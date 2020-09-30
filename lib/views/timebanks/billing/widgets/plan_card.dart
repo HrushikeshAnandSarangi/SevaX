@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
 import '../../../../flavor_config.dart';
@@ -214,21 +215,28 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                             SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
                       print("${widget.plan.id}  ${widget.isPlanActive}");
                       _changePlanAlert(context);
-                      _changePlan(
+                      FirestoreManager.changePlan(
                         SevaCore.of(context).loggedInUser.currentCommunity,
                         widget.plan.id,
                       ).then((value) {
                         Navigator.of(context, rootNavigator: true).pop();
+
                         planChangedMessage(context, value).then(
-                          (_) => Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context1) => SevaCore(
-                                  loggedInUser: widget.user,
-                                  child: HomePageRouter(),
-                                ),
-                              ),
-                              (Route<dynamic> route) => false),
-                        );
+                          (_) {
+                            if( value==0 ){
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context1) => SevaCore(
+                                            loggedInUser: widget.user,
+                                            child: HomePageRouter(),
+                                        ),
+                                    ),
+                                    (Route<dynamic> route) => false);
+                            }
+//                            else {
+//
+//                            }
+                        });
                       });
                     } else {
                       if (widget.plan.id ==
@@ -376,16 +384,16 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
 
   Future<void> planChangedMessage(
     BuildContext context,
-    bool isSuccess,
+    int isSuccess,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(
-            isSuccess
+            isSuccess == 1
                 ? S.of(context).plan_changed
-                : S.of(context).general_stream_error,
+                : isSuccess == 0 ? "Please clear your dues and try again !" : S.of(context).general_stream_error,
           ),
           actions: <Widget>[
             FlatButton(
@@ -398,25 +406,6 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
         );
       },
     );
-  }
-
-  Future<bool> _changePlan(String communityId, String planId) async {
-    try {
-      http.Response result = await http.post(
-        FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-        body: json.encode({'communityId': communityId, "newPlanId": planId}),
-        headers: {"Content-type": "application/json"},
-      );
-
-      if (result.statusCode == 200) {
-        return true;
-      } else {
-        print(result.body);
-      }
-    } catch (e) {
-      print(e);
-    }
-    return false;
   }
 
   void _planSuccessMessage({

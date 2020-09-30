@@ -1,13 +1,18 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -35,6 +40,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
   CommunityModel communityModel = CommunityModel({});
   CardModel cardModel;
+  String currentPlanId;
   BuildContext parentContext;
   var planData = [];
   var transactionPaymentData;
@@ -42,6 +48,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   bool autoValidateText = false;
   final String NO_SELECTED_PLAN_YET = "";
   List<BillingPlanDetailsModel> _billingPlanDetailsModels = [];
+  UserModel currentUser = null;
   @override
   void initState() {
     super.initState();
@@ -82,11 +89,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   @override
   Widget build(BuildContext context) {
     // FocusScope.of(context).requestFocus(FocusNode());
-
+    currentUser = SevaCore.of(context).loggedInUser;
     final _bloc = BlocProvider.of<UserDataBloc>(context);
     this.parentContext = context;
     var currentCommunityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    print(currentCommunityId + "  <<<<");
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -109,6 +116,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                           //No Card added user is on neighbourhood plan
                           if (snapshot.data == null) {
+                              currentPlanId = SevaBillingPlans.NEIGHBOUR_HOOD_PLAN;
                             return spendingsTextWidgettwo(
                               "You are on neighbourhood plan.",
                             );
@@ -116,6 +124,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
                           if (snapshot.hasData && snapshot.data != null) {
                             cardModel = snapshot.data;
+                            currentPlanId = cardModel.currentPlan;
                             //print('cardmodel ${cardModel.currentPlan}');
                             //  print('subscription  ${cardModel.toString()}');
                             //print('subscription  ${cardModel.subscriptionModel}');
@@ -172,10 +181,103 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             cardsHeadingWidget(_bloc),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
+            currentPlanId == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ? Container() :
+            Row(
+            children: [
+              Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(top: 160),
+              child: FlatButton(
+                child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 18),),
+                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
+                    color: FlavorConfig.values.theme.primaryColor,
+                    width: 1,
+                    style: BorderStyle.solid
+                )),
+              onPressed: () async {
+                  _showCancelConfirmationDialog(context);
+              },),
+            ),
+              Spacer(),
+            ],
+            )
+
           ],
         ),
       ),
     );
+  }
+
+  void _showCancelConfirmationDialog(BuildContext parentContext) {
+      showDialog(
+          context: parentContext,
+          barrierDismissible: true,
+          builder: (_context) {
+              return AlertDialog(
+                  title:Text("Cancel Subscription", textAlign: TextAlign.center,),
+                  content: Column(
+                      mainAxisSize: MainAxisSize.min,
+
+                      children: <Widget>[
+                          Text("Are you sure ?"),
+                          SizedBox(
+                              height: 15,
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  RaisedButton(
+                                      padding: EdgeInsets.fromLTRB(14, 5, 14, 5),
+                                      color: Theme.of(context).accentColor,
+                                      textColor: FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                          S.of(context).yes,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: dialogButtonSize,
+                                          ),
+                                      ),
+                                      onPressed: () async {
+                                          Navigator.pop(_context);
+                                          _changePlanAlert(context);
+                                          int value = await FirestoreManager.changePlan(
+                                              SevaCore.of(context).loggedInUser.currentCommunity,
+                                              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN,
+                                          );
+                                          Navigator.of(context, rootNavigator: true).pop();
+
+                                          cancelSubscriptionMessage(context, value)
+                                              .then( (_) {
+                                              if( value == 1 ){
+                                                  Navigator.of(context).pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (context1) => SevaCore(
+                                                              loggedInUser: currentUser,
+                                                              child: HomePageRouter(),
+                                                          ),
+                                                      ),
+                                                          (Route<dynamic> route) => false);
+                                              }
+                                          });
+                                      },
+                                  ),
+                                  FlatButton(
+                                      child: Text(
+                                          S.of(context).no,
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: dialogButtonSize,
+                                          ),
+                                      ),
+                                      onPressed: () => Navigator.pop(_context),
+                                  ),
+                              ],
+                          ),
+                      ],
+                  ),
+              );
+          },
+      );
   }
 
   Widget planCard(UserDataBloc _bloc) {
@@ -334,16 +436,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return emptyText();
           }
         });
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-////        spendingsTextWidget(
-////            "You are currenlty biller to the card ending in 7777."),
-//        //spendingsTextWidget("you are paying for 4 users."),
-//        spendingsTextWidget(
-//            "Billing emails are sent to ${SevaCore.of(parentContext).loggedInUser.email}"),
-//      ],
-//    );
   }
 
   Widget emptyText() {
@@ -365,9 +457,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           if (snapshot.hasData && snapshot.data.data != null) {
             planName = snapshot.data.data['currentplan'];
           }
-          // if (planName == '' && _bloc.community.payment["planId"] != null) {
-          //   planName = _bloc.community.payment["planId"];
-          // }
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -379,17 +468,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                     Icons.edit,
                   ),
                   onPressed: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => BillingPlanDetails(
-                    //       user: SevaCore.of(context).loggedInUser,
-                    //       isPlanActive: false,
-                    //       autoImplyLeading: true,
-                    //       isPrivateTimebank: communityModel.private,
-                    //     ),
-                    //   ),
-                    // );
-
                     if (planName == '' &&
                         !_bloc.community.payment.containsKey("planId")) {
                       Navigator.of(context).push(
@@ -914,6 +992,54 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       curve: Curves.easeOut,
       duration: const Duration(milliseconds: 300),
     );
+  }
+
+  Future<void> cancelSubscriptionMessage(
+      BuildContext context,
+      int isSuccess,
+      ) async {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+              return AlertDialog(
+                  content: Text(
+                      isSuccess == 1
+                          ? "Subscription successfully cancelled"
+                          : isSuccess == 0 ? "Please clear your dues and try again !" : S.of(context).general_stream_error,
+                  ),
+                  actions: <Widget>[
+                      FlatButton(
+                          child: Text(S.of(context).close),
+                          onPressed: () {
+                              Navigator.of(context).pop();
+                          },
+                      ),
+                  ],
+              );
+          },
+      );
+  }
+
+  void _changePlanAlert(
+      BuildContext context,
+      ) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+              return AlertDialog(
+                  content: Row(
+                      children: [
+                          CircularProgressIndicator(),
+                          SizedBox(width: 30),
+                          Expanded(
+                              child: Text(S.of(context).changing_plan),
+                          ),
+                      ],
+                  ),
+              );
+          },
+      );
   }
 }
 

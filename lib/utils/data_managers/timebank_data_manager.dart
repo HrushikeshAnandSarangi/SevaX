@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
+import 'package:http/http.dart' as http;
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -493,6 +495,24 @@ Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
   prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
 
   return model;
+}
+
+Future<int> changePlan(String communityId, String planId) async {
+    // failure is 0, success is 1, error is 2
+    try {
+        http.Response result = await http.post(
+            FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
+            body: json.encode({'communityId': communityId, "newPlanId": planId}),
+            headers: {"Content-type": "application/json"},
+        );
+        if(result.statusCode == 200){
+            Map<String, dynamic> resData = json.decode(result.body);
+            return resData['cancellationStatus'] ? 1 : 0;
+        }
+    } catch (e) {
+        print(e);
+    }
+    return 2;
 }
 
 Stream<List<TimebankModel>> getAllMyTimebanks(
