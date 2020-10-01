@@ -108,8 +108,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   bool autoValidateText = false;
   List<String> selectedTimebanks = [];
   Future<void> writeToDB() async {
-    // print("Credit goes to ${}");
-
     newsObject.placeAddress = this.selectedAddress;
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -138,7 +136,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     newsObject.entity = entityModel;
 
-    print("Model goes like this : $entityModel");
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
     globals.newsDocumentURL = null;
@@ -281,7 +278,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                       return S.of(context).profanity_text_alert;
                                     }
                                     newsObject.subheading = value;
-                                    // print("object");
                                   },
                                 ),
                               )),
@@ -290,7 +286,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     ),
 
                     Offstage(
-                        offstage: !widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                      offstage: !widget.timebankModel.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Center(
                           child: TransactionsMatrixCheck(
                         upgradeDetails:
@@ -330,9 +327,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 this.widget.timebankModel,
                                 selectedTimebanks,
                                 (selectedTimebanks) => {
-                                      print(selectedTimebanks),
-                                      setState(() =>
-                                          {selectedTimebanks = selectedTimebanks})
+                                      setState(() => {
+                                            selectedTimebanks =
+                                                selectedTimebanks
+                                          })
                                     });
                           },
                         ),
@@ -354,13 +352,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             });
                           },
                           //   (geoLocationPointSelected) async {
-                          // print("location is $geoLocationPointSelected");
                           // location = geoLocationPointSelected;
                           // await _getLocation();
-                          // print("Location is updated to ");
                           // },
                           onCreditsEntered: (photoCreditsFromNews) {
-                            print("Hello its me:" + photoCreditsFromNews);
                             photoCredits = photoCreditsFromNews;
                           },
                         ),
@@ -452,7 +447,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     });
 
     newsObject.urlsFromPost = scappedURLs;
-    // print("${newsObject.urlsFromPost}");
   }
 
   void scrapeHashTagsFromSubHeadings(String subHeadings) {
@@ -464,7 +458,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     matches.map((x) => x[0]).forEach((m) => hashTags.add(m));
 
     newsObject.hashTags = hashTags;
-    // print("${newsObject.hashTags}");
   }
 
   Future<void> scrapeURLDetails(String subHeadings) async {
@@ -481,7 +474,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       }
       return;
     } on Exception catch (e) {
-      print(e);
       return;
     }
 
@@ -619,7 +611,6 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
     super.initState();
     communityBloc.searchTimebankSiblingsByParentId(
         this.widget.selectedTimebank.id, this.widget.selectedTimebank);
-    print('called');
   }
 
   @override
@@ -705,18 +696,15 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
           Checkbox(
             value: isSelected,
             onChanged: (bool value) {
-              print(value);
               if (isSelected &&
                   timebankModel.id != this.widget.selectedTimebanks[0]) {
                 this
                     .widget
                     .selectedTimebanks
                     .removeWhere((item) => item == timebankModel.id);
-                print('removed');
               } else if (!isSelected &&
                   timebankModel.id != this.widget.selectedTimebanks[0]) {
                 this.widget.selectedTimebanks.add(timebankModel.id);
-                print('added');
               }
               this.widget.onChanged(this.widget.selectedTimebanks);
               setState(() => this.widget.selectedTimebanks =

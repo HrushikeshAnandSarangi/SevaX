@@ -13,11 +13,13 @@ linter:
     # - avoid_unused_constructor_parameters
     # - camel_case_extensions
     - empty_catches
+    - avoid_print
     # - file_names
     # - provide_deprecation_message
 
 analyzer:
   errors:
+    avoid_print: error
     # close_sinks: error
     # missing_return: error
     missing_required_param: error

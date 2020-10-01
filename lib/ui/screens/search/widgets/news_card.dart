@@ -44,8 +44,6 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(imageUrl);
-
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
 
     return Card(

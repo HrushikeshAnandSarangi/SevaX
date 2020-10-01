@@ -63,7 +63,6 @@ class _ImageUrlViewState extends State<ImageUrlView> {
             onPressed: () {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
-                //print('glg ${globals.webImageUrl}');
 
                 Navigator.of(context).pop();
               } else {
@@ -176,17 +175,13 @@ class _ImageUrlViewState extends State<ImageUrlView> {
 //          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
 
     if (regExp.hasMatch(textContent)) {
-      print(true);
       String match = regExp.stringMatch(textContent);
-      print(match);
       setState(() {
         this.urlError = '';
         this._saving = true;
       });
       await profanityCheck(imageURL: match);
-    } else {
-      print('not url');
-    }
+    } else {}
   }
 
   Future<void> profanityCheck({String imageURL}) async {
@@ -208,8 +203,6 @@ class _ImageUrlViewState extends State<ImageUrlView> {
         this._saving = false;
       });
       if (profanityStatusModel.isProfane) {
-        print('profane');
-
         showProfanityImageAlert(
                 context: context, content: profanityStatusModel.category)
             .then((status) {

@@ -118,7 +118,7 @@ class _OffersTabViewState extends State<OffersTabView> {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr": []
+      "eventsArr": []
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
@@ -233,7 +233,6 @@ class _OffersTabViewState extends State<OffersTabView> {
   }
 
   void _navigateToOfferDetails(OfferModel model) {
-    print(model);
     Navigator.push(
       context,
       MaterialPageRoute(

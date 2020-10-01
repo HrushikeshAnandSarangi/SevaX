@@ -53,7 +53,6 @@ class EditGroupInfoBloc {
       } else {
         return null;
       }
-      print("image url ${imageUrl}");
 
       ChatsRepository.editGroup(
           chatId, _groupName.value, imageUrl, _participantInfo.value);

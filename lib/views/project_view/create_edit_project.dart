@@ -114,7 +114,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         if (templateName != s) {
           SearchManager.searchTemplateForDuplicate(queryString: s)
               .then((commFound) {
-            print("querystring is  ${s} and templateName is ${templateName}");
             if (commFound) {
               setState(() {
                 templateFound = true;
@@ -136,7 +135,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     await FirestoreManager.getProjectFutureById(projectId: widget.projectId)
         .then((onValue) {
       projectModel = onValue;
-      print("projectttttt ${projectModel}");
       selectedAddress = projectModel.address;
       location = projectModel.location;
       isDataLoaded = true;
@@ -218,10 +216,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               padding: EdgeInsets.only(left: 5.0, right: 5.0),
               groupValue: sharedValue,
               onValueChanged: (int val) {
-                print(val);
                 if (val != sharedValue) {
                   setState(() {
-                    print("$sharedValue -- $val");
                     if (val == 0) {
                       projectModel.mode = 'Timebank';
                     } else {
@@ -294,7 +290,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             TextFormField(
               autovalidate: autoValidateText,
               onChanged: (value) {
-                print("name ------ $value");
                 if (value.length > 1 && !autoValidateText) {
                   setState(() {
                     autoValidateText = true;
@@ -563,7 +558,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             //     ),
             //     color: Colors.grey[200],
             //     onPressed: () async {
-            //       print("Location opened : $location");
             //       await Navigator.push(
             //         context,
             //         MaterialPageRoute<LocationDataModel>(
@@ -637,8 +631,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
-                    print('project phone ${projectModel.phoneNumber}');
-
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
@@ -654,7 +646,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       return;
                     }
 
-                    print('project mode ${projectModel.mode}');
                     FocusScope.of(context).requestFocus(FocusNode());
                     // show a dialog
                     projectModel.startTime =
@@ -665,11 +656,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
 //                            }
-                      print(_formKey.currentState.validate());
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
 //                            if (communityFound) {
-//                              print("Found:$communityFound");
 //                              return;
 //                            }
                       if (_formKey.currentState.validate()) {
@@ -818,7 +807,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   void moveToTop() {
-    print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(
       -100,
@@ -868,7 +856,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
 //   Future _getLocation(data) async {
-//     print('Timebank value:$data');
 //     String address = await LocationUtility().getFormattedAddress(
 //       location.latitude,
 //       location.longitude,
@@ -877,7 +864,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //       this.selectedAddress = address;
 //     });
 // //    timebank.updateValueByKey('locationAddress', address);
-//     print('_getLocation: $address');
 //     projectModel.address = this.selectedAddress;
 //   }
 

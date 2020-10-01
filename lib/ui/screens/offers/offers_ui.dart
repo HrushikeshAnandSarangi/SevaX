@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -18,7 +14,6 @@ import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -361,31 +356,31 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   String offerStatusLabel;
-  Future _makePostRequest(OfferModel offerModel) async {
-    String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
-    Map<String, String> headers = {"Content-type": "application/json"};
-    Map<String, String> body = {
-      'id': offerModel.id,
-      'email': offerModel.email,
-      'notificationId': utils.Utils.getUuid(),
-      'acceptorSevaId': SevaCore.of(context).loggedInUser.sevaUserID,
-      'timebankId': FlavorConfig.values.timebankId,
-      'sevaUserId': offerModel.sevaUserId,
-      'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
-      'acceptorEmailId': SevaCore.of(context).loggedInUser.email,
-    };
-    setState(() {
-      widget.offerModel.acceptedOffer = true;
-    });
-    Response response =
-        await post(url, headers: headers, body: json.encode(body));
-    int statusCode = response.statusCode;
-    if (statusCode == 200) {
-      print("Request completed successfully");
-    } else {
-      print("Request failed");
-    }
-  }
+  // Future _makePostRequest(OfferModel offerModel) async {
+  //   String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
+  //   Map<String, String> headers = {"Content-type": "application/json"};
+  //   Map<String, String> body = {
+  //     'id': offerModel.id,
+  //     'email': offerModel.email,
+  //     'notificationId': utils.Utils.getUuid(),
+  //     'acceptorSevaId': SevaCore.of(context).loggedInUser.sevaUserID,
+  //     'timebankId': FlavorConfig.values.timebankId,
+  //     'sevaUserId': offerModel.sevaUserId,
+  //     'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
+  //     'acceptorEmailId': SevaCore.of(context).loggedInUser.email,
+  //   };
+  //   setState(() {
+  //     widget.offerModel.acceptedOffer = true;
+  //   });
+  //   Response response =
+  //       await post(url, headers: headers, body: json.encode(body));
+  //   int statusCode = response.statusCode;
+  //   if (statusCode == 200) {
+  //     print("Request completed successfully");
+  //   } else {
+  //     print("Request failed");
+  //   }
+  // }
 
   bool isAccepted = false;
   BuildContext dialogContext;

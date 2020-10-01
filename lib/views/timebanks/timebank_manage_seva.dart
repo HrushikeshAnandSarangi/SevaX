@@ -39,7 +39,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("creator id ${widget.timebankModel.communityId}");
 
     Future.delayed(Duration.zero, () {
       FirestoreManager.getCommunityDetailsByCommunityId(
@@ -51,7 +50,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           isSuperAdmin = true;
           setState(() {});
         }
-        print("creator id -----> ${communityModel.created_by}");
       });
     });
     Future.delayed(Duration.zero, () {
@@ -67,8 +65,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   @override
   Widget build(BuildContext context) {
-    ///  print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
-
     if (isSuperAdmin) {
       return DefaultTabController(
         length: 4,

@@ -44,7 +44,6 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           .snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        print(widget.timebankData.id);
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = snapshot.data['balance'].toDouble();
@@ -108,8 +107,6 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       );
       return;
     }
-
-    print("${this.widget.loggedInUser.currentBalance}");
 
     if (this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(

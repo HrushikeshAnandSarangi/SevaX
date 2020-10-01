@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -632,7 +633,7 @@ class DiscussionListState extends State<DiscussionList> {
                   .loggedInUser
                   .blockedBy
                   .contains(news.sevaUserId)
-          ? print("Removed blocked content")
+          ? logger.i("Removed blocked content")
           : filteredNewsList.add(news);
     });
     return filteredNewsList;
@@ -663,7 +664,6 @@ class DiscussionListState extends State<DiscussionList> {
   Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
     var feedAddress = getLocation(news.placeAddress);
-    print((feedAddress == null).toString() + "<<<<<<<");
 
     return InkWell(
       onTap: () {
@@ -933,8 +933,6 @@ class DiscussionListState extends State<DiscussionList> {
                                                         SevaCore.of(context)
                                                             .loggedInUser
                                                             .sevaUserID)) {
-                                                      print(
-                                                          'already in reports');
                                                     } else {
                                                       if (news
                                                           .reports.isEmpty) {
@@ -1382,8 +1380,6 @@ class DiscussionListState extends State<DiscussionList> {
                                                                       .of(context)
                                                                   .loggedInUser
                                                                   .sevaUserID)) {
-                                                            print(
-                                                                'already in reports');
                                                           } else {
                                                             if (news.reports
                                                                 .isEmpty) {

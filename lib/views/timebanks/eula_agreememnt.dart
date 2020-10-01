@@ -68,7 +68,6 @@ class EulaAgreementState extends State<EulaAgreement> {
                             activeColor: Colors.green,
                             onChanged: (bool value) {
                               setState(() {
-                                print("selected value ${value}");
                                 userAcceptanceStatus = value;
                               });
                             },

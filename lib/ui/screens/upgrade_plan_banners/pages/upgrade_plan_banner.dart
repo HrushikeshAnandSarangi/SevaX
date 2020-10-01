@@ -84,7 +84,6 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
               timebankId: SevaCore.of(context).loggedInUser.currentTimebank),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              print("error while bringing the snapshot is ${snapshot.error}");
               return Text("Sorry Couldn't fetch data");
             }
             if (snapshot.connectionState == ConnectionState.waiting) {

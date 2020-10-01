@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
@@ -21,12 +19,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../flavor_config.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -57,7 +49,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
-      print("${widget.offerModel}");
     }
     super.initState();
     _bloc.classSizeError.listen((error) {
@@ -98,7 +89,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
               if (status.data == Status.COMPLETE && closePage) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  print("nav stat ${Navigator.of(mcontext).canPop()}");
                   if (Navigator.of(mcontext).canPop())
                     Navigator.of(mcontext).pop();
                 });
@@ -145,7 +135,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (_, snapshot) {
-                              print(snapshot.data);
                               return CustomTextField(
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
@@ -513,11 +502,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     }
 
     if (SevaCore.of(context).loggedInUser.calendarId != null) {
-        _bloc.allowedCalenderEvent = true;
+      _bloc.allowedCalenderEvent = true;
 
-        await _bloc.createOneToManyOffer(
-            user: SevaCore.of(context).loggedInUser,
-            timebankId: widget.timebankId);
+      await _bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId);
 //      showDialog(
 //        context: context,
 //        builder: (_context) {
@@ -542,26 +531,24 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 //        },
 //      );
     } else {
-        _bloc.allowedCalenderEvent = true;
+      _bloc.allowedCalenderEvent = true;
 
-        await _bloc.createOneToManyOffer(
-            user: SevaCore.of(context).loggedInUser,
-            timebankId: widget.timebankId);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) {
-                    return AddToCalendar(
-                        isOfferRequest: null,
-                        offer: null,
-                        requestModel: null,
-                        userModel: null,
-                        eventsIdsArr:_bloc.offerIds
-
-                    );
-                },
-            ),
-        );
+      await _bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return AddToCalendar(
+                isOfferRequest: null,
+                offer: null,
+                requestModel: null,
+                userModel: null,
+                eventsIdsArr: _bloc.offerIds);
+          },
+        ),
+      );
 //        await _settingModalBottomSheet(context);
 //        showDialog(
 //            context: context,

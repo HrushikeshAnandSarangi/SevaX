@@ -73,8 +73,6 @@ class CreateChatBloc extends BlocBase {
       scrollOffset[key] = count;
     });
 
-    print(scrollOffset);
-
     List<TimebankModel> timebanks =
         await TimebankRepository.getTimebanksWhichUserIsPartOf(
             userId, communityId);

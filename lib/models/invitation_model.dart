@@ -65,7 +65,6 @@ enum InvitationType {
 
 //Check the method
 InvitationType stringToNotificationType(String str) {
-  print(str);
   return InvitationType.values.firstWhere(
     (v) => v.toString() == 'InvitationType.' + str.trim(),
   );

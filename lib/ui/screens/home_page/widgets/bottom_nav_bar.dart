@@ -33,8 +33,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         int notificationCount = 0;
         int chatCount = 0;
 
-        print(snapshot.error);
-
         if (snapshot.hasData && snapshot.data != null) {
           notificationCount = snapshot.data.notificationCount;
           chatCount = snapshot.data.chatCount;

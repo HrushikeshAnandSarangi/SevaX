@@ -37,8 +37,6 @@ class _NewChatPageState extends State<NewChatPage> {
     _scrollController = ScrollController();
 
     _scrollController.addListener(() {
-      print(
-          "${_scrollController.offset}  ${widget.frequentContacts.length * 50 + 30 * 2 + 50}");
       if (_scrollController.offset >
           widget.frequentContacts.length * 50 + 30 * 2 + 50) {
         if (!showQuickScroll) {
@@ -171,7 +169,6 @@ class _NewChatPageState extends State<NewChatPage> {
                     if (snapshot.data == null) {
                       return LoadingIndicator();
                     }
-                    print(snapshot.data.length);
                     if (snapshot.data.length == 0) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

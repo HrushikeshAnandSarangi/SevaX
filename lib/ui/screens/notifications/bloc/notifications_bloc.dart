@@ -7,6 +7,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 List<NotificationType> dismissiableNotification = [
   NotificationType.RequestApprove,
@@ -65,7 +66,7 @@ class NotificationsBloc extends BlocBase {
       if (!_personalNotifications.isClosed)
         _personalNotifications.add(notifications);
     }).onError((error) {
-      print("There is an error");
+      logger.e("There is an error");
     });
 
     CombineLatestStream.combine2(
@@ -159,8 +160,7 @@ class TimebankNotificationData {
 
   bool isNotificationAvailable() {
     bool status = false;
-    print(" timebanks ${timebanks.keys}");
-    print(notifications.keys);
+
     timebanks.forEach((key, value) {
       if (notifications.containsKey(key)) {
         if (notifications[key].length == 0) {

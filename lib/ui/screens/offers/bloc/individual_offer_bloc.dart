@@ -89,7 +89,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           type: _type.value,
           cashModel: _cashModel.value,
           goodsDonationDetails: _goodsDonationDetails.value);
-      print('heysdfsdf');
+
       createOffer(offerModel: offerModel).then((_) {
         _status.add(Status.COMPLETE);
       }).catchError((e) => _status.add(Status.ERROR));

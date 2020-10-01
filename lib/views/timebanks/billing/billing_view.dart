@@ -308,7 +308,7 @@ class BillingViewState extends State<BillingView> {
                             return GestureDetector(
                               onTap: () {
                                 // connectToStripe(cards[index]['paymentMethodId']);
-                                print(snapshot.data.data[index].id);
+
                                 connectToStripe(snapshot.data.data[index].id);
                               },
                               onLongPress: () => isDefault
@@ -445,7 +445,6 @@ class BillingViewState extends State<BillingView> {
     bool isSuccess = true,
     String communityId,
   }) {
-    print(communityId + " <<<<<<<<<<<<<<<request from function");
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -519,6 +518,6 @@ Future<bool> setDefaultCard({String communityId, String token}) async {
     "${FlavorConfig.values.cloudFunctionBaseURL}/setDefaultCardForCustomer",
     body: {"communityId": communityId, "token": token},
   );
-  print(result.body);
+
   return true;
 }

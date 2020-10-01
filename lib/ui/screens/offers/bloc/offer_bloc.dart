@@ -20,7 +20,6 @@ class OfferBloc extends BlocBase {
         .listen((QuerySnapshot snap) {
       List<OfferParticipantsModel> offer = [];
       snap.documents.forEach((DocumentSnapshot doc) {
-        print(doc.data.toString());
         OfferParticipantsModel model =
             OfferParticipantsModel.fromJson(doc.data);
         model.id = doc.documentID;

@@ -25,7 +25,6 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
     // TODO: implement initState
     super.initState();
 
-    print("user data---------> ${widget.userModel.sevaUserID}");
     FirestoreManager.getTimeBankForId(timebankId: widget.timebankid)
         .then((onValue) {
       timebankModel = onValue;

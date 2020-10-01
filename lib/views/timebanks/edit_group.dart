@@ -168,16 +168,16 @@ class EditGroupFormState extends State<EditGroupForm> {
             controller: searchTextController,
             autovalidate: autoValidateText,
             onChanged: (value) {
-               if (value.length > 1 && !autoValidateText) {
-            setState(() {
-              autoValidateText = true;
-            });
-          }
-          if (value.length <= 1 && autoValidateText) {
-            setState(() {
-              autoValidateText = false;
-            });
-          }
+              if (value.length > 1 && !autoValidateText) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              }
+              if (value.length <= 1 && autoValidateText) {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
@@ -201,16 +201,16 @@ class EditGroupFormState extends State<EditGroupForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
-               if (value.length > 1 && !autoValidateText) {
-            setState(() {
-              autoValidateText = true;
-            });
-          }
-          if (value.length <= 1 && autoValidateText) {
-            setState(() {
-              autoValidateText = false;
-            });
-          }
+              if (value.length > 1 && !autoValidateText) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              }
+              if (value.length <= 1 && autoValidateText) {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
             },
             initialValue: widget.timebankModel.missionStatement ?? "",
             decoration: InputDecoration(
@@ -242,11 +242,9 @@ class EditGroupFormState extends State<EditGroupForm> {
                 child: Checkbox(
                   value: widget.timebankModel.preventAccedentalDelete,
                   onChanged: (bool value) {
-                    print(value);
                     setState(() {
                       widget.timebankModel.preventAccedentalDelete = value;
                     });
-                    print(widget.timebankModel.preventAccedentalDelete);
                   },
                 ),
               ),
@@ -269,7 +267,6 @@ class EditGroupFormState extends State<EditGroupForm> {
                   Checkbox(
                     value: widget.timebankModel.private,
                     onChanged: (bool value) {
-                      print(value);
                       setState(() {
                         widget.timebankModel.private = value;
                       });

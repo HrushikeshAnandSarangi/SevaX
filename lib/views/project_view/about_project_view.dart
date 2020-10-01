@@ -32,7 +32,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   bool isDataLoaded = false;
   @override
   void initState() {
-    print("inside project initStateeee");
     getData();
     setState(() {});
     super.initState();
@@ -57,7 +56,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   void getUserData() async {
     user =
         await FirestoreManager.getUserForId(sevaUserId: projectModel.creatorId);
-    print("userssssss ${user}");
     isDataLoaded = true;
     setState(() {});
   }
@@ -100,7 +98,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           width: double.infinity,
                           child: FlatButton(
                             onPressed: () {
-                              print('pressed');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

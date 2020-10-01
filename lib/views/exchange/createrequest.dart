@@ -15,7 +15,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -561,9 +560,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.bank_name = value;
-                print(true);
               } else {
-                print('not url');
                 return S.of(context).enter_valid_bank_name;
               }
               return null;
@@ -604,9 +601,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.bank_address = value;
-                print(true);
               } else {
-                print('not url');
 
                 return S.of(context).enter_valid_bank_address;
               }
@@ -648,9 +643,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.routing_number = value;
-                print(true);
               } else {
-                print('not url');
 
                 return S.of(context).enter_valid_routing_number;
               }
@@ -1148,12 +1141,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
               FocusScope.of(context).unfocus();
             },
             onChanged: (v) {
-              print(v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
-                print('hey');
-                print(requestModel.cashModel);
                 requestModel.cashModel.targetAmount = int.parse(v);
-                print(requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1199,7 +1188,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
             onChanged: (v) {
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 requestModel.cashModel.minAmount = int.parse(v);
-                print(requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1333,7 +1321,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
   BuildContext dialogContext;
 
   void createRequest() async {
-    print('clicked here');
     // verify f the start and end date time is not same
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -1363,9 +1350,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           : null;
       end.after =
           (end.endType == "after" ? int.parse(RepeatWidgetState.after) : null);
-      print("end model is = ${end.toMap()} ${end.endType}");
       requestModel.end = end;
-      print("request model is = ${requestModel.toMap()}");
     }
 
     if (_formKey.currentState.validate()) {
@@ -1801,9 +1786,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     // buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
     FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-      print("Error from create req!!!");
     }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      print("success from create req!!!");
     });
 
     // This will handle incoming links if the application is already opened
@@ -2117,7 +2100,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         goods[data.documentID] = data['goodTitle'];
       });
-      print(goods);
       isDataLoaded = true;
       if (this.mounted) {
         setState(() {});

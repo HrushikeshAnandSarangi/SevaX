@@ -96,7 +96,6 @@ class RequestStatusViewState extends State<RequestStatusView> {
   Widget getUserWidget(MemberForRequest userSelected, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Tapped on profile ${userSelected.email}");
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -173,7 +172,6 @@ class RequestStatusViewState extends State<RequestStatusView> {
         '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 
     if (response1.statusCode == 200) {
-      print(response1);
       this.isSent = true;
     } else {
       this.isSent = false;

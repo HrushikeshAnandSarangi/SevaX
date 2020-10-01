@@ -178,7 +178,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   @override
   void initState() {
     super.initState();
-    print(requestModel);
+
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
@@ -455,7 +455,6 @@ class RequestEditFormState extends State<RequestEditForm> {
           GoodsDynamicSelection(
             goodsbefore: widget.requestModel.goodsDonationDetails.requiredGoods,
             onSelectedGoods: (goods) => {
-              print(goods),
               widget.requestModel.goodsDonationDetails.requiredGoods = goods
             },
           ),
@@ -505,7 +504,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else {
-                print(requestModel);
                 widget.requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
               }
@@ -555,9 +553,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.bank_name = value;
-                print(true);
               } else {
-                print('not url');
                 return S.of(context).enter_valid_bank_name;
               }
               return null;
@@ -599,10 +595,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.bank_address = value;
-                print(true);
               } else {
-                print('not url');
-
                 return S.of(context).enter_valid_bank_address;
               }
               return null;
@@ -644,10 +637,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.routing_number = value;
-                print(true);
               } else {
-                print('not url');
-
                 return S.of(context).enter_valid_routing_number;
               }
               return null;
@@ -949,7 +939,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                     groupvalue: widget.requestModel.requestType,
                     onChanged: (value) {
                       widget.requestModel.requestType = value;
-                      print(widget.requestModel.requestType);
                       setState(() => {});
                     },
                   ),
@@ -959,7 +948,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       groupvalue: widget.requestModel.requestType,
                       onChanged: (value) {
                         widget.requestModel.requestType = value;
-                        print(widget.requestModel.requestType);
                         setState(() => {});
                       }),
                   _optionRadioButton(
@@ -968,7 +956,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       groupvalue: widget.requestModel.requestType,
                       onChanged: (value) {
                         widget.requestModel.requestType = value;
-                        print(widget.requestModel.requestType);
                         setState(() => {});
                       }),
                 ],
@@ -1134,12 +1121,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.cashModel.targetAmount.toString(),
             onChanged: (v) {
-              print(v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
-                print('hey');
-                print(widget.requestModel.cashModel);
                 widget.requestModel.cashModel.targetAmount = int.parse(v);
-                print(widget.requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1186,7 +1169,6 @@ class RequestEditFormState extends State<RequestEditForm> {
             onChanged: (v) {
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.cashModel.minAmount = int.parse(v);
-                print(widget.requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1397,7 +1379,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
       widget.requestModel.location = location;
       widget.requestModel.address = selectedAddress;
-      print("request model data === ${widget.requestModel.toMap()}");
 
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {

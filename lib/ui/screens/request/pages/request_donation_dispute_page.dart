@@ -260,7 +260,6 @@ class _RequestDonationDisputePageState
                           )
                               .then(
                             (value) {
-                              print(value);
                               if (value) {
                                 Navigator.of(context).pop();
                               }
@@ -279,7 +278,6 @@ class _RequestDonationDisputePageState
                         operatingMode,
                         widget.model.donatedToTimebank,
                       );
-                      print("==========================" + a.toString());
 
                       switch (a) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
@@ -311,7 +309,6 @@ class _RequestDonationDisputePageState
                           break;
 
                         case ChatModeForDispute.MEMBER_TO_TIMEBANK:
-                          print("==========MEMBER_TO_TIMEBANK===============");
                           TimebankModel timebankModel = await getTimeBankForId(
                             timebankId: widget.model.timebankId,
                           );
@@ -342,7 +339,6 @@ class _RequestDonationDisputePageState
                           break;
 
                         case ChatModeForDispute.TIMEBANK_TO_MEMBER:
-                          print("==========TIMEBANK_TO_MEMBER===============");
                           TimebankModel timebankModel = await getTimeBankForId(
                             timebankId: widget.model.timebankId,
                           );
@@ -548,7 +544,6 @@ class _GoodsFlow extends StatelessWidget {
         StreamBuilder<Map<String, String>>(
           stream: _bloc.goodsRecieved,
           builder: (context, snapshot) {
-            print("==========+>>>>>>>>>>>>>>" + snapshot.data.toString());
             return ListView.builder(
               shrinkWrap: true,
               itemCount: requiredGoods.length,

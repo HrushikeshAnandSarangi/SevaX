@@ -1147,11 +1147,9 @@ class RequestListItemsState extends State<RequestListItems> {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        print("elasticsearch pjs location result is");
         return null;
       }
     } else {
-      print("elasticsearch pjs location result isggggg");
       return null;
     }
   }

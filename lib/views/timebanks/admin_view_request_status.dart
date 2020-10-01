@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -88,7 +89,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
       if (!widget.requestModel.approvedUsers.contains(memberEmail)) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       } else {
-        print("Member approved alredy");
+        logger.i("Member approved alredy");
       }
     });
 
@@ -144,7 +145,6 @@ class TimebankRequestsState extends State<TimebankRequests> {
                               notificationId: "sampleID")
                           .then((onValue) {
                         setState(() {});
-                        print("Action completed");
                       });
                       //set the state
                     },

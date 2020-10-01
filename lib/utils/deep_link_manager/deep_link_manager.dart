@@ -1,8 +1,6 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 void initDynamicLinks(BuildContext context) async {
   final PendingDynamicLinkData data =
@@ -15,14 +13,12 @@ void initDynamicLinks(BuildContext context) async {
 
   FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
-    final Uri deepLink = dynamicLink?.link;
-    if (deepLink != null) {
-      Navigator.pushNamed(context, deepLink.path);
-    }
-  }, onError: (OnLinkErrorException e) async {
-    print('onLinkError');
-    print(e.message);
-  });
+        final Uri deepLink = dynamicLink?.link;
+        if (deepLink != null) {
+          Navigator.pushNamed(context, deepLink.path);
+        }
+      },
+      onError: (OnLinkErrorException e) async {});
 }
 
 Future<String> createDynamicLinkFor({

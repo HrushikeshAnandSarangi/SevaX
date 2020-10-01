@@ -26,10 +26,8 @@ class GroupMembersPage extends StatelessWidget {
                 itemCount: snapshot.data.length,
                 itemBuilder: (_, int index) {
                   TimebankModel model = snapshot.data[index];
-                  print(model.members);
-                  print(_bloc.allMembers);
+
                   return ExpansionTile(
-//                    tilePadding: EdgeInsets.only(left: 12),
                     leading: CustomNetworkImage(
                         model.photoUrl ?? defaultGroupImageURL),
                     title: Text(model.name),

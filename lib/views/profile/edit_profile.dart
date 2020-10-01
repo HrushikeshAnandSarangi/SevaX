@@ -528,7 +528,9 @@ class _EditProfilePageState extends State<EditProfilePage>
       _paths = null;
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['pdf']);
-    } on PlatformException catch (e) {throw e;}
+    } on PlatformException catch (e) {
+      throw e;
+    }
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
@@ -910,7 +912,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                   autovalidate: autoValidateText,
                   //key: _formKey,
                   onChanged: (value) {
-                    print("name ------ $value");
                     if (value.length > 1 && !autoValidateText) {
                       setState(() {
                         autoValidateText = true;

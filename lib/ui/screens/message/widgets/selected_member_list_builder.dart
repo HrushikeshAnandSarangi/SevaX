@@ -12,7 +12,6 @@ class SelectedMemberListBuilder extends StatelessWidget {
     return StreamBuilder<List<String>>(
       stream: _bloc.selectedMembers,
       builder: (context, snapshot) {
-        print("al member ${_bloc.allMembers}");
         if ((snapshot.data?.length ?? 0) <= 0) {
           return Container();
         }

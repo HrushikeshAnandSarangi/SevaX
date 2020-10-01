@@ -77,9 +77,7 @@ class _RecurringListingState extends State<RecurringListing> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.data != null) {
                     List<RequestModel> requestModelList = snapshot.data;
-                    print("snapshot data is ==== ${snapshot.data.length}");
-                    requestModelList
-                        .forEach((k) => print('snapshot id is ==> ${k.id}'));
+
                     return RecurringList(requestModelList, null, timebankModel);
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -102,9 +100,7 @@ class _RecurringListingState extends State<RecurringListing> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.data != null) {
                     List<OfferModel> offerModelList = snapshot.data;
-                    print("snapshot data is ==== ${snapshot.data.length}");
-                    offerModelList
-                        .forEach((k) => print('snapshot id is ==> ${k.id}'));
+
                     return RecurringList(null, offerModelList, timebankModel);
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -421,7 +417,7 @@ class _RecurringListState extends State<RecurringList> {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr": [],
+      "eventsArr": [],
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
