@@ -1,5 +1,7 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,7 +12,6 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
-import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -77,8 +78,10 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      // Crashlytics.instance.enableInDevMode = true;
-      // FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      if (kReleaseMode) {
+        Crashlytics.instance.enableInDevMode = true;
+        FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      }
       runApp(
         MainApplication(),
       );
