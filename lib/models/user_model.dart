@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
@@ -137,7 +136,7 @@ class UserModel extends DataModel {
       //     nearBySettings.toString() +
       //     DateTime.now().toString());
     } else {
-      log("Nearby Settings for user not found....");
+      //  log("Nearby Settings for user not found....");
     }
 
     if (map.containsKey('tokens')) {

@@ -205,13 +205,20 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           loadAllRequest(newList);
         }
       }
-      await loadAdmins();
-      if ((FlavorConfig.appFlavor == Flavor.APP ||
-          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-        await loadCoordinators();
+      if (widget.timebankId == FlavorConfig.values.timebankId &&
+          !widget.isUserAdmin) {
+        await loadAdmins();
+        setState(() {});
+      } else {
+        await loadAdmins();
+
+        if ((FlavorConfig.appFlavor == Flavor.APP ||
+            FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+          await loadCoordinators();
+        }
+        await loadNextMembers();
+        setState(() {});
       }
-      await loadNextMembers();
-      setState(() {});
     }
   }
 
@@ -481,14 +488,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
-    _avtars.addAll(_adminsWidgets);
-    if ((FlavorConfig.appFlavor == Flavor.APP ||
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-      _avtars.addAll(_coordinatorsWidgets);
+    if (widget.timebankId == FlavorConfig.values.timebankId &&
+        !widget.isUserAdmin) {
+      _avtars.addAll(_adminsWidgets);
+      return _avtars;
+    } else {
+      _avtars.addAll(_adminsWidgets);
+
+      if ((FlavorConfig.appFlavor == Flavor.APP ||
+          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+        _avtars.addAll(_coordinatorsWidgets);
+      }
+      _avtars.addAll(_requestsWidgets);
+      _avtars.addAll(_membersWidgets);
+      return _avtars;
     }
-    _avtars.addAll(_requestsWidgets);
-    _avtars.addAll(_membersWidgets);
-    return _avtars;
   }
 
   Widget get emptyCard {
@@ -511,7 +525,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       scrollDirection: Axis.vertical,
       controller: _listController,
       shrinkWrap: true,
-      itemCount: fetchItemsCount(),
+      itemCount: _avtars.length,
       itemBuilder: (BuildContext ctxt, int index) => Padding(
         padding: const EdgeInsets.all(0.0),
         child: index < _avtars.length
@@ -1154,14 +1168,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   //           SevaCore.of(context).loggedInUser.currentCommunity;
   //     }
   //     var insertMembers = model.members.contains(user.sevaUserID);
-  //     print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+  //
   //     var memberList = List<String>();
   //     memberList.addAll(model.members);
   //     if (!model.members.contains(user.sevaUserID)) {
   //       memberList.add(user.sevaUserID);
   //     }
   //     model.members = memberList;
-  //     print(
+  //
   //         "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
   //     await updateUser(user: user);
   //   });
@@ -1180,7 +1194,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   //   }
   //   UserModel user = await getUserForId(sevaUserId: userId);
   //   var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
-  //   print("Current community:$currentCommunity");
+  //
   //   var communities = List<String>();
   //   if (user.communities != null && user.communities.length > 0) {
   //     communities.addAll(user.communities);
@@ -1664,10 +1678,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       bool isFromExit}) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: userModel.sevaUserID, timebankId: timebankModel.id);
-    print(responseData.toString());
+
     if (responseData['deletable'] == true) {
       if (isFromExit) {
-        print("im about to exit");
         await sendNotificationToAdmin(
             user: userModel,
             timebank: timebankModel,

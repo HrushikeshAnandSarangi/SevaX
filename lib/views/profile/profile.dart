@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       ).listen((UserModel userModel) {
         if (mounted) isUserLoaded = true;
-        print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
+
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
       });

@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:usage/uuid/uuid.dart';
 
+import '../flavor_config.dart';
+
 export 'firestore_manager.dart';
 export 'preference_manager.dart';
 export 'search_manager.dart';
@@ -77,4 +79,31 @@ String getReviewMessage(
   String review =
       '$userName ${S.of(context).has_given_review} \n\n${isOfferReview ? offerReview : body} $requestTitle \n${S.of(context).review}:\n\n$reviewMessage';
   return review;
+}
+
+void showAdminAccessMessage({BuildContext context}) {
+  // flutter defined function
+  showDialog(
+    context: context,
+    builder: (BuildContext _context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: Text('Alert'),
+        content:
+            Text('Only Admins can create content in Sevax Global Community'),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            color: Theme.of(context).accentColor,
+            textColor: FlavorConfig.values.buttonTextColor,
+            child: Text(S.of(context).close),
+            onPressed: () {
+              Navigator.of(_context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

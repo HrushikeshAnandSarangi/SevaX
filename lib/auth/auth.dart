@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -24,7 +25,8 @@ class Auth {
     try {
       googleUser = await _googleSignIn.signIn();
     } on Exception catch (error) {
-      throw error;
+      Crashlytics.instance.log(error.toString());
+      error;
     } catch (error) {
       log('Google sign in exception. Error: ${error.toString()}');
     }
@@ -90,9 +92,10 @@ class Auth {
         password: password,
       );
     } on Exception catch (error) {
-      throw error;
+      Crashlytics.instance.log(error.toString());
+      error;
     } catch (error) {
-      log('Auth: signInWithEmailAndPassword: $error');
+      Crashlytics.instance.log(error.toString());
     }
     return _processGoogleUser(result.user);
   }
@@ -111,7 +114,8 @@ class Auth {
       return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {}
-      throw error;
+      Crashlytics.instance.log(error.toString());
+      error;
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
 
@@ -183,7 +187,8 @@ class Auth {
     }
 
     // updating the sevaX global timebank community with user Id;
-    CommunityModel cmodel = await FirestoreManager.getCommunityDetailsByCommunityId(
+    CommunityModel cmodel =
+        await FirestoreManager.getCommunityDetailsByCommunityId(
       communityId: FlavorConfig.values.timebankId,
     );
     List<String> cmembers = cmodel.members;

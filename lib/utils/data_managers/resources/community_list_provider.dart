@@ -8,7 +8,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 class RequestApiProvider {
   Future<List<UserModel>> getUserFromRequest(String requestID) async {
     List<UserModel> usersDataList = [];
-    print("uder ${requestID}");
 
     var query = Firestore.instance
         .collection('users')
@@ -38,11 +37,9 @@ class RequestApiProvider {
             .orderBy("posttimestamp", descending: true);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
-    print("comm list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      print("model is : " + model.id);
       if (model.approvedUsers.length <= model.numberOfApprovals) {
         requestList.add(model);
       }
@@ -58,11 +55,9 @@ class RequestApiProvider {
         .where('projectId', isEqualTo: projectId);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
-    print("complted list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      print("completed model is : " + model.id);
       requestList.add(model);
     });
     return requestList;
@@ -76,11 +71,9 @@ class RequestApiProvider {
         .where('projectId', isEqualTo: projectId);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
-    print("pending list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      print("pending model is : " + model.id);
       requestList.add(model);
     });
     return requestList;
@@ -116,7 +109,6 @@ class RequestApiProvider {
               }
             },
           );
-          print("firebase requesst data $requestList");
           requestSink.add(requestList);
         },
       ),
@@ -138,8 +130,6 @@ class RequestApiProvider {
     }).catchError((onError) {
       return "Error Updating invitedUsers";
     });
-
-    print('seva ${sevaUserId + requestID}');
   }
 }
 
@@ -202,10 +192,8 @@ class CommunityApiProvider {
           .where('associatedParentTimebankId', isEqualTo: id)
           .getDocuments()
           .then((QuerySnapshot querySnapshot) {
-        print(id);
         querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
           var timebank = TimebankModel(documentSnapshot.data);
-          print(timebank.name);
           timebanks.add(timebank);
         });
       });
@@ -269,13 +257,11 @@ class CommunityApiProvider {
         .collection('users')
         .document(user.email)
         .updateData({
-      'membershipTimebanks': user.membershipTimebanks,
-      'communities': user.communities,
-      'currentCommunity': communityId
-    }).then((onValue) {
-      print("Updating completed");
-    }).catchError((onError) {
-      print("Error Updating introduction");
-    });
+          'membershipTimebanks': user.membershipTimebanks,
+          'communities': user.communities,
+          'currentCommunity': communityId
+        })
+        .then((onValue) {})
+        .catchError((onError) {});
   }
 }

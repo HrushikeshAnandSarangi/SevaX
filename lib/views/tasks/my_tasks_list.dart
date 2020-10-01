@@ -63,7 +63,7 @@ class MyTasksList extends StatelessWidget {
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
-          print(SevaCore.of(context).loggedInUser.sevaUserID);
+
           return StreamBuilder<List<RequestModel>>(
             stream: FirestoreManager.getTaskStreamForUserWithEmail(
                 userEmail: SevaCore.of(context).loggedInUser.email,
@@ -698,7 +698,7 @@ class TaskCardViewState extends State<TaskCardView> {
           loggedInUser: loggedInUser);
       startTransaction();
     } on Exception catch (e) {
-      print("errrrr ${e}");
+
       // TODO
     }
   }

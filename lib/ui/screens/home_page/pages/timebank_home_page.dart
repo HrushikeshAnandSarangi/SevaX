@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
@@ -68,16 +69,22 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   }
 
   void navigateToCreateGroup() {
-    createEditCommunityBloc
-        .updateUserDetails(SevaCore.of(context).loggedInUser);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+    if (widget.primaryTimebankModel.id == FlavorConfig.values.timebankId &&
+        !widget.primaryTimebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      showAdminAccessMessage(context: context);
+    } else {
+      createEditCommunityBloc
+          .updateUserDetails(SevaCore.of(context).loggedInUser);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TimebankCreate(
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   // void navigateToCreateProjectGroup() {

@@ -32,7 +32,6 @@ class CommunityFindBloc {
     communityListModel =
         await _repository.searchCommunityByName(name, communityListModel);
     communityListModel.loading = false;
-    print(communityListModel.communities.length);
     _communitiesFetcher.sink.add(communityListModel);
   }
 
@@ -40,11 +39,9 @@ class CommunityFindBloc {
     TimebankListModel timebankListModel = TimebankListModel();
     timebankListModel.loading = true;
     _timebanksFetcher.sink.add(timebankListModel);
-    print('called1');
     timebankListModel = await _repository.searchTimebankSiblingsByParentId(
         id, timebankListModel);
     timebankListModel.loading = false;
-    print(timebankListModel.timebanks.length);
     timebankListModel.timebanks.insert(0, timebank);
     _timebanksFetcher.sink.add(timebankListModel);
   }
@@ -84,7 +81,6 @@ class VolunteerFindBloc {
     _usersFetcher.sink.add(userListModel);
     userListModel = await _repository.searchUserByName(name, userListModel);
     userListModel.loading = false;
-    print(userListModel.users.length);
     _usersFetcher.sink.add(userListModel);
   }
 
@@ -109,7 +105,6 @@ class CommunityCreateEditController {
   CommunityModel selectedCommunity;
 
   CommunityCreateEditController() {
-    print(timebank);
     timebank.preventAccedentalDelete = true;
   }
 
@@ -196,13 +191,9 @@ class TransactionBloc {
   handleApprovedTransaction(
       isApproved, from, to, timebankid, type, credits) async {
     if (isApproved) {
-      print(type);
-      print('came here approved');
       // update user to user transaction balances
       // TODO burhan suggest to do this in cloud function; current is a background task.
       if (type == RequestMode.PERSONAL_REQUEST) {
-        print(
-            "handle final approval transaction to user and tiembnak personal request");
         // debit from user
         Query query = Firestore.instance
             .collection('users')
@@ -228,8 +219,6 @@ class TransactionBloc {
         document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
             : null;
-        print(
-            "handle final approval transaction to user and tiembnak user request");
         if (document != null)
           Firestore.instance
               .collection('users')
@@ -239,7 +228,6 @@ class TransactionBloc {
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
-        print("handle final approval transaction to user and tiembnak request");
         // debit from timebank
         Query query = Firestore.instance
             .collection('timebanknew')
@@ -249,8 +237,6 @@ class TransactionBloc {
             snapshot.documents?.length > 0 && snapshot.documents != null
                 ? snapshot.documents.first
                 : null;
-        print(timebankid);
-        print(snapshot.documents);
         if (document != null)
           Firestore.instance
               .collection('timebanknew')
@@ -260,8 +246,6 @@ class TransactionBloc {
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
         // credit to user
-        print(
-            "handle final approval transaction to user and tiembnak request comere here ");
         query = Firestore.instance
             .collection('users')
             .where('sevauserid', isEqualTo: to);
@@ -287,8 +271,6 @@ class TransactionBloc {
             snapshot.documents?.length > 0 && snapshot.documents != null
                 ? snapshot.documents.first
                 : null;
-        print(timebankid);
-        print(snapshot.documents);
         if (document != null)
           Firestore.instance
               .collection('timebanknew')
@@ -298,7 +280,6 @@ class TransactionBloc {
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       } else if (type == "USER_DONATE_TOTIMEBANK") {
-        print("came here");
         // debit from timebank
         Query query = Firestore.instance
             .collection('timebanknew')
@@ -308,8 +289,6 @@ class TransactionBloc {
             snapshot.documents?.length > 0 && snapshot.documents != null
                 ? snapshot.documents.first
                 : null;
-        print(timebankid);
-        print(snapshot.documents);
         if (document != null)
           Firestore.instance
               .collection('timebanknew')
@@ -336,7 +315,6 @@ class TransactionBloc {
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       } else if (type == "ADMIN_DONATE_TOUSER") {
-        print("came here");
         // debit from timebank
         Query query = Firestore.instance
             .collection('timebanknew')
@@ -346,8 +324,6 @@ class TransactionBloc {
             snapshot.documents?.length > 0 && snapshot.documents != null
                 ? snapshot.documents.first
                 : null;
-        print(timebankid);
-        print(snapshot.documents);
         if (document != null)
           Firestore.instance
               .collection('timebanknew')
@@ -421,7 +397,6 @@ class TransactionBloc {
             .document(document.documentID)
             .setData(transactionModel.toMap(), merge: true);
         if (!prevtransactionModel.isApproved && isApproved) {
-          print("handle final approval transaction to user and tiembnak");
           await handleApprovedTransaction(isApproved, from, to, timebankid,
               type, num.parse(credits.toStringAsFixed(2)));
         }
@@ -440,7 +415,6 @@ class TransactionBloc {
       if (document != null)
         prevtransactionModel = TransactionModel.fromMap(document.data);
       if (!prevtransactionModel.isApproved && isApproved) {
-        print("handle final approval transaction to user and tiembnak sdf");
         await handleApprovedTransaction(isApproved, from, to, timebankid, type,
             num.parse(credits.toStringAsFixed(2)));
       }
@@ -514,7 +488,6 @@ class TimeBankBloc {
   updateInvitedUsersForRequest(requestID, sevauserid) async {
     var result =
         await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
-    print('request invite -----> ${result.toString()}');
   }
 
   setIsAdmin(isAdminStatus) {

@@ -463,11 +463,17 @@ class DiscussionListState extends State<DiscussionList> {
         ),
         InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NewsCreate(
-                      timebankId: widget.timebankId,
-                      timebankModel: widget.timebankModel,
-                    )));
+            if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
+                !widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              showAdminAccessMessage(context: context);
+            } else {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => NewsCreate(
+                        timebankId: widget.timebankId,
+                        timebankModel: widget.timebankModel,
+                      )));
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),

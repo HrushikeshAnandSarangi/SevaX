@@ -416,7 +416,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   Future scrapeURLDetails(String subHeadings) async {
     // newsObject = await fetchPosts(
     //     url: newsObject.urlsFromPost[0],
-    //     newsObject: newsObject); // print("Final Project $newsObject");
+    //     newsObject: newsObject); //
     FeedsWebScraper webScraper = FeedsWebScraper(url: subHeadings);
 
     try {
@@ -431,7 +431,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       }
       return;
     } on Exception catch (e) {
-      print(e);
       return;
     }
   }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -52,15 +50,12 @@ Future<void> main() async {
   await fetchRemoteConfig();
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
-      print('onMessage: $message');
       return null;
     },
     onLaunch: (Map<String, dynamic> message) {
-      print('onLaunch: $message');
       return null;
     },
     onResume: (Map<String, dynamic> message) {
-      print('onResume: $message');
       return null;
     },
   );

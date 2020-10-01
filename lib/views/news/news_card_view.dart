@@ -146,7 +146,6 @@ class NewsCardViewState extends State<NewsCardView> {
                         }
                         if (snapshot.hasData) {
                           List<Comments> commentsList = snapshot.data.comments;
-                          print("Printing CommentsList ${commentsList.length}");
                           return ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: commentsList.length,
@@ -239,13 +238,11 @@ class NewsCardViewState extends State<NewsCardView> {
                       if (_textEditingController.text != "") {
                         if (profanityDetector
                             .isProfaneString(_textEditingController.text)) {
-                          print('profane');
                           setState(() {
                             isProfane = true;
                             errorText = S.of(context).profanity_text_alert;
                           });
                         } else {
-                          print('not profane');
 
                           setState(() {
                             isProfane = false;
@@ -1113,8 +1110,6 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                 if (snapshot.hasData) {
                                   List<Comments> commentsList =
                                       snapshot.data.comments;
-                                  print(
-                                      "Printing CommentsList ${commentsList.length}");
                                   return ListView.builder(
                                     itemCount: commentsList.length,
                                     itemBuilder: (context, index) {
@@ -1572,9 +1567,6 @@ class _LikeCommentState extends State<LikeComment> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.newsModel.likes);
-    print(widget.userId);
-    print(widget.newsModel.likes.contains(widget.userId));
     return Row(children: <Widget>[
       Padding(
         padding: const EdgeInsets.only(top: 10.0, left: 10),
@@ -1643,7 +1635,7 @@ class _LikeCommentState extends State<LikeComment> {
                             widget.newsModel,
                             isFocused: true,
                           )))
-              : print("");
+              : null;
         },
         child: Padding(
             padding: EdgeInsets.only(left: 3, top: 10),
@@ -1697,8 +1689,6 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
   _deleteReplyComment(int comment) {
     setState(() {
       widget.feed.comments[widget.index].comments.removeAt(comment);
-      print("length");
-      print(widget.feed.comments[widget.index].comments.length);
       NewsService().updateFeedById(newsModel: widget.feed);
     });
   }
@@ -1706,7 +1696,6 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
   _deleteComment(int index) {
     setState(() {
       widget.feed.comments.removeAt(index);
-      print("length");
 //      print(widget.feed.comments[widget.index].comments.length);
       NewsService().updateFeedById(newsModel: widget.feed);
     });
@@ -1762,8 +1751,6 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                               ),
                               onPressed: () {
                                 setState(() {
-                                  print(
-                                      "isreply value is === ${widget.isReply}");
                                   if (widget.isReply) {
                                     _deleteReplyComment(widget.comments);
                                   } else {
@@ -1832,7 +1819,6 @@ class _RepliesViewState extends State<RepliesView> {
   @override
   void initState() {
     super.initState();
-    print("feed id");
     isShowSticker = false;
     isKeyboardVisible = false;
 
@@ -1903,8 +1889,6 @@ class _RepliesViewState extends State<RepliesView> {
                               itemBuilder: (context, index) {
                                 return InkWell(
                                   onLongPress: () async {
-                                    print(
-                                        "user id === ${commentsList[index].createdEmail} ${await PreferenceManager.loggedInUserId}");
                                     if (commentsList[index].createdEmail ==
                                         await PreferenceManager
                                             .loggedInUserId) {
@@ -1989,13 +1973,11 @@ class _RepliesViewState extends State<RepliesView> {
                         if (_textEditingController.text != "") {
                           if (profanityDetector
                               .isProfaneString(_textEditingController.text)) {
-                            print('profane');
                             setState(() {
                               isProfane = true;
                               errorText = S.of(context).profanity_text_alert;
                             });
                           } else {
-                            print('not profane');
 
                             setState(() {
                               isProfane = false;

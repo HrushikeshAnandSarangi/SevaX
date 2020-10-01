@@ -76,9 +76,10 @@ class _NewChatPageState extends State<NewChatPage> {
                 _bloc.isSelectionEnabled
                     ? SelectedMemberListBuilder()
                     : TransactionsMatrixCheck(
-                        upgradeDetails: AppConfig.upgradePlanBannerModel.multi_member_messaging,
+                        upgradeDetails: AppConfig
+                            .upgradePlanBannerModel.multi_member_messaging,
                         transaction_matrix_type: "multi_member_messaging",
-                      child: Padding(
+                        child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: GestureDetector(
                             onTap: () {
@@ -91,7 +92,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                   ),
                                 ),
                               )
-                              .then((ChatModel model) {
+                                  .then((ChatModel model) {
                                 if (model != null) {
                                   Navigator.of(context).pop(model);
                                   Navigator.of(context).push(
@@ -134,7 +135,7 @@ class _NewChatPageState extends State<NewChatPage> {
                             ),
                           ),
                         ),
-                    ),
+                      ),
                 Container(
                   height: 30,
                   width: MediaQuery.of(context).size.width,
@@ -149,7 +150,11 @@ class _NewChatPageState extends State<NewChatPage> {
                     ),
                   ),
                 ),
-                (widget.frequentContacts ?? []).where((element) => !element.isGroupMessage).length > 0 || !_bloc.isSelectionEnabled
+                (widget.frequentContacts ?? [])
+                                .where((element) => !element.isGroupMessage)
+                                .length >
+                            0 ||
+                        !_bloc.isSelectionEnabled
                     ? FrequentContactsBuilder(
                         widget.frequentContacts,
                         _bloc.isSelectionEnabled,

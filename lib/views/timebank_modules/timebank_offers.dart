@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
 import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
@@ -94,15 +92,22 @@ class OffersState extends State<OffersModule> {
                         //     builder: (context) => AddToCalendar(),
                         //   ),
                         // );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => prefix0.CreateOffer(
-                              timebankId: timebankId,
-                              // communityId: widget.communityId,
+                        if (widget.timebankModel.id ==
+                                FlavorConfig.values.timebankId &&
+                            !widget.timebankModel.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                          showAdminAccessMessage(context: context);
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => prefix0.CreateOffer(
+                                timebankId: timebankId,
+                                // communityId: widget.communityId,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                           margin: EdgeInsets.only(left: 0),

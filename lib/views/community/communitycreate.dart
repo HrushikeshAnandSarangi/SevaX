@@ -175,8 +175,6 @@ class CreateEditCommunityViewFormState
         if (communitynName != s) {
           SearchManager.searchCommunityForDuplicate(queryString: s)
               .then((commFound) {
-            print(
-                "querystring is  ${s} and communitynName is ${communitynName}");
             if (commFound) {
               setState(() {
                 communityFound = true;
@@ -215,7 +213,6 @@ class CreateEditCommunityViewFormState
       }
     }
     Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
       location = GeoFirePoint(onValue.latitude, onValue.longitude);
       LocationUtility()
           .getFormattedAddress(
@@ -241,7 +238,6 @@ class CreateEditCommunityViewFormState
         taxPercentage = onValue.taxPercentage * 100;
         searchTextController.text = communityModel.name;
         descriptionTextController.text = communityModel.about;
-        print("about ${communityModel.about}");
       });
     });
 
@@ -275,7 +271,6 @@ class CreateEditCommunityViewFormState
   }
 
   void moveToTop() {
-    print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(
       -100,
@@ -298,7 +293,6 @@ class CreateEditCommunityViewFormState
                 createEditCommunityBloc.onChange(snapshot.data);
               }
             }
-            // print("  snapshots data   ${snapshot.data.timebanks}");
 
             return Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
@@ -370,7 +364,6 @@ class CreateEditCommunityViewFormState
                             enteredName =
                                 value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                            // print("name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
                             communityModel.name =
                                 value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
@@ -476,7 +469,6 @@ class CreateEditCommunityViewFormState
                                   ),
                                   onPressed: () {
                                     addVolunteers();
-                                    print("clicked");
                                   },
                                 ),
                               ),
@@ -517,7 +509,6 @@ class CreateEditCommunityViewFormState
                                             ? snapshot.data.timebank.private
                                             : timebankModel.private,
                                         onChanged: (bool value) {
-                                          print(value);
                                           if (timebankModel.private != null &&
                                               timebankModel.private == true) {
                                             timebankModel.private = false;
@@ -584,7 +575,6 @@ class CreateEditCommunityViewFormState
                                       ? snapshot.data.timebank.protected
                                       : timebankModel.protected,
                                   onChanged: (bool value) {
-                                    print(value);
                                     timebankModel.protected = value;
                                     snapshot.data.timebank
                                         .updateValueByKey('protected', value);
@@ -661,7 +651,6 @@ class CreateEditCommunityViewFormState
                                     taxPercentage = value;
                                     communityModel.taxPercentage = value / 100;
                                   });
-                                  print(snapshot.data.community);
                                 },
                               ),
                         Offstage(
@@ -691,7 +680,6 @@ class CreateEditCommunityViewFormState
                           child: ParentTimebankPickerWidget(
                             selectedTimebank: this.selectedTimebank,
                             onChanged: (CommunityModel selectedTimebank) {
-                              print("received data model ");
                               setState(() {
                                 this.selectedTimebank = selectedTimebank.name;
                               });
@@ -819,7 +807,6 @@ class CreateEditCommunityViewFormState
                                       setState(() {
                                         this._billingDetailsError = '';
                                       });
-                                      print(globals.timebankAvatarURL);
                                       if (globals.timebankAvatarURL == null) {
                                         setState(() {
                                           this.communityImageError =
@@ -945,14 +932,12 @@ class CreateEditCommunityViewFormState
 
                                   if (selectedUsers != null) {
                                     selectedUsers.forEach((key, user) {
-                                      print("Selected member with key $key");
                                       if (timebankModel.members
                                           .contains(user.sevaUserID)) {
                                         selectedUsers.remove(user);
                                       }
                                     });
                                     selectedUsers.forEach((key, user) {
-                                      print("Selected member with key $key");
                                       members.add(user.sevaUserID);
                                     });
                                   }
@@ -973,17 +958,13 @@ class CreateEditCommunityViewFormState
                                   await FirestoreManager.updateTimebankDetails(
                                           timebankModel: timebankModel,
                                           members: members)
-                                      .then((onValue) {
-                                    print("timebank updated");
-                                  });
+                                      .then((onValue) {});
                                   communityModel.taxPercentage =
                                       taxPercentage / 100;
 //                            //updating community with latest values
                                   await FirestoreManager.updateCommunityDetails(
                                           communityModel: communityModel)
-                                      .then((onValue) {
-                                    print("community updated");
-                                  });
+                                      .then((onValue) {});
 
                                   globals.timebankAvatarURL = null;
                                   globals.webImageUrl = null;
@@ -1050,7 +1031,6 @@ class CreateEditCommunityViewFormState
         return;
       }
       setState(() {
-        print('Is email verified:${firebaseUser.isEmailVerified}');
         this.firebaseUser = firebaseUser;
       });
     });
@@ -1234,12 +1214,10 @@ class CreateEditCommunityViewFormState
   }
 
   Future _setLocation(data, LocationDataModel dataModel) async {
-    print('Timebank value:$data');
     setState(() {
       this.selectedAddress = dataModel.location;
     });
 //    timebank.updateValueByKey('locationAddress', address);
-    print('_getLocation: ${dataModel.location}');
     timebankModel.address = dataModel.location;
     communityModel.location = location;
     data.timebank.updateValueByKey('address', dataModel.location);
@@ -1248,7 +1226,6 @@ class CreateEditCommunityViewFormState
   }
 
 //   Future _getLocation(data) async {
-//     print('Timebank value:$data');
 //     String address = await LocationUtility().getFormattedAddress(
 //       location.latitude,
 //       location.longitude,
@@ -1257,7 +1234,6 @@ class CreateEditCommunityViewFormState
 //       this.selectedAddress = address;
 //     });
 // //    timebank.updateValueByKey('locationAddress', address);
-//     print('_getLocation: $address');
 //     timebankModel.address = address;
 //     communityModel.location = location;
 //     data.timebank.updateValueByKey('address', address);
@@ -1267,7 +1243,6 @@ class CreateEditCommunityViewFormState
 
   void fetchCurrentlocation() {
     Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
       location = GeoFirePoint(onValue.latitude, onValue.longitude);
       LocationUtility()
           .getFormattedAddress(
@@ -1432,7 +1407,6 @@ class CreateEditCommunityViewFormState
                 autoValidateText = false;
               });
             }
-            // print(controller.community.billing_address);
             controller.community.billing_address
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
@@ -1464,7 +1438,6 @@ class CreateEditCommunityViewFormState
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
-            print(value);
             controller.community.billing_address
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
@@ -1722,7 +1695,6 @@ class CreateEditCommunityViewFormState
               } else {
                 _billingInformationKey.currentState.save();
                 isBillingDetailsProvided = true;
-                print("All Good");
                 Navigator.pop(context);
               }
             }
@@ -1806,9 +1778,7 @@ class CreateEditCommunityViewFormState
         else
           memberAssignment = "${selectedUsers.length} volunteers selected";
       });
-      print("Data is present Selected users ${selectedUsers.length}");
     } else {
-      print("No users where selected");
       //no users where selected
     }
   }

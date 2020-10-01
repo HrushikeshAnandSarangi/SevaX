@@ -54,7 +54,6 @@ class BillingViewState extends State<BillingView> {
   BuildContext dialogContext;
   @override
   void initState() {
-    print(widget.planId);
     userCardDetails = getUserCard(widget.user.currentCommunity);
     StripePayment.setOptions(
       StripeOptions(
@@ -68,18 +67,16 @@ class BillingViewState extends State<BillingView> {
 
   void setError(Error error) {
     //Handle failed transactions and errors in this method
-    print('Error---------- ${error.toString()}');
   }
 
   Future<void> connectToStripe(String paymentMethodId) async {
-    print(paymentMethodId);
     PaymentMethod paymentMethod = PaymentMethod();
     if (paymentMethodId == null) {
       paymentMethod = await StripePayment.paymentRequestWithCardForm(
         CardFormPaymentRequest(),
       ).then((PaymentMethod paymentMethod) {
         return paymentMethod;
-      }).catchError((setError) => {print("Error in payment" + setError)});
+      });
       var paymentbloc = PaymentsBloc();
       paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
@@ -300,7 +297,7 @@ class BillingViewState extends State<BillingView> {
                           physics: ClampingScrollPhysics(),
                           itemCount: snapshot.data.data.length,
                           itemBuilder: (BuildContext context, int index) {
-                            //  print(" user cards data ${snapshot.data.data[index]}");
+                            //
 
                             bool isDefault = false;
                             if (snapshot.data.data[index].isDefault != null &&

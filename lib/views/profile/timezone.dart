@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -1488,8 +1486,6 @@ class TimezoneListData {
       x.add(element.timezoneName);
       y.add(element.timezoneAbb);
     });
-    log(x.toString());
-    log(y.toString());
   }
 
   List<TimeZoneModel> searchTimebank(

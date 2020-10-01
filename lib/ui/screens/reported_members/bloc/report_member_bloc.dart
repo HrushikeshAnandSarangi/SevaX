@@ -98,7 +98,6 @@ class ReportMemberBloc {
     } catch (e) {
       _buttonStatus.add(true);
       Crashlytics.instance.log(e);
-      throw (e);
     }
   }
 

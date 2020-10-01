@@ -906,8 +906,6 @@ class _DonationViewState extends State<DonationView> {
                   await launch(link);
                 } else {
                   showScaffold('Could not launch');
-
-                  throw 'Could not launch';
                 }
               },
               child: Text(

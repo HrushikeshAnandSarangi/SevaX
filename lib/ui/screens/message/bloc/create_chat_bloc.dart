@@ -53,7 +53,7 @@ class CreateChatBloc extends BlocBase {
   Future<void> getMembers(String userId, String communityId) async {
     List<ParticipantInfo> users =
         await UserRepository.getShortDetailsOfAllMembersOfCommunity(
-            communityId);
+            communityId, userId);
     users.removeWhere((ParticipantInfo info) => info.id == userId);
     users.forEach((ParticipantInfo info) {
       allMembers[info.id] = info;
