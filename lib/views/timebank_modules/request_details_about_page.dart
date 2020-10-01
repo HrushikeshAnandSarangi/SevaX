@@ -81,7 +81,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   TextStyle subTitleStyle = TextStyle(
     fontSize: 14,
-    color: Colors.grey,
   );
 
   bool isAdmin = false;

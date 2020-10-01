@@ -205,13 +205,20 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           loadAllRequest(newList);
         }
       }
-      await loadAdmins();
-      if ((FlavorConfig.appFlavor == Flavor.APP ||
-          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-        await loadCoordinators();
+      if (widget.timebankId == FlavorConfig.values.timebankId &&
+          !widget.isUserAdmin) {
+        await loadAdmins();
+        setState(() {});
+      } else {
+        await loadAdmins();
+
+        if ((FlavorConfig.appFlavor == Flavor.APP ||
+            FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+          await loadCoordinators();
+        }
+        await loadNextMembers();
+        setState(() {});
       }
-      await loadNextMembers();
-      setState(() {});
     }
   }
 
@@ -481,14 +488,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
-    _avtars.addAll(_adminsWidgets);
-    if ((FlavorConfig.appFlavor == Flavor.APP ||
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-      _avtars.addAll(_coordinatorsWidgets);
+    if (widget.timebankId == FlavorConfig.values.timebankId &&
+        !widget.isUserAdmin) {
+      _avtars.addAll(_adminsWidgets);
+      return _avtars;
+    } else {
+      _avtars.addAll(_adminsWidgets);
+
+      if ((FlavorConfig.appFlavor == Flavor.APP ||
+          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+        _avtars.addAll(_coordinatorsWidgets);
+      }
+      _avtars.addAll(_requestsWidgets);
+      _avtars.addAll(_membersWidgets);
+      return _avtars;
     }
-    _avtars.addAll(_requestsWidgets);
-    _avtars.addAll(_membersWidgets);
-    return _avtars;
   }
 
   Widget get emptyCard {
@@ -511,7 +525,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       scrollDirection: Axis.vertical,
       controller: _listController,
       shrinkWrap: true,
-      itemCount: fetchItemsCount(),
+      itemCount: _avtars.length,
       itemBuilder: (BuildContext ctxt, int index) => Padding(
         padding: const EdgeInsets.all(0.0),
         child: index < _avtars.length

@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 class UserRepository {
   static CollectionReference ref = Firestore.instance.collection("users");
+  static CollectionReference timebankRef =
+      Firestore.instance.collection("timebanknew");
 
   //Fetch user details
   static Future<UserModel> fetchUserById(String userId) async {
@@ -32,8 +37,8 @@ class UserRepository {
     String blockedUserEmail,
   }) async {
     String userToBeBlockedEmail;
-    userToBeBlockedEmail =
-        blockedUserEmail ?? await UserRepository.fetchUserEmailById(blockedUserId);
+    userToBeBlockedEmail = blockedUserEmail ??
+        await UserRepository.fetchUserEmailById(blockedUserId);
     WriteBatch batch = Firestore.instance.batch();
     batch.setData(
       ref.document(userToBeBlockedEmail),
@@ -60,8 +65,8 @@ class UserRepository {
     String unblockedUserEmail,
   }) async {
     String userToBeBlockedEmail;
-    userToBeBlockedEmail =
-        unblockedUserEmail ?? await UserRepository.fetchUserEmailById(unblockedUserId);
+    userToBeBlockedEmail = unblockedUserEmail ??
+        await UserRepository.fetchUserEmailById(unblockedUserId);
     WriteBatch batch = Firestore.instance.batch();
     batch.setData(
       ref.document(userToBeBlockedEmail),
@@ -82,20 +87,55 @@ class UserRepository {
   }
 
   static Future<List<ParticipantInfo>> getShortDetailsOfAllMembersOfCommunity(
-      String communityId) async {
+      String communityId, String userId) async {
     List<ParticipantInfo> members = [];
+    bool isAdmin = false;
+    TimebankModel timebankModel;
+    if (communityId == FlavorConfig.values.timebankId) {
+      timebankModel = await getTimeBankForId(timebankId: communityId);
+      isAdmin = timebankModel.admins.contains(userId);
+    }
+
+//      timebankModel.admins.forEach((sevauserid) async {
+//        QuerySnapshot querySnapshot = await ref
+//            .where("sevauserid", isEqualTo: sevauserid)
+//            .orderBy("fullname")
+//            .getDocuments();
+//
+//        querySnapshot.documents.forEach((DocumentSnapshot document) {
+//          members.add(ParticipantInfo(
+//            id: document.data["sevauserid"],
+//            name: document.data["fullname"],
+//            photoUrl: document.data["photourl"],
+//          ));
+//        });
+//      });
+//
+//      return members;
+//
+//    } else {
     QuerySnapshot querySnapshot = await ref
         .where("communities", arrayContains: communityId)
         .orderBy("fullname")
         .getDocuments();
 
     querySnapshot.documents.forEach((DocumentSnapshot document) {
-      members.add(ParticipantInfo(
-        id: document.data["sevauserid"],
-        name: document.data["fullname"],
-        photoUrl: document.data["photourl"],
-      ));
+      if (timebankModel != null && !isAdmin) {
+        if (timebankModel.admins.contains(document.data["sevauserid"]))
+          members.add(ParticipantInfo(
+            id: document.data["sevauserid"],
+            name: document.data["fullname"],
+            photoUrl: document.data["photourl"],
+          ));
+      } else {
+        members.add(ParticipantInfo(
+          id: document.data["sevauserid"],
+          name: document.data["fullname"],
+          photoUrl: document.data["photourl"],
+        ));
+      }
     });
+
     return members;
   }
 

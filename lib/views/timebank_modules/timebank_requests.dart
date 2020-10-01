@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
@@ -134,15 +135,24 @@ class RequestsState extends State<RequestsModule> {
                                   }
                                   _showProtectedTimebankMessage();
                                 } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateRequest(
-                                        timebankId: timebankId,
-                                        projectId: '',
+                                  if (widget.timebankModel.id ==
+                                          FlavorConfig.values.timebankId &&
+                                      !widget.timebankModel.admins.contains(
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID)) {
+                                    showAdminAccessMessage(context: context);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateRequest(
+                                          timebankId: timebankId,
+                                          projectId: '',
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 }
                               },
                             ),
