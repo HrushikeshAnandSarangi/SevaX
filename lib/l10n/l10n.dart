@@ -397,17 +397,17 @@ class S {
       );
 
   String get find_your_timebank => Intl.message(
-        'Find your Timebank',
+        'Find your Seva Community',
         name: 'find_your_timebank',
       );
 
   String get looking_existing_timebank => Intl.message(
-        'Looking for an existing Timebank to join',
+        'Looking for an existing Seva Community to join',
         name: 'looking_existing_timebank',
       );
 
   String get find_timebank_help_text => Intl.message(
-        'Type your Timebank name. Ex: Alaska (min 1 char)',
+        'Type your Seva Community name. Ex: Alaska (min 1 char)',
         name: 'find_timebank_help_text',
       );
 
@@ -427,7 +427,7 @@ class S {
       );
 
   String get create_timebank => Intl.message(
-        'Create a Timebank',
+        'Create a Seva Community',
         name: 'create_timebank',
       );
 
@@ -437,7 +437,7 @@ class S {
       );
 
   String get create_timebank_confirmation => Intl.message(
-        'Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.',
+        'Are you sure you want to create a new Seva Community - as opposed to joining an existing Seva Community? Creating a new Seva Community implies that you will be responsible for administering the Seva Community - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Seva Community, you will need to know the name of the Seva Community and either have an invitation code or submit a request to join the Seva Community.',
         name: 'create_timebank_confirmation',
       );
 
@@ -482,7 +482,7 @@ class S {
       );
 
   String get join_timbank_already_requested => Intl.message(
-        'You already requested to this Timebank. Please wait untill request is accepted',
+        'You already requested to this Seva Community. Please wait untill request is accepted',
         name: 'join_timbank_already_requested',
       );
 
@@ -542,12 +542,12 @@ class S {
       );
 
   String get validation_error_timebank_join_code_redeemed => Intl.message(
-        'Timebank code already redeemed',
+        'Seva Community code already redeemed',
         name: 'validation_error_timebank_join_code_redeemed',
       );
 
   String get validation_error_timebank_join_code_redeemed_self => Intl.message(
-        'The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code.',
+        'The Seva Community code that you have provided has already been redeemed earlier by you. Please request the Seva Community admin for a new code.',
         name: 'validation_error_timebank_join_code_redeemed_self',
       );
 
@@ -627,12 +627,12 @@ class S {
       );
 
   String get protected_timebank => Intl.message(
-        'Protected Timebank',
+        'Protected Seva Community',
         name: 'protected_timebank',
       );
 
   String get protected_timebank_group_creation_error => Intl.message(
-        'You cannot create groups in a protected Timebank',
+        'You cannot create groups in a protected Seva Community',
         name: 'protected_timebank_group_creation_error',
       );
 
@@ -832,7 +832,7 @@ class S {
       );
 
   String get notification_timebank_join => Intl.message(
-        'Timebank Join',
+        'Seva Community Join',
         name: 'notification_timebank_join',
       );
 
@@ -1087,7 +1087,7 @@ class S {
       );
 
   String get protected_timebank_request_creation_error => Intl.message(
-        'You cannot post requests in a protected Timebank',
+        'You cannot post requests in a protected Seva Community',
         name: 'protected_timebank_request_creation_error',
       );
 
@@ -1412,7 +1412,7 @@ class S {
       );
 
   String get protected_timebank_alert_dialog => Intl.message(
-        'You cannot accept requests in a protected Timebank',
+        'You cannot accept requests in a protected Seva Community',
         name: 'protected_timebank_alert_dialog',
       );
 
@@ -1572,7 +1572,7 @@ class S {
       );
 
   String get timebank_max_seva_credit_message1 => Intl.message(
-        ' Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of ',
+        ' Seva Credits will be credited to the Seva Community for this request. Note that each participant will receive a maximum of ',
         name: 'timebank_max_seva_credit_message1',
       );
 
@@ -1862,7 +1862,7 @@ class S {
       );
 
   String get change_ownership_invite => Intl.message(
-        'has invited you to be the new owner of the Timebank',
+        'has invited you to be the new owner of the Seva Community',
         name: 'change_ownership_invite',
       );
 
@@ -1907,7 +1907,7 @@ class S {
       );
 
   String get updating_timebank => Intl.message(
-        'Updating Timebank..',
+        'Updating Seva Community..',
         name: 'updating_timebank',
       );
 
@@ -2137,7 +2137,7 @@ class S {
       );
 
   String get timebank_earnings => Intl.message(
-        'Timebank earnings',
+        'Seva Community earnings',
         name: 'timebank_earnings',
       );
 
@@ -2237,12 +2237,12 @@ class S {
       );
 
   String get user_removed_from_timebank => Intl.message(
-        'User is successfully removed from the timebank',
+        'User is successfully removed from the seva community',
         name: 'user_removed_from_timebank',
       );
 
   String get user_removed_from_timebank_failed => Intl.message(
-        'User cannot be deleted from this Timebank',
+        'User cannot be deleted from this Seva Community',
         name: 'user_removed_from_timebank_failed',
       );
 
@@ -2257,7 +2257,7 @@ class S {
       );
 
   String get reported_member_click_to_view => Intl.message(
-        'Click here to view reported users of this Timebank',
+        'Click here to view reported users of this Seva Community',
         name: 'reported_member_click_to_view',
       );
 
@@ -2322,17 +2322,17 @@ class S {
       );
 
   String get create_timebank_description => Intl.message(
-        'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
+        'A Seva Community is a community of volunteers that give and receive time to each other and to the larger community',
         name: 'create_timebank_description',
       );
 
   String get timebank_logo => Intl.message(
-        'Timebank Logo',
+        'Seva Community Logo',
         name: 'timebank_logo',
       );
 
   String get timebank_name => Intl.message(
-        'Name your Timebank',
+        'Name your Seva Community',
         name: 'timebank_name',
       );
 
@@ -2342,22 +2342,22 @@ class S {
       );
 
   String get timebank_name_error => Intl.message(
-        'Timebank name cannot be empty',
+        'Seva Community name cannot be empty',
         name: 'timebank_name_error',
       );
 
   String get timebank_name_exists_error => Intl.message(
-        'Please choose another name for the Timebank. This Timebank name already exists',
+        'Please choose another name for the Seva Community. This Seva Community name already exists',
         name: 'timebank_name_exists_error',
       );
 
   String get timbank_about_hint => Intl.message(
-        'Ex: A bit more about your Timebank',
+        'Ex: A bit more about your Seva Community',
         name: 'timbank_about_hint',
       );
 
   String get timebank_tell_more => Intl.message(
-        'Tell us more about your Timebank.',
+        'Tell us more about your Seva Community.',
         name: 'timebank_tell_more',
       );
 
@@ -2372,7 +2372,7 @@ class S {
       );
 
   String get timebank_location => Intl.message(
-        'Your Timebank location.',
+        'Your Seva Community location.',
         name: 'timebank_location',
       );
 
@@ -2382,22 +2382,22 @@ class S {
       );
 
   String get timebank_name_exists => Intl.message(
-        'Timebank name already exists !',
+        'Seva Community name already exists !',
         name: 'timebank_name_exists',
       );
 
   String get timebank_location_error => Intl.message(
-        'Please add the location of your Timebank',
+        'Please add the location of your Seva Community',
         name: 'timebank_location_error',
       );
 
   String get timebank_logo_error => Intl.message(
-        'Timebank logo is mandatory',
+        'Seva Community logo is mandatory',
         name: 'timebank_logo_error',
       );
 
   String get creating_timebank => Intl.message(
-        'Creating Timebank',
+        'Creating Seva Community',
         name: 'creating_timebank',
       );
 
@@ -2462,7 +2462,7 @@ class S {
       );
 
   String get private_timebank => Intl.message(
-        'Private Timebank',
+        'Private Seva Community',
         name: 'private_timebank',
       );
 
@@ -2482,7 +2482,7 @@ class S {
       );
 
   String get private_timebank_alert => Intl.message(
-        'Private Timebank alert',
+        'Private Seva Community alert',
         name: 'private_timebank_alert',
       );
 
@@ -2507,7 +2507,7 @@ class S {
       );
 
   String get timebank_offers => Intl.message(
-        'Timebank Offers',
+        'Seva Community Offers',
         name: 'timebank_offers',
       );
 
@@ -2782,7 +2782,7 @@ class S {
       );
 
   String get select_timebank => Intl.message(
-        'Select a Timebank',
+        'Select a Seva Community',
         name: 'select_timebank',
       );
 
@@ -2982,7 +2982,7 @@ class S {
       );
 
   String get taking_to_new_timebank => Intl.message(
-        'Taking you to your new Timebank...',
+        'Taking you to your new Seva Community...',
         name: 'taking_to_new_timebank',
       );
 
@@ -3022,7 +3022,7 @@ class S {
       );
 
   String get ownership_success => Intl.message(
-        'Congratulations! You are now the new owner of the Timebank ',
+        'Congratulations! You are now the new owner of the Seva Community ',
         name: 'ownership_success',
       );
 
@@ -3052,7 +3052,7 @@ class S {
       );
 
   String get invitation_sent1 => Intl.message(
-        'We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ',
+        'We have sent your transfer of ownership invitation. You will remain to be the owner of Seva Community ',
         name: 'invitation_sent1',
       );
 
@@ -3067,7 +3067,7 @@ class S {
       );
 
   String get by_accepting_owner_timebank => Intl.message(
-        'By accepting, you will become owner of the timebank',
+        'By accepting, you will become owner of the seva community',
         name: 'by_accepting_owner_timebank',
       );
 
@@ -3097,7 +3097,7 @@ class S {
       );
 
   String get change_ownership_message1 => Intl.message(
-        'You are the new owner of Timebank ',
+        'You are the new owner of Seva Community ',
         name: 'change_ownership_message1',
       );
 
@@ -3107,7 +3107,7 @@ class S {
       );
 
   String get change_ownership_advisory => Intl.message(
-        ' You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.',
+        ' You are required to provide billing details for this Seva Community - including the new billing address. The transfer of ownership will not be completed until this is done.',
         name: 'change_ownership_advisory',
       );
 
@@ -3122,7 +3122,7 @@ class S {
       );
 
   String get donate_to_timebank => Intl.message(
-        'Donate seva credits to Timebank',
+        'Donate seva credits to Seva Community',
         name: 'donate_to_timebank',
       );
 
@@ -3342,7 +3342,7 @@ class S {
       );
 
   String get timebank_code => Intl.message(
-        'Timebank code : ',
+        'Seva Community code : ',
         name: 'timebank_code',
       );
 
@@ -3367,7 +3367,7 @@ class S {
       );
 
   String get invite_prompt => Intl.message(
-        'when prompted to join this Timebank. Please download the app from the links provided at https://sevaexchange.page.link/sevaxapp',
+        'when prompted to join this Seva Community. Please download the app from the links provided at https://sevaexchange.page.link/sevaxapp',
         name: 'invite_prompt',
       );
 
@@ -3417,7 +3417,7 @@ class S {
       );
 
   String get group_description => Intl.message(
-        'Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group',
+        'Groups within a Seva Community allow for granular activities. You can join one of the groups below or create your own group',
         name: 'group_description',
       );
 
@@ -3457,12 +3457,12 @@ class S {
       );
 
   String get timebank_seva_credit => Intl.message(
-        'Your timebank seva credits is',
+        'Your Seva Community seva credits is',
         name: 'timebank_seva_credit',
       );
 
   String get timebank_loan_message => Intl.message(
-        'On click of Donate, Timebank balance will be adjusted.',
+        'On click of Donate, Seva Community balance will be adjusted.',
         name: 'timebank_loan_message',
       );
 
@@ -3512,12 +3512,12 @@ class S {
       );
 
   String get edit_timebank => Intl.message(
-        'Edit Timebank',
+        'Edit Seva Community',
         name: 'edit_timebank',
       );
 
   String get delete_timebank => Intl.message(
-        'Delete Timebank',
+        'Delete Seva Community',
         name: 'delete_timebank',
       );
 
@@ -3552,7 +3552,7 @@ class S {
       );
 
   String get user_removal_success => Intl.message(
-        'User is successfully removed from the timebank',
+        'User is successfully removed from the Seva Community',
         name: 'user_removal_success',
       );
 
@@ -3572,7 +3572,7 @@ class S {
       );
 
   String get group_subset => Intl.message(
-        'Group is a subset of a Timebank that may be temporary. Ex: committees, project teams.',
+        'Group is a subset of a Seva Community that may be temporary. Ex: committees, project teams.',
         name: 'group_subset',
       );
 
@@ -3582,7 +3582,7 @@ class S {
       );
 
   String get global_timebank => Intl.message(
-        'SevaX Global Network of Timebanks',
+        'SevaX Global Network of Communities',
         name: 'global_timebank',
       );
 
@@ -3652,7 +3652,7 @@ class S {
       );
 
   String get from_timebank_members => Intl.message(
-        'from Timebank members?',
+        'from Seva Community members?',
         name: 'from_timebank_members',
       );
 
@@ -3672,7 +3672,7 @@ class S {
       );
 
   String get switching_timebank => Intl.message(
-        'Switching Timebank',
+        'Switching Seva Community',
         name: 'switching_timebank',
       );
 
@@ -3697,7 +3697,7 @@ class S {
       );
 
   String get timebank_exit => Intl.message(
-        'Timebank Exit',
+        'Seva Community Exit',
         name: 'timebank_exit',
       );
 
@@ -3712,7 +3712,7 @@ class S {
       );
 
   String get invited_to_timebank_message => Intl.message(
-        'Awesome! You are invited to join a Timebank',
+        'Awesome! You are invited to join a Seva Community',
         name: 'invited_to_timebank_message',
       );
 
@@ -3767,7 +3767,7 @@ class S {
       );
 
   String get cv_message => Intl.message(
-        'A CV / Resume will help members in the Timebank know you better',
+        'A CV / Resume will help members in the Seva Community know you better',
         name: 'cv_message',
       );
 
@@ -3833,61 +3833,75 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',        
+        name: 'hour',
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
-        name: 'timebank_project',        
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
+          count
+        ])}',
+        name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',        
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+          count
+        ])}',
+        name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
-        name: 'personal_request',        
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
+          count
+        ])}',
+        name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [count])}',
-        name: 'timebank_request',        
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
+          count
+        ])}',
+        name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
-        name: 'members_selected',        
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
+          count
+        ])}',
+        name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
-        name: 'volunteers_selected',        
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
+          count
+        ])}',
+        name: 'volunteers_selected',
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',        
+        name: 'user',
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',        
+        name: 'other',
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
-        name: 'subscription',        
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
+          count
+        ])}',
+        name: 'subscription',
         args: [count],
       );
 
@@ -4007,7 +4021,7 @@ class S {
       );
 
   String get cant_exit_timebank => Intl.message(
-        'cannot exit from this timebank',
+        'cannot exit from this seva community',
         name: 'cant_exit_timebank',
       );
 
@@ -4023,13 +4037,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',        
+        name: 'day',
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',        
+        name: 'year',
         args: [count],
       );
 
@@ -4484,7 +4498,7 @@ class S {
       );
 
   String get nearby_settings_content => Intl.message(
-        'This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project',
+        'This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in a Project',
         name: 'nearby_settings_content',
       );
 
@@ -4664,17 +4678,17 @@ class S {
       );
 
   String get timebank_has_parent => Intl.message(
-        'Timebank has a parent',
+        'Seva Community has a parent',
         name: 'timebank_has_parent',
       );
 
   String get timebank_location_has_parent_hint_text => Intl.message(
-        'If your timebank is associated with a parent timebank, please select from the dropdown below',
+        'If your Seva community is associated with a parent Seva Community, please select from the dropdown below',
         name: 'timebank_location_has_parent_hint_text',
       );
 
   String get select_parent_timebank => Intl.message(
-        'Select Parent Timebank',
+        'Select Parent Seva Community',
         name: 'select_parent_timebank',
       );
 
@@ -4689,12 +4703,12 @@ class S {
       );
 
   String get find_your_parent_timebank => Intl.message(
-        'Find your parent timebank if you are part of',
+        'Find your parent Seva Community if you are part of',
         name: 'find_your_parent_timebank',
       );
 
   String get look_for_existing_timebank_title => Intl.message(
-        'Looking for existing timebank',
+        'Looking for existing Seva Community',
         name: 'look_for_existing_timebank_title',
       );
 
@@ -5049,7 +5063,7 @@ class S {
       );
 
   String get exhaust_limit_admin_message => Intl.message(
-        'please contact the creator of the Timebank to upgrade your plan',
+        'please contact the creator of the Seva Community to upgrade your plan',
         name: 'exhaust_limit_admin_message',
       );
 
@@ -5069,13 +5083,18 @@ class S {
       );
 
   String get plan_upgrade_message_admin => Intl.message(
-        'Please contact the creator of your Timebank to activate this feature',
+        'Please contact the creator of your Seva Community to activate this feature',
         name: 'plan_upgrade_message_admin',
       );
 
   String get plan_upgrade_message_user => Intl.message(
-        'Please contact the admin of your Timebank to activate this feature',
+        'Please contact the admin of your Seva Community to activate this feature',
         name: 'plan_upgrade_message_user',
+      );
+
+  String get seva_community => Intl.message(
+        'Seva Community',
+        name: 'seva_community',
       );
 }
 
@@ -5086,13 +5105,13 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh',countryCode:"CN"),
-        Locale.fromSubtags(languageCode: 'zh',countryCode:"TW"),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: "CN"),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: "TW"),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
-  ];
+      ];
 
   @override
   bool isSupported(Locale locale) => [

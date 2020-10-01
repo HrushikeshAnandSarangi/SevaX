@@ -14,7 +14,6 @@ description: A new Flutter application.
 version: 1.5.0+94
 
 environment:
-
   sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
@@ -102,7 +101,7 @@ dev_dependencies:
 
 arbify:
   url: http://localize.sevaexchange.com
-  project_id: 5
+  project_id: 6
   output_dir: lib/l10n
 
 flutter:
