@@ -54,6 +54,14 @@ class _AuthRouterState extends State<AuthRouter> {
             return AuthProvider(
               auth: Auth(),
               child: MaterialApp(
+                builder: (context, child) {
+                  return GestureDetector(
+                    child: child,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                  );
+                },
                 locale: model.appLocal,
                 supportedLocales: S.delegate.supportedLocales,
                 localizationsDelegates: [
