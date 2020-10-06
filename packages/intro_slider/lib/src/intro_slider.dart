@@ -59,7 +59,7 @@ class _IntroSliderState extends State<IntroSlider> {
             itemBuilder: (context, index) {
               return Image.asset(
                 widget.data[index % widget.data.length],
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               );
               // return widget.data[index % widget.data.length];
             },
