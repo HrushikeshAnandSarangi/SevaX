@@ -22,7 +22,7 @@ class DistanceFromCurrentLocation extends StatelessWidget {
           return isKm
               ? Text(
                   'Distance ${snapshot.data != null ? snapshot.data.toStringAsFixed(3) : 'Loading...'} Km')
-              : Text('Distance ${miles(snapshot.data) ?? 'Loading...'} Miles*');
+              : Text('Distance ${miles(snapshot.data) ?? 'Loading...'} Miles');
         },
       ),
     );
