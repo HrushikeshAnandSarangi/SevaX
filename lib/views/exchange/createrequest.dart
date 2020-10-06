@@ -15,7 +15,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -459,9 +458,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           GoodsDynamicSelection(
-            onSelectedGoods: (goods) => {
-              requestModel.goodsDonationDetails.requiredGoods = goods
-            },
+            onSelectedGoods: (goods) =>
+                {requestModel.goodsDonationDetails.requiredGoods = goods},
           ),
           Text(
             S.of(context).request_goods_address,
@@ -823,6 +821,51 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  Widget RequestPaymentVenmo(RequestModel requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+                    offerDataModel: widget.offer,
+                  )
+                : "",
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.cashModel.venmoId = value;
+            },
+            validator: (value) {
+              requestModel.cashModel.venmoId = value;
+              return _validateEmailId(value);
+            },
+          )
+        ]);
+  }
+
   Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -868,11 +911,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
+        _optionRadioButton(
+            title: 'Venmo',
+            value: RequestPaymentType.VENMO,
+            groupvalue: requestModel.cashModel.paymentType,
+            onChanged: (value) {
+              requestModel.cashModel.paymentType = value;
+              setState(() => {});
+            }),
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
                 ? RequestPaymentPaypal(requestModel)
-                : RequestPaymentZellePay(requestModel),
+                : requestModel.cashModel.paymentType == RequestPaymentType.VENMO
+                    ? RequestPaymentVenmo(requestModel)
+                    : RequestPaymentZellePay(requestModel),
       ],
     );
   }

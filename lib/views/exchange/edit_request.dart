@@ -554,7 +554,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.bank_name = value;
+                widget.requestModel.cashModel.achdetails.bank_name = value;
                 print(true);
               } else {
                 print('not url');
@@ -598,7 +598,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.bank_address = value;
+                widget.requestModel.cashModel.achdetails.bank_address = value;
                 print(true);
               } else {
                 print('not url');
@@ -643,7 +643,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.routing_number = value;
+                widget.requestModel.cashModel.achdetails.routing_number = value;
                 print(true);
               } else {
                 print('not url');
@@ -685,13 +685,13 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.achdetails.account_number = value;
+              widget.requestModel.cashModel.achdetails.account_number = value;
             },
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.account_number = value;
+                widget.requestModel.cashModel.achdetails.account_number = value;
               } else {
                 return S.of(context).enter_valid_account_number;
               }
@@ -701,13 +701,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-  String _validateEmailId(String value) {
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (value.isEmpty) return S.of(context).validation_error_general_text;
-    if (!emailPattern.hasMatch(value)) return S.of(context).enter_valid_link;
-    return null;
-  }
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
   Widget RequestPaymentZellePay(RequestModel requestModel) {
     return Column(
@@ -743,7 +739,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.zelleId = value;
+              widget.requestModel.cashModel.zelleId = value;
             },
             validator: (value) {
               return _validateEmailAndPhone(value);
@@ -753,15 +749,16 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
     } else if (emailPattern.hasMatch(value)) {
+      widget.requestModel.cashModel.zelleId = value;
+
       return null;
     } else if (regExp.hasMatch(value)) {
+      widget.requestModel.cashModel.zelleId = value;
+
       return null;
     } else {
       return S.of(context).enter_valid_link;
@@ -800,14 +797,72 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.paypalId = value;
+              widget.requestModel.cashModel.paypalId = value;
             },
-            validator: _validateEmailId,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!emailPattern.hasMatch(value)) {
+                return S.of(context).enter_valid_link;
+              } else {
+                widget.requestModel.cashModel.paypalId = value;
+
+                return null;
+              }
+            },
           )
         ]);
   }
 
-  Widget RequestPaymentDescriptionData(requestModel) {
+  Widget RequestPaymentVenmo(RequestModel requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: requestModel.cashModel.venmoId ?? '',
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.requestModel.cashModel.venmoId = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!emailPattern.hasMatch(value)) {
+                return S.of(context).enter_valid_link;
+              } else {
+                widget.requestModel.cashModel.venmoId = value;
+
+                return null;
+              }
+            },
+          )
+        ]);
+  }
+
+  Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -832,7 +887,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           value: RequestPaymentType.ACH,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
@@ -841,7 +896,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             value: RequestPaymentType.PAYPAL,
             groupvalue: requestModel.cashModel.paymentType,
             onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
+              widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
         _optionRadioButton(
@@ -849,7 +904,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             value: RequestPaymentType.ZELLEPAY,
             groupvalue: requestModel.cashModel.paymentType,
             onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
+              widget.requestModel.cashModel.paymentType = value;
+              setState(() => {});
+            }),
+        _optionRadioButton(
+            title: 'Venmo',
+            value: RequestPaymentType.VENMO,
+            groupvalue: requestModel.cashModel.paymentType,
+            onChanged: (value) {
+              widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
         getPaymentInformation
@@ -867,6 +930,9 @@ class RequestEditFormState extends State<RequestEditForm> {
 
       case RequestPaymentType.ZELLEPAY:
         return RequestPaymentZellePay(widget.requestModel);
+
+      case RequestPaymentType.VENMO:
+        return RequestPaymentVenmo(widget.requestModel);
 
       default:
         return RequestPaymentACH(widget.requestModel);
