@@ -1,30 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CustomTextField extends StatelessWidget {
+  final enableStreamData;
   final String heading;
-  final String initialValue;
+  final String value;
   final ValueChanged<String> onChanged;
   final String hint;
   final int maxLength;
   final String error;
-  final TextInputType textInputType;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
   final FocusNode currentNode;
   final FocusNode nextNode;
   final List<TextInputFormatter> formatters;
-  CustomTextField(
-      {Key key,
-      this.heading,
-      this.onChanged,
-      this.hint,
-      this.maxLength,
-      this.error,
-      this.textInputType = TextInputType.text,
-      this.initialValue,
-      this.currentNode,
-      this.nextNode,
-      this.formatters})
-      : super(key: key);
+  final TextEditingController controller = TextEditingController();
+  final Function(String) validator;
+  final bool autovalidate;
+  final textCapitalization;
+  final int maxLines;
+  final int errorMaxLines;
+  final void Function(String) onSaved;
+  CustomTextField({
+    Key key,
+    this.heading,
+    this.onChanged,
+    this.hint,
+    this.maxLength,
+    this.error,
+    this.keyboardType = TextInputType.text,
+    this.value,
+    this.currentNode,
+    this.nextNode,
+    this.formatters,
+    this.validator,
+    this.autovalidate,
+    this.textInputAction,
+    this.textCapitalization,
+    this.maxLines = 1,
+    this.errorMaxLines,
+    this.onSaved,
+    this.enableStreamData = false,
+  }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
@@ -39,38 +57,53 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (value != null && enableStreamData) {
+      controller.value = controller.value.copyWith(
+        text: value,
+      );
+      controller.selection = controller.selection.copyWith(
+        baseOffset: value?.length,
+        extentOffset: value?.length,
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          heading,
-          style: titleStyle,
-        ),
-        TextField(
+        heading != null
+            ? Text(
+                heading,
+                style: titleStyle,
+              )
+            : Container(),
+        TextFormField(
           focusNode: currentNode,
-          controller: initialValue != null
-              ? TextEditingController(
-                  text: initialValue.replaceAll('__*__', ''),
-                )
-              : null,
-          onChanged: onChanged,
+          controller: enableStreamData ? controller : null,
+          onChanged: (value) {
+            onChanged(value);
+            ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] =
+                value;
+          },
           inputFormatters: formatters,
-          textCapitalization: TextCapitalization.sentences,
+          textCapitalization:
+              textCapitalization ?? TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: hint ?? '',
-            errorText: error,
+            errorText: enableStreamData ? error : null,
+            errorMaxLines: errorMaxLines,
           ),
           maxLength: maxLength,
-          keyboardType: textInputType,
+          keyboardType: keyboardType,
           textInputAction:
               nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
-          onSubmitted: (v) {
+          onFieldSubmitted: (v) {
             currentNode.unfocus();
             nextNode != null
                 ? nextNode.requestFocus()
                 : FocusScope.of(context).unfocus();
           },
+          onSaved: onSaved,
         ),
       ],
     );

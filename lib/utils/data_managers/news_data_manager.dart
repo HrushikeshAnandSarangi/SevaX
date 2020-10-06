@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -70,7 +71,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       UserModel userModel = await getUserForId(
         sevaUserId: modelList[i].sevaUserId,
       );
-      modelList[i].userPhotoURL = userModel.photoURL;
+      modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
 
       if (modelList[i].placeAddress == null) {
         var data = await _getLocation(

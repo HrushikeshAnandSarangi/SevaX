@@ -131,10 +131,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.availability,
             builder: (context, snapshot) {
               return CustomTextField(
+                enableStreamData: true,
                 currentNode: _availability,
-                initialValue: snapshot.data != null
-                    ? snapshot.data.contains('__*__') ? snapshot.data : null
-                    : null,
+                value: snapshot.data,
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,
                 hint: S.of(context).availablity_description,
@@ -291,13 +290,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           builder: (context, snapshot) {
                             print(snapshot.data);
                             return CustomTextField(
+                              enableStreamData: true,
                               currentNode: _title,
                               nextNode: _description,
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data.contains('__*__')
-                                      ? snapshot.data
-                                      : null
-                                  : null,
+                              value: snapshot.data,
                               heading: "${S.of(context).title}*",
                               onChanged: (String value) {
                                 _bloc.onTitleChanged(value);
@@ -315,13 +311,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           stream: _bloc.offerDescription,
                           builder: (context, snapshot) {
                             return CustomTextField(
+                              enableStreamData: true,
                               currentNode: _description,
                               nextNode: _availability,
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data.contains('__*__')
-                                      ? snapshot.data
-                                      : null
-                                  : null,
+                              value: snapshot.data,
                               heading: "${S.of(context).offer_description}*",
                               onChanged: _bloc.onOfferDescriptionChanged,
                               hint: S.of(context).offer_description_hint,

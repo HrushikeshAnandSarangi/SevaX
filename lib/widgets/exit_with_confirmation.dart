@@ -3,12 +3,22 @@ import 'package:sevaexchange/l10n/l10n.dart';
 
 class ExitWithConfirmation extends StatelessWidget {
   final Widget child;
+  final formKey = GlobalKey<FormState>();
+  final Map<int, String> fieldValues = {};
 
-  const ExitWithConfirmation({Key key, this.child}) : super(key: key);
+  ExitWithConfirmation({Key key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => showExitDialog(context),
+      onWillPop: () {
+        if (fieldValues?.values
+                ?.any((element) => element != null || element.isNotEmpty) ??
+            false) {
+          return showExitDialog(context);
+        } else {
+          return Future.value(true);
+        }
+      },
       child: child,
     );
   }
@@ -37,5 +47,11 @@ class ExitWithConfirmation extends StatelessWidget {
           ),
         ) ??
         false;
+  }
+
+  static ExitWithConfirmation of(BuildContext context) {
+    final ExitWithConfirmation provider =
+        context.findAncestorWidgetOfExactType();
+    return provider;
   }
 }
