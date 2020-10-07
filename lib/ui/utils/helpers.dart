@@ -76,15 +76,14 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   }
 }
 
-Future<double> findDistance(
-  Coordinates coordinates,
-) async {
-  final Location _location = Location();
-  var location = await _location.getLocation();
-  LatLng _locat = LatLng(location.latitude, location.longitude);
+double findDistanceBetweenToLocation(
+    Coordinates coordinates, Coordinates currentLocationCoordinates) {
+  if (coordinates == null || currentLocationCoordinates == null) {
+    return 0;
+  }
   double distance = GeoFirePoint.distanceBetween(
     to: coordinates,
-    from: Coordinates(_locat.latitude, _locat.longitude),
+    from: currentLocationCoordinates,
   );
   return distance;
 }
