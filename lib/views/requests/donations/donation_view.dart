@@ -226,6 +226,49 @@ class _DonationViewState extends State<DonationView> {
         ]);
   }
 
+  Widget RequestPaymentVenmo(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: donationsModel.cashDetails.cashDetails != null
+                ? donationsModel.cashDetails.cashDetails.targetAmount
+                : "0",
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.offerModel.cashModel.venmoId = value;
+            },
+            validator: (value) {
+              donationsModel.cashDetails.cashDetails.venmoId = value;
+              return _validateEmailId(value);
+            },
+          )
+        ]);
+  }
+
   Widget RequestPaymentACH(OfferModel offerModel) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
         Widget>[
@@ -574,13 +617,25 @@ class _DonationViewState extends State<DonationView> {
                     donationsModel.cashDetails.cashDetails.paymentType = value;
                     setState(() => {});
                   }),
+              _optionRadioButton(
+                  title: 'Venmo',
+                  value: RequestPaymentType.VENMO,
+                  groupvalue:
+                      donationsModel.cashDetails.cashDetails.paymentType,
+                  onChanged: (value) {
+                    donationsModel.cashDetails.cashDetails.paymentType = value;
+                    setState(() => {});
+                  }),
               donationsModel.cashDetails.cashDetails.paymentType ==
                       RequestPaymentType.ACH
                   ? RequestPaymentACH(widget.offerModel)
                   : donationsModel.cashDetails.cashDetails.paymentType ==
                           RequestPaymentType.PAYPAL
                       ? RequestPaymentPaypal(widget.offerModel)
-                      : RequestPaymentZellePay(widget.offerModel),
+                      : donationsModel.cashDetails.cashDetails.paymentType ==
+                              RequestPaymentType.VENMO
+                          ? RequestPaymentVenmo(widget.offerModel)
+                          : RequestPaymentZellePay(widget.offerModel),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -886,7 +941,7 @@ class _DonationViewState extends State<DonationView> {
                 showScaffold(S.of(context).copied_to_clipboard);
               },
               onTap: () async {
-                String link = widget.requestModel.donationInstructionLink;
+                String link = getDonationLink();
                 if (await canLaunch(link)) {
                   await launch(link);
                 } else {
@@ -952,6 +1007,9 @@ class _DonationViewState extends State<DonationView> {
           return widget.requestModel.cashModel.zelleId;
         case RequestPaymentType.PAYPAL:
           return widget.requestModel.cashModel.paypalId ?? '';
+
+        case RequestPaymentType.VENMO:
+          return widget.requestModel.cashModel.venmoId ?? '';
 
         default:
           return "Link not registered!";

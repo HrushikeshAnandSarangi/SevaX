@@ -41,16 +41,16 @@ CashModel cashModelFromMap(String str) => CashModel.fromMap(json.decode(str));
 String cashModelToMap(CashModel data) => json.encode(data.toMap());
 
 class CashModel {
-  CashModel({
-    this.amountRaised = 0,
-    this.paymentType,
-    this.donors,
-    this.minAmount,
-    this.targetAmount,
-    this.achdetails,
-    this.paypalId,
-    this.zelleId,
-  });
+  CashModel(
+      {this.amountRaised = 0,
+      this.paymentType,
+      this.donors,
+      this.minAmount,
+      this.targetAmount,
+      this.achdetails,
+      this.paypalId,
+      this.zelleId,
+      this.venmoId});
 
   int amountRaised = 0;
   RequestPaymentType paymentType;
@@ -60,6 +60,7 @@ class CashModel {
   int targetAmount;
   String zelleId;
   String paypalId;
+  String venmoId;
 
   factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         paymentType: json["paymentType"] == null
@@ -68,7 +69,9 @@ class CashModel {
                 ? RequestPaymentType.ACH
                 : json["paymentType"] == 'RequestPaymentType.ZELLEPAY'
                     ? RequestPaymentType.ZELLEPAY
-                    : RequestPaymentType.PAYPAL,
+                    : json["paymentType"] == 'RequestPaymentType.VENMO'
+                        ? RequestPaymentType.VENMO
+                        : RequestPaymentType.PAYPAL,
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
         donors: json["donors"] == null
@@ -82,6 +85,7 @@ class CashModel {
             : ACHModelFromMap(json['achdetails']),
         paypalId: json["paypalId"] == null ? null : json["paypalId"],
         zelleId: json["zelleId"] == null ? null : json["zelleId"],
+        venmoId: json["venmoId"] == null ? null : json["venmoId"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -93,5 +97,6 @@ class CashModel {
         "targetAmount": targetAmount == null ? null : targetAmount,
         'zelleId': zelleId == null ? null : zelleId,
         'paypalId': paypalId == null ? null : paypalId,
+        'venmoId': venmoId == null ? null : venmoId,
       };
 }
