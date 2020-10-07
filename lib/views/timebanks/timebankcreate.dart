@@ -227,7 +227,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             FocusScope.of(context).requestFocus(aboutNode);
           },
           controller: searchTextController,
-          onChanged: (value) {},
+          onChanged: (value) {
+            ExitWithConfirmation.of(context).fieldValues[1] = value;
+          },
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             errorText: errTxt,
@@ -258,6 +260,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               InputDecoration(hintText: S.of(context).bit_more_about_group),
           // keyboardType: TextInputType.multiline,
           maxLines: 1,
+          onChanged: (value) {
+            ExitWithConfirmation.of(context).fieldValues[2] = value;
+          },
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;

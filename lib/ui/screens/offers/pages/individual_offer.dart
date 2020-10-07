@@ -131,7 +131,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.availability,
             builder: (context, snapshot) {
               return CustomTextField(
-                enableStreamData: true,
                 currentNode: _availability,
                 value: snapshot.data,
                 heading: S.of(context).availablity,
@@ -290,7 +289,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           builder: (context, snapshot) {
                             print(snapshot.data);
                             return CustomTextField(
-                              enableStreamData: true,
                               currentNode: _title,
                               nextNode: _description,
                               value: snapshot.data,
@@ -311,7 +309,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           stream: _bloc.offerDescription,
                           builder: (context, snapshot) {
                             return CustomTextField(
-                              enableStreamData: true,
                               currentNode: _description,
                               nextNode: _availability,
                               value: snapshot.data,

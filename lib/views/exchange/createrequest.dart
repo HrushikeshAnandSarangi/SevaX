@@ -15,7 +15,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -307,6 +306,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
     }
   }
 
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
+    ExitWithConfirmation.of(context).fieldValues[index] = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     hoursMessage = S.of(context).set_duration;
@@ -362,6 +366,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             TextFormField(
                               autovalidate: autoValidateText,
                               onChanged: (value) {
+                                updateExitWithConfirmationValue(
+                                    context, 1, value);
                                 if (value.length > 1 && !autoValidateText) {
                                   setState(() {
                                     autoValidateText = true;
@@ -459,9 +465,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           GoodsDynamicSelection(
-            onSelectedGoods: (goods) => {
-              requestModel.goodsDonationDetails.requiredGoods = goods
-            },
+            onSelectedGoods: (goods) =>
+                {requestModel.goodsDonationDetails.requiredGoods = goods},
           ),
           Text(
             S.of(context).request_goods_address,
@@ -482,6 +487,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 2, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -539,6 +545,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 3, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -582,6 +589,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 4, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -626,6 +634,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 5, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -670,6 +679,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 6, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -713,6 +723,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 7, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -785,6 +796,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 8, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -893,6 +905,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 9, value);
               if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
@@ -1029,6 +1042,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     FocusScope.of(context).requestFocus(focusNodes[2]);
                   },
                   onChanged: (v) {
+                    updateExitWithConfirmationValue(context, 10, v);
                     if (v.isNotEmpty && int.parse(v) >= 0) {
                       requestModel.maxCredits = int.parse(v);
                       setState(() {});
@@ -1079,6 +1093,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               FocusScope.of(context).unfocus();
             },
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 11, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 requestModel.numberOfApprovals = int.parse(v);
                 setState(() {});
@@ -1148,7 +1163,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               FocusScope.of(context).unfocus();
             },
             onChanged: (v) {
-              print(v);
+              updateExitWithConfirmationValue(context, 12, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 print('hey');
                 print(requestModel.cashModel);
@@ -1197,6 +1212,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               FocusScope.of(context).unfocus();
             },
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 13, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 requestModel.cashModel.minAmount = int.parse(v);
                 print(requestModel.cashModel);

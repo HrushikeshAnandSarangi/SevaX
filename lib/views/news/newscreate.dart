@@ -259,6 +259,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   maxLines: 5,
                                   autovalidate: autoValidateText,
                                   onChanged: (value) {
+                                    ExitWithConfirmation.of(context)
+                                        .fieldValues[1] = value;
                                     if (value.length > 1 && !autoValidateText) {
                                       setState(() {
                                         autoValidateText = true;
@@ -290,7 +292,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     ),
 
                     Offstage(
-                        offstage: !widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                      offstage: !widget.timebankModel.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Center(
                           child: TransactionsMatrixCheck(
                         upgradeDetails:
@@ -331,8 +334,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 selectedTimebanks,
                                 (selectedTimebanks) => {
                                       print(selectedTimebanks),
-                                      setState(() =>
-                                          {selectedTimebanks = selectedTimebanks})
+                                      setState(() => {
+                                            selectedTimebanks =
+                                                selectedTimebanks
+                                          })
                                     });
                           },
                         ),

@@ -295,6 +295,11 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
+    ExitWithConfirmation.of(context).fieldValues[index] = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -358,6 +363,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                             TextFormField(
                               autovalidate: autoValidateText,
                               onChanged: (value) {
+                                updateExitWithConfirmationValue(
+                                    context, 1, value);
                                 if (value.length > 1 && !autoValidateText) {
                                   setState(() {
                                     autoValidateText = true;
@@ -478,6 +485,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 2, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -533,6 +541,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.bank_name,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 3, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -577,6 +586,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.bank_address,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 4, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -622,6 +632,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.routing_number,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 5, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -667,6 +678,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.account_number,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 6, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -716,6 +728,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 7, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -776,6 +789,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 8, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -889,6 +903,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 9, value);
               if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
@@ -1016,6 +1031,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   },
                   initialValue: widget.requestModel.maxCredits.toString(),
                   onChanged: (v) {
+                    updateExitWithConfirmationValue(context, 10, v);
                     if (v.isNotEmpty && int.parse(v) >= 0) {
                       widget.requestModel.maxCredits = int.parse(v);
                       setState(() {});
@@ -1067,6 +1083,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.numberOfApprovals.toString(),
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 11, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.numberOfApprovals = int.parse(v);
                 setState(() {});
@@ -1134,6 +1151,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.cashModel.targetAmount.toString(),
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 12, v);
               print(v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 print('hey');
@@ -1184,6 +1202,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.cashModel.minAmount.toString(),
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 13, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.cashModel.minAmount = int.parse(v);
                 print(widget.requestModel.cashModel);
