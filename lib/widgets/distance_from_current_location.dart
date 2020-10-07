@@ -4,8 +4,11 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 
 class DistanceFromCurrentLocation extends StatelessWidget {
   final Coordinates coordinates;
+  final Coordinates currentLocation;
   final bool isKm;
-  const DistanceFromCurrentLocation({Key key, this.coordinates, this.isKm})
+  final TextStyle textStyle = TextStyle(color: Colors.grey[800]);
+  DistanceFromCurrentLocation(
+      {Key key, this.coordinates, this.currentLocation, this.isKm})
       : super(key: key);
 
   String miles(double km) {
@@ -14,17 +17,35 @@ class DistanceFromCurrentLocation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: FutureBuilder<double>(
-        future: findDistance(coordinates),
-        builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-          return isKm
-              ? Text(
-                  'Distance ${snapshot.data != null ? snapshot.data.toStringAsFixed(3) : 'Loading...'} Km')
-              : Text('Distance ${miles(snapshot.data) ?? 'Loading...'} Miles');
-        },
-      ),
-    );
+    double distance =
+        findDistanceBetweenToLocation(coordinates, currentLocation);
+    return currentLocation != null && distance > 0
+        ? Container(
+            margin: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+            child: Container(
+              margin: EdgeInsets.all(1.5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: isKm
+                    ? Text(
+                        '${distance.toStringAsFixed(3)} km',
+                        style: textStyle,
+                      )
+                    : Text(
+                        '${miles(distance)} Miles',
+                        style: textStyle,
+                      ),
+              ),
+            ),
+          )
+        : Container();
   }
 }
