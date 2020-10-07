@@ -516,6 +516,25 @@ Future<int> changePlan(String communityId, String planId) async {
     return 2;
 }
 
+Future<int> cancelTimebankSubscription(String communityId, bool cancelSubscription) async {
+    // failure is 0, success is 1, error is 2
+    try {
+        http.Response result = await http.post(
+            FlavorConfig.values.cloudFunctionBaseURL + '/cancelRenewSubscription',
+            body: json.encode({'communityId': communityId, 'cancelSubscription': cancelSubscription}),
+            headers: {"Content-type": "application/json"},
+        );
+        if(result.statusCode == 200){
+            Map<String, dynamic> resData = json.decode(result.body);
+            return resData['subscriptionCancelledStatus'] ? 1 : 0;
+        }
+    } catch (e) {
+        print(e);
+    }
+    return 2;
+}
+
+
 Stream<List<TimebankModel>> getAllMyTimebanks(
     {@required String timebankId}) async* {
   var data = Firestore.instance

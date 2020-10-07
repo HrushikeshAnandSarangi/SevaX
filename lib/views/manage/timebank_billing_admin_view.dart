@@ -40,7 +40,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
   CommunityModel communityModel = CommunityModel({});
   CardModel cardModel;
-  String currentPlanId;
   BuildContext parentContext;
   var planData = [];
   var transactionPaymentData;
@@ -117,7 +116,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                           //No Card added user is on neighbourhood plan
                           if (snapshot.data == null) {
-                              currentPlanId = SevaBillingPlans.NEIGHBOUR_HOOD_PLAN;
                             return spendingsTextWidgettwo(
                               "You are on neighbourhood plan.",
                             );
@@ -125,10 +123,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
                           if (snapshot.hasData && snapshot.data != null) {
                             cardModel = snapshot.data;
-                            currentPlanId = cardModel.currentPlan;
-                            //
-                            //
-                            //
                             if (cardModel.subscriptionModel != null) {
                               String data = NO_SELECTED_PLAN_YET;
                               _billingPlanDetailsModels.removeWhere((element) =>
@@ -182,7 +176,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             cardsHeadingWidget(_bloc),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
-            currentPlanId == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ? Container() :
+              _bloc.community.payment['planId'] == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ? Container() :
             Row(
             children: [
               Spacer(),
@@ -242,9 +236,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                           Navigator.pop(_context);
                                           log("subscribe cancel button condition ${communityModel.payment['planId']}");
                                           _changePlanAlert(context);
-                                          int value = await FirestoreManager.changePlan(
+
+                                          int value = await FirestoreManager.cancelTimebankSubscription(
                                               SevaCore.of(context).loggedInUser.currentCommunity,
-                                              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN,
+                                              true,
                                           );
                                           Navigator.of(context, rootNavigator: true).pop();
 
@@ -272,7 +267,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                           ),
                                       ),
                                       onPressed: () {
-
                                           Navigator.pop(_context);
                                       },
                                   ),
