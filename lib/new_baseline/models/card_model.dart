@@ -19,7 +19,6 @@ class CardModel extends DataModel {
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
     return null;
   }
 

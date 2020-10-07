@@ -201,8 +201,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
   void cardsHeadingWidget() {
     String planName = '';
-    print('curr ${loggedInUser.currentCommunity}');
-    print('curr plan ${communityModel.payment["planId"]}');
     if (communityModel.billMe == true) {
       showProgressDialog(S.of(context).updating_details);
       changeOwnership(
@@ -224,10 +222,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           .document(loggedInUser.currentCommunity)
           .get()
           .then((value) {
-        print("value ${value.data}");
         if (value.data != null) {
           planName = value.data['currentplan'];
-          print('planname $planName');
           if (planName == '' && !communityModel.payment.containsKey("planId")) {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -255,9 +251,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               ),
             );
           }
-        } else {
-          print('no plan ');
-        }
+        } else {}
       });
     }
   }
@@ -453,7 +447,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     List<FocusNode> focusNodes,
     BuildContext bc,
   ) {
-    print(focusNodes);
     Widget _cityWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -476,7 +469,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                 autoValidateText = false;
               });
             }
-            print(value);
             communityModel.billing_address.city = value;
           },
           focusNode: focusNodes[0],
@@ -539,7 +531,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
-            print(value);
             communityModel.billing_address.pincode = int.parse(value);
           },
           validator: (value) {
@@ -741,7 +732,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();
               } else {
-                print("All Good");
                 cardsHeadingWidget();
                 //  Navigator.pop(context);
                 // _pc.close();

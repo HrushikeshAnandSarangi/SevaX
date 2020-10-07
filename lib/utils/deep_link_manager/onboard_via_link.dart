@@ -17,17 +17,16 @@ Future<void> fetchLinkData() async {
   // buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
   await handleLinkData(data: link);
-  FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-    print("Error!!!");
-  }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-    print("succes!!!");
-    log(">>>>>>>>>>link is  ${dynamicLink.link.toString()}");
-    log("coming after syncing calendar");
+  FirebaseDynamicLinks.instance.onLink(
+      onError: (_) async {},
+      onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        log(">>>>>>>>>>link is  ${dynamicLink.link.toString()}");
+        log("coming after syncing calendar");
 
-    return handleLinkData(
-      data: dynamicLink,
-    );
-  });
+        return handleLinkData(
+          data: dynamicLink,
+        );
+      });
 
   // This will handle incoming links if the application is already opened
 }
@@ -38,11 +37,11 @@ Future<void> fetchBulkInviteLinkData(BuildContext context) async {
   //buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
   await handleLinkData(data: link);
-  FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-    print("Error!!!");
-  }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-    return handleBulkInviteLinkData(data: dynamicLink, context: context);
-  });
+  FirebaseDynamicLinks.instance.onLink(
+      onError: (_) async {},
+      onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        return handleBulkInviteLinkData(data: dynamicLink, context: context);
+      });
 
   // This will handle incoming links if the application is already opened
 }
@@ -106,16 +105,13 @@ Future<bool> registerloggedInUserToCommunity({
   String primaryTimebankId,
 }) async {
   if (loggedInUser.email != invitedMemberEmail) {
-    print("Member is a not a verified member from link.");
     return false;
   }
 
   if (loggedInUser.communities != null &&
       loggedInUser.communities.contains(communityId)) {
-    print("Member is a verified member and has been already registered.");
     return false;
   } else {
-    print("Register this member --> ..");
     return await initRegisterationMemberToCommunity(
       communityId: communityId,
       memberJoiningSevaUserId: loggedInUser.sevaUserID,

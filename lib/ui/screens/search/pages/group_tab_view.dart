@@ -50,7 +50,6 @@ class _GroupTabViewState extends State<GroupTabView> {
               }
               if (snapshot.data.timebanks == null ||
                   snapshot.data.timebanks.isEmpty) {
-                print("===>> ${snapshot.data.timebanks}");
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
@@ -59,8 +58,6 @@ class _GroupTabViewState extends State<GroupTabView> {
                   ],
                 );
               }
-
-              print("snapshot ==> ${snapshot.data.timebanks.length}");
 
               return ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: 10),

@@ -150,8 +150,6 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                                   }
                                   break;
                               }
-
-                              print(timeStamp);
                             },
                             items: List.generate(
                               timeList.length,

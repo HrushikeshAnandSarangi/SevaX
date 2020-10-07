@@ -187,7 +187,6 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
                 onChanged: (ind) => setState(() {
                   value = ind;
                   selectedProjectTemplate = projectTemplateList[ind];
-                  print("name ${selectedProjectTemplate.templateName}");
                 }),
                 title: Text(projectTemplateModel.templateName),
               );

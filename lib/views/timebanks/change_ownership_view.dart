@@ -203,11 +203,8 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                   await checkChangeOwnershipStatus(
                       sevauserid: loggedInUser.sevaUserID,
                       timebankId: tbmodel.id);
-              print(
-                  "else error block ${responseObj.keys.toString() + " " + responseObj.values.toString()}");
 
               if (responseObj['transferable'] == true) {
-                print('yes transferable ');
                 invtitedUsers.add(selectedNewOwner.email);
                 sendNotificationToAdmin();
               } else {
@@ -345,7 +342,6 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       suggestionsCallback: (pattern) async {
 //        List<String> dataCopy = [];
 //        // interests.forEach((k, v) => dataCopy.add(v));
-//        print(dataCopy);
 //        dataCopy.retainWhere(
 //            (s) => s.toLowerCase().contains(pattern.toLowerCase()));
 //        //  return await Future.value(dataCopy);
@@ -354,7 +350,6 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
             queryString: pattern, validItems: groupMembersList);
       },
       itemBuilder: (context, suggestion) {
-        // print("suggest ${suggestion}");
         return suggestion.sevaUserID != loggedInUser.sevaUserID
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -488,8 +483,6 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         communityId: tbmodel.communityId,
         senderUserId: loggedInUser.sevaUserID,
         targetUserId: selectedNewOwner.sevaUserID);
-    print("bhhfhff ${changeOwnershipModel} ");
-    print(" timebank id ${tbmodel.id + tbmodel.members.toString()}");
     await Firestore.instance
         .collection('users')
         .document(selectedNewOwner.email)

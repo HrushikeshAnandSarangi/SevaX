@@ -19,7 +19,7 @@ class UserCircleAvatarList extends StatelessWidget {
         if (snapshot.data == null || snapshot.data.isEmpty) {
           return Container();
         }
-        print(snapshot.data);
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }

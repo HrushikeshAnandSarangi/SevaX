@@ -81,14 +81,11 @@ class _ChatPageState extends State<ChatPage> {
     _scrollController = ScrollController();
 
     if (widget.isFromShare) {
-      print("Pushing new message from share");
       pushNewMessage(
         messageContent: widget.feedId,
         type: MessageType.FEED,
       );
-    } else {
-      print("NOT Pushing new message from share");
-    }
+    } else {}
 
     if (widget.chatModel.isGroupMessage) {
       ChatModelSync().chatModels.listen(
@@ -100,7 +97,6 @@ class _ChatPageState extends State<ChatPage> {
 
           if (model == null) {
             if (!exitFromChatPage) {
-              print("called  $exitFromChatPage");
               Navigator.of(context).pop();
             }
           } else {

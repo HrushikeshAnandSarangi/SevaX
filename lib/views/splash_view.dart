@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -234,7 +235,7 @@ class _SplashViewState extends State<SplashView> {
         connectivityResult = result;
       });
     } on PlatformException catch (e) {
-      print(e.toString());
+      logger.e(e);
     }
 
     // If the widget was removed from the tree while the asynchronous platform

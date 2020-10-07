@@ -306,7 +306,6 @@ class AboutApp extends StatelessWidget {
                 onPressed: () async {
                   //For test
                   if (formkey.currentState.validate()) {
-                    print("------------------------------------");
                     Navigator.of(dialogContext).pop();
 
                     showProgressDialog(

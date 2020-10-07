@@ -229,7 +229,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             } else {
               //  print("new owner creator id is ${selectedNewOwner.sevaUserID}");
               ownerGroupsArr.forEach((group) {
-                print("groupppppp=== ${group['id']}");
                 futures.add(
                   Firestore.instance
                       .collection('timebanknew')
@@ -452,8 +451,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         communityId: tbmodel.communityId,
         senderUserId: widget.memberSevaUserId,
         targetUserId: tbmodel.creatorId);
-    print("bhhfhff ${userExitModel} ");
-    print(" timebank id ${tbmodel.id + tbmodel.members.toString()}");
+
     await Firestore.instance
         .collection('timebanknew')
         .document(tbmodel.id)

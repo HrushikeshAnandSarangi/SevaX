@@ -85,7 +85,6 @@ class _CreateOfferState extends State<CreateOffer> {
         padding: EdgeInsets.only(left: 0.0, right: 0),
         groupValue: currentPage,
         onValueChanged: (int val) {
-          print(val);
           if (val != currentPage) {
             setState(() {
               currentPage = val;

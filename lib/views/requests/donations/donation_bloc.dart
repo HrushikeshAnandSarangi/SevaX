@@ -32,14 +32,13 @@ class DonationBloc {
         : localMap[selectedKey] = selectedValue;
 
     _selectedList.add(localMap);
-
-    print("map -> " + localMap.toString());
   }
 
-  Future<bool> donateOfferGoods({ DonationModel donationModel,
-    OfferModel offerModel,
-    String notificationId,
-    UserModel donor}) async {
+  Future<bool> donateOfferGoods(
+      {DonationModel donationModel,
+      OfferModel offerModel,
+      String notificationId,
+      UserModel donor}) async {
 //      donationModel.goodsDetails.donatedGoods = _selectedList.value;
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
@@ -51,17 +50,14 @@ class DonationBloc {
         donationModel.goodsDetails.toAddress =
             donationModel.goodsDetails.toAddress;
         var newDonors =
-        new List<String>.from(offerModel.goodsDonationDetails.donors);
+            new List<String>.from(offerModel.goodsDonationDetails.donors);
         newDonors.add(donor.sevaUserID);
         offerModel.goodsDonationDetails.donors = newDonors;
-        print(donationModel.goodsDetails.toMap());
       }
     } else {
-      var newDonors =
-      new List<String>.from(offerModel.cashModel.donors);
+      var newDonors = new List<String>.from(offerModel.cashModel.donors);
       newDonors.add(donor.sevaUserID);
       offerModel.cashModel.donors = newDonors;
-      print(donationModel.cashDetails.toMap());
     }
     try {
       await FirestoreManager.createDonation(donationModel: donationModel);
@@ -195,9 +191,9 @@ class DonationBloc {
         id: donationModel.notificationId,
         isRead: false,
         isTimebankNotification:
-        requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? false
-            : true,
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? false
+                : true,
         senderUserId: donationModel.donorSevaUserId,
         targetUserId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? requestModel.sevaUserId
@@ -224,7 +220,6 @@ class DonationBloc {
           break;
       }
     }
-
   }
 
   void dispose() {

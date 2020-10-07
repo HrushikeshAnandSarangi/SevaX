@@ -64,8 +64,6 @@ class LanguageListState extends State<LanguageList> {
       );
     });
 
-    print(languagelist);
-    print(languagelist[0].locale.languageCode);
     languagelist.sort(
       (a, b) =>
           a.languageName.toLowerCase().compareTo(b.languageName.toLowerCase()),
@@ -109,7 +107,6 @@ class LanguageListState extends State<LanguageList> {
                 subtitle: Text(getCodeFromLocale(model.locale)),
                 onTap: () async {
                   if (userModel.language != getCodeFromLocale(model.locale)) {
-                    print(getCodeFromLocale(model.locale));
                     appLanguage.changeLanguage(model.locale);
                     userModel.language = getCodeFromLocale(model.locale);
                     await updateUserLanguage(user: userModel);

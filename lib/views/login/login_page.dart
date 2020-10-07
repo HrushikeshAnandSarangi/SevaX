@@ -910,7 +910,6 @@ class _LoginPageState extends State<LoginPage> {
         "links_" + S.of(context).localeName,
       ),
     );
-    print('terms page clicked ' + dynamicLinks['termsAndConditionsLink']);
 
     navigateToWebView(
       aboutMode: AboutMode(
@@ -940,7 +939,6 @@ class _LoginPageState extends State<LoginPage> {
         "links_" + S.of(context).localeName,
       ),
     );
-    print('payment clicked ' + dynamicLinks['paymentPolicyLink']);
     navigateToWebView(
       aboutMode: AboutMode(
           title: S.of(context).login_agreement_payment_link,
@@ -970,18 +968,17 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
     var link = await FirebaseDynamicLinks.instance.getInitialLink();
-    print("method  triggered" + link.toString());
 
     //buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
     await handleBulkInviteLinkData(data: link);
-    FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-      print("Error!!!");
-    }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      return handleBulkInviteLinkData(
-        data: dynamicLink,
-      );
-    });
+    FirebaseDynamicLinks.instance.onLink(
+        onError: (_) async {},
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          return handleBulkInviteLinkData(
+            data: dynamicLink,
+          );
+        });
 
     // This will handle incoming links if the application is already opened
   }
@@ -993,18 +990,12 @@ class _LoginPageState extends State<LoginPage> {
     if (uri != null) {
       final queryParams = uri.queryParameters;
       if (queryParams.length > 0) {
-        print("inside link");
-        print("parans ${queryParams.toString()}");
-        print("uri ${uri.toString()}");
-        print("url full ${data.link.toString()}");
-
         String invitedMemberEmail = queryParams["invitedMemberEmail"];
 
         //   String communityId = queryParams["communityId"];
         // String primaryTimebankId = queryParams["primaryTimebankId"];
         if (queryParams.containsKey("isFromBulkInvite") &&
             queryParams["isFromBulkInvite"] == 'true') {
-          print("inside bulk");
           resetDynamicLinkPassword(invitedMemberEmail);
         }
       }

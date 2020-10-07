@@ -57,17 +57,18 @@ class _DonationViewState extends State<DonationView> {
   var focusNodes = List.generate(16, (_) => FocusNode());
   @override
   void initState() {
-    if (none == '') {
-      print(true);
-    }
+    if (none == '') {}
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
             ? 3
-            : widget.offerModel.type == RequestType.CASH ? 4 : 0)
+            : widget.offerModel.type == RequestType.CASH
+                ? 4
+                : 0)
         : widget.requestModel != null
-            ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1
+            ? widget.requestModel.requestType == RequestType.GOODS
+                ? 0
+                : 1
             : 0);
-    print(temp);
     pageController = PageController(initialPage: temp);
 
     super.initState();
@@ -106,9 +107,7 @@ class _DonationViewState extends State<DonationView> {
         controller: pageController,
         scrollDirection: Axis.horizontal,
         pageSnapping: true,
-        onPageChanged: (number) {
-          print('page changes');
-        },
+        onPageChanged: (number) {},
         children: [
           donatedItems(),
           amountWidget(),
@@ -265,9 +264,7 @@ class _DonationViewState extends State<DonationView> {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.bank_name = value;
-            print(true);
           } else {
-            print('not url');
             return S.of(context).enter_valid_bank_name;
           }
           return null;
@@ -309,10 +306,7 @@ class _DonationViewState extends State<DonationView> {
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.bank_address =
                 value;
-            print(true);
           } else {
-            print('not url');
-
             return S.of(context).enter_valid_bank_address;
           }
           return null;
@@ -354,10 +348,7 @@ class _DonationViewState extends State<DonationView> {
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.routing_number =
                 value;
-            print(true);
           } else {
-            print('not url');
-
             return S.of(context).enter_valid_routing_number;
           }
           return null;
@@ -482,9 +473,6 @@ class _DonationViewState extends State<DonationView> {
   }
 
   Widget RequestPaymentDescriptionData(OfferModel offerModel) {
-    print(donationsModel.cashDetails.toMap());
-    print(donationsModel.cashDetails.cashDetails);
-    print('check this out');
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
@@ -534,7 +522,6 @@ class _DonationViewState extends State<DonationView> {
                   } else if (!value.isEmpty) {
                     donationsModel.cashDetails.cashDetails.amountRaised =
                         int.parse(value);
-                    print(true);
                   } else {
                     return S.of(context).enter_valid_amount;
                   }
@@ -726,8 +713,6 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .offerModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
-                    print("===> " + snapshot.data.toString());
-
                     return Row(
                       children: [
                         Checkbox(
@@ -1037,8 +1022,6 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
-                    print("===> " + snapshot.data.toString());
-
                     return Row(
                       children: [
                         Checkbox(

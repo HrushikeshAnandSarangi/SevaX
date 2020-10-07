@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -75,9 +76,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
               setState(() {
                 globals.projectsAvtaarURL = null;
               });
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
+            }).catchError((e) => logger.e(e));
           }
         });
       } else {
@@ -90,8 +89,6 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
 
   @override
   void userImage(dynamic _image, type) {
-    print(type);
-    print(_image);
     if (type == 'stock_image') {
       setState(() {
         globals.projectsAvtaarURL = _image;

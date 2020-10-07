@@ -181,7 +181,6 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
     );
-    print("----------------" + hasSufficientCredits.toString());
 
     if (hasSufficientCredits) {
       var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -238,7 +237,6 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
   } else if ((model.type == RequestType.CASH ||
       model.type == RequestType.GOODS)) {
 //    if (!_isParticipant) addBookMark(model.id, _userId);
-    print("Inside accept offer-----");
     Navigator.push(
       context,
       MaterialPageRoute(

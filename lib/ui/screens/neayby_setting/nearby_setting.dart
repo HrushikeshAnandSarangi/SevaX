@@ -195,8 +195,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
       email: widget.loggedInUser.email,
       radius: rating.toInt(),
     );
-    print(rating.toString() + "<<<<<<<<<<<<<<<");
-    // selectedRadio = value;
+
     setState(() {
       selectedRadio = value;
     });

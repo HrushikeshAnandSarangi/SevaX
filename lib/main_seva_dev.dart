@@ -19,11 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: Duration.zero).catchError((onError) {
-    print("ERROR WHILE FETCHING " + onError);
-  }).then((value) {
-    print("Successfully fetched");
-  });
+  AppConfig.remoteConfig
+      .fetch(expiration: Duration.zero)
+      .catchError((onError) {})
+      .then((value) {});
   AppConfig.remoteConfig.activateFetched();
 }
 
@@ -58,15 +57,12 @@ Future<void> main() async {
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
-      print('onMessage: $message');
       return null;
     },
     onLaunch: (Map<String, dynamic> message) {
-      print('onLaunch: $message');
       return null;
     },
     onResume: (Map<String, dynamic> message) {
-      print('onResume: $message');
       return null;
     },
   );

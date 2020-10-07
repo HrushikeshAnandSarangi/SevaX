@@ -61,16 +61,11 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   }
 
   averageReview(totalreviews, currentreview, pastreview) {
-    print(totalreviews);
-    print(currentreview);
-    print(pastreview);
-    print((pastreview * totalreviews + currentreview) / (totalreviews + 1));
     return (pastreview * totalreviews + currentreview) / (totalreviews + 1);
   }
 
   if (type == FeedbackType.FOR_REQUEST_VOLUNTEER) {
     var temp = results['ratings'];
-    print(temp);
     await Firestore.instance.collection('users').document(user.email).setData({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,

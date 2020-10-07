@@ -199,13 +199,9 @@ class HandlerForModificationManager {
     );
   }
 
-  static Function handleSuuccess = () {
-    print("OPeration completed Successfully");
-  };
+  static Function handleSuuccess = () {};
 
-  static Function handleFailure = (e) {
-    print("Operation couldn't comlete due to $e");
-  };
+  static Function handleFailure = (e) {};
 
   static Future<bool> acknowledeModificationInDonation({
     String donorEmail,
@@ -257,7 +253,6 @@ class HandlerForModificationManager {
 
     switch (requestMode) {
       case RequestMode.PERSONAL_REQUEST:
-        print("Donated to  ========== " + creatorSevaUserId);
         UserModel fundRaiserDetails =
             await FirestoreManager.getUserForId(sevaUserId: creatorSevaUserId);
 

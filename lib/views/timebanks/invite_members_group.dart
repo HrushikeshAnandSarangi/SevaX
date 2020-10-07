@@ -44,11 +44,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   InvitationModel invitationModel = InvitationModel();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    print(
-        ("group id ${widget.timebankModel.id}  parenttimebank ${widget.parenttimebankid}"));
     _setTimebankModel();
     getParentTimebankMembersList();
     getMembersList();
@@ -169,10 +166,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   Widget buildList() {
-    print("search ${searchTextController.text}");
-
 //    if (searchTextController.text.trim().length < 1) {
-//      //  print('Search requires minimum 1 character');
 //      return Offstage();
 //    }
     // ListView contains a group of widgets that scroll inside the drawer
@@ -230,8 +224,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           return Offstage();
         if (snapshot.hasError) return Offstage();
         if (snapshot.hasData) {
-          print("----------------- has data");
-
           invitationModel = snapshot.data;
           GroupInviteUserModel groupInviteUserModel =
               GroupInviteUserModel.fromMap(invitationModel.data);
@@ -251,8 +243,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               groupInviteUserModel: groupInviteUserModel,
               status: S.of(context).invited);
         } else {
-          print("----------------- no data");
-
           groupInviteStatus = GroupInviteStatus.INVITE;
           return userWidget(
               user: userModel,
@@ -454,7 +444,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   String getGroupUserStatusTitle(GroupInviteStatus status) {
-    print(" check satttt $status");
     switch (status) {
       case GroupInviteStatus.INVITED:
         return INVITED;

@@ -77,8 +77,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     _joinRequestModelList = await getFutureUserTimeBankRequest(
         userID: widget.sevauserId,
         primaryTimebank: widget.communityModel.primary_timebank);
-    //   print("sevauser id ${_joinRequestModelList[0].entityId}");
-    //   print("sevauser community ${widget.communityModel.id}");
 
     isDataLoaded = true;
 
@@ -206,7 +204,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       });
                     },
                     onDone: (text) {
-                      // print("############################ DONE $text");
                       //widget.onSelectedOtp(controller.text);
                     },
                     wrapAlignment: WrapAlignment.center,
@@ -276,8 +273,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             width: 134,
             child: RaisedButton(
               onPressed: () {
-                print('pressed Next');
-
                 this._checkFields();
               },
               child: Text(
@@ -310,7 +305,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                             textColor: Colors.white,
                             color: Theme.of(context).primaryColor,
                             onPressed: () {
-                              print('pressed Next');
 
                               this._checkFields();
                             },
@@ -551,11 +545,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     dialogSubTitle:
                         "${S.of(context).timebank_onboarding_message} ${state.toString()} ${S.of(context).successfully}"),
                 response.then((onValue) async {
-                  print("onboadrd");
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.));
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
                   // Navigator.of(context).pop();
-                  // print(widget.user);
 
                   //widget.communityModel.id
                   //here is the thing
@@ -645,7 +637,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       builder: (BuildContext context) {
         // return object of type Dialog
 
-        print("init dialog");
         return AlertDialog(
           title: Text(dialogTitle),
           content: Text(dialogSubTitle),
@@ -672,7 +663,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   CompareToTimeBank compareTimeBanks(List<JoinRequestModel> joinRequestModels,
       TimebankModel timeBank, String sevaUserId) {
     // CompareToTimeBank status;
-    print("inside compareTimeBanks " + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 

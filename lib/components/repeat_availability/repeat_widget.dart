@@ -13,9 +13,26 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+  List<String> daysName = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
   ];
-  List<String> occurenccesList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
+  List<String> occurenccesList = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10'
   ];
 
   static List<bool> _selected;
@@ -53,8 +70,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
         x++;
       }
     }
-//    recurringDays.removeWhere((value) => value == null);
-    print("list of data $recurringDays");
+
     return recurringDays;
   }
 
@@ -389,8 +405,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               margin: EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: _selectOnAfter,
-                                child: Text(
-                                    "${S.of(context).done}",
+                                child: Text("${S.of(context).done}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -403,8 +418,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 margin: EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: _cancelOnAfter,
-                                  child: Text(
-                                      "${S.of(context).cancel}",
+                                  child: Text("${S.of(context).cancel}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

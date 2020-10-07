@@ -48,20 +48,15 @@ class _WebViewExampleState extends State<SevaWebView> {
             ].toSet(),
             navigationDelegate: (NavigationRequest request) {
               if (request.url.startsWith('https://www.youtube.com/')) {
-                print('blocking navigation to $request}');
                 return NavigationDecision.prevent;
               }
-              print('allowing navigation to $request');
               return NavigationDecision.navigate;
             },
-            onPageStarted: (String url) {
-              print('Page started loading: $url');
-            },
+            onPageStarted: (String url) {},
             onPageFinished: (String url) {
               setState(() {
                 _stackToView = 0;
               });
-              print('Page finished loading: $url');
             },
             gestureNavigationEnabled: true,
           ),

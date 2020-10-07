@@ -287,7 +287,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         StreamBuilder<String>(
                           stream: _bloc.title,
                           builder: (context, snapshot) {
-                            print(snapshot.data);
                             return CustomTextField(
                               currentNode: _title,
                               nextNode: _description,
@@ -415,8 +414,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       );
                                     }
                                   } else {
-                                    print(
-                                        "Updating offer inside  else ${widget.offerModel.goodsDonationDetails.toMap().toString()}");
                                     _bloc.updateIndividualOffer(
                                       widget.offerModel,
                                     );

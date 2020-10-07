@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -8,6 +6,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class DonationsRepository {
   static final CollectionReference _donationRef = Firestore.instance.collection(
@@ -36,14 +35,9 @@ class DonationsRepository {
     @required RequestType requestType,
     @required OperatingMode operatoreMode,
   }) async {
-    log("L0===============================");
-
     try {
       var donationModel =
           DonationModel.fromMap(acknowledgementNotification.data);
-
-      print("L1=============================== " +
-          donationModel.toMap().toString());
 
       var batch = Firestore.instance.batch();
       batch.updateData(_donationRef.document(donationId), {
@@ -73,10 +67,6 @@ class DonationsRepository {
         await MailDonationReciept.sendReciept(donationModel);
       }
 
-      log(isTimebankNotification.toString() +
-          "L3=============================== " +
-          operatoreMode.toString());
-
       var notificationReference = Firestore.instance
           .collection(
             isTimebankNotification ? DBCollection.timebank : DBCollection.users,
@@ -87,46 +77,32 @@ class DonationsRepository {
         notificationReference.document(notificationId),
         {'isRead': true},
       );
-      print("L4===============================");
 
       //Create disputeNotification notification
       var notificationReferenceForDonor;
       if (donationStatus == DonationStatus.ACKNOWLEDGED) {
-        print("init ");
-
         notificationReferenceForDonor = Firestore.instance
             .collection(DBCollection.users)
             .document(donationModel.donorDetails.email)
             .collection(DBCollection.notifications);
         //donor member reference
       } else {
-        print("Else Mode");
-
         if (operatoreMode == OperatingMode.CREATOR &&
             donationModel.donatedToTimebank) {
-          print(
-              "init operatoreMode == OperatingMode.CREATOR && donationModel.donatedToTimebank");
-
           notificationReferenceForDonor = Firestore.instance
               .collection(DBCollection.users)
               .document(donationModel.donorDetails.email)
               .collection(DBCollection.notifications);
           // direct towards timebank
         } else {
-          print("init else ");
-
           //direct it towards creator
 
           if (donationModel.donatedToTimebank) {
-            print("init timebank for " + donationModel.timebankId);
-
             notificationReferenceForDonor = Firestore.instance
                 .collection(DBCollection.timebank)
                 .document(donationModel.timebankId)
                 .collection(DBCollection.notifications);
           } else {
-            print("init member creator ");
-
             notificationReferenceForDonor = Firestore.instance
                 .collection(DBCollection.users)
                 .document(donationModel.requestId.split('*')[0])
@@ -134,23 +110,16 @@ class DonationsRepository {
           }
         }
       }
-      print("L5===============================");
 
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),
         acknowledgementNotification.toMap(),
       );
 
-      print(acknowledgementNotification.id +
-          " <-------------------------> " +
-          acknowledgementNotification.toString());
-      await batch.commit().then((value) => log("Success")).catchError(
-            (onError) => print("FAILURE " + onError.toString()),
-          );
+      await batch.commit();
     } on Exception catch (e) {
-      print("ERROR ===================================" + e.toString());
+      logger.e(e);
     }
-    print("L6===============================");
   }
 
   Future<void> createDisputeNotification({

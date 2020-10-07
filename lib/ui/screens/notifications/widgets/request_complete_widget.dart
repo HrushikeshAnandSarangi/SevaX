@@ -20,6 +20,7 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -339,8 +340,7 @@ class RequestCompleteWidget extends StatelessWidget {
 
       approveTransaction(requestModel, userId, notificationId, sevaCore);
     } on Exception catch (e) {
-      print(e.toString());
-      // TODO
+      logger.e(e.toString());
     }
   }
 

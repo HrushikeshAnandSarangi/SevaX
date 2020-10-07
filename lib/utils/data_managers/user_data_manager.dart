@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../flavor_config.dart';
 
@@ -72,7 +73,7 @@ Future<int> getUserDonatedGoodsAndAmount({
       });
     });
   } on Exception catch (e) {
-    print(e.toString());
+    logger.e(e);
   }
   return totalGoodsOrAmount;
 }
@@ -107,7 +108,7 @@ Future<int> getTimebankRaisedAmountAndGoods({
       });
     });
   } on Exception catch (e) {
-    print(e.toString());
+    logger.e(e);
   }
   return totalGoodsOrAmount;
 }
@@ -129,12 +130,10 @@ Future<int> getRequestRaisedGoods({
             DonationModel.fromMap(documentSnapshot.data);
 
         totalGoods += donationModel.goodsDetails.donatedGoods.values.length;
-
-        print('raised ${totalGoods.toString()}');
       });
     });
   } on Exception catch (e) {
-    print(e.toString());
+    logger.e(e);
   }
   return totalGoods;
 }
@@ -406,11 +405,8 @@ Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
   try {
     profanityImageModel = ProfanityImageModel.fromMap(json.decode(result.body));
 //  } on FormatException catch (formatException) {
-//    print("format exception");
 //    return null;
   } on Exception catch (exception) {
-    print("general exception");
-
     //other exception
     return null;
   }
@@ -427,7 +423,6 @@ Future<String> updateChangeOwnerDetails(
     String city,
     String pinCode,
     String state}) async {
-  // print("community id ${email + streetAddress1 + streetAddress2 + state + country + city}");
   var result = await http.post(
       "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
       body: jsonEncode({

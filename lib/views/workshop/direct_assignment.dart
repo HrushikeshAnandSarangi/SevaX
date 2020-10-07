@@ -8,7 +8,6 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -226,7 +225,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-              print("User:${user.fullname}");
+
               if (user == null) {
                 return Offstage();
               }
@@ -281,10 +280,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        print(user.email +
-            " User selected" +
-            SevaCore.of(context).loggedInUser.email);
-
         if (!widget.userSelected.containsKey(user.email)) {
           widget.userSelected[user.email] = user;
           currSelectedState = true;

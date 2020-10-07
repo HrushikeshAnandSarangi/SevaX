@@ -49,7 +49,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
-      print("${widget.offerModel}");
     }
     super.initState();
     _bloc.classSizeError.listen((error) {
@@ -90,7 +89,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
               if (status.data == Status.COMPLETE && closePage) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  print("nav stat ${Navigator.of(mcontext).canPop()}");
                   if (Navigator.of(mcontext).canPop())
                     Navigator.of(mcontext).pop();
                 });
@@ -137,7 +135,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (_, snapshot) {
-                              print(snapshot.data);
                               return CustomTextField(
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],

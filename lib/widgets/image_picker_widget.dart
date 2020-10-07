@@ -70,7 +70,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
     widget.onStockImageChanged(globals.webImageUrl);
 
     // TODO: implement addWebImageUrl
-    print('');
   }
 
   @override

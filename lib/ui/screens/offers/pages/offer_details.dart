@@ -370,7 +370,7 @@ class OfferDetails extends StatelessWidget {
     bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
       userId,
     );
-    print(offerModel.cashModel.donors);
+
     bool isCreator = offerModel.sevaUserId == userId;
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&

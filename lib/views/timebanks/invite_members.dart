@@ -27,6 +27,7 @@ import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -139,15 +140,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         showNotification: true,
         openFileFromNotification: true,
       );
-      print("task id ${taskId}");
 
       if (taskId == null) {
-        print('Task is not complete');
-      } else {
-        print('Task is complete');
-      }
+      } else {}
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 
@@ -327,9 +324,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             }
             if (await canLaunch(sampleCSVLink)) {
               launch(sampleCSVLink);
-            } else {
-              print('could not launch url');
-            }
+            } else {}
             // requestPermission();
           },
           child: Text(
@@ -532,12 +527,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['csv']);
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      logger.e(e);
     }
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
-      print("FIle  name $_fileName");
 
       userDoc(_path, _fileName);
     }
@@ -638,8 +632,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 SevaCore.of(context).loggedInUser.sevaUserID);
           }
 
-          print("user list ${snapshot.data}");
-          print("user  ${userlist}");
           if (userlist.length == 0) {
             if (searchTextController.text.length > 1 &&
                 isvalidEmailId(searchTextController.text)) {
@@ -684,7 +676,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       Map<Permission, PermissionStatus> statuses = await [
         Permission.storage,
       ].request();
-      print(statuses[Permission.storage]);
       // it should print PermissionStatus.granted
 
       setState(() {
@@ -1138,7 +1129,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     codeModel.timebankCode = timebankCode;
     codeModel.communityId = communityId;
 
-    print('codemodel ${codeModel.toString()}');
     await Firestore.instance
         .collection('timebankCodes')
         .document(codeModel.timebankCodeId)
@@ -1150,8 +1140,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         .collection("timebankCodes")
         .document(timebankCodeId)
         .delete();
-
-    print('deleted');
   }
 
   TextStyle get sectionTextStyle {

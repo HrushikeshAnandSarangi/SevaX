@@ -27,7 +27,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
   @override
   void initState() {
     log("-----offerid---------------> ${widget.offerModel.id} - ${widget.offerModel.occurenceCount}");
-    print(widget.offerModel.toString());
+
     _bloc.offerModel = widget.offerModel;
     _bloc.init();
     super.initState();

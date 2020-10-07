@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
@@ -772,9 +773,7 @@ class _RegisterPageState extends State<RegisterPage>
                   reference.delete();
 
                   setState(() {});
-                }).catchError((e) => print(e));
-              } else {
-                print('error');
+                });
               }
             });
           } else {
@@ -912,12 +911,11 @@ class _RegisterPageState extends State<RegisterPage>
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['pdf']);
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      logger.e(e);
     }
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
-      print("FIle  name $_fileName");
 
       userDoc(_path, _fileName);
     }
@@ -1137,11 +1135,10 @@ class _RegisterPageState extends State<RegisterPage>
     UserModel user;
     try {
       user = await auth.signInWithApple();
-      print("User apple:$user");
     } on PlatformException catch (error) {
       handlePlatformException(error);
     } on Exception catch (error) {
-      print(error);
+      logger.e(error);
     }
     isLoading = false;
     _processLogin(user);
@@ -1189,13 +1186,10 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ),
         );
-
-        print(" $email already registered");
       }
-      print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print("Failed signing in the user with Exception :  $error");
+      logger.e(error);
     }
     isLoading = false;
     _processLogin(user);
@@ -1214,7 +1208,6 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void handlePlatformException(PlatformException error) {
-    print(error.message);
     if (error.message.contains("no user record")) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(

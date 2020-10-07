@@ -66,7 +66,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 //    });
 
 //    if (isAdmin) {
-//      //   print('admin is true ');
 //      _firestore
 //          .collection("users")
 //          .where(
@@ -89,7 +88,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 //        },
 //      );
 //    } else {
-//      //    print('admin is false ');
 //      _firestore
 //          .collection("users")
 //          .where(
@@ -118,7 +116,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     // timeBankBloc.setInvitedUsersData(widget.requestModel.id);
-    print("did change called");
     super.didChangeDependencies();
   }
 
@@ -149,9 +146,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           );
         }
         List<UserModel> userList = snapshot.data.invitedUsersForRequest;
-        // print("length ${userList.length}");
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
-        //print("length ${userList.length}");
 
         if (userList.length == 0) {
           return getEmptyWidget('Users', S.of(context).no_user_found);
@@ -207,8 +202,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   void refresh() {
     setState(() {
       timeBankBloc.setInvitedUsersData(widget.requestModel.id);
-
-      print("invied page refreshed");
     });
   }
 
