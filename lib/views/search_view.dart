@@ -8,7 +8,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebank_modules/request_card_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'core.dart';
