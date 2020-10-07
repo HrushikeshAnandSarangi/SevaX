@@ -114,8 +114,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       _userBloc.comunityStream, (u, c) => true),
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
-                      print("Updating seva core user model here....");
-
                       UserModel loggedInUser = _userBloc.user;
                       loggedInUser.currentTimebank =
                           _userBloc.community.primary_timebank;

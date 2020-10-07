@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../globals.dart' as globals;
 import '../core.dart';
@@ -51,7 +52,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
             type: FileType.custom, allowedExtensions: ['pdf']);
       }
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      logger.e(e);
     }
     if (!mounted) return;
     setState(() {
@@ -59,8 +60,9 @@ class _DocumentUploadState extends State<DocumentUpload> {
 
       _fileName = _path != null
           ? _path.split('/').last
-          : _paths != null ? _paths.keys.toString() : '...';
-      print("FIle  name $_fileName");
+          : _paths != null
+              ? _paths.keys.toString()
+              : '...';
       uploadDocument().then((_) {
         setState(() => this._isDocumentBeingUploaded = false);
       });
@@ -140,7 +142,6 @@ class _DocumentUploadState extends State<DocumentUpload> {
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;
     globals.newsDocumentName = _fileName;
-    print("url of document $documentURL");
     // _setAvatarURL();
     // _updateDB();
     return documentURL;

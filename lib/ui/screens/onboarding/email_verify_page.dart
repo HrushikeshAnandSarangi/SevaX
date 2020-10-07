@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
@@ -24,16 +25,17 @@ class _VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     if (!widget.emailSent) {
-      print('sending email');
       Firestore.instance
           .collection('users')
           .document(widget.email)
           .setData({'emailSent': true}, merge: true).then(
         (_) => widget.firebaseUser
             .sendEmailVerification()
-            .then((onValue) =>
-                {print("Email successfully sent ${widget.firebaseUser.email}")})
-            .catchError((err) => {print("Email not sent due to $err")}),
+            .then((onValue) => {
+                  logger
+                      .i("Email successfully sent ${widget.firebaseUser.email}")
+                })
+            .catchError((err) => {logger.e("Email not sent due to $err")}),
       );
     }
     super.initState();
@@ -119,7 +121,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           .then((onValue) {
                         showVerificationEmailDialog();
                       }).catchError((onError) {
-                        print("Exception $onError");
+                        logger.e(onError);
                       });
                     },
                   ),

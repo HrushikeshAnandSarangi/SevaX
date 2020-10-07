@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
@@ -202,7 +203,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       try {
         setState(() {});
       } on Exception catch (error) {
-        print(error);
+        logger.e(error);
       }
     });
   }
@@ -250,8 +251,6 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
-
-        print("=======>>>>>> ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
@@ -302,7 +301,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           buildWidget();
         });
       } on Exception catch (error) {
-        print(error);
+        logger.e(error);
       }
     });
   }

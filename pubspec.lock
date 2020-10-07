@@ -609,10 +609,10 @@ packages:
   intro_slider:
     dependency: "direct main"
     description:
-      name: intro_slider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
+      path: "packages/intro_slider"
+      relative: true
+    source: path
+    version: "0.0.1"
   js:
     dependency: transitive
     description:

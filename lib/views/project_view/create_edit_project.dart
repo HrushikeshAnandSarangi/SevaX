@@ -114,7 +114,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         if (templateName != s) {
           SearchManager.searchTemplateForDuplicate(queryString: s)
               .then((commFound) {
-            print("querystring is  ${s} and templateName is ${templateName}");
             if (commFound) {
               setState(() {
                 templateFound = true;
@@ -136,7 +135,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     await FirestoreManager.getProjectFutureById(projectId: widget.projectId)
         .then((onValue) {
       projectModel = onValue;
-      print("projectttttt ${projectModel}");
       selectedAddress = projectModel.address;
       location = projectModel.location;
       isDataLoaded = true;
@@ -218,10 +216,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               padding: EdgeInsets.only(left: 5.0, right: 5.0),
               groupValue: sharedValue,
               onValueChanged: (int val) {
-                print(val);
                 if (val != sharedValue) {
                   setState(() {
-                    print("$sharedValue -- $val");
                     if (val == 0) {
                       projectModel.mode = 'Timebank';
                     } else {
@@ -244,257 +240,261 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   Widget get createProjectForm {
-    return SingleChildScrollView(
-      controller: _controller,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            widget.isCreateProject ? projectSwitch : Container(),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: Column(
-                  children: <Widget>[
-                    widget.isCreateProject
-                        ? widget.projectTemplateModel != null
-                            ? ProjectAvtaar(
-                                photoUrl:
-                                    widget.projectTemplateModel.photoUrl ??
-                                        defaultProjectImageURL)
-                            : ProjectAvtaar()
-                        : ProjectAvtaar(
-                            photoUrl: projectModel.photoUrl != null
-                                ? projectModel.photoUrl ??
-                                    defaultProjectImageURL
-                                : defaultProjectImageURL,
-                          ),
-                    Text(''),
-                    Text(
-                      S.of(context).project_logo,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+    return Builder(
+      builder: (context) => SingleChildScrollView(
+        controller: _controller,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              widget.isCreateProject ? projectSwitch : Container(),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Column(
+                    children: <Widget>[
+                      widget.isCreateProject
+                          ? widget.projectTemplateModel != null
+                              ? ProjectAvtaar(
+                                  photoUrl:
+                                      widget.projectTemplateModel.photoUrl ??
+                                          defaultProjectImageURL)
+                              : ProjectAvtaar()
+                          : ProjectAvtaar(
+                              photoUrl: projectModel.photoUrl != null
+                                  ? projectModel.photoUrl ??
+                                      defaultProjectImageURL
+                                  : defaultProjectImageURL,
+                            ),
+                      Text(''),
+                      Text(
+                        S.of(context).project_logo,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    Text(
-                      communityImageError,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontSize: 12,
+                      Text(
+                        communityImageError,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            headingText(S.of(context).project_name),
-            TextFormField(
-              autovalidate: autoValidateText,
-              onChanged: (value) {
-                print("name ------ $value");
-                if (value.length > 1 && !autoValidateText) {
-                  setState(() {
-                    autoValidateText = true;
-                  });
-                }
-                if (value.length <= 1 && autoValidateText) {
-                  setState(() {
-                    autoValidateText = false;
-                  });
-                }
-                projectModel.name = value;
-              },
-              textCapitalization: TextCapitalization.sentences,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-              ],
-              initialValue: widget.isCreateProject
-                  ? widget.projectTemplateModel != null
-                      ? widget.projectTemplateModel.name
-                      : ""
-                  : projectModel.name ?? "",
-              decoration: InputDecoration(
-                errorMaxLines: 2,
-                errorText: errTxt,
-                hintText: S.of(context).name_hint,
-              ),
-              keyboardType: TextInputType.multiline,
-              maxLines: 1,
-              //initialValue: snapshot.data.community.name ?? '',
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(focusNodes[1]);
-              },
-              onSaved: (value) {
-                projectModel.name = value;
-              },
-              // onSaved: (value) => enteredName = value,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return S.of(context).validation_error_project_name_empty;
-                } else if (profanityDetector.isProfaneString(value)) {
-                  return S.of(context).profanity_text_alert;
-                } else {
+              headingText(S.of(context).project_name),
+              TextFormField(
+                autovalidate: autoValidateText,
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[1] = value;
+                  if (value.length > 1 && !autoValidateText) {
+                    setState(() {
+                      autoValidateText = true;
+                    });
+                  }
+                  if (value.length <= 1 && autoValidateText) {
+                    setState(() {
+                      autoValidateText = false;
+                    });
+                  }
                   projectModel.name = value;
-                }
+                },
+                textCapitalization: TextCapitalization.sentences,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                ],
+                initialValue: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.name
+                        : ""
+                    : projectModel.name ?? "",
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  errorText: errTxt,
+                  hintText: S.of(context).name_hint,
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 1,
+                //initialValue: snapshot.data.community.name ?? '',
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[1]);
+                },
+                onSaved: (value) {
+                  projectModel.name = value;
+                },
+                // onSaved: (value) => enteredName = value,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return S.of(context).validation_error_project_name_empty;
+                  } else if (profanityDetector.isProfaneString(value)) {
+                    return S.of(context).profanity_text_alert;
+                  } else {
+                    projectModel.name = value;
+                  }
 
-                return null;
-              },
-            ),
-            widget.isCreateProject
-                ? widget.projectTemplateModel != null
-                    ? OfferDurationWidget(
-                        title: ' ${S.of(context).project_duration}',
-                        startTime: startDate,
-                        endTime: endDate,
-                      )
-                    : OfferDurationWidget(
-                        title: ' ${S.of(context).project_duration}',
-                        //startTime: CalendarWidgetState.startDate,
-                        //endTime: CalendarWidgetState.endDate
-                      )
-                : OfferDurationWidget(
-                    title: ' ${S.of(context).project_duration}',
-                    startTime: startDate,
-                    endTime: endDate,
-                  ),
-            Text(
-              dateTimeEroor,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: 12,
+                  return null;
+                },
               ),
-            ),
-            headingText(S.of(context).mission_statement),
-            TextFormField(
-              decoration: InputDecoration(
-                errorMaxLines: 2,
-                hintText: S.of(context).project_mission_statement_hint,
-              ),
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(focusNodes[2]);
-              },
-              textInputAction: TextInputAction.next,
-              focusNode: focusNodes[1],
-              initialValue: widget.isCreateProject
+              widget.isCreateProject
                   ? widget.projectTemplateModel != null
-                      ? widget.projectTemplateModel.description
-                      : ""
-                  : projectModel.description ?? "",
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              textCapitalization: TextCapitalization.sentences,
+                      ? OfferDurationWidget(
+                          title: ' ${S.of(context).project_duration}',
+                          startTime: startDate,
+                          endTime: endDate,
+                        )
+                      : OfferDurationWidget(
+                          title: ' ${S.of(context).project_duration}',
+                          //startTime: CalendarWidgetState.startDate,
+                          //endTime: CalendarWidgetState.endDate
+                        )
+                  : OfferDurationWidget(
+                      title: ' ${S.of(context).project_duration}',
+                      startTime: startDate,
+                      endTime: endDate,
+                    ),
+              Text(
+                dateTimeEroor,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
+              ),
+              headingText(S.of(context).mission_statement),
+              TextFormField(
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  hintText: S.of(context).project_mission_statement_hint,
+                ),
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[2]);
+                },
+                textInputAction: TextInputAction.next,
+                focusNode: focusNodes[1],
+                initialValue: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.description
+                        : ""
+                    : projectModel.description ?? "",
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
 
-              //  initialValue: timebankModel.missionStatement,
-              autovalidate: autoValidateText,
-              onChanged: (value) {
-                if (value.length > 1 && !autoValidateText) {
-                  setState(() {
-                    autoValidateText = true;
-                  });
-                }
-                if (value.length <= 1 && autoValidateText) {
-                  setState(() {
-                    autoValidateText = false;
-                  });
-                }
+                //  initialValue: timebankModel.missionStatement,
+                autovalidate: autoValidateText,
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[2] = value;
+                  if (value.length > 1 && !autoValidateText) {
+                    setState(() {
+                      autoValidateText = true;
+                    });
+                  }
+                  if (value.length <= 1 && autoValidateText) {
+                    setState(() {
+                      autoValidateText = false;
+                    });
+                  }
 
-                projectModel.description = value;
-              },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return S.of(context).validation_error_mission_empty;
-                } else if (profanityDetector.isProfaneString(value)) {
-                  return S.of(context).profanity_text_alert;
-                } else {
                   projectModel.description = value;
-                }
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return S.of(context).validation_error_mission_empty;
+                  } else if (profanityDetector.isProfaneString(value)) {
+                    return S.of(context).profanity_text_alert;
+                  } else {
+                    projectModel.description = value;
+                  }
 //                      snapshot.data.community.updateValueByKey('about', value);
 //
 //                      snapshot.data.timebank
 //                          .updateValueByKey('missionStatement', value);
 //                      createEditCommunityBloc.onChange(snapshot.data);
-                return null;
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-            ),
-            headingText(
-              S.of(context).email.firstWordUpperCase(),
-            ),
-            TextFormField(
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus(focusNodes[3]);
-              },
-              textInputAction: TextInputAction.next,
-              focusNode: focusNodes[2],
-              cursorColor: Colors.black54,
-              validator: _validateEmailId,
-              onSaved: (value) {
-                projectModel.emailId = value;
-              },
-              onChanged: (value) {
-                projectModel.emailId = value;
-              },
-              initialValue: widget.isCreateProject
-                  ? SevaCore.of(context).loggedInUser.email
-                  : projectModel.emailId ??
-                      SevaCore.of(context).loggedInUser.email,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black54),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black54),
-                ),
-                hintText: S.of(context).email_hint,
-                hintStyle: textStyle,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-            ),
-            headingText(S.of(context).phone_number),
-            TextFormField(
-              onFieldSubmitted: (_) {
-                FocusScope.of(context).unfocus();
-              },
-
-              cursorColor: Colors.black54,
-              focusNode: focusNodes[3],
-              textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.phone,
-              //  validator: _validateEmailId,
-              onSaved: (value) {
-                projectModel.phoneNumber = '+' + value;
-              },
-              onChanged: (value) {
-                projectModel.phoneNumber = '+' + value;
-              },
-              inputFormatters: [
-                WhitelistingTextInputFormatter(RegExp("[0-9]")),
-              ],
-
-              validator: (value) {
-                if (value.isEmpty) {
                   return null;
-                } else {
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
+              headingText(
+                S.of(context).email.firstWordUpperCase(),
+              ),
+              TextFormField(
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[3]);
+                },
+                textInputAction: TextInputAction.next,
+                focusNode: focusNodes[2],
+                cursorColor: Colors.black54,
+                validator: _validateEmailId,
+                onSaved: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[3] = value;
+                  projectModel.emailId = value;
+                },
+                onChanged: (value) {
+                  projectModel.emailId = value;
+                },
+                initialValue: widget.isCreateProject
+                    ? SevaCore.of(context).loggedInUser.email
+                    : projectModel.emailId ??
+                        SevaCore.of(context).loggedInUser.email,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  hintText: S.of(context).email_hint,
+                  hintStyle: textStyle,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
+              headingText(S.of(context).phone_number),
+              TextFormField(
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).unfocus();
+                },
+
+                cursorColor: Colors.black54,
+                focusNode: focusNodes[3],
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.phone,
+                //  validator: _validateEmailId,
+                onSaved: (value) {
                   projectModel.phoneNumber = '+' + value;
-                }
-                return null;
-              },
-              maxLength: 15,
-              initialValue: widget.isCreateProject
-                  ? ""
-                  : projectModel.phoneNumber != null
-                      ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
-                      : '',
-              decoration: InputDecoration(
+                },
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[4] = value;
+                  projectModel.phoneNumber = '+' + value;
+                },
+                inputFormatters: [
+                  WhitelistingTextInputFormatter(RegExp("[0-9]")),
+                ],
+
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return null;
+                  } else {
+                    projectModel.phoneNumber = '+' + value;
+                  }
+                  return null;
+                },
+                maxLength: 15,
+                initialValue: widget.isCreateProject
+                    ? ""
+                    : projectModel.phoneNumber != null
+                        ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
+                        : '',
+                decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
 //                  color: Colors.black,
@@ -505,320 +505,323 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                  color: Colors.black,
 //                  size: 13,
 //                ),
-                prefix: Icon(
-                  Icons.add,
-                  color: Colors.black,
-                  size: 13,
+                  prefix: Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 13,
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54),
+                  ),
+                  hintText: "123456789",
+                  hintStyle: textStyle,
                 ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black54),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
+              headingText(
+                S.of(context).project_location,
+              ),
+              Text(
+                S.of(context).project_location_hint,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black54),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+              ),
+              Center(
+                child: LocationPickerWidget(
+                  selectedAddress: widget.isCreateProject
+                      ? selectedAddress
+                      : selectedAddress,
+                  location: widget.isCreateProject ? location : location,
+                  onChanged: (LocationDataModel dataModel) {
+                    log("received data model");
+                    setState(() {
+                      location = dataModel.geoPoint;
+                      this.selectedAddress = dataModel.location;
+                    });
+                  },
                 ),
-                hintText: "123456789",
-                hintStyle: textStyle,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-            ),
-            headingText(
-              S.of(context).project_location,
-            ),
-            Text(
-              S.of(context).project_location_hint,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
+              // Center(
+              //   child: FlatButton.icon(
+              //     icon: Icon(Icons.add_location),
+              //     label: Container(
+              //       child: Text(
+              //         selectedAddress == '' || selectedAddress == null
+              //             ? 'Add Location'
+              //             : selectedAddress ?? "",
+              //         overflow: TextOverflow.ellipsis,
+              //       ),
+              //     ),
+              //     color: Colors.grey[200],
+              //     onPressed: () async {
+              //              await Navigator.push(
+              //         context,
+              //         MaterialPageRoute<LocationDataModel>(
+              //           builder: (context) => LocationPicker(
+              //             selectedLocation: location,
+              //             selectedAddress: selectedAddress,
+              //           ),
+              //         ),
+              //       ).then((dataModel) {
+              //         if (dataModel != null) {
+              //           location = dataModel.geoPoint;
+              //           print(
+              //               "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+              //           setState(() {
+              //             this.selectedAddress = dataModel.location;
+              //           });
+              //           log("Adderess   ${dataModel.location}");
+              //         }
+              //       });
+              //     },
+              //   ),
+              // ),
+              Text(
+                locationError,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-            ),
-            Center(
-              child: LocationPickerWidget(
-                selectedAddress:
-                    widget.isCreateProject ? selectedAddress : selectedAddress,
-                location: widget.isCreateProject ? location : location,
-                onChanged: (LocationDataModel dataModel) {
-                  log("received data model");
-                  setState(() {
-                    location = dataModel.geoPoint;
-                    this.selectedAddress = dataModel.location;
-                  });
-                },
-              ),
-            ),
-            // Center(
-            //   child: FlatButton.icon(
-            //     icon: Icon(Icons.add_location),
-            //     label: Container(
-            //       child: Text(
-            //         selectedAddress == '' || selectedAddress == null
-            //             ? 'Add Location'
-            //             : selectedAddress ?? "",
-            //         overflow: TextOverflow.ellipsis,
-            //       ),
-            //     ),
-            //     color: Colors.grey[200],
-            //     onPressed: () async {
-            //       print("Location opened : $location");
-            //       await Navigator.push(
-            //         context,
-            //         MaterialPageRoute<LocationDataModel>(
-            //           builder: (context) => LocationPicker(
-            //             selectedLocation: location,
-            //             selectedAddress: selectedAddress,
-            //           ),
-            //         ),
-            //       ).then((dataModel) {
-            //         if (dataModel != null) {
-            //           location = dataModel.geoPoint;
-            //           print(
-            //               "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-            //           setState(() {
-            //             this.selectedAddress = dataModel.location;
-            //           });
-            //           log("Adderess   ${dataModel.location}");
-            //         }
-            //       });
-            //     },
-            //   ),
-            // ),
-            Text(
-              locationError,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: 12,
-              ),
-            ),
-            widget.isCreateProject
-                ? Row(
-                    children: <Widget>[
-                      headingText(S.of(context).save_as_template),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Checkbox(
-                          value: saveAsTemplate,
-                          onChanged: (bool value) {
-                            if (saveAsTemplate) {
-                              setState(() {
-                                saveAsTemplate = false;
-                              });
-                            } else {
-                              _showSaveAsTemplateDialog().then((templateName) {
-                                if (templateName != null) {
-                                  setState(() {
-                                    saveAsTemplate = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    saveAsTemplate = false;
-                                  });
-                                }
-                              });
-                            }
-                          },
+              widget.isCreateProject
+                  ? Row(
+                      children: <Widget>[
+                        headingText(S.of(context).save_as_template),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Checkbox(
+                            value: saveAsTemplate,
+                            onChanged: (bool value) {
+                              if (saveAsTemplate) {
+                                setState(() {
+                                  saveAsTemplate = false;
+                                });
+                              } else {
+                                _showSaveAsTemplateDialog()
+                                    .then((templateName) {
+                                  if (templateName != null) {
+                                    setState(() {
+                                      saveAsTemplate = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      saveAsTemplate = false;
+                                    });
+                                  }
+                                });
+                              }
+                            },
+                          ),
                         ),
-                      ),
 //                Column(
 //                  children: <Widget>[
 //
 //                  ],
 //                ),
-                    ],
-                  )
-                : Offstage(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: Container(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  onPressed: () async {
-                    print('project phone ${projectModel.phoneNumber}');
+                      ],
+                    )
+                  : Offstage(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    onPressed: () async {
 
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context).check_internet),
-                          action: SnackBarAction(
-                            label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+
+                      var connResult = await Connectivity().checkConnectivity();
+                      if (connResult == ConnectivityResult.none) {
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text(S.of(context).check_internet),
+                            action: SnackBarAction(
+                              label: S.of(context).dismiss,
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
+                            ),
                           ),
-                        ),
-                      );
-                      return;
-                    }
+                        );
+                        return;
+                      }
 
-                    print('project mode ${projectModel.mode}');
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    // show a dialog
-                    projectModel.startTime =
-                        OfferDurationWidgetState.starttimestamp;
-                    projectModel.endTime =
-                        OfferDurationWidgetState.endtimestamp;
-                    if (widget.isCreateProject) {
+
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      // show a dialog
+                      projectModel.startTime =
+                          OfferDurationWidgetState.starttimestamp;
+                      projectModel.endTime =
+                          OfferDurationWidgetState.endtimestamp;
+                      if (widget.isCreateProject) {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
 //                            }
-                      print(_formKey.currentState.validate());
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
 //                            if (communityFound) {
-//                              print("Found:$communityFound");
 //                              return;
 //                            }
-                      if (_formKey.currentState.validate()) {
-                        if (projectModel.startTime == 0 ||
-                            projectModel.endTime == 0) {
-                          showDialogForTitle(
-                            dialogTitle: S.of(context).validation_error_no_date,
-                          );
-                          return;
-                        }
+                        if (_formKey.currentState.validate()) {
+                          if (projectModel.startTime == 0 ||
+                              projectModel.endTime == 0) {
+                            showDialogForTitle(
+                              dialogTitle:
+                                  S.of(context).validation_error_no_date,
+                            );
+                            return;
+                          }
 
-                        projectModel.communityId =
-                            SevaCore.of(context).loggedInUser.currentCommunity;
-                        projectModel.completedRequests = [];
-                        projectModel.pendingRequests = [];
-                        projectModel.timebankId = widget.timebankId;
-                        projectModel.photoUrl = globals.projectsAvtaarURL;
-                        projectModel.emailId =
-                            SevaCore.of(context).loggedInUser.email;
-                        projectModel.location = location;
-                        int timestamp = DateTime.now().millisecondsSinceEpoch;
-                        projectModel.createdAt = timestamp;
+                          projectModel.communityId = SevaCore.of(context)
+                              .loggedInUser
+                              .currentCommunity;
+                          projectModel.completedRequests = [];
+                          projectModel.pendingRequests = [];
+                          projectModel.timebankId = widget.timebankId;
+                          projectModel.photoUrl = globals.projectsAvtaarURL;
+                          projectModel.emailId =
+                              SevaCore.of(context).loggedInUser.email;
+                          projectModel.location = location;
+                          int timestamp = DateTime.now().millisecondsSinceEpoch;
+                          projectModel.createdAt = timestamp;
 
-                        projectModel.creatorId =
-                            SevaCore.of(context).loggedInUser.sevaUserID;
-                        projectModel.members = [];
-                        projectModel.address = selectedAddress;
-                        projectModel.id = Utils.getUuid();
-                        projectModel.softDelete = false;
+                          projectModel.creatorId =
+                              SevaCore.of(context).loggedInUser.sevaUserID;
+                          projectModel.members = [];
+                          projectModel.address = selectedAddress;
+                          projectModel.id = Utils.getUuid();
+                          projectModel.softDelete = false;
 
-                        if (saveAsTemplate) {
-                          projectTemplateModel.communityId =
-                              projectModel.communityId;
-                          projectTemplateModel.timebankId =
-                              projectModel.timebankId;
-                          projectTemplateModel.id = Utils.getUuid();
-                          projectTemplateModel.name = projectModel.name;
-                          projectTemplateModel.templateName = templateName;
-                          projectTemplateModel.photoUrl = projectModel.photoUrl;
-                          projectTemplateModel.description =
-                              projectModel.description;
-                          projectTemplateModel.creatorId =
-                              projectModel.creatorId;
-                          projectTemplateModel.createdAt =
-                              projectModel.createdAt;
-                          projectTemplateModel.mode = projectModel.mode;
-                          projectTemplateModel.softDelete = false;
+                          if (saveAsTemplate) {
+                            projectTemplateModel.communityId =
+                                projectModel.communityId;
+                            projectTemplateModel.timebankId =
+                                projectModel.timebankId;
+                            projectTemplateModel.id = Utils.getUuid();
+                            projectTemplateModel.name = projectModel.name;
+                            projectTemplateModel.templateName = templateName;
+                            projectTemplateModel.photoUrl =
+                                projectModel.photoUrl;
+                            projectTemplateModel.description =
+                                projectModel.description;
+                            projectTemplateModel.creatorId =
+                                projectModel.creatorId;
+                            projectTemplateModel.createdAt =
+                                projectModel.createdAt;
+                            projectTemplateModel.mode = projectModel.mode;
+                            projectTemplateModel.softDelete = false;
 
-                          await FirestoreManager.createProjectTemplate(
-                              projectTemplateModel: projectTemplateModel);
-                        }
+                            await FirestoreManager.createProjectTemplate(
+                                projectTemplateModel: projectTemplateModel);
+                          }
 
-                        // if (globals.projectsAvtaarURL == null) {
-                        //   setState(() {
-                        //     this.communityImageError =
-                        //         'Project logo is mandatory';
-                        //     //   moveToTop();
-                        //   });
+                          // if (globals.projectsAvtaarURL == null) {
+                          //   setState(() {
+                          //     this.communityImageError =
+                          //         'Project logo is mandatory';
+                          //     //   moveToTop();
+                          //   });
 
-                        // }
-                        showProgressDialog(S.of(context).creating_project);
+                          // }
+                          showProgressDialog(S.of(context).creating_project);
 //                          setState(() {
 //                            this.communityImageError = '';
 //                          });
-                        await FirestoreManager.createProject(
-                            projectModel: projectModel);
-                        globals.projectsAvtaarURL = null;
-                        globals.webImageUrl = null;
+                          await FirestoreManager.createProject(
+                              projectModel: projectModel);
+                          globals.projectsAvtaarURL = null;
+                          globals.webImageUrl = null;
 
-                        if (dialogContext != null) {
-                          Navigator.pop(dialogContext);
-                        }
-                        _formKey.currentState.reset();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      } else {}
-                    } else {
-                      if (_formKey.currentState.validate()) {
-                        projectModel.startTime =
-                            OfferDurationWidgetState.starttimestamp;
-                        projectModel.endTime =
-                            OfferDurationWidgetState.endtimestamp;
-                        projectModel.address = selectedAddress;
-                        projectModel.location = location;
+                          if (dialogContext != null) {
+                            Navigator.pop(dialogContext);
+                          }
+                          _formKey.currentState.reset();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        } else {}
+                      } else {
+                        if (_formKey.currentState.validate()) {
+                          projectModel.startTime =
+                              OfferDurationWidgetState.starttimestamp;
+                          projectModel.endTime =
+                              OfferDurationWidgetState.endtimestamp;
+                          projectModel.address = selectedAddress;
+                          projectModel.location = location;
 
-                        if (globals.projectsAvtaarURL != null) {
-                          projectModel.photoUrl = globals.projectsAvtaarURL;
-                        }
+                          if (globals.projectsAvtaarURL != null) {
+                            projectModel.photoUrl = globals.projectsAvtaarURL;
+                          }
 
-                        if (projectModel.startTime == 0 ||
-                            projectModel.endTime == 0) {
-                          showDialogForTitle(
-                              dialogTitle:
-                                  S.of(context).validation_error_no_date);
-                          return;
-                        }
+                          if (projectModel.startTime == 0 ||
+                              projectModel.endTime == 0) {
+                            showDialogForTitle(
+                                dialogTitle:
+                                    S.of(context).validation_error_no_date);
+                            return;
+                          }
 
-                        if (projectModel.address == null ||
-                            this.selectedAddress == null) {
-                          this.locationError =
-                              S.of(context).validation_error_location_mandatory;
-                          showDialogForTitle(
-                              dialogTitle: S
-                                  .of(context)
-                                  .validation_error_add_project_location);
-                          return;
-                        }
-                        showProgressDialog(S.of(context).updating_project);
-                        await FirestoreManager.updateProject(
-                            projectModel: projectModel);
-                        globals.projectsAvtaarURL = null;
-                        globals.webImageUrl = null;
+                          if (projectModel.address == null ||
+                              this.selectedAddress == null) {
+                            this.locationError = S
+                                .of(context)
+                                .validation_error_location_mandatory;
+                            showDialogForTitle(
+                                dialogTitle: S
+                                    .of(context)
+                                    .validation_error_add_project_location);
+                            return;
+                          }
+                          showProgressDialog(S.of(context).updating_project);
+                          await FirestoreManager.updateProject(
+                              projectModel: projectModel);
+                          globals.projectsAvtaarURL = null;
+                          globals.webImageUrl = null;
 
-                        if (dialogContext != null) {
-                          Navigator.pop(dialogContext);
+                          if (dialogContext != null) {
+                            Navigator.pop(dialogContext);
+                          }
+                          _formKey.currentState.reset();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         }
-                        _formKey.currentState.reset();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
                       }
-                    }
-                  },
-                  shape: StadiumBorder(),
-                  child: Text(
-                    widget.isCreateProject
-                        ? S.of(context).create_project
-                        : S.of(context).save,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    },
+                    shape: StadiumBorder(),
+                    child: Text(
+                      widget.isCreateProject
+                          ? S.of(context).create_project
+                          : S.of(context).save,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                    textColor: FlavorConfig.values.buttonTextColor,
                   ),
-                  textColor: FlavorConfig.values.buttonTextColor,
                 ),
               ),
-            ),
-            SizedBox(height: 100),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                '',
-                textAlign: TextAlign.center,
+              SizedBox(height: 100),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 50),
+                child: Text(
+                  '',
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   void moveToTop() {
-    print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(
       -100,
@@ -868,7 +871,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
 //   Future _getLocation(data) async {
-//     print('Timebank value:$data');
 //     String address = await LocationUtility().getFormattedAddress(
 //       location.latitude,
 //       location.longitude,
@@ -877,7 +879,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //       this.selectedAddress = address;
 //     });
 // //    timebank.updateValueByKey('locationAddress', address);
-//     print('_getLocation: $address');
 //     projectModel.address = this.selectedAddress;
 //   }
 
@@ -969,6 +970,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(50),
                         ],
+                        onChanged: (value) {
+                          ExitWithConfirmation.of(context).fieldValues[5] =
+                              value;
+                        },
                         validator: (value) {
                           if (value.isEmpty) {
                             return S.of(context).validation_error_template_name;

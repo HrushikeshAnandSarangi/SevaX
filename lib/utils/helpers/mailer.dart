@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../flavor_config.dart';
 
@@ -24,7 +25,8 @@ class SevaMailer {
         ),
       );
       return true;
-    } catch (_) {
+    } catch (e) {
+      logger.e(e);
       return false;
     }
   }
@@ -54,9 +56,8 @@ class MailDonationReciept {
           "donationModel": donationModel.toMap(),
         }),
       );
-      print(result);
     } catch (e) {
-      print(e);
+      logger.e(e);
     }
   }
 }

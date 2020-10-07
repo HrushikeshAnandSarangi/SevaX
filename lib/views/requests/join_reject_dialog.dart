@@ -112,9 +112,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     ),
                     onPressed: () async {
                       //Once approvedp
-                      print(widget.userModel.calendarId);
+
                       if (widget.userModel.calendarId != null) {
-                        print('true');
                         showDialog(
                           context: context,
                           builder: (_context) {
@@ -146,8 +145,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
                         //  calenderConfirmation(context);
                       } else {
-                        print('false');
-
                         approveInvitationForVolunteerRequest(
                             allowedCalender: false,
                             model: widget.requestInvitationModel,

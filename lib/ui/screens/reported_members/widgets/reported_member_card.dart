@@ -260,7 +260,6 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context) async {
-    print(model.reportedId + " removing member ongoing " + timebankModel.id);
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
 

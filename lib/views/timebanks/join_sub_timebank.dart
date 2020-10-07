@@ -73,10 +73,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     setState(() {
       isDataLoaded = true;
     });
-
-    //print('User request ${}');
-
-    // print('User request ${newList}');
   }
 
   Widget build(BuildContext context) {
@@ -87,7 +83,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     REJECTED = S.of(context).rejected;
     final _bloc = BlocProvider.of<UserDataBloc>(context);
 
-    print("in explore ==> ${_bloc.user.email}");
     return Scaffold(
 //      appBar: AppBar(
 //        title: Text("Group",
@@ -138,7 +133,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           primaryTimebankId: widget.communityPrimaryTimebankId,
         ),
         builder: (context, snapshot) {
-          //    print('timee ${snapshot.data}');
           if (snapshot.hasError)
             return Text('${S.of(context).general_stream_error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -157,11 +151,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           timebankList = snapshot.data;
           timebankList.forEach((t) {
             dropdownList.add(t.id);
-            //  print('timee  banks  ${t}');
           });
 
           // Navigator.pop(context);
-          print("data ${dropdownList.length}");
 
           if (snapshot.data != null) {
             return Column(
@@ -180,7 +172,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     String userStatus = S.of(context).join;
 //ytrtrvtfffddxxszwawqewc bunyinuyuty tfgftftf ttftftftftb ftyhbyytbtytuknt  kmiolll908786756 53423saqaqaaxesecsrsescsrsevdvvfdvtfhby byu kmn tbvrtrtrtrvrrrtrvrtvty
                     TimebankModel timebank = timebankList.elementAt(index);
-                    //  print('timebank is ${timebankList.length}');
                     if (timebank.admins
                             .contains(widget.loggedInUserModel.sevaUserID) ||
                         timebank.coordinators
@@ -199,12 +190,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                       _joinRequestModels.forEach((joinRequestModel) {
                         if (joinRequestModel.entityId == timebank.id) {
-                          print('timebank is true ${timebank.id}');
-
                           if (joinRequestModel.operationTaken == true &&
                               joinRequestModel.accepted == false) {
                             campareStatus = CompareToTimeBank.REJECTED;
-                            print('request us rejected ${timebank.id}');
                             userStatus = S.of(context).rejected;
                           }
                           if (joinRequestModel.operationTaken == false) {
@@ -338,9 +326,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                             getData();
                           });
                           // return;
-                        } else {
-                          print('user status ${userStatus}');
-                        }
+                        } else {}
                       },
                     ),
                   ),
@@ -458,16 +444,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
     // CompareToTimeBank status;
-    print("inside compareTimeBanks length " +
-        joinRequestModels.length.toString());
+
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
-      print("inside compareTimeBanks " + joinRequestModels[i].userId);
-      print("inside compareTimeBanks accepted " +
-          joinRequestModels[i].accepted.toString());
-      print(
-          "inside compareTimeBanks enity id " + joinRequestModels[i].entityId);
-      print("inside compareTimeBanks timebank id two " + timeBank.id);
 
       if (joinRequestModels[i].entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
@@ -476,23 +455,15 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               .contains(widget.loggedInUserModel.sevaUserID) ||
           timeBank.coordinators.contains(widget.loggedInUserModel.sevaUserID) ||
           timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
-        print("user status joined");
-
         return CompareToTimeBank.JOINED;
       } else if (joinRequestModels[i].entityId == timeBank.id &&
           joinRequestModels[i].operationTaken == false) {
-        print("user status requested");
-
         return CompareToTimeBank.REQUESTED;
       } else if (joinRequestModels[i].entityId == timeBank.id &&
           joinRequestModels[i].operationTaken == true &&
           joinRequestModels[i].accepted == false) {
-        print("user status rejected");
-
         return CompareToTimeBank.REJECTED;
       } else {
-        print("user status join");
-
         return CompareToTimeBank.JOIN;
       }
     }

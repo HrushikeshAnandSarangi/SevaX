@@ -71,8 +71,6 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
     Offset delta = _canvasSize - fitted;
     _offset = delta / 2.0; // Centers the image
-
-    print(_scale);
   }
 
   Function() _handleDoubleTap(BuildContext ctx) {
@@ -98,7 +96,6 @@ class _ZoomableImageState extends State<ZoomableImage> {
   }
 
   void _handleScaleStart(ScaleStartDetails d) {
-    print("starting scale at ${d.focalPoint} from $_offset $_scale");
     _startingFocalPoint = d.focalPoint;
     _previousOffset = _offset;
     _previousScale = _scale;
@@ -174,7 +171,6 @@ class _ZoomableImageState extends State<ZoomableImage> {
   }
 
   void _handleImageLoaded(ImageInfo info, bool synchronousCall) {
-    print("image loaded: $info");
     setState(() {
       _image = info.image;
     });

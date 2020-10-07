@@ -250,28 +250,29 @@ class ProfileViewerState extends State<ProfileViewer> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: TRscore(
                             user.trustworthinessscore, user.reliabilityscore)),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                        child: GoodsAndAmountDonations(
-                            userId: user.sevaUserID,
-                            isGoods: false,
-                            isTimeBank: false,
-                            onTap: () {})),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 0),
-                        child: GoodsAndAmountDonations(
-                            userId: user.sevaUserID,
-                            isGoods: true,
-                            isTimeBank: false,
-                            onTap: () {})),
+                    // '$' donated and 'Items' donated
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Padding(
+                    //     padding:
+                    //         EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                    //     child: GoodsAndAmountDonations(
+                    //         userId: user.sevaUserID,
+                    //         isGoods: false,
+                    //         isTimeBank: false,
+                    //         onTap: () {})),
+                    // SizedBox(
+                    //   height: 15,
+                    // ),
+                    // Padding(
+                    //     padding:
+                    //         EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                    //     child: GoodsAndAmountDonations(
+                    //         userId: user.sevaUserID,
+                    //         isGoods: true,
+                    //         isTimeBank: false,
+                    //         onTap: () {})),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 0),

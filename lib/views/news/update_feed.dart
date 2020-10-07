@@ -229,6 +229,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             keyboardType: TextInputType.text,
                             maxLines: 5,
                             onChanged: (value) {
+                              ExitWithConfirmation.of(context).fieldValues[1] =
+                                  value;
                               widget.newsModel.subheading = value;
                             },
                             validator: (value) {

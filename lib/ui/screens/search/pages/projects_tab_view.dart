@@ -36,7 +36,6 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
                 return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                print("===>> ${snapshot.data}");
                 return Center(
                   child: Text(S.of(context).no_data),
                 );

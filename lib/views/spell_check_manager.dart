@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/remote_config_keys.dart';
 
 SpellCheckResponse spellCheckResponseFromMap(String str) =>
@@ -179,7 +180,6 @@ class SpellCheckManager {
       ];
     }
     var rand = 0 + _random.nextInt((listOfKeys.length - 1) - 0);
-    print('using key ${listOfKeys[rand]}');
     return listOfKeys[rand];
   }
 
@@ -208,7 +208,6 @@ class SpellCheckManager {
           ..errorType = SpellErrorType.RATE_LIMIT_EXCEEDED;
 
       case HTTPResponseCodes.RESULT_OK:
-        print("RESULSTS OK for $keyword");
         return SpellCheckResult.evaluateKeywordResult(spellChekRespons.body);
 
       default:
@@ -229,12 +228,8 @@ class SpellCheckResult {
     var spellCheckRespone;
     try {
       spellCheckRespone = spellCheckResponseFromMap(responseBody);
-      print(">>>" + spellCheckRespone.toString());
     } catch (e) {
-      print("Couldn't parse the json : " +
-          e.toString() +
-          "?? " +
-          responseBody.toString());
+      logger.e(e);
       return SpellCheckResult()
         ..hasErros = true
         ..errorType = SpellErrorType.NO_SUGGESTIONS_FOUND;

@@ -194,7 +194,7 @@ class BookmarkedOffers extends StatelessWidget {
                         ),
                         onPressed: () async {
                           // Once approved
-                          print("UserModel ${userModel.fullname}");
+
                           Navigator.pop(viewContext);
 
                           Navigator.push(
@@ -222,8 +222,7 @@ class BookmarkedOffers extends StatelessWidget {
                         ),
                         onPressed: () async {
                           // Once approved
-                          print("UserModel ${userModel.sevaUserID}");
-                          print("admint ${timebankModel.admins}");
+
                           Navigator.pop(viewContext);
                           if (timebankModel.admins.contains(
                             SevaCore.of(parentContext).loggedInUser.sevaUserID,

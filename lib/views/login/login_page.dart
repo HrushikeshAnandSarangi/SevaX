@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -46,8 +47,10 @@ class _LoginPageState extends State<LoginPage> {
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
+
   void initState() {
     super.initState();
+
     if (Platform.isIOS) {
       AppleSignIn.onCredentialRevoked.listen((_) {});
     }
@@ -95,6 +98,209 @@ class _LoginPageState extends State<LoginPage> {
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     // getDynamicLinkData(context);
     fetchBulkInviteLinkData();
+
+    bool textLengthCalculator(TextSpan span, size) {
+      // Use a textpainter to determine if it will exceed max lines
+      TextPainter tp = TextPainter(
+        maxLines: 1,
+        textAlign: TextAlign.left,
+        textDirection: TextDirection.ltr,
+        text: span,
+      );
+      // trigger it to layout
+      tp.layout(maxWidth: size.maxWidth);
+      // whether the text overflowed or not
+      bool exceed = tp.didExceedMaxLines;
+      return exceed;
+    }
+
+    List<Widget> resetPasswordAndCancelButton = [
+      FlatButton(
+        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        color: Theme.of(context).accentColor,
+        textColor: FlavorConfig.values.buttonTextColor,
+        child: Text(
+          S.of(context).reset_password,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        onPressed: () {
+          if (!_formKeyDialog.currentState.validate()) {
+            return;
+          }
+          Navigator.of(context).pop({
+            "sendResetLink": true,
+            "userEmail": _textFieldControllerResetEmail.trim()
+          });
+        },
+      ),
+      FlatButton(
+        child: Text(
+          S.of(context).cancel,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.red,
+          ),
+        ),
+        onPressed: () {
+          Navigator.of(context).pop(
+            {"sendResetLink": false, "userEmail": null},
+          );
+        },
+      ),
+    ];
+    List<Widget> signUpAndForgotPassword = <Widget>[
+      Row(
+        children: <Widget>[
+          Text(
+            S.of(context).new_user,
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              isLoading = true;
+              UserModel user = await Navigator.of(context).push(
+                MaterialPageRoute<UserModel>(
+                  builder: (context) => RegisterPage(),
+                ),
+              );
+              isLoading = false;
+              if (user != null) _processLogin(user);
+            },
+            child: Text(
+              S.of(context).sign_up,
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+          )
+        ],
+      ),
+      Row(
+        children: <Widget>[
+          Text(
+            S.of(context).forgot_password,
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          InkWell(
+              onTap: () async {
+                isLoading = true;
+                UserModel user = await Navigator.of(context).push(
+                  MaterialPageRoute<UserModel>(
+                    builder: (context) => RegisterPage(),
+                  ),
+                );
+                isLoading = false;
+                if (user != null) _processLogin(user);
+              },
+              child: InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            S.of(context).enter_email,
+                          ),
+                          content: Container(
+                            width: 300,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Form(
+                                  key: _formKeyDialog,
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return S.of(context).enter_email;
+                                      } else if (!validateEmail(value.trim())) {
+                                        return S
+                                            .of(context)
+                                            .validation_error_invalid_email;
+                                      }
+                                      _textFieldControllerResetEmail = value;
+                                      return null;
+                                    },
+                                    onChanged: (value) {},
+                                                    initialValue: "",
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
+                                                    controller: null,
+                                                    decoration: InputDecoration(
+                                                      hintText: S
+                                                          .of(context)
+                                                          .your_email,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                LayoutBuilder(
+                                  builder: (context, size) {
+                                    TextSpan span = TextSpan(
+                                      text: S.of(context).reset_password +
+                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
+                                          S.of(context).cancel,
+                                    );
+                                    return textLengthCalculator(span, size) ==
+                                            true
+                                        ? Wrap(
+                                            alignment: WrapAlignment.center,
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children:
+                                                resetPasswordAndCancelButton,
+                                          )
+                                        : Row(
+                                            children:
+                                                resetPasswordAndCancelButton,
+                                          );
+                                  },
+                                ),
+                              ],
+                            ),
+                                            ),
+                                          );
+                                        }).then((onActivityResult) {
+                                      if (onActivityResult != null &&
+                                          onActivityResult['sendResetLink'] !=
+                                              null &&
+                                          onActivityResult['sendResetLink'] &&
+                                          onActivityResult['userEmail'] !=
+                                              null &&
+                                          onActivityResult['userEmail']
+                                              .toString()
+                                              .isNotEmpty) {
+                                        resetPassword(
+                                            onActivityResult['userEmail']);
+                                        _scaffoldKey.currentState
+                                            .hideCurrentSnackBar();
+                                      } else {}
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text(
+                                      S.of(context).reset,
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ))
+        ],
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
@@ -173,192 +379,29 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).new_user,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () async {
-                                isLoading = true;
-                                UserModel user =
-                                    await Navigator.of(context).push(
-                                  MaterialPageRoute<UserModel>(
-                                    builder: (context) => RegisterPage(),
-                                  ),
-                                );
-                                isLoading = false;
-                                if (user != null) _processLogin(user);
-                              },
-                              child: Text(
-                                S.of(context).sign_up,
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              S.of(context).forgot_password,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                            InkWell(
-                                onTap: () async {
-                                  isLoading = true;
-                                  UserModel user =
-                                      await Navigator.of(context).push(
-                                    MaterialPageRoute<UserModel>(
-                                      builder: (context) => RegisterPage(),
-                                    ),
-                                  );
-                                  isLoading = false;
-                                  if (user != null) _processLogin(user);
-                                },
-                                child: InkWell(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text(
-                                              S.of(context).enter_email,
-                                            ),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Form(
-                                                  key: _formKeyDialog,
-                                                  child: TextFormField(
-                                                    validator: (value) {
-                                                      if (value.isEmpty) {
-                                                        return S
-                                                            .of(context)
-                                                            .enter_email;
-                                                      } else if (!validateEmail(
-                                                          value.trim())) {
-                                                        return S
-                                                            .of(context)
-                                                            .validation_error_invalid_email;
-                                                      }
-                                                      _textFieldControllerResetEmail =
-                                                          value;
-                                                      return null;
-                                                    },
-                                                    onChanged: (value) {},
-                                                    initialValue: "",
-                                                    keyboardType: TextInputType
-                                                        .emailAddress,
-                                                    controller: null,
-                                                    decoration: InputDecoration(
-                                                      hintText: S
-                                                          .of(context)
-                                                          .your_email,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    FlatButton(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              10, 5, 10, 5),
-                                                      color: Theme.of(context)
-                                                          .accentColor,
-                                                      textColor: FlavorConfig
-                                                          .values
-                                                          .buttonTextColor,
-                                                      child: Text(
-                                                        S
-                                                            .of(context)
-                                                            .reset_password,
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        if (!_formKeyDialog
-                                                            .currentState
-                                                            .validate()) {
-                                                          return;
-                                                        }
-                                                        Navigator.of(context)
-                                                            .pop({
-                                                          "sendResetLink": true,
-                                                          "userEmail":
-                                                              _textFieldControllerResetEmail
-                                                                  .trim()
-                                                        });
-                                                      },
-                                                    ),
-                                                    FlatButton(
-                                                      child: Text(
-                                                        S.of(context).cancel,
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                          color: Colors.red,
-                                                        ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop(
-                                                          {
-                                                            "sendResetLink":
-                                                                false,
-                                                            "userEmail": null
-                                                          },
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).then((onActivityResult) {
-                                      if (onActivityResult != null &&
-                                          onActivityResult['sendResetLink'] !=
-                                              null &&
-                                          onActivityResult['sendResetLink'] &&
-                                          onActivityResult['userEmail'] !=
-                                              null &&
-                                          onActivityResult['userEmail']
-                                              .toString()
-                                              .isNotEmpty) {
-                                        resetPassword(
-                                            onActivityResult['userEmail']);
-                                        _scaffoldKey.currentState
-                                            .hideCurrentSnackBar();
-                                      } else {}
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: Text(
-                                      S.of(context).reset,
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor),
-                                    ),
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, size) {
+                        TextSpan span = TextSpan(
+                          text: S.of(context).new_user +
+                              ' ' +
+                              S.of(context).sign_up +
+                              ' ' +
+                              S.of(context).forgot_password +
+                              ' ' +
+                              S.of(context).reset,
+                        );
+                        return textLengthCalculator(span, size) == true
+                            ? Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: signUpAndForgotPassword,
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: signUpAndForgotPassword,
+                              );
+                      },
                     ),
                     SizedBox(height: 15),
                     Container(
@@ -558,9 +601,9 @@ class _LoginPageState extends State<LoginPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            horizontalLine(),
+            Expanded(child: horizontalLine()),
             Text(S.of(context).or),
-            horizontalLine()
+            Expanded(child: horizontalLine())
           ],
         ),
         SizedBox(
@@ -910,7 +953,6 @@ class _LoginPageState extends State<LoginPage> {
         "links_" + S.of(context).localeName,
       ),
     );
-    print('terms page clicked ' + dynamicLinks['termsAndConditionsLink']);
 
     navigateToWebView(
       aboutMode: AboutMode(
@@ -940,7 +982,6 @@ class _LoginPageState extends State<LoginPage> {
         "links_" + S.of(context).localeName,
       ),
     );
-    print('payment clicked ' + dynamicLinks['paymentPolicyLink']);
     navigateToWebView(
       aboutMode: AboutMode(
           title: S.of(context).login_agreement_payment_link,
@@ -970,18 +1011,17 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
     var link = await FirebaseDynamicLinks.instance.getInitialLink();
-    print("method  triggered" + link.toString());
 
     //buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
     await handleBulkInviteLinkData(data: link);
-    FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-      print("Error!!!");
-    }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      return handleBulkInviteLinkData(
-        data: dynamicLink,
-      );
-    });
+    FirebaseDynamicLinks.instance.onLink(
+        onError: (_) async {},
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          return handleBulkInviteLinkData(
+            data: dynamicLink,
+          );
+        });
 
     // This will handle incoming links if the application is already opened
   }
@@ -993,18 +1033,12 @@ class _LoginPageState extends State<LoginPage> {
     if (uri != null) {
       final queryParams = uri.queryParameters;
       if (queryParams.length > 0) {
-        print("inside link");
-        print("parans ${queryParams.toString()}");
-        print("uri ${uri.toString()}");
-        print("url full ${data.link.toString()}");
-
         String invitedMemberEmail = queryParams["invitedMemberEmail"];
 
         //   String communityId = queryParams["communityId"];
         // String primaryTimebankId = queryParams["primaryTimebankId"];
         if (queryParams.containsKey("isFromBulkInvite") &&
             queryParams["isFromBulkInvite"] == 'true') {
-          print("inside bulk");
           resetDynamicLinkPassword(invitedMemberEmail);
         }
       }

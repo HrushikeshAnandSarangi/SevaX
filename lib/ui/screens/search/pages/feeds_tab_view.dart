@@ -47,7 +47,6 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                print("===>> ${snapshot.data}");
                 return Center(
                   child: Text(S.of(context).search_something),
                 );
@@ -58,7 +57,6 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   final news = snapshot.data[index];
-                  print("address ${news.newsImageUrl}");
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -116,11 +114,9 @@ class _FeedsTabViewState extends State<FeedsTabView>
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        print("elasticsearch pjs location result is");
         return "Unknown";
       }
     } else {
-      print("elasticsearch pjs location result isggggg");
       return "Unknown";
     }
   }
@@ -151,7 +147,6 @@ class _FeedsTabViewState extends State<FeedsTabView>
   }
 
   void _like(NewsModel news, String email) async {
-    print("===>> ${news.likes}");
     Set<String> likesList = Set.from(news.likes);
     news.likes != null && news.likes.contains(email)
         ? likesList.remove(email)
@@ -213,7 +208,6 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 onPressed: () {
                   if (news.reports.contains(
                       SevaCore.of(mContext).loggedInUser.sevaUserID)) {
-                    print('already in reports');
                   } else {
                     if (news.reports.isEmpty) {
                       news.reports = List<String>();

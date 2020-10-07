@@ -73,7 +73,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
-            print("pressed");
             showMemberClaimConfirmation(
               context: parentContext,
               notificationId: notificationId,
@@ -364,8 +363,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
-
-    print("request completion chain ends here");
 
     // return;
     FirestoreManager.readTimeBankNotification(

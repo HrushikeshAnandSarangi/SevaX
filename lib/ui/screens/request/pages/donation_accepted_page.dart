@@ -24,9 +24,7 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
 
   @override
   void initState() {
-    print('herewerwer');
     if (widget.offermodel != null) {
-      print('here');
       _offerBloc.init(widget.offermodel.id);
     } else {
       _bloc.init(widget.model.id);
@@ -79,7 +77,6 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
         ),
       ),
     );
-    print('checker');
     return widget.offermodel != null
         ? BlocProvider(
             bloc: _offerBloc,

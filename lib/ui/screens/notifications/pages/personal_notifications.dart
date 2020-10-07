@@ -43,7 +43,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     return StreamBuilder<List<NotificationsModel>>(
       stream: _bloc.personalNotifications,
       builder: (_, snapshot) {
-        print(snapshot.error);
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return LoadingIndicator();
@@ -591,7 +590,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         ),
       ),
     );
-    print("results ==> $results");
+
     if (results != null && results.containsKey('selection')) {
       Firestore.instance.collection("reviews").add(
         {

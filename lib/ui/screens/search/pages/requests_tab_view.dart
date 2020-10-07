@@ -35,7 +35,6 @@ class RequestsTabView extends StatelessWidget {
                 return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                print("===>> ${snapshot.data}");
                 return Center(
                   child: Text(S.of(context).no_data),
                 );
@@ -94,7 +93,10 @@ class RequestsTabView extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RecurringListing(requestModel: requestModel, offerModel: null,),
+          builder: (context) => RecurringListing(
+            requestModel: requestModel,
+            offerModel: null,
+          ),
         ),
       );
     } else {

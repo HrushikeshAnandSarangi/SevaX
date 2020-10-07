@@ -47,7 +47,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     controller = TabController(length: 3, vsync: this);
     _scrollController = ScrollController();
     _scrollController.addListener(() {
-      print(_scrollController.offset);
       if (_scrollController.offset > 260 && !isTitleVisible) {
         isTitleVisible = true;
         setState(() {});

@@ -178,7 +178,6 @@ class RequestEditFormState extends State<RequestEditForm> {
   @override
   void initState() {
     super.initState();
-    print(requestModel);
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
@@ -295,6 +294,11 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
+    ExitWithConfirmation.of(context).fieldValues[index] = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -358,6 +362,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                             TextFormField(
                               autovalidate: autoValidateText,
                               onChanged: (value) {
+                                updateExitWithConfirmationValue(
+                                    context, 1, value);
                                 if (value.length > 1 && !autoValidateText) {
                                   setState(() {
                                     autoValidateText = true;
@@ -455,7 +461,6 @@ class RequestEditFormState extends State<RequestEditForm> {
           GoodsDynamicSelection(
             goodsbefore: widget.requestModel.goodsDonationDetails.requiredGoods,
             onSelectedGoods: (goods) => {
-              print(goods),
               widget.requestModel.goodsDonationDetails.requiredGoods = goods
             },
           ),
@@ -478,6 +483,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 2, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -505,7 +511,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else {
-                print(requestModel);
                 widget.requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
               }
@@ -533,6 +538,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.bank_name,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 3, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -554,10 +560,8 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.bank_name = value;
-                print(true);
+                widget.requestModel.cashModel.achdetails.bank_name = value;
               } else {
-                print('not url');
                 return S.of(context).enter_valid_bank_name;
               }
               return null;
@@ -577,6 +581,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.bank_address,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 4, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -598,11 +603,8 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.bank_address = value;
-                print(true);
+                widget.requestModel.cashModel.achdetails.bank_address = value;
               } else {
-                print('not url');
-
                 return S.of(context).enter_valid_bank_address;
               }
               return null;
@@ -622,6 +624,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.routing_number,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 5, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -643,11 +646,8 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.routing_number = value;
-                print(true);
+                widget.requestModel.cashModel.achdetails.routing_number = value;
               } else {
-                print('not url');
-
                 return S.of(context).enter_valid_routing_number;
               }
               return null;
@@ -667,6 +667,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             autovalidate: autoValidateCashText,
             initialValue: requestModel.cashModel.achdetails.account_number,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 6, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -685,13 +686,13 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.achdetails.account_number = value;
+              widget.requestModel.cashModel.achdetails.account_number = value;
             },
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.account_number = value;
+                widget.requestModel.cashModel.achdetails.account_number = value;
               } else {
                 return S.of(context).enter_valid_account_number;
               }
@@ -701,13 +702,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-  String _validateEmailId(String value) {
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (value.isEmpty) return S.of(context).validation_error_general_text;
-    if (!emailPattern.hasMatch(value)) return S.of(context).enter_valid_link;
-    return null;
-  }
+  RegExp emailPattern = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
   Widget RequestPaymentZellePay(RequestModel requestModel) {
     return Column(
@@ -716,6 +713,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateCashText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 7, value);
               if (value.length > 1) {
                 setState(() {
                   autoValidateCashText = true;
@@ -743,7 +741,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.zelleId = value;
+              widget.requestModel.cashModel.zelleId = value;
             },
             validator: (value) {
               return _validateEmailAndPhone(value);
@@ -753,15 +751,16 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   String _validateEmailAndPhone(String value) {
-    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp emailPattern = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
     } else if (emailPattern.hasMatch(value)) {
+      widget.requestModel.cashModel.zelleId = value;
+
       return null;
     } else if (regExp.hasMatch(value)) {
+      widget.requestModel.cashModel.zelleId = value;
+
       return null;
     } else {
       return S.of(context).enter_valid_link;
@@ -770,6 +769,55 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget RequestPaymentPaypal(RequestModel requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 8, value);
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: requestModel.cashModel.paypalId ?? '',
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.requestModel.cashModel.paypalId = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!emailPattern.hasMatch(value)) {
+                return S.of(context).enter_valid_link;
+              } else {
+                widget.requestModel.cashModel.paypalId = value;
+
+                return null;
+              }
+            },
+          )
+        ]);
+  }
+
+  Widget RequestPaymentVenmo(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -796,18 +844,28 @@ class RequestEditFormState extends State<RequestEditForm> {
               hintText: S.of(context).email_hint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.cashModel.paypalId ?? '',
+            initialValue: requestModel.cashModel.venmoId ?? '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.paypalId = value;
+              widget.requestModel.cashModel.venmoId = value;
             },
-            validator: _validateEmailId,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!emailPattern.hasMatch(value)) {
+                return S.of(context).enter_valid_link;
+              } else {
+                widget.requestModel.cashModel.venmoId = value;
+
+                return null;
+              }
+            },
           )
         ]);
   }
 
-  Widget RequestPaymentDescriptionData(requestModel) {
+  Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -832,7 +890,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           value: RequestPaymentType.ACH,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
+            widget.requestModel.cashModel.paymentType = value;
             setState(() => {});
           },
         ),
@@ -841,7 +899,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             value: RequestPaymentType.PAYPAL,
             groupvalue: requestModel.cashModel.paymentType,
             onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
+              widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
         _optionRadioButton(
@@ -849,7 +907,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             value: RequestPaymentType.ZELLEPAY,
             groupvalue: requestModel.cashModel.paymentType,
             onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
+              widget.requestModel.cashModel.paymentType = value;
+              setState(() => {});
+            }),
+        _optionRadioButton(
+            title: 'Venmo',
+            value: RequestPaymentType.VENMO,
+            groupvalue: requestModel.cashModel.paymentType,
+            onChanged: (value) {
+              widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
         getPaymentInformation
@@ -867,6 +933,9 @@ class RequestEditFormState extends State<RequestEditForm> {
 
       case RequestPaymentType.ZELLEPAY:
         return RequestPaymentZellePay(widget.requestModel);
+
+      case RequestPaymentType.VENMO:
+        return RequestPaymentVenmo(widget.requestModel);
 
       default:
         return RequestPaymentACH(widget.requestModel);
@@ -889,6 +958,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 9, value);
               if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
@@ -949,7 +1019,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                     groupvalue: widget.requestModel.requestType,
                     onChanged: (value) {
                       widget.requestModel.requestType = value;
-                      print(widget.requestModel.requestType);
                       setState(() => {});
                     },
                   ),
@@ -959,7 +1028,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       groupvalue: widget.requestModel.requestType,
                       onChanged: (value) {
                         widget.requestModel.requestType = value;
-                        print(widget.requestModel.requestType);
                         setState(() => {});
                       }),
                   _optionRadioButton(
@@ -968,7 +1036,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       groupvalue: widget.requestModel.requestType,
                       onChanged: (value) {
                         widget.requestModel.requestType = value;
-                        print(widget.requestModel.requestType);
                         setState(() => {});
                       }),
                 ],
@@ -1016,6 +1083,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   },
                   initialValue: widget.requestModel.maxCredits.toString(),
                   onChanged: (v) {
+                    updateExitWithConfirmationValue(context, 10, v);
                     if (v.isNotEmpty && int.parse(v) >= 0) {
                       widget.requestModel.maxCredits = int.parse(v);
                       setState(() {});
@@ -1067,6 +1135,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.numberOfApprovals.toString(),
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 11, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.numberOfApprovals = int.parse(v);
                 setState(() {});
@@ -1134,12 +1203,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.cashModel.targetAmount.toString(),
             onChanged: (v) {
-              print(v);
+              updateExitWithConfirmationValue(context, 12, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
-                print('hey');
-                print(widget.requestModel.cashModel);
                 widget.requestModel.cashModel.targetAmount = int.parse(v);
-                print(widget.requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1184,9 +1250,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
             initialValue: widget.requestModel.cashModel.minAmount.toString(),
             onChanged: (v) {
+              updateExitWithConfirmationValue(context, 13, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.cashModel.minAmount = int.parse(v);
-                print(widget.requestModel.cashModel);
                 setState(() {});
               }
             },
@@ -1397,7 +1463,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
       widget.requestModel.location = location;
       widget.requestModel.address = selectedAddress;
-      print("request model data === ${widget.requestModel.toMap()}");
 
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {

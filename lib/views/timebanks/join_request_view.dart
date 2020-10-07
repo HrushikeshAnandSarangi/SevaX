@@ -254,7 +254,7 @@ class TimebankRequests extends StatelessWidget {
                         ),
                         onPressed: () async {
                           // request declined
-                          print("Declining request");
+
                           model.accepted = false;
                           await updateJoinRequest(model: model);
                           Navigator.pop(viewContext);

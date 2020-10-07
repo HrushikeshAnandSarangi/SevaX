@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
@@ -284,9 +285,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 .getReferenceFromUrl(imageURL)
                 .then((reference) {
               reference.delete();
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
+            }).catchError((e) => logger.e(e));
           }
         });
       } else {
@@ -294,7 +293,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
             .getReferenceFromUrl(imageURL)
             .then((reference) {
           reference.delete();
-        }).catchError((e) => print(e));
+        }).catchError((e) => logger.e(e));
         bloc.uploadImage(file);
         progressDialog.hide();
       }

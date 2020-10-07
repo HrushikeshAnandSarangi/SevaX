@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:share_extend/share_extend.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +30,7 @@ class PDFScreen extends StatelessWidget {
                   if (await canLaunch(pdfUrl)) {
                     launch(pdfUrl);
                   } else {
-                    print("could not launch");
+                    logger.e("could not launch");
                   }
                 }
               },

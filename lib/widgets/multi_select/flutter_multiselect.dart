@@ -172,7 +172,6 @@ class MultiSelect extends FormField<dynamic> {
                           fullscreenDialog: true,
                         ));
                     if (results != null) {
-                      print(results);
                       dynamic newValue;
                       if (results.length > 0) {
                         newValue = results;

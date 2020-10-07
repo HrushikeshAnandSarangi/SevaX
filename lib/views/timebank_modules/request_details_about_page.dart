@@ -582,10 +582,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void applyAction() async {
     if (isApplied) {
-      print("Withraw request");
       _withdrawRequest();
     } else {
-      print("Accept request");
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         calenderConfirmation();
       } else {
@@ -937,9 +935,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         return Container(
           height: 40,
           child: InkWell(
-            onTap: () {
-              print('tapped');
-            },
+            onTap: () {},
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 12),
               scrollDirection: Axis.horizontal,

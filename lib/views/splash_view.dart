@@ -15,17 +15,20 @@ import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/intro_slider.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'onboarding/interests_view.dart';
@@ -234,7 +237,7 @@ class _SplashViewState extends State<SplashView> {
         connectivityResult = result;
       });
     } on PlatformException catch (e) {
-      print(e.toString());
+      logger.e(e);
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -529,10 +532,39 @@ class _SplashViewState extends State<SplashView> {
     }
   }
 
+// ToDo:: Check once
   Future _navigateToLoginPage() async {
-    await Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => LoginPage(),
-    ));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Intro(
+            onSkip: () async {
+              await Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    } else {
+      await prefs.setBool('seen', true);
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
+    }
+
+    // await Navigator.of(context).pushReplacement(
+    //   MaterialPageRoute(
+    //     builder: (context) => LoginPage(),
+    //   ),
+    // );
   }
 
   Future _navigateToUpdatePage(UserModel loggedInUser, bool forced) async {

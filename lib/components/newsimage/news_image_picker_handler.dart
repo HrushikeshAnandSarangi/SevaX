@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/components/newsimage/news_image_picker_dialog.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class NewsImagePickerHandler {
   NewsImagePickerDialog imagePicker;
@@ -68,12 +69,11 @@ class NewsImagePickerHandler {
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['pdf']);
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      logger.e("Unsupported operation" + e.toString());
     }
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
-      print("FIle  name $_fileName");
 
       _listener.userDoc(_path, _fileName);
     }

@@ -49,7 +49,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
-      print("${widget.offerModel}");
     }
     super.initState();
     _bloc.classSizeError.listen((error) {
@@ -90,7 +89,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
               if (status.data == Status.COMPLETE && closePage) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  print("nav stat ${Navigator.of(mcontext).canPop()}");
                   if (Navigator.of(mcontext).canPop())
                     Navigator.of(mcontext).pop();
                 });
@@ -137,9 +135,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (_, snapshot) {
-                              print(snapshot.data);
                               return CustomTextField(
-                                enableStreamData: true,
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
                                 formatters: <TextInputFormatter>[
@@ -192,7 +188,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.preparationHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
-                                enableStreamData: true,
                                 currentNode: focusNodes[1],
                                 nextNode: focusNodes[2],
                                 value: snapshot.data != null
@@ -212,7 +207,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
-                                enableStreamData: true,
                                 currentNode: focusNodes[2],
                                 nextNode: focusNodes[3],
                                 value: snapshot.data != null
@@ -235,7 +229,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classSize,
                             builder: (_, snapshot) {
                               return CustomTextField(
-                                enableStreamData: true,
                                 currentNode: focusNodes[3],
                                 nextNode: focusNodes[4],
                                 value: snapshot.data != null
@@ -255,7 +248,6 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classDescription,
                             builder: (_, snapshot) {
                               return CustomTextField(
-                                enableStreamData: true,
                                 currentNode: focusNodes[4],
                                 value: snapshot.data != null
                                     ? snapshot.data

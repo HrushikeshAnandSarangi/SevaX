@@ -1,6 +1,7 @@
-import 'dart:collection';
+
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
+
 import '../resources/repository.dart';
 
 class PaymentCards {
@@ -29,7 +30,6 @@ class PaymentsBloc {
 
   storeNewCard(token, timebankid, UserModel user,String planName) {
     // storing a new card
-    print("hey" + token);
     _repository.storeCard(token, timebankid, user,planName);
     //
   }

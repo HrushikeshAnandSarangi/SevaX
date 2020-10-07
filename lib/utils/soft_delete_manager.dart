@@ -123,7 +123,6 @@ Future<void> showAdvisoryBeforeDeletion({
                       } else {
                         autoValidateText = false;
                       }
-                      print("auto $autoValidateText");
                     },
                     validator: (value) {
                       if (value.isEmpty) {
@@ -189,7 +188,6 @@ Future<void> showAdvisoryBeforeDeletion({
                 });
                 ;
               } catch (_) {
-                print("Failed sending request due to ${_.toString()}");
                 progressDialog.hide();
                 showFinalResultConfirmation(
                   context,

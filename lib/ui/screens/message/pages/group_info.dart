@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart'
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
@@ -340,9 +341,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 .getReferenceFromUrl(imageUrl)
                 .then((reference) {
               reference.delete();
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
+            }).catchError((e) => logger.e(e));
           }
         });
       } else {
@@ -350,7 +349,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
             .getReferenceFromUrl(imageUrl)
             .then((reference) {
           reference.delete();
-        }).catchError((e) => print(e));
+        }).catchError((e) => logger.e(e));
         bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }

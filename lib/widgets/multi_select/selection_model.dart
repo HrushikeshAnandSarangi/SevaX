@@ -337,15 +337,11 @@ class _SelectionModalState extends State<SelectionModal> {
             padding: EdgeInsets.only(left: 5.0, right: 5.0),
             groupValue: sharedValue,
             onValueChanged: (int val) {
-              print(val);
               if (val != sharedValue) {
                 setState(() {
-                  print("$sharedValue -- $val");
                   if (val == 0) {
-                    print("TIMEBANK___REQUEST");
                     requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                   } else {
-                    print("PERSONAL___REQUEST");
                     requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                   }
                   filterProjects();

@@ -279,6 +279,11 @@ class CreateEditCommunityViewFormState
     );
   }
 
+  void updateExitWithConfirmationValue(
+      BuildContext context, int index, String value) {
+    ExitWithConfirmation.of(context)?.fieldValues[index] = value;
+  }
+
   Widget get createSevaX {
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
@@ -351,6 +356,7 @@ class CreateEditCommunityViewFormState
                           },
                           controller: searchTextController,
                           onChanged: (value) {
+                            updateExitWithConfirmationValue(context, 1, value);
                             if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
@@ -423,6 +429,7 @@ class CreateEditCommunityViewFormState
                           textCapitalization: TextCapitalization.sentences,
                           //  initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
+                            updateExitWithConfirmationValue(context, 2, value);
                             if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
@@ -1353,6 +1360,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 3, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
@@ -1397,6 +1405,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 4, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
@@ -1438,6 +1447,7 @@ class CreateEditCommunityViewFormState
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 5, value);
             controller.community.billing_address
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
@@ -1474,6 +1484,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 6, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
@@ -1518,6 +1529,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 7, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
@@ -1563,6 +1575,7 @@ class CreateEditCommunityViewFormState
             },
             keyboardType: TextInputType.text,
             onChanged: (value) {
+              updateExitWithConfirmationValue(context, 8, value);
               if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
@@ -1610,6 +1623,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 9, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
@@ -1646,6 +1660,7 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
+            updateExitWithConfirmationValue(context, 10, value);
             if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;

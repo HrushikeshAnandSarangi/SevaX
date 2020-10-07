@@ -102,7 +102,6 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             userList.add(model);
           });
 
-          print("length ${userList.length}");
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           //print("length ${userList.length}");
           if (userList.length == 0) {

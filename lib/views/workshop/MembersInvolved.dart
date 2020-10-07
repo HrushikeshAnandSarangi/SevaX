@@ -31,8 +31,6 @@ class MemberForRequest {
       this.bio});
 
   factory MemberForRequest.fromJson(Map<String, dynamic> json) {
-    print(json);
-
     return MemberForRequest(
         tokens: json['tokens'] == null ? '' : json['tokens'],
         photourl: json['photourl'] == null ? '' : json['photourl'],

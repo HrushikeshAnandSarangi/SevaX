@@ -48,7 +48,7 @@ class ImagePickerHandler {
       ),
     )
         .then((value) {
-      globals.isFromOnBoarding ? imagePicker.dismissDialog() : print('');
+      globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
     });
     // _parentStockSelectionBottomsheet(context, (image) {
     //   log("inside stock images onchanged callback");
@@ -58,7 +58,7 @@ class ImagePickerHandler {
   }
 
   addImageUrl() async {
-    globals.isFromOnBoarding ? imagePicker.dismissDialog() : print('');
+    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
     _listener.addWebImageUrl();
   }
 

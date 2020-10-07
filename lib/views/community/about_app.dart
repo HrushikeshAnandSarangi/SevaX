@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/ui/screens/intro_slider.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -28,6 +29,19 @@ class AboutApp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          getHelpButton(
+            context,
+            () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Intro(
+                    onSkip: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              );
+            },
+            'Intro',
+          ),
           getHelpButton(
             context,
             getOnTap(
@@ -306,7 +320,6 @@ class AboutApp extends StatelessWidget {
                 onPressed: () async {
                   //For test
                   if (formkey.currentState.validate()) {
-                    print("------------------------------------");
                     Navigator.of(dialogContext).pop();
 
                     showProgressDialog(

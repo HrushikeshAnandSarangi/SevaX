@@ -57,17 +57,18 @@ class _DonationViewState extends State<DonationView> {
   var focusNodes = List.generate(16, (_) => FocusNode());
   @override
   void initState() {
-    if (none == '') {
-      print(true);
-    }
+    if (none == '') {}
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
             ? 3
-            : widget.offerModel.type == RequestType.CASH ? 4 : 0)
+            : widget.offerModel.type == RequestType.CASH
+                ? 4
+                : 0)
         : widget.requestModel != null
-            ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1
+            ? widget.requestModel.requestType == RequestType.GOODS
+                ? 0
+                : 1
             : 0);
-    print(temp);
     pageController = PageController(initialPage: temp);
 
     super.initState();
@@ -106,9 +107,7 @@ class _DonationViewState extends State<DonationView> {
         controller: pageController,
         scrollDirection: Axis.horizontal,
         pageSnapping: true,
-        onPageChanged: (number) {
-          print('page changes');
-        },
+        onPageChanged: (number) {},
         children: [
           donatedItems(),
           amountWidget(),
@@ -227,6 +226,49 @@ class _DonationViewState extends State<DonationView> {
         ]);
   }
 
+  Widget RequestPaymentVenmo(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: donationsModel.cashDetails.cashDetails != null
+                ? donationsModel.cashDetails.cashDetails.targetAmount
+                : "0",
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.offerModel.cashModel.venmoId = value;
+            },
+            validator: (value) {
+              donationsModel.cashDetails.cashDetails.venmoId = value;
+              return _validateEmailId(value);
+            },
+          )
+        ]);
+  }
+
   Widget RequestPaymentACH(OfferModel offerModel) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
         Widget>[
@@ -265,9 +307,7 @@ class _DonationViewState extends State<DonationView> {
             return S.of(context).validation_error_general_text;
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.bank_name = value;
-            print(true);
           } else {
-            print('not url');
             return S.of(context).enter_valid_bank_name;
           }
           return null;
@@ -309,10 +349,7 @@ class _DonationViewState extends State<DonationView> {
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.bank_address =
                 value;
-            print(true);
           } else {
-            print('not url');
-
             return S.of(context).enter_valid_bank_address;
           }
           return null;
@@ -354,10 +391,7 @@ class _DonationViewState extends State<DonationView> {
           } else if (!value.isEmpty) {
             donationsModel.cashDetails.cashDetails.achdetails.routing_number =
                 value;
-            print(true);
           } else {
-            print('not url');
-
             return S.of(context).enter_valid_routing_number;
           }
           return null;
@@ -482,9 +516,6 @@ class _DonationViewState extends State<DonationView> {
   }
 
   Widget RequestPaymentDescriptionData(OfferModel offerModel) {
-    print(donationsModel.cashDetails.toMap());
-    print(donationsModel.cashDetails.cashDetails);
-    print('check this out');
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
@@ -534,7 +565,6 @@ class _DonationViewState extends State<DonationView> {
                   } else if (!value.isEmpty) {
                     donationsModel.cashDetails.cashDetails.amountRaised =
                         int.parse(value);
-                    print(true);
                   } else {
                     return S.of(context).enter_valid_amount;
                   }
@@ -587,13 +617,25 @@ class _DonationViewState extends State<DonationView> {
                     donationsModel.cashDetails.cashDetails.paymentType = value;
                     setState(() => {});
                   }),
+              _optionRadioButton(
+                  title: 'Venmo',
+                  value: RequestPaymentType.VENMO,
+                  groupvalue:
+                      donationsModel.cashDetails.cashDetails.paymentType,
+                  onChanged: (value) {
+                    donationsModel.cashDetails.cashDetails.paymentType = value;
+                    setState(() => {});
+                  }),
               donationsModel.cashDetails.cashDetails.paymentType ==
                       RequestPaymentType.ACH
                   ? RequestPaymentACH(widget.offerModel)
                   : donationsModel.cashDetails.cashDetails.paymentType ==
                           RequestPaymentType.PAYPAL
                       ? RequestPaymentPaypal(widget.offerModel)
-                      : RequestPaymentZellePay(widget.offerModel),
+                      : donationsModel.cashDetails.cashDetails.paymentType ==
+                              RequestPaymentType.VENMO
+                          ? RequestPaymentVenmo(widget.offerModel)
+                          : RequestPaymentZellePay(widget.offerModel),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -726,8 +768,6 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .offerModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
-                    print("===> " + snapshot.data.toString());
-
                     return Row(
                       children: [
                         Checkbox(
@@ -901,7 +941,7 @@ class _DonationViewState extends State<DonationView> {
                 showScaffold(S.of(context).copied_to_clipboard);
               },
               onTap: () async {
-                String link = widget.requestModel.donationInstructionLink;
+                String link = getDonationLink();
                 if (await canLaunch(link)) {
                   await launch(link);
                 } else {
@@ -967,6 +1007,9 @@ class _DonationViewState extends State<DonationView> {
           return widget.requestModel.cashModel.zelleId;
         case RequestPaymentType.PAYPAL:
           return widget.requestModel.cashModel.paypalId ?? '';
+
+        case RequestPaymentType.VENMO:
+          return widget.requestModel.cashModel.venmoId ?? '';
 
         default:
           return "Link not registered!";
@@ -1037,8 +1080,6 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
-                    print("===> " + snapshot.data.toString());
-
                     return Row(
                       children: [
                         Checkbox(

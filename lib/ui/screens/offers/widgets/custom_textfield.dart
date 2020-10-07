@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CustomTextField extends StatelessWidget {
-  final enableStreamData;
   final String heading;
   final String value;
   final ValueChanged<String> onChanged;
@@ -41,7 +40,6 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.errorMaxLines,
     this.onSaved,
-    this.enableStreamData = false,
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
@@ -57,7 +55,7 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (value != null && enableStreamData) {
+    if (value != null) {
       controller.value = controller.value.copyWith(
         text: value,
       );
@@ -78,9 +76,9 @@ class CustomTextField extends StatelessWidget {
             : Container(),
         TextFormField(
           focusNode: currentNode,
-          controller: enableStreamData ? controller : null,
+          controller: controller,
           onChanged: (value) {
-            onChanged(value);
+            onChanged?.call(value);
             ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] =
                 value;
           },
@@ -89,7 +87,7 @@ class CustomTextField extends StatelessWidget {
               textCapitalization ?? TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: hint ?? '',
-            errorText: enableStreamData ? error : null,
+            errorText: error,
             errorMaxLines: errorMaxLines,
           ),
           maxLength: maxLength,
@@ -103,6 +101,7 @@ class CustomTextField extends StatelessWidget {
                 ? nextNode.requestFocus()
                 : FocusScope.of(context).unfocus();
           },
+          validator: validator,
           onSaved: onSaved,
         ),
       ],
