@@ -1139,7 +1139,6 @@ class RequestEditFormState extends State<RequestEditForm> {
             initialValue: widget.requestModel.cashModel.targetAmount.toString(),
             onChanged: (v) {
               updateExitWithConfirmationValue(context, 12, v);
-              print(v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.cashModel.targetAmount = int.parse(v);
                 setState(() {});

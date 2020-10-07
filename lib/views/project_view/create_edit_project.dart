@@ -291,10 +291,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               TextFormField(
                 autovalidate: autoValidateText,
                 onChanged: (value) {
-                  print("name ------ $value");
                   ExitWithConfirmation.of(context).fieldValues[1] = value;
-                  print(
-                      "value is ${ExitWithConfirmation.of(context).fieldValues}");
                   if (value.length > 1 && !autoValidateText) {
                     setState(() {
                       autoValidateText = true;
@@ -393,8 +390,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 autovalidate: autoValidateText,
                 onChanged: (value) {
                   ExitWithConfirmation.of(context).fieldValues[2] = value;
-                  print(
-                      "value is ${ExitWithConfirmation.of(context).fieldValues}");
                   if (value.length > 1 && !autoValidateText) {
                     setState(() {
                       autoValidateText = true;
@@ -671,7 +666,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
 //                            }
-                        print(_formKey.currentState.validate());
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
 //                            if (communityFound) {
