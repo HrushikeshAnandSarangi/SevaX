@@ -11,7 +11,6 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -266,7 +265,6 @@ class RequestListItems extends StatefulWidget {
   final TimebankModel timebankModel;
   bool isProjectRequest = false;
   final bool isFromSettings;
-
   bool isAdmin;
 
   RequestListItems(
@@ -287,56 +285,101 @@ class RequestListItems extends StatefulWidget {
 }
 
 class RequestListItemsState extends State<RequestListItems> {
-  Coordinates currentLocation;
+  Future<Coordinates> currentCoords;
   @override
   void initState() {
+    currentCoords = findcurrentLocation();
     super.initState();
+
     if (!widget.isFromSettings) {
       timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
     }
   }
 
-// todo::findcurrentLocation )(abhishek)
   Future<Coordinates> findcurrentLocation() async {
     final Location _location = Location();
-    var location = await _location.getLocation();
-    if (location == null) {
-      return null;
+    PermissionStatus status = await _location.hasPermission();
+    if (status != PermissionStatus.granted) {
+      throw "No Location";
     }
+    if (!await _location.serviceEnabled()) {
+      throw "No Location";
+    }
+    LocationData location = await _location.getLocation();
     Coordinates distance = Coordinates(location.latitude, location.longitude);
     return distance;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
-      future: FirestoreManager.getUserForId(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('${S.of(context).general_stream_error}');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return FutureBuilder<Coordinates>(
+      future: currentCoords,
+      builder: (context, currentLocation) {
+        if (currentLocation.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        UserModel user = snapshot.data;
-        String loggedintimezone = user.timezone;
+        String loggedintimezone = SevaCore.of(context).loggedInUser.timezone;
         if (!widget.isFromSettings) {
-          return FutureBuilder(
-            future: findcurrentLocation(),
-            builder: (_, coords) => StreamBuilder(
-              stream: timeBankBloc.timebankController,
-              builder: (context, AsyncSnapshot<TimebankController> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('${S.of(context).general_stream_error}');
+          return StreamBuilder(
+            stream: timeBankBloc.timebankController,
+            builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+              if (snapshot.hasError) {
+                return Text('${S.of(context).general_stream_error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LoadingIndicator();
+              }
+              if (snapshot.hasData) {
+                List<RequestModel> requestModelList = snapshot.data.requests;
+                requestModelList = filterBlockedRequestsContent(
+                    context: context, requestModelList: requestModelList);
+
+                if (requestModelList.length == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child:
+                          Text(S.of(context).no + ' ' + S.of(context).requests),
+                    ),
+                  );
                 }
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                var consolidatedList =
+                    GroupRequestCommons.groupAndConsolidateRequests(
+                        requestModelList,
+                        SevaCore.of(context).loggedInUser.sevaUserID);
+                return formatListFrom(
+                  consolidatedList: consolidatedList,
+                  loggedintimezone: loggedintimezone,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
+                  projectId: widget.projectId,
+                  currentCoords: currentLocation.data,
+                );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Text("");
+            },
+          );
+        } else {
+          return StreamBuilder<List<RequestModel>>(
+            stream: FirestoreManager.getRequestListStream(
+              timebankId: widget.timebankModel.id,
+            ),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+              if (requestListSnapshot.hasError) {
+                return Text('${S.of(context).general_stream_error}');
+              }
+              switch (requestListSnapshot.connectionState) {
+                case ConnectionState.waiting:
                   return LoadingIndicator();
-                }
-                if (snapshot.hasData) {
-                  List<RequestModel> requestModelList = snapshot.data.requests;
+                default:
+                  List<RequestModel> requestModelList =
+                      requestListSnapshot.data;
                   requestModelList = filterBlockedRequestsContent(
-                      context: context, requestModelList: requestModelList);
+                    context: context,
+                    requestModelList: requestModelList,
+                  );
 
                   if (requestModelList.length == 0) {
                     return Padding(
@@ -353,61 +396,10 @@ class RequestListItemsState extends State<RequestListItems> {
                           SevaCore.of(context).loggedInUser.sevaUserID);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
-                    loggedintimezone: loggedintimezone,
-                    userEmail: SevaCore.of(context).loggedInUser.email,
-                    projectId: widget.projectId,
-                    currentCoords: coords.data,
+                    currentCoords: currentLocation.data,
                   );
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString());
-                }
-                return Text("");
-              },
-            ),
-          );
-        } else {
-          return FutureBuilder(
-            future: findcurrentLocation(),
-            builder: (_, coords) => StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getRequestListStream(
-                timebankId: widget.timebankModel.id,
-              ),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return Text('${S.of(context).general_stream_error}');
-                }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return LoadingIndicator();
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
-                    requestModelList = filterBlockedRequestsContent(
-                      context: context,
-                      requestModelList: requestModelList,
-                    );
-
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(
-                          child: Text(
-                              S.of(context).no + ' ' + S.of(context).requests),
-                        ),
-                      );
-                    }
-                    var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
-                    return formatListFrom(
-                      consolidatedList: consolidatedList,
-                      currentCoords: coords.data,
-                    );
-                }
-              },
-            ),
+              }
+            },
           );
         }
       },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
 
 class DistanceFromCurrentLocation extends StatelessWidget {
   final Coordinates coordinates;
@@ -33,10 +32,10 @@ class DistanceFromCurrentLocation extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(50)),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 child: isKm
                     ? Text(
-                        '${distance.toStringAsFixed(3)} km',
+                        '${distanceConvertorForKm(distance)}',
                         style: textStyle,
                       )
                     : Text(
@@ -47,5 +46,27 @@ class DistanceFromCurrentLocation extends StatelessWidget {
             ),
           )
         : Container();
+  }
+
+  String distanceConvertorForKm(double distance) {
+    if (distance < 1) {
+      return "${(distance * 1000).toInt()} m";
+    } else {
+      return "${distance.toInt()} km";
+    }
+  }
+
+  double findDistanceBetweenToLocation(
+    Coordinates coordinates,
+    Coordinates currentLocationCoordinates,
+  ) {
+    if (coordinates == null || currentLocationCoordinates == null) {
+      return 0;
+    }
+    double distance = GeoFirePoint.distanceBetween(
+      to: coordinates,
+      from: currentLocationCoordinates,
+    );
+    return distance;
   }
 }
