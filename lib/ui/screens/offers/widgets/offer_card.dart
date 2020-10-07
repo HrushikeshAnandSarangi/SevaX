@@ -5,6 +5,7 @@ import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.d
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 
 class OfferCard extends StatelessWidget {
   final String title;
@@ -65,6 +66,19 @@ class OfferCard extends StatelessWidget {
                     children: <Widget>[
                       Row(
                         children: [
+                          getOfferLocation(selectedAddress: selectedAddress) !=
+                                  null
+                              ? getStatsIcon(
+                                  label: getOfferLocation(
+                                      selectedAddress: selectedAddress),
+                                  icon: Icons.location_on)
+                              : Container(),
+                          //todo pass current location and location from model
+                          DistanceFromCurrentLocation(),
+                        ],
+                      ),
+                      Row(
+                        children: [
                           Text(
                             title,
                             style: TextStyle(
@@ -94,7 +108,7 @@ class OfferCard extends StatelessWidget {
                                   ),
                                 ),
                               )),
-                          getAppropriateTag(type, context),
+                          // getAppropriateTag(type, context),
                         ],
                       ),
                       SizedBox(
@@ -118,13 +132,30 @@ class OfferCard extends StatelessWidget {
                           children: <Widget>[
                             FlatButton(
                               shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  side: BorderSide(color: buttonColor)),
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              color: Colors.transparent,
+                              child: Text(
+                                'Share',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              onPressed: onActionPressed,
+                            ),
+                            SizedBox(width: 20),
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               padding: EdgeInsets.only(left: 10, right: 10),
                               color:
-                                  buttonColor ?? Theme.of(context).primaryColor,
+                                  // buttonColor ??
+                                  Theme.of(context).primaryColor,
                               child: Text(
-                                actionButtonLabel ?? '',
+                                // actionButtonLabel ?? '',
+                                'Accept',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -169,11 +200,11 @@ class OfferCard extends StatelessWidget {
 
   Widget getOfferMetaData({BuildContext context, int startDate}) {
     return Container(
-      margin: EdgeInsets.only(top: 15),
+      margin: EdgeInsets.only(top: 5),
       child: Row(
-        mainAxisAlignment: offerType == OfferType.GROUP_OFFER
-            ? MainAxisAlignment.spaceBetween
-            : MainAxisAlignment.start,
+        // mainAxisAlignment: offerType == OfferType.GROUP_OFFER
+        //     ? MainAxisAlignment.spaceBetween
+        //     : MainAxisAlignment.start,
         children: <Widget>[
           offerType == OfferType.GROUP_OFFER
               ? getStatsIcon(
@@ -183,6 +214,7 @@ class OfferCard extends StatelessWidget {
                   ),
                   icon: Icons.calendar_today)
               : Offstage(),
+          SizedBox(width: 20),
           offerType == OfferType.GROUP_OFFER
               ? getStatsIcon(
                   label: getFormatedTimeFromTimeStamp(
@@ -192,11 +224,12 @@ class OfferCard extends StatelessWidget {
                   ),
                   icon: Icons.access_time)
               : Offstage(),
-          getOfferLocation(selectedAddress: selectedAddress) != null
-              ? getStatsIcon(
-                  label: getOfferLocation(selectedAddress: selectedAddress),
-                  icon: Icons.location_on)
-              : Container(),
+
+          // getOfferLocation(selectedAddress: selectedAddress) != null
+          //     ? getStatsIcon(
+          //         label: getOfferLocation(selectedAddress: selectedAddress),
+          //         icon: Icons.location_on)
+          //     : Container(),
         ],
       ),
     );
