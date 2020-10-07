@@ -65,6 +65,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             .getString('billing_plans_${S.of(context).localeName}'),
       );
     });
+    setState((){});
   }
 
   String planName(String text) {
@@ -239,6 +240,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                       ),
                                       onPressed: () async {
                                           Navigator.pop(_context);
+                                          log("subscribe cancel button condition ${communityModel.payment['planId']}");
                                           _changePlanAlert(context);
                                           int value = await FirestoreManager.changePlan(
                                               SevaCore.of(context).loggedInUser.currentCommunity,
@@ -269,7 +271,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                               fontSize: dialogButtonSize,
                                           ),
                                       ),
-                                      onPressed: () => Navigator.pop(_context),
+                                      onPressed: () {
+
+                                          Navigator.pop(_context);
+                                      },
                                   ),
                               ],
                           ),
