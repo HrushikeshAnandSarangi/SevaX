@@ -248,7 +248,7 @@ bool getTransactionStatus({
       communityModel.billingQuota != null) {
     List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
         SevaPlansBillingConfig
-            .billingPlans[SevaBillingPlans.NEIGHBOUR_HOOD_PLAN]['action']);
+            .billingPlans[communityModel.payment['planId']]['action']);
 
     neighbourhoodPlanBillableTransactions.forEach((billableItem) {
       if (communityModel.billingQuota.containsKey(billableItem)) {
