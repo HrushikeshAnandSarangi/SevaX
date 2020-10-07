@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -52,7 +53,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
   @override
   Widget build(BuildContext context) {
     final textColor = widget.isSelected ? Colors.white : Colors.black;
-    print("co id ==>> ${widget.user.currentCommunity} ${widget.isBillMe}");
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
       child: Container(
@@ -213,7 +214,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                         widget.activePlanId != null &&
                         widget.activePlanId !=
                             SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
-                      print("${widget.plan.id}  ${widget.isPlanActive}");
+
                       _changePlanAlert(context);
                       FirestoreManager.changePlan(
                         SevaCore.of(context).loggedInUser.currentCommunity,
@@ -246,8 +247,6 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                           context: context,
                         );
                       } else {
-                        print(
-                            "${widget.isPlanActive} && ${widget.activePlanId != null} && ${widget.activePlanId != SevaBillingPlans.NEIGHBOUR_HOOD_PLAN}");
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BillingView(
@@ -408,6 +407,26 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
     );
   }
 
+  Future<bool> _changePlan(String communityId, String planId) async {
+    try {
+      http.Response result = await http.post(
+        FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
+        body: json.encode({'communityId': communityId, "newPlanId": planId}),
+        headers: {"Content-type": "application/json"},
+      );
+
+      if (result.statusCode == 200) {
+        return true;
+      } else {
+
+      }
+    } catch (e) {
+      Crashlytics.instance.log(e.toString());
+
+    }
+    return false;
+  }
+
   void _planSuccessMessage({
     BuildContext context,
   }) {
@@ -439,7 +458,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                     : dev.MainApplication(),
               ),
               (Route<dynamic> route) => false);
-        }).catchError((e) => print(e));
+        });
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           content: Column(

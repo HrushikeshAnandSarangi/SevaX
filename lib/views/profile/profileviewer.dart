@@ -77,9 +77,6 @@ class ProfileViewerState extends State<ProfileViewer> {
   }
 
   TRscore(num trustworthinessscore, num reliabilityscore) {
-    print('ey');
-    print(trustworthinessscore);
-    print(reliabilityscore);
     return Row(
       children: <Widget>[
         Expanded(
@@ -150,8 +147,6 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   @override
   Widget build(BuildContext context) {
-    print("**********************${widget.timebankId}");
-
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     UserModel userData = SevaCore.of(context).loggedInUser;
 
@@ -172,7 +167,6 @@ class ProfileViewerState extends State<ProfileViewer> {
               user = UserModel.fromMap(snapshot.data.data, 'profile_viewer');
 
               if (user == null) {
-                print("User details not fouund");
                 Navigator.pop(context);
                 return Offstage();
               }
@@ -446,8 +440,6 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
 
     onDialogActviityResult.then((result) {
-      print("result " + result);
-
       switch (result) {
         case "BLOCK":
           blockMember(ACTION.BLOCK);

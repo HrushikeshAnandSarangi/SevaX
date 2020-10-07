@@ -85,8 +85,6 @@ class UserProfileBloc {
     }).then((onValue) {
       //TODO navigate to community page
       SevaCore.of(context).loggedInUser.currentCommunity = community.id;
-      print(SevaCore.of(context).loggedInUser.currentCommunity);
-      // print(onValue.data);
     });
   }
 

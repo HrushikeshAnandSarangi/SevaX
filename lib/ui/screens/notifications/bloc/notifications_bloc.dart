@@ -8,11 +8,27 @@ import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
+List<NotificationType> dismissiableNotification = [
+  NotificationType.RequestApprove,
+  NotificationType.TypeMemberAdded,
+  NotificationType.RequestReject,
+  NotificationType.RequestCompletedRejected,
+  NotificationType.TransactionDebit,
+  NotificationType.TransactionCredit,
+  NotificationType.AcceptedOffer,
+  NotificationType.JoinRequest,
+  NotificationType.RequestCompletedApproved,
+  NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+  NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,
+];
+
 class NotificationsBloc extends BlocBase {
   final _personalNotificationCount = BehaviorSubject<int>.seeded(0);
   final _timebankNotificationCount = BehaviorSubject<int>.seeded(0);
   final _personalNotifications = BehaviorSubject<List<NotificationsModel>>();
   final _adminNotificationData = BehaviorSubject<TimebankNotificationData>();
+  //Used for clearing all notifications
+  List<String> personalNotificationsToBeCleared = [];
 
   Stream<List<NotificationsModel>> get personalNotifications =>
       _personalNotifications.stream;
@@ -36,8 +52,13 @@ class NotificationsBloc extends BlocBase {
     NotificationsRepository.getUserNotifications(userEmail, communityId)
         .listen((QuerySnapshot query) {
       List<NotificationsModel> notifications = [];
+      personalNotificationsToBeCleared = [];
       query.documents.forEach((DocumentSnapshot document) {
-        notifications.add(NotificationsModel.fromMap(document.data));
+        var notification = NotificationsModel.fromMap(document.data);
+        if (checkIfDismissible(notification.type)) {
+          personalNotificationsToBeCleared.add(notification.id);
+        }
+        notifications.add(notification);
       });
       if (!_personalNotificationCount.isClosed)
         _personalNotificationCount.add(notifications.length);
@@ -86,11 +107,32 @@ class NotificationsBloc extends BlocBase {
     });
   }
 
+  bool checkIfDismissible(NotificationType type) {
+    return dismissiableNotification.contains(type);
+  }
+
   Future clearNotification({String email, String notificationId}) {
     return NotificationsRepository.readUserNotification(
       notificationId,
       email,
     );
+  }
+
+  Future<void> clearAllNotification(String email,
+      {List<String> notificationIdsToBeCleared}) async {
+    var x = notificationIdsToBeCleared ?? personalNotificationsToBeCleared;
+    WriteBatch batch = Firestore.instance.batch();
+    x.forEach((String id) {
+      batch.updateData(
+        Firestore.instance
+            .collection("users")
+            .document(email)
+            .collection("notifications")
+            .document(id),
+        {"isRead": true},
+      );
+    });
+    await batch.commit();
   }
 
   void dispose() async {

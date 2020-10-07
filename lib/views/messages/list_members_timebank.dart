@@ -1,68 +1,30 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 
-class ListMambersForNewChat extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return ListMambersForNewChatState();
-  }
-}
+// Widget getTimebankMembers() {
+//   var context;
+//   FirestoreManager.getTimeBankForId(
+//           timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+//       .then((timebank) {
+//     return Text("From then");
+//   });
+// }
 
-class ListMambersForNewChatState extends State<ListMambersForNewChat> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      supportedLocales: S.delegate.supportedLocales,
-      localizationsDelegates: [
-        S.delegate,
-        
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      title: AppConfig.appName,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Title"),
-        ),
-        body: getTimebankMembers(),
-      ),
-    );
-  }
-}
-
-Widget getTimebankMembers() {
-  var context;
-  FirestoreManager.getTimeBankForId(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-      .then((timebank) {
-    return Text("From then");
-  });
-}
-
-Widget getUserWidget(UserModel user) {
-  return Card(
-    child: ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-          user.photoURL ?? defaultUserImageURL,
-        ),
-      ),
-      title: Text(user.fullname),
-      subtitle: Text(user.email),
-    ),
-  );
-}
+// Widget getUserWidget(UserModel user) {
+//   return Card(
+//     child: ListTile(
+//       leading: CircleAvatar(
+//         backgroundImage: NetworkImage(
+//           user.photoURL ?? defaultUserImageURL,
+//         ),
+//       ),
+//       title: Text(user.fullname),
+//       subtitle: Text(user.email),
+//     ),
+//   );
+// }
 
 Stream<List<TimebankModel>> getTimebankDetails({
   String timebankId,

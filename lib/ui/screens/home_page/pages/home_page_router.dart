@@ -85,6 +85,14 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       child: Consumer<AppLanguage>(
         builder: (context, model, child) {
           return MaterialApp(
+            builder: (context, child) {
+              return GestureDetector(
+                child: child,
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+              );
+            },
             locale: model.appLocal,
             supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: [

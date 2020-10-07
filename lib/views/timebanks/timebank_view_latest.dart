@@ -142,7 +142,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             ),
             isUserJoined
                 ? TimeBankSevaCoin(
-                    isAdmin: !widget.timebankModel.admins
+                    isAdmin: widget.timebankModel.admins
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                     loggedInUser: SevaCore.of(context).loggedInUser,
                     timebankData: widget.timebankModel)

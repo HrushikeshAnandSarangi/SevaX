@@ -107,10 +107,8 @@ class NewsImageState extends State<NewsImage>
                 .then((reference) {
               reference.delete();
               globals.newsImageURL = null;
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
-          }
+            });
+          } else {}
         });
       } else {
         globals.newsImageURL = imageURL;
@@ -230,7 +228,6 @@ class NewsImageState extends State<NewsImage>
     if (state == AppLifecycleState.resumed) {
       if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
         globals.newsImageURL = globals.webImageUrl;
-        print('${globals.newsImageURL}');
         setState(() {});
       }
     }
@@ -418,7 +415,6 @@ class NewsImageState extends State<NewsImage>
     setState(() {
       if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
         globals.newsImageURL = globals.webImageUrl;
-        print('${globals.newsImageURL}');
         setState(() {});
       }
     });

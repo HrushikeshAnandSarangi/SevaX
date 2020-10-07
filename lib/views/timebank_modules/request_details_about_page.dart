@@ -22,6 +22,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
@@ -80,7 +81,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   TextStyle subTitleStyle = TextStyle(
     fontSize: 14,
-    color: Colors.grey,
   );
 
   bool isAdmin = false;
@@ -202,6 +202,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 10),
                   getRequestModeComponent,
                   timestampComponent,
+                  createdAt,
                   addressComponent,
                   hostNameComponent,
                   widget.requestItem.requestType == RequestType.TIME
@@ -802,6 +803,23 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       title: date,
       subtitle: subtitleComponent,
       trailing: trailingComponent,
+    );
+  }
+
+  Widget get createdAt {
+    return Text(
+      timeAgo
+          .format(
+              DateTime.fromMillisecondsSinceEpoch(
+                  widget.requestItem.postTimestamp),
+              locale: Locale(AppConfig.prefs.getString('language_code'))
+                  .toLanguageTag())
+          .replaceAll('hours ago', 'h'),
+      style: TextStyle(
+        fontFamily: 'Europa',
+        fontSize: 16,
+        color: Colors.black38,
+      ),
     );
   }
 

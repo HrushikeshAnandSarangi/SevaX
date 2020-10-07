@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -139,8 +140,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-
-    print("Final arrray $members");
 
     String id = Utils.getUuid();
     timebankModel.id = id;
@@ -285,11 +284,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 child: Checkbox(
                   value: timebankModel.private,
                   onChanged: (bool value) {
-                    print(value);
                     setState(() {
                       timebankModel.private = value;
                     });
-                    print(timebankModel.private);
                   },
                 ),
               ),
@@ -304,11 +301,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               child: Checkbox(
                 value: timebankModel.preventAccedentalDelete,
                 onChanged: (bool value) {
-                  print(value);
                   setState(() {
                     timebankModel.preventAccedentalDelete = value;
                   });
-                  print(timebankModel.preventAccedentalDelete);
                 },
               ),
             ),
@@ -349,14 +344,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                     //if (location != null) {
                     if (_formKey.currentState.validate() &&
                         (errTxt == null || errTxt == "")) {
-//                            print("Hello");
+//
 //                            // If the form is valid, we want to show a Snackbar
                       _writeToDB();
 //                            // return;
                       try {
                         parentTimebank.children.add(timebankModel.id);
                       } catch (e) {
-                        print(e);
+                        Crashlytics.instance.log(e.toString());
                       }
                       updateTimebank(timebankModel: parentTimebank);
                       Navigator.pop(context);
@@ -532,7 +527,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return 'Please enter some text';
             }
             timebankModel.phoneNumber = value.replaceAll('.', '');
-            print(timebankModel.phoneNumber.toString());
+
           },
         ),
         Text(''),
@@ -708,7 +703,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             parentTimebank.children.add(timebankModel.id);
                             updateTimebank(timebankModel: parentTimebank);
                           } catch (e) {
-                            print("Error is:$e");
+
                           }
                           Navigator.pop(context);
                         }

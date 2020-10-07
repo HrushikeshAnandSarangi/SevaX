@@ -100,10 +100,11 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
         snapshot.documents.forEach(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            if (model.rootTimebankId == FlavorConfig.values.timebankId)
-              model.softDelete
-                  ? print("Removed soft deleted timebank from list")
-                  : modelList.add(model);
+            if (model.rootTimebankId == FlavorConfig.values.timebankId) {
+              if (!model.softDelete) {
+                modelList.add(model);
+              }
+            }
           },
         );
         modelList.sort(
@@ -255,7 +256,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
             model.id = documentSnapshot.documentID;
 
             model.softDelete == true || model.private == true
-                ? print("Removed soft deleted item")
+                ? null
                 : communityList.add(model);
 
             // communityList.add(model);

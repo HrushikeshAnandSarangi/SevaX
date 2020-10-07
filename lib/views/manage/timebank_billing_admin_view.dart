@@ -126,9 +126,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           if (snapshot.hasData && snapshot.data != null) {
                             cardModel = snapshot.data;
                             currentPlanId = cardModel.currentPlan;
-                            //print('cardmodel ${cardModel.currentPlan}');
-                            //  print('subscription  ${cardModel.toString()}');
-                            //print('subscription  ${cardModel.subscriptionModel}');
+                            //
+                            //
+                            //
                             if (cardModel.subscriptionModel != null) {
                               String data = NO_SELECTED_PLAN_YET;
                               _billingPlanDetailsModels.removeWhere((element) =>
@@ -521,7 +521,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               Icons.edit,
             ),
             onPressed: () {
-              print("clicked");
+
               FocusScope.of(buildContext).requestFocus(FocusNode());
               _billingBottomsheet(buildContext);
 
@@ -609,7 +609,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Widget _scrollingList(List<FocusNode> focusNodes, BuildContext bc) {
-    print(focusNodes);
+
     Widget _cityWidget(String city) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -632,7 +632,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 autoValidateText = false;
               });
             }
-            print(value);
+
             communityModel.billing_address.city = value;
           },
           initialValue: city != null ? city : '',
@@ -696,7 +696,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
-            print(value);
+
             communityModel.billing_address.pincode = int.parse(value);
           },
           initialValue: pinCode != null ? pinCode.toString() : '',
@@ -919,7 +919,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();
               } else {
-                print("All Good");
+
                 showProgressDialog(S.of(context).updating_details);
 
                 await FirestoreManager.updateCommunityDetails(

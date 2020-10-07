@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -33,7 +34,6 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
-  print('hey');
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
@@ -71,7 +71,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       UserModel userModel = await getUserForId(
         sevaUserId: modelList[i].sevaUserId,
       );
-      modelList[i].userPhotoURL = userModel.photoURL;
+      modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
 
       if (modelList[i].placeAddress == null) {
         var data = await _getLocation(
@@ -123,10 +123,8 @@ Stream<List<NewsModel>> getNearNewsStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    //
   }
-  print(
-      "radius is fetched from remote config getNearNewsStream ${radius.toDouble()}");
 
   var data = geos.collection(collectionRef: query).within(
         center: center,
@@ -135,13 +133,9 @@ Stream<List<NewsModel>> getNearNewsStream(
         strictMode: true,
       );
 
-  print(
-      "-------------${lat.toString()}---------${lng.toString()}--------${data.toString()}");
-
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
           handleData: (querySnapshot, newsSink) async {
-    print("-------------------------------------------------------");
     List<NewsModel> modelList = [];
 
     querySnapshot.forEach((document) {
@@ -200,10 +194,8 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    //
   }
-  print(
-      "radius is fetched from remote config getAllNearNewsStream ${radius.toDouble()}");
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news');

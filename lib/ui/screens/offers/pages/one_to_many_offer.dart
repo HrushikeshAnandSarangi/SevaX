@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
@@ -21,12 +19,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../flavor_config.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -147,16 +139,15 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               print(snapshot.data);
                               return CustomTextField(
+                                enableStreamData: true,
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
                                 formatters: <TextInputFormatter>[
                                   WhitelistingTextInputFormatter(
                                       RegExp("[a-zA-Z0-9_ ]*"))
                                 ],
-                                initialValue: snapshot.data != null
-                                    ? snapshot.data.contains('__*__')
-                                        ? snapshot.data
-                                        : null
+                                value: snapshot.data != null
+                                    ? snapshot.data
                                     : null,
                                 heading: "${S.of(context).title}*",
                                 onChanged: _bloc.onTitleChanged,
@@ -201,19 +192,18 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.preparationHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                enableStreamData: true,
                                 currentNode: focusNodes[1],
                                 nextNode: focusNodes[2],
-                                initialValue: snapshot.data != null
-                                    ? snapshot.data.contains('__*__')
-                                        ? snapshot.data
-                                        : null
+                                value: snapshot.data != null
+                                    ? snapshot.data
                                     : null,
                                 heading: "${S.of(context).offer_prep_hours} *",
                                 onChanged: _bloc.onPreparationHoursChanged,
                                 hint: S.of(context).offer_prep_hours_required,
                                 error:
                                     getValidationError(context, snapshot.error),
-                                textInputType: TextInputType.number,
+                                keyboardType: TextInputType.number,
                               );
                             },
                           ),
@@ -222,12 +212,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                enableStreamData: true,
                                 currentNode: focusNodes[2],
                                 nextNode: focusNodes[3],
-                                initialValue: snapshot.data != null
-                                    ? snapshot.data.contains('__*__')
-                                        ? snapshot.data
-                                        : null
+                                value: snapshot.data != null
+                                    ? snapshot.data
                                     : null,
                                 heading:
                                     "${S.of(context).offer_number_class_hours} *",
@@ -237,7 +226,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     .offer_number_class_hours_required,
                                 error:
                                     getValidationError(context, snapshot.error),
-                                textInputType: TextInputType.number,
+                                keyboardType: TextInputType.number,
                               );
                             },
                           ),
@@ -246,19 +235,18 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classSize,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                enableStreamData: true,
                                 currentNode: focusNodes[3],
                                 nextNode: focusNodes[4],
-                                initialValue: snapshot.data != null
-                                    ? snapshot.data.contains('__*__')
-                                        ? snapshot.data
-                                        : null
+                                value: snapshot.data != null
+                                    ? snapshot.data
                                     : null,
                                 heading: "${S.of(context).offer_size_class} *",
                                 onChanged: _bloc.onClassSizeChanged,
                                 hint: S.of(context).offer_enter_participants,
                                 error:
                                     getValidationError(context, snapshot.error),
-                                textInputType: TextInputType.number,
+                                keyboardType: TextInputType.number,
                               );
                             },
                           ),
@@ -267,11 +255,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classDescription,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                enableStreamData: true,
                                 currentNode: focusNodes[4],
-                                initialValue: snapshot.data != null
-                                    ? snapshot.data.contains('__*__')
-                                        ? snapshot.data
-                                        : null
+                                value: snapshot.data != null
+                                    ? snapshot.data
                                     : null,
                                 heading: S.of(context).offer_class_description,
                                 onChanged: _bloc.onclassDescriptionChanged,
@@ -279,7 +266,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 maxLength: 500,
                                 error:
                                     getValidationError(context, snapshot.error),
-                                textInputType: TextInputType.multiline,
+                                keyboardType: TextInputType.multiline,
                               );
                             },
                           ),
@@ -513,11 +500,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     }
 
     if (SevaCore.of(context).loggedInUser.calendarId != null) {
-        _bloc.allowedCalenderEvent = true;
+      _bloc.allowedCalenderEvent = true;
 
-        await _bloc.createOneToManyOffer(
-            user: SevaCore.of(context).loggedInUser,
-            timebankId: widget.timebankId);
+      await _bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId);
 //      showDialog(
 //        context: context,
 //        builder: (_context) {
@@ -542,26 +529,24 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 //        },
 //      );
     } else {
-        _bloc.allowedCalenderEvent = true;
+      _bloc.allowedCalenderEvent = true;
 
-        await _bloc.createOneToManyOffer(
-            user: SevaCore.of(context).loggedInUser,
-            timebankId: widget.timebankId);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) {
-                    return AddToCalendar(
-                        isOfferRequest: null,
-                        offer: null,
-                        requestModel: null,
-                        userModel: null,
-                        eventsIdsArr:_bloc.offerIds
-
-                    );
-                },
-            ),
-        );
+      await _bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return AddToCalendar(
+                isOfferRequest: null,
+                offer: null,
+                requestModel: null,
+                userModel: null,
+                eventsIdsArr: _bloc.offerIds);
+          },
+        ),
+      );
 //        await _settingModalBottomSheet(context);
 //        showDialog(
 //            context: context,

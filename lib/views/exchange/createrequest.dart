@@ -185,7 +185,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    print(requestModel);
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -461,7 +460,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
           GoodsDynamicSelection(
             onSelectedGoods: (goods) => {
-              print(goods),
               requestModel.goodsDonationDetails.requiredGoods = goods
             },
           ),
@@ -515,7 +513,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else {
-                print(requestModel);
                 requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
               }

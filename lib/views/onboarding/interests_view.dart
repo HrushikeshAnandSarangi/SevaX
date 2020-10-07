@@ -252,7 +252,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
               onSuggestionSelected: (SuggestedItem suggestion) {
                 if (ProfanityDetector()
                     .isProfaneString(suggestion.suggesttionTitle)) {
-                  print("No action can be taken on profane word");
                   return;
                 }
 

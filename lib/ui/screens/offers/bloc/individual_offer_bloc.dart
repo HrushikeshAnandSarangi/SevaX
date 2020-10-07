@@ -103,11 +103,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
       offer.location = _location.value.location;
       offer.selectedAdrress = _location.value.address;
       offer.individualOfferDataModel = IndividualOfferDataModel()
-        ..title = _title.value.replaceAll('__*__', '')
-        ..description = _offerDescription.value.replaceAll('__*__', '')
-        ..schedule = _availabilty.value != null
-            ? _availabilty.value.replaceAll('__*__', '')
-            : '';
+        ..title = _title.value
+        ..description = _offerDescription.value
+        ..schedule = _availabilty.value != null ? _availabilty.value : '';
 
       updateOfferWithRequest(offer: offerModel).then((_) {
         _status.add(Status.COMPLETE);
@@ -118,17 +116,17 @@ class IndividualOfferBloc extends BlocBase with Validators {
   ///[PRELOAD DATA FOR UPDATE]
   void loadData(OfferModel offerModel) {
     _title.add(
-      offerModel.individualOfferDataModel.title + '__*__',
+      offerModel.individualOfferDataModel.title,
     );
     _offerDescription.add(
-      offerModel.individualOfferDataModel.description + '__*__',
+      offerModel.individualOfferDataModel.description,
     );
     _type.add(offerModel.type);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _cashModel.add(offerModel.cashModel);
     if (offerModel.individualOfferDataModel.schedule != null) {
       _availabilty.add(
-        offerModel.individualOfferDataModel.schedule + '__*__',
+        offerModel.individualOfferDataModel.schedule,
       );
     }
     _location.add(

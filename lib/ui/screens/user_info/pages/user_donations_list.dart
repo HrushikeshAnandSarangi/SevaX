@@ -135,6 +135,7 @@ class DonationListItem extends StatelessWidget {
                     ? Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => GoodsDisplayPage(
+                            label: 'Donation Received',
                             name: model.donorDetails.name,
                             photoUrl: model.donorDetails.photoUrl,
                             goods: model.goodsDetails?.donatedGoods != null

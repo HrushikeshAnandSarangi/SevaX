@@ -131,10 +131,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.availability,
             builder: (context, snapshot) {
               return CustomTextField(
+                enableStreamData: true,
                 currentNode: _availability,
-                initialValue: snapshot.data != null
-                    ? snapshot.data.contains('__*__') ? snapshot.data : null
-                    : null,
+                value: snapshot.data,
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,
                 hint: S.of(context).availablity_description,
@@ -291,13 +290,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           builder: (context, snapshot) {
                             print(snapshot.data);
                             return CustomTextField(
+                              enableStreamData: true,
                               currentNode: _title,
                               nextNode: _description,
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data.contains('__*__')
-                                      ? snapshot.data
-                                      : null
-                                  : null,
+                              value: snapshot.data,
                               heading: "${S.of(context).title}*",
                               onChanged: (String value) {
                                 _bloc.onTitleChanged(value);
@@ -310,18 +306,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             );
                           },
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 30),
                         StreamBuilder<String>(
                           stream: _bloc.offerDescription,
                           builder: (context, snapshot) {
                             return CustomTextField(
+                              enableStreamData: true,
                               currentNode: _description,
                               nextNode: _availability,
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data.contains('__*__')
-                                      ? snapshot.data
-                                      : null
-                                  : null,
+                              value: snapshot.data,
                               heading: "${S.of(context).offer_description}*",
                               onChanged: _bloc.onOfferDescriptionChanged,
                               hint: S.of(context).offer_description_hint,
@@ -344,7 +337,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       ? CashRequest()
                                       : GoodsRequest();
                             }),
-                        SizedBox(height: 40),
+                        SizedBox(height: 10),
                         StreamBuilder<CustomLocation>(
                             stream: _bloc.location,
                             builder: (context, snapshot) {
@@ -364,18 +357,18 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 },
                               );
                             }),
-                        SizedBox(height: 40),
+                        SizedBox(height: 10),
                         RaisedButton(
                           onPressed: status.data == Status.LOADING
                               ? () {}
                               : () async {
-                                  var connResult = await Connectivity()
-                                      .checkConnectivity();
+                                  var connResult =
+                                      await Connectivity().checkConnectivity();
                                   if (connResult == ConnectivityResult.none) {
                                     _scaffoldKey.currentState.showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                            S.of(context).check_internet),
+                                        content:
+                                            Text(S.of(context).check_internet),
                                         action: SnackBarAction(
                                           label: S.of(context).dismiss,
                                           onPressed: () => _scaffoldKey
@@ -406,8 +399,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                               Navigator.of(_context).pop();
                                             },
                                             addToCalender: () async {
-                                              _bloc.allowedCalenderEvent =
-                                                  true;
+                                              _bloc.allowedCalenderEvent = true;
 
                                               _bloc.createOrUpdateOffer(
                                                 user: SevaCore.of(context)
@@ -421,8 +413,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       );
                                     } else {
                                       _bloc.createOrUpdateOffer(
-                                        user:
-                                            SevaCore.of(context).loggedInUser,
+                                        user: SevaCore.of(context).loggedInUser,
                                         timebankId: widget.timebankId,
                                       );
                                     }

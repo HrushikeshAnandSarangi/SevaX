@@ -182,7 +182,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                             .removeDeviceRegisterationForMember(
                                 email: loggedInEmail);
                       } catch (e) {
-                        print("Couldn't clear the token");
+                        throw e;
                       }
                       Navigator.of(context).pop();
                       _signOut(context);
@@ -332,7 +332,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           } else {
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
-//                print("comm list ${communityList}");
+//
 
               return Padding(
                   padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
@@ -458,7 +458,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         }
       }
     } on PlatformException catch (e) {
-      print(e);
+
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
@@ -477,7 +477,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return LoadingIndicator();
           }
           if (snapshot.hasData) {
-            print('near by comminities ${snapshot.data}');
+
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
 
@@ -547,14 +547,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     String seveaUserId,
   ) {
     if (communityModel.members.contains(widget.loggedInUser.sevaUserID)) {
-      print('u r joined user');
+
       return CompareUserStatus.JOINED;
     } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
-      // print('u rrr joined user');
+      //
 
       return CompareUserStatus.JOINED;
     } else {
-      //  print('u r not joined user');
+      //
 
       return CompareUserStatus.JOIN;
     }
@@ -624,7 +624,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       ),
                     );
                   } else {
-                    print("NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+
                   }
                 },
               ),
