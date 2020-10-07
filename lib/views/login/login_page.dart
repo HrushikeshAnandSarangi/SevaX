@@ -248,9 +248,6 @@ class _LoginPageState extends State<LoginPage> {
                                           '${Padding(padding: const EdgeInsets.only(left: 20))}' +
                                           S.of(context).cancel,
                                     );
-
-                                    print(
-                                        '===================================>>  ${textLengthCalculator(span, size)}');
                                     return textLengthCalculator(span, size) ==
                                             true
                                         ? Wrap(
@@ -393,8 +390,6 @@ class _LoginPageState extends State<LoginPage> {
                               ' ' +
                               S.of(context).reset,
                         );
-                        print(
-                            '==============================>>  ${textLengthCalculator(span, size)}');
                         return textLengthCalculator(span, size) == true
                             ? Wrap(
                                 alignment: WrapAlignment.center,
