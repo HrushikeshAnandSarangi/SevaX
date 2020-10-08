@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import '../flavor_config.dart';
 
 class UserModel extends DataModel {
+  bool seenIntro;
   String bio;
   String email;
   String fullname;
@@ -66,7 +67,8 @@ class UserModel extends DataModel {
   String calendarScope;
 
   UserModel(
-      {this.calendarScope,
+      {this.seenIntro,
+      this.calendarScope,
       this.calendarEmail,
       this.calendarAccessToken,
       this.calendarId,
@@ -111,6 +113,11 @@ class UserModel extends DataModel {
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
       this.calendarScope = map['calendarScope'];
+    }
+    if (map.containsKey('seenIntro')) {
+      this.seenIntro = map['seenIntro'];
+    } else {
+      this.seenIntro = false;
     }
     if (map.containsKey('calendarEmail')) {
       this.calendarEmail = map['calendarEmail'];
@@ -359,6 +366,9 @@ class UserModel extends DataModel {
     }
     if (this.calendarScope != null) {
       object['calendarScope'] = this.calendarScope;
+    }
+    if (this.seenIntro != null) {
+      object['seenIntro'] = this.seenIntro;
     }
     if (this.calendarEmail != null) {
       object['calendarEmail'] = this.calendarEmail;
