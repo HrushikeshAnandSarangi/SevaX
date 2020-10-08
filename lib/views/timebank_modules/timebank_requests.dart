@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -12,6 +11,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -49,7 +49,6 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  bool isNearme = false;
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
@@ -294,20 +293,6 @@ class RequestListItemsState extends State<RequestListItems> {
     if (!widget.isFromSettings) {
       timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
     }
-  }
-
-  Future<Coordinates> findcurrentLocation() async {
-    final Location _location = Location();
-    PermissionStatus status = await _location.hasPermission();
-    if (status != PermissionStatus.granted) {
-      throw "No Location";
-    }
-    if (!await _location.serviceEnabled()) {
-      throw "No Location";
-    }
-    LocationData location = await _location.getLocation();
-    Coordinates distance = Coordinates(location.latitude, location.longitude);
-    return distance;
   }
 
   @override
