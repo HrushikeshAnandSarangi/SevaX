@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-10-01T12:30:13+00:00",
+    "@@last_modified": "2020-10-08T15:45:08+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "The feature you have chosen needs an upgraded plan.",
     "plan_upgrade_message_admin": "Please contact the creator of your Seva Community to activate this feature",
     "plan_upgrade_message_user": "Please contact the admin of your Seva Community to activate this feature",
-    "seva_community": "Seva Community"
+    "seva_community": "Seva Community",
+    "venmo_hint": "Provide your Venmo username",
+    "sevax_global_creation_error": "\"The SevaX Global Community\" is a protected community. Only Admins can post content here",
+    "alert": "Alert",
+    "cancelled_subscription": "Canceled subscription",
+    "subscription_cancellation": "Subscription cancelation",
+    "cancellation_failure_message": "We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again",
+    "cancellation_success_message": "We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged"
 }

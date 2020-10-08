@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-10-01T12:30:19+00:00",
+    "@@last_modified": "2020-10-08T15:45:08+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "La función que ha elegido necesita un plan actualizado.",
     "plan_upgrade_message_admin": "Póngase en contacto con el creador de su Comunidad Seva para activar esta función.",
     "plan_upgrade_message_user": "Póngase en contacto con el administrador de su Comunidad Seva para activar esta función",
-    "seva_community": "Comunidad Seva"
+    "seva_community": "Comunidad Seva",
+    "venmo_hint": "Proporcione su nombre de usuario de Venmo",
+    "sevax_global_creation_error": "\"La Comunidad Global SevaX\" es una comunidad protegida. Solo los administradores pueden publicar contenido aquí",
+    "alert": "Alerta",
+    "cancelled_subscription": "Suscripción cancelada",
+    "subscription_cancellation": "Cancelación de suscripción",
+    "cancellation_failure_message": "Hemos recibido una solicitud para cancelar su suscripción. Si bien lamentamos que se vaya, hay cuotas impagas en este momento. Borre estas cuotas y luego intente cancelar nuevamente",
+    "cancellation_success_message": "Lamentamos verte marchar. Su suscripción ahora está cancelada. A partir de la conclusión del período de suscripción actual, no se le cobrará a su tarjeta de crédito"
 }

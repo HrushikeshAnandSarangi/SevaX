@@ -841,7 +841,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: S.of(context).venmo_hint,
               hintStyle: hintTextStyle,
             ),
             initialValue: requestModel.cashModel.venmoId ?? '',
@@ -853,9 +853,11 @@ class RequestEditFormState extends State<RequestEditForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!emailPattern.hasMatch(value)) {
-                return S.of(context).enter_valid_link;
-              } else {
+              }
+              // else if (!emailPattern.hasMatch(value)) {
+              //   return S.of(context).enter_valid_link;
+              // }
+              else {
                 widget.requestModel.cashModel.venmoId = value;
 
                 return null;

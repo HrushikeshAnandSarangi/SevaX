@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-10-01T12:31:27+00:00",
+    "@@last_modified": "2020-10-08T15:45:09+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "您选择的功能需要升级计划。",
     "plan_upgrade_message_admin": "请联系您的Seva社区的创建者以激活此功能",
     "plan_upgrade_message_user": "请联系您的Seva社区管理员以激活此功能",
-    "seva_community": "塞瓦社区"
+    "seva_community": "塞瓦社区",
+    "venmo_hint": "提供您的Venmo用户名",
+    "sevax_global_creation_error": "“ SevaX全球社区”是受保护的社区。只有管​​理员可以在此处发布内容",
+    "alert": "警报",
+    "cancelled_subscription": "取消订阅",
+    "subscription_cancellation": "订阅取消",
+    "cancellation_failure_message": "我们已收到取消您的订阅的请求。很抱歉看到您离开，目前尚有未付的会费。请清除这些会费，然后再次尝试取消",
+    "cancellation_success_message": "我们很伤心看你走。您的订阅现已取消。从当前订阅期结束之日起，将不会向您的信用卡收费"
 }
