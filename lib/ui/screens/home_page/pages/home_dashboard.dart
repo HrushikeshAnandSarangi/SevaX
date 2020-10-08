@@ -49,7 +49,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   }
 
   Future<void> planTransactionsMatrix() async {
-    AppConfig.plan_transactions_matrix = await json
+    AppConfig.plan_transactions_matrix = json
         .decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
   }
 
