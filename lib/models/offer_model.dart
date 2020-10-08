@@ -201,6 +201,7 @@ class OfferModel extends DataModel {
   IndividualOfferDataModel individualOfferDataModel;
   List<String> allowedCalenderUsers;
   bool creatorAllowedCalender = false;
+  Coordinates currentUserLocation; //to be used locally
 
   OfferModel(
       {this.isRecurring,

@@ -31,7 +31,6 @@ class OffersState extends State<OffersModule> {
     globals.orCreateSelector = 1;
   }
 
-  bool isNearme = false;
   int sharedValue = 0;
 
   @override
@@ -140,16 +139,11 @@ class OffersState extends State<OffersModule> {
           color: Colors.white,
           height: 0,
         ),
-        isNearme == true
-            ? NearOfferListItems(
-                parentContext: context,
-                timebankId: timebankId,
-              )
-            : OfferListItems(
-                parentContext: context,
-                timebankId: timebankId,
-                timebankModel: widget.timebankModel,
-              )
+        OfferListItems(
+          parentContext: context,
+          timebankId: timebankId,
+          timebankModel: widget.timebankModel,
+        )
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -72,4 +73,18 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['2'] + temp['3']), user.trustworthinessscore)
     }, merge: true);
   }
+}
+
+Future<Coordinates> findcurrentLocation() async {
+  final Location _location = Location();
+  PermissionStatus status = await _location.hasPermission();
+  if (status != PermissionStatus.granted) {
+    throw "No Location";
+  }
+  if (!await _location.serviceEnabled()) {
+    throw "No Location";
+  }
+  LocationData location = await _location.getLocation();
+  Coordinates distance = Coordinates(location.latitude, location.longitude);
+  return distance;
 }
