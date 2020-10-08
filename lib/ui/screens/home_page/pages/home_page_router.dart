@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -104,81 +105,84 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             title: AppConfig.appName,
             debugShowCheckedModeBanner: false,
             theme: FlavorConfig.values.theme,
-            home: BlocProvider<UserDataBloc>(
-              bloc: _userBloc,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: StreamBuilder(
-                  // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
-                  stream: CombineLatestStream.combine2(_userBloc.userStream,
-                      _userBloc.comunityStream, (u, c) => true),
-                  builder: (context, AsyncSnapshot<bool> snapshot) {
-                    if (snapshot.hasData && snapshot.data != null) {
-                      UserModel loggedInUser = _userBloc.user;
-                      loggedInUser.currentTimebank =
-                          _userBloc.community.primary_timebank;
-                      loggedInUser.associatedWithTimebanks =
-                          _userBloc.user.communities.length;
+            home: LogConsoleOnShake(
+              dark: true,
+              child: BlocProvider<UserDataBloc>(
+                bloc: _userBloc,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: StreamBuilder(
+                    stream: CombineLatestStream.combine2(_userBloc.userStream,
+                        _userBloc.comunityStream, (u, c) => true),
+                    builder: (context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        UserModel loggedInUser = _userBloc.user;
+                        loggedInUser.currentTimebank =
+                            _userBloc.community.primary_timebank;
+                        loggedInUser.associatedWithTimebanks =
+                            _userBloc.user.communities.length;
 
-                      SevaCore.of(context).loggedInUser = loggedInUser;
+                        SevaCore.of(context).loggedInUser = loggedInUser;
 
-                      if (_userBloc.user.communities == null ||
-                          _userBloc.user.communities.isEmpty) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => SplashView()),
-                              ((Route<dynamic> route) => false));
-                        });
-                      }
-                      return Stack(
-                        children: <Widget>[
-                          BlocProvider<NotificationsBloc>(
-                            bloc: _notificationsBloc,
-                            child: BlocProvider<MessageBloc>(
-                              bloc: _messageBloc,
-                              child: Container(
-                                height: MediaQuery.of(context).size.height - 65,
-                                child: pages[selected],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey[300],
-                                    blurRadius: 100.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: BlocProvider(
+                        if (_userBloc.user.communities == null ||
+                            _userBloc.user.communities.isEmpty) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => SplashView()),
+                                ((Route<dynamic> route) => false));
+                          });
+                        }
+                        return Stack(
+                          children: <Widget>[
+                            BlocProvider<NotificationsBloc>(
                               bloc: _notificationsBloc,
                               child: BlocProvider<MessageBloc>(
                                 bloc: _messageBloc,
-                                child: CustomBottomNavigationBar(
-                                  selected: selected,
-                                  onChanged: (index) {
-                                    selected = index;
-                                    setState(() {});
-                                  },
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height - 65,
+                                  child: pages[selected],
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return LoadingIndicator();
-                    }
-                  },
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[300],
+                                      blurRadius: 100.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: BlocProvider(
+                                bloc: _notificationsBloc,
+                                child: BlocProvider<MessageBloc>(
+                                  bloc: _messageBloc,
+                                  child: CustomBottomNavigationBar(
+                                    selected: selected,
+                                    onChanged: (index) {
+                                      selected = index;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return LoadingIndicator();
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
