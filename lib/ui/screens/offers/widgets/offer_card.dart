@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
@@ -80,11 +81,13 @@ class OfferCard extends StatelessWidget {
                               : Container(),
                           SizedBox(width: 10),
                           //todo pass current location and location from model
-                          DistanceFromCurrentLocation(
-                            coordinates: offerCoordinates,
-                            currentLocation: userCoordinates,
-                            isKm: true,
-                          ),
+                          !isCreator
+                              ? DistanceFromCurrentLocation(
+                                  coordinates: offerCoordinates,
+                                  currentLocation: userCoordinates,
+                                  isKm: true,
+                                )
+                              : Container(),
                         ],
                       ),
                       Row(
