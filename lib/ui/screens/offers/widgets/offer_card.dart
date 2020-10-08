@@ -132,30 +132,13 @@ class OfferCard extends StatelessWidget {
                           children: <Widget>[
                             FlatButton(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  side: BorderSide(color: buttonColor)),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              color: Colors.transparent,
-                              child: Text(
-                                'Share',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                              onPressed: onActionPressed,
-                            ),
-                            SizedBox(width: 20),
-                            FlatButton(
-                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               padding: EdgeInsets.only(left: 10, right: 10),
                               color:
-                                  // buttonColor ??
-                                  Theme.of(context).primaryColor,
+                                  buttonColor ?? Theme.of(context).primaryColor,
                               child: Text(
-                                // actionButtonLabel ?? '',
-                                'Accept',
+                                actionButtonLabel ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
