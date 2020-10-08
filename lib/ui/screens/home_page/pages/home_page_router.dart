@@ -107,6 +107,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             theme: FlavorConfig.values.theme,
             home: LogConsoleOnShake(
               dark: true,
+              debugOnly: FlavorConfig.appFlavor == Flavor.APP,
               child: BlocProvider<UserDataBloc>(
                 bloc: _userBloc,
                 child: Scaffold(
