@@ -503,6 +503,9 @@ class _SplashViewState extends State<SplashView> {
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
     }
+    if (!loggedInUser.seenIntro) {
+      await _navigateToIntro(loggedInUser);
+    }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
         (loggedInUser.skills == null || loggedInUser.skills.length == 0)) {
@@ -533,38 +536,34 @@ class _SplashViewState extends State<SplashView> {
   }
 
 // ToDo:: Check once
-  Future _navigateToLoginPage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen = (prefs.getBool('seen') ?? false);
-
-    if (_seen) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Intro(
-            onSkip: () async {
-              await Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
-              );
-            },
+  Future _navigateToIntro(UserModel loggedInUser) async {
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Intro(
+          onSkip: () => Navigator.pop(
+            context,
+            {'response': 'SKIP'},
           ),
         ),
-      );
-    } else {
-      await prefs.setBool('seen', true);
-      await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      );
-    }
+      ),
+    );
 
-    // await Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(
-    //     builder: (context) => LoginPage(),
-    //   ),
-    // );
+    if (results != null && results['response'] == "SKIP") {
+      await Firestore.instance
+          .collection('users')
+          .document(loggedInUser.email)
+          .updateData({'seenIntro': true})
+          .then((onValue) {})
+          .catchError((onError) {});
+    }
+  }
+
+  Future _navigateToLoginPage() async {
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
   }
 
   Future _navigateToUpdatePage(UserModel loggedInUser, bool forced) async {
