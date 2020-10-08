@@ -16,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -499,41 +500,44 @@ Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
 }
 
 Future<int> changePlan(String communityId, String planId) async {
-    // failure is 0, success is 1, error is 2
-    try {
-        http.Response result = await http.post(
-            FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-            body: json.encode({'communityId': communityId, "newPlanId": planId}),
-            headers: {"Content-type": "application/json"},
-        );
-        if(result.statusCode == 200){
-            Map<String, dynamic> resData = json.decode(result.body);
-            return resData['cancellationStatus'] ? 1 : 0;
-        }
-    } catch (e) {
-        print(e);
+  // failure is 0, success is 1, error is 2
+  try {
+    http.Response result = await http.post(
+      FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
+      body: json.encode({'communityId': communityId, "newPlanId": planId}),
+      headers: {"Content-type": "application/json"},
+    );
+    if (result.statusCode == 200) {
+      Map<String, dynamic> resData = json.decode(result.body);
+      return resData['cancellationStatus'] ? 1 : 0;
     }
-    return 2;
+  } catch (e) {
+    logger.e("Exception caugut");
+  }
+  return 2;
 }
 
-Future<int> cancelTimebankSubscription(String communityId, bool cancelSubscription) async {
-    // failure is 0, success is 1, error is 2
-    try {
-        http.Response result = await http.post(
-            FlavorConfig.values.cloudFunctionBaseURL + '/cancelRenewSubscription',
-            body: json.encode({'communityId': communityId, 'cancelSubscription': cancelSubscription}),
-            headers: {"Content-type": "application/json"},
-        );
-        if(result.statusCode == 200){
-            Map<String, dynamic> resData = json.decode(result.body);
-            return resData['subscriptionCancelledStatus'] ? 1 : 0;
-        }
-    } catch (e) {
-        print(e);
+Future<int> cancelTimebankSubscription(
+    String communityId, bool cancelSubscription) async {
+  // failure is 0, success is 1, error is 2
+  try {
+    http.Response result = await http.post(
+      FlavorConfig.values.cloudFunctionBaseURL + '/cancelRenewSubscription',
+      body: json.encode({
+        'communityId': communityId,
+        'cancelSubscription': cancelSubscription
+      }),
+      headers: {"Content-type": "application/json"},
+    );
+    if (result.statusCode == 200) {
+      Map<String, dynamic> resData = json.decode(result.body);
+      return resData['subscriptionCancelledStatus'] ? 1 : 0;
     }
-    return 2;
+  } catch (e) {
+    logger.e("Exception caugut");
+  }
+  return 2;
 }
-
 
 Stream<List<TimebankModel>> getAllMyTimebanks(
     {@required String timebankId}) async* {
