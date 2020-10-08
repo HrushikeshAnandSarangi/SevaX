@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -531,6 +532,7 @@ class RequestListItemsState extends State<RequestListItems> {
       String userEmail,
       Coordinates currentCoords}) {
     var requestLocation = getLocation(model.address);
+
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -555,7 +557,9 @@ class RequestListItemsState extends State<RequestListItems> {
                         ? Text(requestLocation)
                         : Container(),
                     SizedBox(width: 10),
-                    model.location != null
+                    model.location != null &&
+                            model.sevaUserId !=
+                                SevaCore.of(context).loggedInUser.sevaUserID
                         ? DistanceFromCurrentLocation(
                             currentLocation: currentCoords,
                             coordinates: Coordinates(model.location.latitude,

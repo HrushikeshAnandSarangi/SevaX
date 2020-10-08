@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
@@ -78,22 +79,28 @@ class OfferCard extends StatelessWidget {
                                       selectedAddress: selectedAddress),
                                   icon: Icons.location_on)
                               : Container(),
+                          SizedBox(width: 10),
                           //todo pass current location and location from model
-                          DistanceFromCurrentLocation(
-                            coordinates: offerCoordinates,
-                            currentLocation: userCoordinates,
-                            isKm: true,
-                          ),
+                          !isCreator
+                              ? DistanceFromCurrentLocation(
+                                  coordinates: offerCoordinates,
+                                  currentLocation: userCoordinates,
+                                  isKm: true,
+                                )
+                              : Container(),
                         ],
                       ),
                       Row(
                         children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           Spacer(),
@@ -184,6 +191,7 @@ class OfferCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 5),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         // mainAxisAlignment: offerType == OfferType.GROUP_OFFER
         //     ? MainAxisAlignment.spaceBetween
         //     : MainAxisAlignment.start,
@@ -206,7 +214,6 @@ class OfferCard extends StatelessWidget {
                   ),
                   icon: Icons.access_time)
               : Offstage(),
-
           // getOfferLocation(selectedAddress: selectedAddress) != null
           //     ? getStatsIcon(
           //         label: getOfferLocation(selectedAddress: selectedAddress),
@@ -239,7 +246,7 @@ class OfferCard extends StatelessWidget {
         Icon(
           icon,
           size: 15,
-          color: Colors.grey,
+          color: Colors.black87,
         ),
         SizedBox(
           width: 4,
@@ -248,7 +255,7 @@ class OfferCard extends StatelessWidget {
           label.trim(),
           style: TextStyle(
             fontSize: 13,
-            color: Colors.grey,
+            color: Colors.grey[800],
           ),
         ),
       ],
