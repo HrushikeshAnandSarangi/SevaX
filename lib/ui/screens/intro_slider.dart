@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class Intro extends StatelessWidget {
   final Function onSkip;
@@ -9,14 +13,11 @@ class Intro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.i(">>>>" + AppConfig.remoteConfig.getString('intro_screens'));
+    List<dynamic> introSliderScreenshots =
+        json.decode(AppConfig.remoteConfig.getString('intro_screens'));
     return IntroSlider(
-      data: [
-        'images/intro_screens/Broadcasting_feeds.png',
-        'images/intro_screens/Groups_and_Projects.png',
-        'images/intro_screens/Messaging_and_communication.png',
-        'images/intro_screens/Requests_and_Offers.png',
-        'images/intro_screens/What_is_a_timebank_and_how_can_people_find_and_join_one.png',
-      ],
+      data: [...introSliderScreenshots],
       onSkip: onSkip,
     );
   }
