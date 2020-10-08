@@ -140,8 +140,10 @@ class CommunityModel extends DataModel {
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
   String parentTimebankId;
+  bool subscriptionCancelled;
 
   CommunityModel(Map<String, dynamic> map) {
+    this.subscriptionCancelled = map.containsKey('subscriptionCancelled') && map['subscriptionCancelled'] != null ? map['subscriptionCancelled'] : false;
     this.transactionCount = map.containsKey('transactionCount') && map["transactionCount"] != null ? map['transactionCount'] ?? 0 : null;
     this.taxPercentage = map.containsKey('taxPercentage') && map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
@@ -211,6 +213,9 @@ class CommunityModel extends DataModel {
     if (key == 'billingStmtNo') {
       this.id = value;
     }
+    if (key == 'subscriptionCancelled') {
+        this.id = value;
+    }
     if (key == 'sevaxAccountNo') {
       this.id = value;
     }
@@ -279,7 +284,9 @@ class CommunityModel extends DataModel {
     if (this.taxPercentage != null) {
       object['taxPercentage'] = this.taxPercentage;
     }
-
+    if (this.subscriptionCancelled != null) {
+        object['subscriptionCancelled'] = this.subscriptionCancelled;
+    }
     if (this.id != null && this.id.isNotEmpty) {
       object['id'] = this.id;
     }
