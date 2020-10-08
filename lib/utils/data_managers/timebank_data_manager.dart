@@ -512,7 +512,7 @@ Future<int> changePlan(String communityId, String planId) async {
       return resData['cancellationStatus'] ? 1 : 0;
     }
   } catch (e) {
-    logger.e("Exception caugut");
+    logger.e(e);
   }
   return 2;
 }
@@ -534,7 +534,7 @@ Future<int> cancelTimebankSubscription(
       return resData['subscriptionCancelledStatus'] ? 1 : 0;
     }
   } catch (e) {
-    logger.e("Exception caugut");
+    logger.e(e);
   }
   return 2;
 }
