@@ -555,7 +555,9 @@ class RequestListItemsState extends State<RequestListItems> {
                         ? Text(requestLocation)
                         : Container(),
                     SizedBox(width: 10),
-                    model.location != null
+                    model.location != null ||
+                            model.sevaUserId ==
+                                SevaCore.of(context).loggedInUser
                         ? DistanceFromCurrentLocation(
                             currentLocation: currentCoords,
                             coordinates: Coordinates(model.location.latitude,
