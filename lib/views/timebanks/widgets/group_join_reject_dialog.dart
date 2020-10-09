@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class GroupJoinRejectDialogView extends StatefulWidget {
   final GroupInviteUserModel groupInviteUserModel;
@@ -123,8 +126,8 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
-                    onPressed: () {
-                      declineInvitationRequest(
+                    onPressed: () async {
+                      await declineInvitationRequest(
                           userEmail: widget.userModel.email,
                           notificationId: widget.notificationId);
 
@@ -179,23 +182,30 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
     String notificationId,
     String userEmail,
   }) async {
+    QuerySnapshot invitationSnap = await Firestore.instance
+        .collection('invitations')
+        .where('data.notificationId',isEqualTo: widget.notificationId).getDocuments();
+    String invitationId;
+    invitationSnap.documents.forEach((doc){
+        invitationId = doc.documentID;
+    });
+
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     await Firestore.instance
         .collection('invitations')
-        .document(widget.invitationId)
+        .document(invitationId)
         .updateData(
             {'data.declined': true, 'data.declinedTimestamp': timestamp});
     await Firestore.instance
         .collection('users')
         .document(userEmail)
         .collection('notifications')
-        .document(notificationId)
+        .document(widget.notificationId)
         .updateData({
       'isRead': true,
       'data.declined': true,
-      'data.declinedTimestamp': timestamp,
+      'data.timestamp': timestamp,
     });
-    //  FirestoreManager.readUserNotification(notificationId, userEmail);
   }
 
   Widget _getCloseButton(BuildContext context) {
