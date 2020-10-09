@@ -41,21 +41,47 @@ class MyTaskPage extends StatefulWidget {
 class MyTaskPageState extends State<MyTaskPage> {
   @override
   Widget build(BuildContext context) {
+    UserModel model = SevaCore.of(context).loggedInUser;
+    ;
     return TabBarView(
       controller: widget.controller,
-      children: [MyTasksList(), NotAcceptedTaskList(), CompletedList()],
+      children: [
+        MyTaskList(
+          email: model.email,
+          sevaUserId: model.sevaUserID,
+        ),
+        NotAcceptedTaskList(),
+        CompletedList()
+      ],
     );
   }
 }
 
-class MyTasksList extends StatelessWidget {
+class MyTaskList extends StatefulWidget {
+  final String email;
+  final String sevaUserId;
+
+  MyTaskList({this.email, this.sevaUserId});
+
+  @override
+  State<StatefulWidget> createState() => MyTasksListState();
+}
+
+class MyTasksListState extends State<MyTaskList> {
+  Stream<List<RequestModel>> myTasksStream;
+  @override
+  void initState() {
+    super.initState();
+    myTasksStream = FirestoreManager.getTaskStreamForUserWithEmail(
+      userEmail: widget.email,
+      userId: widget.sevaUserId,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<RequestModel>>(
-      stream: FirestoreManager.getTaskStreamForUserWithEmail(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-      ),
+      stream: myTasksStream,
       builder: (streamContext, snapshot) {
         if (!snapshot.hasData) {
           return Padding(
@@ -88,22 +114,6 @@ class MyTasksList extends StatelessWidget {
         );
       },
     );
-
-    // return FutureBuilder<Object>(
-    //     future: FirestoreManager.getUserForId(
-    //         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasError) {
-    //         return Text(S.of(context).general_stream_error);
-    //       }
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return LoadingIndicator();
-    //       }
-    //       // UserModel userModel = snapshot.data;
-    //       // String usertimezone = userModel.timezone;
-
-    //       return StreamBuilder<List<RequestModel>>();
-    //     });
   }
 
   Widget getTaskWidget(
