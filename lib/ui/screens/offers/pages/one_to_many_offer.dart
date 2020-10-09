@@ -310,9 +310,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         return;
                                       }
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState
-                                              .starttimestamp !=
-                                          0) {
+                                      if (OfferDurationWidgetState.starttimestamp != 0) {
                                         _bloc.startTime =
                                             OfferDurationWidgetState
                                                 .starttimestamp;
@@ -497,74 +495,27 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId);
-//      showDialog(
-//        context: context,
-//        builder: (_context) {
-//          return CalenderEventConfirmationDialog(
-//            title: title,
-//            isrequest: false,
-//            cancelled: () async {
-//              await _bloc.createOneToManyOffer(
-//                  user: SevaCore.of(context).loggedInUser,
-//                  timebankId: widget.timebankId);
-//              Navigator.of(_context).pop();
-//            },
-//            addToCalender: () async {
-//              _bloc.allowedCalenderEvent = true;
-//
-//              await _bloc.createOneToManyOffer(
-//                  user: SevaCore.of(context).loggedInUser,
-//                  timebankId: widget.timebankId);
-//              Navigator.of(_context).pop();
-//            },
-//          );
-//        },
-//      );
     } else {
       _bloc.allowedCalenderEvent = true;
 
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return AddToCalendar(
-                isOfferRequest: null,
-                offer: null,
-                requestModel: null,
-                userModel: null,
-                eventsIdsArr: _bloc.offerIds);
-          },
-        ),
-      );
-//        await _settingModalBottomSheet(context);
-//        showDialog(
-//            context: context,
-//            builder: (_context) {
-//                return CalenderEventConfirmationDialog(
-//                    title: title,
-//                    isrequest: false,
-//                    cancelled: () async {
-//                        await _bloc.createOneToManyOffer(
-//                            user: SevaCore.of(context).loggedInUser,
-//                            timebankId: widget.timebankId);
-//                        Navigator.of(_context).pop();
-//                    },
-//                    addToCalender: () async {
-//                        _bloc.allowedCalenderEvent = true;
-//
-//                        await _bloc.createOneToManyOffer(
-//                            user: SevaCore.of(context).loggedInUser,
-//                            timebankId: widget.timebankId);
-//                        await _settingModalBottomSheet(context);
-//
-//                        Navigator.of(_context).pop();
-//                    },
-//                );
-//            },
-//        );
+      if (_bloc.offerCreatedBool){
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) {
+                      return AddToCalendar(
+                          isOfferRequest: null,
+                          offer: null,
+                          requestModel: null,
+                          userModel: null,
+                          eventsIdsArr: _bloc.offerIds);
+                  },
+              ),
+          );
+      }
     }
   }
 

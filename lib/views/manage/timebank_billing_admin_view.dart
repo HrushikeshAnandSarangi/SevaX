@@ -180,19 +180,16 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             Row(
             children: [
               Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(top: 160),
-              child: FlatButton(
-                child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 18),),
-                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
-                    color: FlavorConfig.values.theme.primaryColor,
-                    width: 1,
-                    style: BorderStyle.solid
-                )),
-              onPressed: () async {
-                  _showCancelConfirmationDialog(context);
-              },),
-            ),
+            FlatButton(
+              child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 18),),
+              shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
+                  color: FlavorConfig.values.theme.primaryColor,
+                  width: 1,
+                  style: BorderStyle.solid
+              )),
+            onPressed: () async {
+                _showCancelConfirmationDialog(context);
+            },),
               Spacer(),
             ],
             )
@@ -461,7 +458,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             children: <Widget>[
               headingText(S.of(context).monthly_subscription),
               Padding(
-                padding: EdgeInsets.only(left: 10, top: 15, right: 10),
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
                 child: IconButton(
                   icon: Icon(
                     Icons.edit,
