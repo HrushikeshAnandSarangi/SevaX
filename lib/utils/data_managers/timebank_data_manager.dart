@@ -4,7 +4,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
@@ -15,7 +16,6 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
@@ -220,53 +220,64 @@ class NearBySettings {
   }
 }
 
-Stream<List<CommunityModel>> getNearCommunitiesListStream(
-    {@required NearBySettings nearbySettings}) async* {
-  // LocationData pos = await location.getLocation();
-  // double lat = pos.latitude;
-  // double lng = pos.longitude;
-  // Location location = Location();
+Stream<List<CommunityModel>> getNearCommunitiesListStream({
+  @required NearBySettings nearbySettings,
+}) async* {
   Geoflutterfire geo = Geoflutterfire();
-  Geolocator geolocator = Geolocator();
-  Position userLocation;
-  userLocation = await geolocator.getCurrentPosition();
-  double lat = userLocation.latitude;
-  double lng = userLocation.longitude;
+  LocationData locationData;
+  Location location = Location();
 
-  //Here get radius from dataabse
+  try {
+    var permission = await location.hasPermission();
+    var serviceEnabled = await location.serviceEnabled();
 
-  var radius = NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
-  log("Getting within the raidus ==> " + radius.toString());
+    if (permission != PermissionStatus.granted || !serviceEnabled) {
+      yield* Stream.error("service disabled");
+    } else {
+      logger.i("fetching location");
+      locationData = await location.getLocation();
 
-  GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('communities');
-  var data = geo.collection(collectionRef: query).within(
-        center: center,
-        radius: radius.toDouble(),
-        field: 'location',
-        strictMode: true,
-      );
-  yield* data.transform(
-    StreamTransformer<List<DocumentSnapshot>,
-        List<CommunityModel>>.fromHandlers(
-      handleData: (snapshot, requestSink) {
-        List<CommunityModel> communityList = [];
-        snapshot.forEach(
-          (documentSnapshot) {
-            CommunityModel model = CommunityModel(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+      double lat = locationData?.latitude;
+      double lng = locationData?.longitude;
 
-            model.softDelete == true || model.private == true
-                ? null
-                : communityList.add(model);
+      //Here get radius from dataabse
 
-            // communityList.add(model);
+      var radius =
+          NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
+      log("Getting within the raidus ==> " + radius.toString());
+
+      GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+      var query = Firestore.instance.collection('communities');
+      var data = geo.collection(collectionRef: query).within(
+            center: center,
+            radius: radius.toDouble(),
+            field: 'location',
+            strictMode: true,
+          );
+      yield* data.transform(
+        StreamTransformer<List<DocumentSnapshot>,
+            List<CommunityModel>>.fromHandlers(
+          handleData: (snapshot, requestSink) {
+            List<CommunityModel> communityList = [];
+            snapshot.forEach(
+              (documentSnapshot) {
+                CommunityModel model = CommunityModel(documentSnapshot.data);
+                model.id = documentSnapshot.documentID;
+
+                model.softDelete == true || model.private == true
+                    ? null
+                    : communityList.add(model);
+              },
+            );
+            requestSink.add(communityList);
           },
-        );
-        requestSink.add(communityList);
-      },
-    ),
-  );
+        ),
+      );
+    }
+  } catch (e) {
+    yield* Stream.error(e);
+    logger.e(e);
+  }
 }
 
 Stream<List<ReportModel>> getReportedUsersStream(
