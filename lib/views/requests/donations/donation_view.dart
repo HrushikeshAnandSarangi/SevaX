@@ -52,8 +52,7 @@ class _DonationViewState extends State<DonationView> {
   );
   UserModel sevaUser = UserModel();
   String none = '';
-  bool autoValidateText = false;
-  bool autoValidateCashText = false;
+
   var focusNodes = List.generate(16, (_) => FocusNode());
   @override
   void initState() {
@@ -188,18 +187,7 @@ class _DonationViewState extends State<DonationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(focusNodes[12]);
@@ -231,18 +219,7 @@ class _DonationViewState extends State<DonationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(focusNodes[12]);
@@ -283,18 +260,7 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
-        autovalidate: autoValidateCashText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateCashText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateCashText = false;
-            });
-          }
-        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[12],
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(focusNodes[13]);
@@ -324,18 +290,7 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
-        autovalidate: autoValidateCashText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateCashText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateCashText = false;
-            });
-          }
-        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[13],
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(focusNodes[14]);
@@ -366,18 +321,7 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
-        autovalidate: autoValidateCashText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateCashText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateCashText = false;
-            });
-          }
-        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[14],
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(focusNodes[15]);
@@ -408,18 +352,7 @@ class _DonationViewState extends State<DonationView> {
         ),
       ),
       TextFormField(
-        autovalidate: autoValidateCashText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateCashText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateCashText = false;
-            });
-          }
-        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNodes[15],
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(focusNodes[15]);
@@ -450,18 +383,7 @@ class _DonationViewState extends State<DonationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(focusNodes[12]);
@@ -541,18 +463,7 @@ class _DonationViewState extends State<DonationView> {
                 ),
               ),
               TextFormField(
-                autovalidate: autoValidateCashText,
-                onChanged: (value) {
-                  if (value.length > 1) {
-                    setState(() {
-                      autoValidateCashText = true;
-                    });
-                  } else {
-                    setState(() {
-                      autoValidateCashText = false;
-                    });
-                  }
-                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focusNodes[1],
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -718,7 +629,7 @@ class _DonationViewState extends State<DonationView> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               if (value.length > 1) {
                 donationsModel.goodsDetails.toAddress = value;

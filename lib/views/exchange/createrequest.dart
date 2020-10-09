@@ -173,8 +173,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   Future getProjectsByFuture;
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
-  bool autoValidateCashText = false;
+
   RegExp regExp = RegExp(
     r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
     caseSensitive: false,
@@ -364,20 +363,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               ),
                             ),
                             TextFormField(
-                              autovalidate: autoValidateText,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               onChanged: (value) {
                                 updateExitWithConfirmationValue(
                                     context, 1, value);
-                                if (value.length > 1 && !autoValidateText) {
-                                  setState(() {
-                                    autoValidateText = true;
-                                  });
-                                }
-                                if (value.length <= 1 && autoValidateText) {
-                                  setState(() {
-                                    autoValidateText = false;
-                                  });
-                                }
                               },
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
@@ -485,18 +475,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 2, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[8],
             onFieldSubmitted: (v) {
@@ -543,18 +524,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 3, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -585,18 +557,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 4, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[13],
             onFieldSubmitted: (v) {
@@ -611,7 +574,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.bank_address = value;
               } else {
-
                 return S.of(context).enter_valid_bank_address;
               }
               return null;
@@ -628,18 +590,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[14],
             onFieldSubmitted: (v) {
@@ -654,7 +607,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.routing_number = value;
               } else {
-
                 return S.of(context).enter_valid_routing_number;
               }
               return null;
@@ -671,18 +623,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[15],
             onFieldSubmitted: (v) {
@@ -715,18 +658,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 7, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -788,18 +722,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 8, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -834,18 +759,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(focusNodes[12]);
@@ -952,19 +867,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 9, value);
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
             },
             focusNode: focusNodes[0],
             onFieldSubmitted: (v) {
@@ -1858,9 +1763,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     log("<<<<<<<<<<<<<<<<<<<< $link");
     // buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-    FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-    }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-    });
+    FirebaseDynamicLinks.instance.onLink(
+        onError: (_) async {},
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {});
 
     // This will handle incoming links if the application is already opened
   }
@@ -2157,8 +2062,6 @@ class GoodsDynamicSelection extends StatefulWidget {
 class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-
-  bool autovalidate = false;
   Map<String, String> goods = {};
   Map<String, String> _selectedGoods = {};
   bool isDataLoaded = false;

@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-10-01T12:30:08+00:00",
+    "@@last_modified": "2020-10-08T15:45:09+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "Die gekose funksie benodig 'n opgegradeerde plan.",
     "plan_upgrade_message_admin": "Kontak die skepper van u Seva-gemeenskap om hierdie funksie te aktiveer",
     "plan_upgrade_message_user": "Kontak die administrateur van u Seva-gemeenskap om hierdie funksie te aktiveer",
-    "seva_community": "Seva Gemeenskap"
+    "seva_community": "Seva Gemeenskap",
+    "venmo_hint": "Verskaf u Venmo-gebruikersnaam",
+    "sevax_global_creation_error": "\"Die SevaX Global Community\" is 'n beskermde gemeenskap. Slegs administrateurs kan hier inhoud plaas",
+    "alert": "Waarskuwing",
+    "cancelled_subscription": "Gekanselleerde intekening",
+    "subscription_cancellation": "Intekening van intekening",
+    "cancellation_failure_message": "Ons het 'n versoek ontvang om u intekening te kanselleer. Alhoewel ons jammer is dat u gaan, is daar tans onbetaalde fooie. Vee hierdie heffings uit en probeer weer om te kanselleer",
+    "cancellation_success_message": "Ons is jammer om jou te sien gaan. U intekening is nou gekanselleer. Aan die einde van die huidige inskrywingstydperk word u kredietkaart nie gehef nie"
 }

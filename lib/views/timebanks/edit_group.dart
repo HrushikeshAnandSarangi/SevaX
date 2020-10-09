@@ -59,7 +59,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   String errTxt;
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   void initState() {
     super.initState();
 
@@ -166,19 +166,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           TextFormField(
             textInputAction: TextInputAction.done,
             controller: searchTextController,
-            autovalidate: autoValidateText,
-            onChanged: (value) {
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               errorMaxLines: 2,
               errorText: errTxt,
@@ -199,19 +187,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           ),
           headingText(S.of(context).about, true),
           TextFormField(
-            autovalidate: autoValidateText,
-            onChanged: (value) {
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: widget.timebankModel.missionStatement ?? "",
             decoration: InputDecoration(
               errorMaxLines: 2,

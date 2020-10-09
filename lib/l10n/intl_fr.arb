@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-10-01T12:30:24+00:00",
+    "@@last_modified": "2020-10-08T15:45:08+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "La fonctionnalité que vous avez choisie nécessite un plan mis à niveau.",
     "plan_upgrade_message_admin": "Veuillez contacter le créateur de votre communauté Seva pour activer cette fonctionnalité",
     "plan_upgrade_message_user": "Veuillez contacter l'administrateur de votre communauté Seva pour activer cette fonctionnalité",
-    "seva_community": "Communauté Seva"
+    "seva_community": "Communauté Seva",
+    "venmo_hint": "Indiquez votre nom d'utilisateur Venmo",
+    "sevax_global_creation_error": "«La communauté mondiale SevaX» est une communauté protégée. Seuls les administrateurs peuvent publier du contenu ici",
+    "alert": "Alerte",
+    "cancelled_subscription": "Abonnement annulé",
+    "subscription_cancellation": "Annulation d'abonnement",
+    "cancellation_failure_message": "Nous avons reçu une demande d'annulation de votre abonnement. Nous sommes désolés de vous voir partir, mais il y a des cotisations impayées en ce moment. Veuillez effacer ces frais et tenter à nouveau l'annulation",
+    "cancellation_success_message": "Nous sommes navrés de vous voir partir. Votre abonnement est maintenant annulé. À compter de la fin de la période d'abonnement en cours, votre carte de crédit ne sera pas débitée"
 }

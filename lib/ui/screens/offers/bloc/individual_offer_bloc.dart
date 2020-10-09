@@ -29,7 +29,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
       GoodsDonationDetails(address: '', donors: [], requiredGoods: {}));
 
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
 
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;

@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-01T12:31:19+00:00",
+    "@@last_modified": "2020-10-08T15:45:09+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "Kipengele ulichochagua kinahitaji mpango ulioboreshwa.",
     "plan_upgrade_message_admin": "Tafadhali wasiliana na muundaji wa Jumuiya yako ya Seva ili kuamsha huduma hii",
     "plan_upgrade_message_user": "Tafadhali wasiliana na msimamizi wa Jumuiya yako ya Seva ili kuamsha huduma hii",
-    "seva_community": "Jamii ya Seva"
+    "seva_community": "Jamii ya Seva",
+    "venmo_hint": "Toa jina lako la mtumiaji la Venmo",
+    "sevax_global_creation_error": "\"Jumuiya ya SevaX Global\" ni jamii inayolindwa. Admins tu ndio wanaweza kutuma yaliyomo hapa",
+    "alert": "Tahadhari",
+    "cancelled_subscription": "Usajili umeghairiwa",
+    "subscription_cancellation": "Kughairi usajili",
+    "cancellation_failure_message": "Tumepokea ombi la kughairi usajili wako. Wakati tunasikitika kukuona ukienda, kuna malipo ambayo hayajalipwa kwa wakati huu. Tafadhali futa haki hizi kisha ujaribu kughairi tena",
+    "cancellation_success_message": "Tunasikitika kukuona ukienda. Usajili wako sasa umeghairiwa. Kuanzia mwisho wa kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa"
 }

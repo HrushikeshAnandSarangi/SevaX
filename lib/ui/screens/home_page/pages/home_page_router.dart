@@ -109,7 +109,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 body: StreamBuilder(
-                  // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
                   stream: CombineLatestStream.combine2(_userBloc.userStream,
                       _userBloc.comunityStream, (u, c) => true),
                   builder: (context, AsyncSnapshot<bool> snapshot) {

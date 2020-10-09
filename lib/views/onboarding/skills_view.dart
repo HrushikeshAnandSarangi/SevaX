@@ -39,7 +39,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  bool autovalidate = false;
+
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
   bool isDataLoaded = false;

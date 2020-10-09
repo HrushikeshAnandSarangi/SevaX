@@ -88,9 +88,8 @@ void showAdminAccessMessage({BuildContext context}) {
     builder: (BuildContext _context) {
       // return object of type Dialog
       return AlertDialog(
-        title: Text('Alert'),
-        content:
-            Text('Only Admins can create content in Sevax Global Community'),
+        title: Text(S.of(context).alert),
+        content: Text(S.of(context).sevax_global_creation_error),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           FlatButton(

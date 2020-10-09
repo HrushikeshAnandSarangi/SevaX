@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-10-01T12:30:36+00:00",
+    "@@last_modified": "2020-10-08T15:45:09+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -1009,5 +1009,12 @@
     "needs_upgraded_plan": "Chinhu chawakasarudza chinoda chirongwa chakakwidziridzwa.",
     "plan_upgrade_message_admin": "Ndokumbira kuti ubate iye mugadziri weSeva Nharaunda yako kuti umise chinhu ichi",
     "plan_upgrade_message_user": "Ndokumbira kuti ubate admin weSeva Nharaunda yako kuti umise chinhu ichi",
-    "seva_community": "Seva Nharaunda"
+    "seva_community": "Seva Nharaunda",
+    "venmo_hint": "Ipa zita rako rezita reVenmo",
+    "sevax_global_creation_error": "\"Iyo SevaX Global Nharaunda\" inharaunda yakachengetedzwa. MaAdmin chete ndiwo anogona kutumira zvemukati pano",
+    "alert": "Alert",
+    "cancelled_subscription": "Kukanzurwa kunyoreswa",
+    "subscription_cancellation": "Kunyoreswa kukanzura",
+    "cancellation_failure_message": "Isu takagamuchira chikumbiro chekudzima kunyorera kwako. Nepo tine urombo kukuona iwe uchienda, kune vasina kubhadhara mari panguva ino. Ndokumbirawo ubvise izvi zvakafanira wobva waedza kudzima zvakare",
+    "cancellation_success_message": "Tine hurombo kukuona uchienda. Kunyoresa kwako kwadzimwa. Kutanga pakupera kwenguva yezvino yekunyorera, kiredhiti kadhi yako haibhadhariswe"
 }

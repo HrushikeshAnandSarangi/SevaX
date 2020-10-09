@@ -168,8 +168,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   Future getProjectsByFuture;
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
-  bool autoValidateCashText = false;
+
   RegExp regExp = RegExp(
     r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
     caseSensitive: false,
@@ -360,20 +359,11 @@ class RequestEditFormState extends State<RequestEditForm> {
                               ),
                             ),
                             TextFormField(
-                              autovalidate: autoValidateText,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               onChanged: (value) {
                                 updateExitWithConfirmationValue(
                                     context, 1, value);
-                                if (value.length > 1 && !autoValidateText) {
-                                  setState(() {
-                                    autoValidateText = true;
-                                  });
-                                }
-                                if (value.length <= 1 && autoValidateText) {
-                                  setState(() {
-                                    autoValidateText = false;
-                                  });
-                                }
                               },
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
@@ -481,18 +471,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 2, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[8],
             onFieldSubmitted: (v) {
@@ -535,19 +516,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: requestModel.cashModel.achdetails.bank_name,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 3, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -578,19 +550,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: requestModel.cashModel.achdetails.bank_address,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 4, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[13],
             onFieldSubmitted: (v) {
@@ -621,19 +584,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: requestModel.cashModel.achdetails.routing_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 5, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[14],
             onFieldSubmitted: (v) {
@@ -664,19 +618,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
           ),
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: requestModel.cashModel.achdetails.account_number,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 6, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[15],
             onFieldSubmitted: (v) {
@@ -711,18 +656,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 7, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -773,18 +709,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 8, value);
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
             },
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
@@ -822,18 +749,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
             focusNode: focusNodes[12],
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(focusNodes[12]);
@@ -841,7 +758,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: S.of(context).venmo_hint,
               hintStyle: hintTextStyle,
             ),
             initialValue: requestModel.cashModel.venmoId ?? '',
@@ -853,9 +770,11 @@ class RequestEditFormState extends State<RequestEditForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              } else if (!emailPattern.hasMatch(value)) {
-                return S.of(context).enter_valid_link;
-              } else {
+              }
+              // else if (!emailPattern.hasMatch(value)) {
+              //   return S.of(context).enter_valid_link;
+              // }
+              else {
                 widget.requestModel.cashModel.venmoId = value;
 
                 return null;
@@ -944,57 +863,48 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   Widget RequestDescriptionData(hintTextDesc) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).request_description,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          S.of(context).request_description,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
           ),
-          TextFormField(
-            autovalidate: autoValidateText,
-            onChanged: (value) {
-              updateExitWithConfirmationValue(context, 9, value);
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
-            },
-            focusNode: focusNodes[0],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
-            },
-            textInputAction: TextInputAction.next,
-            maxLength: 500,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: hintTextDesc,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.description,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              }
-              widget.requestModel.description = value;
-            },
+        ),
+        TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          onChanged: (value) {
+            updateExitWithConfirmationValue(context, 9, value);
+          },
+          focusNode: focusNodes[0],
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).requestFocus(focusNodes[1]);
+          },
+          textInputAction: TextInputAction.next,
+          maxLength: 500,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: hintTextDesc,
+            hintStyle: hintTextStyle,
           ),
-        ]);
+          initialValue: widget.requestModel.description,
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            }
+            if (profanityDetector.isProfaneString(value)) {
+              return S.of(context).profanity_text_alert;
+            }
+            widget.requestModel.description = value;
+          },
+        ),
+      ],
+    );
   }
 
   Widget RequestTypeWidget() {

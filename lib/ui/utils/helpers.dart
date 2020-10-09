@@ -3,6 +3,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
 //Fetch location
@@ -79,9 +80,11 @@ Future<Coordinates> findcurrentLocation() async {
   final Location _location = Location();
   PermissionStatus status = await _location.hasPermission();
   if (status != PermissionStatus.granted) {
+    logger.e("Permission not granted");
     throw "No Location";
   }
   if (!await _location.serviceEnabled()) {
+    logger.e("Service Disabled");
     throw "No Location";
   }
   LocationData location = await _location.getLocation();
