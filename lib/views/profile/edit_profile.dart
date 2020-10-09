@@ -75,7 +75,6 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
 
   @override
   void initState() {
@@ -810,12 +809,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     hintText: S.of(context).enter_name,
                     errorMaxLines: 2,
                   ),
-                  autovalidate: autoValidateText,
-                  onChanged: (value) {
-                    setState(() {
-                      autoValidateText = value.length > 1;
-                    });
-                  },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -909,20 +903,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  autovalidate: autoValidateText,
-                  //key: _formKey,
-                  onChanged: (value) {
-                    if (value.length > 1 && !autoValidateText) {
-                      setState(() {
-                        autoValidateText = true;
-                      });
-                    }
-                    if (value.length <= 1 && autoValidateText) {
-                      setState(() {
-                        autoValidateText = false;
-                      });
-                    }
-                  },
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     errorMaxLines: 2,
                     hintText: S.of(context).enter_bio,
@@ -933,7 +914,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
                   initialValue: widget.userModel.bio,
-
                   validator: (value) {
                     if (value.isEmpty) {
                       return S.of(context).update_bio_hint;

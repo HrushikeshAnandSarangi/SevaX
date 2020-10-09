@@ -55,10 +55,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   DeviceModel deviceModel = DeviceModel();
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     getDeviceDetails();
@@ -351,19 +350,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 textCapitalization: TextCapitalization.sentences,
                 controller: myCommentsController,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
-                autovalidate: autoValidateText,
-                onChanged: (value) {
-                  if (value.length > 1 && !autoValidateText) {
-                    setState(() {
-                      autoValidateText = true;
-                    });
-                  }
-                  if (value.length <= 1 && autoValidateText) {
-                    setState(() {
-                      autoValidateText = false;
-                    });
-                  }
-                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onChanged: (value) {},
                 decoration: InputDecoration(
                   errorMaxLines: 2,
 

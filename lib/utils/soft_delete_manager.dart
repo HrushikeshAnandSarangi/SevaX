@@ -56,7 +56,6 @@ Future<void> showAdvisoryBeforeDeletion({
   bool isAccedentalDeleteEnabled,
 }) async {
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
   progressDialog = ProgressDialog(
     context,
     type: ProgressDialogType.Normal,
@@ -116,14 +115,7 @@ Future<void> showAdvisoryBeforeDeletion({
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50),
                     ],
-                    autovalidate: autoValidateText,
-                    onChanged: (value) {
-                      if (value.length > 1) {
-                        autoValidateText = true;
-                      } else {
-                        autoValidateText = false;
-                      }
-                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       if (value.isEmpty) {
                         return S.of(context).enter_reason_to_delete_error;

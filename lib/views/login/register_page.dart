@@ -77,8 +77,6 @@ class _RegisterPageState extends State<RegisterPage>
 
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
-  List<bool> autoValidateTexts = [true, true, false, false];
 
   @override
   void initState() {
@@ -260,80 +258,6 @@ class _RegisterPageState extends State<RegisterPage>
           S.of(context).validation_error_cv_size,
           style: TextStyle(color: Colors.grey),
         ),
-//        Text(
-//          cvFileError,
-//          style: TextStyle(color: Colors.red),
-//        ),
-//        Row(
-//          mainAxisAlignment: MainAxisAlignment.end,
-//          children: <Widget>[
-//            Padding(
-//              padding: const EdgeInsets.only(top: 5),
-//              child: Container(
-//                height: 30,
-//                child: RaisedButton(
-//                  onPressed: () async {
-//                    var connResult = await Connectivity().checkConnectivity();
-//                    if (connResult == ConnectivityResult.none) {
-//                      _scaffoldKey.currentState.showSnackBar(
-//                        SnackBar(
-//                          content: Text(AppLocalizations.of(context)
-//                              .translate('shared', 'check_internet')),
-//                          action: SnackBarAction(
-//                            label: AppLocalizations.of(context)
-//                                .translate('shared', 'dismiss'),
-//                            onPressed: () =>
-//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
-//                          ),
-//                        ),
-//                      );
-//                      return;
-//                    }
-//                    if (cvUrl == null ||
-//                        cvUrl == '' ||
-//                        cvName == '' ||
-//                        cvName == null) {
-//                      setState(() {
-//                        this.cvFileError = AppLocalizations.of(context)
-//                            .translate('cv', 'cv_error');
-//                      });
-//                    } else {
-//                      await updateCV();
-//                      _scaffoldKey.currentState.showSnackBar(
-//                        SnackBar(
-//                          content: Text(
-//                            AppLocalizations.of(context)
-//                                .translate('upload_csv', 'upload_success'),
-//                          ),
-//                          action: SnackBarAction(
-//                            label: AppLocalizations.of(context)
-//                                .translate('shared', 'dismiss'),
-//                            onPressed: () =>
-//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
-//                          ),
-//                        ),
-//                      );
-//                      setState(() {
-//                        this.cvFileError = '';
-//                        this.canuploadCV = false;
-//                      });
-//                    }
-//                  },
-//                  child: Text(
-//                    AppLocalizations.of(context)
-//                        .translate('upload_csv', 'upload'),
-//                    textAlign: TextAlign.center,
-//                    style: TextStyle(
-//                      fontSize: 12,
-//                    ),
-//                  ),
-//                  color: Colors.grey[300],
-//                  shape: StadiumBorder(),
-//                ),
-//              ),
-//            ),
-//          ],
-//        ),
         SizedBox(
           height: 15,
         ),
@@ -516,22 +440,10 @@ class _RegisterPageState extends State<RegisterPage>
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: TextFormField(
-        autovalidate: focusNode == emailFocus ? false : autoValidateText,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
         enabled: !isLoading,
-        onChanged: (value) {
-          if (value.length > 1 && !autoValidateText) {
-            setState(() {
-              autoValidateText = true;
-            });
-          }
-          if (value.length <= 1 && autoValidateText) {
-            setState(() {
-              autoValidateText = false;
-            });
-          }
-        },
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,

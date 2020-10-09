@@ -31,8 +31,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   String selectedAddress;
   CustomLocation customLocation;
-  bool autoValidateText = false;
-  bool autoValidateCashText = false;
+
   String title = '';
 
   FocusNode _title = FocusNode();

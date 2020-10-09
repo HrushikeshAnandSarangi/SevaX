@@ -48,7 +48,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   BuildContext progressContext;
   var scollContainer = ScrollController();
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   @override
   void initState() {
     super.initState();
@@ -457,18 +457,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.city = value;
           },
           focusNode: focusNodes[0],
@@ -494,18 +484,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.state = value;
           },
           validator: (value) {
@@ -578,18 +558,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
@@ -615,23 +585,13 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
             },
-            autovalidate: autoValidateText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
               return (profanityDetector.isProfaneString(value))
                   ? S.of(context).profanity_text_alert
                   : null;
             },
             onChanged: (value) {
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
               communityModel.billing_address.street_address2 = value;
             },
             focusNode: focusNodes[5],
@@ -652,18 +612,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.country = value;
           },
           validator: (value) {
@@ -690,18 +640,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[7]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.companyname = value;
           },
           validator: (value) {
