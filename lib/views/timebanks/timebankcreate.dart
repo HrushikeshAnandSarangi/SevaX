@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -139,7 +140,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-
+    selectedUsers.forEach((key, value) {
+        members.add(value.sevaUserID);
+    });
+    Set<String> membersSet = members.toList().toSet();
     String id = Utils.getUuid();
     timebankModel.id = id;
     timebankModel.communityId =
@@ -150,7 +154,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
     timebankModel.emailId = SevaCore.of(context).loggedInUser.email;
     timebankModel.coordinators = [];
-    timebankModel.members = members;
+    timebankModel.members = membersSet.toList();
     timebankModel.children = [];
     timebankModel.balance = 0;
     timebankModel.protected = false;
@@ -409,7 +413,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             timebankImage: timebankModel.photoUrl,
             aboutTimebank: timebankModel.missionStatement,
             adminName: SevaCore.of(context).loggedInUser.fullname,
-            groupId: timebankModel.id);
+            groupId: timebankModel.id,
+        );
 
         NotificationsModel notification = NotificationsModel(
             id: utils.Utils.getUuid(),
@@ -447,6 +452,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (onActivityResult != null &&
         onActivityResult.containsKey("membersSelected")) {
       selectedUsers = onActivityResult['membersSelected'];
+      log("$selectedUsers");
       setState(() {
         if (selectedUsers.length == 0)
           memberAssignment = S.of(context).assign_to_volunteers;
