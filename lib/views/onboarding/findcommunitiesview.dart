@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -58,7 +59,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   void initState() {
     gpsCheck();
-
     super.initState();
     String _searchText = "";
 
@@ -99,7 +99,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       resizeToAvoidBottomInset: false,
       appBar: !showAppbar
           ? AppBar(
-              // automaticallyImplyLeading: widget.keepOnBackPress,
               automaticallyImplyLeading: false,
               elevation: 0.5,
               actions: <Widget>[
@@ -139,7 +138,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   fontSize: 18,
                 ),
               ),
-              centerTitle: true,
+              titleSpacing: 0,
             )
           : null,
       body: searchTeams(),
@@ -425,6 +424,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   void gpsCheck() async {
+    logger.i("check gps");
+
     try {
       Location templocation = Location();
       bool _serviceEnabled;
@@ -433,23 +434,30 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       _serviceEnabled = await templocation.serviceEnabled();
       if (!_serviceEnabled) {
         _serviceEnabled = await templocation.requestService();
+        logger.i("requesting location");
+
         if (!_serviceEnabled) {
           return;
+        } else {
+          setState(() {});
         }
       }
 
       _permissionGranted = await templocation.hasPermission();
       if (_permissionGranted == PermissionStatus.denied) {
         _permissionGranted = await templocation.requestPermission();
+        logger.i("requesting location");
         if (_permissionGranted != PermissionStatus.granted) {
           return;
+        } else {
+          setState(() {});
         }
       }
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
-        //error = e.message;
+        logger.e(e);
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        //error = e.message;
+        logger.e(e);
       }
     }
   }
@@ -472,7 +480,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     bottom: 180,
                     top: 5.0,
                   ), //to avoid keyboard overlap //temp fix neeeds to be changed
-
                   shrinkWrap: true,
                   itemCount: communityList.length,
                   itemBuilder: (BuildContext context, int index) {

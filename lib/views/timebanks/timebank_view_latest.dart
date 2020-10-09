@@ -107,27 +107,28 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 10,
             ),
+            // todo:: removed Part of sevax global community
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20.0, bottom: 10, top: 5),
+            //   child: RichText(
+            //     text:
+            //         TextSpan(style: TextStyle(color: Colors.black), children: [
+            //       TextSpan(
+            //         text: S.of(context).part_of,
+            //         style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
+            //       ),
+            //       TextSpan(
+            //         text: " ${S.of(context).global_timebank}.",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             fontFamily: 'Europa'),
+            //       )
+            //     ]),
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, bottom: 10, top: 5),
-              child: RichText(
-                text:
-                    TextSpan(style: TextStyle(color: Colors.black), children: [
-                  TextSpan(
-                    text: S.of(context).part_of,
-                    style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
-                  ),
-                  TextSpan(
-                    text: " ${S.of(context).global_timebank}.",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa'),
-                  )
-                ]),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.only(left: 20.0, top: 5),
               child: Text(
                 widget.timebankModel.name ?? " ",
                 style: TextStyle(
