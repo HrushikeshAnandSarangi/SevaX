@@ -95,7 +95,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                       ),
                       Tab(
                         text:
-                            "${S.of(context).groups_within} ${snapshot.data.name ?? "Timebank"}  ",
+                            "${S.of(context).groups_within} ${snapshot.data.name ?? S.of(context).timebank}  ",
                       ),
                     ],
                   ),

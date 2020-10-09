@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -417,7 +416,7 @@ class S {
       );
 
   String get timebank => Intl.message(
-        'Timebank',
+        'Seva Community',
         name: 'timebank',
       );
 
@@ -2532,7 +2531,7 @@ class S {
       );
 
   String get plan_yearly_1500 => Intl.message(
-        'paying yearly for \\\$1500 and additional charges of',
+        'paying yearly for \$1500 and additional charges of',
         name: 'plan_yearly_1500',
       );
 
@@ -3207,7 +3206,7 @@ class S {
       );
 
   String get find_timebanks => Intl.message(
-        'Find Timebanks',
+        'Find Seva Communities',
         name: 'find_timebanks',
       );
 
@@ -3422,7 +3421,7 @@ class S {
       );
 
   String get updating_users => Intl.message(
-        'Updating Users',
+        'Updating Members',
         name: 'updating_users',
       );
 
@@ -3833,75 +3832,61 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
+        name: 'hour',        
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4037,13 +4022,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4753,12 +4738,12 @@ class S {
       );
 
   String get imageurl_alert => Intl.message(
-        'Web Image url alert',
+        'Web Image URL alert',
         name: 'imageurl_alert',
       );
 
   String get image_url_alert_desc => Intl.message(
-        'Please add a image url to continue',
+        'Please add a image URL to continue',
         name: 'image_url_alert_desc',
       );
 
@@ -4913,17 +4898,17 @@ class S {
       );
 
   String get offerReview => Intl.message(
-        'Body: You have received a review for the offer:',
+        'You have received a review for the offer:',
         name: 'offerReview',
       );
 
   String get request_review_body_creator => Intl.message(
-        'Body: You have received a review for the request:',
+        'You have received a review for the request:',
         name: 'request_review_body_creator',
       );
 
   String get request_review_body_user => Intl.message(
-        'Body: You have received a review on the work that you did for the request:',
+        'You have received a review on the work that you did for the request:',
         name: 'request_review_body_user',
       );
 
@@ -5096,34 +5081,69 @@ class S {
         'Seva Community',
         name: 'seva_community',
       );
+
+  String get venmo_hint => Intl.message(
+        'Provide your Venmo username',
+        name: 'venmo_hint',
+      );
+
+  String get sevax_global_creation_error => Intl.message(
+        '\"The SevaX Global Community\" is a protected community. Only Admins can post content here',
+        name: 'sevax_global_creation_error',
+      );
+
+  String get alert => Intl.message(
+        'Alert',
+        name: 'alert',
+      );
+
+  String get cancelled_subscription => Intl.message(
+        'Canceled subscription',
+        name: 'cancelled_subscription',
+      );
+
+  String get subscription_cancellation => Intl.message(
+        'Subscription cancelation',
+        name: 'subscription_cancellation',
+      );
+
+  String get cancellation_failure_message => Intl.message(
+        'We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again',
+        name: 'cancellation_failure_message',
+      );
+
+  String get cancellation_success_message => Intl.message(
+        'We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged',
+        name: 'cancellation_success_message',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: "CN"),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: "TW"),
-        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fr'),
-      ];
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
+  ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
+        'en',
         'es',
+        'fr',
         'pt',
         'sn',
-        'zh',
-        'zh',
-        'af',
         'sw',
-        'en',
-        'fr',
+        'zh',
+        'zh',
       ].contains(locale.languageCode);
 
   @override
