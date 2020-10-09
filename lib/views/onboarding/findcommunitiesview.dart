@@ -139,7 +139,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   fontSize: 18,
                 ),
               ),
-              centerTitle: true,
+              titleSpacing: 0,
             )
           : null,
       body: searchTeams(),
@@ -458,7 +458,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         }
       }
     } on PlatformException catch (e) {
-
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
@@ -477,7 +476,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return LoadingIndicator();
           }
           if (snapshot.hasData) {
-
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
 
@@ -547,7 +545,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     String seveaUserId,
   ) {
     if (communityModel.members.contains(widget.loggedInUser.sevaUserID)) {
-
       return CompareUserStatus.JOINED;
     } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
       //
@@ -623,9 +620,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         ),
                       ),
                     );
-                  } else {
-
-                  }
+                  } else {}
                 },
               ),
               SizedBox(height: 20),
