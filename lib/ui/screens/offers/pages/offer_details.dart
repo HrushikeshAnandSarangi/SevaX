@@ -485,11 +485,7 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          bool isAccepted =
-                              getOfferParticipants(offerDataModel: offerModel)
-                                  .contains(
-                            userId,
-                          );
+                          bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(userId);
                           if (offerModel.type == RequestType.CASH &&
                               !isAccepted) {
                             navigateToDonations(context, offerModel);
