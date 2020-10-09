@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
@@ -243,15 +244,18 @@ class CreateEditCommunityViewFormState
 
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    selectedAddress = timebankModel.address;
+    location = timebankModel.location;
+
     if (timebankModel != null &&
-        timebankModel.associatedParentTimebankId != null) {
+        timebankModel.associatedParentTimebankId != null &&
+        timebankModel.associatedParentTimebankId.isNotEmpty) {
       parentTimebank = await FirestoreManager.getTimeBankForId(
           timebankId: timebankModel.associatedParentTimebankId);
       selectedTimebank = parentTimebank.name;
     }
 
-    selectedAddress = timebankModel.address;
-    location = timebankModel.location;
+    logger.i('location', selectedAddress + location.toString());
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
     setState(() {});
