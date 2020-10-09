@@ -931,9 +931,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         return AlertDialog(
           content: Text(
             isSuccess == 1
-                ? "We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged and you will be downgraded to the (free) neighborhood plan"
+                ? S.of(context).cancellation_success_message
                 : isSuccess == 0
-                    ? "We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again"
+                    ? S.of(context).cancellation_failure_message
                           : S.of(context).general_stream_error,
                   ),
                   actions: <Widget>[
