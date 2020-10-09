@@ -43,6 +43,7 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
   NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
   NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,
+  NotificationType.RequestApprove,
 ];
 
 //Not dismissiable notifications
