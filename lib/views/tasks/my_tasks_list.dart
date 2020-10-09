@@ -51,193 +51,161 @@ class MyTaskPageState extends State<MyTaskPage> {
 class MyTasksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
-        future: FirestoreManager.getUserForId(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(S.of(context).general_stream_error);
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          }
-          UserModel userModel = snapshot.data;
-          String usertimezone = userModel.timezone;
-
-          return StreamBuilder<List<RequestModel>>(
-            stream: FirestoreManager.getTaskStreamForUserWithEmail(
-                userEmail: SevaCore.of(context).loggedInUser.email,
-                userId: SevaCore.of(context).loggedInUser.sevaUserID),
-            builder: (streamContext, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: LoadingIndicator(),
-                );
-              }
-              List<RequestModel> requestModelList = snapshot.data;
-              if (requestModelList.length == 0) {
-                // return ListView.builder(
-                //   itemBuilder: (context, index) => Text(index.toString()),
-                //   itemCount: 100,
-                // );
-                return Padding(
-                  padding: const EdgeInsets.only(top: 58.0),
-                  child: Text(
-                    S.of(context).no_pending_task,
-                    textAlign: TextAlign.center,
-                  ),
-                );
-              }
-              return ListView.builder(
-                itemCount: requestModelList.length,
-                itemBuilder: (listContext, index) {
-                  RequestModel model = requestModelList[index];
-
-                  return getTaskWidget(model, usertimezone);
-
-                  return Container(
-                    padding: EdgeInsets.only(
-                      top: 5.0,
-                      bottom: 5.0,
-                      left: 30.0,
-                      right: 15.0,
-                    ),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage(_getPostItColor(model)),
-                      ),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        model.title,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text(model.fullName),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return TaskCardView(
-                                requestModel: model,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              );
-            },
+    return StreamBuilder<List<RequestModel>>(
+      stream: FirestoreManager.getTaskStreamForUserWithEmail(
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ),
+      builder: (streamContext, snapshot) {
+        if (!snapshot.hasData) {
+          return Padding(
+            padding: EdgeInsets.all(8.0),
+            child: LoadingIndicator(),
           );
-        });
+        }
+        List<RequestModel> requestModelList = snapshot.data;
+        if (requestModelList.length == 0) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 58.0),
+            child: Text(
+              S.of(context).no_pending_task,
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+        return ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: requestModelList.length,
+          itemBuilder: (listContext, index) {
+            RequestModel model = requestModelList[index];
+
+            return getTaskWidget(
+              model,
+              SevaCore.of(context).loggedInUser.timezone,
+              context,
+            );
+          },
+        );
+      },
+    );
+
+    // return FutureBuilder<Object>(
+    //     future: FirestoreManager.getUserForId(
+    //         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) {
+    //         return Text(S.of(context).general_stream_error);
+    //       }
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return LoadingIndicator();
+    //       }
+    //       // UserModel userModel = snapshot.data;
+    //       // String usertimezone = userModel.timezone;
+
+    //       return StreamBuilder<List<RequestModel>>();
+    //     });
   }
 
   Widget getTaskWidget(
     RequestModel model,
     String userTimezone,
+    BuildContext context,
   ) {
-    return FutureBuilder<UserModel>(
-        future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return taskShimmer;
-          }
-
-          UserModel user = snapshot.data;
-
-          if (user == null) {
-            return Container();
-          }
-
-          DateFormat format = DateFormat(
-              'dd/MM/yy hh:mm a',
-              Locale(AppConfig.prefs.getString('language_code'))
-                  .toLanguageTag());
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                shadows: shadowList,
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return TaskCardView(
-                          requestModel: model,
-                          userTimezone: userTimezone,
-                        );
-                      },
-                    ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          shadows: shadowList,
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return TaskCardView(
+                    requestModel: model,
+                    userTimezone: userTimezone,
                   );
                 },
-                child: ListTile(
-                  title: Text(
-                    model.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(user != null && user.fullname != null
-                          ? user.fullname
-                          : ''),
-                      SizedBox(height: 4),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        //runAlignment: WrapAlignment.center,
-                        spacing: 8,
-                        children: <Widget>[
-                          Text(
-                            getTimeFormattedString(
-                                model.requestStart, userTimezone),
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.black,
-                            size: 14,
-                          ),
-                          Text(
-                            getTimeFormattedString(
-                                model.requestEnd, userTimezone),
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(user.photoURL ?? defaultUserImageURL),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return TaskCardView(
-                            requestModel: model,
-                            userTimezone: userTimezone,
-                          );
-                        },
-                      ),
+              ),
+            );
+          },
+          child: ListTile(
+            title: Text(
+              model.title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(model.fullName),
+                SizedBox(height: 4),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  //runAlignment: WrapAlignment.center,
+                  spacing: 8,
+                  children: <Widget>[
+                    Text(
+                      getTimeFormattedString(model.requestStart, userTimezone),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                    Text(
+                      getTimeFormattedString(model.requestEnd, userTimezone),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            leading: CircleAvatar(
+              backgroundImage:
+                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TaskCardView(
+                      requestModel: model,
+                      userTimezone: userTimezone,
                     );
                   },
                 ),
-              ),
-            ),
-          );
-        });
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    // return FutureBuilder<UserModel>(
+    //     future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) return Text(snapshot.error.toString());
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return taskShimmer;
+    //       }
+
+    //       UserModel user = snapshot.data;
+
+    //       if (user == null) {
+    //         return Container();
+    //       }
+
+    //       // DateFormat format = DateFormat(
+    //       //     'dd/MM/yy hh:mm a',
+    //       //     Locale(AppConfig.prefs.getString('language_code'))
+    //       //         .toLanguageTag());
+
+    //     });
   }
 
   String getTime(int timeInMilliseconds, String timezoneAbb) {
