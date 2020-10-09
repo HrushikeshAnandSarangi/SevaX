@@ -36,10 +36,12 @@ class DistanceFromCurrentLocation extends StatelessWidget {
                 child: isKm
                     ? Text(
                         '${distanceConvertorForKm(distance)}',
+                        overflow: TextOverflow.ellipsis,
                         style: textStyle,
                       )
                     : Text(
                         '${miles(distance)} Miles',
+                        overflow: TextOverflow.ellipsis,
                         style: textStyle,
                       ),
               ),
