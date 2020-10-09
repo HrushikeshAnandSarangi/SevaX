@@ -175,35 +175,31 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             cardsHeadingWidget(_bloc),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
-            _bloc.community.payment['planId'] ==
-                    SevaBillingPlans.NEIGHBOUR_HOOD_PLAN
-                ? Container()
-                : Row(
-                    children: [
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 160),
-                        child: FlatButton(
-                          child: Text(
-                            "Cancel Subscription",
-                            style: TextStyle(
-                                color: FlavorConfig.values.theme.primaryColor,
-                                fontSize: 18),
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              side: BorderSide(
-                                  color: FlavorConfig.values.theme.primaryColor,
-                                  width: 1,
-                                  style: BorderStyle.solid)),
-                          onPressed: () async {
-                            _showCancelConfirmationDialog(context);
-                          },
-                        ),
-                      ),
-                      Spacer(),
-                    ],
-                  )
+              _bloc.community.payment['planId'] == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ? Container() :
+            Column(
+              children: [
+                  SizedBox(
+                      height:70
+                  ),
+                Row(
+                children: [
+                  Spacer(),
+                FlatButton(
+                  child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 14),),
+                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
+                      color: FlavorConfig.values.theme.primaryColor,
+                      width: 1,
+                      style: BorderStyle.solid
+                  )),
+                onPressed: () async {
+                    _showCancelConfirmationDialog(context);
+                },),
+                  Spacer(),
+                ],
+                ),
+              ],
+            )
+
           ],
         ),
       ),
@@ -211,40 +207,38 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   void _showCancelConfirmationDialog(BuildContext parentContext) {
-    showDialog(
-      context: parentContext,
-      barrierDismissible: true,
-      builder: (_context) {
-        return AlertDialog(
-          title: Text(
-            "Cancel Subscription",
-            textAlign: TextAlign.center,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text("Are you sure ?"),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                children: <Widget>[
-                  Spacer(),
-                  RaisedButton(
-                    padding: EdgeInsets.fromLTRB(14, 5, 14, 5),
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    child: Text(
-                      S.of(context).yes,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: dialogButtonSize,
-                      ),
-                    ),
-                    onPressed: () async {
-                      Navigator.pop(_context);
-                      log("subscribe cancel button condition ${communityModel.payment['planId']}");
-                      _changePlanAlert(context);
+      showDialog(
+          context: parentContext,
+          barrierDismissible: true,
+          builder: (_context) {
+              return AlertDialog(
+                  title:Text("Cancel Subscription", textAlign: TextAlign.center,),
+
+                  content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                          Text("Are you sure ?"),
+                          SizedBox(
+                              height: 15,
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  RaisedButton(
+                                      padding: EdgeInsets.fromLTRB(14, 5, 14, 5),
+                                      color: Theme.of(context).accentColor,
+                                      textColor: FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                          S.of(context).yes,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: dialogButtonSize,
+                                          ),
+                                      ),
+                                      onPressed: () async {
+                                          Navigator.pop(_context);
+                                          log("subscribe cancel button condition ${communityModel.payment['planId']}");
+                                          _changePlanAlert(context);
 
                       int value =
                           await FirestoreManager.cancelTimebankSubscription(
@@ -399,7 +393,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   Widget headingText(String name) {
     return Padding(
-      padding: EdgeInsets.only(top: 15, bottom: 10, left: 20),
+      padding: EdgeInsets.only(top: 5, bottom: 10, left: 20),
       child: Text(
         name,
         style: TextStyle(
@@ -470,7 +464,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             children: <Widget>[
               headingText(S.of(context).monthly_subscription),
               Padding(
-                padding: EdgeInsets.only(left: 10, top: 15, right: 10),
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
                 child: IconButton(
                   icon: Icon(
                     Icons.edit,
@@ -518,7 +512,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       children: <Widget>[
         headingText(S.of(context).edit_profile_information),
         Padding(
-          padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+          padding: EdgeInsets.only(left: 10, top: 5, right: 10),
           child: IconButton(
             icon: Icon(
               Icons.edit,
@@ -937,14 +931,14 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         return AlertDialog(
           content: Text(
             isSuccess == 1
-                ? "Subscription successfully cancelled"
+                ? S.of(context).cancellation_success_message
                 : isSuccess == 0
-                    ? "Please clear your dues and try again !"
-                    : S.of(context).general_stream_error,
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(S.of(context).close),
+                    ? S.of(context).cancellation_failure_message
+                          : S.of(context).general_stream_error,
+                  ),
+                  actions: <Widget>[
+                      FlatButton(
+                          child: Text(S.of(context).close, style:TextStyle(color: isSuccess == 1?Colors.green:Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

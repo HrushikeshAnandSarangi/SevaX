@@ -622,8 +622,6 @@ class _LoginPageState extends State<LoginPage> {
     'user15ec27@gmail.com',
     'adi007footballer@gmail.com',
     'adityatestacc123@gmail.com',
-    'aditya1ga14ec004@gmail.com',
-    'adityasn210496@gmail.com',
     'adityazzz@yopmail.com',
     'amazinggg@yopmail.com',
   ];

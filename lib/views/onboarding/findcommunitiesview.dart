@@ -138,7 +138,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   fontSize: 18,
                 ),
               ),
-              centerTitle: true,
+              titleSpacing: 0,
             )
           : null,
       body: searchTeams(),
