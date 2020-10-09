@@ -137,10 +137,11 @@ class _DonationViewState extends State<DonationView> {
       );
       donationsModel.donationStatus = DonationStatus.PLEDGED;
       donationsModel.donorSevaUserId = sevaUser.sevaUserID;
-      donationsModel.donorDetails.name = sevaUser.fullname;
-      donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
-      donationsModel.donorDetails.email = sevaUser.email;
-      donationsModel.donorDetails.bio = sevaUser.bio;
+      donationsModel.donorDetails.name = widget.offerModel.fullName;
+      donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
+      donationsModel.donorDetails.email = widget.offerModel.email;
+      //TODO FIX BIO
+      donationsModel.donorDetails.bio = '';
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -591,8 +592,6 @@ class _DonationViewState extends State<DonationView> {
   }
 
   Widget donationOfferAt() {
-    bool autoValidateText = false;
-    bool autoValidateCashText = false;
     TextStyle hintTextStyle = TextStyle(
       fontSize: 14,
       // fontWeight: FontWeight.bold,
@@ -627,16 +626,7 @@ class _DonationViewState extends State<DonationView> {
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
-              if (value.length > 1) {
-                donationsModel.goodsDetails.toAddress = value;
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
+              donationsModel.goodsDetails.toAddress = value;
             },
             focusNode: focusNodes[1],
             onFieldSubmitted: (v) {
@@ -656,7 +646,7 @@ class _DonationViewState extends State<DonationView> {
                 return S.of(context).validation_error_general_text;
               } else {
                 donationsModel.goodsDetails.toAddress = value;
-                setState(() {});
+                // setState(() {});
               }
               return null;
             },
