@@ -10,18 +10,59 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 List<NotificationType> dismissiableNotification = [
-  NotificationType.RequestApprove,
-  NotificationType.TypeMemberAdded,
+  NotificationType.RequestScheduleReminder,
+  NotificationType.RecurringRequestUpdated,
+  NotificationType.RecurringOfferUpdated,
+  NotificationType.RequestInvite,
   NotificationType.RequestReject,
-  NotificationType.RequestCompletedRejected,
-  NotificationType.TransactionDebit,
-  NotificationType.TransactionCredit,
-  NotificationType.AcceptedOffer,
-  NotificationType.JoinRequest,
   NotificationType.RequestCompletedApproved,
+  NotificationType.RequestCompletedRejected,
+  NotificationType.TransactionCredit,
+  NotificationType.TransactionDebit,
+  NotificationType.OfferAccept,
+  NotificationType.OfferReject,
+  NotificationType.AcceptedOffer,
+  NotificationType.TypeMemberExitTimebank,
+  NotificationType.TypeMemberAdded,
+  NotificationType.TYPE_DEBIT_FROM_OFFER,
+  NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,
+  NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED,
+  NotificationType.TYPE_CREDIT_FROM_OFFER,
+  NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK,
+  NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER,
+  NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED,
+  NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED,
+  NotificationType.TYPE_DELETION_REQUEST_OUTPUT,
+  NotificationType.TYPE_REPORT_MEMBER,
+  NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST,
+  NotificationType.OFFER_CANCELLED_BY_CREATOR,
+  NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
+  NotificationType.SEVA_COINS_DEBITED,
+  NotificationType.SEVA_COINS_CREDITED,
+  NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+  NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
   NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
   NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,
+  NotificationType.RequestApprove,
 ];
+
+//Not dismissiable notifications
+// RequestAccept,
+// RequestApprove,
+// RequestCompleted,
+// JoinRequest,
+// TypeChangeOwnership,
+// GroupJoinInvite,
+// TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+// GOODS_DONATION_REQUEST,
+// ACKNOWLEDGE_DONOR_DONATION, //creator and timebank
+
+// CASH_DONATION_MODIFIED_BY_CREATOR, //donor
+// GOODS_DONATION_MODIFIED_BY_CREATOR, //donor
+// CASH_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
+// GOODS_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
+// CASH_DONATION_MODIFIED_BY_DONOR, //creator and timebank
+// GOODS_DONATION_MODIFIED_BY_DONOR, //creator and timebank
 
 class NotificationsBloc extends BlocBase {
   final _personalNotificationCount = BehaviorSubject<int>.seeded(0);

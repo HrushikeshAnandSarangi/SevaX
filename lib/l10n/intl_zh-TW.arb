@@ -1,10 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-09T15:24:52+00:00",
     "check_met": "檢查我們是否見過",
-    "we_met": "我們曾見過",
-    "hang_on": "稍待。。。",
-    "skills": "技能",
     "interests": "興趣",
     "email": "電子郵件",
     "password": "密碼",

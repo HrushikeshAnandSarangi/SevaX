@@ -139,7 +139,6 @@ class CreateEditCommunityViewFormState
 
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
 
   void initState() {
     if (widget.isCreateTimebank == false) {
@@ -348,7 +347,7 @@ class CreateEditCommunityViewFormState
                         ),
                         headingText(S.of(context).timebank_name),
                         TextFormField(
-                          autovalidate: autoValidateText,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: nameFocus,
                           textCapitalization: TextCapitalization.sentences,
                           onFieldSubmitted: (v) {
@@ -357,24 +356,6 @@ class CreateEditCommunityViewFormState
                           controller: searchTextController,
                           onChanged: (value) {
                             updateExitWithConfirmationValue(context, 1, value);
-                            if (value.length > 1 && !autoValidateText) {
-                              setState(() {
-                                autoValidateText = true;
-                              });
-                            }
-                            if (value.length <= 1 && autoValidateText) {
-                              setState(() {
-                                autoValidateText = false;
-                              });
-                            }
-                            enteredName =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-
-                            communityModel.name =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-
-                            timebankModel.name =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
                           },
                           decoration: InputDecoration(
                             errorText: errTxt,
@@ -387,7 +368,8 @@ class CreateEditCommunityViewFormState
                           maxLines: 1,
                           inputFormatters: <TextInputFormatter>[
                             WhitelistingTextInputFormatter(
-                                RegExp("[a-zA-Z0-9_ ]*"))
+                              RegExp("[a-zA-Z0-9_ ]*"),
+                            )
                           ],
                           onSaved: (value) {
                             enteredName =
@@ -417,7 +399,7 @@ class CreateEditCommunityViewFormState
                         TextFormField(
                           controller: descriptionTextController,
 
-                          autovalidate: autoValidateText,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
                             errorMaxLines: 2,
@@ -430,16 +412,6 @@ class CreateEditCommunityViewFormState
                           //  initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
                             updateExitWithConfirmationValue(context, 2, value);
-                            if (value.length > 1 && !autoValidateText) {
-                              setState(() {
-                                autoValidateText = true;
-                              });
-                            }
-                            if (value.length <= 1 && autoValidateText) {
-                              setState(() {
-                                autoValidateText = false;
-                              });
-                            }
                             timebankModel.missionStatement = value;
                             communityModel.about = value;
                           },
@@ -1086,52 +1058,6 @@ class CreateEditCommunityViewFormState
         });
   }
 
-//
-//  void _showVerificationAndLogoutDialogue() {
-//    // flutter defined function
-//    showDialog(
-//      context: context,
-//      builder: (BuildContext context) {
-//        // return object of type Dialog
-//        return AlertDialog(
-//          title: Text(
-//              AppLocalizations.of(context).translate('shared', 'signing_out')),
-//          content: Text(AppLocalizations.of(context)
-//              .translate('createtimebank', 'ack_dialog')),
-//          actions: <Widget>[
-//            RaisedButton(
-//              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-//              elevation: 5,
-//              color: Theme.of(context).accentColor,
-//              textColor: FlavorConfig.values.buttonTextColor,
-//              child: Text(
-//                AppLocalizations.of(context)
-//                    .translate('createtimebank', 'ok_signout'),
-//                style: TextStyle(
-//                  fontSize: 16,
-//                ),
-//              ),
-//              onPressed: () {
-//                firebaseUser.sendEmailVerification().then((value) {
-//                  _signOut(context);
-//                  Navigator.of(context).pop();
-//                });
-//              },
-//            ),
-//            FlatButton(
-//                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-//                child: Text(
-//                  AppLocalizations.of(context)
-//                      .translate('createtimebank', 'illdolater'),
-//                  style: TextStyle(fontSize: 16, color: Colors.red),
-//                ),
-//                onPressed: () => Navigator.of(context).pop()),
-//          ],
-//        );
-//      },
-//    );
-//  }
-
   void showProgressDialog(String message) {
     showDialog(
         barrierDismissible: false,
@@ -1360,19 +1286,10 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 3, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
+
             // print(controller.community.billing_address);
             controller.community.billing_address
                 .updateValueByKey('state', value);
@@ -1405,19 +1322,10 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 4, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
+
             controller.community.billing_address
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
@@ -1484,19 +1392,10 @@ class CreateEditCommunityViewFormState
             FocusScope.of(context).unfocus();
             // scrollToBottom();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 6, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
+
             controller.community.billing_address
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
@@ -1529,19 +1428,10 @@ class CreateEditCommunityViewFormState
             // FocusScope.of(context).requestFocus(focusNodes[5]);
             FocusScope.of(context).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 7, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
+
             controller.community.billing_address
                 .updateValueByKey('street_address1', value);
             createEditCommunityBloc.onChange(controller);
@@ -1570,7 +1460,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
-            autovalidate: autoValidateText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             textCapitalization: TextCapitalization.sentences,
             onFieldSubmitted: (input) {
               FocusScope.of(context).unfocus();
@@ -1578,16 +1468,7 @@ class CreateEditCommunityViewFormState
             keyboardType: TextInputType.text,
             onChanged: (value) {
               updateExitWithConfirmationValue(context, 8, value);
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
+
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
@@ -1623,19 +1504,10 @@ class CreateEditCommunityViewFormState
                 ? S.of(context).profanity_text_alert
                 : null;
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 9, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
+
             controller.community.billing_address
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
@@ -1660,19 +1532,9 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 10, value);
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             controller.community.billing_address
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);

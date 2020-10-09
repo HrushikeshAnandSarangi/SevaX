@@ -44,7 +44,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   var planData = [];
   var transactionPaymentData;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
   final String NO_SELECTED_PLAN_YET = "";
   List<BillingPlanDetailsModel> _billingPlanDetailsModels = [];
   UserModel currentUser = null;
@@ -64,7 +63,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             .getString('billing_plans_${S.of(context).localeName}'),
       );
     });
-    setState((){});
+    setState(() {});
   }
 
   String planName(String text) {
@@ -177,24 +176,28 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
               _bloc.community.payment['planId'] == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ? Container() :
-            Row(
-            children: [
-              Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(top: 160),
-              child: FlatButton(
-                child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 18),),
-                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
-                    color: FlavorConfig.values.theme.primaryColor,
-                    width: 1,
-                    style: BorderStyle.solid
-                )),
-              onPressed: () async {
-                  _showCancelConfirmationDialog(context);
-              },),
-            ),
-              Spacer(),
-            ],
+            Column(
+              children: [
+                  SizedBox(
+                      height:70
+                  ),
+                Row(
+                children: [
+                  Spacer(),
+                FlatButton(
+                  child: Text("Cancel Subscription", style: TextStyle(color: FlavorConfig.values.theme.primaryColor, fontSize: 14),),
+                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0), side: BorderSide(
+                      color: FlavorConfig.values.theme.primaryColor,
+                      width: 1,
+                      style: BorderStyle.solid
+                  )),
+                onPressed: () async {
+                    _showCancelConfirmationDialog(context);
+                },),
+                  Spacer(),
+                ],
+                ),
+              ],
             )
 
           ],
@@ -210,9 +213,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           builder: (_context) {
               return AlertDialog(
                   title:Text("Cancel Subscription", textAlign: TextAlign.center,),
+
                   content: Column(
                       mainAxisSize: MainAxisSize.min,
-
                       children: <Widget>[
                           Text("Are you sure ?"),
                           SizedBox(
@@ -237,46 +240,46 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                           log("subscribe cancel button condition ${communityModel.payment['planId']}");
                                           _changePlanAlert(context);
 
-                                          int value = await FirestoreManager.cancelTimebankSubscription(
-                                              SevaCore.of(context).loggedInUser.currentCommunity,
-                                              true,
-                                          );
-                                          Navigator.of(context, rootNavigator: true).pop();
+                      int value =
+                          await FirestoreManager.cancelTimebankSubscription(
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                        true,
+                      );
+                      Navigator.of(context, rootNavigator: true).pop();
 
-                                          cancelSubscriptionMessage(context, value)
-                                              .then( (_) {
-                                              if( value == 1 ){
-                                                  Navigator.of(context).pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (context1) => SevaCore(
-                                                              loggedInUser: currentUser,
-                                                              child: HomePageRouter(),
-                                                          ),
-                                                      ),
-                                                          (Route<dynamic> route) => false);
-                                              }
-                                          });
-                                      },
-                                  ),
-                                  FlatButton(
-                                      child: Text(
-                                          S.of(context).no,
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: dialogButtonSize,
-                                          ),
-                                      ),
-                                      onPressed: () {
-                                          Navigator.pop(_context);
-                                      },
-                                  ),
-                              ],
-                          ),
-                      ],
+                      cancelSubscriptionMessage(context, value).then((_) {
+                        if (value == 1) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context1) => SevaCore(
+                                  loggedInUser: currentUser,
+                                  child: HomePageRouter(),
+                                ),
+                              ),
+                              (Route<dynamic> route) => false);
+                        }
+                      });
+                    },
                   ),
-              );
-          },
-      );
+                  FlatButton(
+                    child: Text(
+                      S.of(context).no,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(_context);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget planCard(UserDataBloc _bloc) {
@@ -390,7 +393,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   Widget headingText(String name) {
     return Padding(
-      padding: EdgeInsets.only(top: 15, bottom: 10, left: 20),
+      padding: EdgeInsets.only(top: 5, bottom: 10, left: 20),
       child: Text(
         name,
         style: TextStyle(
@@ -461,7 +464,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             children: <Widget>[
               headingText(S.of(context).monthly_subscription),
               Padding(
-                padding: EdgeInsets.only(left: 10, top: 15, right: 10),
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
                 child: IconButton(
                   icon: Icon(
                     Icons.edit,
@@ -509,13 +512,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       children: <Widget>[
         headingText(S.of(context).edit_profile_information),
         Padding(
-          padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+          padding: EdgeInsets.only(left: 10, top: 5, right: 10),
           child: IconButton(
             icon: Icon(
               Icons.edit,
             ),
             onPressed: () {
-
               FocusScope.of(buildContext).requestFocus(FocusNode());
               _billingBottomsheet(buildContext);
 
@@ -603,7 +605,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Widget _scrollingList(List<FocusNode> focusNodes, BuildContext bc) {
-
     Widget _cityWidget(String city) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -614,19 +615,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
-
             communityModel.billing_address.city = value;
           },
           initialValue: city != null ? city : '',
@@ -652,18 +642,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.state = value;
           },
           initialValue: state != null ? state : '',
@@ -690,7 +670,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
-
             communityModel.billing_address.pincode = int.parse(value);
           },
           initialValue: pinCode != null ? pinCode.toString() : '',
@@ -715,18 +694,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           onFieldSubmitted: (input) {
             scrollToBottom();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.additionalnotes = value;
           },
           validator: (value) {
@@ -751,18 +720,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
@@ -789,18 +748,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
             },
-            autovalidate: autoValidateText,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
-              if (value.length > 1 && !autoValidateText) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              }
-              if (value.length <= 1 && autoValidateText) {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
               communityModel.billing_address.street_address2 = value;
             },
             validator: (value) {
@@ -827,18 +776,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.country = value;
           },
           initialValue: country != null ? country : '',
@@ -872,18 +811,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 ? S.of(context).profanity_text_alert
                 : null;
           },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
             communityModel.billing_address.companyname = value;
           },
           initialValue: companyname != null ? companyname : '',
@@ -913,7 +842,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();
               } else {
-
                 showProgressDialog(S.of(context).updating_details);
 
                 await FirestoreManager.updateCommunityDetails(
@@ -994,51 +922,53 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Future<void> cancelSubscriptionMessage(
-      BuildContext context,
-      int isSuccess,
-      ) async {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-              return AlertDialog(
-                  content: Text(
-                      isSuccess == 1
-                          ? "Subscription successfully cancelled"
-                          : isSuccess == 0 ? "Please clear your dues and try again !" : S.of(context).general_stream_error,
+    BuildContext context,
+    int isSuccess,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            isSuccess == 1
+                ? S.of(context).cancellation_success_message
+                : isSuccess == 0
+                    ? S.of(context).cancellation_failure_message
+                          : S.of(context).general_stream_error,
                   ),
                   actions: <Widget>[
                       FlatButton(
-                          child: Text(S.of(context).close),
-                          onPressed: () {
-                              Navigator.of(context).pop();
-                          },
-                      ),
-                  ],
-              );
-          },
-      );
+                          child: Text(S.of(context).close, style:TextStyle(color: isSuccess == 1?Colors.green:Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _changePlanAlert(
-      BuildContext context,
-      ) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-              return AlertDialog(
-                  content: Row(
-                      children: [
-                          CircularProgressIndicator(),
-                          SizedBox(width: 30),
-                          Expanded(
-                              child: Text(S.of(context).changing_plan),
-                          ),
-                      ],
-                  ),
-              );
-          },
-      );
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 30),
+              Expanded(
+                child: Text(S.of(context).changing_plan),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
