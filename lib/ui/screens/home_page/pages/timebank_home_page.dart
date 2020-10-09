@@ -335,31 +335,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
               ),
             ),
           ),
-          //     SliverPersistentHeader(
-          //       delegate: _SliverAppBarDelegate(
-          //         TabBar(
-          //           labelColor: Theme.of(context).primaryColor,
-          //           unselectedLabelStyle: TextStyle(color: Colors.grey),
-          //           labelStyle: TextStyle(fontWeight: FontWeight.bold),
-          //           indicatorColor: Theme.of(context).primaryColor,
-          //           tabs: [
-          //             Tab(
-          //               child: Text('Pending '),
-          //             ),
-          //             Tab(
-          //               child: Text('Not Accepted '),
-          //             ),
-          //             Tab(
-          //               child: Text('Completed '),
-          //             ),
-          //           ],
-          //           controller: controller,
-          //           isScrollable: false,
-          //           unselectedLabelColor: Colors.black,
-          //         ),
-          //       ),
-          //       pinned: true,
-          //     ),
         ];
       },
       body: SafeArea(
@@ -367,7 +342,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         child: TabBarView(
           controller: controller,
           children: <Widget>[
-            MyTasksList(),
+            MyTaskList(
+              email: SevaCore.of(context).loggedInUser.email,
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            ),
             NotAcceptedTaskList(),
             CompletedList()
           ],
