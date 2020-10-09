@@ -559,9 +559,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ).commit();
 
                   setState(() {
+                    widget.user.communities.add(widget.communityModel.id);
                     widget.user.currentCommunity = widget.communityModel.id;
                   });
-
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
