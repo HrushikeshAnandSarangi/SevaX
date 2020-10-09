@@ -86,7 +86,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   final aboutNode = FocusNode();
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
   void initState() {
     super.initState();
     timebankModel.preventAccedentalDelete = true;

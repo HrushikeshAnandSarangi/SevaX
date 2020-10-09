@@ -105,7 +105,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   GeoFirePoint location;
   String selectedAddress;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   List<String> selectedTimebanks = [];
   Future<void> writeToDB() async {
     newsObject.placeAddress = this.selectedAddress;
@@ -254,20 +254,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                   ),
                                   keyboardType: TextInputType.text,
                                   maxLines: 5,
-                                  autovalidate: autoValidateText,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   onChanged: (value) {
                                     ExitWithConfirmation.of(context)
                                         .fieldValues[1] = value;
-                                    if (value.length > 1 && !autoValidateText) {
-                                      setState(() {
-                                        autoValidateText = true;
-                                      });
-                                    }
-                                    if (value.length <= 1 && autoValidateText) {
-                                      setState(() {
-                                        autoValidateText = false;
-                                      });
-                                    }
                                   },
                                   validator: (value) {
                                     if (value.isEmpty) {
