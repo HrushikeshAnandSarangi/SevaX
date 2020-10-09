@@ -42,6 +42,10 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   double rating;
   int selectedRadio;
   final _debouncer = Debouncer(milliseconds: 700);
+  static const double minKM = 3;
+  static const double maxKM = 80;
+  static const double minMi = 2;
+  static const double maxMi = 50;
 
   @override
   void initState() {
@@ -70,14 +74,14 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               children: [
                 Text(
                   selectedRadio == NearbySettingBloc.MILES_SELECTION
-                      ? '10 M'
-                      : '16 Kms',
+                      ? '$minMi M'
+                      : '$minKM Kms',
                   style: TextStyle(fontSize: 12),
                 ),
                 Text(
                   selectedRadio == NearbySettingBloc.MILES_SELECTION
-                      ? '50 M'
-                      : '80 Kms',
+                      ? '$maxMi M'
+                      : '$maxKM Kms',
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -86,10 +90,14 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
           Container(
             width: MediaQuery.of(context).size.height,
             child: CupertinoSlider(
-              min: selectedRadio == NearbySettingBloc.MILES_SELECTION ? 10 : 16,
-              max: selectedRadio == NearbySettingBloc.MILES_SELECTION ? 50 : 80,
-              divisions:
-                  selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
+              min: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                  ? minMi
+                  : minKM,
+              max: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                  ? maxMi
+                  : maxKM,
+              // divisions:
+              //     selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
               thumbColor: Theme.of(context).primaryColor,
               activeColor: Theme.of(context).primaryColor,
               value: rating,
