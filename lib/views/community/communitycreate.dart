@@ -434,39 +434,41 @@ class CreateEditCommunityViewFormState
                         Padding(
                           padding: EdgeInsets.all(8),
                         ),
-
-                        Offstage(
-                          offstage: widget.isCreateTimebank,
-                          child: Row(
-                            children: <Widget>[
-                              headingText(S.of(context).timebank_members),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10, top: 15),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.add_circle_outline,
-                                  ),
-                                  onPressed: () {
-                                    addVolunteers();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Offstage(
-                          offstage: widget.isCreateTimebank,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                totalMembersCount.toString() ?? "0",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Europa'),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // todo:: removed timebank members
+                        // Offstage(
+                        //   offstage: widget.isCreateTimebank,
+                        //   child: Row(
+                        //     children: <Widget>[
+                        //       headingText(S.of(context).timebank_members),
+                        //       Padding(
+                        //         padding: EdgeInsets.only(left: 10, top: 15),
+                        //         child: IconButton(
+                        //           icon: Icon(
+                        //             Icons.add_circle_outline,
+                        //           ),
+                        //           onPressed: () {
+                        //             addVolunteers();
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Offstage(
+                        //   offstage: widget.isCreateTimebank,
+                        //   child: Row(
+                        //     children: <Widget>[
+                        //       totalMembersCount != 0
+                        //           ? Text(
+                        //               totalMembersCount.toString() ?? " ",
+                        //               style: TextStyle(
+                        //                   fontWeight: FontWeight.bold,
+                        //                   fontFamily: 'Europa'),
+                        //             )
+                        //           : Container(),
+                        //     ],
+                        //   ),
+                        // ),
                         widget.isCreateTimebank
                             ? Row(
                                 children: <Widget>[
