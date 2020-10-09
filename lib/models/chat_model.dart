@@ -45,7 +45,7 @@ class ChatModel {
             ? []
             : List<String>.from(map["softDeletedBy"].map((x) => x)),
         deletedBy: map.containsKey("deletedBy") ? map["deletedBy"] : {},
-        isTimebankMessage: map["isTimebankMessage"],
+        isTimebankMessage: map["isTimebankMessage"] ?? false,
         isGroupMessage:
             map.containsKey("isGroupMessage") ? map["isGroupMessage"] : false,
         groupDetails:
