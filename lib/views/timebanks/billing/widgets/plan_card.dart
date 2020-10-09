@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -44,7 +45,7 @@ class BillingPlanCard extends StatefulWidget {
 
 class _BillingPlanCardState extends State<BillingPlanCard> {
   bool isBillMe;
-
+List<String> planIdArr = ["neighbourhood_plan","tall_plan","grande_plan","venti_plan"];
   void initState() {
     super.initState();
     isBillMe = widget.isBillMe;
@@ -210,36 +211,16 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                     if (widget.activePlanId == widget.plan.id) {
                       return;
                     }
-                    if (widget.isPlanActive &&
-                        widget.activePlanId != null &&
-                        widget.activePlanId !=
-                            SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
-
-                      _changePlanAlert(context);
-                      FirestoreManager.changePlan(
-                        SevaCore.of(context).loggedInUser.currentCommunity,
-                        widget.plan.id,
-                      ).then((value) {
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        planChangedMessage(context, value).then(
-                          (_) {
-                            if( value==0 ){
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context1) => SevaCore(
-                                            loggedInUser: widget.user,
-                                            child: HomePageRouter(),
-                                        ),
-                                    ),
-                                    (Route<dynamic> route) => false);
-                            }
-//                            else {
-//
-//                            }
+                    if(widget.isPlanActive && widget.activePlanId != null && planIdArr.indexOf(widget.plan.id) < planIdArr.indexOf(widget.activePlanId)){
+                        cannotDowngradeMessage(context).then((_){
+                            Navigator.of(context).pop();
                         });
-                      });
-                    } else {
+                    }
+                    else if (widget.isPlanActive && widget.activePlanId != null && widget.activePlanId != SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
+                        _showPlanChangeConfirmationDialog(context);
+
+                    }
+                    else {
                       if (widget.plan.id ==
                               SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
                           isBillMe) {
@@ -339,6 +320,67 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
     );
   }
 
+  void _showPlanChangeConfirmationDialog(BuildContext parentContext) {
+      showDialog(
+          context: parentContext,
+          barrierDismissible: true,
+          builder: (_context) {
+              return AlertDialog(
+                  title: Text("Change plan confirmation"),
+                  content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                          Text("Are you sure you want to upgrade the plan ?"),
+                          SizedBox(
+                              height: 15,
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  RaisedButton(
+                                      padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                      color: Theme.of(context).accentColor,
+                                      textColor: FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                          S.of(context).yes,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: dialogButtonSize,
+                                          ),
+                                      ),
+                                      onPressed: () async {
+                                          Navigator.pop(_context);
+
+                                          _changePlanAlert(context);
+                                          FirestoreManager.changePlan(
+                                              SevaCore.of(context).loggedInUser.currentCommunity,
+                                              widget.plan.id,
+                                          ).then((value) {
+                                              Navigator.of(context, rootNavigator: true).pop();
+                                              return planChangedMessage(context, value);
+                                          });
+
+                                      },
+                                  ),
+                                  FlatButton(
+                                      child: Text(
+                                          S.of(context).no,
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: dialogButtonSize,
+                                          ),
+                                      ),
+                                      onPressed: () => Navigator.pop(_context),
+                                  ),
+                              ],
+                          ),
+                      ],
+                  ),
+              );
+          },
+      );
+  }
+
   void _showBillMeDialog(context, msg) {
     showDialog(
       context: context,
@@ -381,6 +423,28 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
     );
   }
 
+  Future<void> cannotDowngradeMessage(
+      BuildContext context,
+      ) async {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+              return AlertDialog(
+                  content: Text("Please contact Sevax support for downgrading your plan",
+                  ),
+                  actions: <Widget>[
+                      FlatButton(
+                          child: Text(S.of(context).close),
+                          onPressed: () {
+                              Navigator.of(context).pop();
+                          },
+                      ),
+                  ],
+              );
+          },
+      );
+  }
+
   Future<void> planChangedMessage(
     BuildContext context,
     int isSuccess,
@@ -399,32 +463,22 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
+                if( isSuccess==1 ){
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context1) => SevaCore(
+                                loggedInUser: widget.user,
+                                child: HomePageRouter(),
+                            ),
+                        ),
+                            (Route<dynamic> route) => false);
+                }
               },
             ),
           ],
         );
       },
     );
-  }
-
-  Future<bool> _changePlan(String communityId, String planId) async {
-    try {
-      http.Response result = await http.post(
-        FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-        body: json.encode({'communityId': communityId, "newPlanId": planId}),
-        headers: {"Content-type": "application/json"},
-      );
-
-      if (result.statusCode == 200) {
-        return true;
-      } else {
-
-      }
-    } catch (e) {
-      Crashlytics.instance.log(e.toString());
-
-    }
-    return false;
   }
 
   void _planSuccessMessage({
