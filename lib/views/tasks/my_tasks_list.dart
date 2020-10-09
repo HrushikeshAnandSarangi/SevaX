@@ -150,6 +150,10 @@ class MyTasksList extends StatelessWidget {
 
           UserModel user = snapshot.data;
 
+          if (user == null) {
+            return Container();
+          }
+
           DateFormat format = DateFormat(
               'dd/MM/yy hh:mm a',
               Locale(AppConfig.prefs.getString('language_code'))
@@ -177,52 +181,6 @@ class MyTasksList extends StatelessWidget {
                     ),
                   );
                 },
-                //   child: Container(
-                //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                //     child: Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       mainAxisSize: MainAxisSize.min,
-                //       children: <Widget>[
-                //         Text(
-                //           getTime(
-                //             model.requestStart,
-                //             userTimezone,
-                //           ),
-                //           style: TextStyle(
-                //             color: Color(0xFFFb57b59),
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //         SizedBox(height: 3),
-                //         Text(
-                //           model.title,
-                //           style: TextStyle(
-                //             fontSize: 16,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //         SizedBox(height: 3),
-                //         Text(
-                //           user.fullname,
-                //           style: TextStyle(fontSize: 14),
-                //         ),
-                //         SizedBox(height: 3),
-                //         Text(
-                //           getTimeFormattedString(
-                //             model.requestStart,
-                //             userTimezone,
-                //           ),
-                //           style: TextStyle(
-                //             color: Color(0xFFFb57b59),
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 child: ListTile(
                   title: Text(
                     model.title,
@@ -231,7 +189,9 @@ class MyTasksList extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(user.fullname),
+                      Text(user != null && user.fullname != null
+                          ? user.fullname
+                          : ''),
                       SizedBox(height: 4),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
@@ -698,7 +658,6 @@ class TaskCardViewState extends State<TaskCardView> {
           loggedInUser: loggedInUser);
       startTransaction();
     } on Exception catch (e) {
-
       // TODO
     }
   }
