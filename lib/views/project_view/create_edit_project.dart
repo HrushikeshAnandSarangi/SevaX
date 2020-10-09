@@ -74,7 +74,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool templateFound = false;
   String templateError = '';
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -289,19 +289,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ),
               headingText(S.of(context).project_name),
               TextFormField(
-                autovalidate: autoValidateText,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
                   ExitWithConfirmation.of(context).fieldValues[1] = value;
-                  if (value.length > 1 && !autoValidateText) {
-                    setState(() {
-                      autoValidateText = true;
-                    });
-                  }
-                  if (value.length <= 1 && autoValidateText) {
-                    setState(() {
-                      autoValidateText = false;
-                    });
-                  }
                   projectModel.name = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
@@ -387,19 +377,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 textCapitalization: TextCapitalization.sentences,
 
                 //  initialValue: timebankModel.missionStatement,
-                autovalidate: autoValidateText,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
                   ExitWithConfirmation.of(context).fieldValues[2] = value;
-                  if (value.length > 1 && !autoValidateText) {
-                    setState(() {
-                      autoValidateText = true;
-                    });
-                  }
-                  if (value.length <= 1 && autoValidateText) {
-                    setState(() {
-                      autoValidateText = false;
-                    });
-                  }
 
                   projectModel.description = value;
                 },
@@ -411,11 +391,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   } else {
                     projectModel.description = value;
                   }
-//                      snapshot.data.community.updateValueByKey('about', value);
-//
-//                      snapshot.data.timebank
-//                          .updateValueByKey('missionStatement', value);
-//                      createEditCommunityBloc.onChange(snapshot.data);
+
                   return null;
                 },
               ),
@@ -638,8 +614,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   alignment: Alignment.center,
                   child: RaisedButton(
                     onPressed: () async {
-
-
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
@@ -654,7 +628,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         );
                         return;
                       }
-
 
                       FocusScope.of(context).requestFocus(FocusNode());
                       // show a dialog

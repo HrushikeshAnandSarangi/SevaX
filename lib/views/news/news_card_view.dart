@@ -38,7 +38,7 @@ class NewsCardViewState extends State<NewsCardView> {
   TextEditingController _textEditingController = TextEditingController();
   bool isShowSticker;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   bool isProfane = false;
   String errorText = '';
   @override
@@ -243,7 +243,6 @@ class NewsCardViewState extends State<NewsCardView> {
                             errorText = S.of(context).profanity_text_alert;
                           });
                         } else {
-
                           setState(() {
                             isProfane = false;
                             errorText = '';
@@ -1813,7 +1812,6 @@ class _RepliesViewState extends State<RepliesView> {
   bool isShowSticker;
   bool isKeyboardVisible;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
   bool isProfane = false;
   String errorText = '';
   @override
@@ -1930,7 +1928,7 @@ class _RepliesViewState extends State<RepliesView> {
                   children: <Widget>[
                     Flexible(
                       child: TextFormField(
-                        autovalidate: autoValidateText,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _textEditingController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -1978,7 +1976,6 @@ class _RepliesViewState extends State<RepliesView> {
                               errorText = S.of(context).profanity_text_alert;
                             });
                           } else {
-
                             setState(() {
                               isProfane = false;
                               errorText = '';

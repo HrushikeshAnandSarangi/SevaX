@@ -21,8 +21,8 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
@@ -52,7 +52,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   String nearTimebankText;
   var radius;
   final profanityDetector = ProfanityDetector();
-  bool autoValidateText = false;
+
   String errorText = '';
   BuildContext parentContext;
   @override
@@ -236,19 +236,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         TextFormField(
-          onChanged: (value) {
-            if (value.length > 1 && !autoValidateText) {
-              setState(() {
-                autoValidateText = true;
-              });
-            }
-            if (value.length <= 1 && autoValidateText) {
-              setState(() {
-                autoValidateText = false;
-              });
-            }
-          },
-          autovalidate: autoValidateText,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
           validator: (value) {
@@ -458,7 +446,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         }
       }
     } on PlatformException catch (e) {
-
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
@@ -477,7 +464,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return LoadingIndicator();
           }
           if (snapshot.hasData) {
-
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
 
@@ -547,7 +533,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     String seveaUserId,
   ) {
     if (communityModel.members.contains(widget.loggedInUser.sevaUserID)) {
-
       return CompareUserStatus.JOINED;
     } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
       //
@@ -623,9 +608,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         ),
                       ),
                     );
-                  } else {
-
-                  }
+                  } else {}
                 },
               ),
               SizedBox(height: 20),
