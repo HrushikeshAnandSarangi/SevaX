@@ -17,7 +17,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -554,7 +553,12 @@ class RequestListItemsState extends State<RequestListItems> {
                           )
                         : Container(),
                     requestLocation != null
-                        ? Text(requestLocation)
+                        ? Expanded(
+                            child: Text(
+                              requestLocation,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
                         : Container(),
                     SizedBox(width: 10),
                     model.location != null &&

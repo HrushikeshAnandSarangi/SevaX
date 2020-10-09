@@ -525,7 +525,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       scrollDirection: Axis.vertical,
       controller: _listController,
       shrinkWrap: true,
-      itemCount: _avtars.length,
+      itemCount: fetchItemsCount(),
       itemBuilder: (BuildContext ctxt, int index) => Padding(
         padding: const EdgeInsets.all(0.0),
         child: index < _avtars.length

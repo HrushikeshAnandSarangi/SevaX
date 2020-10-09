@@ -110,14 +110,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       ),
                     ),
                     onTap: () {
-                      if (widget.timebankModel.id ==
-                              FlavorConfig.values.timebankId &&
-                          !widget.timebankModel.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID)) {
-                        showAdminAccessMessage(context: context);
-                      } else {
-                        navigateToCreateProject();
-                      }
+                      navigateToCreateProject();
                     },
                   ),
                 ),
@@ -226,16 +219,22 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   void navigateToCreateProject() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectTemplateView(
-          timebankId: widget.timebankId,
-          isCreateProject: true,
-          projectId: '',
+    if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
+        !widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      showAdminAccessMessage(context: context);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProjectTemplateView(
+            timebankId: widget.timebankId,
+            isCreateProject: true,
+            projectId: '',
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void showProjectsWebPage() {
