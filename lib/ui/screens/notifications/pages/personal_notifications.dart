@@ -68,7 +68,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 onPressed: () async {
                   if (await CustomDialogs.generalConfirmationDialogWithMessage(
                     context,
-                    'Are you sure you want to clear all notifications?',
+                    S.of(context).clear_notications,
                   )) {
                     _bloc.clearAllNotification(user.email);
                   }

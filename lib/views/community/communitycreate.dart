@@ -130,8 +130,6 @@ class CreateEditCommunityViewFormState
 
   final nameFocus = FocusNode();
 
-  String selectedCountryValue = "Select your country";
-
   var scrollIsOpen = false;
   var communityFound = false;
   List<FocusNode> focusNodes;

@@ -141,7 +141,7 @@ class NewsCardViewState extends State<NewsCardView> {
                             (snapshot.hasData &&
                                 snapshot.data.comments.length == 0)) {
                           return Center(
-                            child: Text("No data"),
+                            child: Text(S.of(context).no_data),
                           );
                         }
                         if (snapshot.hasData) {
@@ -1103,7 +1103,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                               builder: (context, snapshot) {
                                 if (snapshot.data == null) {
                                   return Center(
-                                    child: Text("No data"),
+                                    child: Text(S.of(context).no_data),
                                   );
                                 }
                                 if (snapshot.hasData) {
@@ -1876,7 +1876,7 @@ class _RepliesViewState extends State<RepliesView> {
                         builder: (context, snapshot) {
                           if (snapshot.data == null) {
                             return Center(
-                              child: Text("No data"),
+                              child: Text(S.of(context).no_data),
                             );
                           }
                           if (snapshot.hasData) {

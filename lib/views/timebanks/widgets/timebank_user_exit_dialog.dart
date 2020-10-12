@@ -49,7 +49,7 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userExitModel.timebank ?? "Timebank name not updated",
+                userExitModel.timebank ?? "Seva Community name not updated",
               ),
             ),
             Padding(

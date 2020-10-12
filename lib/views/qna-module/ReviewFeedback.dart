@@ -156,6 +156,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case 'en':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
 
+      case 'sn':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
+      case 'af':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_AF;
+      case 'sw':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SW;
+
       case 'fr':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_FR;
 
@@ -179,7 +186,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     switch (languageCode) {
       case 'en':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN;
-
+      case 'af':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_AF;
+      case 'sn':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_SN;
+      case 'sw':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_SW;
       case 'fr':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_FR;
 
@@ -203,6 +215,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     switch (languageCode) {
       case 'en':
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+      case 'af':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF;
+      case 'sn':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN;
+
+      case 'sw':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SW;
 
       case 'fr':
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR;
@@ -354,9 +373,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
                   errorText: _validate
                       ? S.of(context).validation_error_required_fields
-                      : _profane
-                          ? S.of(context).profanity_text_alert
-                          : null,
+                      : _profane ? S.of(context).profanity_text_alert : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                   hintText: S.of(context).review_feedback_message,

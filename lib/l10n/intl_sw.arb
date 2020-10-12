@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-09T16:05:58+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -141,7 +141,7 @@
     "general_stream_error": "Hitilafu imetokea, tafadhali jaribu tena",
     "no_pending_task": "Hakuna kazi zinazosubiri",
     "from": "Kutoka:",
-    "until": "mpaka",
+    "until": "Mpaka",
     "posted_by": "Iliyotumwa na:",
     "posted_date": "Tarehe ya mwisho:",
     "enter_hours": "Ingiza masaa",
@@ -540,7 +540,7 @@
     "large_file_size": "Tahadhari kubwa ya faili",
     "update_feed": "Huishwa chapisho",
     "updating_feed": "Inahuishwa chapisho",
-    "notification_alerts": "Arifu za arifu",
+    "notification_alerts": "Arifa za Arifa",
     "request_accepted": "Mwanachama amekubali ombi na anasubiri idhini",
     "request_completed": "Mwanachama anadai mikopo ya wakati na anasubiri idhini",
     "join_request_message": "Ombi la mwanachama la kujiunga",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Usajili umeghairiwa",
     "subscription_cancellation": "Kughairi usajili",
     "cancellation_failure_message": "Tumepokea ombi la kughairi usajili wako. Wakati tunasikitika kukuona ukienda, kuna malipo ambayo hayajalipwa kwa wakati huu. Tafadhali futa haki hizi kisha ujaribu kughairi tena",
-    "cancellation_success_message": "Tunasikitika kukuona ukienda. Usajili wako sasa umeghairiwa. Kuanzia mwisho wa kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa"
+    "cancellation_success_message": "Tunasikitika kukuona ukienda. Usajili wako sasa umeghairiwa. Kuanzia mwisho wa kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Tayari ipo",
+    "add_to_request": "Ongeza kwa Ombi?",
+    "are_you_sure": "Je! Una uhakika unataka",
+    "already_added": "tayari imeongezwa kwenye ombi hili",
+    "offer_updated": "Ofa imesasishwa",
+    "clear_notications": "Je! Una uhakika unataka kufuta arifa zote?"
 }

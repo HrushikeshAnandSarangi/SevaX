@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-09T16:05:58+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -141,7 +141,7 @@
     "general_stream_error": "出問題了，請重試",
     "no_pending_task": "沒有待處理的任務",
     "from": "從:",
-    "until": " 直到 ",
+    "until": "直到",
     "posted_by": "發表者:",
     "posted_date": "發布日期:",
     "enter_hours": "輸入小時",
@@ -668,7 +668,7 @@
     "expired": "過期",
     "active": "活動中",
     "share_code": "分享代碼",
-    "invite_message": "Seva社區是一個社區，它使您可以志願服務，還可以得到時間積分，以便為您完成工作。使用代碼",
+    "invite_message": "Seva社區是一個社區，它使您能夠志願服務，並能獲得時間積分，為您完成工作。使用代碼",
     "invite_prompt": "當系統提示您加入此Seva社區時。請從https:\/\/sevaexchange.page.link\/sevaxapp提供的鏈接下載該應用程序",
     "code_generated": "代碼生成",
     "is_your_code": "這是你的代碼。",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "取消訂閱",
     "subscription_cancellation": "訂閱取消",
     "cancellation_failure_message": "我們已收到取消您的訂閱的請求。很抱歉看到您離開，目前尚有未付的會費。請清除這些會費，然後再次嘗試取消",
-    "cancellation_success_message": "我們很傷心看你走。您的訂閱現已取消。從當前訂閱期結束之日起，將不會向您的信用卡收費"
+    "cancellation_success_message": "我們很傷心看你走。您的訂閱現已取消。從當前訂閱期結束之日起，將不會向您的信用卡收費",
+    "request_paymenttype_venmo": "文莫",
+    "already_exists": "已經存在",
+    "add_to_request": "添加到請求？",
+    "are_you_sure": "你確定要",
+    "already_added": "已經添加到此請求中",
+    "offer_updated": "優惠已更新",
+    "clear_notications": "您確定要清除所有通知嗎？"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-10-09T16:05:59+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -141,7 +141,7 @@
     "general_stream_error": "Algo salió mal. Por favor, vuelva a intentarlo",
     "no_pending_task": "No hay tareas pendientes.",
     "from": "Desde:",
-    "until": " hasta ",
+    "until": "Hasta",
     "posted_by": "Publicado por:",
     "posted_date": "Posfechar:",
     "enter_hours": "Ingrese horas",
@@ -540,7 +540,7 @@
     "large_file_size": "Alerta de arquivo grande",
     "update_feed": "Atualizar postagem",
     "updating_feed": "Atualizando postagem",
-    "notification_alerts": "Alertas de notificación\n\n",
+    "notification_alerts": "Alertas de notificaciones",
     "request_accepted": "El miembro ha aceptado una solicitud y está esperando su aprobación",
     "request_completed": "El miembro reclama créditos de tiempo y está esperando su aprobación",
     "join_request_message": "Solicitud de miembro para unirse a",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Suscripción cancelada",
     "subscription_cancellation": "Cancelación de suscripción",
     "cancellation_failure_message": "Hemos recibido una solicitud para cancelar su suscripción. Si bien lamentamos que se vaya, hay cuotas impagas en este momento. Borre estas cuotas y luego intente cancelar nuevamente",
-    "cancellation_success_message": "Lamentamos verte marchar. Su suscripción ahora está cancelada. A partir de la conclusión del período de suscripción actual, no se le cobrará a su tarjeta de crédito"
+    "cancellation_success_message": "Lamentamos verte marchar. Su suscripción ahora está cancelada. A partir de la conclusión del período de suscripción actual, no se le cobrará a su tarjeta de crédito",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Ya existe",
+    "add_to_request": "¿Agregar a la solicitud?",
+    "are_you_sure": "¿Seguro que quieres",
+    "already_added": "ya agregado a esta solicitud",
+    "offer_updated": "Oferta actualizada",
+    "clear_notications": "¿Estás seguro de que deseas borrar todas las notificaciones?"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-10-09T16:05:59+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -141,7 +141,7 @@
     "general_stream_error": "Iets het verkeerd geloop. Probeer asseblief weer",
     "no_pending_task": "Geen hangende take nie",
     "from": "Van",
-    "until": "totdat",
+    "until": "Totdat",
     "posted_by": "Gepos deur",
     "posted_date": "Posdatum",
     "enter_hours": "Voer ure in",
@@ -493,7 +493,7 @@
     "edit_profile_information": "Profielinligting wysig",
     "selected_users_before": "Geselekteerde gebruikers voor",
     "private_timebank_alert": "Private Seva Gemeenskap waarskuwing",
-    "private_timebank_alert_hint": "Let daarop dat private Seva-gemeenskappe nie 'n gratis opsie het nie. U sal u faktuurbesonderhede moet verskaf om voort te gaan met die skep van hierdie Seva-gemeenskap",
+    "private_timebank_alert_hint": "Let daarop dat private Seva-gemeenskappe nie 'n gratis opsie het nie. U sal u faktuurbesonderhede moet verstrek om voort te gaan met die skep van hierdie Seva-gemeenskap",
     "additional_notes": "Bykomende notas",
     "prevent_accidental_delete": "Voorkom verwydering per ongeluk",
     "update_request": "Opdateringsversoek",
@@ -540,7 +540,7 @@
     "large_file_size": "Groot lêerwaarskuwing",
     "update_feed": "Dateer die pos op",
     "updating_feed": "Opdatering van plasing",
-    "notification_alerts": "Kennisgewings waarskuwings",
+    "notification_alerts": "Kennisgewings Alert",
     "request_accepted": "Die lid het 'n versoek aanvaar en wag vir goedkeuring",
     "request_completed": "Die lid eis tydskrediete en wag vir goedkeuring",
     "join_request_message": "Lid versoek om aan te sluit by a",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Gekanselleerde intekening",
     "subscription_cancellation": "Intekening van intekening",
     "cancellation_failure_message": "Ons het 'n versoek ontvang om u intekening te kanselleer. Alhoewel ons jammer is dat u gaan, is daar tans onbetaalde fooie. Vee hierdie heffings uit en probeer weer om te kanselleer",
-    "cancellation_success_message": "Ons is jammer om jou te sien gaan. U intekening is nou gekanselleer. Aan die einde van die huidige inskrywingstydperk word u kredietkaart nie gehef nie"
+    "cancellation_success_message": "Ons is jammer om jou te sien gaan. U intekening is nou gekanselleer. Aan die einde van die huidige inskrywingstydperk word u kredietkaart nie gehef nie",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Bestaan ​​alreeds",
+    "add_to_request": "Voeg by versoek?",
+    "are_you_sure": "Is jy seker wil",
+    "already_added": "reeds by hierdie versoek gevoeg",
+    "offer_updated": "Aanbod opgedateer",
+    "clear_notications": "Is u seker dat u alle kennisgewings wil uitvee?"
 }

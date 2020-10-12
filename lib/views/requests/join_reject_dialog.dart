@@ -89,7 +89,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By accepting, ${widget.requestInvitationModel.requestModel.title} will be added to the tasks.",
+                  "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),

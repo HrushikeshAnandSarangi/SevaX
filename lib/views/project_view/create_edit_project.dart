@@ -72,7 +72,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   var focusNodes = List.generate(4, (_) => FocusNode());
   final _textUpdates = StreamController<String>();
   bool templateFound = false;
-  String templateError = '';
   final profanityDetector = ProfanityDetector();
 
   @override
@@ -107,9 +106,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
       if (s.isEmpty) {
-        setState(() {
-          templateError = null;
-        });
+        setState(() {});
       } else {
         if (templateName != s) {
           SearchManager.searchTemplateForDuplicate(queryString: s)
@@ -117,12 +114,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             if (commFound) {
               setState(() {
                 templateFound = true;
-                templateError = 'Template name already exists';
               });
             } else {
               setState(() {
                 templateFound = false;
-                templateError = null;
               });
             }
           });
