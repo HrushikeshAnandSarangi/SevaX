@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -392,7 +391,7 @@ class S {
       );
 
   String get timebanks_near_you => Intl.message(
-        'Timebanks near you',
+        'Seva Communities near you',
         name: 'timebanks_near_you',
       );
 
@@ -412,7 +411,7 @@ class S {
       );
 
   String get no_timebanks_found => Intl.message(
-        'No Timebanks found',
+        'No Seva Communities found',
         name: 'no_timebanks_found',
       );
 
@@ -432,7 +431,7 @@ class S {
       );
 
   String get timebank_gps_hint => Intl.message(
-        'Please make sure you have GPS turned on to see the list of Timebanks around you',
+        'Please make sure you have GPS turned on to see the list of Seva Communities around you',
         name: 'timebank_gps_hint',
       );
 
@@ -2487,7 +2486,7 @@ class S {
       );
 
   String get private_timebank_alert_hint => Intl.message(
-        'Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank',
+        'Please be informed that Private Seva Communities do not have a free option. You will need to provide your billing details to continue to create this Seva Community',
         name: 'private_timebank_alert_hint',
       );
 
@@ -3362,7 +3361,7 @@ class S {
       );
 
   String get invite_message => Intl.message(
-        'Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        'Seva Communities are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
         name: 'invite_message',
       );
 
@@ -3412,7 +3411,7 @@ class S {
       );
 
   String get no_image_available => Intl.message(
-        'No Image Available',
+        'No Image Avaialable',
         name: 'no_image_available',
       );
 
@@ -3833,75 +3832,61 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
+        name: 'hour',        
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4037,13 +4022,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4693,7 +4678,7 @@ class S {
       );
 
   String get look_for_existing_siblings => Intl.message(
-        'Feed is visible to following timebanks',
+        'Feed is visible to following Seva Communities',
         name: 'look_for_existing_siblings',
       );
 
@@ -5073,7 +5058,7 @@ class S {
       );
 
   String get exhaust_limit_user_message => Intl.message(
-        'please contact the admin of the Timebank to upgrade your plan',
+        'please contact the admin of the Seva Community to upgrade your plan',
         name: 'exhaust_limit_user_message',
       );
 
@@ -5137,28 +5122,28 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
-        Locale.fromSubtags(languageCode: 'af'),
-        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
-        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
-      ];
+        Locale.fromSubtags(languageCode: 'en'),
+        Locale.fromSubtags(languageCode: 'fr'),
+  ];
 
   @override
   bool isSupported(Locale locale) => [
-        'af',
-        'en',
         'es',
-        'fr',
         'pt',
         'sn',
+        'zh',
+        'zh',
+        'af',
         'sw',
-        'zh',
-        'zh',
+        'en',
+        'fr',
       ].contains(locale.languageCode);
 
   @override
