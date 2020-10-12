@@ -618,12 +618,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
-    'burhan@uipep.com',
-    'user15ec27@gmail.com',
     'adi007footballer@gmail.com',
     'adityatestacc123@gmail.com',
     'adityazzz@yopmail.com',
     'amazinggg@yopmail.com',
+    'sam1@yopmail.com',
+    'sam2@yopmail.com',
+    'sam3@yopmail.com',
+    'burhan@uipep.com',
+    'user15ec27@gmail.com',
   ];
   Widget get directDevLogin {
     return Padding(

@@ -11,6 +11,9 @@ import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
 class IndividualOfferBloc extends BlocBase with Validators {
   bool allowedCalenderEvent = false;
+  bool offerCreatedBool = false;
+  List<String> offerIds = [];
+  OfferModel mainOfferModel;
 
   final _type = BehaviorSubject<RequestType>();
   final _title = BehaviorSubject<String>();
@@ -88,9 +91,12 @@ class IndividualOfferBloc extends BlocBase with Validators {
           type: _type.value,
           cashModel: _cashModel.value,
           goodsDonationDetails: _goodsDonationDetails.value);
+      offerIds.add(offerModel.id);
 
       createOffer(offerModel: offerModel).then((_) {
         _status.add(Status.COMPLETE);
+        mainOfferModel = offerModel;
+        offerCreatedBool = true;
       }).catchError((e) => _status.add(Status.ERROR));
     }
   }

@@ -191,7 +191,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
         title:
             "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
         onConfirmed: () {
-          if (SevaCore.of(context).loggedInUser.calendarId == null) {
+          if (SevaCore.of(context).loggedInUser.calendarId != null) {
             showDialog(
               context: context,
               builder: (_context) {
