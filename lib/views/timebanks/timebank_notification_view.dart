@@ -101,7 +101,6 @@
 //             direction: DismissDirection.endToStart,
 //             key: Key(notificationModel.id),
 //             onDismissed: (DismissDirection direction) {
-//               print('dismissed');
 //             },
 //             background: Container(
 //               padding: EdgeInsets.only(right: 20),

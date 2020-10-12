@@ -72,7 +72,6 @@
 //        .then((QuerySnapshot querySnapshot) {
 //      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
 //        joinRequest = JoinRequestModel.fromMap(documentSnapshot.data);
-//        print("joining data $joinRequest");
 //      });
 //    });
 //
@@ -83,13 +82,11 @@
 //  Widget build(BuildContext buildcontext) {
 //    loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
 ////    this.getJoinRequestData().catchError((error) {
-////      print(error);
 ////    });
 //    return timebankStreamBuilder(buildcontext);
 //  }
 //
 //  void showDeleteConfirmation(TimebankModel model) {
-//    print("${timebankModel.id} -----------------------");
 //    showDialog(
 //      context: context,
 //      builder: (buildContext) {

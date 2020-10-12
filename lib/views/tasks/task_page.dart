@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 
 import '../core.dart';
+import 'my_tasks_list.dart';
 
 class TasksPage extends StatefulWidget {
   _TasksPageState createState() => _TasksPageState();
@@ -28,8 +29,8 @@ class _TasksPageState extends State<TasksPage> {
         body: TabBarView(
           children: [
             MyTaskList(
-              email: SevaCore.of(context).loggedInUser.email,
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            email: SevaCore.of(context).loggedInUser.email,
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
             ),
             CompletedList(),
           ],
