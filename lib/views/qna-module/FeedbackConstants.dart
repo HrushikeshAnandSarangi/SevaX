@@ -122,7 +122,6 @@ class FeedbackConstants {
       ]
     }
   ];
-
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_FR = const [
     {
       FEEDBACK_TITLE: "comment noteriez-vous votre expérience?",
@@ -152,7 +151,6 @@ class FeedbackConstants {
       ]
     }
   ];
-
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN = const [
     {
       FEEDBACK_TITLE: "您如何评价您的经验？",
