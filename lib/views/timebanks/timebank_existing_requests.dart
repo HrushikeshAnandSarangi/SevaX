@@ -319,7 +319,8 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                         model.title,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: Theme.of(widget.parentContext).textTheme.subhead,
+                        style:
+                            Theme.of(widget.parentContext).textTheme.subtitle1,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
@@ -327,8 +328,9 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                           model.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(widget.parentContext).textTheme.subtitle,
+                          style: Theme.of(widget.parentContext)
+                              .textTheme
+                              .subtitle1,
                         ),
                       ),
                       SizedBox(height: 8),
