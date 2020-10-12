@@ -53,8 +53,10 @@ class ReportInfoCard extends StatelessWidget {
                             : timeAgo.format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                   report.timestamp,
-                                ),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                              ),
+                                ),
+                                locale: Locale(AppConfig.prefs
+                                        .getString('language_code'))
+                                    .toLanguageTag()),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -63,7 +65,7 @@ class ReportInfoCard extends StatelessWidget {
                       Offstage(
                         offstage: !isFromTimebank,
                         child: Text(
-                          'Reported within ${report.isTimebankReport ? "Timebank" : "Group : ${report.entityName}"}',
+                          'Reported within ${report.isTimebankReport ? "Seva Community" : "Group : ${report.entityName}"}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.red,

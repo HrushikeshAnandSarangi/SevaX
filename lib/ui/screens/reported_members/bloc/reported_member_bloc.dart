@@ -12,7 +12,7 @@ class ReportedMembersBloc {
 
   void fetchReportedMembers(
       String timebankId, String communityId, bool isFromTimebank) {
-    log("fetching members for timebank $timebankId");
+    log("fetching members for Seva Community $timebankId");
     Query query = isFromTimebank
         ? Firestore.instance.collection("reported_users_list").where(
               "communityId",

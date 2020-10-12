@@ -106,7 +106,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                changeOwnershipModel.timebank ?? "Timebank name not updated",
+                changeOwnershipModel.timebank ??
+                    "${S.of(context).timebank} name not updated",
               ),
             ),
 //              Padding(

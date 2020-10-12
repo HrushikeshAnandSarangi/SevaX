@@ -90,11 +90,11 @@ class GroupRequestCommons {
       case "Others":
         return (FlavorConfig.appFlavor == Flavor.APP ||
                 FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-            ? "Timebank Requests"
-            : "Timebank Requests";
+            ? "Seva Community Requests"
+            : "Seva Community Requests";
 
       default:
-        return "Timebank Requests";
+        return "Seva Community Requests";
     }
   }
 }
