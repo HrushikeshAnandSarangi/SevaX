@@ -183,7 +183,7 @@ Future<List<String>> createRecurringEvents(
       return [];
     }
   } else {
-    log("inside timebank req " + requestModel.requestMode.toString());
+    log("inside Seva Community req " + requestModel.requestMode.toString());
     eventsIdsArr.add(requestModel.id);
     temparr.forEach((tempobj) {
       batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
