@@ -17,7 +17,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "Did you experience any diffculty in completing the task?",
+          "Did you experience any difficulty in completing the task?",
       ANSWERS: [
         {ANSWER_TEXT: "No difficulty", SCORE: 5},
         {ANSWER_TEXT: "Only slightly", SCORE: 4},
@@ -274,7 +274,8 @@ class FeedbackConstants {
   //FEEDBACK_QUESTIONS_FOR_VOLUNTEER
   static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN = const [
     {
-      FEEDBACK_TITLE: "How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely",
+      FEEDBACK_TITLE:
+          "How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -284,7 +285,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "How satisfied are you with the person / service, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
+      FEEDBACK_TITLE:
+          "How satisfied are you with the person / service, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
       ANSWERS: [
         {ANSWER_TEXT: "On time", SCORE: 3},
         {ANSWER_TEXT: "A bit late", SCORE: 4},
@@ -302,7 +304,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-      "How satisfied are you with the ability of the person / service to get the job done, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
+          "How satisfied are you with the ability of the person / service to get the job done, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
       "answers": [
         {ANSWER_TEXT: "Highly skilled", SCORE: 3},
         {ANSWER_TEXT: "Average", SCORE: 3},
