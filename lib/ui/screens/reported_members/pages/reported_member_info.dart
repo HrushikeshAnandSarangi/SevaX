@@ -128,9 +128,9 @@ Map<String, int> countReports(ReportedMembersModel model) {
   Map<String, int> map = {};
   model.reports.forEach((Report report) {
     if (map.containsKey(report.entityName)) {
-      map[report.isTimebankReport ? "Timebank" : report.entityName] += 1;
+      map[report.isTimebankReport ? "Seva Community" : report.entityName] += 1;
     } else {
-      map[report.isTimebankReport ? "Timebank" : report.entityName] = 1;
+      map[report.isTimebankReport ? "Seva Community" : report.entityName] = 1;
     }
   });
   return map;

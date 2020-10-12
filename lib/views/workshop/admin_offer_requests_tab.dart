@@ -54,7 +54,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "Timebank Requests",
+                  text: "Seva Community Requests",
                 ),
                 Tab(
                   text: "Personal Requests",

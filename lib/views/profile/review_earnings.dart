@@ -132,7 +132,7 @@ class _EarningListItemState extends State<EarningListItem> {
             widget.model.type != 'RequestMode.TIMEBANK_REQUEST' &&
             widget.model.from != widget.model.timebankid)
         ? 'user'
-        : 'timebank';
+        : S.of(context).timebank;
     return FutureBuilder(
         future: type == 'user'
             ? FirestoreManager.getUserForId(sevaUserId: widget.model.from)
@@ -178,8 +178,8 @@ class _EarningListItemState extends State<EarningListItem> {
                               ? snapshot.data.fullname + ' - Loan Repayment'
                               : snapshot.data.fullname
                       : widget.model.type == "ADMIN_DONATE_TOUSER"
-                          ? snapshot.data.name + " (Timebank) Loan"
-                          : snapshot.data.name + " (Timebank)",
+                          ? snapshot.data.name + " (Seva Community) Loan"
+                          : snapshot.data.name + " (Seva Community)",
                   timestamp: widget.model.timestamp,
                   usertimezone: widget.usertimezone));
         });

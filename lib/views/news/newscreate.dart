@@ -303,7 +303,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                                   .selectedTimebanks
                                                   .length
                                                   .toString() +
-                                              ' timebanks'
+                                              ' Seva Communities'
                                           : this.widget.timebankModel.name),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,

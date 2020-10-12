@@ -178,7 +178,7 @@ class CreateEditCommunityViewFormState
             if (commFound) {
               setState(() {
                 communityFound = true;
-                errTxt = 'Timebank name already exists';
+                errTxt = 'Seva Community name already exists';
               });
             } else {
               setState(() {

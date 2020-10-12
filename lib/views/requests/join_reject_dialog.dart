@@ -66,7 +66,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.requestInvitationModel.timebankModel.name ??
-                    "Timebank name not updated",
+                    "${S.of(context).timebank} name not updated",
               ),
             ),
 //              Padding(
