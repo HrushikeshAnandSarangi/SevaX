@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-10-12T11:12:47+00:00",
+    "@@last_modified": "2020-10-12T14:17:14+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -344,7 +344,7 @@
     "new_chat": "New Chat",
     "frequently_contacted": "GEREELD KONTAK",
     "groups": "Groups",
-    "timebank_members": "Tydbanklede",
+    "timebank_members": "SEVA GEMEENSKAPSLEDE",
     "add_participants": "Add Participants",
     "participants": "deelnemers",
     "messaging_room": "Messaging Room",

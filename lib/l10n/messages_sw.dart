@@ -932,7 +932,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timebank_logo_error" : MessageLookupByLibrary.simpleMessage("Nembo ya Jumuiya ya Seva ni lazima"),
     "timebank_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage("Mikopo ya Seva itawekwa kwa Jumuiya ya Seva kwa ombi hili. Kumbuka kuwa kila mshiriki atapata kiwango cha juu cha"),
     "timebank_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage("mikopo ya kukamilisha ombi hili."),
-    "timebank_members" : MessageLookupByLibrary.simpleMessage("WANACHAMA WA TIMEBANK"),
+    "timebank_members" : MessageLookupByLibrary.simpleMessage("WANACHAMA WA JUMUIYA YA SEVA"),
     "timebank_name" : MessageLookupByLibrary.simpleMessage("Ipe Jamii yako ya Seva jina"),
     "timebank_name_error" : MessageLookupByLibrary.simpleMessage("Jina la Jumuiya ya Seva haliwezi kuwa tupu"),
     "timebank_name_exists" : MessageLookupByLibrary.simpleMessage("Jina la Jumuiya ya Seva tayari lipo!"),

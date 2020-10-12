@@ -932,7 +932,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timebank_logo_error" : MessageLookupByLibrary.simpleMessage("El logotipo de Seva Community es obligatorio"),
     "timebank_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage("Los Créditos Seva se acreditarán a la Comunidad Seva por esta solicitud. Tenga en cuenta que cada participante recibirá un máximo de"),
     "timebank_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage("créditos por completar esta solicitud"),
-    "timebank_members" : MessageLookupByLibrary.simpleMessage("TimeBank MIEMBROS"),
+    "timebank_members" : MessageLookupByLibrary.simpleMessage("MIEMBROS DE LA COMUNIDAD DE SEVA"),
     "timebank_name" : MessageLookupByLibrary.simpleMessage("Nombra tu comunidad Seva"),
     "timebank_name_error" : MessageLookupByLibrary.simpleMessage("El nombre de la comunidad de Seva no puede estar vacío"),
     "timebank_name_exists" : MessageLookupByLibrary.simpleMessage("¡El nombre de la comunidad de Seva ya existe!"),

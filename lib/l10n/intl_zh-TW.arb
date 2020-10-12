@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-12T11:12:47+00:00",
+    "@@last_modified": "2020-10-12T14:17:13+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -344,7 +344,7 @@
     "new_chat": "新聊天",
     "frequently_contacted": "頻繁接觸",
     "groups": " 團體",
-    "timebank_members": "時間銀行成員",
+    "timebank_members": "SEVA社區成員",
     "add_participants": "添加參與者",
     "participants": "參與者",
     "messaging_room": "多用戶消息傳遞室",
