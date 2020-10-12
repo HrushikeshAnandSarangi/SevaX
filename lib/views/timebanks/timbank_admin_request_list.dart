@@ -1706,7 +1706,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             // return object of type Dialog
             return AlertDialog(
               title: Text(
-                  " ${isFromExit ? "You" : "User"} ${S.of(context).cant_exit_timebank}"),
+                  "${isFromExit ? "You" : "User"} ${S.of(context).cant_exit_timebank}"),
               content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
                   "${responseData['PendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
