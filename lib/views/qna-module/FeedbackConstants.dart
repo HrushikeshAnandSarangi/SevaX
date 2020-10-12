@@ -35,30 +35,30 @@ class FeedbackConstants {
   ];
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_SN = const [
     {
-      FEEDBACK_TITLE: "How would you rate your experience?",
+      FEEDBACK_TITLE: "Iwe ungaera sei chiitiko chako?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
-        {ANSWER_TEXT: "Good", SCORE: 4},
-        {ANSWER_TEXT: "Okay", SCORE: 3},
-        {ANSWER_TEXT: "Not so good", SCORE: 2},
-        {ANSWER_TEXT: "Terrible", SCORE: 1},
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 4},
+        {ANSWER_TEXT: "zvakanaka", SCORE: 3},
+        {ANSWER_TEXT: "Hazvina kunaka", SCORE: 2},
+        {ANSWER_TEXT: "Zvinotyisa", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Wakawana here chero chinetso mukupedzisa iro basa?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Hapana kuoma", SCORE: 5},
+        {ANSWER_TEXT: "Chete zvishoma", SCORE: 4},
+        {ANSWER_TEXT: "Hongu, ndakanga ndine chinetso", SCORE: 3},
       ]
     },
     {
       FEEDBACK_TITLE:
-          "Did you experience any difficulty in completing the task?",
+          "Iwe unogona sei kuzvipira zvakare nekuda kwechikonzero ichi?",
       ANSWERS: [
-        {ANSWER_TEXT: "No difficulty", SCORE: 5},
-        {ANSWER_TEXT: "Only slightly", SCORE: 4},
-        {ANSWER_TEXT: "Yes, I had some difficulty", SCORE: 3},
-      ]
-    },
-    {
-      FEEDBACK_TITLE: "How likely are you to volunteer again for this cause?",
-      ANSWERS: [
-        {"text": "Yes, I would", SCORE: 5},
-        {"text": "Maybe", SCORE: 4},
-        {"text": "No, I would not", SCORE: 3},
+        {"text": "Hongu, ndingadai", SCORE: 5},
+        {"text": "Pamwe", SCORE: 4},
+        {"text": "Kwete, handidi", SCORE: 3},
       ]
     }
   ];
@@ -919,28 +919,28 @@ class FeedbackConstants {
   ];
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN = const [
     {
-      FEEDBACK_TITLE: "What is your overall rating of the class?",
+      FEEDBACK_TITLE: "Ndeipi yako chiyero chekirasi?",
       ANSWERS: [
-        {ANSWER_TEXT: "Excellent", SCORE: 5},
-        {ANSWER_TEXT: "Good", SCORE: 4},
-        {ANSWER_TEXT: "Average", SCORE: 3},
-        {ANSWER_TEXT: "Poor", SCORE: 2},
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
       ]
     },
     {
-      FEEDBACK_TITLE: "What did you think of the content of the class?",
+      FEEDBACK_TITLE: "Iwe wafungei nezve zvirimo mukirasi?",
       ANSWERS: [
-        {ANSWER_TEXT: "Just right", SCORE: 4},
-        {ANSWER_TEXT: "Too light", SCORE: 3},
-        {ANSWER_TEXT: "Too detailed", SCORE: 2},
+        {ANSWER_TEXT: "Ndizvozvo chaizvo", SCORE: 4},
+        {ANSWER_TEXT: "Zvakareruka", SCORE: 3},
+        {ANSWER_TEXT: "Kunyanya kutsanangurwa", SCORE: 2},
       ]
     },
     {
-      FEEDBACK_TITLE: "What did you think of the length of the class?",
+      FEEDBACK_TITLE: "Iwe wafungei nezvehurefu hwekirasi?",
       "answers": [
-        {ANSWER_TEXT: "Just right", SCORE: 4},
-        {ANSWER_TEXT: "Too light", SCORE: 3},
-        {ANSWER_TEXT: "Too detailed", SCORE: 2},
+        {ANSWER_TEXT: "Ndizvozvo chaizvo", SCORE: 4},
+        {ANSWER_TEXT: "Zvakareruka", SCORE: 3},
+        {ANSWER_TEXT: "Kunyanya kutsanangurwa", SCORE: 2},
       ]
     },
   ];
