@@ -1710,8 +1710,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
                   "${responseData['PendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
-                  "${S.of(context).clear_transaction} "),
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n"
+                  "${S.of(context).clear_transaction}"),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
