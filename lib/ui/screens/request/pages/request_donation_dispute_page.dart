@@ -481,7 +481,7 @@ class _CashFlow extends StatelessWidget {
         SizedBox(height: 30),
         Text(
           operatingMode == OperatingMode.CREATOR
-              ? '\$${S.of(context).i_received_amount} ${amount}'
+              ? '${S.of(context).i_received_amount} \$${amount}'
               : S.of(context).i_pledged_amount,
           style: TextStyle(
             color: Colors.grey,
