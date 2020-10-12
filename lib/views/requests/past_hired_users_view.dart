@@ -103,7 +103,6 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           });
 
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
-          //print("length ${userList.length}");
           if (userList.length == 0) {
             return Center(
               child: getEmptyWidget('Users', S.of(context).no_user_found),
@@ -147,10 +146,6 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
     if(favoriteUsers != null){
 
       bool isfavorite =false;
-
-      print(" favorite ids are ${favoriteUsers[0].sevaUserID}");
-
-
 
       return RequestCardWidget(
         userModel: user,

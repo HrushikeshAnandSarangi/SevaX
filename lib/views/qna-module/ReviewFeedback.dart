@@ -71,7 +71,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       deviceModel.osName = androidInfo.brand;
       deviceModel.model = androidInfo.model;
       deviceModel.version = androidInfo.version.release;
-      // print('Android  info ${deviceModel}');
     }
 
     if (Platform.isIOS) {
@@ -80,8 +79,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       deviceModel.version = iosInfo.systemVersion;
       deviceModel.model = iosInfo.utsname.machine;
       deviceModel.osName = iosInfo.systemName;
-      //  print('ios info $deviceModel  name ${iosInfo.name}');
-      // iOS 13.1, iPhone 11 Pro Max iPhone
     }
   }
 

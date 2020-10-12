@@ -84,7 +84,6 @@
 //                    ),
 //                    onTap: () {
 //                      bookMarked = !bookMarked;
-//                      print(bookMarked);
 //                      setState(() {});
 //                    },
 //                  ),

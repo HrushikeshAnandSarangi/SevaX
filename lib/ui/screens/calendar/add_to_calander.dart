@@ -51,7 +51,7 @@ class AddToCalendarState extends State<AddToCalendar> {
             "mobile": true,
             "envName": FlavorConfig.values.envMode,
             "eventsArr": widget.eventsIdsArr,
-            "createType": widget.requestModel!=null ? "REQUEST":"OFFER"
+            "createType": widget.requestModel != null ? "REQUEST" : "OFFER"
         };
         var stateVar = jsonEncode(stateOfcalendarCallback);
         String redirectUrl =
@@ -71,21 +71,12 @@ class AddToCalendarState extends State<AddToCalendar> {
         if (await canLaunch(authorizationUrl.toString())) {
             await launch(authorizationUrl.toString());
         }
-        // setState(() {
-        //   comingFromDynamicLink = true;
-        // });
-
-        // log("after showing modal bottom");
-        // if (eventsIdsArr.length == 0) {
-        //   showInsufficientBalance();
-        // }
 
         if (widget.isOfferRequest == true && widget.userModel != null) {
             Navigator.pop(context, {'response': 'ACCEPTED'});
         } else {
             Navigator.pop(context);
         }
-        // Navigator.of(bc).pop();
     }
 
     Future<void> outlookCalanderIntegration() async {
@@ -115,10 +106,6 @@ class AddToCalendarState extends State<AddToCalendar> {
         if (await canLaunch(authorizationUrl.toString())) {
             await launch(authorizationUrl.toString());
         }
-        // setState(() {
-        //   comingFromDynamicLink = true;
-        // });
-        // Navigator.of(bc).pop();
 
         if (widget.isOfferRequest == true && widget.userModel != null) {
             Navigator.pop(context, {'response': 'ACCEPTED'});
@@ -155,11 +142,6 @@ class AddToCalendarState extends State<AddToCalendar> {
     if (await canLaunch(authorizationUrl.toString())) {
       await launch(authorizationUrl.toString());
     }
-    // setState(() {
-    //   comingFromDynamicLink = true;
-    // });
-    // Navigator.of(bc).pop();
-    // Navigator.of(bc).pop();
 
     if (widget.isOfferRequest == true && widget.userModel != null) {
       Navigator.pop(context, {'response': 'ACCEPTED'});
@@ -199,7 +181,6 @@ class AddToCalendarState extends State<AddToCalendar> {
             margin: EdgeInsets.only(top: 50),
             child: SingleChildScrollView(
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   getCalander(
                     icon: CircleAvatar(
