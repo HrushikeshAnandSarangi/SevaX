@@ -1285,7 +1285,6 @@ class CreateEditCommunityViewFormState
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 3, value);
 
-            // print(controller.community.billing_address);
             controller.community.billing_address
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);

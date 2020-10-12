@@ -5,6 +5,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -375,43 +376,36 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     return;
                                   }
                                   if (widget.offerModel == null) {
-                                    if (SevaCore.of(context)
-                                            .loggedInUser
-                                            .calendarId !=
-                                        null) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_context) {
-                                          return CalenderEventConfirmationDialog(
-                                            title: title,
-                                            isrequest: false,
-                                            cancelled: () async {
-                                              _bloc.createOrUpdateOffer(
-                                                user: SevaCore.of(context)
-                                                    .loggedInUser,
-                                                timebankId: widget.timebankId,
-                                              );
-                                              Navigator.of(_context).pop();
-                                            },
-                                            addToCalender: () async {
-                                              _bloc.allowedCalenderEvent = true;
-
-                                              _bloc.createOrUpdateOffer(
-                                                user: SevaCore.of(context)
-                                                    .loggedInUser,
-                                                timebankId: widget.timebankId,
-                                              );
-                                              Navigator.of(_context).pop();
-                                            },
+                                      if (SevaCore.of(context).loggedInUser.calendarId != null) {
+                                          _bloc.allowedCalenderEvent = true;
+                                          await _bloc.createOrUpdateOffer(
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                              timebankId: widget.timebankId,
                                           );
-                                        },
-                                      );
-                                    } else {
-                                      _bloc.createOrUpdateOffer(
-                                        user: SevaCore.of(context).loggedInUser,
-                                        timebankId: widget.timebankId,
-                                      );
-                                    }
+                                      } else {
+                                          _bloc.allowedCalenderEvent = true;
+                                          await _bloc.createOrUpdateOffer(
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                              timebankId: widget.timebankId,
+                                          );
+                                          if(_bloc.offerCreatedBool){
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                          return AddToCalendar(
+                                                              isOfferRequest: null,
+                                                              offer: _bloc.mainOfferModel,
+                                                              requestModel: null,
+                                                              userModel: null,
+                                                              eventsIdsArr: _bloc.offerIds);
+                                                      },
+                                                  ),
+                                              );
+                                          }
+                                      }
                                   } else {
                                     _bloc.updateIndividualOffer(
                                       widget.offerModel,

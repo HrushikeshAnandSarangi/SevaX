@@ -501,6 +501,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId);
+
       if (_bloc.offerCreatedBool){
           Navigator.pushReplacement(
               context,
@@ -508,7 +509,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                   builder: (context) {
                       return AddToCalendar(
                           isOfferRequest: null,
-                          offer: null,
+                          offer: _bloc.mainOfferModel,
                           requestModel: null,
                           userModel: null,
                           eventsIdsArr: _bloc.offerIds);

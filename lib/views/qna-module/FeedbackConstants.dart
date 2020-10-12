@@ -33,6 +33,95 @@ class FeedbackConstants {
       ]
     }
   ];
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_SN = const [
+    {
+      FEEDBACK_TITLE: "Iwe ungaera sei chiitiko chako?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 4},
+        {ANSWER_TEXT: "zvakanaka", SCORE: 3},
+        {ANSWER_TEXT: "Hazvina kunaka", SCORE: 2},
+        {ANSWER_TEXT: "Zvinotyisa", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Wakawana here chero chinetso mukupedzisa iro basa?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Hapana kuoma", SCORE: 5},
+        {ANSWER_TEXT: "Chete zvishoma", SCORE: 4},
+        {ANSWER_TEXT: "Hongu, ndakanga ndine chinetso", SCORE: 3},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Iwe unogona sei kuzvipira zvakare nekuda kwechikonzero ichi?",
+      ANSWERS: [
+        {"text": "Hongu, ndingadai", SCORE: 5},
+        {"text": "Pamwe", SCORE: 4},
+        {"text": "Kwete, handidi", SCORE: 3},
+      ]
+    }
+  ];
+
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_SW = const [
+    {
+      FEEDBACK_TITLE: "Unawezaje kadiria uzoefu wako?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "nzuri", SCORE: 4},
+        {ANSWER_TEXT: "sawa", SCORE: 3},
+        {ANSWER_TEXT: "Sio nzuri sana", SCORE: 2},
+        {ANSWER_TEXT: "kutisha", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Het jy enige probleme ondervind in die voltooiing van die taak?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Hakuna shida", SCORE: 5},
+        {ANSWER_TEXT: "kidogo tu", SCORE: 4},
+        {ANSWER_TEXT: "Ndiyo, nilikuwa na shida fulani", SCORE: 3},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Unawezaje kujitolea tena kwa sababu hii?",
+      ANSWERS: [
+        {"text": "Ndiyo, ningependa", SCORE: 5},
+        {"text": "Labda", SCORE: 4},
+        {"text": "Hapana, nisingependa", SCORE: 3},
+      ]
+    }
+  ];
+
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_AF = const [
+    {
+      FEEDBACK_TITLE: "Hoe sal jy jou ervaring beoordeel?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "goeie", SCORE: 4},
+        {ANSWER_TEXT: "ok", SCORE: 3},
+        {ANSWER_TEXT: "nie so goed nie", SCORE: 2},
+        {ANSWER_TEXT: "verskriklik", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Je, ulipata shida yoyote katika kukamilisha kazi?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Geen probleme", SCORE: 5},
+        {ANSWER_TEXT: "Net effens", SCORE: 4},
+        {ANSWER_TEXT: "Ja, ek het 'n paar probleme", SCORE: 3},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Hoe waarskynlik moet jy weer vrywillig wees vir hierdie saak?",
+      ANSWERS: [
+        {"text": "Ja, ek sou", SCORE: 5},
+        {"text": "Miskien", SCORE: 4},
+        {"text": "Nee, ek wou nie", SCORE: 3},
+      ]
+    }
+  ];
 
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_FR = const [
     {
@@ -275,6 +364,47 @@ class FeedbackConstants {
   static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN = const [
     {
       FEEDBACK_TITLE:
+          "How likely are you to recommend this person/service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 6},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Okay", SCORE: 3},
+        {ANSWER_TEXT: "Not so good", SCORE: 2},
+        {ANSWER_TEXT: "Terrible", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "How satisfied are you with the person/service, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
+      ANSWERS: [
+        {ANSWER_TEXT: "On time", SCORE: 3},
+        {ANSWER_TEXT: "A bit late", SCORE: 4},
+        {ANSWER_TEXT: "Kept me waiting", SCORE: 3},
+        {ANSWER_TEXT: "Didn't show up", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "How easy was it for you to get the job done, on a scale between 0-10 where 0 = Not at all Easy and 10 = Extremely Easy",
+      "answers": [
+        {ANSWER_TEXT: "Yes, I would", SCORE: 3},
+        {ANSWER_TEXT: "No, i would not", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "How satisfied are you with the ability of the person/service to get the job done, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied",
+      "answers": [
+        {ANSWER_TEXT: "Highly skilled", SCORE: 3},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
+      ]
+    }
+  ];
+  //FEEDBACK_QUESTIONS_FOR_VOLUNTEER
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_SN = const [
+    {
+      FEEDBACK_TITLE:
           "How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
@@ -309,6 +439,89 @@ class FeedbackConstants {
         {ANSWER_TEXT: "Highly skilled", SCORE: 3},
         {ANSWER_TEXT: "Average", SCORE: 3},
         {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
+      ]
+    }
+  ];
+  //FEEDBACK_QUESTIONS_FOR_VOLUNTEER
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_AF = const [
+    {
+      FEEDBACK_TITLE:
+          "Hoe waarskynlik is jy hierdie persoon / diens aan 'n vriend aanbeveel, op 'n skaal tussen 0-10 waar 0 = Glad nie waarskynlik en 10 = Uiters waarskynlik",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 6},
+        {ANSWER_TEXT: "goeie", SCORE: 4},
+        {ANSWER_TEXT: "ok", SCORE: 3},
+        {ANSWER_TEXT: "nie so goed nie", SCORE: 2},
+        {ANSWER_TEXT: "verskriklik", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Hoe tevrede is jy met die persoon / diens, op 'n skaal tussen 0-10 waar 0 = Glad nie tevrede en 10 = Uiters tevrede",
+      ANSWERS: [
+        {ANSWER_TEXT: "Op tyd", SCORE: 3},
+        {ANSWER_TEXT: "'n bietjie laa", SCORE: 4},
+        {ANSWER_TEXT: "Hou my wag", SCORE: 3},
+        {ANSWER_TEXT: "Het nie opgedaag", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Hoe maklik was dit vir jou om die werk te doen, op 'n skaal tussen 0-10 waar 0 = Glad nie maklik en 10 = Uiters maklik",
+      "answers": [
+        {ANSWER_TEXT: "Ja, ek sou,", SCORE: 3},
+        {ANSWER_TEXT: "nee, ek sou nie", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Hoe tevrede is jy met die vermoë van die persoon / diens om die werk te doen, op 'n skaal tussen 0-10 waar 0 = Glad nie tevrede en 10 = Uiters tevrede",
+      "answers": [
+        {ANSWER_TEXT: "Hoogs geskoolde", SCORE: 3},
+        {ANSWER_TEXT: "gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "glad nie vaardig nie", SCORE: 1},
+      ]
+    }
+  ];
+
+  //FEEDBACK_QUESTIONS_FOR_VOLUNTEER
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_SW = const [
+    {
+      FEEDBACK_TITLE:
+          "How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "nzuri", SCORE: 4},
+        {ANSWER_TEXT: "sawa", SCORE: 3},
+        {ANSWER_TEXT: "Sio nzuri sana", SCORE: 2},
+        {ANSWER_TEXT: "kutisha", SCORE: 1},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Jinsi ya kuridhika wewe na mtu / huduma, kwa kiwango kati ya 0-10 ambapo 0 = Si kabisa kuridhika na 10 = Kuridhika sana",
+      ANSWERS: [
+        {ANSWER_TEXT: "Kwa wakati", SCORE: 3},
+        {ANSWER_TEXT: "kuchelewa kidogo", SCORE: 4},
+        {ANSWER_TEXT: "Niliendelea kusubiri", SCORE: 3},
+        {ANSWER_TEXT: "Haikujitokeza", SCORE: 2}
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Ilikuwa rahisi kiasi gani kwako kupata kazi kufanyika, kwa kiwango kati ya 0-10 ambapo 0 = Sio rahisi kabisa na 10 = Rahisi Sana",
+      "answers": [
+        {ANSWER_TEXT: "Ndiyo, ningependa", SCORE: 3},
+        {ANSWER_TEXT: "Hapana, nisingependa", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "Jinsi kuridhika ni wewe na uwezo wa mtu / huduma ya kupata kazi kufanyika, kwa kiwango kati ya 0-10 ambapo 0 = Si kabisa kuridhika na 10 = Kuridhika sana",
+      "answers": [
+        {ANSWER_TEXT: "Wenye ujuzi mkubwa", SCORE: 3},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Sio wenye ujuzi kabisa", SCORE: 1},
       ]
     }
   ];
@@ -650,7 +863,87 @@ class FeedbackConstants {
       ]
     },
   ];
-
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF = const [
+    {
+      FEEDBACK_TITLE: "Wat is jou algehele gradering van die klas?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Uitstekende", SCORE: 5},
+        {ANSWER_TEXT: "Goeie", SCORE: 4},
+        {ANSWER_TEXT: "Gemiddelde", SCORE: 3},
+        {ANSWER_TEXT: "Swak", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Wat het jy gedink aan die inhoud van die klas?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Net reg", SCORE: 4},
+        {ANSWER_TEXT: "te lig", SCORE: 3},
+        {ANSWER_TEXT: "te gedetailleerde", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Wat het jy gedink aan die lengte van die klas?",
+      "answers": [
+        {ANSWER_TEXT: "Net reg", SCORE: 4},
+        {ANSWER_TEXT: "te lig", SCORE: 3},
+        {ANSWER_TEXT: "te gedetailleerde", SCORE: 2},
+      ]
+    },
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SW = const [
+    {
+      FEEDBACK_TITLE: "Je, kadirio lako la jumla la darasa ni lipi?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Bora", SCORE: 5},
+        {ANSWER_TEXT: "Nzuri", SCORE: 4},
+        {ANSWER_TEXT: "Wastani", SCORE: 3},
+        {ANSWER_TEXT: "Maskini", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ulifikiria nini kuhusu maudhui ya darasa?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Haki tu", SCORE: 4},
+        {ANSWER_TEXT: "mwanga mno", SCORE: 3},
+        {ANSWER_TEXT: "maelezo sana", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Ulifikiria nini kuhusu urefu wa darasa?",
+      "answers": [
+        {ANSWER_TEXT: "Haki tu", SCORE: 4},
+        {ANSWER_TEXT: "mwanga mno", SCORE: 3},
+        {ANSWER_TEXT: "maelezo sana", SCORE: 2},
+      ]
+    },
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN = const [
+    {
+      FEEDBACK_TITLE: "Ndeipi yako chiyero chekirasi?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Zvakanaka", SCORE: 5},
+        {ANSWER_TEXT: "Kugona", SCORE: 4},
+        {ANSWER_TEXT: "Avhareji", SCORE: 3},
+        {ANSWER_TEXT: "Varombo", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Iwe wafungei nezve zvirimo mukirasi?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Ndizvozvo chaizvo", SCORE: 4},
+        {ANSWER_TEXT: "Zvakareruka", SCORE: 3},
+        {ANSWER_TEXT: "Kunyanya kutsanangurwa", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Iwe wafungei nezvehurefu hwekirasi?",
+      "answers": [
+        {ANSWER_TEXT: "Ndizvozvo chaizvo", SCORE: 4},
+        {ANSWER_TEXT: "Zvakareruka", SCORE: 3},
+        {ANSWER_TEXT: "Kunyanya kutsanangurwa", SCORE: 2},
+      ]
+    },
+  ];
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR = const [
     {
       FEEDBACK_TITLE: "Quelle est votre note globale de la classe?",

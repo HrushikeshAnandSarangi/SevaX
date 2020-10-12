@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -188,6 +189,20 @@ class OfferListItems extends StatelessWidget {
         }
       },
     );
+  }
+
+  void navigateToDonations(context, OfferModel offerModel) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DonationView(
+                  offerModel: offerModel,
+                  timabankName: '',
+                  requestModel: null,
+                  notificationId: null,
+              ),
+          ),
+      );
   }
 
   void _settingModalBottomSheet(context, OfferModel model) {

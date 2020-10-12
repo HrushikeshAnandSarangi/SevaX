@@ -19,6 +19,7 @@ class OneToManyOfferBloc extends BlocBase {
   int occurenceCount;
   End end;
   String parent_offer_id;
+  OfferModel mainOfferModel = null;
   List<String> offerIds = [];
 
   final _title = BehaviorSubject<String>();
@@ -111,6 +112,7 @@ class OneToManyOfferBloc extends BlocBase {
             });
           }
           offerCreatedBool = true;
+          mainOfferModel = offerModel;
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));
       } else {

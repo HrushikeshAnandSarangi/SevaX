@@ -546,8 +546,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //       ).then((dataModel) {
               //         if (dataModel != null) {
               //           location = dataModel.geoPoint;
-              //           print(
-              //               "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
               //           setState(() {
               //             this.selectedAddress = dataModel.location;
               //           });
