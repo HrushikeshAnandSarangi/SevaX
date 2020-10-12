@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-10-09T16:05:59+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -141,7 +141,7 @@
     "general_stream_error": "Something went wrong, please try again",
     "no_pending_task": "No pending tasks",
     "from": "From:",
-    "until": " until ",
+    "until": "Until",
     "posted_by": "Posted By:",
     "posted_date": "PostDate:",
     "enter_hours": "Enter hours",
@@ -540,7 +540,7 @@
     "large_file_size": "Large file alert",
     "update_feed": "Update post",
     "updating_feed": "Updating post",
-    "notification_alerts": "Notification alerts",
+    "notification_alerts": "Notifications Alerts",
     "request_accepted": "Member has accepted a request and is waiting for approval",
     "request_completed": "Member claims time credits and is waiting for approval",
     "join_request_message": "Member request to join a ",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Canceled subscription",
     "subscription_cancellation": "Subscription cancelation",
     "cancellation_failure_message": "We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again",
-    "cancellation_success_message": "We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged"
+    "cancellation_success_message": "We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Already exists",
+    "add_to_request": "Add To Request?",
+    "are_you_sure": "Are you sure want to",
+    "already_added": "already added to this request",
+    "offer_updated": "Offer Updated",
+    "clear_notications": "Are you sure you want to clear all notifications?"
 }

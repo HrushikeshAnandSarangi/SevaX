@@ -92,7 +92,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
+                        child: Center(child: Text(S.of(context).no_requests)),
                       );
                     }
                     var consolidatedList =
@@ -218,13 +218,13 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                 builder: (BuildContext viewContextS) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text('Already Exists!'),
+                    title: Text(S.of(context).already_exists),
                     content: Text(
-                        '${widget.userModel.fullname} already added to this request'),
+                        '${widget.userModel.fullname} ${S.of(context).already_added}'),
                     actions: <Widget>[
                       FlatButton(
                         child: Text(
-                          'OK',
+                          S.of(context).ok,
                           style: TextStyle(
                             fontSize: dialogButtonSize,
                           ),
@@ -243,16 +243,16 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                 builder: (BuildContext viewContext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text('Add To Request?'),
+                    title: Text(S.of(context).add_to_request),
                     content: Text(
-                        'Are you sure want to ${widget.userModel.fullname} add to request?'),
+                        '${S.of(context).are_you_sure} ${widget.userModel.fullname} ${S.of(context).add_to_request}'),
                     actions: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                         color: Theme.of(context).accentColor,
                         textColor: FlavorConfig.values.buttonTextColor,
                         child: Text(
-                          'Add',
+                          S.of(context).add,
                           style: TextStyle(
                             fontSize: dialogButtonSize,
                           ),
@@ -278,7 +278,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                       ),
                       FlatButton(
                         child: Text(
-                          'Cancel',
+                          S.of(context).cancel,
                           style: TextStyle(color: Colors.red),
                         ),
                         onPressed: () {
@@ -369,7 +369,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      'Applied',
+                                      S.of(context).applied,
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),

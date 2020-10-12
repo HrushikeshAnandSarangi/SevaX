@@ -726,7 +726,7 @@ class S {
       );
 
   String get until => Intl.message(
-        ' until ',
+        'Until',
         name: 'until',
       );
 
@@ -2721,7 +2721,7 @@ class S {
       );
 
   String get notification_alerts => Intl.message(
-        'Notification alerts',
+        'Notifications Alerts',
         name: 'notification_alerts',
       );
 
@@ -5115,6 +5115,41 @@ class S {
   String get cancellation_success_message => Intl.message(
         'We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged',
         name: 'cancellation_success_message',
+      );
+
+  String get request_paymenttype_venmo => Intl.message(
+        'Venmo',
+        name: 'request_paymenttype_venmo',
+      );
+
+  String get already_exists => Intl.message(
+        'Already exists',
+        name: 'already_exists',
+      );
+
+  String get add_to_request => Intl.message(
+        'Add To Request?',
+        name: 'add_to_request',
+      );
+
+  String get are_you_sure => Intl.message(
+        'Are you sure want to',
+        name: 'are_you_sure',
+      );
+
+  String get already_added => Intl.message(
+        'already added to this request',
+        name: 'already_added',
+      );
+
+  String get offer_updated => Intl.message(
+        'Offer Updated',
+        name: 'offer_updated',
+      );
+
+  String get clear_notications => Intl.message(
+        'Are you sure you want to clear all notifications?',
+        name: 'clear_notications',
       );
 }
 

@@ -147,7 +147,7 @@ class PersonalNotificationReducerForRequests {
           photoUrl: user.photoURL,
           title: S.of(context).notifications_debited,
           subTitle:
-              "${model.credits} Seva Credits ${S.of(context).notifications_debited_to} ",
+              "${model.credits} ${S.of(context).seva_credits} ${S.of(context).notifications_debited_to} ",
         );
       },
     );
@@ -218,7 +218,7 @@ class PersonalNotificationReducerForRequests {
           photoUrl: user.photoURL,
           title: S.of(context).notifications_credited,
           subTitle:
-              ' ${S.of(context).congrats}! ${model.credits} Seva Credits ${S.of(context).notifications_credited_to}. ',
+              ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).seva_credits} ${S.of(context).notifications_credited_to}. ',
         );
       },
     );
@@ -287,7 +287,7 @@ class PersonalNotificationReducerForRequests {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr":[]
+      "eventsArr": []
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
@@ -647,7 +647,7 @@ class PersonalNotificationReducerForRequests {
         ReccuringOfferUpdated.fromMap(notification.data);
     return NotificationCard(
       timestamp: notification.timestamp,
-      title: "Offer Updated",
+      title: S.of(context).offer_updated,
       subTitle:
           "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
               .replaceFirst('***eventName', eventData.eventName)
@@ -656,7 +656,7 @@ class PersonalNotificationReducerForRequests {
                   DateTime.fromMillisecondsSinceEpoch(
                     eventData.eventDate,
                   ).toString()),
-      entityName: "Request Updated",
+      entityName: S.of(context).request_updated,
       photoUrl: eventData.photoUrl,
       onDismissed: () {
         onDismissed(

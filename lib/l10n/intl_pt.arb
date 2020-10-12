@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-10-09T16:05:59+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -141,7 +141,7 @@
     "general_stream_error": "Alguma coisa deu errado. Por favor tente outra vez",
     "no_pending_task": "Nenhuma tarefa pendente",
     "from": "De:",
-    "until": " até ",
+    "until": "Até",
     "posted_by": "Postado por:",
     "posted_date": "Data de postagem:",
     "enter_hours": "Digite as horas",
@@ -540,7 +540,7 @@
     "large_file_size": "Alerta de arquivo grande",
     "update_feed": "Atualizar publicação",
     "updating_feed": "Atualizando publicação",
-    "notification_alerts": "Alertas de notificação",
+    "notification_alerts": "Alertas de notificações",
     "request_accepted": "O membro aceitou uma solicitação e está aguardando aprovação",
     "request_completed": "O membro reivindica créditos de tempo e aguarda aprovação",
     "join_request_message": "Solicitação de membro para ingressar em",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Assinatura cancelada",
     "subscription_cancellation": "Cancelamento de assinatura",
     "cancellation_failure_message": "Recebemos um pedido de cancelamento de sua assinatura. Lamentamos ver sua saída, mas há dívidas não pagas no momento. Limpe essas taxas e tente o cancelamento novamente",
-    "cancellation_success_message": "Lamentamos ver você partir. Sua assinatura foi cancelada. A partir da conclusão do período de assinatura atual, seu cartão de crédito não será cobrado"
+    "cancellation_success_message": "Lamentamos ver você partir. Sua assinatura foi cancelada. A partir da conclusão do período de assinatura atual, seu cartão de crédito não será cobrado",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Já existe",
+    "add_to_request": "Adicionar ao pedido?",
+    "are_you_sure": "Você tem certeza que quer",
+    "already_added": "já adicionado a este pedido",
+    "offer_updated": "Oferta atualizada",
+    "clear_notications": "Tem certeza de que deseja limpar todas as notificações?"
 }

@@ -35,7 +35,7 @@ class FlavorValues {
     this.offertitle = 'Offer',
     this.theme,
     this.buttonTextColor = Colors.white,
-    this.timebankTitle = 'Timebank',
+    this.timebankTitle = 'Seva Community',
     @required this.cloudFunctionBaseURL,
     @required this.elasticSearchBaseURL,
     @required this.stripePublishableKey,

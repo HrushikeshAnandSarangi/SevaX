@@ -212,9 +212,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 builder: (BuildContext viewContextS) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text('Already Exists!'),
+                    title: Text(S.of(context).already_exists),
                     content: Text(
-                        '${widget.userModel.fullname} already added to this request'),
+                        '${widget.userModel.fullname} ${S.of(context).already_added}'),
                     actions: <Widget>[
                       FlatButton(
                         child: Text(
@@ -237,9 +237,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 builder: (BuildContext viewContext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text('Add To Request?'),
+                    title: Text(S.of(context).add_to_request),
                     content: Text(
-                        'Are you sure want to add ${widget.userModel.fullname} to request?'),
+                        '${S.of(context).are_you_sure}  ${widget.userModel.fullname} ${S.of(context).add_to_request}'),
                     actions: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),

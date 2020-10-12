@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-10-09T16:05:59+00:00",
+    "@@last_modified": "2020-10-12T11:12:47+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -141,7 +141,7 @@
     "general_stream_error": "Une erreur s'est produite. Veuillez réessayer",
     "no_pending_task": "Aucune tâche en attente",
     "from": "De:",
-    "until": "jusqu'à ce que",
+    "until": "Jusqu'à ce que",
     "posted_by": "Posté par:",
     "posted_date": "Postdater:",
     "enter_hours": "Entrez les heures",
@@ -540,7 +540,7 @@
     "large_file_size": "Alerte fichier volumineux",
     "update_feed": "Mettre à jour le message",
     "updating_feed": "Mise à jour du message",
-    "notification_alerts": "Alertes de notification",
+    "notification_alerts": "Alertes de notifications",
     "request_accepted": "Le membre a accepté une demande et attend l'approbation",
     "request_completed": "Le membre réclame des crédits de temps et attend l'approbation",
     "join_request_message": "Demande d'un membre pour rejoindre un",
@@ -1016,5 +1016,12 @@
     "cancelled_subscription": "Abonnement annulé",
     "subscription_cancellation": "Annulation d'abonnement",
     "cancellation_failure_message": "Nous avons reçu une demande d'annulation de votre abonnement. Nous sommes désolés de vous voir partir, mais il y a des cotisations impayées en ce moment. Veuillez effacer ces frais et tenter à nouveau l'annulation",
-    "cancellation_success_message": "Nous sommes navrés de vous voir partir. Votre abonnement est maintenant annulé. À compter de la fin de la période d'abonnement en cours, votre carte de crédit ne sera pas débitée"
+    "cancellation_success_message": "Nous sommes navrés de vous voir partir. Votre abonnement est maintenant annulé. À compter de la fin de la période d'abonnement en cours, votre carte de crédit ne sera pas débitée",
+    "request_paymenttype_venmo": "Venmo",
+    "already_exists": "Existe déjà",
+    "add_to_request": "Ajouter à la demande?",
+    "are_you_sure": "Etes-vous sûr de vouloir",
+    "already_added": "déjà ajouté à cette demande",
+    "offer_updated": "Offre mise à jour",
+    "clear_notications": "Voulez-vous vraiment effacer toutes les notifications?"
 }
