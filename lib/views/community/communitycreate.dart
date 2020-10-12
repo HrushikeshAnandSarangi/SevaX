@@ -908,8 +908,13 @@ class CreateEditCommunityViewFormState
                                         globals.timebankAvatarURL;
                                   }
 
+                                  timebankModel.name =
+                                      searchTextController.text;
+                                  communityModel.name =
+                                      searchTextController.text;
+
                                   timebankModel.location = location;
-                                  ;
+
                                   timebankModel.address = selectedAddress;
 
                                   if (selectedUsers != null) {
