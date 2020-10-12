@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-10-12T11:12:47+00:00",
+    "@@last_modified": "2020-10-12T14:17:13+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -344,7 +344,7 @@
     "new_chat": "Nueva conversación",
     "frequently_contacted": "contactados frecuentemente",
     "groups": "GRUPOS",
-    "timebank_members": "TimeBank MIEMBROS",
+    "timebank_members": "MIEMBROS DE LA COMUNIDAD DE SEVA",
     "add_participants": "Añadir participantes",
     "participants": "Participantes",
     "messaging_room": "Sala de mensajería multi-usuario",

@@ -932,7 +932,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "timebank_logo_error" : MessageLookupByLibrary.simpleMessage("必須使用Seva Community標誌"),
     "timebank_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage("Seva積分將根據此請求計入Seva社區。請注意，每個參與者最多將獲得"),
     "timebank_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage("學分，以完成此請求。"),
-    "timebank_members" : MessageLookupByLibrary.simpleMessage("時間銀行成員"),
+    "timebank_members" : MessageLookupByLibrary.simpleMessage("SEVA社區成員"),
     "timebank_name" : MessageLookupByLibrary.simpleMessage("為您的Seva社區命名"),
     "timebank_name_error" : MessageLookupByLibrary.simpleMessage("Seva社區名稱不能為空"),
     "timebank_name_exists" : MessageLookupByLibrary.simpleMessage("Seva社區名稱已存在！"),
