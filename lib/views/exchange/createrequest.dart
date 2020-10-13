@@ -1102,6 +1102,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           TextFormField(
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getCashDonationAmount(
+                    offerDataModel: widget.offer,
+                  )
+                : "",
             focusNode: focusNodes[5],
             onFieldSubmitted: (v) {
               FocusScope.of(context).unfocus();

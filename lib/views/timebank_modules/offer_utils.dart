@@ -16,8 +16,10 @@ import '../../flavor_config.dart';
 import '../core.dart';
 
 String getCashDonationAmount({OfferModel offerDataModel}) {
-  
-
+  String TAGET_NOT_DEFINED = '';
+  return offerDataModel.type == RequestType.CASH
+      ? offerDataModel.cashModel.targetAmount.toString()
+      : TAGET_NOT_DEFINED;
 }
 
 String getOfferTitle({OfferModel offerDataModel}) {
