@@ -881,9 +881,9 @@ class _RegisterPageState extends State<RegisterPage>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            horizontalLine(),
+            Expanded(child: horizontalLine()),
             Text(S.of(context).or),
-            horizontalLine()
+            Expanded(child: horizontalLine()),
           ],
         ),
         SizedBox(
