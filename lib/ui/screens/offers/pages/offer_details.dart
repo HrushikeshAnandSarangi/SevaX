@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
@@ -485,17 +486,25 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(userId);
-                          if (offerModel.type == RequestType.CASH &&
-                              !isAccepted) {
-                            navigateToDonations(context, offerModel);
-                          } else if (offerModel.type == RequestType.GOODS &&
-                              !isAccepted) {
-                            navigateToDonations(context, offerModel);
+                          bool isAccepted =
+                              getOfferParticipants(offerDataModel: offerModel)
+                                  .contains(userId);
+
+                          if (offerModel.type == RequestType.CASH ||
+                              offerModel.type == RequestType.GOODS &&
+                                  !isAccepted) {
+                            navigateToCreateRequestFromOffer(
+                              context,
+                              offerModel,
+                            );
                           } else {
                             if (SevaCore.of(context).loggedInUser.calendarId ==
-                                null && !isAccepted) {
-                              _settingModalBottomSheet(context, offerModel);
+                                    null &&
+                                !isAccepted) {
+                              _settingModalBottomSheet(
+                                context,
+                                offerModel,
+                              );
                             } else {
                               offerActions(context, offerModel)
                                   .then((_) => Navigator.of(context).pop());
@@ -511,15 +520,17 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
-  void navigateToDonations(context, OfferModel offerModel) {
+  void navigateToCreateRequestFromOffer(context, OfferModel offerModel) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DonationView(
-          offerModel: offerModel,
-          timabankName: '',
-          requestModel: null,
-          notificationId: null,
+        builder: (context) => CreateRequest(
+          isOfferRequest: true,
+          offer: offerModel,
+          projectId: null,
+          projectModel: null,
+          timebankId: offerModel.timebankId,
+          userModel: SevaCore.of(context).loggedInUser,
         ),
       ),
     );
