@@ -203,8 +203,7 @@ class _RequestDonationDisputePageState
                           // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
                           _bloc
                               .validateAmount(
-                            minmumAmount: amount,
-                          )
+                                  minmumAmount: widget.model.minimumAmount ?? 0)
                               .then((value) {
                             if (value) {
                               FocusScope.of(context).unfocus();
