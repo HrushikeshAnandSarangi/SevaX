@@ -849,6 +849,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
+      handlePlatformException(error);
       Crashlytics.instance.log(error.toString());
     }
     isLoading = false;
