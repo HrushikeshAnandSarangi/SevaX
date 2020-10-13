@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -24,10 +25,12 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -439,6 +442,27 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 );
               });
         });
+  }
+
+  void function(OfferModel offerModel) {
+    switch (offerModel.type) {
+      case RequestType.CASH:
+        //radio button cash
+        //prefrill offer title, offer description, pleged amount,
+
+        // TODO: Handle this case.
+        break;
+
+      case RequestType.TIME:
+        // TODO: Handle this case.
+        break;
+      case RequestType.GOODS:
+        //radio button goods
+        //prefrill offer title, offer description, pleged amount,
+
+        // TODO: Handle this case.
+        break;
+    }
   }
 
   Widget RequestGoodsDescriptionData() {
@@ -1358,6 +1382,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         List<String> approvedUsers = [];
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
+        //create an invitation for the request
+
       }
 
       if (requestModel.isRecurring) {
@@ -1804,6 +1830,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
+      //create invitation if its from offer only for cash and goods
+
+
+      await handleInvitationNotification();
+
       resultVar.add(requestModel.id);
       return resultVar;
     } else {
@@ -1811,6 +1842,64 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel: requestModel);
       return resultVar;
     }
+  }
+
+  Future<bool> createNotificaitonForInvitee(
+    RequestModel requestModel,
+    OfferModel offerModel,
+    TimebankModel timebankModel,
+  ) async {
+    //add to invited members
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.updateData(
+        Firestore.instance.collection('requests').document(requestModel.id), {
+      'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
+    });
+
+    NotificationsModel invitationNotification = getNotificationForInvitation(
+      currentCommunity: widget.userModel.currentCommunity,
+      inviteeSevaUserId: offerModel.sevaUserId,
+      requestModel: requestModel,
+      timebankModel: timebankModel,
+      senderSevaUserID: widget.userModel.sevaUserID,
+    );
+    batchWrite.setData(
+      Firestore.instance
+          .collection('users')
+          .document(offerModel.email)
+          .collection('notifications')
+          .document(invitationNotification.id),
+      invitationNotification.toMap(),
+    );
+
+
+    return  await  batchWrite.commit().then((value) => true).catchError((onError) => false);
+  }
+
+
+
+
+
+  NotificationsModel getNotificationForInvitation({
+    String inviteeSevaUserId,
+    RequestModel requestModel,
+    String currentCommunity,
+    String senderSevaUserID,
+    TimebankModel timebankModel,
+  }) {
+    return NotificationsModel(
+      id: utils.Utils.getUuid(),
+      timebankId: FlavorConfig.values.timebankId,
+      data: RequestInvitationModel(
+        requestModel: requestModel,
+        timebankModel: timebankModel,
+      ).toMap(),
+      isRead: false,
+      type: NotificationType.RequestInvite,
+      communityId: currentCommunity,
+      senderUserId: senderSevaUserID,
+      targetUserId: inviteeSevaUserId,
+    );
   }
 
   Future _updateProjectModel() async {
@@ -1877,7 +1966,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
           );
         });
   }
+
+  void handleInvitationNotification({OfferModel offerModel}) {
+  switch (offerModel.type) {
+    case RequestType.CASH:
+    case RequestType.GOODS:
+
+      // await createNotificaitonForInvitee;(
+      //    
+      // )  
+      break;
+
+    case RequestType.TIME:
+    break;
+  }
 }
+}
+
+
 
 Widget TotalCredits({
   BuildContext context,

@@ -592,23 +592,6 @@ class PersonalNotificationReducerForRequests {
             timabankName: requestInvitationModel.timebankModel.name,
           );
         }));
-
-        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
-        //   _settingModalBottomSheet(context, requestInvitationModel,
-        //       notification.timebankId, notification.id, user);
-        // } else {
-        //   showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       return JoinRejectDialogView(
-        //         requestInvitationModel: requestInvitationModel,
-        //         timeBankId: notification.timebankId,
-        //         notificationId: notification.id,
-        //         userModel: user,
-        //       );
-        //     },
-        //   );
-        // }
       },
       timestamp: notification.timestamp,
     );
