@@ -1136,7 +1136,7 @@ class S {
       );
 
   String get applied => Intl.message(
-        'Applied',
+        'applied',
         name: 'applied',
       );
 
@@ -4132,7 +4132,7 @@ class S {
       );
 
   String get donation_description_three => Intl.message(
-        'USD. Please click on the below link to fo the donation.',
+        ' USD.',
         name: 'donation_description_three',
       );
 
