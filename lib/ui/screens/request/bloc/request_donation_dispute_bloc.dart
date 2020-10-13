@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/donations_repository.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class RequestDonationDisputeBloc {
   final DonationsRepository _donationsRepository = DonationsRepository();
@@ -17,9 +18,10 @@ class RequestDonationDisputeBloc {
   Stream<Map<String, String>> get goodsRecieved => _goodsRecieved.stream;
 
   Function(String) get onAmountChanged => _cashAmount.sink.add;
-  getgoodsRecieved () {
+  getgoodsRecieved() {
     return _goodsRecieved.value;
   }
+
   void toggleGoodsReceived(String key, String value) {
     var map = _goodsRecieved.value;
     if (map.containsKey(key)) {
@@ -54,12 +56,17 @@ class RequestDonationDisputeBloc {
     DonationModel donationModel,
     RequestMode requestMode,
   }) async {
+    logger.e(
+        "$pledgedAmount ========================<<<<<<<<INSIDE DISPUTE CASH>>>>>>>>>>>> ${double.parse(_cashAmount.value)}");
+
     var status = pledgedAmount == double.parse(_cashAmount.value);
+    logger.i("$status ========================<<<<<<<<>>>>>>>>>>>>");
 
     if (_cashAmount.value == null || _cashAmount.value == '') {
       _cashAmount.addError('amount1');
       return false;
-    } else if (donationModel.minimumAmount != null && int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+    } else if (donationModel.minimumAmount != null &&
+        int.parse(_cashAmount.value) < donationModel.minimumAmount) {
       _cashAmount.addError('min');
       return false;
     } else {

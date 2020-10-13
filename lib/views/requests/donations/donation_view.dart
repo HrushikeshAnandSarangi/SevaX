@@ -139,7 +139,7 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorSevaUserId = sevaUser.sevaUserID;
       donationsModel.donorDetails.name = sevaUser.fullname;
       donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
-      donationsModel.donorDetails.email = sevaUser.photoURL;
+      donationsModel.donorDetails.email = sevaUser.email;
       donationsModel.donorDetails.bio = sevaUser.bio;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;

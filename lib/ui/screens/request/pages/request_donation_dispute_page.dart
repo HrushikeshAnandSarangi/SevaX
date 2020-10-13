@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bl
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
@@ -39,6 +40,7 @@ class RequestDonationDisputePage extends StatefulWidget {
 class _RequestDonationDisputePageState
     extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
+  int AMOUNT_NOT_DEFINED = 0;
   _AckType ackType;
   OperatingMode operatingMode;
   final _key = GlobalKey<ScaffoldState>();
@@ -192,10 +194,10 @@ class _RequestDonationDisputePageState
                         widget.model.goodsDetails.donatedGoods =
                             _bloc.getgoodsRecieved();
                       }
-                      var amount = widget.model.cashDetails.pledgedAmount ==
-                              null
-                          ? widget.model.cashDetails.cashDetails.amountRaised
-                          : widget.model.minimumAmount;
+                      var amount =
+                          widget.model.cashDetails.pledgedAmount == null
+                              ? AMOUNT_NOT_DEFINED
+                              : widget.model.cashDetails.pledgedAmount;
                       switch (ackType) {
                         case _AckType.CASH:
                           // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
