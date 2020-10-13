@@ -193,6 +193,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     if (widget.isOfferRequest ?? false) {
       requestModel.requestType = widget.offer.type;
+      requestModel.goodsDonationDetails.requiredGoods =
+          widget.offer.goodsDonationDetails.requiredGoods;
     }
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
@@ -440,6 +442,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           ),
           GoodsDynamicSelection(
+            selectedGoods: requestModel.goodsDonationDetails.requiredGoods,
             onSelectedGoods: (goods) =>
                 {requestModel.goodsDonationDetails.requiredGoods = goods},
           ),
@@ -1975,11 +1978,10 @@ class ProjectSelectionState extends State<ProjectSelection> {
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);
 
 class GoodsDynamicSelection extends StatefulWidget {
-  final bool automaticallyImplyLeading;
   final StringMapCallback onSelectedGoods;
+  final Map<String, String> selectedGoods;
 
-  GoodsDynamicSelection(
-      {@required this.onSelectedGoods, this.automaticallyImplyLeading = true});
+  GoodsDynamicSelection({@required this.onSelectedGoods, this.selectedGoods});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
@@ -1993,6 +1995,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
   @override
   void initState() {
+    _selectedGoods = widget.selectedGoods ?? {};
     Firestore.instance
         .collection('donationCategories')
         .orderBy('goodTitle')
