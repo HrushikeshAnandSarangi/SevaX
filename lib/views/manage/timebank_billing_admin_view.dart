@@ -619,7 +619,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
@@ -646,7 +646,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
@@ -673,7 +673,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: TextFormField(
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[3]);
             FocusScope.of(bc).unfocus();
@@ -741,7 +741,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                     : null;
           },
           focusNode: focusNodes[3],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           initialValue: street_address1 != null ? street_address1 : '',
           decoration: getInputDecoration(fieldTitle: S.of(context).street_add1),
         ),
@@ -767,7 +767,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   : null;
             },
             focusNode: focusNodes[5],
-            textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.next,
             initialValue: street_address2 != null ? street_address2 : '',
             decoration: getInputDecoration(
               fieldTitle: S.of(context).street_add2,
@@ -780,7 +780,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
@@ -829,7 +829,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           //   return value.isEmpty ? 'Field cannot be left blank*' : null;
           // },
           focusNode: focusNodes[6],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: S.of(context).company_name,
           ),
