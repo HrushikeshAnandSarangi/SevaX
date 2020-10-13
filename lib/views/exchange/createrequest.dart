@@ -446,6 +446,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             onSelectedGoods: (goods) =>
                 {requestModel.goodsDonationDetails.requiredGoods = goods},
           ),
+          SizedBox(height: 20),
           Text(
             S.of(context).request_goods_address,
             style: TextStyle(
@@ -477,11 +478,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               hintText: S.of(context).request_goods_address_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: widget.offer != null && widget.isOfferRequest
-                ? getOfferDescription(
-                    offerDataModel: widget.offer,
-                  )
-                : "",
             keyboardType: TextInputType.multiline,
             maxLines: 3,
             validator: (value) {
@@ -2015,236 +2011,214 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 8),
-          TypeAheadField<SuggestedItem>(
-            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            errorBuilder: (context, err) {
-              return Text(S.of(context).error_occured);
-            },
-            hideOnError: true,
-            textFieldConfiguration: TextFieldConfiguration(
-              controller: _textEditingController,
-              decoration: InputDecoration(
-                hintText: S.of(context).search,
-                filled: true,
-                fillColor: Colors.grey[300],
-                focusedBorder: OutlineInputBorder(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 8),
+        TypeAheadField<SuggestedItem>(
+          suggestionsBoxDecoration: SuggestionsBoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBuilder: (context, err) {
+            return Text(S.of(context).error_occured);
+          },
+          hideOnError: true,
+          textFieldConfiguration: TextFieldConfiguration(
+            controller: _textEditingController,
+            decoration: InputDecoration(
+              hintText: S.of(context).search,
+              filled: true,
+              fillColor: Colors.grey[300],
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(25.7),
+              ),
+              enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7)),
-                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                prefixIcon: Icon(
-                  Icons.search,
+                  borderRadius: BorderRadius.circular(25.7)),
+              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
+              suffixIcon: InkWell(
+                splashColor: Colors.transparent,
+                child: Icon(
+                  Icons.clear,
                   color: Colors.grey,
+                  // color: _textEditingController.text.length > 1
+                  //     ? Colors.black
+                  //     : Colors.grey,
                 ),
-                suffixIcon: InkWell(
-                  splashColor: Colors.transparent,
-                  child: Icon(
-                    Icons.clear,
-                    color: Colors.grey,
-                    // color: _textEditingController.text.length > 1
-                    //     ? Colors.black
-                    //     : Colors.grey,
-                  ),
-                  onTap: () {
-                    _textEditingController.clear();
-                    controller.close();
-                  },
-                ),
+                onTap: () {
+                  _textEditingController.clear();
+                  controller.close();
+                },
               ),
             ),
-            suggestionsBoxController: controller,
-            suggestionsCallback: (pattern) async {
-              List<SuggestedItem> dataCopy = [];
-              goods.forEach(
-                (k, v) => dataCopy.add(SuggestedItem()
-                  ..suggestionMode = SuggestionMode.FROM_DB
-                  ..suggesttionTitle = v),
-              );
-              dataCopy.retainWhere((s) => s.suggesttionTitle
-                  .toLowerCase()
-                  .contains(pattern.toLowerCase()));
-
-              if (pattern.length > 2 &&
-                  !dataCopy
-                      .contains(SuggestedItem()..suggesttionTitle = pattern)) {
-                var spellCheckResult =
-                    await SpellCheckManager.evaluateSpellingFor(pattern,
-                        language: 'en');
-                if (spellCheckResult.hasErros) {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                } else if (spellCheckResult.correctSpelling != pattern) {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.SUGGESTED
-                    ..suggesttionTitle = spellCheckResult.correctSpelling);
-
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                } else {
-                  dataCopy.add(SuggestedItem()
-                    ..suggestionMode = SuggestionMode.USER_DEFINED
-                    ..suggesttionTitle = pattern);
-                }
-              }
-              return await Future.value(dataCopy);
-            },
-            itemBuilder: (context, suggestedItem) {
-              switch (suggestedItem.suggestionMode) {
-                case SuggestionMode.FROM_DB:
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      suggestedItem.suggesttionTitle,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  );
-
-                case SuggestionMode.SUGGESTED:
-                  if (ProfanityDetector()
-                      .isProfaneString(suggestedItem.suggesttionTitle)) {
-                    return ProfanityDetector.getProanityAdvisory(
-                      suggestion: suggestedItem.suggesttionTitle,
-                      suggestionMode: SuggestionMode.SUGGESTED,
-                      context: context,
-                    );
-                  }
-                  return searchUserDefinedEntity(
-                    keyword: suggestedItem.suggesttionTitle,
-                    language: 'en',
-                    suggestionMode: suggestedItem.suggestionMode,
-                    showLoader: true,
-                  );
-
-                case SuggestionMode.USER_DEFINED:
-                  if (ProfanityDetector()
-                      .isProfaneString(suggestedItem.suggesttionTitle)) {
-                    return ProfanityDetector.getProanityAdvisory(
-                      suggestion: suggestedItem.suggesttionTitle,
-                      suggestionMode: SuggestionMode.USER_DEFINED,
-                      context: context,
-                    );
-                  }
-
-                  return searchUserDefinedEntity(
-                    keyword: suggestedItem.suggesttionTitle,
-                    language: 'en',
-                    suggestionMode: suggestedItem.suggestionMode,
-                    showLoader: false,
-                  );
-
-                default:
-                  return Container();
-              }
-            },
-            noItemsFoundBuilder: (context) {
-              return searchUserDefinedEntity(
-                keyword: _textEditingController.text,
-                language: 'en',
-              );
-            },
-            onSuggestionSelected: (suggestion) {
-              if (ProfanityDetector()
-                  .isProfaneString(suggestion.suggesttionTitle)) {
-                return;
-              }
-
-              switch (suggestion.suggestionMode) {
-                case SuggestionMode.SUGGESTED:
-                  var newGoodId = Uuid().generateV4();
-                  addGoodsToDb(
-                    goodsId: newGoodId,
-                    goodsLanguage: 'en',
-                    goodsTitle: suggestion.suggesttionTitle,
-                  );
-                  goods[newGoodId] = suggestion.suggesttionTitle;
-                  break;
-
-                case SuggestionMode.USER_DEFINED:
-                  var goodId = Uuid().generateV4();
-                  addGoodsToDb(
-                    goodsId: goodId,
-                    goodsLanguage: 'en',
-                    goodsTitle: suggestion.suggesttionTitle,
-                  );
-                  goods[goodId] = suggestion.suggesttionTitle;
-                  break;
-
-                case SuggestionMode.FROM_DB:
-                  break;
-              }
-              // controller.close();
-
-              _textEditingController.clear();
-              if (!_selectedGoods.containsValue(suggestion)) {
-                controller.close();
-                String id = goods.keys.firstWhere(
-                  (k) => goods[k] == suggestion.suggesttionTitle,
-                );
-                _selectedGoods[id] = suggestion.suggesttionTitle;
-                widget.onSelectedGoods(_selectedGoods);
-                setState(() {});
-              }
-
-              // _textEditingController.clear();
-              // if (!_selectedGoods.containsValue(suggestion)) {
-              //   controller.close();
-              //   String id =
-              //       goods.keys.firstWhere((k) => goods[k] == suggestion);
-              //   _selectedGoods[id] = suggestion;
-              //   widget.onSelectedGoods(_selectedGoods);
-              //   setState(() {});
-              // }
-            },
           ),
-          SizedBox(height: 20),
-          !isDataLoaded
-              ? LoadingIndicator()
-              : Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: <Widget>[
-                      Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: _selectedGoods.values
-                            .toList()
-                            .map(
-                              (value) => value == null
-                                  ? Container()
-                                  : CustomChip(
-                                      title: value,
-                                      onDelete: () {
-                                        String id = goods.keys.firstWhere(
-                                            (k) => goods[k] == value);
-                                        _selectedGoods.remove(id);
-                                        setState(() {});
-                                      },
-                                    ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+          suggestionsBoxController: controller,
+          suggestionsCallback: (pattern) async {
+            List<SuggestedItem> dataCopy = [];
+            goods.forEach(
+              (k, v) => dataCopy.add(SuggestedItem()
+                ..suggestionMode = SuggestionMode.FROM_DB
+                ..suggesttionTitle = v),
+            );
+            dataCopy.retainWhere((s) => s.suggesttionTitle
+                .toLowerCase()
+                .contains(pattern.toLowerCase()));
+
+            if (pattern.length > 2 &&
+                !dataCopy
+                    .contains(SuggestedItem()..suggesttionTitle = pattern)) {
+              var spellCheckResult =
+                  await SpellCheckManager.evaluateSpellingFor(pattern,
+                      language: 'en');
+              if (spellCheckResult.hasErros) {
+                dataCopy.add(SuggestedItem()
+                  ..suggestionMode = SuggestionMode.USER_DEFINED
+                  ..suggesttionTitle = pattern);
+              } else if (spellCheckResult.correctSpelling != pattern) {
+                dataCopy.add(SuggestedItem()
+                  ..suggestionMode = SuggestionMode.SUGGESTED
+                  ..suggesttionTitle = spellCheckResult.correctSpelling);
+
+                dataCopy.add(SuggestedItem()
+                  ..suggestionMode = SuggestionMode.USER_DEFINED
+                  ..suggesttionTitle = pattern);
+              } else {
+                dataCopy.add(SuggestedItem()
+                  ..suggestionMode = SuggestionMode.USER_DEFINED
+                  ..suggesttionTitle = pattern);
+              }
+            }
+            return await Future.value(dataCopy);
+          },
+          itemBuilder: (context, suggestedItem) {
+            switch (suggestedItem.suggestionMode) {
+              case SuggestionMode.FROM_DB:
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    suggestedItem.suggesttionTitle,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-        ],
-      ),
+                );
+
+              case SuggestionMode.SUGGESTED:
+                if (ProfanityDetector()
+                    .isProfaneString(suggestedItem.suggesttionTitle)) {
+                  return ProfanityDetector.getProanityAdvisory(
+                    suggestion: suggestedItem.suggesttionTitle,
+                    suggestionMode: SuggestionMode.SUGGESTED,
+                    context: context,
+                  );
+                }
+                return searchUserDefinedEntity(
+                  keyword: suggestedItem.suggesttionTitle,
+                  language: 'en',
+                  suggestionMode: suggestedItem.suggestionMode,
+                  showLoader: true,
+                );
+
+              case SuggestionMode.USER_DEFINED:
+                if (ProfanityDetector()
+                    .isProfaneString(suggestedItem.suggesttionTitle)) {
+                  return ProfanityDetector.getProanityAdvisory(
+                    suggestion: suggestedItem.suggesttionTitle,
+                    suggestionMode: SuggestionMode.USER_DEFINED,
+                    context: context,
+                  );
+                }
+
+                return searchUserDefinedEntity(
+                  keyword: suggestedItem.suggesttionTitle,
+                  language: 'en',
+                  suggestionMode: suggestedItem.suggestionMode,
+                  showLoader: false,
+                );
+
+              default:
+                return Container();
+            }
+          },
+          noItemsFoundBuilder: (context) {
+            return searchUserDefinedEntity(
+              keyword: _textEditingController.text,
+              language: 'en',
+            );
+          },
+          onSuggestionSelected: (suggestion) {
+            if (ProfanityDetector()
+                .isProfaneString(suggestion.suggesttionTitle)) {
+              return;
+            }
+
+            switch (suggestion.suggestionMode) {
+              case SuggestionMode.SUGGESTED:
+                var newGoodId = Uuid().generateV4();
+                addGoodsToDb(
+                  goodsId: newGoodId,
+                  goodsLanguage: 'en',
+                  goodsTitle: suggestion.suggesttionTitle,
+                );
+                goods[newGoodId] = suggestion.suggesttionTitle;
+                break;
+
+              case SuggestionMode.USER_DEFINED:
+                var goodId = Uuid().generateV4();
+                addGoodsToDb(
+                  goodsId: goodId,
+                  goodsLanguage: 'en',
+                  goodsTitle: suggestion.suggesttionTitle,
+                );
+                goods[goodId] = suggestion.suggesttionTitle;
+                break;
+
+              case SuggestionMode.FROM_DB:
+                break;
+            }
+            // controller.close();
+
+            _textEditingController.clear();
+            if (!_selectedGoods.containsValue(suggestion)) {
+              controller.close();
+              String id = goods.keys.firstWhere(
+                (k) => goods[k] == suggestion.suggesttionTitle,
+              );
+              _selectedGoods[id] = suggestion.suggesttionTitle;
+              widget.onSelectedGoods(_selectedGoods);
+              setState(() {});
+            }
+          },
+        ),
+        SizedBox(height: 20),
+        !isDataLoaded
+            ? LoadingIndicator()
+            : Wrap(
+                runSpacing: 5.0,
+                spacing: 5.0,
+                children: _selectedGoods.values
+                    .toList()
+                    .map(
+                      (value) => value == null
+                          ? Container()
+                          : CustomChip(
+                              title: value,
+                              onDelete: () {
+                                String id = goods.keys
+                                    .firstWhere((k) => goods[k] == value);
+                                _selectedGoods.remove(id);
+                                setState(() {});
+                              },
+                            ),
+                    )
+                    .toList(),
+              ),
+      ],
     );
   }
 
