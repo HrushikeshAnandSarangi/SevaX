@@ -1142,7 +1142,11 @@ class CreateEditCommunityViewFormState
       context: mcontext,
       builder: (BuildContext bc) {
         return Container(
-          child: _scrollingList(context, focusNodes),
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: _scrollingList(context, focusNodes),
+          ),
         );
       },
     );
