@@ -211,24 +211,26 @@ class OfferListItems extends StatelessWidget {
             context,
             model,
           );
-        } else {
-          if (SevaCore.of(context).loggedInUser.calendarId == null &&
-              !isAccepted) {
-            _settingModalBottomSheet(
-              context,
-              model,
-            );
-          } else {
-            offerActions(context, model)
-                .then((_) => Navigator.of(context).pop());
-          }
         }
+        //  else {
+        //   if (SevaCore.of(context).loggedInUser.calendarId == null &&
+        //       !isAccepted) {
+        //     _settingModalBottomSheet(
+        //       context,
+        //       model,
+        //     );
+        //   } else {
+        //     offerActions(parentContext, model)
+        //         .then((_) => Navigator.of(context).pop());
+        //   }
+        // }
         // if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
         //     model.offerType == OfferType.GROUP_OFFER) {
         //   _settingModalBottomSheet(parentContext, model);
-        // } else {
-        //   offerActions(parentContext, model);
         // }
+        else {
+          offerActions(parentContext, model);
+        }
       },
     );
   }
