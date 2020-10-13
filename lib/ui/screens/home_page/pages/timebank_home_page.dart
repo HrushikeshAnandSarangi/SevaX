@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -17,7 +18,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
-import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/notAccepted_tasks.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -416,18 +416,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         urlToHit: dynamicLinks['groupsInfoLink'],
       ),
       context: context,
-    );
-  }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
     );
   }
 

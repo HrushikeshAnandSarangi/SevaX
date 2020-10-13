@@ -13,11 +13,13 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../flavor_config.dart';
@@ -26,38 +28,41 @@ class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
   final TimebankModel timebankModel;
-  String sevaUserId;
+
   OfferListItems(
       {Key key, this.parentContext, this.timebankId, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+    logger.i("in offerlist build $timebankId");
     return StreamBuilder<List<OfferModel>>(
       stream: getOffersStream(timebankId: timebankId),
       builder:
           (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-        if (snapshot.hasError)
-          return Text('${S.of(context).general_stream_error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return LoadingIndicator();
-          default:
-            List<OfferModel> offersList = snapshot.data;
-            offersList = filterBlockedOffersContent(
-                context: context, requestModelList: offersList);
-            if (offersList.length == 0) {
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: Text(S.of(context).no_offers),
-                ),
-              );
-            }
-            var consolidatedList = GroupOfferCommons.groupAndConsolidateOffers(
-                offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-            return formatListOffer(consolidatedList: consolidatedList);
+        if (snapshot.hasError) {
+          return Text(
+            '${S.of(context).general_stream_error}',
+          );
         }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        List<OfferModel> offersList = snapshot.data;
+        offersList = filterBlockedOffersContent(
+          context: context,
+          requestModelList: offersList,
+        );
+        if (offersList.length == 0) {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Text(S.of(context).no_offers),
+            ),
+          );
+        }
+        var consolidatedList = GroupOfferCommons.groupAndConsolidateOffers(
+            offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+        return formatListOffer(consolidatedList: consolidatedList);
       },
     );
   }
@@ -167,20 +172,34 @@ class OfferListItems extends StatelessWidget {
                   ? Colors.grey
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
+        if (model.type != RequestType.TIME &&
+            !timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          adminCheckToAcceptOfferDialog(context);
+          return;
+        }
         if (model.isRecurring) {
           Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                  builder: (context) => RecurringListing(
-                        offerModel: model,
-                        timebankModel: timebankModel,
-                        requestModel: null,
-                      )));
+            parentContext,
+            MaterialPageRoute(
+              builder: (context) => RecurringListing(
+                offerModel: model,
+                timebankModel: timebankModel,
+                requestModel: null,
+              ),
+            ),
+          );
         } else {
           _navigateToOfferDetails(model);
         }
       },
       onActionPressed: () async {
+        if (model.type != RequestType.TIME &&
+            !timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          adminCheckToAcceptOfferDialog(context);
+          return;
+        }
         if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
             model.offerType == OfferType.GROUP_OFFER) {
           _settingModalBottomSheet(parentContext, model);
@@ -191,18 +210,25 @@ class OfferListItems extends StatelessWidget {
     );
   }
 
+  Future<bool> adminCheckToAcceptOfferDialog(BuildContext context) async {
+    return CustomDialogs.generalDialogWithCloseButton(
+      context,
+      'Only admin can accept Goods/Cash offers',
+    );
+  }
+
   void navigateToDonations(context, OfferModel offerModel) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DonationView(
-                  offerModel: offerModel,
-                  timabankName: '',
-                  requestModel: null,
-                  notificationId: null,
-              ),
-          ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
+        ),
+      ),
+    );
   }
 
   void _settingModalBottomSheet(context, OfferModel model) {
