@@ -657,11 +657,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   S.of(context).request_payment_descriptionZelle_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: widget.offer != null && widget.isOfferRequest
-                ? getOfferDescription(
-                    offerDataModel: widget.offer,
-                  )
-                : "",
+            // initialValue: widget.offer != null && widget.isOfferRequest
+            //     ? getOfferDescription(
+            //         offerDataModel: widget.offer,
+            //       )
+            //     : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
@@ -1803,7 +1803,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.timebankId,
         requestModel.timebankId,
         DateTime.now().millisecondsSinceEpoch,
-        requestModel.numberOfHours,
+        requestModel.numberOfHours ?? 0,
         true,
         "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
         requestModel.id,
