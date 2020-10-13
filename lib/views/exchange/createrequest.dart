@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -14,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
@@ -30,12 +28,11 @@ import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -58,17 +55,17 @@ class CreateRequest extends StatefulWidget {
   final String timebankId;
   final UserModel userModel;
   final ProjectModel projectModel;
-  String projectId;
+  final String projectId;
 
-  CreateRequest(
-      {Key key,
-      this.isOfferRequest,
-      this.offer,
-      this.timebankId,
-      this.userModel,
-      this.projectId,
-      this.projectModel})
-      : super(key: key);
+  CreateRequest({
+    Key key,
+    this.isOfferRequest,
+    this.offer,
+    this.timebankId,
+    this.userModel,
+    this.projectId,
+    this.projectModel,
+  }) : super(key: key);
 
   @override
   _CreateRequestState createState() => _CreateRequestState();
@@ -130,9 +127,9 @@ class RequestCreateForm extends StatefulWidget {
   final UserModel userModel;
   final UserModel loggedInUser;
   final ProjectModel projectModel;
-  String projectId;
+  final String projectId;
   RequestCreateForm({
-    this.isOfferRequest,
+    this.isOfferRequest = false,
     this.offer,
     this.timebankId,
     this.userModel,
@@ -191,6 +188,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
+    if (widget.isOfferRequest ?? false) {
+      requestModel.requestType = widget.offer.type;
+    }
+
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -215,49 +216,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed && comingFromDynamicLink) {
       Navigator.of(context).pop();
-    }
-  }
-
-  void get _fetchCurrentlocation async {
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
-
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        if (!_serviceEnabled) {
-          return;
-        }
-      }
-
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        }
-      }
-      Location().getLocation().then((onValue) {
-        location = GeoFirePoint(onValue.latitude, onValue.longitude);
-        LocationUtility()
-            .getFormattedAddress(
-          location.latitude,
-          location.longitude,
-        )
-            .then((address) {
-          setState(() {
-            this.selectedAddress = address;
-          });
-        });
-      });
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        //error = e.message;
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        //error = e.message;
-      }
     }
   }
 
@@ -833,7 +791,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             color: Colors.grey,
           ),
         ),
-        _optionRadioButton(
+        _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_ach,
           value: RequestPaymentType.ACH,
           groupvalue: requestModel.cashModel.paymentType,
@@ -842,30 +800,33 @@ class RequestCreateFormState extends State<RequestCreateForm>
             setState(() => {});
           },
         ),
-        _optionRadioButton(
-            title: S.of(context).request_paymenttype_paypal,
-            value: RequestPaymentType.PAYPAL,
-            groupvalue: requestModel.cashModel.paymentType,
-            onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
-              setState(() => {});
-            }),
-        _optionRadioButton(
-            title: S.of(context).request_paymenttype_zellepay,
-            value: RequestPaymentType.ZELLEPAY,
-            groupvalue: requestModel.cashModel.paymentType,
-            onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
-              setState(() => {});
-            }),
-        _optionRadioButton(
-            title: 'Venmo',
-            value: RequestPaymentType.VENMO,
-            groupvalue: requestModel.cashModel.paymentType,
-            onChanged: (value) {
-              requestModel.cashModel.paymentType = value;
-              setState(() => {});
-            }),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).request_paymenttype_paypal,
+          value: RequestPaymentType.PAYPAL,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton<RequestPaymentType>(
+          title: S.of(context).request_paymenttype_zellepay,
+          value: RequestPaymentType.ZELLEPAY,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton<RequestPaymentType>(
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
@@ -941,8 +902,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
               ),
               Column(
                 children: <Widget>[
-                  _optionRadioButton(
+                  _optionRadioButton<RequestType>(
                     title: S.of(context).request_type_time,
+                    isEnabled: widget.isOfferRequest,
                     value: RequestType.TIME,
                     groupvalue: requestModel.requestType,
                     onChanged: (value) {
@@ -954,27 +916,31 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton(
-                        title: S.of(context).request_type_cash,
-                        value: RequestType.CASH,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          requestModel.requestType = value;
-                          setState(() => {});
-                        }),
+                    child: _optionRadioButton<RequestType>(
+                      title: S.of(context).request_type_cash,
+                      value: RequestType.CASH,
+                      isEnabled: widget.isOfferRequest,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      },
+                    ),
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.goods_request,
                     transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton(
-                        title: S.of(context).request_type_goods,
-                        value: RequestType.GOODS,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          requestModel.requestType = value;
-                          setState(() => {});
-                        }),
+                    child: _optionRadioButton<RequestType>(
+                      title: S.of(context).request_type_goods,
+                      isEnabled: !(widget.isOfferRequest ?? false),
+                      value: RequestType.GOODS,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      },
+                    ),
                   ),
                 ],
               )
@@ -1258,13 +1224,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return projectId == null || projectId.isEmpty || projectId == "";
   }
 
-  Widget _optionRadioButton(
-      {String title, value, groupvalue, Function onChanged}) {
+  Widget _optionRadioButton<T>({
+    String title,
+    T value,
+    T groupvalue,
+    Function onChanged,
+    bool isEnabled = true,
+  }) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading:
-          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+      leading: Radio<T>(
+        value: value,
+        groupValue: groupvalue,
+        onChanged: (isEnabled ?? true) ? onChanged : null,
+      ),
     );
   }
 
@@ -1832,7 +1806,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
       await FirestoreManager.createRequest(requestModel: requestModel);
       //create invitation if its from offer only for cash and goods
 
-
       await handleInvitationNotification();
 
       resultVar.add(requestModel.id);
@@ -1872,13 +1845,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
       invitationNotification.toMap(),
     );
 
-
-    return  await  batchWrite.commit().then((value) => true).catchError((onError) => false);
+    return await batchWrite
+        .commit()
+        .then((value) => true)
+        .catchError((onError) => false);
   }
-
-
-
-
 
   NotificationsModel getNotificationForInvitation({
     String inviteeSevaUserId,
@@ -1968,22 +1939,20 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   void handleInvitationNotification({OfferModel offerModel}) {
-  switch (offerModel.type) {
-    case RequestType.CASH:
-    case RequestType.GOODS:
+    switch (offerModel.type) {
+      case RequestType.CASH:
+      case RequestType.GOODS:
 
-      // await createNotificaitonForInvitee;(
-      //    
-      // )  
-      break;
+        // await createNotificaitonForInvitee;(
+        //
+        // )
+        break;
 
-    case RequestType.TIME:
-    break;
+      case RequestType.TIME:
+        break;
+    }
   }
 }
-}
-
-
 
 Widget TotalCredits({
   BuildContext context,
@@ -2028,59 +1997,6 @@ Widget TotalCredits({
     ),
   );
 }
-
-// Widget TotalCredits(
-//   context,
-//   requestModel,
-//   int starttimestamp,
-//   int endtimestamp,
-// ) {
-//   var label;
-//   var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-//       .inHours;
-//   var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-//       .inMinutes;
-//   var totalallowedhours;
-//   if (totalhours == 0) {
-//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
-//   } else {
-//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
-//   }
-
-//   var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
-//   requestModel.numberOfHours = totalCredits;
-//   if (totalallowedhours > 0 && totalCredits > 0) {
-//     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-//       label = totalCredits.toString() +
-//           ' ' +
-//           S.of(context).timebank_max_seva_credit_message1 +
-//           totalallowedhours.toString() +
-//           ' ' +
-//           S.of(context).timebank_max_seva_credit_message2;
-//     } else {
-//       label = totalCredits.toString() +
-//           ' ' +
-//           S.of(context).personal_max_seva_credit_message1 +
-//           totalallowedhours.toString() +
-//           ' ' +
-//           S.of(context).personal_max_seva_credit_message2;
-//     }
-//   } else {
-//     label = "";
-//   }
-
-//   return Text(
-//     label,
-//     style: TextStyle(
-//       fontSize: 16,
-//       fontWeight: FontWeight.normal,
-//       fontFamily: 'Europa',
-//       color: Colors.black54,
-//     ),
-//   );
-// }
 
 class ProjectSelection extends StatefulWidget {
   ProjectSelection({
