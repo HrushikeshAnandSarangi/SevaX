@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../flavor_config.dart';
@@ -167,20 +168,34 @@ class OfferListItems extends StatelessWidget {
                   ? Colors.grey
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
+        if (model.type != RequestType.TIME &&
+            !timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          adminCheckToAcceptOfferDialog(context);
+          return;
+        }
         if (model.isRecurring) {
           Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                  builder: (context) => RecurringListing(
-                        offerModel: model,
-                        timebankModel: timebankModel,
-                        requestModel: null,
-                      )));
+            parentContext,
+            MaterialPageRoute(
+              builder: (context) => RecurringListing(
+                offerModel: model,
+                timebankModel: timebankModel,
+                requestModel: null,
+              ),
+            ),
+          );
         } else {
           _navigateToOfferDetails(model);
         }
       },
       onActionPressed: () async {
+        if (model.type != RequestType.TIME &&
+            !timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          adminCheckToAcceptOfferDialog(context);
+          return;
+        }
         if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
             model.offerType == OfferType.GROUP_OFFER) {
           _settingModalBottomSheet(parentContext, model);
@@ -191,18 +206,25 @@ class OfferListItems extends StatelessWidget {
     );
   }
 
+  Future<bool> adminCheckToAcceptOfferDialog(BuildContext context) async {
+    return CustomDialogs.generalDialogWithCloseButton(
+      context,
+      'Only admin can accept Goods/Cash offers',
+    );
+  }
+
   void navigateToDonations(context, OfferModel offerModel) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DonationView(
-                  offerModel: offerModel,
-                  timabankName: '',
-                  requestModel: null,
-                  notificationId: null,
-              ),
-          ),
-      );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
+        ),
+      ),
+    );
   }
 
   void _settingModalBottomSheet(context, OfferModel model) {
