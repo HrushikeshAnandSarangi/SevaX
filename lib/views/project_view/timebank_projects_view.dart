@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -248,18 +249,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
           title: S.of(context).projects + ' ' + S.of(context).help,
           urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
-    );
-  }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
     );
   }
 }

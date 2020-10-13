@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -20,6 +19,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
@@ -227,21 +227,18 @@ class _LoginPageState extends State<LoginPage> {
                                       return null;
                                     },
                                     onChanged: (value) {},
-                                                    initialValue: "",
-                                                    keyboardType: TextInputType
-                                                        .emailAddress,
-                                                    controller: null,
-                                                    decoration: InputDecoration(
-                                                      hintText: S
-                                                          .of(context)
-                                                          .your_email,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                LayoutBuilder(
+                                    initialValue: "",
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: null,
+                                    decoration: InputDecoration(
+                                      hintText: S.of(context).your_email,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                LayoutBuilder(
                                   builder: (context, size) {
                                     TextSpan span = TextSpan(
                                       text: S.of(context).reset_password +
@@ -265,32 +262,25 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                                            ),
-                                          );
-                                        }).then((onActivityResult) {
-                                      if (onActivityResult != null &&
-                                          onActivityResult['sendResetLink'] !=
-                                              null &&
-                                          onActivityResult['sendResetLink'] &&
-                                          onActivityResult['userEmail'] !=
-                                              null &&
-                                          onActivityResult['userEmail']
-                                              .toString()
-                                              .isNotEmpty) {
-                                        resetPassword(
-                                            onActivityResult['userEmail']);
-                                        _scaffoldKey.currentState
-                                            .hideCurrentSnackBar();
-                                      } else {}
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: Text(
-                                      S.of(context).reset,
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
+                          ),
+                        );
+                      }).then((onActivityResult) {
+                    if (onActivityResult != null &&
+                        onActivityResult['sendResetLink'] != null &&
+                        onActivityResult['sendResetLink'] &&
+                        onActivityResult['userEmail'] != null &&
+                        onActivityResult['userEmail'].toString().isNotEmpty) {
+                      resetPassword(onActivityResult['userEmail']);
+                      _scaffoldKey.currentState.hideCurrentSnackBar();
+                    } else {}
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    S.of(context).reset,
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -990,24 +980,6 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
     );
   }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
-    );
-  }
-
-//  void getDynamicLinkData(
-//    BuildContext context,
-//  ) async {
-//    await fetchBulkInviteLinkData();
-//  }
 
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.

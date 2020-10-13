@@ -284,30 +284,6 @@ class OfferCardViewState extends State<OfferCardView> {
                                               style: subTitleStyle,
                                               maxLines: 1,
                                             ),
-                                            // subtitle: FutureBuilder<String>(
-                                            //   future: _getLocation(
-                                            //     widget.offerModel.location
-                                            //         .latitude,
-                                            //     widget.offerModel.location
-                                            //         .longitude,
-                                            //   ),
-                                            //   builder: (context, snapshot) {
-                                            //     if (snapshot.hasError) {
-                                            //       return Text(
-                                            //           "Unnamed Location");
-                                            //     }
-                                            //     if (snapshot.connectionState ==
-                                            //         ConnectionState.waiting) {
-                                            //       return Text(
-                                            //           "Resolving location...");
-                                            //     }
-                                            //     return Text(
-                                            //       snapshot.data,
-                                            //       style: subTitleStyle,
-                                            //       maxLines: 1,
-                                            //     );
-                                            //   },
-                                            // ),
                                           ),
                                           CustomListTile(
                                             leading: Icon(
@@ -552,32 +528,6 @@ class OfferCardViewState extends State<OfferCardView> {
       ),
     );
   }
-
-  // Future<String> _getLocation(double lat, double lng) async {
-  //   String address = await LocationUtility().getFormattedAddress(lat, lng);
-  //   return address;
-  // }
-
-  // void _showProtectedTimebankMessage() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(S.of(context).protected_timebank),
-  //         content: Text(
-  //             "Admins or Co-Ordinators can only accept offers in a protected timebank"),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text(S.of(context).close),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> deleteOffer({
     @required OfferModel offerModel,
