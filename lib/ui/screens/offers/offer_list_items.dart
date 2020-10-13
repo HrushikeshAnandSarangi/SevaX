@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -194,19 +195,57 @@ class OfferListItems extends StatelessWidget {
         }
       },
       onActionPressed: () async {
+        bool isAccepted = getOfferParticipants(offerDataModel: model)
+            .contains(model.sevaUserId);
+
         if (model.type != RequestType.TIME &&
             !timebankModel.admins
                 .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
           return;
         }
-        if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
-            model.offerType == OfferType.GROUP_OFFER) {
-          _settingModalBottomSheet(parentContext, model);
+
+        if (model.type == RequestType.CASH ||
+            model.type == RequestType.GOODS && !isAccepted) {
+          navigateToCreateRequestFromOffer(
+            context,
+            model,
+          );
         } else {
-          offerActions(parentContext, model);
+          if (SevaCore.of(context).loggedInUser.calendarId == null &&
+              !isAccepted) {
+            _settingModalBottomSheet(
+              context,
+              model,
+            );
+          } else {
+            offerActions(context, model)
+                .then((_) => Navigator.of(context).pop());
+          }
         }
+        // if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
+        //     model.offerType == OfferType.GROUP_OFFER) {
+        //   _settingModalBottomSheet(parentContext, model);
+        // } else {
+        //   offerActions(parentContext, model);
+        // }
       },
+    );
+  }
+
+  void navigateToCreateRequestFromOffer(context, OfferModel offerModel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateRequest(
+          isOfferRequest: true,
+          offer: offerModel,
+          projectId: '',
+          projectModel: null,
+          timebankId: offerModel.timebankId,
+          userModel: SevaCore.of(context).loggedInUser,
+        ),
+      ),
     );
   }
 
