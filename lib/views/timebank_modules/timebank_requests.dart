@@ -125,6 +125,8 @@ class RequestsState extends State<RequestsModule> {
                                         builder: (context) => CreateRequest(
                                           timebankId: timebankId,
                                           projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
                                         ),
                                       ),
                                     );
@@ -146,6 +148,8 @@ class RequestsState extends State<RequestsModule> {
                                         builder: (context) => CreateRequest(
                                           timebankId: timebankId,
                                           projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
                                         ),
                                       ),
                                     );

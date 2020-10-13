@@ -363,6 +363,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           timebankId: widget.timebankModel.id,
           projectId: widget.projectModel.id,
           projectModel: widget.projectModel,
+          userModel: SevaCore.of(context).loggedInUser,
         ),
       ),
     );
