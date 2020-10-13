@@ -846,6 +846,9 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
+    } on NoSuchMethodError catch (error) {
+      handleException();
+      Crashlytics.instance.log("No Such methods error in login!");
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -857,6 +860,20 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     _processLogin(user);
+  }
+
+  void handleException() {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(S.of(context).no_user_found),
+        action: SnackBarAction(
+          label: S.of(context).dismiss,
+          onPressed: () {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
   }
 
   void handlePlatformException(PlatformException error) {
