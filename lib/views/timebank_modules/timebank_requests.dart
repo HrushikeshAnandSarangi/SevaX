@@ -615,13 +615,15 @@ class RequestListItemsState extends State<RequestListItems> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                model.title,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: Theme.of(widget.parentContext)
-                                    .textTheme
-                                    .subhead,
+                              Expanded(
+                                child: Text(
+                                  model.title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: Theme.of(widget.parentContext)
+                                      .textTheme
+                                      .subhead,
+                                ),
                               ),
                               Container(
                                 margin:
