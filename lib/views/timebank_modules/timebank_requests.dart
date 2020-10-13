@@ -242,18 +242,6 @@ class RequestsState extends State<RequestsModule> {
       context: context,
     );
   }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
-    );
-  }
 }
 
 class RequestListItems extends StatefulWidget {

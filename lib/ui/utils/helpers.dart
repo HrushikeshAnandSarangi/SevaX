@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
 //Fetch location
@@ -78,16 +80,31 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
 
 Future<Coordinates> findcurrentLocation() async {
   final Location _location = Location();
+
+  if (!await _location.serviceEnabled()) {
+    logger.e("Service Disabled");
+    throw "No Location";
+  }
+
   PermissionStatus status = await _location.hasPermission();
   if (status != PermissionStatus.granted) {
     logger.e("Permission not granted");
     throw "No Location";
   }
-  if (!await _location.serviceEnabled()) {
-    logger.e("Service Disabled");
-    throw "No Location";
-  }
+
   LocationData location = await _location.getLocation();
   Coordinates distance = Coordinates(location.latitude, location.longitude);
   return distance;
+}
+
+void navigateToWebView({
+  BuildContext context,
+  AboutMode aboutMode,
+}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SevaWebView(aboutMode),
+    ),
+  );
 }

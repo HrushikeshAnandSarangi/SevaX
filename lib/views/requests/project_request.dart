@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
@@ -226,7 +227,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             widget.timebankModel.admins.contains(sevaUserId)) ||
         (widget.projectModel.mode == "Personal" &&
             widget.projectModel.creatorId == sevaUserId)) {
-        proceedCreatingRequest();
+      proceedCreatingRequest();
     } else {
       _showProtectedTimebankMessage();
     }
@@ -237,7 +238,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr": []
+      "eventsArr": []
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
@@ -490,18 +491,6 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         urlToHit: dynamicLinks['requestsInfoLink'],
       ),
       context: context,
-    );
-  }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
     );
   }
 

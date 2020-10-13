@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -27,22 +27,15 @@ class OffersModule extends StatefulWidget {
 
 class OffersState extends State<OffersModule> {
   String timebankId;
-  void _setORValue() {
-    globals.orCreateSelector = 1;
-  }
-
-  int sharedValue = 0;
 
   @override
   void initState() {
+    timebankId = widget.timebankModel.id;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _setORValue();
-    timebankId = widget.timebankModel.id;
-
     return Column(
       children: <Widget>[
         Row(
@@ -61,8 +54,10 @@ class OffersState extends State<OffersModule> {
                           onPressed: () {},
                           child: Text(
                             S.of(context).my_offers,
-                            style: (TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18)),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                         Positioned(
@@ -84,13 +79,6 @@ class OffersState extends State<OffersModule> {
                         widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
-                        // //TODO REMOVE
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddToCalendar(),
-                        //   ),
-                        // );
                         if (widget.timebankModel.id ==
                                 FlavorConfig.values.timebankId &&
                             !widget.timebankModel.admins.contains(
@@ -135,10 +123,6 @@ class OffersState extends State<OffersModule> {
             SizedBox(width: 5),
           ],
         ),
-        Divider(
-          color: Colors.white,
-          height: 0,
-        ),
         OfferListItems(
           parentContext: context,
           timebankId: timebankId,
@@ -159,18 +143,6 @@ class OffersState extends State<OffersModule> {
           title: S.of(context).offer_help,
           urlToHit: dynamicLinks['offersInfoLink']),
       context: context,
-    );
-  }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
     );
   }
 }

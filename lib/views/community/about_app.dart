@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/intro_slider.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -122,41 +123,6 @@ class AboutApp extends StatelessWidget {
     };
   }
 
-  // Widget aboutSevaX(BuildContext context) {
-  //   return Container(
-  //     width: double.infinity,
-  //     child: Padding(
-  //       padding: EdgeInsets.all(20),
-  //       child: GestureDetector(
-  //         onTap: () async {
-  //           dynamicLinks = json.decode(
-  //             AppConfig.remoteConfig.getString(
-  //               'links_${S.of(context).localeName}',
-  //             ),
-  //           );
-
-  //           navigateToWebView(
-  //             aboutMode: AboutMode(
-  //               title: S.of(context).about + ' ' + AppConfig.appName,
-  //               urlToHit: dynamicLinks['aboutSeva'],
-  //             ),
-  //             context: context,
-  //           );
-  //         },
-  //         child: Container(
-  //           child: Text(
-  //             AppLocalizations.of(context).translate('help', 'about_sevax'),
-  //             style: TextStyle(
-  //               color: Colors.blue,
-  //               fontSize: 16,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget getHelpButton(BuildContext context, Function onTap, String title) {
     return InkWell(
       onTap: onTap,
@@ -188,86 +154,6 @@ class AboutApp extends StatelessWidget {
       ),
     );
   }
-
-  void navigateToWebView({
-    BuildContext context,
-    AboutMode aboutMode,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SevaWebView(aboutMode),
-      ),
-    );
-  }
-
-  // Widget aboutUs(BuildContext context) {
-  //   return Container(
-  //     child: Padding(
-  //       padding: EdgeInsets.all(20),
-  //       child: GestureDetector(
-  //         onTap: () {
-  //           dynamicLinks = json.decode(
-  //             AppConfig.remoteConfig.getString(
-  //               AppLocalizations.of(context).translate('links', 'linkToWeb'),
-  //             ),
-  //           );
-
-  //           navigateToWebView(
-  //             aboutMode: AboutMode(
-  //                 title: AppLocalizations.of(context)
-  //                     .translate('help', 'about_us'),
-  //                 urlToHit: dynamicLinks['aboutUsLink']),
-  //             context: context,
-  //           );
-  //         },
-  //         child: Container(
-  //           child: Text(
-  //             AppLocalizations.of(context).translate('help', 'about_us'),
-  //             style: TextStyle(
-  //               color: Colors.blue,
-  //               fontSize: 16,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget trainingVideo(BuildContext context) {
-  //   return Container(
-  //     child: Padding(
-  //       padding: EdgeInsets.all(20),
-  //       child: GestureDetector(
-  //         onTap: () {
-  //           dynamicLinks = json.decode(
-  //             AppConfig.remoteConfig.getString(
-  //               AppLocalizations.of(context).translate('links', 'linkToWeb'),
-  //             ),
-  //           );
-  //           navigateToWebView(
-  //             aboutMode: AboutMode(
-  //               title: AppLocalizations.of(context)
-  //                   .translate('help', 'training_video'),
-  //               urlToHit: dynamicLinks['trainingVideo'],
-  //             ),
-  //             context: context,
-  //           );
-  //         },
-  //         child: Container(
-  //           child: Text(
-  //             AppLocalizations.of(context).translate('help', 'training_video'),
-  //             style: TextStyle(
-  //               color: Colors.blue,
-  //               fontSize: 16,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   String feedbackText;
 

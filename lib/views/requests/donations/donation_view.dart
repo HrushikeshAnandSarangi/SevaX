@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
@@ -115,14 +116,13 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void setUpModel() {
+    logger.e("Setting up model");
     sevaUser = SevaCore.of(context).loggedInUser;
     if (widget.requestModel != null) {
       donationsModel.timebankId = widget.requestModel.timebankId;
       donationsModel.requestId = widget.requestModel.id;
       donationsModel.donatedToTimebank =
-          widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? false
-              : true;
+          widget.requestModel.requestMode != RequestMode.PERSONAL_REQUEST;
       donationsModel.donationType = widget.requestModel.requestType;
       donationsModel.donatedTo =
           widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
@@ -137,23 +137,22 @@ class _DonationViewState extends State<DonationView> {
       );
       donationsModel.donationStatus = DonationStatus.PLEDGED;
       donationsModel.donorSevaUserId = sevaUser.sevaUserID;
-      donationsModel.donorDetails.name = widget.offerModel.fullName;
-      donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
-      donationsModel.donorDetails.email = widget.offerModel.email;
-      //TODO FIX BIO
-      donationsModel.donorDetails.bio = '';
+      donationsModel.donorDetails.name = sevaUser.fullname;
+      donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
+      donationsModel.donorDetails.email = sevaUser.email;
+      donationsModel.donorDetails.bio = sevaUser.bio;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
       donationsModel.donatedToTimebank = false;
       donationsModel.donationType = widget.offerModel.type;
-      donationsModel.donatedTo = widget.offerModel.sevaUserId;
+      donationsModel.donatedTo = sevaUser.sevaUserID;
       donationsModel.requestTitle =
           widget.offerModel.individualOfferDataModel.title;
       donationsModel.donationAssociatedTimebankDetails =
           DonationAssociatedTimebankDetails();
       donationsModel.donationStatus = DonationStatus.REQUESTED;
-      donationsModel.donorSevaUserId = sevaUser.sevaUserID;
+      donationsModel.donorSevaUserId = widget.offerModel.sevaUserId;
       donationsModel.donorDetails.name = widget.offerModel.fullName;
       donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
       donationsModel.donorDetails.email = widget.offerModel.email;
@@ -165,7 +164,6 @@ class _DonationViewState extends State<DonationView> {
 
   TextStyle hintTextStyle = TextStyle(
     fontSize: 14,
-    // fontWeight: FontWeight.bold,
     color: Colors.grey,
     fontFamily: 'Europa',
   );
