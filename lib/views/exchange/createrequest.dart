@@ -76,37 +76,40 @@ class _CreateRequestState extends State<CreateRequest> {
   Widget build(BuildContext context) {
     return ExitWithConfirmation(
       child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: Text(
-              _title,
-              style: TextStyle(fontSize: 18),
-            ),
-            centerTitle: false,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            _title,
+            style: TextStyle(fontSize: 18),
           ),
-          body: StreamBuilder<UserModelController>(
-              stream: userBloc.getLoggedInUser,
-              builder: (context, snapshot) {
-                if (snapshot.hasError)
-                  return Text(
-                    S.of(context).general_stream_error,
-                  );
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return LoadingIndicator();
-                }
-                if (snapshot.data != null) {
-                  return RequestCreateForm(
-                    isOfferRequest: widget.isOfferRequest,
-                    offer: widget.offer,
-                    timebankId: widget.timebankId,
-                    userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser,
-                    projectId: widget.projectId,
-                    projectModel: widget.projectModel,
-                  );
-                }
-                return Text('');
-              })),
+          centerTitle: false,
+        ),
+        body: StreamBuilder<UserModelController>(
+          stream: userBloc.getLoggedInUser,
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Text(
+                S.of(context).general_stream_error,
+              );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            if (snapshot.data != null) {
+              return RequestCreateForm(
+                isOfferRequest:
+                    widget.offer != null ? widget.isOfferRequest : false,
+                offer: widget.offer,
+                timebankId: widget.timebankId,
+                userModel: widget.userModel,
+                loggedInUser: snapshot.data.loggedinuser,
+                projectId: widget.projectId,
+                projectModel: widget.projectModel,
+              );
+            }
+            return Text('');
+          },
+        ),
+      ),
     );
   }
 
@@ -904,7 +907,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 children: <Widget>[
                   _optionRadioButton<RequestType>(
                     title: S.of(context).request_type_time,
-                    isEnabled: widget.isOfferRequest,
+                    isEnabled: !widget.isOfferRequest,
                     value: RequestType.TIME,
                     groupvalue: requestModel.requestType,
                     onChanged: (value) {
@@ -919,7 +922,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     child: _optionRadioButton<RequestType>(
                       title: S.of(context).request_type_cash,
                       value: RequestType.CASH,
-                      isEnabled: widget.isOfferRequest,
+                      isEnabled: !widget.isOfferRequest,
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
