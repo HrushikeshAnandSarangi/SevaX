@@ -122,6 +122,8 @@ class OfferCard extends StatelessWidget {
                       ),
                       Text(
                         subtitle,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                       Visibility(

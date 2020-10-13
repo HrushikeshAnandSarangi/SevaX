@@ -685,7 +685,7 @@ class RequestListItemsState extends State<RequestListItems> {
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: Text(
                               model.description,
-                              maxLines: 1,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(widget.parentContext)
                                   .textTheme
