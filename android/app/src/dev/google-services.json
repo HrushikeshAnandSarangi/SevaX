@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "726382185793-c0hhi2qe8suravqnl7b0nfteq2r2edmm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.dev",
+            "certificate_hash": "3b9f911a93dc84743cc09a2ea5a14614cacc075b"
+          }
+        },
+        {
+          "client_id": "726382185793-iav88imikklvn8kno6t507ika27t459g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.dev",
+            "certificate_hash": "86ac8b9c985b44c14253675fac394173bf457496"
+          }
+        },
+        {
           "client_id": "726382185793-ul1b5alinkfqs1262abiehim6grn7jb3.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -28,8 +44,16 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "726382185793-ul1b5alinkfqs1262abiehim6grn7jb3.apps.googleusercontent.com",
+              "client_id": "726382185793-hvh4u0sa2cnpi8jeoh67h8jvbi070ji1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "726382185793-6vq06halrr1m3u9vfdlml7q1ubkqcmde.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.dev",
+                "app_store_id": "1510195449"
+              }
             }
           ]
         }

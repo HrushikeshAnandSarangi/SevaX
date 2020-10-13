@@ -93,9 +93,9 @@ class Auth {
       );
     } on Exception catch (error) {
       Crashlytics.instance.log(error.toString());
-      error;
+      throw error;
     } catch (error) {
-      Crashlytics.instance.log(error.toString());
+      //Crashlytics.instance.log(error.toString());
     }
     return _processGoogleUser(result.user);
   }
