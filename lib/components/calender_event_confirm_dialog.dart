@@ -36,7 +36,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
               ),
               FlatButton(
                 child: Text(
-                  S.of(context).cancel,
+                  S.of(context).no,
                   style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                 ),
                 onPressed: cancelled,
