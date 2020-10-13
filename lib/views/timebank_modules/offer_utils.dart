@@ -15,6 +15,11 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import '../../flavor_config.dart';
 import '../core.dart';
 
+String getCashDonationAmount({OfferModel offerDataModel}) {
+  
+
+}
+
 String getOfferTitle({OfferModel offerDataModel}) {
   return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
       ? offerDataModel.individualOfferDataModel.title

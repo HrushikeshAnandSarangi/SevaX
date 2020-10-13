@@ -4,9 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
+import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+
+import '../../flavor_config.dart';
 
 class InvitationManager {
   Map<String, InvitationViaLink> cacheList;
@@ -212,5 +220,95 @@ class InvitationStatus {
 
   InvitationStatus.isInvited({InvitationViaLink invitation}) {
     this.isInvited = true;
+  }
+}
+
+//export to  a new  file
+class OfferInvitationManager {
+  static Future<bool> handleInvitationNotificationForRequestCreatedFromOffer({
+    RequestModel requestModel,
+    OfferModel offerModel,
+    TimebankModel timebankModel,
+    String currentCommunity,
+    String senderSevaUserID,
+  }) async {
+    //if this if from offer
+    if (offerModel == null) return true;
+    switch (offerModel.type) {
+      case RequestType.CASH:
+      case RequestType.GOODS:
+        return await createNotificaitonForInvitee(
+          requestModel: requestModel,
+          offerModel: offerModel,
+          timebankModel: timebankModel,
+          currentCommunity: currentCommunity,
+          senderSevaUserID: senderSevaUserID,
+        ).then((value) => true).catchError((onError) => false);
+        break;
+
+      case RequestType.TIME:
+        return true;
+
+      default:
+        return true;
+    }
+  }
+
+  static Future<bool> createNotificaitonForInvitee({
+    RequestModel requestModel,
+    OfferModel offerModel,
+    TimebankModel timebankModel,
+    String currentCommunity,
+    String senderSevaUserID,
+  }) async {
+    //add to invited members
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.updateData(
+        Firestore.instance.collection('requests').document(requestModel.id), {
+      'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
+    });
+
+    NotificationsModel invitationNotification = getNotificationForInvitation(
+      currentCommunity: currentCommunity,
+      senderSevaUserID: senderSevaUserID,
+      inviteeSevaUserId: offerModel.sevaUserId,
+      requestModel: requestModel,
+      timebankModel: timebankModel,
+    );
+    batchWrite.setData(
+      Firestore.instance
+          .collection('users')
+          .document(offerModel.email)
+          .collection('notifications')
+          .document(invitationNotification.id),
+      invitationNotification.toMap(),
+    );
+
+    return await batchWrite
+        .commit()
+        .then((value) => true)
+        .catchError((onError) => false);
+  }
+
+  static NotificationsModel getNotificationForInvitation({
+    String inviteeSevaUserId,
+    RequestModel requestModel,
+    String currentCommunity,
+    String senderSevaUserID,
+    TimebankModel timebankModel,
+  }) {
+    return NotificationsModel(
+      id: utils.Utils.getUuid(),
+      timebankId: FlavorConfig.values.timebankId,
+      data: RequestInvitationModel(
+        requestModel: requestModel,
+        timebankModel: timebankModel,
+      ).toMap(),
+      isRead: false,
+      type: NotificationType.RequestInvite,
+      communityId: currentCommunity,
+      senderUserId: senderSevaUserID,
+      targetUserId: inviteeSevaUserId,
+    );
   }
 }

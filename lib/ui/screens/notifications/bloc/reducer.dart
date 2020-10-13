@@ -583,7 +583,7 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).cash_donation_invite}',
-      title: S.of(context).has_cash_donation,
+      title: "${user.fullname} ${S.of(context).has_cash_donation}",
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
@@ -592,23 +592,6 @@ class PersonalNotificationReducerForRequests {
             timabankName: requestInvitationModel.timebankModel.name,
           );
         }));
-
-        // if (SevaCore.of(context).loggedInUser.calendarId == null) {
-        //   _settingModalBottomSheet(context, requestInvitationModel,
-        //       notification.timebankId, notification.id, user);
-        // } else {
-        //   showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       return JoinRejectDialogView(
-        //         requestInvitationModel: requestInvitationModel,
-        //         timeBankId: notification.timebankId,
-        //         notificationId: notification.id,
-        //         userModel: user,
-        //       );
-        //     },
-        //   );
-        // }
       },
       timestamp: notification.timestamp,
     );

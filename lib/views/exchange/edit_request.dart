@@ -29,6 +29,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -1071,7 +1072,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               }
             },
           ),
-          TotalCredits(
+          CommonUtils.TotalCredits(
             context: context,
             requestCreditsMode: TotalCreditseMode.EDIT_MODE,
             requestModel: widget.requestModel,
