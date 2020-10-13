@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -32,10 +31,12 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -1097,7 +1098,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               }
             },
           ),
-          TotalCredits(
+          CommonUtils.TotalCredits(
             context: context,
             requestModel: requestModel,
             requestCreditsMode: TotalCreditseMode.CREATE_MODE,
@@ -1831,9 +1832,18 @@ class RequestCreateFormState extends State<RequestCreateForm>
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
       //create invitation if its from offer only for cash and goods
-
-
-      await handleInvitationNotification();
+      try {
+        await OfferInvitationManager
+            .handleInvitationNotificationForRequestCreatedFromOffer(
+          currentCommunity: widget.userModel.currentCommunity,
+          offerModel: widget.offer,
+          requestModel: requestModel,
+          senderSevaUserID: requestModel.sevaUserId,
+          timebankModel: timebankModel,
+        );
+      } on Exception catch (exception) {
+        //Log to crashlytics
+      }
 
       resultVar.add(requestModel.id);
       return resultVar;
@@ -1842,64 +1852,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel: requestModel);
       return resultVar;
     }
-  }
-
-  Future<bool> createNotificaitonForInvitee(
-    RequestModel requestModel,
-    OfferModel offerModel,
-    TimebankModel timebankModel,
-  ) async {
-    //add to invited members
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.updateData(
-        Firestore.instance.collection('requests').document(requestModel.id), {
-      'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
-    });
-
-    NotificationsModel invitationNotification = getNotificationForInvitation(
-      currentCommunity: widget.userModel.currentCommunity,
-      inviteeSevaUserId: offerModel.sevaUserId,
-      requestModel: requestModel,
-      timebankModel: timebankModel,
-      senderSevaUserID: widget.userModel.sevaUserID,
-    );
-    batchWrite.setData(
-      Firestore.instance
-          .collection('users')
-          .document(offerModel.email)
-          .collection('notifications')
-          .document(invitationNotification.id),
-      invitationNotification.toMap(),
-    );
-
-
-    return  await  batchWrite.commit().then((value) => true).catchError((onError) => false);
-  }
-
-
-
-
-
-  NotificationsModel getNotificationForInvitation({
-    String inviteeSevaUserId,
-    RequestModel requestModel,
-    String currentCommunity,
-    String senderSevaUserID,
-    TimebankModel timebankModel,
-  }) {
-    return NotificationsModel(
-      id: utils.Utils.getUuid(),
-      timebankId: FlavorConfig.values.timebankId,
-      data: RequestInvitationModel(
-        requestModel: requestModel,
-        timebankModel: timebankModel,
-      ).toMap(),
-      isRead: false,
-      type: NotificationType.RequestInvite,
-      communityId: currentCommunity,
-      senderUserId: senderSevaUserID,
-      targetUserId: inviteeSevaUserId,
-    );
   }
 
   Future _updateProjectModel() async {
@@ -1966,121 +1918,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           );
         });
   }
-
-  void handleInvitationNotification({OfferModel offerModel}) {
-  switch (offerModel.type) {
-    case RequestType.CASH:
-    case RequestType.GOODS:
-
-      // await createNotificaitonForInvitee;(
-      //    
-      // )  
-      break;
-
-    case RequestType.TIME:
-    break;
-  }
 }
-}
-
-
-
-Widget TotalCredits({
-  BuildContext context,
-  RequestModel requestModel,
-  TotalCreditseMode requestCreditsMode,
-}) {
-  var label;
-  var totalCredits =
-      requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
-  requestModel.numberOfHours = totalCredits;
-
-  if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
-    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      label = totalCredits.toString() +
-          ' ' +
-          S.of(context).timebank_max_seva_credit_message1 +
-          requestModel.maxCredits.toString() +
-          ' ' +
-          S.of(context).timebank_max_seva_credit_message2;
-    } else {
-      label = totalCredits.toString() +
-          ' ' +
-          S.of(context).personal_max_seva_credit_message1 +
-          requestModel.maxCredits.toString() +
-          ' ' +
-          S.of(context).personal_max_seva_credit_message2;
-    }
-  } else {
-    label = "";
-  }
-
-  return Container(
-    margin: EdgeInsets.only(top: 10),
-    child: Text(
-      label,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        fontFamily: 'Europa',
-        color: Colors.black54,
-      ),
-    ),
-  );
-}
-
-// Widget TotalCredits(
-//   context,
-//   requestModel,
-//   int starttimestamp,
-//   int endtimestamp,
-// ) {
-//   var label;
-//   var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-//       .inHours;
-//   var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-//       .inMinutes;
-//   var totalallowedhours;
-//   if (totalhours == 0) {
-//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
-//   } else {
-//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
-//   }
-
-//   var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
-//   requestModel.numberOfHours = totalCredits;
-//   if (totalallowedhours > 0 && totalCredits > 0) {
-//     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-//       label = totalCredits.toString() +
-//           ' ' +
-//           S.of(context).timebank_max_seva_credit_message1 +
-//           totalallowedhours.toString() +
-//           ' ' +
-//           S.of(context).timebank_max_seva_credit_message2;
-//     } else {
-//       label = totalCredits.toString() +
-//           ' ' +
-//           S.of(context).personal_max_seva_credit_message1 +
-//           totalallowedhours.toString() +
-//           ' ' +
-//           S.of(context).personal_max_seva_credit_message2;
-//     }
-//   } else {
-//     label = "";
-//   }
-
-//   return Text(
-//     label,
-//     style: TextStyle(
-//       fontSize: 16,
-//       fontWeight: FontWeight.normal,
-//       fontFamily: 'Europa',
-//       color: Colors.black54,
-//     ),
-//   );
-// }
 
 class ProjectSelection extends StatefulWidget {
   ProjectSelection({

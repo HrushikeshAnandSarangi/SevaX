@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../flavor_config.dart';
@@ -105,4 +107,50 @@ void showAdminAccessMessage({BuildContext context}) {
       );
     },
   );
+}
+
+class CommonUtils {
+  static Widget TotalCredits({
+    BuildContext context,
+    RequestModel requestModel,
+    TotalCreditseMode requestCreditsMode,
+  }) {
+    var label;
+    var totalCredits =
+        requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
+    requestModel.numberOfHours = totalCredits;
+
+    if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
+      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+        label = totalCredits.toString() +
+            ' ' +
+            S.of(context).timebank_max_seva_credit_message1 +
+            requestModel.maxCredits.toString() +
+            ' ' +
+            S.of(context).timebank_max_seva_credit_message2;
+      } else {
+        label = totalCredits.toString() +
+            ' ' +
+            S.of(context).personal_max_seva_credit_message1 +
+            requestModel.maxCredits.toString() +
+            ' ' +
+            S.of(context).personal_max_seva_credit_message2;
+      }
+    } else {
+      label = "";
+    }
+
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          fontFamily: 'Europa',
+          color: Colors.black54,
+        ),
+      ),
+    );
+  }
 }
