@@ -1142,7 +1142,7 @@ class CreateEditCommunityViewFormState
       context: mcontext,
       builder: (BuildContext bc) {
         return Container(
-          child: _scrollingList(context, focusNodes),
+          child: _scrollingList(mcontext, focusNodes),
         );
       },
     );
