@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -227,21 +226,18 @@ class _LoginPageState extends State<LoginPage> {
                                       return null;
                                     },
                                     onChanged: (value) {},
-                                                    initialValue: "",
-                                                    keyboardType: TextInputType
-                                                        .emailAddress,
-                                                    controller: null,
-                                                    decoration: InputDecoration(
-                                                      hintText: S
-                                                          .of(context)
-                                                          .your_email,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                LayoutBuilder(
+                                    initialValue: "",
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: null,
+                                    decoration: InputDecoration(
+                                      hintText: S.of(context).your_email,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                LayoutBuilder(
                                   builder: (context, size) {
                                     TextSpan span = TextSpan(
                                       text: S.of(context).reset_password +
@@ -265,32 +261,25 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                                            ),
-                                          );
-                                        }).then((onActivityResult) {
-                                      if (onActivityResult != null &&
-                                          onActivityResult['sendResetLink'] !=
-                                              null &&
-                                          onActivityResult['sendResetLink'] &&
-                                          onActivityResult['userEmail'] !=
-                                              null &&
-                                          onActivityResult['userEmail']
-                                              .toString()
-                                              .isNotEmpty) {
-                                        resetPassword(
-                                            onActivityResult['userEmail']);
-                                        _scaffoldKey.currentState
-                                            .hideCurrentSnackBar();
-                                      } else {}
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: Text(
-                                      S.of(context).reset,
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
+                          ),
+                        );
+                      }).then((onActivityResult) {
+                    if (onActivityResult != null &&
+                        onActivityResult['sendResetLink'] != null &&
+                        onActivityResult['sendResetLink'] &&
+                        onActivityResult['userEmail'] != null &&
+                        onActivityResult['userEmail'].toString().isNotEmpty) {
+                      resetPassword(onActivityResult['userEmail']);
+                      _scaffoldKey.currentState.hideCurrentSnackBar();
+                    } else {}
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    S.of(context).reset,
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -859,6 +848,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
+      handlePlatformException(error);
       Crashlytics.instance.log(error.toString());
     }
     isLoading = false;

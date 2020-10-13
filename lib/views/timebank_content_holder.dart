@@ -879,13 +879,15 @@ class DiscussionListState extends State<DiscussionList> {
                                           builder: (BuildContext viewContextS) {
                                             // return object of type Dialog
                                             return AlertDialog(
-                                              title: Text('Already reported!'),
+                                              title: Text(S
+                                                  .of(context)
+                                                  .already_reported),
                                               content: Text(
-                                                  'You already reported this feed'),
+                                                  S.of(context).feed_reported),
                                               actions: <Widget>[
                                                 FlatButton(
                                                   child: Text(
-                                                    'OK',
+                                                    S.of(context).ok,
                                                     style: TextStyle(
                                                       fontSize:
                                                           dialogButtonSize,
@@ -1041,6 +1043,7 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                                 Text('${news.likes.length}',
                                     style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     )),
                                 Padding(
@@ -1051,7 +1054,7 @@ class DiscussionListState extends State<DiscussionList> {
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black)))),
+                                                )))),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
