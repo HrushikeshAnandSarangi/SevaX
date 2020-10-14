@@ -125,6 +125,8 @@ class RequestsState extends State<RequestsModule> {
                                         builder: (context) => CreateRequest(
                                           timebankId: timebankId,
                                           projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
                                         ),
                                       ),
                                     );
@@ -146,6 +148,8 @@ class RequestsState extends State<RequestsModule> {
                                         builder: (context) => CreateRequest(
                                           timebankId: timebankId,
                                           projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
                                         ),
                                       ),
                                     );
@@ -699,8 +703,10 @@ class RequestListItemsState extends State<RequestListItems> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
-                              model.acceptors.contains(userEmail) ||
-                                      model.approvedUsers.contains(userEmail)
+                              model.email != userEmail &&
+                                      (model.acceptors.contains(userEmail) ||
+                                          model.approvedUsers
+                                              .contains(userEmail))
                                   ? Container(
                                       margin:
                                           EdgeInsets.only(top: 10, bottom: 10),

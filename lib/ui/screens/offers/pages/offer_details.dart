@@ -527,7 +527,7 @@ class OfferDetails extends StatelessWidget {
         builder: (context) => CreateRequest(
           isOfferRequest: true,
           offer: offerModel,
-          projectId: null,
+          projectId: '',
           projectModel: null,
           timebankId: offerModel.timebankId,
           userModel: SevaCore.of(context).loggedInUser,

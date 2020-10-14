@@ -40,7 +40,11 @@ class LocationPickerWidget extends StatelessWidget {
           context,
           MaterialPageRoute<LocationDataModel>(
             builder: (context) => LocationPicker(
-              selectedLocation: location,
+              selectedLocation: (location != null &&
+                      location.latitude != null &&
+                      location.longitude != null)
+                  ? location
+                  : null,
               selectedAddress: selectedAddress,
             ),
           ),

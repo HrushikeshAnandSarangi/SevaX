@@ -546,7 +546,8 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).goods_donation_invite}',
-      title: S.of(context).has_goods_donation,
+      title:
+          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_goods_donation}",
       onPressed: () {
         Navigator.push(
           context,
@@ -583,7 +584,8 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).cash_donation_invite}',
-      title: "${user.fullname} ${S.of(context).has_cash_donation}",
+      title:
+          "${requestInvitationModel.timebankModel.name} ${S.of(context).has_cash_donation}",
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
