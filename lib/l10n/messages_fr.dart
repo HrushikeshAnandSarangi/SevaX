@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Annuler l\'offre"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Voulez-vous vraiment annuler l\'offre?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Annuler l\'abonnement"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Votre abonnement est maintenant annulé. Jusqu\'à la fin de la période d\'abonnement en cours, votre carte de crédit ne sera pas débitée et les transactions pourront être effectuées jusqu\'à ce que la limite gratuite du plan actuel soit atteinte."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("Nous avons reçu une demande d\'annulation de votre abonnement. Nous sommes désolés de vous voir partir, mais il y a des cotisations impayées en ce moment. Veuillez effacer ces frais et tenter à nouveau l\'annulation"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("Nous sommes navrés de vous voir partir. Votre abonnement est maintenant annulé. À compter de la fin de la période d\'abonnement en cours, votre carte de crédit ne sera pas débitée"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Abonnement annulé"),

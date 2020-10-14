@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Cancel Offer"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to cancel the offer?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Cancel Subscription"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("We have received a request to cancel your subscription. While we are sorry to see you go, there are unpaid dues at this time. Please clear these dues and then attempt the cancelation again"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("We are sorry to see you go. Your subscription is now canceled. Beginning at the conclusion of the current subscription period, your credit card will not be charged"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Canceled subscription"),

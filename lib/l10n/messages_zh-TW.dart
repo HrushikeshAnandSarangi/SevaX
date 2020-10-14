@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("取消報價"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("您確定要取消報價嗎？"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("取消訂閱"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("您的訂閱現已取消。在當前訂閱期結束之前，將不會向您的信用卡收取費用，並且只有在達到當前計劃的免費限額之前才能進行交易。"),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("我們已收到取消您的訂閱的請求。很抱歉看到您離開，目前尚有未付的會費。請清除這些會費，然後再次嘗試取消"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("我們很傷心看你走。您的訂閱現已取消。從當前訂閱期結束之日起，將不會向您的信用卡收費"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("取消訂閱"),

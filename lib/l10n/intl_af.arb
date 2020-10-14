@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-10-14T18:03:17+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -1031,5 +1031,6 @@
     "only_community_admins_can_accept": "Slegs gemeenskapsadministrateurs kan aanbiedinge van geld \/ goedere aanvaar",
     "suggested": "Voorgestel",
     "cancel_subscription": "Kanselleer intekening",
-    "are_you_sure_subs_cancel": "Is u seker dat u u intekening wil kanselleer?"
+    "are_you_sure_subs_cancel": "Is u seker dat u u intekening wil kanselleer?",
+    "cancel_subscription_success_label": "U intekening is nou gekanselleer. Totdat u aan die einde van die huidige inskrywingstydperk begin, sal u kredietkaart nie gehef word nie en kan transaksies gedoen word totdat die vrye limiet van die huidige plan bereik is."
 }

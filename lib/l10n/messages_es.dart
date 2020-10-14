@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Cancelar oferta"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("¿Estás seguro de que deseas cancelar la oferta?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Cancelar suscripción"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Su suscripción ahora está cancelada. Hasta que comience al finalizar el período de suscripción actual, no se le cobrará a su tarjeta de crédito y se pueden realizar transacciones hasta que se alcance el límite gratuito del plan actual."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("Hemos recibido una solicitud para cancelar su suscripción. Si bien lamentamos que se vaya, hay cuotas impagas en este momento. Borre estas cuotas y luego intente cancelar nuevamente"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("Lamentamos verte marchar. Su suscripción ahora está cancelada. A partir de la conclusión del período de suscripción actual, no se le cobrará a su tarjeta de crédito"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Suscripción cancelada"),

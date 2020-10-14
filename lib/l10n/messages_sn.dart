@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Kanzura Kupa"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Une chokwadi here kuti unoda kukanzura kupihwa kwacho?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Kanzura Kunyorera"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Kunyorera kwako kwadzimwa. Kusvikira pakutanga pakupera kwenguva yezvino yekunyorera, kiredhiti kadhi yako haibhadhariswe uye kutengeserana kunogona kuitwa kudzamara muganho wepachena weurongwa hwazvino hwasvika."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("Isu takagamuchira chikumbiro chekudzima kunyorera kwako. Nepo tine urombo kukuona iwe uchienda, kune vasina kubhadhara mari panguva ino. Ndokumbirawo ubvise izvi zvakafanira wobva waedza kudzima zvakare"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("Tine hurombo kukuona uchienda. Kunyoresa kwako kwadzimwa. Kutanga pakupera kwenguva yezvino yekunyorera, kiredhiti kadhi yako haibhadhariswe"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Kukanzurwa kunyoreswa"),

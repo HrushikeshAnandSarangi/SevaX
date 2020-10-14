@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Ghairi Ofa"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Je! Una uhakika unataka kughairi ofa?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Ghairi Usajili"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("Usajili wako sasa umeghairiwa. Hadi mwanzo wa kuhitimisha kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa na shughuli zinaweza kufanywa hadi kikomo cha bure cha mpango wa sasa kifikiwe."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("Tumepokea ombi la kughairi usajili wako. Wakati tunasikitika kukuona ukienda, kuna malipo ambayo hayajalipwa kwa wakati huu. Tafadhali futa haki hizi kisha ujaribu kughairi tena"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("Tunasikitika kukuona ukienda. Usajili wako sasa umeghairiwa. Kuanzia mwisho wa kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Usajili umeghairiwa"),
