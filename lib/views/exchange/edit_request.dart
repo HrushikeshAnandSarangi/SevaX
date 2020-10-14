@@ -31,7 +31,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
@@ -771,11 +770,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              }
-              // else if (!emailPattern.hasMatch(value)) {
-              //   return S.of(context).enter_valid_link;
-              // }
-              else {
+              } else {
                 widget.requestModel.cashModel.venmoId = value;
 
                 return null;
