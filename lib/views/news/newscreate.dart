@@ -291,22 +291,17 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           elevation: 0,
                           child: Container(
                             constraints: BoxConstraints.loose(
-                              Size(MediaQuery.of(context).size.width - 220, 50),
+                              Size(MediaQuery.of(context).size.width - 200, 50),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(
-                                  'Posting to ' +
-                                      ((this.selectedTimebanks.length > 1)
-                                          ? this
-                                                  .selectedTimebanks
-                                                  .length
-                                                  .toString() +
-                                              ' Seva Communities'
-                                          : this.widget.timebankModel.name),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                Expanded(
+                                  child: Text(
+                                    "Posting to ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 ),
                                 Icon(Icons.arrow_drop_down)
                               ],

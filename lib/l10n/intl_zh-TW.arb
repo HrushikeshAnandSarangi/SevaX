@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:03:17+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -1029,5 +1029,7 @@
     "Suggested": "建議的",
     "entered": "已輸入",
     "only_community_admins_can_accept": "只有社區管理員才能接受金錢\/商品報價",
-    "suggested": "建議的"
+    "suggested": "建議的",
+    "cancel_subscription": "取消訂閱",
+    "are_you_sure_subs_cancel": "您確定要取消訂閱嗎？"
 }

@@ -766,8 +766,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.cashModel.venmoId = value;
             },
             validator: (value) {
-              requestModel.cashModel.venmoId = value;
-              return _validateEmailId(value);
+              if (value == null || value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else {
+                requestModel.cashModel.venmoId = value;
+                return null;
+              }
             },
           )
         ]);

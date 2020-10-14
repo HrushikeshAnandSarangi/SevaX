@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:03:17+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1029,5 +1029,7 @@
     "Suggested": "Imependekezwa",
     "entered": "Imeingia",
     "only_community_admins_can_accept": "Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa \/ bidhaa",
-    "suggested": "Imependekezwa"
+    "suggested": "Imependekezwa",
+    "cancel_subscription": "Ghairi Usajili",
+    "are_you_sure_subs_cancel": "Je! Una uhakika unataka kughairi usajili wako?"
 }

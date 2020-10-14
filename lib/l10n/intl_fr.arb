@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:03:17+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -1029,5 +1029,7 @@
     "Suggested": "Suggéré",
     "entered": "Entré",
     "only_community_admins_can_accept": "Seuls les administrateurs de la communauté peuvent accepter des offres d'argent \/ de biens",
-    "suggested": "Suggéré"
+    "suggested": "Suggéré",
+    "cancel_subscription": "Annuler l'abonnement",
+    "are_you_sure_subs_cancel": "Voulez-vous vraiment annuler votre abonnement?"
 }

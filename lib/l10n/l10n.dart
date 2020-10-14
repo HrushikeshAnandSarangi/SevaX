@@ -5195,6 +5195,16 @@ class S {
         'Suggested',
         name: 'suggested',
       );
+
+  String get cancel_subscription => Intl.message(
+        'Cancel Subscription',
+        name: 'cancel_subscription',
+      );
+
+  String get are_you_sure_subs_cancel => Intl.message(
+        'Are you sure you want to cancel your subscription ?',
+        name: 'are_you_sure_subs_cancel',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
