@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Zvataurwa"),
     "about" : MessageLookupByLibrary.simpleMessage("Nezve"),
     "accept" : MessageLookupByLibrary.simpleMessage("Bvuma"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Gamuchira Chipo"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Pinda Zita reBhangi"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Pinda chinobhadharwa chinoshanda"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Pinda Nzira yekufambisa"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Yakapinda"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Kanganiso yakaitika! Ndokumbirawo mudzoke gare gare uye muedze zvakare."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("Ini ndinobvuma kuti ini ndinodisisa kutevedzera aya Mitemo neMagariro."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("EULA Chibvumirano"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("Imwe kuvazhinji"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Ex kudzidzisa kirasi yera .."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("imwe kune zvakawanda zvinopihwa"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("MaCommunity admins chete ndiwo anogona kugamuchira kupihwa kwemari / zvinhu"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Chero ma CSV mafaera anotenderwa"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Mifananidzo yemifananidzo chete ndiyo inobvumidzwa ex: jpg, png \'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Pdf chete mafaera anotenderwa"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Ex: Zvimwe zvishoma nezve purojekiti yako iyo inozobatsira kufambidzana nayo"),
     "project_name" : MessageLookupByLibrary.simpleMessage("Project zita"),
     "projects" : MessageLookupByLibrary.simpleMessage("Zvirongwa"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Zvirongwa pano"),
     "promote" : MessageLookupByLibrary.simpleMessage("Kurudzira"),
     "promoted" : MessageLookupByLibrary.simpleMessage("YAKASIMBISWA"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Kukwidziridzwa kuna admin kubva kunhengo"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Sarudza Boka"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Sarudza maawa"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Sarudza Mubereki Seva Nharaunda"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Sarudza chirongwa"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Sarudza Chikumbiro"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Ndokumbira kuti usarudze Template kubva pane yakawanikwa maTemplate"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Sarudza Nharaunda yeSeva"),
