@@ -186,7 +186,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           Spacer(),
                           FlatButton(
                             child: Text(
-                              "Cancel Subscription",
+                              S.of(context).cancel_subscription,
                               style: TextStyle(
                                   color: FlavorConfig.values.theme.primaryColor,
                                   fontSize: 14),
@@ -220,13 +220,13 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       builder: (_context) {
         return AlertDialog(
           title: Text(
-            "Cancel Subscription",
+              S.of(context).cancel_subscription,
             textAlign: TextAlign.center,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text("Are you sure ?"),
+              Text(S.of(context).are_you_sure_subs_cancel),
               SizedBox(
                 height: 15,
               ),
