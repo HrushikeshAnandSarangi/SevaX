@@ -554,12 +554,12 @@ class DiscussionListState extends State<DiscussionList> {
                 return Expanded(
                   child: ListView(
                     children: <Widget>[
-//                      isPinned
-//                          ? newFeedsCard(
-//                              news: pinnedNewsModel,
-//                              isFromMessage: false,
-//                            )
-//                          : Offstage(),
+                      isPinned
+                          ? newFeedsCard(
+                              news: pinnedNewsModel,
+                              isFromMessage: false,
+                            )
+                          : Offstage(),
                       ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -606,16 +606,16 @@ class DiscussionListState extends State<DiscussionList> {
     filteredNewsList = newsList;
     filteredNewsList.forEach((newsModel) {
       if (newsModel.isPinned == true) {
-        filteredNewsList.remove(newsModel);
-        filteredNewsList.insert(0, newsModel);
-        //   pinnedNewsModel = newsModel;
-        //  isPinned = true;
+        //  filteredNewsList.remove(newsModel);
+        //  filteredNewsList.insert(0, newsModel);
+        pinnedNewsModel = newsModel;
+        isPinned = true;
       }
     });
 
-//    if (filteredNewsList.length > 1) {
-//      filteredNewsList.removeWhere((news) => news.isPinned == true);
-//    }
+    if (filteredNewsList.length > 1) {
+      filteredNewsList.removeWhere((news) => news.isPinned == true);
+    }
 
     return filteredNewsList;
   }
@@ -1052,9 +1052,9 @@ class DiscussionListState extends State<DiscussionList> {
                                         alignment: Alignment.centerLeft,
                                         child: Text('${news.comments.length}',
                                             style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                )))),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            )))),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
