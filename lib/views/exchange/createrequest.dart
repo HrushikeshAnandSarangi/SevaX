@@ -752,7 +752,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).email_hint,
+              hintText: S.of(context).venmo_hint,
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
