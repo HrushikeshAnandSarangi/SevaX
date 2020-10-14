@@ -254,7 +254,8 @@ class OfferListItems extends StatelessWidget {
   Future<bool> adminCheckToAcceptOfferDialog(BuildContext context) async {
     return CustomDialogs.generalDialogWithCloseButton(
       context,
-      'Only admin can accept Goods/Cash offers',
+      // 'Only admin can accept Goods/Cash offers',
+      'Only Community admins can accept offers of money / goods',
     );
   }
 
