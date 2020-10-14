@@ -178,13 +178,13 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             _bloc.community.payment['planId'] ==
                     SevaBillingPlans.NEIGHBOUR_HOOD_PLAN
                 ? Container()
-                : !_bloc.community.subscriptionCancelled ? Column(
+                : Column(
                     children: [
                       SizedBox(height: 70),
                       Row(
                         children: [
                           Spacer(),
-                          FlatButton(
+                            !_bloc.community.subscriptionCancelled ? FlatButton(
                             child: Text(
                               S.of(context).cancel_subscription,
                               style: TextStyle(
@@ -201,12 +201,14 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                             onPressed: () async {
                               _showCancelConfirmationDialog(context);
                             },
-                          ),
+                          )
+                            : Text(S.of(context).cancel_subscription_success_label,
+                              style:TextStyle(fontSize: 14)),
                           Spacer(),
                         ],
                       ),
                     ],
-                  ) : S.of(context).cancel_subscription_success_label
+                  )
           ],
         ),
       ),
