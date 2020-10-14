@@ -5165,6 +5165,36 @@ class S {
         'Are you sure you want to clear all notifications?',
         name: 'clear_notications',
       );
+
+  String get select_project => Intl.message(
+        'Select project',
+        name: 'select_project',
+      );
+
+  String get projects_here => Intl.message(
+        'Projects here',
+        name: 'projects_here',
+      );
+
+  String get Suggested => Intl.message(
+        'Suggested',
+        name: 'Suggested',
+      );
+
+  String get entered => Intl.message(
+        'Entered',
+        name: 'entered',
+      );
+
+  String get only_community_admins_can_accept => Intl.message(
+        'Only Community admins can accept offers of money / goods',
+        name: 'only_community_admins_can_accept',
+      );
+
+  String get suggested => Intl.message(
+        'Suggested',
+        name: 'suggested',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

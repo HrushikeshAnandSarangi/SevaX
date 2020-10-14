@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Suggested"),
     "about" : MessageLookupByLibrary.simpleMessage("About"),
     "accept" : MessageLookupByLibrary.simpleMessage("Accept"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Accept Offer"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Enter Bank Name"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Enter valid payment link"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Enter Routing Number"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Entered"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Error occurred! Please come back later and try again."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("I agree that I am willing to adhere to these Terms and Conditions."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("EULA Agreement"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("One to many"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Ex teaching a python class.."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("one to many offers\n"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Only Community admins can accept offers of money / goods"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Only CSV files are allowed"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Only image types are allowed ex:jpg, png\'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Only Pdf files are allowed"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Ex: A bit more about your project which will help to associate with"),
     "project_name" : MessageLookupByLibrary.simpleMessage("Project Name"),
     "projects" : MessageLookupByLibrary.simpleMessage("Projects"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Projects here"),
     "promote" : MessageLookupByLibrary.simpleMessage("Promote"),
     "promoted" : MessageLookupByLibrary.simpleMessage("PROMOTED"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Promotion to admin from member"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Select Group"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Select hours"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Select Parent Seva Community"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Select project"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Select Request"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Please select a Template from the list of available Templates"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Select a Seva Community"),
@@ -888,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Subscription cancelation"),
     "successfully" : MessageLookupByLibrary.simpleMessage("successfully."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Suggested"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Are you sure you would like to cancel this One-to-Many offer"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Switching Seva Community"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Taking you to your new Seva Community..."),

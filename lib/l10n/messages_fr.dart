@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Suggéré"),
     "about" : MessageLookupByLibrary.simpleMessage("À propos de"),
     "accept" : MessageLookupByLibrary.simpleMessage("J\'accepte"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Accepter l\'offre"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Entrez le nom de la banque"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Entrez un lien de paiement valide"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Entrez le numéro de gamme"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Entré"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Erreur est survenue! S\'il vous plaît, revenez plus tard et réessayez."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("J\'accepte que je serai prêt à être lié par ces termes et conditions."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("accord CLUF"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("Un à plusieurs"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Ex enseigner une classe de python .."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("une à plusieurs offres\n"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Seuls les administrateurs de la communauté peuvent accepter des offres d\'argent / de biens"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Seuls les fichiers CSV sont autorisés"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Seuls les types d\'images sont autorisés ex: jpg, png \'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Seuls les fichiers PDF sont autorisés"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Aider les autres membres à s\'associer à votre projet, en donnant plus de détails sur celui-ci"),
     "project_name" : MessageLookupByLibrary.simpleMessage("nom du projet"),
     "projects" : MessageLookupByLibrary.simpleMessage("Projets"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Projets ici"),
     "promote" : MessageLookupByLibrary.simpleMessage("Promouvoir"),
     "promoted" : MessageLookupByLibrary.simpleMessage("PROMOTIONNÉ"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Promotion d\'administrateur du membre"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Sélectionnez un groupe"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Sélectionnez les heures"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Sélectionnez la communauté Seva parent"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Sélectionnez un projet"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Sélectionnez demande"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Veuillez sélectionner un modèle dans la liste des modèles disponibles"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Sélectionnez une communauté Seva"),
@@ -888,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Annulation d\'abonnement"),
     "successfully" : MessageLookupByLibrary.simpleMessage("avec succès."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Suggéré"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Êtes-vous sûr de vouloir annuler cette offre One-to-Many"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Changer de communauté Seva"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Vous emmener dans votre nouvelle communauté Seva ..."),

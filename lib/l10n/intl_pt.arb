@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-10-13T11:34:42+00:00",
+    "@@last_modified": "2020-10-14T09:00:25+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1023,5 +1023,11 @@
     "are_you_sure": "Você tem certeza que quer",
     "already_added": "já adicionado a este pedido",
     "offer_updated": "Oferta atualizada",
-    "clear_notications": "Tem certeza de que deseja limpar todas as notificações?"
+    "clear_notications": "Tem certeza de que deseja limpar todas as notificações?",
+    "select_project": "Selecione o projeto",
+    "projects_here": "Projetos aqui",
+    "Suggested": "Sugerido",
+    "entered": "Inscrito",
+    "only_community_admins_can_accept": "Apenas os administradores da comunidade podem aceitar ofertas de dinheiro \/ bens",
+    "suggested": "Sugerido"
 }

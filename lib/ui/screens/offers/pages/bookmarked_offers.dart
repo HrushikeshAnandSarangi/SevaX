@@ -127,168 +127,172 @@ class BookmarkedOffers extends StatelessWidget {
                   Radius.circular(25.0),
                 ),
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _getCloseButton(viewContext),
-                  Container(
-                    height: 70,
-                    width: 70,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          userModel.photoURL ?? defaultUserImageURL),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      userModel.fullname,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _getCloseButton(viewContext),
+                    Container(
+                      height: 70,
+                      width: 70,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            userModel.photoURL ?? defaultUserImageURL),
                       ),
                     ),
-                  ),
-                  if (userModel.bio != null)
                     Padding(
-                      padding: EdgeInsets.all(0.0),
+                      padding: EdgeInsets.all(4.0),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(4.0),
                       child: Text(
-                        S.of(context).about + " " + userModel.fullname,
+                        userModel.fullname,
                         style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-                        maxLines: 5,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  getBio(context, userModel),
-                  Center(
-                    child: Text(
-                        S
-                            .of(context)
-                            .will_be_added_to_request
-                            .replaceFirst('***', userModel.fullname),
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
-                        textAlign: TextAlign.center),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            S.of(context).create_request,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
+                    if (userModel.bio != null)
+                      Padding(
+                        padding: EdgeInsets.all(0.0),
+                        child: Text(
+                          S.of(context).about + " " + userModel.fullname,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
                           ),
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        onPressed: () async {
-                          // Once approved
-
-                          Navigator.pop(viewContext);
-
-                          Navigator.push(
-                            parentContext,
-                            MaterialPageRoute(
-                              builder: (parentContext) => CreateRequest(
-                                isOfferRequest: true,
-                                offer: model,
-                                timebankId: model.timebankId,
-                                userModel: userModel,
-                                projectId: "",
-                              ),
+                      ),
+                    getBio(context, userModel),
+                    Center(
+                      child: Text(
+                          S
+                              .of(context)
+                              .will_be_added_to_request
+                              .replaceFirst('***', userModel.fullname),
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                          child: Container(
+                            width: double.infinity,
+                            child: Text(
+                              S.of(context).create_request,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
                             ),
-                          );
-                        },
-                      ),
-                      RaisedButton(
-                        child: Container(
-                          width: double.infinity,
-                          child: Text(
-                            'Add to Existing Request',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
                           ),
-                        ),
-                        onPressed: () async {
-                          // Once approved
+                          onPressed: () async {
+                            // Once approved
 
-                          Navigator.pop(viewContext);
-                          if (timebankModel.admins.contains(
-                            SevaCore.of(parentContext).loggedInUser.sevaUserID,
-                          )) {
+                            Navigator.pop(viewContext);
+
                             Navigator.push(
                               parentContext,
                               MaterialPageRoute(
-                                builder: (parentContext) =>
-                                    AdminOfferRequestsTab(
-                                  timebankid: model.timebankId,
-                                  parentContext: parentContext,
-                                  userModel: userModel,
-                                ),
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              parentContext,
-                              MaterialPageRoute(
-                                builder: (context) => AdminPersonalRequests(
+                                builder: (parentContext) => CreateRequest(
+                                  isOfferRequest: true,
+                                  offer: model,
                                   timebankId: model.timebankId,
-                                  isTimebankRequest: true,
-                                  parentContext: parentContext,
                                   userModel: userModel,
-                                  showAppBar: true,
+                                  projectId: "",
                                 ),
                               ),
                             );
-                          }
-                        },
-                      ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Container(
+                          },
+                        ),
+                        RaisedButton(
+                          child: Container(
                             width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                'Remove from bookmark',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )),
-                        onPressed: () async {
-                          removeBookmark(model.id, sevaUserId);
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Container(
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                'Cancel',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )),
-                        onPressed: () async {
-                          // request declined
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                    ],
-                  )
-                ],
+                            child: Text(
+                              'Add to Existing Request',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+
+                            Navigator.pop(viewContext);
+                            if (timebankModel.admins.contains(
+                              SevaCore.of(parentContext)
+                                  .loggedInUser
+                                  .sevaUserID,
+                            )) {
+                              Navigator.push(
+                                parentContext,
+                                MaterialPageRoute(
+                                  builder: (parentContext) =>
+                                      AdminOfferRequestsTab(
+                                    timebankid: model.timebankId,
+                                    parentContext: parentContext,
+                                    userModel: userModel,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                parentContext,
+                                MaterialPageRoute(
+                                  builder: (context) => AdminPersonalRequests(
+                                    timebankId: model.timebankId,
+                                    isTimebankRequest: true,
+                                    parentContext: parentContext,
+                                    userModel: userModel,
+                                    showAppBar: true,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Container(
+                              width: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  'Remove from bookmark',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )),
+                          onPressed: () async {
+                            removeBookmark(model.id, sevaUserId);
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                        RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Container(
+                              width: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  'Cancel',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              )),
+                          onPressed: () async {
+                            // request declined
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             );
           },

@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("建議的"),
     "about" : MessageLookupByLibrary.simpleMessage("關於"),
     "accept" : MessageLookupByLibrary.simpleMessage("接受"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("接受報價"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("輸入銀行名稱"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("輸入有效的付款鏈接"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("輸入路由號碼"),
+    "entered" : MessageLookupByLibrary.simpleMessage("已輸入"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("發生了錯誤！請稍后再試，然后重試。"),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("我同意我將受這些條款和條件的約束。"),
     "eula_title" : MessageLookupByLibrary.simpleMessage(" EULA協議"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("一對多"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("舉例：教學Python.."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("一對多報價\n"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("只有社區管理員才能接受金錢/商品報價"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("只允許CSV文件"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("僅允許使用圖片類型，例如：jpg，png\'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("僅允許使用Pdf文件"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("例如：有關您的項目的更多信息。"),
     "project_name" : MessageLookupByLibrary.simpleMessage("項目名稱"),
     "projects" : MessageLookupByLibrary.simpleMessage("專案"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("這裡的項目"),
     "promote" : MessageLookupByLibrary.simpleMessage("推廣"),
     "promoted" : MessageLookupByLibrary.simpleMessage("PROMOTED"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("從會員晉升為管理員"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("選擇組"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("選擇時間"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("選擇家長Seva社區"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("選擇項目"),
     "select_request" : MessageLookupByLibrary.simpleMessage("選擇需求"),
     "select_template" : MessageLookupByLibrary.simpleMessage("請從可用模板列表中選擇一個模板"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("選擇一個Seva社區"),
@@ -888,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("訂閱取消"),
     "successfully" : MessageLookupByLibrary.simpleMessage("成功地."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("建議的"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("您確定要取消此一對多報價嗎？"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("切換Seva社區"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("帶您進入新的Seva社區..."),

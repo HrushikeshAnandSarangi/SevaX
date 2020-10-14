@@ -459,11 +459,21 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottombarForCreator {
-    canDeleteRequest = widget.requestItem.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID &&
-        widget.requestItem.acceptors.length == 0 &&
-        widget.requestItem.approvedUsers.length == 0 &&
-        widget.requestItem.invitedUsers.length == 0;
+    if (widget.requestItem.requestType == RequestType.TIME) {
+      canDeleteRequest = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID &&
+          widget.requestItem.acceptors.length == 0 &&
+          widget.requestItem.approvedUsers.length == 0 &&
+          widget.requestItem.invitedUsers.length == 0;
+    } else if (widget.requestItem.requestType == RequestType.GOODS) {
+      canDeleteRequest = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID &&
+          widget.requestItem.goodsDonationDetails.donors == null;
+    } else {
+      canDeleteRequest = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID &&
+          widget.requestItem.cashModel.amountRaised == 0;
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[

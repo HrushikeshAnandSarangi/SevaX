@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Imependekezwa"),
     "about" : MessageLookupByLibrary.simpleMessage("Kuhusu"),
     "accept" : MessageLookupByLibrary.simpleMessage("Kubali"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Kubali Ofa"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Ingiza Jina la Benki"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Ingiza kiunga halali cha malipo"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Ingiza Nambari ya Kuelekeza"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Imeingia"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Hitilafu imetokea! Tafadhali rudi baadaye na ujaribu tena."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("Ninakubali kuwa niko tayari kufuata Masharti na Masharti haya."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("Mkataba wa EULA"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("Moja kwa nyingi"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Mf kufundisha darasa la chatu .."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("moja kwa ofa nyingi"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa / bidhaa"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Faili za CSV tu zinaruhusiwa"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Aina za picha tu zinaruhusiwa ex: jpg, png \'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Faili za Pdf tu zinaruhusiwa"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Mf: Zaidi zaidi juu ya mradi wako ambao utasaidia kuungana nao"),
     "project_name" : MessageLookupByLibrary.simpleMessage("Jina la mradi"),
     "projects" : MessageLookupByLibrary.simpleMessage("Miradi"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Miradi hapa"),
     "promote" : MessageLookupByLibrary.simpleMessage("Kukuza"),
     "promoted" : MessageLookupByLibrary.simpleMessage("ANAENDELEZWA"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Kukuza kwa msimamizi kutoka kwa mwanachama"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Chagua Kikundi"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Chagua masaa"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Chagua Jumuiya ya Mzazi Seva"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Chagua mradi"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Chagua Ombi"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Tafadhali chagua Kiolezo kutoka kwenye orodha ya Matukio yanayopatikana"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Chagua Jumuiya ya Seva"),
@@ -888,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Kughairi usajili"),
     "successfully" : MessageLookupByLibrary.simpleMessage("mafanikio."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Imependekezwa"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Je! Una uhakika ungetaka kughairi ofa hii ya One-to-Many"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Kubadilisha Jamii ya Seva"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Kukupeleka kwenye Jumuiya yako mpya ya Seva ..."),
