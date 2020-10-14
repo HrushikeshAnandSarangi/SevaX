@@ -396,7 +396,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                                   MaterialPageRoute(
                                                       builder: (context) {
                                                           return AddToCalendar(
-                                                              isOfferRequest: null,
+                                                              isOfferRequest: false,
                                                               offer: _bloc.mainOfferModel,
                                                               requestModel: null,
                                                               userModel: null,

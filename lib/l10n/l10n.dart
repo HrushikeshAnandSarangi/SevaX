@@ -906,7 +906,7 @@ class S {
       );
 
   String get notifications_invited_to_join => Intl.message(
-        'has invited you to join',
+        'has invited you to join the',
         name: 'notifications_invited_to_join',
       );
 
@@ -3361,12 +3361,12 @@ class S {
       );
 
   String get invite_message => Intl.message(
-        'Seva Communities are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        'Seva Communities allow you to volunteer and receive Seva credits that can be used by you for getting the community to help you with getting things done for you. Use the code',
         name: 'invite_message',
       );
 
   String get invite_prompt => Intl.message(
-        'when prompted to join this Seva Community. Please download the app from the links provided at https://sevaexchange.page.link/sevaxapp',
+        'when prompted to join this community. Please download the SevaX app from the links provided at https://sevaexchange.page.link/sevaxapp',
         name: 'invite_prompt',
       );
 
@@ -5102,7 +5102,7 @@ class S {
       );
 
   String get sevax_global_creation_error => Intl.message(
-        '\"The SevaX Global Community\" is a protected community. Only Admins can post content here',
+        '\"SevaX Global\" is a protected community. Only Admins can post content here.',
         name: 'sevax_global_creation_error',
       );
 
@@ -5189,6 +5189,11 @@ class S {
   String get only_community_admins_can_accept => Intl.message(
         'Only Community admins can accept offers of money / goods',
         name: 'only_community_admins_can_accept',
+      );
+
+  String get suggested => Intl.message(
+        'Suggested',
+        name: 'suggested',
       );
 }
 

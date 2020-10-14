@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T13:05:49+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -177,7 +177,7 @@
     "notifications_debited_to": "ha sido cargado en su cuenta",
     "notifications_offer_accepted": "Oferta aceptada",
     "notifications_shown_interest": "ha mostrado interés en su oferta",
-    "notifications_invited_to_join": "Convidou você para participar",
+    "notifications_invited_to_join": "te ha invitado a unirte al",
     "notifications_group_join_invite": "Convite para ingresso no grupo",
     "notifications_new_member_signup": "Nuevo miembro registrado",
     "notifications_credits_for": "Créditos para",
@@ -668,8 +668,8 @@
     "expired": "Expirado",
     "active": "Ativo",
     "share_code": "Compartilhar código",
-    "invite_message": "Las comunidades de Seva son comunidades que le permiten ser voluntario y también recibir créditos de tiempo para hacer las cosas por usted. Usa el código",
-    "invite_prompt": "cuando se le solicite unirse a esta Comunidad Seva. Descargue la aplicación desde los enlaces que se proporcionan en https:\/\/sevaexchange.page.link\/sevaxapp",
+    "invite_message": "Las comunidades de Seva le permiten ser voluntario y recibir créditos de Seva que usted puede usar para lograr que la comunidad lo ayude a hacer las cosas por usted. Usa el código",
+    "invite_prompt": "cuando se le solicite unirse a esta comunidad. Descargue la aplicación SevaX desde los enlaces provistos en https:\/\/sevaexchange.page.link\/sevaxapp",
     "code_generated": "Código gerado",
     "is_your_code": "é o seu código.",
     "publish_code": "Código de publicação",
@@ -1011,7 +1011,7 @@
     "plan_upgrade_message_user": "Póngase en contacto con el administrador de su Comunidad Seva para activar esta función",
     "seva_community": "Comunidad Seva",
     "venmo_hint": "Proporcione su nombre de usuario de Venmo",
-    "sevax_global_creation_error": "\"La Comunidad Global SevaX\" es una comunidad protegida. Solo los administradores pueden publicar contenido aquí",
+    "sevax_global_creation_error": "\"SevaX Global\" es una comunidad protegida. Solo los administradores pueden publicar contenido aquí.",
     "alert": "Alerta",
     "cancelled_subscription": "Suscripción cancelada",
     "subscription_cancellation": "Cancelación de suscripción",
@@ -1028,5 +1028,6 @@
     "projects_here": "Proyectos aquí",
     "Suggested": "Sugirió",
     "entered": "Ingresó",
-    "only_community_admins_can_accept": "Solo los administradores de la comunidad pueden aceptar ofertas de dinero \/ bienes"
+    "only_community_admins_can_accept": "Solo los administradores de la comunidad pueden aceptar ofertas de dinero \/ bienes",
+    "suggested": "Sugirió"
 }

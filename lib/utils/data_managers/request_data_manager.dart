@@ -41,6 +41,18 @@ Future<void> updateRequest({@required RequestModel requestModel}) async {
       .updateData(requestModel.toMap());
 }
 
+Future<void> updateRequestsByFields({List<String> requestIds, Map<String, dynamic> fields}) async {
+    var futures = <Future>[];
+    int i;
+    for(i=0 ; i<requestIds.length ; i++) {
+        futures.add(Firestore.instance
+            .collection('requests')
+            .document(requestIds[i])
+            .updateData(fields));
+    }
+    await Future.wait(futures);
+}
+
 Future<void> createDonation({@required DonationModel donationModel}) async {
   return await Firestore.instance
       .collection('donations')

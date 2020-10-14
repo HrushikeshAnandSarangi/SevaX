@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T13:05:49+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -177,7 +177,7 @@
     "notifications_debited_to": "inobviswa kubva kuaccount yako",
     "notifications_offer_accepted": "Offer Yakagamuchirwa",
     "notifications_shown_interest": "aratidza kufarira zvaunopa",
-    "notifications_invited_to_join": "akakoka iwe kuti ubatane",
+    "notifications_invited_to_join": "yakakukoka iwe kujoina",
     "notifications_group_join_invite": "Boka rejojo kukoka",
     "notifications_new_member_signup": "Nhengo nyowani yakasaina",
     "notifications_credits_for": "Zvikwereti zve",
@@ -668,8 +668,8 @@
     "expired": "Zvakapera",
     "active": "Inoshanda",
     "share_code": "Goverana kodhi",
-    "invite_message": "Seva Nharaunda ndidzo nharaunda dzinokutendera iwe kuti uzvipire uye zvakare kugamuchira nguva dzechikwereti pakuitira kuti zvinhu zviitwe kwauri. Shandisa kodhi",
-    "invite_prompt": "paunokurudzirwa kujoina ino Seva Nharaunda. Ndokumbirawo utore iyo app kubva kune zvinongedzo zvakapihwa pa https:\/\/sevaexchange.page.link\/sevaxapp",
+    "invite_message": "Seva Nharaunda dzinokutendera iwe kuti uzvipire uye ugamuchire zvikwereti zveSeva zvinogona kushandiswa newe pakuita kuti nharaunda ikubatsire iwe nekuitira zvinhu iwe. Shandisa kodhi",
+    "invite_prompt": "paunokurudzirwa kujoina nharaunda ino. Ndokumbirawo utore iyo SevaX app kubva kune zvinongedzo zvakapihwa pa https:\/\/sevaexchange.page.link\/sevaxapp",
     "code_generated": "Code yakagadzirwa",
     "is_your_code": "ndiyo kodhi yako.",
     "publish_code": "Dhinda kodhi",
@@ -1011,7 +1011,7 @@
     "plan_upgrade_message_user": "Ndokumbira kuti ubate admin weSeva Nharaunda yako kuti umise chinhu ichi",
     "seva_community": "Seva Nharaunda",
     "venmo_hint": "Ipa zita rako rezita reVenmo",
-    "sevax_global_creation_error": "\"Iyo SevaX Global Nharaunda\" inharaunda yakachengetedzwa. MaAdmin chete ndiwo anogona kutumira zvemukati pano",
+    "sevax_global_creation_error": "\"SevaX Global\" inharaunda yakachengetedzwa. MaAdmin chete ndiwo anogona kutumira zvemukati pano.",
     "alert": "Alert",
     "cancelled_subscription": "Kukanzurwa kunyoreswa",
     "subscription_cancellation": "Kunyoreswa kukanzura",
@@ -1028,5 +1028,6 @@
     "projects_here": "Zvirongwa pano",
     "Suggested": "Zvataurwa",
     "entered": "Yakapinda",
-    "only_community_admins_can_accept": "MaCommunity admins chete ndiwo anogona kugamuchira kupihwa kwemari \/ zvinhu"
+    "only_community_admins_can_accept": "MaCommunity admins chete ndiwo anogona kugamuchira kupihwa kwemari \/ zvinhu",
+    "suggested": "Zvataurwa"
 }

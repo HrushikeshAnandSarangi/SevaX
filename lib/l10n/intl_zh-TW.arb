@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T13:05:49+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -177,7 +177,7 @@
     "notifications_debited_to": "已從您的帳戶中扣除",
     "notifications_offer_accepted": "接受報價",
     "notifications_shown_interest": "對您的報價有興趣",
-    "notifications_invited_to_join": "已邀請您加入",
+    "notifications_invited_to_join": "邀請您加入",
     "notifications_group_join_invite": "群組加入邀請",
     "notifications_new_member_signup": "新會員注冊",
     "notifications_credits_for": "記入原因",
@@ -668,8 +668,8 @@
     "expired": "過期",
     "active": "活動中",
     "share_code": "分享代碼",
-    "invite_message": "Seva社區是一個社區，它使您能夠志願服務，並能獲得時間積分，為您完成工作。使用代碼",
-    "invite_prompt": "當系統提示您加入此Seva社區時。請從https:\/\/sevaexchange.page.link\/sevaxapp提供的鏈接下載該應用程序",
+    "invite_message": "Seva社區可讓您自願參加並獲得Seva積分，您可以將其用於建立社區，以幫助您為自己完成工作。使用代碼",
+    "invite_prompt": "當系統提示您加入該社區時。請從https:\/\/sevaexchange.page.link\/sevaxapp提供的鏈接下載SevaX應用程序。",
     "code_generated": "代碼生成",
     "is_your_code": "這是你的代碼。",
     "publish_code": "發布代碼",
@@ -1011,7 +1011,7 @@
     "plan_upgrade_message_user": "請聯繫您的Seva社區管理員以激活此功能",
     "seva_community": "塞瓦社區",
     "venmo_hint": "提供您的Venmo用戶名",
-    "sevax_global_creation_error": "“ SevaX全球社區”是受保護的社區。只有管​​理員可以在此處發佈內容",
+    "sevax_global_creation_error": "“ SevaX Global”是受保護的社區。只有管​​理員可以在此處發佈內容。",
     "alert": "警報",
     "cancelled_subscription": "取消訂閱",
     "subscription_cancellation": "訂閱取消",
@@ -1028,5 +1028,6 @@
     "projects_here": "這裡的項目",
     "Suggested": "建議的",
     "entered": "已輸入",
-    "only_community_admins_can_accept": "只有社區管理員才能接受金錢\/商品報價"
+    "only_community_admins_can_accept": "只有社區管理員才能接受金錢\/商品報價",
+    "suggested": "建議的"
 }
