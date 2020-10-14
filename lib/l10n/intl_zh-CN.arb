@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:03:17+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -1029,5 +1029,7 @@
     "Suggested": "建议的",
     "entered": "已输入",
     "only_community_admins_can_accept": "只有社区管理员才能接受金钱\/商品报价",
-    "suggested": "建议的"
+    "suggested": "建议的",
+    "cancel_subscription": "取消订阅",
+    "are_you_sure_subs_cancel": "您确定要取消订阅吗？"
 }
