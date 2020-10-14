@@ -1026,7 +1026,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   String shareText(TimebankCodeModel timebankCode) {
     var text =
-        "${SevaCore.of(context).loggedInUser.fullname} ${S.of(context).notifications_invited_to_join} ${timebankModel.name}\" ${S.of(context).timebank}. ${S.of(context).invite_message} \"${timebankCode.timebankCode}\" ${S.of(context).invite_prompt}";
+        "${SevaCore.of(context).loggedInUser.fullname} ${S.of(context).notifications_invited_to_join} \"${timebankModel.name}\" ${S.of(context).community.toLowerCase()}. ${S.of(context).invite_message} \"${timebankCode.timebankCode}\" ${S.of(context).invite_prompt}";
     return text;
   }
 
