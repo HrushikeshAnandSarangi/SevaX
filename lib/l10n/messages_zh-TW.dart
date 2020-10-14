@@ -893,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("訂閱取消"),
     "successfully" : MessageLookupByLibrary.simpleMessage("成功地."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("建議的"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("您確定要取消此一對多報價嗎？"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("切換Seva社區"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("帶您進入新的Seva社區..."),

@@ -893,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Intekening van intekening"),
     "successfully" : MessageLookupByLibrary.simpleMessage("suksesvol"),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Voorgestel"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Are you sure you would like to cancel this One-to-Many offer"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Skakel oor van Seva-gemeenskap"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Neem u na u nuwe Seva-gemeenskap ..."),

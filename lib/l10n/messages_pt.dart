@@ -893,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Cancelamento de assinatura"),
     "successfully" : MessageLookupByLibrary.simpleMessage("com sucesso."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Sugerido"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Tem certeza de que deseja cancelar esta oferta Um para Muitos"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Mudando de comunidade Seva"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Levando você para sua nova comunidade Seva ..."),

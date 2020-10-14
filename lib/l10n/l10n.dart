@@ -5190,6 +5190,11 @@ class S {
         'Only Community admins can accept offers of money / goods',
         name: 'only_community_admins_can_accept',
       );
+
+  String get suggested => Intl.message(
+        'Suggested',
+        name: 'suggested',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T09:00:25+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1028,5 +1028,6 @@
     "projects_here": "Projetos aqui",
     "Suggested": "Sugerido",
     "entered": "Inscrito",
-    "only_community_admins_can_accept": "Apenas os administradores da comunidade podem aceitar ofertas de dinheiro \/ bens"
+    "only_community_admins_can_accept": "Apenas os administradores da comunidade podem aceitar ofertas de dinheiro \/ bens",
+    "suggested": "Sugerido"
 }

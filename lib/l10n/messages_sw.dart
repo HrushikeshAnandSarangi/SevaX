@@ -893,6 +893,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription" : m6,
     "subscription_cancellation" : MessageLookupByLibrary.simpleMessage("Kughairi usajili"),
     "successfully" : MessageLookupByLibrary.simpleMessage("mafanikio."),
+    "suggested" : MessageLookupByLibrary.simpleMessage("Imependekezwa"),
     "sure_to_cancel_one_to_many_offer" : MessageLookupByLibrary.simpleMessage("Je! Una uhakika ungetaka kughairi ofa hii ya One-to-Many"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Kubadilisha Jamii ya Seva"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Kukupeleka kwenye Jumuiya yako mpya ya Seva ..."),

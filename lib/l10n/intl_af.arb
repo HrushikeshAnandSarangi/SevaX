@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T09:00:25+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -1028,5 +1028,6 @@
     "projects_here": "Projekte hier",
     "Suggested": "Voorgestel",
     "entered": "Ingeskryf",
-    "only_community_admins_can_accept": "Slegs gemeenskapsadministrateurs kan aanbiedinge van geld \/ goedere aanvaar"
+    "only_community_admins_can_accept": "Slegs gemeenskapsadministrateurs kan aanbiedinge van geld \/ goedere aanvaar",
+    "suggested": "Voorgestel"
 }

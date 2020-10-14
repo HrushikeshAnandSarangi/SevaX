@@ -2318,7 +2318,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     ),
                     Text(
                       suggestionMode == SuggestionMode.SUGGESTED
-                          ? S.of(context).Suggested
+                          ? S.of(context).suggested
                           : S.of(context).entered,
                       style: TextStyle(
                         fontSize: 16,

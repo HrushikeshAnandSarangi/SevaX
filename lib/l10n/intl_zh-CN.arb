@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T09:00:25+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -1028,5 +1028,6 @@
     "projects_here": "这里的项目",
     "Suggested": "建议的",
     "entered": "已输入",
-    "only_community_admins_can_accept": "只有社区管理员才能接受金钱\/商品报价"
+    "only_community_admins_can_accept": "只有社区管理员才能接受金钱\/商品报价",
+    "suggested": "建议的"
 }

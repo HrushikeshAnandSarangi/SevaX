@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-14T08:04:42+00:00",
+    "@@last_modified": "2020-10-14T09:00:25+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1028,5 +1028,6 @@
     "projects_here": "Miradi hapa",
     "Suggested": "Imependekezwa",
     "entered": "Imeingia",
-    "only_community_admins_can_accept": "Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa \/ bidhaa"
+    "only_community_admins_can_accept": "Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa \/ bidhaa",
+    "suggested": "Imependekezwa"
 }
