@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Sugirió"),
     "about" : MessageLookupByLibrary.simpleMessage("Sobre"),
     "accept" : MessageLookupByLibrary.simpleMessage("Aceptar"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Aceptar la oferta"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Ingrese el nombre del banco"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Ingrese un enlace de pago válido"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Ingrese el número de ruta"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Ingresó"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Ocorreu um erro! Por favor volte mais tarde e tente novamente."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("Acepto que estaré dispuesto a estar sujeto a estos términos y condiciones."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("Acuerdo de EULA"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("Uno para muchos"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Ex dando aula de python .."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("uma a muitas ofertas\n"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Solo los administradores de la comunidad pueden aceptar ofertas de dinero / bienes"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Solo se permiten archivos CSV"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Solo se permiten tipos de imágenes, por ejemplo: jpg, png \'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Solo se permiten archivos PDF"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Ej: un poco más sobre su proyecto que ayudará a asociarse con"),
     "project_name" : MessageLookupByLibrary.simpleMessage("Nombre del proyecto"),
     "projects" : MessageLookupByLibrary.simpleMessage("Proyectos"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Proyectos aquí"),
     "promote" : MessageLookupByLibrary.simpleMessage("Promover"),
     "promoted" : MessageLookupByLibrary.simpleMessage("PROMOVIDO"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Promoción a administrador de miembro"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Selecionar grupo"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Seleccione horas"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Seleccionar comunidad de padres Seva"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Seleccionar proyecto"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Seleccionar solicitud"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Seleccione una plantilla de la lista de plantillas disponibles."),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Seleccione una comunidad de Seva"),

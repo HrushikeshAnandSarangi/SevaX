@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-10-13T11:34:42+00:00",
+    "@@last_modified": "2020-10-14T08:04:42+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -1023,5 +1023,10 @@
     "are_you_sure": "你確定要",
     "already_added": "已經添加到此請求中",
     "offer_updated": "優惠已更新",
-    "clear_notications": "您確定要清除所有通知嗎？"
+    "clear_notications": "您確定要清除所有通知嗎？",
+    "select_project": "選擇項目",
+    "projects_here": "這裡的項目",
+    "Suggested": "建議的",
+    "entered": "已輸入",
+    "only_community_admins_can_accept": "只有社區管理員才能接受金錢\/商品報價"
 }

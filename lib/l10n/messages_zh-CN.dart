@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("建议的"),
     "about" : MessageLookupByLibrary.simpleMessage("关于"),
     "accept" : MessageLookupByLibrary.simpleMessage("接受"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("接受报价"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("输入银行名称"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("输入有效的付款链接"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("输入路由号码"),
+    "entered" : MessageLookupByLibrary.simpleMessage("已输入"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("错误发生！请稍后回来再试一次。"),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("我同意我将受这些条款和条件的约束。"),
     "eula_title" : MessageLookupByLibrary.simpleMessage(" EULA协议"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("一对多"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("举例：教学Python.."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("一对多报价\n"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("只有社区管理员才能接受金钱/商品报价"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("只允许CSV文件"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("仅允许使用图片类型，例如：jpg，png\'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("仅允许使用Pdf文件"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("例如：有关您的项目的更多信息。"),
     "project_name" : MessageLookupByLibrary.simpleMessage("项目名称"),
     "projects" : MessageLookupByLibrary.simpleMessage("专案"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("这里的项目"),
     "promote" : MessageLookupByLibrary.simpleMessage("推广"),
     "promoted" : MessageLookupByLibrary.simpleMessage("晋升"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("从会员晋升为管理员"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("选择组"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("选择时间"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("选择家长Seva社区"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("选择项目"),
     "select_request" : MessageLookupByLibrary.simpleMessage("选择申请"),
     "select_template" : MessageLookupByLibrary.simpleMessage("请从可用模板列表中选择一个模板"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("选择一个Seva社区"),

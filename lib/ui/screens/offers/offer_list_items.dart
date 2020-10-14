@@ -255,7 +255,8 @@ class OfferListItems extends StatelessWidget {
     return CustomDialogs.generalDialogWithCloseButton(
       context,
       // 'Only admin can accept Goods/Cash offers',
-      'Only Community admins can accept offers of money / goods',
+      // 'Only Community admins can accept offers of money / goods',
+      S.of(context).only_community_admins_can_accept,
     );
   }
 

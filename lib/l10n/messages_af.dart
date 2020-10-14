@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "Suggested" : MessageLookupByLibrary.simpleMessage("Voorgestel"),
     "about" : MessageLookupByLibrary.simpleMessage("oor"),
     "accept" : MessageLookupByLibrary.simpleMessage("aanvaar"),
     "accept_offer" : MessageLookupByLibrary.simpleMessage("Aanvaar die aanbod"),
@@ -358,6 +359,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_valid_bank_name" : MessageLookupByLibrary.simpleMessage("Voer die banknaam in"),
     "enter_valid_link" : MessageLookupByLibrary.simpleMessage("Voer \'n geldige betalingsskakel in"),
     "enter_valid_routing_number" : MessageLookupByLibrary.simpleMessage("Voer roete-nommer in"),
+    "entered" : MessageLookupByLibrary.simpleMessage("Ingeskryf"),
     "error_occured" : MessageLookupByLibrary.simpleMessage("Fout het ontstaan! Kom asseblief later weer en probeer weer."),
     "eula_delcaration" : MessageLookupByLibrary.simpleMessage("Ek stem in dat ek bereid is om hierdie bepalings en voorwaardes na te kom."),
     "eula_title" : MessageLookupByLibrary.simpleMessage("EULA-ooreenkoms"),
@@ -664,6 +666,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "one_to_many" : MessageLookupByLibrary.simpleMessage("Een vir baie"),
     "one_to_many_offer_hint" : MessageLookupByLibrary.simpleMessage("Eks leer \'n pythonklas .."),
     "one_to_many_offers" : MessageLookupByLibrary.simpleMessage("een tot baie aanbiedinge"),
+    "only_community_admins_can_accept" : MessageLookupByLibrary.simpleMessage("Slegs gemeenskapsadministrateurs kan aanbiedinge van geld / goedere aanvaar"),
     "only_csv_allowed" : MessageLookupByLibrary.simpleMessage("Only CSV files are allowed"),
     "only_images_types_allowed" : MessageLookupByLibrary.simpleMessage("Slegs beeldtipes word toegelaat, byvoorbeeld: jpg, png \'"),
     "only_pdf_files_allowed" : MessageLookupByLibrary.simpleMessage("Slegs Pdf-lêers word toegelaat"),
@@ -731,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "project_mission_statement_hint" : MessageLookupByLibrary.simpleMessage("Voorbeeld: \'n Bietjie meer oor u projek waarmee u kan assosieer"),
     "project_name" : MessageLookupByLibrary.simpleMessage("Projek Naam"),
     "projects" : MessageLookupByLibrary.simpleMessage("Projekte"),
+    "projects_here" : MessageLookupByLibrary.simpleMessage("Projekte hier"),
     "promote" : MessageLookupByLibrary.simpleMessage("Promote"),
     "promoted" : MessageLookupByLibrary.simpleMessage("BEVORDER"),
     "promotion_to_admin_from_member" : MessageLookupByLibrary.simpleMessage("Promotion to admin from member"),
@@ -845,6 +849,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_group" : MessageLookupByLibrary.simpleMessage("Kies Groep"),
     "select_hours" : MessageLookupByLibrary.simpleMessage("Kies ure"),
     "select_parent_timebank" : MessageLookupByLibrary.simpleMessage("Kies Ouer Seva-gemeenskap"),
+    "select_project" : MessageLookupByLibrary.simpleMessage("Kies projek"),
     "select_request" : MessageLookupByLibrary.simpleMessage("Kies Versoek"),
     "select_template" : MessageLookupByLibrary.simpleMessage("Kies \'n sjabloon uit die lys met beskikbare sjablone"),
     "select_timebank" : MessageLookupByLibrary.simpleMessage("Kies \'n Seva-gemeenskap"),

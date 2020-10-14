@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-13T11:34:42+00:00",
+    "@@last_modified": "2020-10-14T08:04:42+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1023,5 +1023,10 @@
     "are_you_sure": "Je! Una uhakika unataka",
     "already_added": "tayari imeongezwa kwenye ombi hili",
     "offer_updated": "Ofa imesasishwa",
-    "clear_notications": "Je! Una uhakika unataka kufuta arifa zote?"
+    "clear_notications": "Je! Una uhakika unataka kufuta arifa zote?",
+    "select_project": "Chagua mradi",
+    "projects_here": "Miradi hapa",
+    "Suggested": "Imependekezwa",
+    "entered": "Imeingia",
+    "only_community_admins_can_accept": "Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa \/ bidhaa"
 }
