@@ -582,12 +582,36 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void applyAction() async {
     if (isApplied) {
-      _withdrawRequest();
+        _withdrawRequest();
     } else {
-      if (SevaCore.of(context).loggedInUser.calendarId != null) {
-        calenderConfirmation();
-      } else {
-        await _acceptRequest();
+        if (SevaCore.of(context).loggedInUser.calendarId != null) {
+            showDialog(
+                context: context,
+                builder: (_context) {
+                    return CalenderEventConfirmationDialog(
+                        title: widget.requestItem.title,
+                        isrequest: true,
+                        cancelled: () async {
+                            await _acceptRequest();
+                            Navigator.pop(_context);
+                            Navigator.pop(context);
+                        },
+                        addToCalender: () async {
+                            await _acceptRequest();
+                            Set<String> acceptorList =
+                            Set.from(widget.requestItem.allowedCalenderUsers);
+                            acceptorList.add(SevaCore.of(context).loggedInUser.email);
+                            widget.requestItem.allowedCalenderUsers = acceptorList.toList();
+                            await FirestoreManager.updateRequest(
+                                requestModel: widget.requestItem);
+                            Navigator.pop(_context);
+                            Navigator.pop(context);
+                        },
+                    );
+                },
+            );
+        }
+        else {
         showDialog(
           context: context,
           builder: (_context) {
@@ -595,44 +619,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               title: widget.requestItem.title,
               isrequest: true,
               cancelled: () async {
+                  await _acceptRequest();
                 Navigator.pop(_context);
                 Navigator.pop(context);
               },
               addToCalender: () async {
-                _settingModalBottomSheet(context);
-                Navigator.pop(_context);
+                  await _acceptRequest();
+                  Navigator.pop(_context);
+                  _settingModalBottomSheet(context);
               },
             );
           },
         );
-      }
+        }
     }
-  }
-
-  void calenderConfirmation() {
-    showDialog(
-      context: context,
-      builder: (_context) {
-        return CalenderEventConfirmationDialog(
-          title: widget.requestItem.title,
-          isrequest: true,
-          cancelled: () async {
-            Navigator.pop(_context);
-            Navigator.pop(context);
-          },
-          addToCalender: () async {
-            Set<String> acceptorList =
-                Set.from(widget.requestItem.allowedCalenderUsers);
-            acceptorList.add(SevaCore.of(context).loggedInUser.email);
-            widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-            await FirestoreManager.updateRequest(
-                requestModel: widget.requestItem);
-            Navigator.pop(_context);
-            Navigator.pop(context);
-          },
-        );
-      },
-    );
   }
 
   void _acceptRequest() {

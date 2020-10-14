@@ -60,10 +60,10 @@ class AddToCalendarState extends State<AddToCalendar> {
             "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
         //listOfEmails for which event is created
-        if(widget.requestModel!=null){
+        if(widget.requestModel != null){
             List<String> acceptorList =
-            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-                ? [widget.offer.email, widget.requestModel.email]
+            widget.isOfferRequest != null
+                ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
                 : [widget.requestModel.email];
             widget.requestModel.allowedCalenderUsers = acceptorList.toList();
             await FirestoreManager.updateRequest(requestModel: widget.requestModel);
@@ -97,8 +97,8 @@ class AddToCalendarState extends State<AddToCalendar> {
 
         if(widget.requestModel!=null){
             List<String> acceptorList =
-            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-                ? [widget.offer.email, widget.requestModel.email]
+            widget.isOfferRequest != null
+                ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
                 : [widget.requestModel.email];
             widget.requestModel.allowedCalenderUsers = acceptorList.toList();
             await FirestoreManager.updateRequest(requestModel: widget.requestModel);
@@ -133,8 +133,8 @@ class AddToCalendarState extends State<AddToCalendar> {
 
     if(widget.requestModel!=null){
         List<String> acceptorList =
-        widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-            ? [widget.offer.email, widget.requestModel.email]
+        widget.isOfferRequest != null
+            ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
             : [widget.requestModel.email];
         widget.requestModel.allowedCalenderUsers = acceptorList.toList();
         await FirestoreManager.updateRequest(requestModel: widget.requestModel);
