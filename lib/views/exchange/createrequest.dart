@@ -1417,7 +1417,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
         List<String> acceptorList =
-            widget.isOfferRequest != null
+            widget.isOfferRequest
                 ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [requestModel.email]:[widget.offer.email, requestModel.email]
                 : [requestModel.email];
         requestModel.allowedCalenderUsers = acceptorList.toList();

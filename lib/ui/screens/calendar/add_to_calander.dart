@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
 import '../../../flavor_config.dart';
 
@@ -61,18 +62,26 @@ class AddToCalendarState extends State<AddToCalendar> {
 
         //listOfEmails for which event is created
         if(widget.requestModel != null){
-            List<String> acceptorList =
-            widget.isOfferRequest != null
+            List<String> acceptorList = widget.isOfferRequest
                 ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
                 : [widget.requestModel.email];
             widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-            await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+            await FirestoreManager.updateRequestsByFields(requestIds: widget.eventsIdsArr, fields: {
+                "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
+            });
+
+        } else {
+            await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
+                "allowedCalenderUsers": [widget.offer.email],
+                "creatorAllowedCalender":true
+            });
         }
+
         if (await canLaunch(authorizationUrl.toString())) {
             await launch(authorizationUrl.toString());
         }
 
-        if (widget.isOfferRequest == true && widget.userModel != null) {
+        if (widget.isOfferRequest && widget.userModel != null) {
             Navigator.pop(context, {'response': 'ACCEPTED'});
         } else {
             Navigator.pop(context);
@@ -95,19 +104,27 @@ class AddToCalendarState extends State<AddToCalendar> {
         String authorizationUrl =
             "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-        if(widget.requestModel!=null){
-            List<String> acceptorList =
-            widget.isOfferRequest != null
+        if(widget.requestModel != null){
+            List<String> acceptorList = widget.isOfferRequest
                 ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
                 : [widget.requestModel.email];
             widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-            await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+            await FirestoreManager.updateRequestsByFields(requestIds: widget.eventsIdsArr, fields: {
+                "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
+            });
+
+        } else {
+            await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
+                "allowedCalenderUsers": [widget.offer.email],
+                "creatorAllowedCalender":true
+            });
         }
+
         if (await canLaunch(authorizationUrl.toString())) {
             await launch(authorizationUrl.toString());
         }
 
-        if (widget.isOfferRequest == true && widget.userModel != null) {
+        if (widget.isOfferRequest && widget.userModel != null) {
             Navigator.pop(context, {'response': 'ACCEPTED'});
         } else {
             Navigator.pop(context);
@@ -131,19 +148,27 @@ class AddToCalendarState extends State<AddToCalendar> {
     String authorizationUrl =
         "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-    if(widget.requestModel!=null){
-        List<String> acceptorList =
-        widget.isOfferRequest != null
+    if(widget.requestModel != null){
+        List<String> acceptorList = widget.isOfferRequest
             ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [widget.requestModel.email] : [widget.offer.email, widget.requestModel.email]
             : [widget.requestModel.email];
         widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-        await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+        await FirestoreManager.updateRequestsByFields(requestIds: widget.eventsIdsArr, fields: {
+            "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
+        });
+
+    } else {
+        await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
+            "creatorAllowedCalender":true,
+            "allowedCalenderUsers": [widget.offer.email]
+        });
     }
+
     if (await canLaunch(authorizationUrl.toString())) {
       await launch(authorizationUrl.toString());
     }
 
-    if (widget.isOfferRequest == true && widget.userModel != null) {
+    if (widget.isOfferRequest && widget.userModel != null) {
       Navigator.pop(context, {'response': 'ACCEPTED'});
     } else {
       Navigator.pop(context);
