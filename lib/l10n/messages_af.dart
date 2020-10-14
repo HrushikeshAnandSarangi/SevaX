@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel_offer" : MessageLookupByLibrary.simpleMessage("Cancel Offer"),
     "cancel_offer_confirmation" : MessageLookupByLibrary.simpleMessage("Is u seker dat u die aanbod wil kanselleer?"),
     "cancel_subscription" : MessageLookupByLibrary.simpleMessage("Kanselleer intekening"),
+    "cancel_subscription_success_label" : MessageLookupByLibrary.simpleMessage("U intekening is nou gekanselleer. Totdat u aan die einde van die huidige inskrywingstydperk begin, sal u kredietkaart nie gehef word nie en kan transaksies gedoen word totdat die vrye limiet van die huidige plan bereik is."),
     "cancellation_failure_message" : MessageLookupByLibrary.simpleMessage("Ons het \'n versoek ontvang om u intekening te kanselleer. Alhoewel ons jammer is dat u gaan, is daar tans onbetaalde fooie. Vee hierdie heffings uit en probeer weer om te kanselleer"),
     "cancellation_success_message" : MessageLookupByLibrary.simpleMessage("Ons is jammer om jou te sien gaan. U intekening is nou gekanselleer. Aan die einde van die huidige inskrywingstydperk word u kredietkaart nie gehef nie"),
     "cancelled_subscription" : MessageLookupByLibrary.simpleMessage("Gekanselleerde intekening"),

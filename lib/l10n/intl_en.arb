@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-10-14T18:03:17+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -1031,5 +1031,6 @@
     "only_community_admins_can_accept": "Only Community admins can accept offers of money \/ goods",
     "suggested": "Suggested",
     "cancel_subscription": "Cancel Subscription",
-    "are_you_sure_subs_cancel": "Are you sure you want to cancel your subscription ?"
+    "are_you_sure_subs_cancel": "Are you sure you want to cancel your subscription ?",
+    "cancel_subscription_success_label": "Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached."
 }

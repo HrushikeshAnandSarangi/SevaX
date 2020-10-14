@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-10-14T18:03:17+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1031,5 +1031,6 @@
     "only_community_admins_can_accept": "Wasimamizi wa Jumuiya tu ndio wanaweza kukubali ofa za pesa \/ bidhaa",
     "suggested": "Imependekezwa",
     "cancel_subscription": "Ghairi Usajili",
-    "are_you_sure_subs_cancel": "Je! Una uhakika unataka kughairi usajili wako?"
+    "are_you_sure_subs_cancel": "Je! Una uhakika unataka kughairi usajili wako?",
+    "cancel_subscription_success_label": "Usajili wako sasa umeghairiwa. Hadi mwanzo wa kuhitimisha kipindi cha sasa cha usajili, kadi yako ya mkopo haitatozwa na shughuli zinaweza kufanywa hadi kikomo cha bure cha mpango wa sasa kifikiwe."
 }

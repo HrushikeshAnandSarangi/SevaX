@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-10-14T18:03:17+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1031,5 +1031,6 @@
     "only_community_admins_can_accept": "Apenas os administradores da comunidade podem aceitar ofertas de dinheiro \/ bens",
     "suggested": "Sugerido",
     "cancel_subscription": "Cancelar assinatura",
-    "are_you_sure_subs_cancel": "Tem certeza que deseja cancelar sua assinatura?"
+    "are_you_sure_subs_cancel": "Tem certeza que deseja cancelar sua assinatura?",
+    "cancel_subscription_success_label": "Sua assinatura foi cancelada. Até o início da conclusão do período de assinatura atual, seu cartão de crédito não será cobrado e as transações podem ser feitas até que o limite gratuito do plano atual seja atingido."
 }
