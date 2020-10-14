@@ -461,6 +461,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottombarForCreator {
     canDeleteRequest = widget.requestItem.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID &&
+        widget.requestItem.requestType == RequestType.TIME &&
         widget.requestItem.acceptors.length == 0 &&
         widget.requestItem.approvedUsers.length == 0 &&
         widget.requestItem.invitedUsers.length == 0;
