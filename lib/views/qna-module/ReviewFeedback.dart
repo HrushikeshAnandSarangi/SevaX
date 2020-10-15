@@ -373,7 +373,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
                   errorText: _validate
                       ? S.of(context).validation_error_required_fields
-                      : _profane ? S.of(context).profanity_text_alert : null,
+                      : _profane
+                          ? S.of(context).profanity_text_alert
+                          : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                   hintText: S.of(context).review_feedback_message,

@@ -64,7 +64,9 @@ class ProjectsCard extends StatelessWidget {
                   Text(
                     timeago.format(
                       DateTime.fromMillisecondsSinceEpoch(timestamp),
-                      locale: S.of(context).localeName,
+                      locale: S.of(context).localeName == 'sn'
+                          ? 'en'
+                          : S.of(context).localeName,
                     ),
                     style: TextStyle(color: Colors.grey),
                   ),

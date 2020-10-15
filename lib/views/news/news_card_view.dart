@@ -12,7 +12,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -757,8 +757,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   String _getFormattedTime(int timestamp) {
     return timeAgo.format(DateTime.fromMillisecondsSinceEpoch(timestamp),
-        locale:
-            Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+        locale: Locale(getLangTag()).toLanguageTag());
   }
 
   void _deleteNews(BuildContext context) async {
@@ -802,9 +801,7 @@ class NewsCardViewState extends State<NewsCardView> {
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
                               commentsList.createdAt),
-                          locale:
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag()),
+                          locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -1281,9 +1278,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
                               commentsList.createdAt),
-                          locale:
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag()),
+                          locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -2095,9 +2090,7 @@ class _RepliesViewState extends State<RepliesView> {
                       timeAgo.format(
                           DateTime.fromMillisecondsSinceEpoch(
                               commentsList.createdAt),
-                          locale:
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag()),
+                          locale: Locale(getLangTag()).toLanguageTag()),
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,

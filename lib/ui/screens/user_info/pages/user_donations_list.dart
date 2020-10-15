@@ -5,7 +5,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/request/pages/goods_display_page.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -227,10 +227,7 @@ class DonationItem extends StatelessWidget {
           height: 2,
         ),
         Text(
-          DateFormat(
-                  'MMM dd, yyyy',
-                  Locale(AppConfig.prefs.getString('language_code'))
-                      .toLanguageTag())
+          DateFormat('MMM dd, yyyy', Locale(getLangTag()).toLanguageTag())
               .format(
             getDateTimeAccToUserTimezone(
                 dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),

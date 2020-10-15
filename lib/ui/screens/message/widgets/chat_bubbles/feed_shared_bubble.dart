@@ -4,7 +4,6 @@ import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -66,8 +65,7 @@ class FeedBubble extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return NewsCardView(newsModel: news,
-                isFocused: false);
+              return NewsCardView(newsModel: news, isFocused: false);
             },
           ),
         );
@@ -151,7 +149,7 @@ class FeedBubble extends StatelessWidget {
                                 news.postTimestamp,
                               ),
                               locale: Locale(
-                                AppConfig.prefs.getString('language_code'),
+                                getLangTag(),
                               ).toLanguageTag()),
                           style: TextStyle(fontSize: 12)),
                     ],

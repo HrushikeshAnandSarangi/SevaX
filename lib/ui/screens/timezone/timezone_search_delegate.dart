@@ -71,7 +71,7 @@ class TimezoneSearchDelegate extends SearchDelegate<TimeZoneModel> {
           title: timeZoneModel.timezoneName,
           subTitle: DateFormat(
             'dd/MMM/yyyy HH:mm',
-            S.of(context).localeName,
+            S.of(context).localeName == 'sn' ? 'en' : S.of(context).localeName,
           ).format(localtime),
           onTap: () {
             close(context, timeZoneModel);

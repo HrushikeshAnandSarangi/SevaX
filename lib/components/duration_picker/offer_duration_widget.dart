@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 
 import 'calendar_picker.dart';
 
@@ -60,17 +60,17 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
 
   Widget get title {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(16.0,4.0,0,0),
-    child: Text(
-      widget.title,
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Europa',
-        color: Colors.black,
-      ),
-      // style: sectionLabelTextStyle,
-    ));
+        padding: const EdgeInsets.fromLTRB(16.0, 4.0, 0, 0),
+        child: Text(
+          widget.title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+          // style: sectionLabelTextStyle,
+        ));
   }
 
   Widget get startWidget {
@@ -157,8 +157,8 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? S.of(context).start : S.of(context).end}\n${S.of(context).date_time}';
     }
     String dateTimeString = '';
-    DateFormat format = DateFormat('dd MMM,\nhh:mm a',
-        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat format =
+        DateFormat('dd MMM,\nhh:mm a', Locale(getLangTag()).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
   }

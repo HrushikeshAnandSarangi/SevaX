@@ -4,8 +4,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -136,9 +136,7 @@ class MessageCard extends StatelessWidget {
                     ? ""
                     : timeago.format(
                         DateTime.fromMillisecondsSinceEpoch(model.timestamp),
-                        locale:
-                            Locale(AppConfig.prefs.getString('language_code'))
-                                .toLanguageTag()),
+                        locale: Locale(getLangTag()).toLanguageTag()),
                 // "Now 10:00 pm",
                 style: TextStyle(fontSize: 12),
               ),

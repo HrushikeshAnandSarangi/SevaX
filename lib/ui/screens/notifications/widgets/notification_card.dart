@@ -118,7 +118,9 @@ class NotificationCard extends StatelessWidget {
                     DateTime.fromMillisecondsSinceEpoch(
                       timestamp,
                     ),
-                    locale: S.of(context).localeName,
+                    locale: S.of(context).localeName == 'sn'
+                        ? 'en'
+                        : S.of(context).localeName,
                   ),
                 ),
               ],
