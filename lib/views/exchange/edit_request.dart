@@ -770,11 +770,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-              }
-              // else if (!emailPattern.hasMatch(value)) {
-              //   return S.of(context).enter_valid_link;
-              // }
-              else {
+              } else {
                 widget.requestModel.cashModel.venmoId = value;
 
                 return null;

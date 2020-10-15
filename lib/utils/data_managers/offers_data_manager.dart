@@ -72,6 +72,18 @@ Future<void> createOffer({@required OfferModel offerModel}) async {
       .setData(offerModel.toMap());
 }
 
+Future<void> updateOffersByFields({List<String> offerIds, Map<String, dynamic> fields}) async {
+    var futures = <Future>[];
+    int i;
+    for(i=0 ; i<offerIds.length ; i++) {
+        futures.add(Firestore.instance
+            .collection('offers')
+            .document(offerIds[i])
+            .updateData(fields));
+    }
+    await Future.wait(futures);
+}
+
 Future<List<String>> createRecurringEventsOffer(
     {@required OfferModel offerModel}) async {
   var batch = Firestore.instance.batch();
@@ -269,7 +281,8 @@ Future<void> updateRecurrenceOffersFrontEnd(
         break;
       }
     }
-  } else {
+  }
+  else {
     //end type is after
     var numTemp = 0;
     int occurenceCount = updatedOfferModel.occurenceCount + 1;
