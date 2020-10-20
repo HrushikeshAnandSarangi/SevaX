@@ -304,6 +304,28 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                       );
 
+                    case NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER:
+                      bool isGroup = false;
+                      String associatedName =
+                          notification.data['associatedName'];
+
+                      // bool
+                      String timebankTitle = notification.data['timebankName'];
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        title: '${S.of(context).notifications_demoted_title}',
+                        subTitle:
+                            '$associatedName has demoted you from being an Organizer for the ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
+                        entityName: S.of(context).demoted,
+                        onDismissed: () {
+                          // Dismiss notification
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                      );
+
                     case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
                       String associatedName =
                           notification.data['associatedName'];
@@ -315,6 +337,26 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         title: '${S.of(context).notifications_promoted_title}',
                         subTitle:
                             '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
+                        entityName: S.of(context).promoted,
+                        onDismissed: () {
+                          // Dismiss notification
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                      );
+                    case NotificationType.ADMIN_PROMOTED_AS_ORGANIZER:
+                      String associatedName =
+                          notification.data['associatedName'];
+                      bool isGroup = notification.data['isGroup'];
+                      String timebankTitle = notification.data['timebankName'];
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        title: '${S.of(context).notifications_promoted_title}',
+                        subTitle:
+                            '$associatedName has promoted you to be the Organizer for the ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
                         entityName: S.of(context).promoted,
                         onDismissed: () {
                           // Dismiss notification

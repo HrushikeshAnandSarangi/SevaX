@@ -141,7 +141,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
     selectedUsers.forEach((key, value) {
-        members.add(value.sevaUserID);
+      members.add(value.sevaUserID);
     });
     Set<String> membersSet = members.toList().toSet();
     String id = Utils.getUuid();
@@ -152,6 +152,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+    timebankModel.organizers = [SevaCore.of(context).loggedInUser.sevaUserID];
     timebankModel.emailId = SevaCore.of(context).loggedInUser.email;
     timebankModel.coordinators = [];
     timebankModel.members = membersSet.toList();
@@ -408,12 +409,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (selectedUsers.length > 0) {
       selectedUsers.forEach((key, user) async {
         GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
-            timebankId: widget.timebankId,
-            timebankName: timebankModel.name,
-            timebankImage: timebankModel.photoUrl,
-            aboutTimebank: timebankModel.missionStatement,
-            adminName: SevaCore.of(context).loggedInUser.fullname,
-            groupId: timebankModel.id,
+          timebankId: widget.timebankId,
+          timebankName: timebankModel.name,
+          timebankImage: timebankModel.photoUrl,
+          aboutTimebank: timebankModel.missionStatement,
+          adminName: SevaCore.of(context).loggedInUser.fullname,
+          groupId: timebankModel.id,
         );
 
         NotificationsModel notification = NotificationsModel(

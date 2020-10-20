@@ -39,6 +39,8 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
   NotificationType.SEVA_COINS_DEBITED,
   NotificationType.SEVA_COINS_CREDITED,
+  NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
+  NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
   NotificationType.MEMBER_PROMOTED_AS_ADMIN,
   NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
   NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,

@@ -154,7 +154,9 @@ enum NotificationType {
 
   //PROMOTION AND DEMOTION
   MEMBER_PROMOTED_AS_ADMIN,
+  ADMIN_PROMOTED_AS_ORGANIZER,
   MEMBER_DEMOTED_FROM_ADMIN,
+  ADMIN_DEMOTED_FROM_ORGANIZER,
 
   //Donation notifications
   GOODS_DONATION_REQUEST,
@@ -177,9 +179,9 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
-  "RequestScheduleReminder":NotificationType.RequestScheduleReminder,
-  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
-  "RecurringOfferUpdated":NotificationType.RecurringOfferUpdated,
+  "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
+  "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
+  "RecurringOfferUpdated": NotificationType.RecurringOfferUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
@@ -223,6 +225,8 @@ Map<String, NotificationType> typeMapper = {
   "DEBITED_SEVA_COINS_TIMEBANK": NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
   "SEVA_COINS_CREDITED": NotificationType.SEVA_COINS_CREDITED,
   "SEVA_COINS_DEBITED": NotificationType.SEVA_COINS_DEBITED,
+  "ADMIN_PROMOTED_AS_ORGANIZER": NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+  "ADMIN_DEMOTED_FROM_ORGANIZER": NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
   "MEMBER_PROMOTED_AS_ADMIN": NotificationType.MEMBER_PROMOTED_AS_ADMIN,
   "MEMBER_DEMOTED_FROM_ADMIN": NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
 

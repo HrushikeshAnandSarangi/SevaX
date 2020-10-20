@@ -118,6 +118,7 @@ class CommunityCreateEditController {
         DateTime.now().millisecondsSinceEpoch.toString();
     this.community.primary_email = user.email;
     this.community.admins = [user.sevaUserID];
+    this.community.organizers = [user.sevaUserID];
     this.community.location = location;
   }
 
@@ -130,6 +131,9 @@ class CommunityCreateEditController {
         .timebank
         .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
     this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
+    this
+        .timebank
+        .updateValueByKey('organizers', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('coordinators', [].cast<String>());
     this.timebank.updateValueByKey('members', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('children', [].cast<String>());
