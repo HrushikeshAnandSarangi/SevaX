@@ -598,7 +598,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         String email = user.email.toString().trim();
         _adminEmails.add(email);
         _adminsWidgets.add(getUserWidget(
-            user, context, timebankModel, true, true, true, false));
+            user, context, timebankModel, true, false, true, false));
       });
     }
   }
@@ -905,7 +905,42 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       PopupMenuButton(
         itemBuilder: (_context) {
           var list = List<PopupMenuEntry<Object>>();
-          if (!isDemoteOrganizer) {
+
+          if (isPromoteAdmin) {
+            list.add(
+              PopupMenuItem(
+                value: 1,
+                child: CustomRaisedButton(
+                  debouncer: debounceValue,
+                  action: Actions.MakeOwner,
+                  onTap: () async {
+                    Navigator.pop(_context);
+                    setState(() {
+                      isProgressBarActive = true;
+                    });
+
+                    // PROMOTTE
+
+                    log('inside organizer');
+                    await MembershipManager.updateOrganizerStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
+                      timebankId: timebankModel.id,
+                      notificationType:
+                          NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+                      parentTimebankId: timebankModel.parentTimebankId,
+                      targetUserId: user.sevaUserID,
+                      timebankName: timebankModel.name,
+                      userEmail: user.email,
+                    );
+                  },
+                ),
+              ),
+            );
+          }
+          if (isPromoteBottonVisible) {
             list.add(
               PopupMenuItem(
                 value: 1,
@@ -918,37 +953,19 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       isProgressBarActive = true;
                     });
 
-                    // PROMOTTE
-                    if (isPromoteAdmin) {
-                      log('inside organizer');
-                      await MembershipManager.updateOrganizerStatus(
-                        associatedName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebankModel.id,
-                        notificationType:
-                            NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
-                        parentTimebankId: timebankModel.parentTimebankId,
-                        targetUserId: user.sevaUserID,
-                        timebankName: timebankModel.name,
-                        userEmail: user.email,
-                      );
-                    } else {
-                      await MembershipManager.updateMembershipStatus(
-                        associatedName:
-                            SevaCore.of(context).loggedInUser.fullname,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebankModel.id,
-                        notificationType:
-                            NotificationType.MEMBER_PROMOTED_AS_ADMIN,
-                        parentTimebankId: timebankModel.parentTimebankId,
-                        targetUserId: user.sevaUserID,
-                        timebankName: timebankModel.name,
-                        userEmail: user.email,
-                      );
-                    }
+                    await MembershipManager.updateMembershipStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
+                      timebankId: timebankModel.id,
+                      notificationType:
+                          NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+                      parentTimebankId: timebankModel.parentTimebankId,
+                      targetUserId: user.sevaUserID,
+                      timebankName: timebankModel.name,
+                      userEmail: user.email,
+                    );
                   },
                 ),
               ),
@@ -1856,13 +1873,17 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 }
 
-enum Actions { Approve, Reject, Remove, Promote, Demote, Exit, Loan }
+enum Actions { Approve, Reject, Remove, Promote, Demote, Exit, Loan, MakeOwner }
 
 String actionToStringMapper(BuildContext context, Actions action) {
   S s = S.of(context);
   switch (action) {
     case Actions.Approve:
       return s.approve;
+      break;
+
+    case Actions.MakeOwner:
+      return 'Make Organizer';
       break;
     case Actions.Reject:
       return s.reject;
@@ -1905,6 +1926,7 @@ class CustomRaisedButton extends StatelessWidget {
       padding: EdgeInsets.all(0),
       color: (action == Actions.Approve ||
               action == Actions.Promote ||
+              action == Actions.MakeOwner ||
               action == Actions.Loan)
           ? null
           : Colors.red,
