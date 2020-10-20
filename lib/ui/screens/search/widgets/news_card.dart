@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -69,9 +69,7 @@ class NewsCard extends StatelessWidget {
                   Text(
                     timeago.format(
                         DateTime.fromMillisecondsSinceEpoch(timestamp),
-                        locale:
-                            Locale(AppConfig.prefs.getString('language_code'))
-                                .toLanguageTag()),
+                        locale: Locale(getLangTag()).toLanguageTag()),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],

@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -1029,5 +1029,8 @@
     "Suggested": "Zvataurwa",
     "entered": "Yakapinda",
     "only_community_admins_can_accept": "MaCommunity admins chete ndiwo anogona kugamuchira kupihwa kwemari \/ zvinhu",
-    "suggested": "Zvataurwa"
+    "suggested": "Zvataurwa",
+    "cancel_subscription": "Kanzura Kunyorera",
+    "are_you_sure_subs_cancel": "Une chokwadi here kuti unoda kukanzura kunyorera kwako?",
+    "cancel_subscription_success_label": "Kunyorera kwako kwadzimwa. Kusvikira pakutanga pakupera kwenguva yezvino yekunyorera, kiredhiti kadhi yako haibhadhariswe uye kutengeserana kunogona kuitwa kudzamara muganho wepachena weurongwa hwazvino hwasvika."
 }

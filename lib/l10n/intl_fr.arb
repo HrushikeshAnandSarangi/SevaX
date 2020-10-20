@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-10-14T13:05:49+00:00",
+    "@@last_modified": "2020-10-14T18:56:49+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -1029,5 +1029,8 @@
     "Suggested": "Suggéré",
     "entered": "Entré",
     "only_community_admins_can_accept": "Seuls les administrateurs de la communauté peuvent accepter des offres d'argent \/ de biens",
-    "suggested": "Suggéré"
+    "suggested": "Suggéré",
+    "cancel_subscription": "Annuler l'abonnement",
+    "are_you_sure_subs_cancel": "Voulez-vous vraiment annuler votre abonnement?",
+    "cancel_subscription_success_label": "Votre abonnement est maintenant annulé. Jusqu'à la fin de la période d'abonnement en cours, votre carte de crédit ne sera pas débitée et les transactions pourront être effectuées jusqu'à ce que la limite gratuite du plan actuel soit atteinte."
 }

@@ -12,6 +12,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -212,7 +213,7 @@ class MyTasksListState extends State<MyTaskList> {
 
     //       // DateFormat format = DateFormat(
     //       //     'dd/MM/yy hh:mm a',
-    //       //     Locale(AppConfig.prefs.getString('language_code'))
+    //       //     Locale(getLangTag())
     //       //         .toLanguageTag());
 
     //     });
@@ -229,8 +230,8 @@ class MyTasksListState extends State<MyTaskList> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
-        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat =
+        DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);

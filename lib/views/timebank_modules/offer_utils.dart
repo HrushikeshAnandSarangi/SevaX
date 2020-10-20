@@ -7,7 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -61,9 +61,7 @@ String getOfferLocation({String selectedAddress}) {
 
 String getFormatedTimeFromTimeStamp(
     {int timeStamp, String timeZone, String format = "EEEEEEE, MMMM dd"}) {
-  return DateFormat(format,
-          Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
-      .format(
+  return DateFormat(format, Locale(getLangTag()).toLanguageTag()).format(
     getDateTimeAccToUserTimezone(
         dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
         timezoneAbb: timeZone),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 // import 'package:business/main.dart';
 
 class DateTimeSelector extends StatelessWidget {
@@ -82,7 +82,7 @@ class DateTimeSelector extends StatelessWidget {
       String _forDate = DateFormat(
               'dd MMM yyyy, hh:mm a',
               Locale(
-                AppConfig.prefs.getString('language_code'),
+                getLangTag(),
               ).toString())
           .format(_date);
       return Text(_forDate,

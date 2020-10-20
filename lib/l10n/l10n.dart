@@ -5195,6 +5195,21 @@ class S {
         'Suggested',
         name: 'suggested',
       );
+
+  String get cancel_subscription => Intl.message(
+        'Cancel Subscription',
+        name: 'cancel_subscription',
+      );
+
+  String get are_you_sure_subs_cancel => Intl.message(
+        'Are you sure you want to cancel your subscription ?',
+        name: 'are_you_sure_subs_cancel',
+      );
+
+  String get cancel_subscription_success_label => Intl.message(
+        'Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached.',
+        name: 'cancel_subscription_success_label',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -11,6 +11,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -756,10 +757,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get date {
     return Text(
-      DateFormat(
-              'EEEEEEE, MMMM dd',
-              Locale(AppConfig.prefs.getString('language_code'))
-                  .toLanguageTag())
+      DateFormat('EEEEEEE, MMMM dd', Locale(getLangTag()).toLanguageTag())
           .format(
         getDateTimeAccToUserTimezone(
             dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -774,22 +772,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get subtitleComponent {
     return Text(
-      DateFormat(
-                  'h:mm a',
-                  Locale(AppConfig.prefs.getString('language_code'))
-                      .toLanguageTag())
-              .format(
+      DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
             getDateTimeAccToUserTimezone(
                 dateTime: DateTime.fromMillisecondsSinceEpoch(
                     widget.requestItem.requestStart),
                 timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
           ) +
           ' - ' +
-          DateFormat(
-                  'h:mm a',
-                  Locale(AppConfig.prefs.getString('language_code'))
-                      .toLanguageTag())
-              .format(
+          DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
             getDateTimeAccToUserTimezone(
               dateTime: DateTime.fromMillisecondsSinceEpoch(
                   widget.requestItem.requestEnd),
@@ -820,8 +810,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           .format(
               DateTime.fromMillisecondsSinceEpoch(
                   widget.requestItem.postTimestamp),
-              locale: Locale(AppConfig.prefs.getString('language_code'))
-                  .toLanguageTag())
+              locale: Locale(getLangTag()).toLanguageTag())
           .replaceAll('hours ago', 'h'),
       style: TextStyle(
         fontFamily: 'Europa',

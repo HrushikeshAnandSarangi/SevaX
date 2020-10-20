@@ -3,9 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
+//defaulting to en if sn found as sn is not supported
+String getLangTag() {
+  String langTag = AppConfig.prefs.getString('language_code');
+  return langTag == 'sn' ? 'en' : langTag;
+}
+
 String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:mm a ',
-      Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+  DateFormat dateFormat =
+      DateFormat('d MMM h:mm a ', Locale(getLangTag()).toLanguageTag());
   String dateOfTransaction = dateFormat.format(
     DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
   );
@@ -15,7 +21,7 @@ String getTimeFormattedString(int timeInMilliseconds) {
 String formatChatDate(int timestamp, String timezone) {
   return DateFormat(
     'h:mm a',
-    Locale(AppConfig.prefs.getString('language_code')).toLanguageTag(),
+    Locale(getLangTag()).toLanguageTag(),
   ).format(
     getDateTimeAccToUserTimezone(
       dateTime: DateTime.fromMillisecondsSinceEpoch(
