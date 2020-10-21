@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -74,6 +72,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       case 'tall_plan':
         return 'Community Plan';
         break;
+      case 'community_plus_plan':
+        return 'Community Plus Plan';
+        break;
       case 'grande_plan':
         return 'Non-Profit Plan';
         break;
@@ -140,6 +141,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                           data =
                                               "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
                                         } else if (cardModel.currentPlan ==
+                                            SevaBillingPlans.COMMUNITY_PLUS) {
+                                          data =
+                                              "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
+                                        } else if (cardModel.currentPlan ==
                                             SevaBillingPlans.NON_PROFIT) {
                                           data =
                                               "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
@@ -175,63 +180,71 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             cardsHeadingWidget(_bloc),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
-              SizedBox(height: 70),
-              _bloc.community.payment['planId'] ==
+            SizedBox(height: 70),
+            _bloc.community.payment['planId'] ==
                     SevaBillingPlans.NEIGHBOUR_HOOD_PLAN
                 ? Container()
-                : _bloc.community.subscriptionCancelled ? Padding(
-                  padding: EdgeInsets.only(right: 12, left: 10),
-                  child: FlatButton(
-                      onPressed: (){},
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                          side: BorderSide(
-                              color: Colors.redAccent,
-                              width: 2,
-                              style: BorderStyle.solid)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top:3, bottom:3),
-                      child: RichText(
-                          textAlign: TextAlign.start,
-                          text: TextSpan(
-                              children: <TextSpan>[
+                : _bloc.community.subscriptionCancelled
+                    ? Padding(
+                        padding: EdgeInsets.only(right: 12, left: 10),
+                        child: FlatButton(
+                          onPressed: () {},
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                  color: Colors.redAccent,
+                                  width: 2,
+                                  style: BorderStyle.solid)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 3, bottom: 3),
+                            child: RichText(
+                              textAlign: TextAlign.start,
+                              text: TextSpan(
+                                children: <TextSpan>[
                                   TextSpan(
-                                      style: TextStyle(color: Colors.black, fontSize: 15),
-                                      text: "* "+S.of(context).cancel_subscription_success_label,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15),
+                                    text: "* " +
+                                        S
+                                            .of(context)
+                                            .cancel_subscription_success_label,
                                   ),
-                              ],
-                          ),
-                      ),
-                    ),
-                  ),
-              ) : Column(
-                    children: [
-                        Row(
-                        children: [
-                          Spacer(),
-                            FlatButton(
-                            child: Text(
-                              S.of(context).cancel_subscription,
-                              style: TextStyle(
-                                  color: FlavorConfig.values.theme.primaryColor,
-                                  fontSize: 14),
+                                ],
+                              ),
                             ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0),
-                                side: BorderSide(
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                    width: 1,
-                                    style: BorderStyle.solid)),
-                            onPressed: () async {
-                              _showCancelConfirmationDialog(context);
-                            },
                           ),
-                          Spacer(),
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          Row(
+                            children: [
+                              Spacer(),
+                              FlatButton(
+                                child: Text(
+                                  S.of(context).cancel_subscription,
+                                  style: TextStyle(
+                                      color: FlavorConfig
+                                          .values.theme.primaryColor,
+                                      fontSize: 14),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(10.0),
+                                    side: BorderSide(
+                                        color: FlavorConfig
+                                            .values.theme.primaryColor,
+                                        width: 1,
+                                        style: BorderStyle.solid)),
+                                onPressed: () async {
+                                  _showCancelConfirmationDialog(context);
+                                },
+                              ),
+                              Spacer(),
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
-                  )
+                      )
           ],
         ),
       ),
@@ -245,7 +258,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       builder: (_context) {
         return AlertDialog(
           title: Text(
-              S.of(context).cancel_subscription,
+            S.of(context).cancel_subscription,
             textAlign: TextAlign.center,
           ),
           content: Column(
