@@ -203,8 +203,10 @@ Widget createAdminTabBar(
                 userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
               TimebankRequestAdminPage(
-                isUserAdmin: timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                isUserAdmin: timebankModel.admins.contains(
+                        SevaCore.of(context).loggedInUser.sevaUserID) ||
+                    timebankModel.organizers
+                        .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                 timebankId: timebankModel.id,
                 userEmail: SevaCore.of(context).loggedInUser.email,
                 isFromGroup: true,
@@ -334,8 +336,11 @@ Widget createJoinedUserTabBar(
               // ),
               TimebankRequestAdminPage(
                 isUserAdmin: timebankModel.admins.contains(
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
+                      SevaCore.of(context).loggedInUser.sevaUserID,
+                    ) ||
+                    timebankModel.organizers.contains(
+                      SevaCore.of(context).loggedInUser.sevaUserID,
+                    ),
                 timebankId: timebankModel.id,
                 userEmail: SevaCore.of(context).loggedInUser.email,
                 isFromGroup: true,

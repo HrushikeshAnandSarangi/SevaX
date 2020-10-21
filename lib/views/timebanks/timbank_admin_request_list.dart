@@ -1883,7 +1883,7 @@ String actionToStringMapper(BuildContext context, Actions action) {
       break;
 
     case Actions.MakeOwner:
-      return 'Make Organizer';
+      return 'Make Owner';
       break;
     case Actions.Reject:
       return s.reject;

@@ -199,6 +199,11 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
                 isAdmin = true;
               }
+              if (primaryTimebank != null &&
+                  primaryTimebank.organizers
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                isAdmin = true;
+              }
             }
             return DefaultTabController(
               length: isAdmin ? tabLength + 1 : tabLength,
@@ -250,8 +255,11 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         ),
                         TimebankRequestAdminPage(
                           isUserAdmin: primaryTimebank.admins.contains(
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                          ),
+                                SevaCore.of(context).loggedInUser.sevaUserID,
+                              ) ||
+                              primaryTimebank.organizers.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID,
+                              ),
                           timebankId: primaryTimebank.id,
                           userEmail: SevaCore.of(context).loggedInUser.email,
                           isCommunity: true,
