@@ -41,7 +41,9 @@ class _ManageGroupView extends State<ManageGroupView> {
           .then((onValue) {
         communityModel = onValue;
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
-            communityModel.created_by) {
+                communityModel.created_by ||
+            communityModel.organizers
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
           setState(() {});
         }

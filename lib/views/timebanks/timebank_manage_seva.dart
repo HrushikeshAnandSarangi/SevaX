@@ -48,9 +48,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
                 communityModel.created_by ||
             widget.timebankModel.organizers
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
-        if (communityModel.organizers != null &&
-            communityModel.organizers
                 .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
         }
