@@ -52,7 +52,7 @@ class _MonthsListingState extends State<MonthsListing> {
     },
     "community_plus_plan": {
       "name": "Community Plus Plan",
-      "initial_transactions_amount": 150,
+      "initial_transactions_amount": 50,
       "initial_transactions_qty": 150,
       "pro_data_bill_amount": 0.05,
     },
