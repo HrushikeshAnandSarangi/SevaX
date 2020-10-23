@@ -268,6 +268,28 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          !widget.timebankModel.sponsored
+              ? Row(
+                  children: <Widget>[
+                    headingText('Save as Sponsored', false),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Checkbox(
+                        value: widget.timebankModel.sponsored,
+                        onChanged: (bool value) {
+                          setState(() {
+                            widget.timebankModel.sponsored =
+                                !widget.timebankModel.sponsored;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : Offstage(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(
