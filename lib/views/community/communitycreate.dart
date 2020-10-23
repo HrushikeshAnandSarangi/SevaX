@@ -636,9 +636,7 @@ class CreateEditCommunityViewFormState
                                   });
                                 },
                               ),
-                          widget.isCreateTimebank
-                              ? Container()
-                              : Row(
+                          Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                   headingText("Negative credits threshold"),
@@ -653,9 +651,7 @@ class CreateEditCommunityViewFormState
                                   ),
                               ],
                           ),
-                          widget.isCreateTimebank
-                              ? Container()
-                              : Slider(
+                          Slider(
                               label: "${negativeCreditsThreshold.toInt()}%",
                               value: negativeCreditsThreshold,
                               min: -50,

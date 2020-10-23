@@ -437,7 +437,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                           await FirestoreManager.hasSufficientCredits(
                         credits: transactionModel.credits,
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                        communityId: SevaCore.of(context).loggedInUser.currentCommunity
+                        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                              timebankId: SevaCore.of(context).loggedInUser.currentTimebank
                       );
                       // Navigator.pop(linearProgressForBalanceCheck);
 

@@ -63,6 +63,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                    timebankId: SevaCore.of(context).loggedInUser.currentTimebank
                 );
 
                 if (!canApproveTransaction) {

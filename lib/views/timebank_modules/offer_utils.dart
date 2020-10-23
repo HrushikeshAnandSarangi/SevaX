@@ -185,7 +185,8 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
     var hasSufficientCredits = await FirestoreManager.hasSufficientCredits(
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      timebankId: SevaCore.of(context).loggedInUser.currentTimebank
     );
 
     if (hasSufficientCredits) {
