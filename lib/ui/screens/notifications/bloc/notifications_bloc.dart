@@ -46,6 +46,7 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
   NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,
   NotificationType.RequestApprove,
+  NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
 ];
 
 //Not dismissiable notifications

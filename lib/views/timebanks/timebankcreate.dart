@@ -18,6 +18,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
+import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -79,6 +80,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   var groupFound = false;
   TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
+  bool sponsored = false;
   GeoFirePoint location;
   String selectedAddress;
   TextEditingController searchTextController = TextEditingController();
@@ -159,6 +161,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.children = [];
     timebankModel.balance = 0;
     timebankModel.protected = false;
+    timebankModel.sponsored = sponsored;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.address = selectedAddress;
@@ -179,6 +182,82 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.timebankAvatarURL = null;
     globals.webImageUrl = null;
     globals.addedMembersId = [];
+  }
+
+  Future _assembleAndSendRequest({
+    String creatorId,
+    String timebankName,
+    String subTimebankId,
+  }) async {
+    var sponsoredRequesrModel = _assembleSponsoredRequestModel(
+      creatorId: creatorId,
+      timebankName: timebankName,
+      subtimebankId: subTimebankId,
+    );
+
+    var notification = _assembleNotificationForSponsorRequest(
+      joinRequestModel: joinRequestModel,
+      userIdForNewMember: userIdForNewMember,
+      creatorId: userIdForNewMember,
+      subTimebankId: subTimebankId,
+    );
+
+    await createAndSendSponserRequest(
+      sponsoredGroupModel: sponsoredRequesrModel,
+      notification: notification,
+      subtimebankId: subTimebankId,
+    ).commit();
+  }
+
+  NotificationsModel _assembleNotificationForSponsorRequest({
+    String userIdForNewMember,
+    SponsoredGroupModel sponsoredGroupModel,
+    String subTimebankId,
+    String creatorId,
+  }) {
+    return NotificationsModel(
+      timebankId: subTimebankId,
+      id: sponsoredGroupModel.notificationId,
+      targetUserId: creatorId,
+      senderUserId: userIdForNewMember,
+      type: NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
+      data: sponsoredGroupModel.toMap(),
+      communityId: "NOT_REQUIRED",
+    );
+  }
+
+  WriteBatch createAndSendSponserRequest({
+    String subtimebankId,
+    NotificationsModel notification,
+    SponsoredGroupModel sponsoredGroupModel,
+  }) {
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.setData(
+        Firestore.instance
+            .collection('timebanknew')
+            .document(
+              subtimebankId,
+            )
+            .collection("notifications")
+            .document(notification.id),
+        (notification..isTimebankNotification = true).toMap());
+    return batchWrite;
+  }
+
+  SponsoredGroupModel _assembleSponsoredRequestModel({
+    String creatorId,
+    String subtimebankId,
+    String timebankName,
+    String timebankPhotoUrl,
+  }) {
+    return SponsoredGroupModel(
+      timebankId: subtimebankId,
+      timebankTitle: timebankName,
+      timebankPhotUrl: timebankPhotoUrl,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      creatorId: creatorId,
+      notificationId: utils.Utils.getUuid(),
+    );
   }
 
   Map onActivityResult;
@@ -331,6 +410,25 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               });
             },
           ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: <Widget>[
+            headingText('Save as Sponsored', false),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Checkbox(
+                value: sponsored,
+                onChanged: (bool value) {
+                  setState(() {
+                    sponsored = !sponsored;
+                  });
+                },
+              ),
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
