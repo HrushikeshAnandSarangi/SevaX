@@ -1493,25 +1493,23 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }
 
 Future<bool> hasSufficientCredits({
-  String userId,
-  double credits,
+  @required String userId,
+  @required double credits,
+  @required String communityId
 }) async {
-  var sevaCoinsBalance = await getMemberBalance(
-    userId,
-  );
+//  var sevaCoinsBalance = await getMemberBalance(userId);
+  double sevaCoinsBalance = await getMemberBalancePerTimebank(userId);
+  double lowerLimit = 50;
+  double timebankUserNegativeLimit = await getNegativeThresholdForCommunity(communityId);
 
-  var lowerLimit = 50;
   try {
-    lowerLimit =
-        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+    lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
   } on Exception {
     // Crashlytics.instance.log(error.toString());
-
   }
-
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
 
-  return maxAvailableBalance - credits >= 0;
+  return maxAvailableBalance - credits >= timebankUserNegativeLimit;
 }
 
 Future<bool> hasSufficientCreditsIncludingRecurring(
@@ -1520,8 +1518,7 @@ Future<bool> hasSufficientCreditsIncludingRecurring(
   log("on mode recurrence count isss $recurrences");
   var lowerLimit = 50;
   try {
-    lowerLimit =
-        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+    lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
   } on Exception {
     //  Crashlytics.instance.log(error.toString());
 
@@ -1544,27 +1541,34 @@ Future<double> getMemberBalance(userId) async {
 }
 
 ///NOTE Removed as a part of version 1.1 update as balance should be a meta not through calculation
-//Future<double> getMyDebits(userEmail, userId) {
-//  double myDebits = 0;
-//  return Firestore.instance
-//      .collection('requests')
-//      .where('email', isEqualTo: userEmail)
-//      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
-//      .getDocuments()
-//      .then((QuerySnapshot querySnapshot) {
-//    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-//      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-//      model.transactions?.forEach((transaction) {
-//        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
-//            transaction.isApproved &&
-//            transaction.from == userId) myDebits += transaction.credits;
-//      });
-//    });
-//    return myDebits;
-//  }).catchError((onError) {
-//    return myDebits;
-//  });
-//}
+
+Future<double> getNegativeThresholdForCommunity(communityId) async {
+    var communityDoc = await Firestore.instance.collection("communities").document(communityId).get();
+    CommunityModel commModel = CommunityModel(communityDoc.data);
+    return commModel.negativeCreditsThreshold;
+}
+
+Future<double> getMemberBalancePerTimebank(userSevaId) async {
+    double sevaCoinsBalance = 0.0;
+
+    var snapTransactions = await Firestore.instance.collection('transactions')
+        .where("isApproved", isEqualTo: true).where('transactionbetween', arrayContains: userSevaId)
+        .orderBy("timestamp", descending: true).getDocuments();
+
+    TransactionModel transactionModel;
+    snapTransactions.documents.forEach((transactionDoc){
+        transactionModel = TransactionModel.fromMap(transactionDoc.data);
+        if(transactionModel.from == userSevaId){
+            //lost credits
+            sevaCoinsBalance -= transactionModel.credits > 0 ? transactionModel.credits : transactionModel.credits.abs();
+        } else {
+            //gained credits
+            sevaCoinsBalance += transactionModel.credits > 0 ? transactionModel.credits : transactionModel.credits.abs();
+        }
+    });
+
+    return sevaCoinsBalance;
+}
 
 Stream<List<RequestModel>> getNotAcceptedRequestStream({
   @required String userEmail,

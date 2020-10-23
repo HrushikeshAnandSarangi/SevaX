@@ -59,10 +59,10 @@ class RequestCompleteWidget extends StatelessWidget {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () async {
-                var canApproveTransaction =
-                    await FirestoreManager.hasSufficientCredits(
+                var canApproveTransaction = await FirestoreManager.hasSufficientCredits(
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  communityId: SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
                 if (!canApproveTransaction) {

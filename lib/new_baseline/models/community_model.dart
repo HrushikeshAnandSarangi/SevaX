@@ -126,6 +126,7 @@ class CommunityModel extends DataModel {
   bool private;
 
   double taxPercentage;
+  double negativeCreditsThreshold;
   List<String> timebanks;
   List<String> admins;
   List<String> organizers;
@@ -156,6 +157,10 @@ class CommunityModel extends DataModel {
         map.containsKey('taxPercentage') && map["taxPercentage"] != null
             ? map["taxPercentage"].toDouble()
             : 0.0;
+    this.negativeCreditsThreshold =
+    map.containsKey('negativeCreditsThreshold') && map["negativeCreditsThreshold"] != null
+        ? map["negativeCreditsThreshold"].toDouble()
+        : 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
@@ -205,6 +210,7 @@ class CommunityModel extends DataModel {
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
   }
+
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
     if (map.containsKey("location") &&
@@ -227,14 +233,17 @@ class CommunityModel extends DataModel {
   }
 
   void updateValueByKey(String key, dynamic value) {
+    if (key == 'negativeCreditsThreshold') {
+      this.negativeCreditsThreshold = value;
+    }
     if (key == 'billingStmtNo') {
-      this.id = value;
+      this.billingStmtNo = value;
     }
     if (key == 'subscriptionCancelled') {
-      this.id = value;
+      this.subscriptionCancelled = value;
     }
     if (key == 'sevaxAccountNo') {
-      this.id = value;
+      this.sevaxAccountNo = value;
     }
     if (key == 'id') {
       this.id = value;

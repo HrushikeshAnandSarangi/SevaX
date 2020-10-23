@@ -1389,6 +1389,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           var onBalanceCheckResult = await hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
+            communityId: timebankModel.communityId
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
