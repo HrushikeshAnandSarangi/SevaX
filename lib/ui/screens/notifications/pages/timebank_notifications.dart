@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.da
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/sponser_group_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
@@ -178,6 +179,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.JoinRequest:
                 return TimebankJoinRequestWidget(notification: notification);
+                break;
+
+              case NotificationType.APPROVE_SPONSORED_GROUP_REQUEST:
+                return SponsorGroupRequestWidget(notification: notification);
                 break;
 
               case NotificationType.RequestCompleted:
