@@ -71,9 +71,11 @@ class TimeBankCard extends StatelessWidget {
               timebank.sponsored
                   ? Align(
                       alignment: Alignment.topRight,
-                      child: Icon(
-                        Icons.verified_user,
+                      child: Image.asset(
+                        'images/icons/verified.png',
                         color: FlavorConfig.values.theme.primaryColor,
+                        height: 28,
+                        width: 28,
                       ))
                   : Offstage(),
             ],
