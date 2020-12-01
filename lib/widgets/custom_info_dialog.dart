@@ -16,6 +16,7 @@ enum InfoType {
   PRIVATE_GROUP,
   TAX_CONFIGURATION,
   MAX_CREDITS,
+  SPONSORED,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -28,6 +29,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.PRIVATE_GROUP: "privateGroupInfo",
   InfoType.TAX_CONFIGURATION: "taxInfo",
   InfoType.MAX_CREDITS: "maxCredit",
+  InfoType.SPONSORED: "sponsored",
 };
 
 Widget infoButton({

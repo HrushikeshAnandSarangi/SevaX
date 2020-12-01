@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -73,7 +72,7 @@ class TimeBankCard extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Image.asset(
                         'images/icons/verified.png',
-                        color: FlavorConfig.values.theme.primaryColor,
+                        color: Colors.orange,
                         height: 28,
                         width: 28,
                       ))

@@ -184,7 +184,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             SevaCore.of(context).loggedInUser.sevaUserID) {
       timebankModel.sponsored = false;
 
-      _assembleAndSendRequest(
+      assembleAndSendRequest(
           creatorId: timebankModel.creatorId,
           timebankName: timebankModel.name,
           adminId: parentTimebankModel.creatorId,
@@ -212,98 +212,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.timebankAvatarURL = null;
     globals.webImageUrl = null;
     globals.addedMembersId = [];
-  }
-
-  Future _assembleAndSendRequest({
-    String creatorId,
-    String timebankName,
-    String subTimebankId,
-    String targetTimebankId,
-    String adminId,
-    String communityId,
-    String timebankPhotoUrl,
-    String creatorName,
-    String creatorPhotoUrl,
-  }) async {
-    var sponsoredRequesrModel = _assembleSponsoredRequestModel(
-        creatorId: creatorId,
-        timebankName: timebankName,
-        subtimebankId: subTimebankId,
-        timebankPhotoUrl: timebankPhotoUrl,
-        creatorName: creatorName,
-        creatorPhotoUrl: creatorPhotoUrl);
-
-    var notification = _assembleNotificationForSponsorRequest(
-      sponsoredGroupModel: sponsoredRequesrModel,
-      adminId: adminId,
-      creatorId: creatorId,
-      targetTimebankId: targetTimebankId,
-      communityId: communityId,
-    );
-
-    await createAndSendSponserRequest(
-      sponsoredGroupModel: sponsoredRequesrModel,
-      notification: notification,
-      targetTimebankId: targetTimebankId,
-    ).commit();
-  }
-
-  NotificationsModel _assembleNotificationForSponsorRequest({
-    String adminId,
-    SponsoredGroupModel sponsoredGroupModel,
-    String targetTimebankId,
-    String creatorId,
-    String communityId,
-  }) {
-    return NotificationsModel(
-      timebankId: targetTimebankId,
-      id: sponsoredGroupModel.notificationId,
-      targetUserId: adminId,
-      isRead: false,
-      isTimebankNotification: true,
-      senderUserId: creatorId,
-      type: NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
-      data: sponsoredGroupModel.toMap(),
-      communityId: communityId,
-    );
-  }
-
-  WriteBatch createAndSendSponserRequest({
-    String targetTimebankId,
-    NotificationsModel notification,
-    SponsoredGroupModel sponsoredGroupModel,
-  }) {
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.setData(
-        Firestore.instance
-            .collection('timebanknew')
-            .document(
-              targetTimebankId,
-            )
-            .collection("notifications")
-            .document(notification.id),
-        (notification..isTimebankNotification = true).toMap());
-    return batchWrite;
-  }
-
-  SponsoredGroupModel _assembleSponsoredRequestModel({
-    String creatorId,
-    String creatorName,
-    String creatorPhotoUrl,
-    String subtimebankId,
-    String timebankName,
-    String timebankPhotoUrl,
-  }) {
-    return SponsoredGroupModel(
-      timebankId: subtimebankId,
-      timebankTitle: timebankName,
-      creatorName: creatorName,
-      userPhotoUrl: creatorPhotoUrl,
-      timebankPhotUrl: timebankPhotoUrl,
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      creatorId: creatorId,
-      notificationId: utils.Utils.getUuid(),
-    );
   }
 
   Map onActivityResult;
@@ -464,15 +372,25 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           children: <Widget>[
             headingText('Save as Sponsored', false),
             Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Checkbox(
-                value: sponsored,
-                onChanged: (bool value) {
-                  setState(() {
-                    sponsored = !sponsored;
-                  });
-                },
+              padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+              child: infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.SPONSORED,
               ),
+            ),
+            Column(
+              children: <Widget>[
+                Divider(),
+                Checkbox(
+                  value: sponsored,
+                  onChanged: (bool value) {
+                    setState(() {
+                      sponsored = !sponsored;
+                    });
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -673,4 +591,96 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     super.dispose();
     _textUpdates.close();
   }
+}
+
+Future assembleAndSendRequest({
+  String creatorId,
+  String timebankName,
+  String subTimebankId,
+  String targetTimebankId,
+  String adminId,
+  String communityId,
+  String timebankPhotoUrl,
+  String creatorName,
+  String creatorPhotoUrl,
+}) async {
+  var sponsoredRequesrModel = _assembleSponsoredRequestModel(
+      creatorId: creatorId,
+      timebankName: timebankName,
+      subtimebankId: subTimebankId,
+      timebankPhotoUrl: timebankPhotoUrl,
+      creatorName: creatorName,
+      creatorPhotoUrl: creatorPhotoUrl);
+
+  var notification = _assembleNotificationForSponsorRequest(
+    sponsoredGroupModel: sponsoredRequesrModel,
+    adminId: adminId,
+    creatorId: creatorId,
+    targetTimebankId: targetTimebankId,
+    communityId: communityId,
+  );
+
+  await createAndSendSponserRequest(
+    sponsoredGroupModel: sponsoredRequesrModel,
+    notification: notification,
+    targetTimebankId: targetTimebankId,
+  ).commit();
+}
+
+NotificationsModel _assembleNotificationForSponsorRequest({
+  String adminId,
+  SponsoredGroupModel sponsoredGroupModel,
+  String targetTimebankId,
+  String creatorId,
+  String communityId,
+}) {
+  return NotificationsModel(
+    timebankId: targetTimebankId,
+    id: sponsoredGroupModel.notificationId,
+    targetUserId: adminId,
+    isRead: false,
+    isTimebankNotification: true,
+    senderUserId: creatorId,
+    type: NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
+    data: sponsoredGroupModel.toMap(),
+    communityId: communityId,
+  );
+}
+
+WriteBatch createAndSendSponserRequest({
+  String targetTimebankId,
+  NotificationsModel notification,
+  SponsoredGroupModel sponsoredGroupModel,
+}) {
+  WriteBatch batchWrite = Firestore.instance.batch();
+  batchWrite.setData(
+      Firestore.instance
+          .collection('timebanknew')
+          .document(
+            targetTimebankId,
+          )
+          .collection("notifications")
+          .document(notification.id),
+      (notification..isTimebankNotification = true).toMap());
+  return batchWrite;
+}
+
+SponsoredGroupModel _assembleSponsoredRequestModel({
+  String creatorId,
+  String creatorName,
+  String creatorPhotoUrl,
+  String subtimebankId,
+  String timebankName,
+  String timebankPhotoUrl,
+}) {
+  return SponsoredGroupModel(
+    timebankId: subtimebankId,
+    timebankTitle: timebankName,
+    creatorName: creatorName,
+    userPhotoUrl: creatorPhotoUrl,
+    timebankPhotUrl: timebankPhotoUrl,
+    timestamp: DateTime.now().millisecondsSinceEpoch,
+    creatorId: creatorId,
+    notificationId: utils.Utils.getUuid(),
+  );
 }
