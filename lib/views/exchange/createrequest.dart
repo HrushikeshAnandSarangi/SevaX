@@ -17,7 +17,6 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -32,7 +31,6 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -47,7 +45,6 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -919,36 +916,38 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       setState(() => {});
                     },
                   ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_cash,
-                      value: RequestType.CASH,
-                      isEnabled: !widget.isOfferRequest,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      },
-                    ),
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.cash_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   child:
+                  _optionRadioButton<RequestType>(
+                    title: S.of(context).request_type_cash,
+                    value: RequestType.CASH,
+                    isEnabled: !widget.isOfferRequest,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    },
                   ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.goods_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_goods,
-                      isEnabled: !(widget.isOfferRequest ?? false),
-                      value: RequestType.GOODS,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      },
-                    ),
+                  // ),
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.goods_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   child:
+                  _optionRadioButton<RequestType>(
+                    title: S.of(context).request_type_goods,
+                    isEnabled: !(widget.isOfferRequest ?? false),
+                    value: RequestType.GOODS,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    },
                   ),
+                  // ),
                 ],
               )
             ],
@@ -1421,10 +1420,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
-        List<String> acceptorList =
-            widget.isOfferRequest
-                ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [requestModel.email]:[widget.offer.email, requestModel.email]
-                : [requestModel.email];
+        List<String> acceptorList = widget.isOfferRequest
+            ? widget.offer.creatorAllowedCalender == null ||
+                    widget.offer.creatorAllowedCalender == false
+                ? [requestModel.email]
+                : [widget.offer.email, requestModel.email]
+            : [requestModel.email];
         requestModel.allowedCalenderUsers = acceptorList.toList();
         await continueCreateRequest(confirmationDialogContext: null);
       } else {

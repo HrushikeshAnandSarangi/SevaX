@@ -20,8 +20,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
@@ -141,7 +139,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
     selectedUsers.forEach((key, value) {
-        members.add(value.sevaUserID);
+      members.add(value.sevaUserID);
     });
     Set<String> membersSet = members.toList().toSet();
     String id = Utils.getUuid();
@@ -284,21 +282,22 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 type: InfoType.PRIVATE_GROUP,
               ),
             ),
-            TransactionsMatrixCheck(
-              upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
-              transaction_matrix_type: "private_groups",
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: Checkbox(
-                  value: timebankModel.private,
-                  onChanged: (bool value) {
-                    setState(() {
-                      timebankModel.private = value;
-                    });
-                  },
-                ),
+            // TransactionsMatrixCheck(
+            //   upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+            //   transaction_matrix_type: "private_groups",
+            //   child:
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+              child: Checkbox(
+                value: timebankModel.private,
+                onChanged: (bool value) {
+                  setState(() {
+                    timebankModel.private = value;
+                  });
+                },
               ),
             ),
+            // ),
           ],
         ),
         Row(
@@ -408,12 +407,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (selectedUsers.length > 0) {
       selectedUsers.forEach((key, user) async {
         GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
-            timebankId: widget.timebankId,
-            timebankName: timebankModel.name,
-            timebankImage: timebankModel.photoUrl,
-            aboutTimebank: timebankModel.missionStatement,
-            adminName: SevaCore.of(context).loggedInUser.fullname,
-            groupId: timebankModel.id,
+          timebankId: widget.timebankId,
+          timebankName: timebankModel.name,
+          timebankImage: timebankModel.photoUrl,
+          aboutTimebank: timebankModel.missionStatement,
+          adminName: SevaCore.of(context).loggedInUser.fullname,
+          groupId: timebankModel.id,
         );
 
         NotificationsModel notification = NotificationsModel(

@@ -8,9 +8,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -298,35 +296,36 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         Theme.of(context).platform == TargetPlatform.iOS) {
       return Container();
     }
-    return TransactionsMatrixCheck(
-      upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
-      transaction_matrix_type: "invoice_generation",
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => MonthsListing.of(
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
-                  planId: planId,
-                  communityModel: communityModel),
+    return
+        // TransactionsMatrixCheck(
+        //   upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
+        //   transaction_matrix_type: "invoice_generation",
+        //   child:
+        GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MonthsListing.of(
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                planId: planId,
+                communityModel: communityModel),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Text(
+            "${S.of(context).invoice_and_reports}",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
             ),
-          );
-        },
-        child: Column(
-          children: [
-            Text(
-              "${S.of(context).invoice_and_reports}",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-            SizedBox(height: 20),
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+        ],
       ),
+      // ),
     );
   }
 
