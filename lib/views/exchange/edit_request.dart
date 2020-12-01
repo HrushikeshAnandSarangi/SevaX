@@ -1410,7 +1410,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                       linearProgressForCreatingRequest();
                       await updateRequest(requestModel: widget.requestModel);
                       await RequestManager.updateRecurrenceRequestsFrontEnd(
-                          updatedRequestModel: widget.requestModel);
+                          updatedRequestModel: widget.requestModel,
+                          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,);
 
                       Navigator.pop(dialogContext);
                       Navigator.pop(context);

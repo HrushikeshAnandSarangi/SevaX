@@ -24,6 +24,7 @@ class NotificationsModel extends DataModel {
     this.senderUserId,
     this.timebankId,
     this.communityId,
+    this.timestamp,
     this.isTimebankNotification,
   });
 
@@ -113,6 +114,7 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
+  AddManualTimeRequest,
   RequestScheduleReminder,
   RecurringRequestUpdated,
   RecurringOfferUpdated,
@@ -180,6 +182,7 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
+  "AddManualTimeRequest": NotificationType.AddManualTimeRequest,
   "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
   "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RecurringOfferUpdated": NotificationType.RecurringOfferUpdated,

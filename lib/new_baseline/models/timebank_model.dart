@@ -106,6 +106,7 @@ class TimebankModel extends DataModel {
       notificationSetting[key] = NotificationSetting.fromMap(value);
     });
   }
+
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
     if (map.containsKey("location") &&

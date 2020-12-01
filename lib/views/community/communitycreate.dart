@@ -102,6 +102,7 @@ GlobalKey<FormState> _billingInformationKey = GlobalKey();
 class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
   double taxPercentage = 0.0;
+  double negativeCreditsThreshold = -20.0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
@@ -635,6 +636,36 @@ class CreateEditCommunityViewFormState
                                   });
                                 },
                               ),
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                  headingText("Negative credits threshold"),
+                                  Padding(
+                                      padding:
+                                      const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                                      child: infoButton(
+                                          context: context,
+                                          key: GlobalKey(),
+                                          type: InfoType.TAX_CONFIGURATION,
+                                      ),
+                                  ),
+                              ],
+                          ),
+                          Slider(
+                              label: "${negativeCreditsThreshold.toInt()}%",
+                              value: negativeCreditsThreshold,
+                              min: -50,
+                              max: 0,
+                              divisions: 50,
+                              onChanged: (value) {
+                                  snapshot.data.community.updateValueByKey(
+                                      'negativeCreditsThreshold', value);
+                                  setState(() {
+                                      negativeCreditsThreshold = value;
+                                      communityModel.negativeCreditsThreshold = value;
+                                  });
+                              },
+                          ),
                         Offstage(
                           offstage: widget.isCreateTimebank,
                           child: Row(

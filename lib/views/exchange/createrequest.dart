@@ -1389,6 +1389,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           var onBalanceCheckResult = await hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
+            communityId: timebankModel.communityId,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
@@ -1654,7 +1656,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return resultVar;
     } else {
       resultVar = await FirestoreManager.createRecurringEvents(
-          requestModel: requestModel);
+          requestModel: requestModel,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,);
       return resultVar;
     }
   }

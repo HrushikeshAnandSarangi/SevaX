@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:core' as prefix0;
 import 'dart:core';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
+import 'package:sevaexchange/views/profile/add_manual_time_page.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
@@ -154,13 +155,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 20),
                         SevaCoinWidget(
-                          amount: this.user.currentBalance != null
-                              ? double.parse(
-                                  this.user.currentBalance.toStringAsFixed(2))
-                              : 0.0,
+                          amount: this.user.currentBalance != null ? double.parse(this.user.currentBalance.toStringAsFixed(2)) : 0.0,
                           onTap: () async {
-                            var connResult =
-                                await Connectivity().checkConnectivity();
+                            var connResult = await Connectivity().checkConnectivity();
                             if (connResult == ConnectivityResult.none) {
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
@@ -183,6 +180,28 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             );
                           },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                            height:50,
+                            padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+                            child: RaisedButton(
+                                shape:StadiumBorder(),
+                                onPressed: () async {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => AddManualTimeWidget(
+                                                userModel: SevaCore.of(context).loggedInUser,
+                                            ),
+                                        ),
+                                    );
+                                },
+                                color: Theme.of(context).primaryColor,
+                                child: Text("Add Manual time", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),),
+
+                            )
                         ),
                         SizedBox(
                           height: 20,
