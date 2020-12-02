@@ -41,16 +41,17 @@ Future<void> updateRequest({@required RequestModel requestModel}) async {
       .updateData(requestModel.toMap());
 }
 
-Future<void> updateRequestsByFields({List<String> requestIds, Map<String, dynamic> fields}) async {
-    var futures = <Future>[];
-    int i;
-    for(i=0 ; i<requestIds.length ; i++) {
-        futures.add(Firestore.instance
-            .collection('requests')
-            .document(requestIds[i])
-            .updateData(fields));
-    }
-    await Future.wait(futures);
+Future<void> updateRequestsByFields(
+    {List<String> requestIds, Map<String, dynamic> fields}) async {
+  var futures = <Future>[];
+  int i;
+  for (i = 0; i < requestIds.length; i++) {
+    futures.add(Firestore.instance
+        .collection('requests')
+        .document(requestIds[i])
+        .updateData(fields));
+  }
+  await Future.wait(futures);
 }
 
 Future<void> createDonation({@required DonationModel donationModel}) async {
@@ -61,26 +62,34 @@ Future<void> createDonation({@required DonationModel donationModel}) async {
 }
 
 Future<List<String>> createRecurringEvents(
-    {@required RequestModel requestModel, @required String communityId, @required String timebankId}) async {
+    {@required RequestModel requestModel,
+    @required String communityId,
+    @required String timebankId}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double sevaCreditsCount = 0;
   bool lastRound = false;
-  DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
-      eventEndDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
-  double balanceVar = await getMemberBalancePerTimebank(requestModel.sevaUserId, timebankId);
-  double negativeThresholdTimebank = await getNegativeThresholdForCommunity(communityId);
+  DateTime eventStartDate =
+          DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
+      eventEndDate =
+          DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
+  double balanceVar =
+      await getMemberBalancePerTimebank(requestModel.sevaUserId, timebankId);
+  double negativeThresholdTimebank =
+      await getNegativeThresholdForCommunity(communityId);
   List<Map<String, dynamic>> temparr = [];
   List<String> eventsIdsArr = [];
   DocumentSnapshot projectDoc = null;
   ProjectModel projectData = null;
 
   if (requestModel.projectId != null && requestModel.projectId != "") {
-    projectDoc = await db.collection("projects").document(requestModel.projectId).get();
+    projectDoc =
+        await db.collection("projects").document(requestModel.projectId).get();
     projectData = ProjectModel.fromMap(projectDoc.data);
   }
 
-  batch.setData(db.collection("requests").document(requestModel.id), requestModel.toMap());
+  batch.setData(db.collection("requests").document(requestModel.id),
+      requestModel.toMap());
 
   if (requestModel.end.endType == "on") {
     //end type is on
@@ -224,7 +233,9 @@ Future<List<String>> createRecurringEvents(
 }
 
 Future<void> updateRecurrenceRequestsFrontEnd(
-    {@required RequestModel updatedRequestModel, @required String communityId, @required String timebankId}) async {
+    {@required RequestModel updatedRequestModel,
+    @required String communityId,
+    @required String timebankId}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double newCredits = 0, oldCredits = 0;
@@ -235,8 +246,10 @@ Future<void> updateRecurrenceRequestsFrontEnd(
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
 //  double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
-  double balanceVar = await getMemberBalancePerTimebank(updatedRequestModel.sevaUserId, timebankId);
-  double negativeThresholdTimebank = await getNegativeThresholdForCommunity(communityId);
+  double balanceVar = await getMemberBalancePerTimebank(
+      updatedRequestModel.sevaUserId, timebankId);
+  double negativeThresholdTimebank =
+      await getNegativeThresholdForCommunity(communityId);
   Set<String> usersIds = Set();
   DateTime eventStartDate =
           DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
@@ -1472,84 +1485,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
   );
 }
 
-Future<bool> hasSufficientCredits({
-  @required String userId,
-  @required double credits,
-  @required String communityId,
-  @required String timebankId,
-}) async {
-//  var sevaCoinsBalance = await getMemberBalance(userId);
-  double sevaCoinsBalance = await getMemberBalancePerTimebank(userId, timebankId);
-  double lowerLimit = 50;
-  double timebankUserNegativeLimit = await getNegativeThresholdForCommunity(communityId);
-
-  try {
-    lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
-  } on Exception {
-    // Crashlytics.instance.log(error.toString());
-  }
-  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
-
-  return maxAvailableBalance - credits >= timebankUserNegativeLimit;
-}
-
-Future<bool> hasSufficientCreditsIncludingRecurring(
-    {String userId, double credits, int recurrences, bool isRecurring}) async {
-  var sevaCoinsBalance = await getMemberBalance(userId);
-  log("on mode recurrence count isss $recurrences");
-  var lowerLimit = 50;
-  try {
-    lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
-  } on Exception {
-    //  Crashlytics.instance.log(error.toString());
-
-  }
-
-  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
-  var creditsNew = isRecurring ? credits * recurrences : credits;
-
-  return maxAvailableBalance - (creditsNew) >= 0;
-}
-
-Future<double> getMemberBalance(userId) async {
-  double sevaCoins = 0;
-  var userModel = await FirestoreManager.getUserForIdFuture(
-    sevaUserId: userId,
-  );
-  sevaCoins = userModel.currentBalance;
-
-  return double.parse(sevaCoins.toStringAsFixed(2));
-}
-
 ///NOTE Removed as a part of version 1.1 update as balance should be a meta not through calculation
-
-Future<double> getNegativeThresholdForCommunity(communityId) async {
-    var communityDoc = await Firestore.instance.collection("communities").document(communityId).get();
-    CommunityModel commModel = CommunityModel(communityDoc.data);
-    return commModel.negativeCreditsThreshold;
-}
-
-Future<double> getMemberBalancePerTimebank(String userSevaId, String timebankId) async {
-    double sevaCoinsBalance = 0.0;
-
-    var snapTransactions = await Firestore.instance.collection('transactions').where("timebankid", isEqualTo: timebankId)
-        .where("isApproved", isEqualTo: true).where('transactionbetween', arrayContains: userSevaId)
-        .orderBy("timestamp", descending: true).getDocuments();
-
-    TransactionModel transactionModel;
-    snapTransactions.documents.forEach((transactionDoc){
-        transactionModel = TransactionModel.fromMap(transactionDoc.data);
-        if(transactionModel.from == userSevaId){
-            //lost credits
-            sevaCoinsBalance -= transactionModel.credits > 0 ? transactionModel.credits : transactionModel.credits.abs();
-        } else {
-            //gained credits
-            sevaCoinsBalance += transactionModel.credits > 0 ? transactionModel.credits : transactionModel.credits.abs();
-        }
-    });
-
-    return sevaCoinsBalance;
-}
 
 Stream<List<RequestModel>> getNotAcceptedRequestStream({
   @required String userEmail,
