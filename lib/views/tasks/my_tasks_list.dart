@@ -710,6 +710,7 @@ class TaskCardViewState extends State<TaskCardView> {
         to: SevaCore.of(context).loggedInUser.sevaUserID,
         credits: totalMinutes / 60,
         timestamp: DateTime.now().millisecondsSinceEpoch,
+        associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
       );
 
       if (requestModel.transactions == null) {
@@ -722,18 +723,20 @@ class TaskCardViewState extends State<TaskCardView> {
       FirestoreManager.requestComplete(model: requestModel);
       // END OF CODE correction mentioned above
       await transactionBloc.createNewTransaction(
-          requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-              ? requestModel.sevaUserId
-              : requestModel.timebankId,
-          SevaCore.of(context).loggedInUser.sevaUserID,
-          DateTime.now().millisecondsSinceEpoch,
-          totalMinutes / 60,
-          false,
-          this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-              ? RequestMode.TIMEBANK_REQUEST.toString()
-              : RequestMode.PERSONAL_REQUEST.toString(),
-          this.requestModel.id,
-          this.requestModel.timebankId);
+        requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? requestModel.sevaUserId
+            : requestModel.timebankId,
+        SevaCore.of(context).loggedInUser.sevaUserID,
+        DateTime.now().millisecondsSinceEpoch,
+        totalMinutes / 60,
+        false,
+        this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+            ? RequestMode.TIMEBANK_REQUEST.toString()
+            : RequestMode.PERSONAL_REQUEST.toString(),
+        this.requestModel.id,
+        this.requestModel.timebankId,
+        associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
 
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(

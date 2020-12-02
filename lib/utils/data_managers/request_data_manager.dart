@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:usage/uuid/uuid.dart';
 
 import '../app_config.dart';
+import '../svea_credits_manager.dart';
 import 'notifications_data_manager.dart';
 
 Location location = Location();
@@ -61,10 +62,11 @@ Future<void> createDonation({@required DonationModel donationModel}) async {
       .setData(donationModel.toMap());
 }
 
-Future<List<String>> createRecurringEvents(
-    {@required RequestModel requestModel,
-    @required String communityId,
-    @required String timebankId}) async {
+Future<List<String>> createRecurringEvents({
+  @required RequestModel requestModel,
+  @required String communityId,
+  @required String timebankId,
+}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double sevaCreditsCount = 0;
@@ -73,10 +75,13 @@ Future<List<String>> createRecurringEvents(
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
       eventEndDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
-  double balanceVar =
-      await getMemberBalancePerTimebank(requestModel.sevaUserId, timebankId);
+  double balanceVar = await SevaCreditLimitManager.getMemberBalancePerTimebank(
+    associatedCommunity: communityId,
+    userSevaId: requestModel.sevaUserId,
+  );
   double negativeThresholdTimebank =
-      await getNegativeThresholdForCommunity(communityId);
+      await SevaCreditLimitManager.getNegativeThresholdForCommunity(
+          communityId);
   List<Map<String, dynamic>> temparr = [];
   List<String> eventsIdsArr = [];
   DocumentSnapshot projectDoc = null;
@@ -246,10 +251,13 @@ Future<void> updateRecurrenceRequestsFrontEnd(
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
 //  double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
-  double balanceVar = await getMemberBalancePerTimebank(
-      updatedRequestModel.sevaUserId, timebankId);
+  double balanceVar = await SevaCreditLimitManager.getMemberBalancePerTimebank(
+    associatedCommunity: communityId,
+    userSevaId: updatedRequestModel.sevaUserId,
+  );
   double negativeThresholdTimebank =
-      await getNegativeThresholdForCommunity(communityId);
+      await SevaCreditLimitManager.getNegativeThresholdForCommunity(
+          communityId);
   Set<String> usersIds = Set();
   DateTime eventStartDate =
           DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
@@ -1048,17 +1056,19 @@ Future<void> approveRequestCompletion({
         merge: true,
       );
   await transactionBloc.updateNewTransaction(
-      model.requestMode == RequestMode.PERSONAL_REQUEST
-          ? editedTransaction.from
-          : model.timebankId,
-      editedTransaction.to,
-      editedTransaction.timestamp,
-      editedTransaction.credits,
-      editedTransaction.isApproved,
-      model.requestMode,
-      model.id,
-      model.timebankId,
-      false);
+    model.requestMode == RequestMode.PERSONAL_REQUEST
+        ? editedTransaction.from
+        : model.timebankId,
+    editedTransaction.to,
+    editedTransaction.timestamp,
+    editedTransaction.credits,
+    editedTransaction.isApproved,
+    model.requestMode,
+    model.id,
+    model.timebankId,
+    false,
+    associatedCommunity: communityId,
+  );
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -1071,10 +1081,12 @@ Future<void> approveRequestCompletion({
 
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
   await utils.processLoans(
-      timebankId: model.timebankId,
-      userId: userId,
-      to: editedTransaction.to,
-      credits: editedTransaction.credits);
+    timebankId: model.timebankId,
+    userId: userId,
+    to: editedTransaction.to,
+    credits: editedTransaction.credits,
+    associatedCommunity: communityId,
+  );
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);

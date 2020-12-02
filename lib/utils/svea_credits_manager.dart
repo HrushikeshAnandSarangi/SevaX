@@ -10,7 +10,9 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'app_config.dart';
 
 class SevaCreditLimitManager {
-  static Future<double> getNegativeThresholdForCommunity(communityId) async {
+  static Future<double> getNegativeThresholdForCommunity(
+    communityId,
+  ) async {
     var communityDoc = await Firestore.instance
         .collection("communities")
         .document(communityId)
@@ -19,13 +21,15 @@ class SevaCreditLimitManager {
     return commModel.negativeCreditsThreshold;
   }
 
-  static Future<double> getMemberBalancePerTimebank(
-      String userSevaId, String timebankId) async {
+  static Future<double> getMemberBalancePerTimebank({
+    String userSevaId,
+    String associatedCommunity,
+  }) async {
     double sevaCoinsBalance = 0.0;
 
     var snapTransactions = await Firestore.instance
         .collection('transactions')
-        .where("timebankid", isEqualTo: timebankId)
+        .where("associatedCommunity", isEqualTo: associatedCommunity)
         .where("isApproved", isEqualTo: true)
         .where('transactionbetween', arrayContains: userSevaId)
         .orderBy("timestamp", descending: true)
@@ -84,24 +88,16 @@ class SevaCreditLimitManager {
   static Future<bool> hasSufficientCredits({
     @required String userId,
     @required double credits,
-    @required String communityId,
-    @required String timebankId,
+    @required String associatedCommunity,
   }) async {
-//  var sevaCoinsBalance = await getMemberBalance(userId);
-    double sevaCoinsBalance =
-        await getMemberBalancePerTimebank(userId, timebankId);
-    double lowerLimit = 50;
-    double timebankUserNegativeLimit =
-        await getNegativeThresholdForCommunity(communityId);
+    double communityAssociatedBalance = await getMemberBalancePerTimebank(
+      userSevaId: userId,
+      associatedCommunity: associatedCommunity,
+    );
 
-    try {
-      lowerLimit =
-          json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
-    } on Exception {
-      // Crashlytics.instance.log(error.toString());
-    }
-    var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
-
-    return maxAvailableBalance - credits >= timebankUserNegativeLimit;
+    double communityThreshold =
+        await getNegativeThresholdForCommunity(associatedCommunity);
+    log("Response = >$communityThreshold  $communityAssociatedBalance  ${communityThreshold - (communityAssociatedBalance + credits)}");
+    return communityAssociatedBalance + credits <= communityThreshold;
   }
 }

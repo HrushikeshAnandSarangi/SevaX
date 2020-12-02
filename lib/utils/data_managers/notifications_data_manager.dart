@@ -282,8 +282,13 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   }
 }
 
-Future<void> processLoans(
-    {String timebankId, String userId, String to, num credits}) async {
+Future<void> processLoans({
+  String timebankId,
+  String userId,
+  String to,
+  num credits,
+  @required String associatedCommunity,
+}) async {
   // get all previous loans of this user with in the timebank;
   var loans = await Firestore.instance
       .collection("transactions")
@@ -333,14 +338,16 @@ Future<void> processLoans(
     var paying = tobepaid > credits ? credits : tobepaid;
 
     await transactionBloc.createNewTransaction(
-        to,
-        timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        paidamount,
-        true,
-        "USER_PAYLOAN_TOTIMEBANK",
-        null,
-        timebankId);
+      to,
+      timebankId,
+      DateTime.now().millisecondsSinceEpoch,
+      paidamount,
+      true,
+      "USER_PAYLOAN_TOTIMEBANK",
+      null,
+      timebankId,
+      associatedCommunity: associatedCommunity,
+    );
   }
 }
 

@@ -21,6 +21,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -59,11 +60,12 @@ class RequestCompleteWidget extends StatelessWidget {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () async {
-                var canApproveTransaction = await FirestoreManager.hasSufficientCredits(
+                var canApproveTransaction =
+                    await SevaCreditLimitManager.hasSufficientCredits(
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-                    timebankId: SevaCore.of(context).loggedInUser.currentTimebank
+                  associatedCommunity:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
                 if (!canApproveTransaction) {
