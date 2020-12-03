@@ -67,6 +67,7 @@ class AddManualTimeBloc {
         relatedNotificationId: notificationId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         claimedBy: userType,
+        timebankId: timebankId,
       );
 
       NotificationsModel notificationsModel = NotificationsModel()

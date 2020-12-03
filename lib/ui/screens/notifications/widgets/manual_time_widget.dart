@@ -4,6 +4,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/manual_time_repository.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
@@ -112,6 +113,12 @@ void manualTimeActionDialog(
                       _model.actionBy =
                           SevaCore.of(context).loggedInUser.sevaUserID;
                       ManualTimeRepository.claimAction(_model);
+
+                      // TransactionModel.fromMap(
+                      //   model.ty
+
+                      // )
+
                       createNotification(
                           SevaCore.of(context).loggedInUser, _model);
                       FirestoreManager.readTimeBankNotification(
