@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 
@@ -53,17 +55,40 @@ class NotificationsRepository {
         .snapshots();
   }
 
-  static Stream<QuerySnapshot> getAllTimebankNotifications(
-    String communityId,
-  ) {
-    return _firestore
+  static Stream<List<NotificationsModel>> getAllTimebankNotifications(
+      String communityId) async* {
+    var data = _firestore
         .collectionGroup("notifications")
         .where("isTimebankNotification", isEqualTo: true)
         .where("communityId", isEqualTo: communityId)
         .where("isRead", isEqualTo: false)
         .orderBy("timestamp", descending: true)
         .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
+        handleData: (data, sink) {
+          List<NotificationsModel> notifications = [];
+          data.documents.forEach((document) {
+            notifications.add(NotificationsModel.fromMap(document.data));
+          });
+          sink.add(notifications);
+        },
+      ),
+    );
   }
+
+  // static Stream<QuerySnapshot> getAllTimebankNotifications(
+  //   String communityId,
+  // ) {
+  //   return _firestore
+  //       .collectionGroup("notifications")
+  //       .where("isTimebankNotification", isEqualTo: true)
+  //       .where("communityId", isEqualTo: communityId)
+  //       .where("isRead", isEqualTo: false)
+  //       .orderBy("timestamp", descending: true)
+  //       .snapshots();
+  // }
 
   static Future<void> readUserNotification(
     String notificationId,
