@@ -60,6 +60,7 @@ class AddManualTimeBloc {
           id: user.sevaUserID,
           name: user.fullname,
           photoUrl: user.photoURL,
+          email: user.email,
         ),
         claimedTime: _time(),
         communityId: user.currentCommunity,

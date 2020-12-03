@@ -132,21 +132,25 @@ class UserDetails {
     this.id,
     this.name,
     this.photoUrl,
+    @required this.email,
   });
 
   String id;
   String name;
   String photoUrl;
+  String email;
 
   factory UserDetails.fromMap(Map<String, dynamic> map) => UserDetails(
         id: map["id"],
         name: map["name"],
         photoUrl: map["photoUrl"],
+        email: map['email'],
       );
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
         "photoUrl": photoUrl,
+        "email": email,
       };
 }

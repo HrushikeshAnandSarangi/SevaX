@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -21,7 +22,6 @@ void manualTimeActionDialog(
   ManualTimeModel model,
 ) {
   Future<void> createNotification(UserModel user, ManualTimeModel model) async {
-    var reciever = await UserRepository.fetchUserById(model.userDetails.id);
     NotificationsModel notificationsModel = NotificationsModel()
       ..id = Uuid().generateV4()
       ..type = model.status == ClaimStatus.Approved
@@ -35,7 +35,7 @@ void manualTimeActionDialog(
 
     await NotificationsRepository.createNotification(
       notificationsModel,
-      reciever.email,
+      model.userDetails.email,
     );
   }
 
@@ -112,18 +112,19 @@ void manualTimeActionDialog(
                       _model.status = ClaimStatus.Approved;
                       _model.actionBy =
                           SevaCore.of(context).loggedInUser.sevaUserID;
-                      ManualTimeRepository.claimAction(_model);
 
-                      // TransactionModel.fromMap(
-                      //   model.ty
-
-                      // )
-
-                      createNotification(
-                          SevaCore.of(context).loggedInUser, _model);
-                      FirestoreManager.readTimeBankNotification(
+                      await ManualTimeRepository.approveManualCreditClaim(
+                        memberTransactionModel:
+                            ManualTimeRepository.getMemberTransactionModel(
+                          _model,
+                        ),
+                        timebankTransaction:
+                            ManualTimeRepository.getTimebankTransactionModel(
+                          _model,
+                        ),
+                        model: _model,
                         notificationId: notificationId,
-                        timebankId: timebankId,
+                        userModel: SevaCore.of(context).loggedInUser,
                       );
                       Navigator.of(_context).pop();
                     },
@@ -149,14 +150,11 @@ void manualTimeActionDialog(
                       _model.status = ClaimStatus.Rejected;
                       _model.actionBy =
                           SevaCore.of(context).loggedInUser.sevaUserID;
-                      ManualTimeRepository.claimAction(_model);
-                      createNotification(
-                          SevaCore.of(context).loggedInUser, _model);
-                      FirestoreManager.readTimeBankNotification(
+                      ManualTimeRepository.rejectManualCreditClaim(
+                        model: _model,
                         notificationId: notificationId,
-                        timebankId: timebankId,
+                        userModel: SevaCore.of(context).loggedInUser,
                       );
-
                       Navigator.of(_context).pop();
                     },
                   ),
@@ -168,4 +166,18 @@ void manualTimeActionDialog(
       );
     },
   );
+}
+
+class CreateTransaction {
+  static bool createTransaction({
+    TransactionModel transactionModel,
+    ManualTimeModel manualTimeModel,
+    String notificationId,
+  }) {}
+
+  static updateMemberBalance({
+    TransactionModel transactionModel,
+  }) {
+    Firestore.instance.collection('users').document();
+  }
 }
