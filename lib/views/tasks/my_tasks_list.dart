@@ -735,7 +735,7 @@ class TaskCardViewState extends State<TaskCardView> {
             : RequestMode.PERSONAL_REQUEST.toString(),
         this.requestModel.id,
         this.requestModel.timebankId,
-        associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+        associatedCommunity: requestModel.associatedCommunityId,
       );
 
       FirestoreManager.createTaskCompletedNotification(
@@ -745,7 +745,7 @@ class TaskCardViewState extends State<TaskCardView> {
           type: NotificationType.RequestCompleted,
           senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
           targetUserId: requestModel.sevaUserId,
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          communityId: requestModel.associatedCommunityId,
           timebankId: requestModel.timebankId,
           isTimebankNotification:
               requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,

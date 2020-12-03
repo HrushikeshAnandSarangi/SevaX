@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -232,7 +234,9 @@ class RequestModel extends DataModel {
     this.donationInstructionLink,
     this.allowedCalenderUsers,
     @required this.associatedCommunityId,
-  });
+  }) {
+    log("===========Constructir called $associatedCommunityId =======");
+  }
 
   RequestModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('donationInstructionLink')) {

@@ -139,7 +139,7 @@ class RequestCreateForm extends StatefulWidget {
     this.offer,
     this.timebankId,
     this.userModel,
-    this.loggedInUser,
+    @required this.loggedInUser,
     this.projectId,
     this.projectModel,
   });
@@ -287,6 +287,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
+    this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
+    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
 
     Widget headerContainer(snapshot) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
