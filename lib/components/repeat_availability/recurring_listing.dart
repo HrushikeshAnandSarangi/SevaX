@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -389,8 +390,8 @@ class _RecurringListState extends State<RecurringList> {
   void editRequest({RequestModel model, TimebankModel timebankModel}) {
     timeBankBloc.setSelectedRequest(model);
     if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
-        timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        isAccessAvailable(
+            timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(
         context,
         MaterialPageRoute(

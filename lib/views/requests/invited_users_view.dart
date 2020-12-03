@@ -41,7 +41,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     timeBankBloc.setInvitedUsersData(widget.requestModel.id);
     setState(() {});
 
-    if (timebank.model.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
       isAdmin = true;
     }
 

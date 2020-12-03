@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
@@ -174,8 +175,8 @@ class OfferListItems extends StatelessWidget {
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
         if (model.type != RequestType.TIME &&
-            !timebankModel.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+            !isAccessAvailable(
+                timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
           return;
         }
@@ -199,8 +200,8 @@ class OfferListItems extends StatelessWidget {
             .contains(model.sevaUserId);
 
         if (model.type != RequestType.TIME &&
-            !timebankModel.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+            !isAccessAvailable(
+                timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
           return;
         }

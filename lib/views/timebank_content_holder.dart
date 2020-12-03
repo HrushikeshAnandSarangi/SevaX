@@ -203,10 +203,8 @@ Widget createAdminTabBar(
                 userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
               TimebankRequestAdminPage(
-                isUserAdmin: timebankModel.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID) ||
-                    timebankModel.organizers
-                        .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                isUserAdmin: isAccessAvailable(timebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID),
                 timebankId: timebankModel.id,
                 userEmail: SevaCore.of(context).loggedInUser.email,
                 isFromGroup: true,
@@ -335,9 +333,8 @@ Widget createJoinedUserTabBar(
               //   timebankId: timebankModel.id,
               // ),
               TimebankRequestAdminPage(
-                isUserAdmin: timebankModel.admins.contains(
-                      SevaCore.of(context).loggedInUser.sevaUserID,
-                    ) ||
+                isUserAdmin: isAccessAvailable(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID) ||
                     timebankModel.organizers.contains(
                       SevaCore.of(context).loggedInUser.sevaUserID,
                     ),
@@ -410,7 +407,7 @@ Widget createNormalUserTabBar(
 
 AboutUserRole determineUserRoleInAbout(
     {String sevaUserId, TimebankModel timeBankModel}) {
-  if (timeBankModel.admins.contains(sevaUserId)) {
+  if (isAccessAvailable(timeBankModel, sevaUserId)) {
     return AboutUserRole.ADMIN;
   } else if (timeBankModel.members.contains(sevaUserId)) {
     return AboutUserRole.JOINED_USER;
@@ -470,8 +467,8 @@ class DiscussionListState extends State<DiscussionList> {
         InkWell(
           onTap: () {
             if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-                !widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                !isAccessAvailable(widget.timebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID)) {
               showAdminAccessMessage(context: context);
             } else {
               Navigator.of(context).push(MaterialPageRoute(
@@ -764,7 +761,7 @@ class DiscussionListState extends State<DiscussionList> {
                       ),
                     ),
                     //  SizedBox(width: 8.0),
-                    widget.timebankModel.admins.contains(
+                    isAccessAvailable(widget.timebankModel,
                             SevaCore.of(context).loggedInUser.sevaUserID)
                         ? getOptionButtons(
                             Padding(
@@ -1159,7 +1156,7 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                           ),
-                          widget.timebankModel.admins.contains(
+                          isAccessAvailable(widget.timebankModel,
                                   SevaCore.of(context).loggedInUser.sevaUserID)
                               ? getOptionButtons(
                                   Padding(

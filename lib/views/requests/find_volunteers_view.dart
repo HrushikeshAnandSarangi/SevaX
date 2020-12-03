@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
@@ -52,7 +53,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
       });
     });
 
-    if (timebankModel.model.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(timebankModel.model, widget.sevaUserId)) {
       isAdmin = true;
     }
 
@@ -190,7 +191,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   @override
   void initState() {
     super.initState();
-    if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(widget.timebankModel, widget.sevaUserId)) {
       isAdmin = true;
     }
 

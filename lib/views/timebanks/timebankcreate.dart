@@ -178,8 +178,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     if (sponsored == true &&
-        !parentTimebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+        !isAccessAvailable(parentTimebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID) &&
         parentTimebankModel.creatorId !=
             SevaCore.of(context).loggedInUser.sevaUserID) {
       timebankModel.sponsored = false;

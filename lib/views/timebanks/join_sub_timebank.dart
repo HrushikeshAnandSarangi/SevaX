@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../timebank_content_holder.dart';
@@ -172,8 +173,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     String userStatus = S.of(context).join;
 //ytrtrvtfffddxxszwawqewc bunyinuyuty tfgftftf ttftftftftb ftyhbyytbtytuknt  kmiolll908786756 53423saqaqaaxesecsrsescsrsevdvvfdvtfhby byu kmn tbvrtrtrtrvrrrtrvrtvty
                     TimebankModel timebank = timebankList.elementAt(index);
-                    if (timebank.admins
-                            .contains(widget.loggedInUserModel.sevaUserID) ||
+                    if (isAccessAvailable(
+                            timebank, widget.loggedInUserModel.sevaUserID) ||
                         timebank.coordinators
                             .contains(widget.loggedInUserModel.sevaUserID) ||
                         timebank.members
@@ -468,8 +469,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (joinRequestModels[i].entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
         return CompareToTimeBank.JOINED;
-      } else if (timeBank.admins
-              .contains(widget.loggedInUserModel.sevaUserID) ||
+      } else if (isAccessAvailable(
+              timeBank, widget.loggedInUserModel.sevaUserID) ||
           timeBank.coordinators.contains(widget.loggedInUserModel.sevaUserID) ||
           timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;

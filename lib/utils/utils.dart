@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -26,6 +27,16 @@ bool isLeapYear(int year) {
 
 bool isSameDay(DateTime d1, DateTime d2) {
   return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
+}
+
+bool isAccessAvailable(TimebankModel timebank, String userId) {
+  if (timebank.creatorId == userId ||
+      timebank.admins.contains(userId) ||
+      timebank.organizers.contains(userId)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 Widget getEmptyWidget(String title, String notFoundValue) {

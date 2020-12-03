@@ -278,14 +278,12 @@ class RequestEditFormState extends State<RequestEditForm> {
       return Container();
     }
     timebankModel = snapshot.data;
-    if (snapshot.data.admins
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID)){
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
           selectedProject: null,
-          admin: snapshot.data.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID));
+          admin: isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -325,8 +323,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         return Container();
       }
       timebankModel = snapshot.data;
-      if (snapshot.data.admins
-          .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      if (isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID)) {
         return requestSwitch();
       } else {
         this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;

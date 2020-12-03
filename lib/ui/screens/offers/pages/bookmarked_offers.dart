@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -225,11 +226,12 @@ class BookmarkedOffers extends StatelessWidget {
                             // Once approved
 
                             Navigator.pop(viewContext);
-                            if (timebankModel.admins.contains(
-                              SevaCore.of(parentContext)
-                                  .loggedInUser
-                                  .sevaUserID,
-                            )) {
+
+                            if (isAccessAvailable(
+                                timebankModel,
+                                SevaCore.of(parentContext)
+                                    .loggedInUser
+                                    .sevaUserID)) {
                               Navigator.push(
                                 parentContext,
                                 MaterialPageRoute(

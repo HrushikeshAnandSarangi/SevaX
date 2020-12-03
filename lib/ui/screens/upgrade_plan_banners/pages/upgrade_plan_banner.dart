@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 
@@ -180,7 +181,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                             );
                           },
                         )
-                      : timebankModel.admins.contains(currentUser.sevaUserID)
+                      : isAccessAvailable(timebankModel, currentUser.sevaUserID)
                           ? RichText(
                               text: TextSpan(
                                 style: TextStyle(
