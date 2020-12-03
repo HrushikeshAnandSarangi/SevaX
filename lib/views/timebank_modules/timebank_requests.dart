@@ -115,11 +115,11 @@ class RequestsState extends State<RequestsModule> {
                               ),
                               onTap: () {
                                 if (widget.timebankModel.protected) {
-                                  if (widget.timebankModel.admins.contains(
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID,
-                                  )) {
+                                  if (isAccessAvailable(
+                                      widget.timebankModel,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID)) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -137,7 +137,8 @@ class RequestsState extends State<RequestsModule> {
                                 } else {
                                   if (widget.timebankModel.id ==
                                           FlavorConfig.values.timebankId &&
-                                      !widget.timebankModel.admins.contains(
+                                      !isAccessAvailable(
+                                          widget.timebankModel,
                                           SevaCore.of(context)
                                               .loggedInUser
                                               .sevaUserID)) {
@@ -780,8 +781,8 @@ class RequestListItemsState extends State<RequestListItems> {
                   )));
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        isAccessAvailable(widget.timebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(

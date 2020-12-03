@@ -44,7 +44,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   void initState() {
     super.initState();
 
-    if (timebank.model.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
       isAdmin = true;
     }
     _firestore

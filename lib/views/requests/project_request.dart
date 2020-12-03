@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -225,7 +226,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
     if ((widget.projectModel.mode == "Timebank" &&
-            widget.timebankModel.admins.contains(sevaUserId)) ||
+            isAccessAvailable(widget.timebankModel,
+                SevaCore.of(context).loggedInUser.sevaUserID)) ||
         (widget.projectModel.mode == "Personal" &&
             widget.projectModel.creatorId == sevaUserId)) {
       proceedCreatingRequest();
@@ -644,8 +646,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }) {
     bool isAdmin = false;
     if (model.sevaUserId == SevaCore.of(mContext).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins
-            .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+        isAccessAvailable(widget.timebankModel,
+            SevaCore.of(mContext).loggedInUser.sevaUserID)) {
       isAdmin = true;
     }
     return Container(
@@ -658,8 +660,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           onTap: () {
             if (model.sevaUserId ==
                     SevaCore.of(mContext).loggedInUser.sevaUserID ||
-                widget.timebankModel.admins
-                    .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+                isAccessAvailable(widget.timebankModel,
+                    SevaCore.of(mContext).loggedInUser.sevaUserID)) {
               timeBankBloc.setSelectedRequest(model);
               timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
               timeBankBloc.setIsAdmin(isAdmin);
@@ -912,7 +914,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 
     requestModelList.forEach((request) {
       if (sevauserid != request.sevaUserId ||
-          !widget.timebankModel.admins.contains(sevauserid)) {
+          !isAccessAvailable(widget.timebankModel,
+              SevaCore.of(context).loggedInUser.sevaUserID)) {
         requestModelList.removeWhere((request) =>
             widget.projectModel.completedRequests.contains(request.id));
       }

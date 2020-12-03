@@ -221,8 +221,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   void navigateToCreateProject() {
     if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        !isAccessAvailable(widget.timebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(

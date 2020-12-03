@@ -190,8 +190,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           return Container();
         }
         timebankModel = snapshot.data;
-        if (snapshot.data.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
           return Container(
             margin: EdgeInsets.only(bottom: 20),
             width: double.infinity,

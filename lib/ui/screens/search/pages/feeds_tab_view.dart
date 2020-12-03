@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/search/widgets/news_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
@@ -85,7 +86,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                           .contains(SevaCore.of(context).loggedInUser.email),
                       onFavorite: () =>
                           _like(news, SevaCore.of(context).loggedInUser.email),
-                      isAdmin: _bloc.timebank.admins.contains(
+                      isAdmin: isAccessAvailable(_bloc.timebank,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       address: getLocation(news.placeAddress) ??
                           "location not updated",

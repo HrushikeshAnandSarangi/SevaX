@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
@@ -143,16 +144,16 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             ),
             isUserJoined
                 ? TimeBankSevaCoin(
-                    isAdmin: widget.timebankModel.admins
-                        .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                    isAdmin: isAccessAvailable(widget.timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
                     loggedInUser: SevaCore.of(context).loggedInUser,
                     timebankData: widget.timebankModel)
                 : Offstage(),
             SizedBox(
               height: 15,
             ),
-            widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+            isAccessAvailable(widget.timebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -444,7 +445,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            if (widget.timebankModel.admins.contains(
+                            if (isAccessAvailable(widget.timebankModel,
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
                               _showAdminMessage();
                             } else {

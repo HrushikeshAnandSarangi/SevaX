@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -195,8 +196,8 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               );
 
               if (primaryTimebank != null &&
-                  primaryTimebank.admins
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                  isAccessAvailable(primaryTimebank,
+                      SevaCore.of(context).loggedInUser.sevaUserID)) {
                 isAdmin = true;
               }
               if (primaryTimebank != null &&
@@ -254,9 +255,11 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           userId: SevaCore.of(context).loggedInUser.sevaUserID,
                         ),
                         TimebankRequestAdminPage(
-                          isUserAdmin: primaryTimebank.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                              ) ||
+                          isUserAdmin: isAccessAvailable(
+                                  primaryTimebank,
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID) ||
                               primaryTimebank.organizers.contains(
                                 SevaCore.of(context).loggedInUser.sevaUserID,
                               ),

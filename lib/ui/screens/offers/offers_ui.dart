@@ -14,6 +14,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -39,8 +40,8 @@ class OfferCardViewState extends State<OfferCardView> {
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
         .then((timebank) {
       widget.timebankModel = timebank;
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+      if (isAccessAvailable(
+              timebank, SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         if (widget.isAdmin == false) {
@@ -65,8 +66,8 @@ class OfferCardViewState extends State<OfferCardView> {
   Widget build(BuildContext context) {
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
         .then((timebank) {
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+      if (isAccessAvailable(
+              timebank, SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
     });

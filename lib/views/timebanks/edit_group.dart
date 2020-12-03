@@ -127,8 +127,8 @@ class EditGroupFormState extends State<EditGroupForm> {
     widget.timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     if (widget.timebankModel.sponsored == true &&
-        !parentTimebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+        !isAccessAvailable(parentTimebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID) &&
         parentTimebankModel.creatorId !=
             SevaCore.of(context).loggedInUser.sevaUserID) {
       widget.timebankModel.sponsored = false;

@@ -70,8 +70,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   void navigateToCreateGroup() {
     if (widget.primaryTimebankModel.id == FlavorConfig.values.timebankId &&
-        !widget.primaryTimebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        !isAccessAvailable(widget.primaryTimebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
       showAdminAccessMessage(context: context);
     } else {
       createEditCommunityBloc
@@ -266,7 +266,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                             icon: Icon(Icons.add_circle),
                             color: FlavorConfig.values.theme.primaryColor,
                             onPressed: widget.primaryTimebankModel.protected
-                                ? widget.primaryTimebankModel.admins.contains(
+                                ? isAccessAvailable(
+                                        widget.primaryTimebankModel,
                                         SevaCore.of(context)
                                             .loggedInUser
                                             .sevaUserID)
