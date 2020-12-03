@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -182,9 +183,11 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
 
   if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
     //Check balance here
-    var hasSufficientCredits = await FirestoreManager.hasSufficientCredits(
+    var hasSufficientCredits =
+        await SevaCreditLimitManager.hasSufficientCredits(
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
+      associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
     );
 
     if (hasSufficientCredits) {

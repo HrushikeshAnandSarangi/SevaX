@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -434,9 +435,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         RequestMode.PERSONAL_REQUEST) {
                       // showLinearProgress();
                       var canApproveTransaction =
-                          await FirestoreManager.hasSufficientCredits(
+                          await SevaCreditLimitManager.hasSufficientCredits(
                         credits: transactionModel.credits,
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        associatedCommunity:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
                       );
                       // Navigator.pop(linearProgressForBalanceCheck);
 

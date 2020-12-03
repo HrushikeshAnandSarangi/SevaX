@@ -159,7 +159,8 @@ flutter:
     - images/icons/remove_user.png
     - images/icons/camera.png
     - images/icons/cash_donation.png
-    - images/icons/goods_donation.png
+    - images/icons/cash_donation.png
+    - images/icons/verified.png
     # intro_screens
     - images/intro_screens/Broadcasting_feeds.png
     - images/intro_screens/Groups_and_Projects.png

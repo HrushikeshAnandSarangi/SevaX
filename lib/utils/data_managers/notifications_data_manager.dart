@@ -282,8 +282,13 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   }
 }
 
-Future<void> processLoans(
-    {String timebankId, String userId, String to, num credits}) async {
+Future<void> processLoans({
+  String timebankId,
+  String userId,
+  String to,
+  num credits,
+  @required String associatedCommunity,
+}) async {
   // get all previous loans of this user with in the timebank;
   var loans = await Firestore.instance
       .collection("transactions")
@@ -333,14 +338,16 @@ Future<void> processLoans(
     var paying = tobepaid > credits ? credits : tobepaid;
 
     await transactionBloc.createNewTransaction(
-        to,
-        timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        paidamount,
-        true,
-        "USER_PAYLOAN_TOTIMEBANK",
-        null,
-        timebankId);
+      to,
+      timebankId,
+      DateTime.now().millisecondsSinceEpoch,
+      paidamount,
+      true,
+      "USER_PAYLOAN_TOTIMEBANK",
+      null,
+      timebankId,
+      associatedCommunity: associatedCommunity,
+    );
   }
 }
 
@@ -579,6 +586,8 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
                 model.type ==
                     NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK ||
                 model.type == NotificationType.TYPE_DELETION_REQUEST_OUTPUT ||
+                model.type == NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER ||
+                model.type == NotificationType.ADMIN_PROMOTED_AS_ORGANIZER ||
                 model.type == NotificationType.MEMBER_PROMOTED_AS_ADMIN ||
                 model.type == NotificationType.MEMBER_DEMOTED_FROM_ADMIN) {
               notifications.add(model);

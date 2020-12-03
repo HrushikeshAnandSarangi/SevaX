@@ -244,36 +244,39 @@ bool getTransactionStatus({
   CommunityModel communityModel,
 }) {
   int activeCount = 0;
-  if ((communityModel.payment['planId'] == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN || communityModel.subscriptionCancelled) &&
+  if ((communityModel.payment['planId'] ==
+              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
+          communityModel.subscriptionCancelled) &&
       communityModel.billingQuota != null) {
     List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
-        SevaPlansBillingConfig
-            .billingPlans[communityModel.payment['planId']]['action']);
+        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
+            ['action']);
 
     neighbourhoodPlanBillableTransactions.forEach((billableItem) {
       if (communityModel.billingQuota.containsKey(billableItem)) {
         activeCount += communityModel.billingQuota[billableItem];
       }
     });
-    return activeCount >= SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
+    return activeCount >=
+        SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
   } else {
-
     return false;
   }
 }
 
 class SevaPlansBillingConfig {
-    static Map<String, dynamic> plansLimit = {
-    "neighbourhood_plan":15,
-    "tall_plan":50,
-    "grande_plan":3000,
-    "venti_plan":5000
-    };
+  static Map<String, dynamic> plansLimit = {
+    "neighbourhood_plan": 15,
+    "tall_plan": 50,
+    "community_plus_plan": 150,
+    "grande_plan": 3000,
+    "venti_plan": 5000
+  };
 
   static Map<String, dynamic> billingPlans = {
     "neighbourhood_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 15,
       'action': [
 //         "quota_TypeJoinTimebank",
         "quota_TypeRequestApply",
@@ -287,36 +290,48 @@ class SevaPlansBillingConfig {
       "initial_transactions_amount": 0,
       "initial_transactions_qty": 50,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+    "community_plus_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 150,
+      'action': [
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     },
     "grande_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 3000,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     },
     "venti_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 5000,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     }
   };

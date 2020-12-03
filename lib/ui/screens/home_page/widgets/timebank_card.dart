@@ -41,29 +41,43 @@ class TimeBankCard extends StatelessWidget {
                     timebank.photoUrl ?? defaultGroupImageURL),
                 fit: BoxFit.cover),
           ),
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                begin: Alignment.bottomRight,
-                colors: [
-                  Colors.black.withOpacity(.8),
-                  Colors.black.withOpacity(.2),
-                ],
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomRight,
+                    colors: [
+                      Colors.black.withOpacity(.8),
+                      Colors.black.withOpacity(.2),
+                    ],
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    timebank.name,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        fontSize: 14),
+                  ),
+                ),
               ),
-            ),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                timebank.name,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    fontSize: 14),
-              ),
-            ),
+              timebank.sponsored
+                  ? Align(
+                      alignment: Alignment.topRight,
+                      child: Image.asset(
+                        'images/icons/verified.png',
+                        color: Colors.orange,
+                        height: 28,
+                        width: 28,
+                      ))
+                  : Offstage(),
+            ],
           ),
         ),
       ),

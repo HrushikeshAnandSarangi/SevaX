@@ -12,8 +12,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
@@ -55,6 +57,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   GeoFirePoint location;
   String selectedAddress;
   TextEditingController searchTextController;
+  TimebankModel parentTimebankModel = TimebankModel({});
+
   var _searchText = "";
   String errTxt;
   final _textUpdates = StreamController<String>();
@@ -62,11 +66,13 @@ class EditGroupFormState extends State<EditGroupForm> {
 
   void initState() {
     super.initState();
+    getParentTimebank();
 
     if (widget.timebankModel.location != null) {
       location = widget.timebankModel.location;
       selectedAddress = widget.timebankModel.address;
     }
+
     searchTextController =
         TextEditingController(text: widget.timebankModel.name);
 
@@ -103,6 +109,14 @@ class EditGroupFormState extends State<EditGroupForm> {
     });
   }
 
+  Future<void> getParentTimebank() async {
+    Future.delayed(Duration.zero, () async {
+      parentTimebankModel = await FirestoreManager.getTimeBankForId(
+          timebankId: widget.timebankModel.parentTimebankId);
+    });
+    setState(() {});
+  }
+
   HashMap<String, UserModel> selectedUsers = HashMap();
   String memberAssignment;
   void updateGroupDetails() {
@@ -112,7 +126,24 @@ class EditGroupFormState extends State<EditGroupForm> {
     widget.timebankModel.address = selectedAddress;
     widget.timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    if (widget.timebankModel.sponsored == true &&
+        !parentTimebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+        parentTimebankModel.creatorId !=
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+      widget.timebankModel.sponsored = false;
 
+      assembleAndSendRequest(
+          creatorId: widget.timebankModel.creatorId,
+          timebankName: widget.timebankModel.name,
+          adminId: parentTimebankModel.creatorId,
+          subTimebankId: widget.timebankModel.id,
+          targetTimebankId: parentTimebankModel.id,
+          timebankPhotoUrl: widget.timebankModel.photoUrl,
+          creatorName: SevaCore.of(context).loggedInUser.fullname,
+          creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+          communityId: widget.timebankModel.communityId);
+    }
     updateTimebank(timebankModel: widget.timebankModel).then((onValue) {
       showDialogForSuccess(dialogTitle: "Details updated successfully.");
     });
@@ -268,6 +299,38 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          !widget.timebankModel.sponsored
+              ? Row(
+                  children: <Widget>[
+                    headingText('Save as Sponsored', false),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                      child: infoButton(
+                        context: context,
+                        key: GlobalKey(),
+                        type: InfoType.SPONSORED,
+                      ),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Divider(),
+                        Checkbox(
+                          value: widget.timebankModel.sponsored,
+                          onChanged: (bool value) {
+                            setState(() {
+                              widget.timebankModel.sponsored =
+                                  !widget.timebankModel.sponsored;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Offstage(),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(

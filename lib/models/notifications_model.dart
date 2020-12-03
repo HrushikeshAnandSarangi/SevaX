@@ -24,6 +24,7 @@ class NotificationsModel extends DataModel {
     this.senderUserId,
     this.timebankId,
     this.communityId,
+    this.timestamp,
     this.isTimebankNotification,
   });
 
@@ -113,6 +114,7 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
+  AddManualTimeRequest,
   RequestScheduleReminder,
   RecurringRequestUpdated,
   RecurringOfferUpdated,
@@ -145,7 +147,8 @@ enum NotificationType {
   TYPE_DELETION_REQUEST_OUTPUT,
   TYPE_REPORT_MEMBER,
   APPROVED_MEMBER_WITHDRAWING_REQUEST,
-
+  //sponser group request
+  APPROVE_SPONSORED_GROUP_REQUEST,
   //ONE TO MAY OFFER CANCELLATION
   OFFER_CANCELLED_BY_CREATOR,
   DEBITED_SEVA_COINS_TIMEBANK,
@@ -154,7 +157,9 @@ enum NotificationType {
 
   //PROMOTION AND DEMOTION
   MEMBER_PROMOTED_AS_ADMIN,
+  ADMIN_PROMOTED_AS_ORGANIZER,
   MEMBER_DEMOTED_FROM_ADMIN,
+  ADMIN_DEMOTED_FROM_ORGANIZER,
 
   //Donation notifications
   GOODS_DONATION_REQUEST,
@@ -182,6 +187,7 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
+  "AddManualTimeRequest": NotificationType.AddManualTimeRequest,
   "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
   "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RecurringOfferUpdated": NotificationType.RecurringOfferUpdated,
@@ -228,6 +234,8 @@ Map<String, NotificationType> typeMapper = {
   "DEBITED_SEVA_COINS_TIMEBANK": NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
   "SEVA_COINS_CREDITED": NotificationType.SEVA_COINS_CREDITED,
   "SEVA_COINS_DEBITED": NotificationType.SEVA_COINS_DEBITED,
+  "ADMIN_PROMOTED_AS_ORGANIZER": NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+  "ADMIN_DEMOTED_FROM_ORGANIZER": NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
   "MEMBER_PROMOTED_AS_ADMIN": NotificationType.MEMBER_PROMOTED_AS_ADMIN,
   "MEMBER_DEMOTED_FROM_ADMIN": NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
 
@@ -253,6 +261,8 @@ Map<String, NotificationType> typeMapper = {
   "MANUAL_TIME_CLAIM": NotificationType.MANUAL_TIME_CLAIM,
   "MANUAL_TIME_CLAIM_REJECTED": NotificationType.MANUAL_TIME_CLAIM_REJECTED,
   "MANUAL_TIME_CLAIM_APPROVED": NotificationType.MANUAL_TIME_CLAIM_APPROVED,
+  "APPROVE_SPONSORED_GROUP_REQUEST":
+      NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

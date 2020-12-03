@@ -118,6 +118,7 @@ class CommunityCreateEditController {
         DateTime.now().millisecondsSinceEpoch.toString();
     this.community.primary_email = user.email;
     this.community.admins = [user.sevaUserID];
+    this.community.organizers = [user.sevaUserID];
     this.community.location = location;
   }
 
@@ -130,6 +131,9 @@ class CommunityCreateEditController {
         .timebank
         .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
     this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
+    this
+        .timebank
+        .updateValueByKey('organizers', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('coordinators', [].cast<String>());
     this.timebank.updateValueByKey('members', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('children', [].cast<String>());
@@ -352,9 +356,19 @@ class TransactionBloc {
     }
   }
 
-  createNewTransaction(from, to, timestamp, credits, isApproved, type, typeid,
-      timebankid) async {
+  void createNewTransaction(
+    from,
+    to,
+    timestamp,
+    credits,
+    isApproved,
+    type,
+    typeid,
+    timebankid, {
+    @required String associatedCommunity,
+  }) async {
     TransactionModel transactionModel = TransactionModel(
+        associatedCommunity: associatedCommunity,
         from: from,
         to: to,
         timestamp: timestamp,
@@ -372,19 +386,31 @@ class TransactionBloc {
         .setData(transactionModel.toMap(), merge: true);
   }
 
-  updateNewTransaction(from, to, timestamp, credits, isApproved, type, typeid,
-      timebankid, id) async {
+  updateNewTransaction(
+    from,
+    to,
+    timestamp,
+    credits,
+    isApproved,
+    type,
+    typeid,
+    timebankid,
+    id, {
+    @required String associatedCommunity,
+  }) async {
     TransactionModel prevtransactionModel;
     TransactionModel transactionModel = TransactionModel(
-        from: from,
-        to: to,
-        timestamp: timestamp,
-        credits: num.parse(credits.toStringAsFixed(2)),
-        isApproved: isApproved,
-        type: type.toString(),
-        typeid: typeid,
-        timebankid: timebankid,
-        transactionbetween: [from, to]);
+      from: from,
+      to: to,
+      timestamp: timestamp,
+      credits: num.parse(credits.toStringAsFixed(2)),
+      isApproved: isApproved,
+      type: type.toString(),
+      typeid: typeid,
+      timebankid: timebankid,
+      transactionbetween: [from, to],
+      associatedCommunity: associatedCommunity,
+    );
     if (id) {
       var document = await Firestore.instance
           .collection('transactions')

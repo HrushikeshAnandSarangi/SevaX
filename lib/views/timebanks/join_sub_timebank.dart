@@ -260,18 +260,35 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AspectRatio(
-                aspectRatio: 3.3 / 2.3,
-                child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
-                  fit: BoxFit.fitWidth,
-                  errorWidget: (context, url, error) => Center(
-                    child: Text(S.of(context).no_image_available),
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 3.3 / 2.3,
+                    child: CachedNetworkImage(
+                      imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
+                      fit: BoxFit.fitWidth,
+                      errorWidget: (context, url, error) => Center(
+                        child: Text(S.of(context).no_image_available),
+                      ),
+                      placeholder: (conext, url) {
+                        return LoadingIndicator();
+                      },
+                    ),
                   ),
-                  placeholder: (conext, url) {
-                    return LoadingIndicator();
-                  },
-                ),
+                  timebank.sponsored
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, right: 5),
+                            child: Image.asset(
+                              'images/icons/verified.png',
+                              color: Colors.orange,
+                              height: 28,
+                              width: 28,
+                            ),
+                          ))
+                      : Offstage(),
+                ],
               ),
               Row(
                 children: <Widget>[

@@ -18,10 +18,12 @@ class TimebankModel extends DataModel {
   String photoUrl;
   int createdAt;
   List<String> admins;
+  List<String> organizers;
   List<String> coordinators;
   List<String> members;
   bool protected;
   bool private;
+  bool sponsored;
   String parentTimebankId;
   String communityId;
   String rootTimebankId;
@@ -54,6 +56,8 @@ class TimebankModel extends DataModel {
     this.photoUrl = map.containsKey("photo_url") ? map["photo_url"] : '';
     this.createdAt = map.containsKey("created_at") ? map["created_at"] : 0;
     this.admins = map.containsKey("admins") ? List.castFrom(map['admins']) : [];
+    this.organizers =
+        map.containsKey("organizers") ? List.castFrom(map['organizers']) : [];
     this.coordinators = map.containsKey("coordinators")
         ? List.castFrom(map['coordinators'])
         : [];
@@ -61,6 +65,7 @@ class TimebankModel extends DataModel {
         map.containsKey("members") ? List.castFrom(map['members']) : [];
     this.protected = map.containsKey("protected") ? map["protected"] : false;
     this.private = map.containsKey("private") ? map["private"] : false;
+    this.sponsored = map.containsKey("sponsored") ? map["sponsored"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.associatedParentTimebankId =
@@ -101,6 +106,7 @@ class TimebankModel extends DataModel {
       notificationSetting[key] = NotificationSetting.fromMap(value);
     });
   }
+
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
     if (map.containsKey("location") &&
@@ -153,6 +159,10 @@ class TimebankModel extends DataModel {
     if (key == 'admins') {
       this.admins = value;
     }
+
+    if (key == 'organizers') {
+      this.organizers = value;
+    }
     if (key == 'coordinators') {
       this.coordinators = value;
     }
@@ -165,6 +175,9 @@ class TimebankModel extends DataModel {
 
     if (key == 'private') {
       this.private = value;
+    }
+    if (key == 'sponsored') {
+      this.sponsored = value;
     }
     if (key == 'parentTimebankId') {
       this.parentTimebankId = value;
@@ -234,6 +247,9 @@ class TimebankModel extends DataModel {
       "created_at": createdAt == null ? null : createdAt,
       "admins":
           admins == null ? null : List<dynamic>.from(admins.map((x) => x)),
+      "organizers": organizers == null
+          ? null
+          : List<dynamic>.from(organizers.map((x) => x)),
       "coordinators": coordinators == null
           ? null
           : List<dynamic>.from(coordinators.map((x) => x)),
@@ -241,6 +257,7 @@ class TimebankModel extends DataModel {
           members == null ? null : List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "private": private == null ? null : private,
+      "sponsored": sponsored == null ? null : sponsored,
       "parent_timebank_id": parentTimebankId == null || parentTimebankId.isEmpty
           ? FlavorConfig.values.timebankId
           : parentTimebankId,
@@ -283,7 +300,7 @@ class TimebankModel extends DataModel {
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
   }
 }
 

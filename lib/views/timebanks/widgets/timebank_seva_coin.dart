@@ -142,14 +142,16 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
             widget.loggedInUser.currentBalance - donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
-          this.widget.loggedInUser.sevaUserID,
-          this.widget.timebankData.id,
-          DateTime.now().millisecondsSinceEpoch,
-          donateAmount,
-          true,
-          "USER_DONATE_TOTIMEBANK",
-          null,
-          this.widget.timebankData.id);
+        this.widget.loggedInUser.sevaUserID,
+        this.widget.timebankData.id,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "USER_DONATE_TOTIMEBANK",
+        null,
+        this.widget.timebankData.id,
+        associatedCommunity: widget.loggedInUser.currentCommunity,
+      );
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(

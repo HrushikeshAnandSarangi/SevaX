@@ -46,10 +46,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           .then((onValue) {
         communityModel = onValue;
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
-            communityModel.created_by) {
+                communityModel.created_by ||
+            widget.timebankModel.organizers
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
-          setState(() {});
         }
+        setState(() {});
       });
     });
     Future.delayed(Duration.zero, () {

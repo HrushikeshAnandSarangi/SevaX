@@ -26,6 +26,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -33,6 +34,7 @@ import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -137,7 +139,7 @@ class RequestCreateForm extends StatefulWidget {
     this.offer,
     this.timebankId,
     this.userModel,
-    this.loggedInUser,
+    @required this.loggedInUser,
     this.projectId,
     this.projectModel,
   });
@@ -154,12 +156,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel(
-    requestType: RequestType.TIME,
-    cashModel: CashModel(
-        paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
-    goodsDonationDetails: GoodsDonationDetails(),
-  );
+  RequestModel requestModel;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
@@ -188,6 +185,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+    requestModel = RequestModel(
+      requestType: RequestType.TIME,
+      cashModel: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+      goodsDonationDetails: GoodsDonationDetails(),
+      associatedCommunityId: widget.loggedInUser.currentCommunity,
+    );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
@@ -283,6 +287,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
+    this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
+    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
 
     Widget headerContainer(snapshot) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
@@ -1386,9 +1392,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
           var myDetails = SevaCore.of(context).loggedInUser;
           this.requestModel.fullName = myDetails.fullname;
           this.requestModel.photoUrl = myDetails.photoURL;
-          var onBalanceCheckResult = await hasSufficientCredits(
+          var onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
+            associatedCommunity: timebankModel.communityId,
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
@@ -1421,10 +1429,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
-        List<String> acceptorList =
-            widget.isOfferRequest
-                ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [requestModel.email]:[widget.offer.email, requestModel.email]
-                : [requestModel.email];
+        List<String> acceptorList = widget.isOfferRequest
+            ? widget.offer.creatorAllowedCalender == null ||
+                    widget.offer.creatorAllowedCalender == false
+                ? [requestModel.email]
+                : [widget.offer.email, requestModel.email]
+            : [requestModel.email];
         requestModel.allowedCalenderUsers = acceptorList.toList();
         await continueCreateRequest(confirmationDialogContext: null);
       } else {
@@ -1625,14 +1635,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
-        requestModel.timebankId,
-        requestModel.timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        requestModel.numberOfHours ?? 0,
-        true,
-        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-        requestModel.id,
-        requestModel.timebankId);
+      requestModel.timebankId,
+      requestModel.timebankId,
+      DateTime.now().millisecondsSinceEpoch,
+      requestModel.numberOfHours ?? 0,
+      true,
+      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+      requestModel.id,
+      requestModel.timebankId,
+      associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
@@ -1654,7 +1666,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return resultVar;
     } else {
       resultVar = await FirestoreManager.createRecurringEvents(
-          requestModel: requestModel);
+        requestModel: requestModel,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+      );
       return resultVar;
     }
   }
