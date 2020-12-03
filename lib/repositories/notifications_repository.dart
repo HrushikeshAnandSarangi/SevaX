@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 
 class NotificationsRepository {
   static String _notificationCollection = "notifications";
@@ -6,6 +7,25 @@ class NotificationsRepository {
   static final String _timebankCollection = "timebanknew";
 
   static Firestore _firestore = Firestore.instance;
+
+  static Future<void> createNotification(
+    NotificationsModel model,
+    String userEmail,
+  ) async {
+    CollectionReference ref;
+    if (model.isTimebankNotification) {
+      ref = _firestore
+          .collection(_timebankCollection)
+          .document(model.timebankId)
+          .collection(_notificationCollection);
+    } else {
+      ref = _firestore
+          .collection(_userCollection)
+          .document(userEmail)
+          .collection(_notificationCollection);
+    }
+    await ref.document(model.id).setData(model.toMap());
+  }
 
   static Stream<QuerySnapshot> getUserNotifications(
     String userEmail,
