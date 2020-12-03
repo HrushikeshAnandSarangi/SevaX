@@ -710,7 +710,7 @@ class TaskCardViewState extends State<TaskCardView> {
         to: SevaCore.of(context).loggedInUser.sevaUserID,
         credits: totalMinutes / 60,
         timestamp: DateTime.now().millisecondsSinceEpoch,
-        associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+        associatedCommunity: requestModel.associatedCommunityId,
       );
 
       if (requestModel.transactions == null) {

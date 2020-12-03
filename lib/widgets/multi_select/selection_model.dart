@@ -73,7 +73,7 @@ class SelectionModal extends StatefulWidget {
 }
 
 class _SelectionModalState extends State<SelectionModal> {
-  RequestModel requestModel = RequestModel();
+  RequestModel requestModel;
   int sharedValue = 0;
   final globalKey = GlobalKey<ScaffoldState>();
   final TextEditingController _controller = TextEditingController();
@@ -99,6 +99,7 @@ class _SelectionModalState extends State<SelectionModal> {
   @override
   void initState() {
     super.initState();
+    requestModel = RequestModel(associatedCommunityId: '');
     requestModel.requestMode = widget.admin
         ? RequestMode.TIMEBANK_REQUEST
         : RequestMode.PERSONAL_REQUEST;

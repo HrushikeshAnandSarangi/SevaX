@@ -151,7 +151,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel();
+  RequestModel requestModel;
   GeoFirePoint location;
 
   End end = End();
@@ -180,6 +180,9 @@ class RequestEditFormState extends State<RequestEditForm> {
   void initState() {
     super.initState();
     _selectedTimebankId = widget.timebankId;
+    requestModel = RequestModel(
+      associatedCommunityId: widget.requestModel.associatedCommunityId,
+    );
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;

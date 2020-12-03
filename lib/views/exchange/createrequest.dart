@@ -156,12 +156,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel(
-    requestType: RequestType.TIME,
-    cashModel: CashModel(
-        paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
-    goodsDonationDetails: GoodsDonationDetails(),
-  );
+  RequestModel requestModel;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
@@ -190,6 +185,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+    requestModel = RequestModel(
+      requestType: RequestType.TIME,
+      cashModel: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+      goodsDonationDetails: GoodsDonationDetails(),
+      associatedCommunityId: widget.loggedInUser.currentCommunity,
+    );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;

@@ -18,7 +18,7 @@ class SevaCreditLimitManager {
         .document(communityId)
         .get();
     CommunityModel commModel = CommunityModel(communityDoc.data);
-    return commModel.negativeCreditsThreshold;
+    return commModel.negativeCreditsThreshold ?? 50;
   }
 
   static Future<double> getMemberBalancePerTimebank({
