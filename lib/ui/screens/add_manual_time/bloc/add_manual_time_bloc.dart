@@ -60,6 +60,7 @@ class AddManualTimeBloc {
           id: user.sevaUserID,
           name: user.fullname,
           photoUrl: user.photoURL,
+          email: user.email,
         ),
         claimedTime: _time(),
         communityId: user.currentCommunity,
@@ -67,6 +68,7 @@ class AddManualTimeBloc {
         relatedNotificationId: notificationId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         claimedBy: userType,
+        timebankId: timebankId,
       );
 
       NotificationsModel notificationsModel = NotificationsModel()

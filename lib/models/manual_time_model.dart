@@ -19,6 +19,7 @@ class ManualTimeModel {
     @required this.userDetails,
     @required this.relatedNotificationId,
     @required this.timestamp,
+    @required this.timebankId,
   });
 
   String id;
@@ -33,6 +34,7 @@ class ManualTimeModel {
   UserDetails userDetails;
   String relatedNotificationId;
   int timestamp;
+  String timebankId;
 
   factory ManualTimeModel.fromSnapshot(DocumentSnapshot snapshot) =>
       ManualTimeModel(
@@ -50,6 +52,7 @@ class ManualTimeModel {
         relatedNotificationId: snapshot.data["relatedNotificationId"],
         timestamp: snapshot.data["timestamp"],
         claimedBy: _claimedByMap[snapshot.data['claimedBy']],
+        timebankId: snapshot.data['timebankId'],
       );
 
   factory ManualTimeModel.fromMap(Map<String, dynamic> map) => ManualTimeModel(
@@ -69,6 +72,7 @@ class ManualTimeModel {
         relatedNotificationId: map["relatedNotificationId"],
         timestamp: map["timestamp"],
         claimedBy: _claimedByMap[map['claimedBy']],
+        timebankId: map["timebankId"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -84,6 +88,7 @@ class ManualTimeModel {
         "userDetails": userDetails.toMap(),
         "relatedNotificationId": relatedNotificationId,
         "timestamp": timestamp,
+        "timebankId": timebankId,
       };
 
   @override
@@ -115,21 +120,25 @@ class UserDetails {
     this.id,
     this.name,
     this.photoUrl,
+    @required this.email,
   });
 
   String id;
   String name;
   String photoUrl;
+  String email;
 
   factory UserDetails.fromMap(Map<String, dynamic> map) => UserDetails(
         id: map["id"],
         name: map["name"],
         photoUrl: map["photoUrl"],
+        email: map['email'],
       );
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
         "photoUrl": photoUrl,
+        "email": email,
       };
 }
