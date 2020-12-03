@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 enum ClaimStatus { NoAction, Approved, Rejected }
 enum ManualTimeType { Project, Timebank, Group }
-enum UserRole { Admin, Organizer, Creator }
+enum UserRole { Admin, Organizer, Creator, Member }
 
 class ManualTimeModel {
   ManualTimeModel({
@@ -110,17 +109,6 @@ Map<String, UserRole> _claimedByMap = {
   "Organizer": UserRole.Organizer,
   "Creator": UserRole.Creator,
 };
-
-UserRole getClaimedBy(TimebankModel model, String userId) {
-  //TODO update the method to support owner/organizer
-  if (model.creatorId == userId) {
-    return UserRole.Creator;
-  } else if (model.admins.contains(userId)) {
-    return UserRole.Admin;
-  } else {
-    return UserRole.Admin;
-  }
-}
 
 class UserDetails {
   UserDetails({
