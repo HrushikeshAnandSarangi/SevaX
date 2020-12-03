@@ -162,7 +162,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 typeId: widget.timebankModel.id,
                 timebankId: widget.timebankModel.id,
                 timeFor: ManualTimeType.Timebank,
-                userType: getClaimedBy(
+                userType: getLoggedInUserRole(
                   widget.timebankModel,
                   SevaCore.of(context).loggedInUser.sevaUserID,
                 ),
