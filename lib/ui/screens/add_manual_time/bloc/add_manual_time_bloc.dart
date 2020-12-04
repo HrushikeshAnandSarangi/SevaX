@@ -81,11 +81,31 @@ class AddManualTimeBloc {
         ..senderUserId = user.sevaUserID;
       logger.i(model, 'claiming');
       try {
-        await ManualTimeRepository.createClaim(model);
-        await NotificationsRepository.createNotification(
-          notificationsModel,
-          user.email,
-        );
+        if (userType == UserRole.Creator) {
+          model.actionBy = user.sevaUserID;
+          model.status = ClaimStatus.Approved;
+          await ManualTimeRepository.createClaim(model);
+          await ManualTimeRepository.approveManualCreditClaim(
+            memberTransactionModel:
+                ManualTimeRepository.getMemberTransactionModel(
+              model,
+            ),
+            timebankTransaction:
+                ManualTimeRepository.getTimebankTransactionModel(
+              model,
+            ),
+            model: model,
+            notificationId: '',
+            userModel: user,
+          );
+        } else {
+          await ManualTimeRepository.createClaim(model);
+          await NotificationsRepository.createNotification(
+            notificationsModel,
+            user.email,
+          );
+        }
+
         return true;
       } catch (e) {
         logger.e(e);

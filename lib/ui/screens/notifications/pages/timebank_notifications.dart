@@ -344,7 +344,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: body.userDetails.photoUrl,
                   title: "Manual time Notification",
                   subTitle:
-                      "${body.userDetails.name} requested for ${body.claimedTime} hours",
+                      "${body.userDetails.name} requested for ${body.claimedTime / 60} hours",
                   isDissmissible: false,
                   onPressed: () {
                     manualTimeActionDialog(

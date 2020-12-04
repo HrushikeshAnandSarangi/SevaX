@@ -591,7 +591,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: "${S.of(context).notifications_credited_msg}",
                         subTitle:
-                            "${S.of(context).notifications_credited_msg} ",
+                            "${notification.data.containsKey('credits') ? notification.data['credits'] : ''} ${S.of(context).notifications_credited_msg} ",
                         onDismissed: onDismissed,
                       );
 
@@ -615,7 +615,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: body.userDetails.photoUrl,
                         title: "Manual time Notification",
                         subTitle:
-                            "Your request for ${body.claimedTime} hours has been approved",
+                            "Your request for ${body.claimedTime / 60} hours has been approved",
                         isDissmissible: true,
                         onDismissed: onDismissed,
                       );
@@ -630,7 +630,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: body.userDetails.photoUrl,
                         title: "Manual time Notification",
                         subTitle:
-                            "Your request for ${body.claimedTime} hours has been rejected",
+                            "Your request for ${body.claimedTime / 60} hours has been rejected",
                         isDissmissible: true,
                         onDismissed: onDismissed,
                       );

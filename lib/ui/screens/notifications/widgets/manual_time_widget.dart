@@ -4,16 +4,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
-import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/manual_time_repository.dart';
-import 'package:sevaexchange/repositories/notifications_repository.dart';
-import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:usage/uuid/uuid.dart';
 
 void manualTimeActionDialog(
   BuildContext context,
@@ -21,23 +15,23 @@ void manualTimeActionDialog(
   String timebankId,
   ManualTimeModel model,
 ) {
-  Future<void> createNotification(UserModel user, ManualTimeModel model) async {
-    NotificationsModel notificationsModel = NotificationsModel()
-      ..id = Uuid().generateV4()
-      ..type = model.status == ClaimStatus.Approved
-          ? NotificationType.MANUAL_TIME_CLAIM_APPROVED
-          : NotificationType.MANUAL_TIME_CLAIM_REJECTED
-      ..data = model.toMap()
-      ..communityId = user.currentCommunity
-      ..isTimebankNotification = false
-      ..timebankId = timebankId
-      ..senderUserId = user.sevaUserID;
+  // Future<void> createNotification(UserModel user, ManualTimeModel model) async {
+  //   NotificationsModel notificationsModel = NotificationsModel()
+  //     ..id = Uuid().generateV4()
+  //     ..type = model.status == ClaimStatus.Approved
+  //         ? NotificationType.MANUAL_TIME_CLAIM_APPROVED
+  //         : NotificationType.MANUAL_TIME_CLAIM_REJECTED
+  //     ..data = model.toMap()
+  //     ..communityId = user.currentCommunity
+  //     ..isTimebankNotification = false
+  //     ..timebankId = timebankId
+  //     ..senderUserId = user.sevaUserID;
 
-    await NotificationsRepository.createNotification(
-      notificationsModel,
-      model.userDetails.email,
-    );
-  }
+  //   await NotificationsRepository.createNotification(
+  //     notificationsModel,
+  //     model.userDetails.email,
+  //   );
+  // }
 
   showDialog(
     context: context,
@@ -79,7 +73,7 @@ void manualTimeActionDialog(
                 padding: EdgeInsets.all(8.0),
                 child: Center(
                   child: Text(
-                    "${S.of(context).by_approving_you_accept} ${model.userDetails.name} has worked for ${model.claimedTime} hours",
+                    "${S.of(context).by_approving_you_accept} ${model.userDetails.name} has worked for ${model.claimedTime / 60} hours",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Europa',

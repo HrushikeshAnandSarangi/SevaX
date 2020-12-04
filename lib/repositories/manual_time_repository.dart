@@ -99,7 +99,7 @@ class ManualTimeRepository {
     batchWrite.updateData(
       _firestore.document(model.userDetails.email),
       {
-        'balance': FieldValue.increment(model.claimedTime / 60),
+        'currentBalance': FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -153,9 +153,9 @@ class ManualTimeRepository {
 
     //Update Balance
     batchWrite.updateData(
-      _firestore.document(model.userDetails.email),
+      _firestore.collection('users').document(model.userDetails.email),
       {
-        'balance': FieldValue.increment(model.claimedTime / 60),
+        'currentBalance': FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -186,16 +186,18 @@ class ManualTimeRepository {
     );
 
     //Clear notification
-    batchWrite.updateData(
-      _firestore
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(notificationId),
-      {
-        'isRead': true,
-      },
-    );
+    if (notificationId != null) {
+      batchWrite.updateData(
+        _firestore
+            .collection('timebanknew')
+            .document(model.timebankId)
+            .collection('notifications')
+            .document(notificationId),
+        {
+          'isRead': true,
+        },
+      );
+    }
     return batchWrite;
   }
 
@@ -239,6 +241,7 @@ class ManualTimeRepository {
         'isRead': true,
       },
     );
+    return batchWrite;
   }
 
   static _getCreditNotification({ManualTimeModel model}) {
@@ -252,7 +255,9 @@ class ManualTimeRepository {
       timebankId: model.timebankId,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       type: NotificationType.SEVA_COINS_CREDITED,
-      data: {},
+      data: {
+        'credits': model.claimedTime / 60,
+      },
     );
   }
 
