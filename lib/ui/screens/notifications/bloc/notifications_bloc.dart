@@ -144,10 +144,11 @@ class NotificationsBloc extends BlocBase {
             );
 
             if (!isManualTimeNotificationVisible(
-                userRole,
-                data.claimedBy,
-                _adminTimebanks[notification.timebankId].parentTimebankId ==
-                    FlavorConfig.values.timebankId)) {
+                    userRole,
+                    data.claimedBy,
+                    _adminTimebanks[notification.timebankId].parentTimebankId ==
+                        FlavorConfig.values.timebankId) ||
+                data.userDetails.id == userId) {
               continue;
             }
           }
