@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
@@ -160,7 +161,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               padding: const EdgeInsets.all(8.0),
               child: AddManualTimeButton(
                 typeId: widget.timebankModel.id,
-                timebankId: widget.timebankModel.id,
+                timebankId: widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId
+                    ? widget.timebankModel.id
+                    : widget.timebankModel.parentTimebankId,
                 timeFor: ManualTimeType.Timebank,
                 userType: getLoggedInUserRole(
                   widget.timebankModel,
