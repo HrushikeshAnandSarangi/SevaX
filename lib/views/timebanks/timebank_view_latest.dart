@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -74,7 +77,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var futures = <Future>[];
+
     widget.timebankModel.members.forEach((member) {
       futures.add(getUserForId(sevaUserId: member));
     });
@@ -152,6 +157,21 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 15,
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AddManualTimeButton(
+                typeId: widget.timebankModel.id,
+                timebankId: widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId
+                    ? widget.timebankModel.id
+                    : widget.timebankModel.parentTimebankId,
+                timeFor: ManualTimeType.Timebank,
+                userType: getLoggedInUserRole(
+                  widget.timebankModel,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                ),
+              ),
+            ),
             isAccessAvailable(widget.timebankModel,
                     SevaCore.of(context).loggedInUser.sevaUserID)
                 ? Column(
@@ -167,9 +187,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                               MaterialPageRoute(
                                 builder: (context) {
                                   return GoodsAndAmountDonationsList(
-                                      type: "timebank",
-                                      isGoods: false,
-                                      timebankid: widget.timebankModel.id);
+                                    type: "timebank",
+                                    isGoods: false,
+                                    timebankid: widget.timebankModel.id,
+                                  );
                                 },
                               ),
                             );

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -14,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/manual_time_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/sponser_group_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
@@ -329,6 +331,28 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,
                         notificationId: notification.id);
+                  },
+                );
+
+              case NotificationType.MANUAL_TIME_CLAIM:
+                var body = ManualTimeModel.fromMap(
+                    Map<String, dynamic>.from(notification.data));
+
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: body.userDetails.name,
+                  photoUrl: body.userDetails.photoUrl,
+                  title: "Manual time Notification",
+                  subTitle:
+                      "${body.userDetails.name} requested for ${body.claimedTime / 60} hours",
+                  isDissmissible: false,
+                  onPressed: () {
+                    manualTimeActionDialog(
+                      context,
+                      notification.id,
+                      notification.timebankId,
+                      body,
+                    );
                   },
                 );
 

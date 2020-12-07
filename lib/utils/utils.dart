@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -36,6 +37,22 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
     return true;
   } else {
     return false;
+  }
+}
+
+UserRole getLoggedInUserRole(TimebankModel model, String userId) {
+  if (model.creatorId == userId) {
+    if (model.parentTimebankId == FlavorConfig.values.timebankId) {
+      return UserRole.TimebankCreator;
+    } else {
+      return UserRole.Creator;
+    }
+  } else if (model.organizers.contains(userId)) {
+    return UserRole.Organizer;
+  } else if (model.admins.contains(userId)) {
+    return UserRole.Admin;
+  } else {
+    return UserRole.Member;
   }
 }
 

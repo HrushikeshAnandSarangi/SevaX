@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -590,7 +591,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: "${S.of(context).notifications_credited_msg}",
                         subTitle:
-                            "${S.of(context).notifications_credited_msg} ",
+                            "${notification.data.containsKey('credits') ? notification.data['credits'] : ''} ${S.of(context).notifications_credited_msg} ",
                         onDismissed: onDismissed,
                       );
 
@@ -601,6 +602,36 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: "${S.of(context).notifications_debited_msg}",
                         subTitle: "${S.of(context).notifications_debited_msg} ",
+                        onDismissed: onDismissed,
+                      );
+
+                    case NotificationType.MANUAL_TIME_CLAIM_APPROVED:
+                      var body = ManualTimeModel.fromMap(
+                          Map<String, dynamic>.from(notification.data));
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: body.userDetails.name,
+                        photoUrl: body.userDetails.photoUrl,
+                        title: "Manual time Notification",
+                        subTitle:
+                            "Your request for ${body.claimedTime / 60} hours has been approved",
+                        isDissmissible: true,
+                        onDismissed: onDismissed,
+                      );
+
+                    case NotificationType.MANUAL_TIME_CLAIM_REJECTED:
+                      var body = ManualTimeModel.fromMap(
+                          Map<String, dynamic>.from(notification.data));
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: body.userDetails.name,
+                        photoUrl: body.userDetails.photoUrl,
+                        title: "Manual time Notification",
+                        subTitle:
+                            "Your request for ${body.claimedTime / 60} hours has been rejected",
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                       );
 

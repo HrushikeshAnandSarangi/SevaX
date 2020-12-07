@@ -172,6 +172,11 @@ enum NotificationType {
   GOODS_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
   CASH_DONATION_MODIFIED_BY_DONOR, //creator and timebank
   GOODS_DONATION_MODIFIED_BY_DONOR, //creator and timebank
+
+  //Manual time claim
+  MANUAL_TIME_CLAIM,
+  MANUAL_TIME_CLAIM_APPROVED,
+  MANUAL_TIME_CLAIM_REJECTED,
 }
 
 //Check the method
@@ -251,6 +256,11 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
   "GOODS_DONATION_MODIFIED_BY_DONOR":
       NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR,
+
+  //Manual time claim
+  "MANUAL_TIME_CLAIM": NotificationType.MANUAL_TIME_CLAIM,
+  "MANUAL_TIME_CLAIM_REJECTED": NotificationType.MANUAL_TIME_CLAIM_REJECTED,
+  "MANUAL_TIME_CLAIM_APPROVED": NotificationType.MANUAL_TIME_CLAIM_APPROVED,
   "APPROVE_SPONSORED_GROUP_REQUEST":
       NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
 };

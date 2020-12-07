@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 List<NotificationType> dismissiableNotification = [
   NotificationType.RequestScheduleReminder,
@@ -113,24 +116,43 @@ class NotificationsBloc extends BlocBase {
       logger.e("There is an error");
     });
 
-    CombineLatestStream.combine2(
+    CombineLatestStream.combine2<List<NotificationsModel>, List<TimebankModel>,
+            TimebankNotificationData>(
         NotificationsRepository.getAllTimebankNotifications(communityId),
-        TimebankRepository.getAllTimebanksUserIsAdminOf(userId, communityId),
-        (QuerySnapshot notificationSnapshot, QuerySnapshot timebankSnapshot) {
+        TimebankRepository.getAllTimebanksUserIsAdminOf(userId, communityId), (
+      List<NotificationsModel> notificationSnapshot,
+      List<TimebankModel> timebankSnapshot,
+    ) {
       Map<String, List<NotificationsModel>> _adminNotificationsMap = {};
       Map<String, TimebankModel> _adminTimebanks = {};
       var _adminTimebankIds = <String>[];
       int _adminNotificationCount = 0;
 
-      timebankSnapshot.documents.forEach((DocumentSnapshot document) {
-        TimebankModel timebank = TimebankModel.fromMap(document.data);
-        _adminTimebankIds.add(document.documentID);
-        _adminTimebanks[document.documentID] = timebank;
+      timebankSnapshot.forEach((element) {
+        _adminTimebankIds.add(element.id);
+        _adminTimebanks[element.id] = element;
       });
 
-      notificationSnapshot.documents.forEach((DocumentSnapshot document) {
-        NotificationsModel notification =
-            NotificationsModel.fromMap(document.data);
+      for (NotificationsModel notification in notificationSnapshot) {
+        if (_adminTimebankIds.contains(notification.timebankId)) {
+          var userRole = getLoggedInUserRole(
+              _adminTimebanks[notification.timebankId], userId);
+
+          if (notification.type == NotificationType.MANUAL_TIME_CLAIM) {
+            var data = ManualTimeModel.fromMap(
+              Map<String, dynamic>.from(notification.data),
+            );
+
+            if (!isManualTimeNotificationVisible(
+                    userRole,
+                    data.claimedBy,
+                    _adminTimebanks[notification.timebankId].parentTimebankId ==
+                        FlavorConfig.values.timebankId) ||
+                data.userDetails.id == userId) {
+              continue;
+            }
+          }
+        }
 
         if (_adminTimebankIds.contains(notification.timebankId)) {
           _adminNotificationCount++;
@@ -140,7 +162,8 @@ class NotificationsBloc extends BlocBase {
         } else {
           _adminNotificationsMap[notification.timebankId] = [notification];
         }
-      });
+      }
+
       if (!_timebankNotificationCount.isClosed)
         _timebankNotificationCount.add(_adminNotificationCount);
       return TimebankNotificationData(
@@ -161,6 +184,27 @@ class NotificationsBloc extends BlocBase {
       notificationId,
       email,
     );
+  }
+
+  bool isManualTimeNotificationVisible(
+    UserRole userRole,
+    UserRole claimedBy,
+    bool isGroup,
+  ) {
+    if (isGroup) {
+      return true;
+    }
+    // if (isGroup && [UserRole.TimebankCreator, UserRole.Organizer,UserRole.Admin].contains(userRole)) {
+    //   return true;
+    // }
+    if (claimedBy == UserRole.Organizer && userRole == UserRole.Creator) {
+      return true;
+    } else if (claimedBy == UserRole.Admin &&
+        [UserRole.Creator, UserRole.Organizer].contains(userRole)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> clearAllNotification(String email,
