@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -142,7 +143,11 @@ class NotificationsBloc extends BlocBase {
               Map<String, dynamic>.from(notification.data),
             );
 
-            if (!isManualTimeNotificationVisible(userRole, data.claimedBy)) {
+            if (!isManualTimeNotificationVisible(
+                userRole,
+                data.claimedBy,
+                _adminTimebanks[notification.timebankId].parentTimebankId ==
+                    FlavorConfig.values.timebankId)) {
               continue;
             }
           }
@@ -180,7 +185,17 @@ class NotificationsBloc extends BlocBase {
     );
   }
 
-  bool isManualTimeNotificationVisible(UserRole userRole, UserRole claimedBy) {
+  bool isManualTimeNotificationVisible(
+    UserRole userRole,
+    UserRole claimedBy,
+    bool isGroup,
+  ) {
+    if (isGroup) {
+      return true;
+    }
+    // if (isGroup && [UserRole.TimebankCreator, UserRole.Organizer,UserRole.Admin].contains(userRole)) {
+    //   return true;
+    // }
     if (claimedBy == UserRole.Organizer && userRole == UserRole.Creator) {
       return true;
     } else if (claimedBy == UserRole.Admin &&
