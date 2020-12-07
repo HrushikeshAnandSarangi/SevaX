@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 enum ClaimStatus { NoAction, Approved, Rejected }
 enum ManualTimeType { Project, Timebank, Group }
-enum UserRole { Admin, Organizer, Creator, Member }
+enum UserRole { TimebankCreator, Admin, Organizer, Creator, Member }
 
 class ManualTimeModel {
   ManualTimeModel({
@@ -113,6 +113,7 @@ Map<String, UserRole> _claimedByMap = {
   "Admin": UserRole.Admin,
   "Organizer": UserRole.Organizer,
   "Creator": UserRole.Creator,
+  "TimebankCreator": UserRole.TimebankCreator,
 };
 
 class UserDetails {

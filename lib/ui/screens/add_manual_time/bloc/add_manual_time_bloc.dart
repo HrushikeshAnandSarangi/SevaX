@@ -81,7 +81,7 @@ class AddManualTimeBloc {
         ..senderUserId = user.sevaUserID;
       logger.i(model, 'claiming');
       try {
-        if (userType == UserRole.Creator) {
+        if (userType == UserRole.TimebankCreator) {
           model.actionBy = user.sevaUserID;
           model.status = ClaimStatus.Approved;
           await ManualTimeRepository.createClaim(model);

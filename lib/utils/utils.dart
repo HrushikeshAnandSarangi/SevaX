@@ -42,7 +42,11 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
 
 UserRole getLoggedInUserRole(TimebankModel model, String userId) {
   if (model.creatorId == userId) {
-    return UserRole.Creator;
+    if (model.parentTimebankId == FlavorConfig.values.timebankId) {
+      return UserRole.TimebankCreator;
+    } else {
+      return UserRole.Creator;
+    }
   } else if (model.organizers.contains(userId)) {
     return UserRole.Organizer;
   } else if (model.admins.contains(userId)) {
