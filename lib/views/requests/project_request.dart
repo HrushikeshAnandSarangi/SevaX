@@ -124,7 +124,7 @@ class RequestsState extends State<ProjectRequests>
                   ),
                   AboutProjectView(
                     project_id: projectModel.id,
-                    timebankId: widget.timebankId,
+                    timebankModel: widget.timebankModel,
                   ),
                 ],
               ),
