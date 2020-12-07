@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -43,6 +44,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
+
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
@@ -149,7 +151,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel();
+  RequestModel requestModel;
   GeoFirePoint location;
 
   End end = End();
@@ -178,6 +180,9 @@ class RequestEditFormState extends State<RequestEditForm> {
   void initState() {
     super.initState();
     _selectedTimebankId = widget.timebankId;
+    requestModel = RequestModel(
+      associatedCommunityId: widget.requestModel.associatedCommunityId,
+    );
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
@@ -1330,15 +1335,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                       widget.requestModel.occurenceCount)
                   .abs()
               : calculateRecurrencesOnMode(widget.requestModel);
-          onBalanceCheckResult =
-              await RequestManager.hasSufficientCreditsIncludingRecurring(
+          onBalanceCheckResult = await SevaCreditLimitManager
+              .hasSufficientCreditsIncludingRecurring(
                   credits: widget.requestModel.numberOfHours.toDouble(),
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   isRecurring: widget.requestModel.isRecurring,
                   recurrences: recurrences);
         } else {
-          onBalanceCheckResult =
-              await RequestManager.hasSufficientCreditsIncludingRecurring(
+          onBalanceCheckResult = await SevaCreditLimitManager
+              .hasSufficientCreditsIncludingRecurring(
                   credits: widget.requestModel.numberOfHours.toDouble(),
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   isRecurring: widget.requestModel.isRecurring,
@@ -1407,9 +1412,12 @@ class RequestEditFormState extends State<RequestEditForm> {
                       linearProgressForCreatingRequest();
                       await updateRequest(requestModel: widget.requestModel);
                       await RequestManager.updateRecurrenceRequestsFrontEnd(
-                          updatedRequestModel: widget.requestModel,
-                          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-                          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,);
+                        updatedRequestModel: widget.requestModel,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                        timebankId:
+                            SevaCore.of(context).loggedInUser.currentTimebank,
+                      );
 
                       Navigator.pop(dialogContext);
                       Navigator.pop(context);

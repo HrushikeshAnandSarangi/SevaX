@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'models.dart';
 
 class TransactionModel extends DataModel {
@@ -10,17 +12,20 @@ class TransactionModel extends DataModel {
   String typeid;
   String timebankid;
   List<String> transactionbetween;
+  String associatedCommunity;
 
-  TransactionModel(
-      {this.from,
-      this.timestamp,
-      this.credits,
-      this.to,
-      this.isApproved = false,
-      this.type,
-      this.typeid,
-      this.timebankid,
-      this.transactionbetween});
+  TransactionModel({
+    this.from,
+    this.timestamp,
+    this.credits,
+    this.to,
+    this.isApproved = false,
+    this.type,
+    this.typeid,
+    this.timebankid,
+    this.transactionbetween,
+    @required this.associatedCommunity,
+  });
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
@@ -46,6 +51,9 @@ class TransactionModel extends DataModel {
     }
     if (map.containsKey('timebankid')) {
       this.timebankid = map['timebankid'];
+    }
+    if (map.containsKey('associatedCommunity')) {
+      this.associatedCommunity = map['associatedCommunity'];
     }
     if (map.containsKey('transactionbetween')) {
       List<String> transactionbetween =
@@ -80,6 +88,10 @@ class TransactionModel extends DataModel {
     }
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
+    }
+
+    if (this.associatedCommunity != null) {
+      map['associatedCommunity'] = this.associatedCommunity;
     }
     if (this.transactionbetween != null && this.transactionbetween.isNotEmpty) {
       map['transactionbetween'] = this.transactionbetween;

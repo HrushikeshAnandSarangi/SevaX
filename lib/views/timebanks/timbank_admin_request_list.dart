@@ -1195,7 +1195,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         elevation: 4,
         padding: EdgeInsets.symmetric(horizontal: 10),
       );
-  void _showFontSizePickerDialog(UserModel user, model) async {
+  void _showFontSizePickerDialog(UserModel user, TimebankModel model) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -1244,14 +1244,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       });
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
       await TransactionBloc().createNewTransaction(
-          model.id,
-          user.sevaUserID,
-          DateTime.now().millisecondsSinceEpoch,
-          donateAmount,
-          true,
-          "ADMIN_DONATE_TOUSER",
-          null,
-          model.id);
+        model.id,
+        user.sevaUserID,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        associatedCommunity: model.communityId,
+      );
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(
