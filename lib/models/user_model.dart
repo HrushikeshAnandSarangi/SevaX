@@ -499,6 +499,7 @@ class UserModel extends DataModel {
     if (this.cvName != null) {
       object['cvName'] = this.cvName;
     }
+
     return object;
   }
 
