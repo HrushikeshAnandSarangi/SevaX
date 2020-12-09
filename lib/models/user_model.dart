@@ -111,7 +111,8 @@ class UserModel extends DataModel {
       this.notificationAlerts,
       this.cvUrl,
       this.cvName,
-      this.curatedRequestIds});
+      this.curatedRequestIds,
+      this.recommendedForRequestIds});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
