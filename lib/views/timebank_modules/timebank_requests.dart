@@ -467,13 +467,12 @@ class RequestListItemsState extends State<RequestListItems> {
   Widget getAppropriateTag(RequestType requestType) {
     switch (requestType) {
       case RequestType.CASH:
-        return getTagMainFrame('Cash Request');
+        return getTagMainFrame(S.of(context).cash_request);
 
       case RequestType.GOODS:
-        return getTagMainFrame('Goods Request');
 
       case RequestType.TIME:
-        return getTagMainFrame('Time Request');
+        return getTagMainFrame(S.of(context).time_request);
 
       default:
         return Container();
@@ -482,14 +481,14 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getTagMainFrame(String tagTitle) {
     return Container(
-      margin: EdgeInsets.only(bottom: 3, right: 5, top: 5),
+      margin: EdgeInsets.only(bottom: 3, right: 0, top: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(5)),
         child: Container(
           color: Theme.of(context).primaryColor,
           child: Padding(
             padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+                const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
             child: Text(
               tagTitle,
               style: TextStyle(
@@ -537,7 +536,19 @@ class RequestListItemsState extends State<RequestListItems> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SevaCore.of(context)
+                        .loggedInUser
+                        .curatedRequestIds
+                        .contains(model.id)
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          getTagMainFrame('recommended'),
+                        ],
+                      )
+                    : Offstage(),
                 Row(
                   children: <Widget>[
                     requestLocation != null
@@ -582,7 +593,7 @@ class RequestListItemsState extends State<RequestListItems> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -692,7 +703,7 @@ class RequestListItemsState extends State<RequestListItems> {
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  "Recurring",
+                                  S.of(context).recurring,
                                   style: TextStyle(
                                       fontSize: 16.0,
                                       color: Theme.of(context).primaryColor,

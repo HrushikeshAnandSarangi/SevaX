@@ -183,6 +183,32 @@ Future<Map<String, UserModel>> getUserForUserModels(
   return map;
 }
 
+Stream<List<UserModel>> getRecommendedUsersStream(
+    {@required String requestId}) async* {
+  var data = Firestore.instance
+      .collection('users')
+      .where('recommendedForRequestIds', arrayContains: requestId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<UserModel>>.fromHandlers(
+      handleData: (snapshot, usersListSink) {
+        List<UserModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            UserModel model =
+                UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+            modelList.add(model);
+          },
+        );
+        modelList.sort((a, b) =>
+            a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
+        usersListSink.add(modelList);
+      },
+    ),
+  );
+}
+
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
