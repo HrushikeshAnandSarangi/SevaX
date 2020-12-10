@@ -12,28 +12,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -49,7 +49,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -160,6 +160,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
+  List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
   GeoFirePoint location;
 
@@ -209,7 +210,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     fetchRemoteConfig();
-
     if ((FlavorConfig.appFlavor == Flavor.APP ||
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       // _fetchCurrentlocation;
@@ -256,12 +256,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
           selectedProject: null,
-          admin: isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID));
+          admin: isAccessAvailable(
+              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -294,7 +296,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return Container();
       }
       timebankModel = snapshot.data;
-      if (isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID)) {
+      if (isAccessAvailable(
+          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
         return requestSwitch();
       } else {
         this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -864,6 +867,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
+              if (value != null && value.length > 1) {
+                getCategoriesFromApi(value);
+              }
               updateExitWithConfirmationValue(context, 9, value);
             },
             focusNode: focusNodes[0],
@@ -959,13 +965,150 @@ class RequestCreateFormState extends State<RequestCreateForm>
         : Container();
   }
 
+// Choose Category and Sub Category function
+  // get data from Category class
+  List categories;
+  void updateInformation(List category) {
+    setState(() => categories = category);
+  }
+
+  Future<void> getCategoriesFromApi(String query) async {
+    try {
+      const url =
+          'https://run.mocky.io/v3/91c859ce-13c7-425a-b177-76629a83ca02';
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> bodyMap = json.decode(response.body);
+        List<String> categoriesList = bodyMap.containsKey('string_vec')
+            ? List.castFrom(bodyMap['string_vec'])
+            : [];
+        getCategoryModels(categoriesList);
+      } else {
+        return null;
+      }
+    } catch (exception) {
+      log(exception);
+      return null;
+    }
+  }
+
+  Future<void> getCategoryModels(List<String> categoriesList) async {
+    List<CategoryModel> modelList = List();
+    for (int i = 0; i < categoriesList.length; i += 1) {
+      CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
+        categoryID: categoriesList[i],
+      );
+      modelList.add(categoryModel);
+    }
+
+    updateInformation(['Suggested Categories', modelList]);
+  }
+
+  // Navigat to Category class and geting data from the class
+  void moveToCategory() async {
+    var category = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true, builder: (context) => Category()),
+    );
+    updateInformation(category);
+    logger.i(
+        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
+  }
+
+  //building list of selectedSubCategories
+  List<Widget> _buildselectedSubCategories(List categories) {
+    List<CategoryModel> subCategories = [];
+    subCategories = categories[1];
+    List<Widget> selectedSubCategories = [];
+    logger.i('poped selectedSubCategories => ${categories[1]} ');
+    subCategories.forEach((item) {
+      selectedCategoryIds.add(item.typeId);
+      selectedSubCategories.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 10, bottom: 10),
+          child: Container(
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: Text("${item.title_en.toString()}",
+                  style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ),
+      );
+    });
+    return selectedSubCategories;
+  }
+
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RepeatWidget(),
+
           SizedBox(height: 20),
+
           RequestDescriptionData(S.of(context).request_description_hint),
+          SizedBox(height: 20),
+          // Choose Category and Sub Category
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1102,6 +1245,60 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                      "Choose Category and Sub Category",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                        : Text(
+                      "${categories[0]}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                  alignment: WrapAlignment.start,
+                  children: _buildselectedSubCategories(categories),
+                )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
+          SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
             style: TextStyle(
@@ -1220,6 +1417,60 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_goods),
+          SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                      "Choose Category and Sub Category",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                        : Text(
+                      "${categories[0]}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                  alignment: WrapAlignment.start,
+                  children: _buildselectedSubCategories(categories),
+                )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1419,6 +1670,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.accepted = false;
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
+      requestModel.categories = selectedCategoryIds.toList();
       requestModel.address = selectedAddress;
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;

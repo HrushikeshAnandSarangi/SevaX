@@ -172,6 +172,7 @@ class RequestModel extends DataModel {
   int numberOfApprovals;
   List<String> approvedUsers;
   List<String> invitedUsers;
+  List<String> categories;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
@@ -235,6 +236,7 @@ class RequestModel extends DataModel {
     this.donationInstructionLink,
     this.allowedCalenderUsers,
     this.recommendedMembeIdsForRequest,
+    this.categories,
     @required this.associatedCommunityId,
   }) {
     log("===========Constructir called $associatedCommunityId =======");
@@ -258,6 +260,12 @@ class RequestModel extends DataModel {
       this.recommendedMembeIdsForRequest = recommendedMembeIds;
     } else {
       this.recommendedMembeIdsForRequest = List();
+    }
+    if (map.containsKey('categories')) {
+      List<String> categories = List.castFrom(map['categories']);
+      this.categories = categories;
+    } else {
+      this.categories = List();
     }
 
     if (map.containsKey('id')) {
@@ -560,6 +568,12 @@ class RequestModel extends DataModel {
     } else {
       this.recommendedMembeIdsForRequest = List();
     }
+    if (map.containsKey('categories')) {
+      List<String> categoriesIds = List.castFrom(map['categories']);
+      this.categories = categoriesIds;
+    } else {
+      this.categories = List();
+    }
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
@@ -736,6 +750,9 @@ class RequestModel extends DataModel {
     if (this.approvedUsers != null) {
       object['approvedUsers'] = this.approvedUsers;
     }
+    if (this.categories != null) {
+      object['categories'] = this.categories;
+    }
     if (this.numberOfApprovals != null) {
       object['numberOfApprovals'] = this.numberOfApprovals;
     }
@@ -774,7 +791,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMembeIdsForRequest: $recommendedMembeIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMembeIdsForRequest: $recommendedMembeIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -18,6 +19,7 @@ import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.d
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -30,6 +32,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -43,6 +46,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class EditRequest extends StatefulWidget {
@@ -150,6 +154,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
+  List<String> selectedCategoryIds = [];
 
   RequestModel requestModel;
   GeoFirePoint location;
@@ -278,12 +283,14 @@ class RequestEditFormState extends State<RequestEditForm> {
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID)){
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
           selectedProject: null,
-          admin: isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID));
+          admin: isAccessAvailable(
+              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -323,7 +330,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         return Container();
       }
       timebankModel = snapshot.data;
-      if (isAccessAvailable(snapshot.data,SevaCore.of(context).loggedInUser.sevaUserID)) {
+      if (isAccessAvailable(
+          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
         return requestSwitch();
       } else {
         this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -875,6 +883,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
+            if (value != null && value.length > 1) {
+              getCategoriesFromApi(value);
+            }
             updateExitWithConfirmationValue(context, 9, value);
           },
           focusNode: focusNodes[0],
@@ -953,6 +964,87 @@ class RequestEditFormState extends State<RequestEditForm> {
         : Container();
   }
 
+// Choose Category and Sub Category function
+  // get data from Category class
+  List categories;
+  void updateInformation(List category) {
+    setState(() => categories = category);
+  }
+
+  Future<void> getCategoriesFromApi(String query) async {
+    try {
+      const url =
+          'https://run.mocky.io/v3/91c859ce-13c7-425a-b177-76629a83ca02';
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> bodyMap = json.decode(response.body);
+        List<String> categoriesList = bodyMap.containsKey('string_vec')
+            ? List.castFrom(bodyMap['string_vec'])
+            : [];
+        getCategoryModels(categoriesList);
+      } else {
+        return null;
+      }
+    } catch (exception) {
+      log(exception);
+      return null;
+    }
+  }
+
+  Future<void> getCategoryModels(List<String> categoriesList) async {
+    List<CategoryModel> modelList = List();
+    for (int i = 0; i < categoriesList.length; i += 1) {
+      CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
+        categoryID: categoriesList[i],
+      );
+      modelList.add(categoryModel);
+    }
+
+    updateInformation(['Suggested Categories', modelList]);
+  }
+
+  // Navigat to Category class and geting data from the class
+  void moveToCategory() async {
+    var category = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true, builder: (context) => Category()),
+    );
+
+    updateInformation(category);
+    logger.i(
+        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
+  }
+
+  //building list of selectedSubCategories
+  List<Widget> _buildselectedSubCategories(List categories) {
+    List<CategoryModel> subCategories = [];
+    subCategories = categories[1];
+    List<Widget> selectedSubCategories = [];
+    logger.i('poped selectedSubCategories => ${categories[1]} ');
+    subCategories.forEach((item) {
+      selectedCategoryIds.add(item.typeId);
+      selectedSubCategories.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 10, bottom: 10),
+          child: Container(
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: Text("${item.title_en.toString()}",
+                  style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ),
+      );
+    });
+    return selectedSubCategories;
+  }
+
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -960,6 +1052,60 @@ class RequestEditFormState extends State<RequestEditForm> {
           RepeatWidget(),
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint),
+          SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1189,6 +1335,60 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
+          SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
           )
@@ -1209,6 +1409,60 @@ class RequestEditFormState extends State<RequestEditForm> {
         children: <Widget>[
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_goods),
+          SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1371,7 +1625,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
       widget.requestModel.location = location;
       widget.requestModel.address = selectedAddress;
-
+      widget.requestModel.categories = selectedCategoryIds.toList();
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {
         showDialog(

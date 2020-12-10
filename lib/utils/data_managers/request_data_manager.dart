@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -17,7 +18,6 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:usage/uuid/uuid.dart';
 
@@ -1527,4 +1527,39 @@ Stream<List<RequestModel>> getNotAcceptedRequestStream({
       },
     ),
   );
+}
+
+//getALl the categories
+Future<List<CategoryModel>> getAllCategories() async {
+  List<CategoryModel> categories = [];
+
+  await Firestore.instance
+      .collection('requestCategories')
+      .getDocuments()
+      .then((data) {
+    data.documents.forEach(
+      (documentSnapshot) {
+        CategoryModel model = CategoryModel.fromMap(documentSnapshot.data);
+        model.typeId = documentSnapshot.documentID;
+        categories.add(model);
+      },
+    );
+  });
+  return categories;
+}
+
+/// Get a particular category by it's ID
+Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
+  CategoryModel categoryModel;
+  await Firestore.instance
+      .collection('requestCategories')
+      .document(categoryID)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap = documentSnapshot.data;
+    categoryModel = CategoryModel.fromMap(dataMap);
+    categoryModel.typeId = documentSnapshot.documentID;
+  });
+
+  return categoryModel;
 }
