@@ -109,8 +109,8 @@ class RequestCardWidget extends StatelessWidget {
                     ),
                   ),
 //              Spacer(),
-                  requestModel.recommendedMembeIdsForRequest != null &&
-                          requestModel.recommendedMembeIdsForRequest
+                  requestModel.recommendedMemberIdsForRequest != null &&
+                          requestModel.recommendedMemberIdsForRequest
                               .contains(userModel.sevaUserID)
                       ? Image.asset(
                           'images/icons/recommended.png',
