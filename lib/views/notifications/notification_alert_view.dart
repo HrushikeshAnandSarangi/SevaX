@@ -143,6 +143,32 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     );
                   },
                 ),
+
+                //messages
+                NotificationWidgetSwitch(
+                  isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
+                  title: "Notification for new messages.",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'TYPE_MESSAGING_NOTIFICATION',
+                      status: status,
+                    );
+                  },
+                ),
+
+                //feeds
+                NotificationWidgetSwitch(
+                  isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
+                  title: "Feeds notification",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'TYPE_FEEDS_NOTIFICATION',
+                      status: status,
+                    );
+                  },
+                ),
               ],
             );
           }),
