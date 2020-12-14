@@ -5,7 +5,6 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/widgets/change_ownership_dialog.dart';
 
 class ChangeOwnershipWidget extends StatelessWidget {
   final int timestamp;
@@ -39,19 +38,19 @@ class ChangeOwnershipWidget extends StatelessWidget {
         );
       },
       onPressed: () {
-        showDialog(
-          context: context,
-          builder: (mContext) {
-            return ChangeOwnershipDialog(
-              changeOwnershipModel: changeOwnershipModel,
-              timeBankId: timebankId,
-              notificationId: notificationId,
-              notificationModel: notificationsModel,
-              loggedInUser: SevaCore.of(context).loggedInUser,
-              parentContext: context,
-            );
-          },
-        );
+        // showDialog(
+        //   context: context,
+        //   builder: (mContext) {
+        //     return ChangeOwnershipDialog(
+        //       changeOwnershipModel: changeOwnershipModel,
+        //       timeBankId: timebankId,
+        //       notificationId: notificationId,
+        //       notificationModel: notificationsModel,
+        //       loggedInUser: SevaCore.of(context).loggedInUser,
+        //       parentContext: context,
+        //     );
+        //   },
+        // );
       },
       photoUrl: changeOwnershipModel.creatorPhotoUrl,
       title: S.of(context).change_ownership,

@@ -1,6 +1,5 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -10,8 +9,6 @@ import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -85,38 +82,39 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         color: Colors.black,
                       ),
                     ),
-                    TransactionsMatrixCheck(
-                      upgradeDetails:
-                          AppConfig.upgradePlanBannerModel.cash_donation,
-                      transaction_matrix_type: "cash_goods_offers",
-                      child: Column(
-                        children: <Widget>[
-                          _optionRadioButton(
-                            title: S.of(context).request_type_time,
-                            value: RequestType.TIME,
+                    // TransactionsMatrixCheck(
+                    //   upgradeDetails:
+                    //       AppConfig.upgradePlanBannerModel.cash_donation,
+                    //   transaction_matrix_type: "cash_goods_offers",
+                    //   child:
+                    Column(
+                      children: <Widget>[
+                        _optionRadioButton(
+                          title: S.of(context).request_type_time,
+                          value: RequestType.TIME,
+                          groupvalue: snapshot.data != null
+                              ? snapshot.data
+                              : RequestType.TIME,
+                          onChanged: _bloc.onTypeChanged,
+                        ),
+                        _optionRadioButton(
+                            title: S.of(context).request_type_cash,
+                            value: RequestType.CASH,
                             groupvalue: snapshot.data != null
                                 ? snapshot.data
                                 : RequestType.TIME,
-                            onChanged: _bloc.onTypeChanged,
-                          ),
-                          _optionRadioButton(
-                              title: S.of(context).request_type_cash,
-                              value: RequestType.CASH,
-                              groupvalue: snapshot.data != null
-                                  ? snapshot.data
-                                  : RequestType.TIME,
-                              onChanged: (data) =>
-                                  {_bloc.onTypeChanged(data), setState(() {})}),
-                          _optionRadioButton(
-                              title: S.of(context).request_type_goods,
-                              value: RequestType.GOODS,
-                              groupvalue: snapshot.data != null
-                                  ? snapshot.data
-                                  : RequestType.TIME,
-                              onChanged: _bloc.onTypeChanged)
-                        ],
-                      ),
-                    )
+                            onChanged: (data) =>
+                                {_bloc.onTypeChanged(data), setState(() {})}),
+                        _optionRadioButton(
+                            title: S.of(context).request_type_goods,
+                            value: RequestType.GOODS,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data
+                                : RequestType.TIME,
+                            onChanged: _bloc.onTypeChanged)
+                      ],
+                    ),
+                    // )
                   ],
                 );
               })
@@ -376,36 +374,37 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     return;
                                   }
                                   if (widget.offerModel == null) {
-                                      if (SevaCore.of(context).loggedInUser.calendarId != null) {
-                                          _bloc.allowedCalenderEvent = true;
-                                          await _bloc.createOrUpdateOffer(
-                                              user: SevaCore.of(context)
-                                                  .loggedInUser,
-                                              timebankId: widget.timebankId,
-                                          );
-                                      } else {
-                                          _bloc.allowedCalenderEvent = true;
-                                          await _bloc.createOrUpdateOffer(
-                                              user: SevaCore.of(context)
-                                                  .loggedInUser,
-                                              timebankId: widget.timebankId,
-                                          );
-                                          if(_bloc.offerCreatedBool){
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                          return AddToCalendar(
-                                                              isOfferRequest: false,
-                                                              offer: _bloc.mainOfferModel,
-                                                              requestModel: null,
-                                                              userModel: null,
-                                                              eventsIdsArr: _bloc.offerIds);
-                                                      },
-                                                  ),
-                                              );
-                                          }
+                                    if (SevaCore.of(context)
+                                            .loggedInUser
+                                            .calendarId !=
+                                        null) {
+                                      _bloc.allowedCalenderEvent = true;
+                                      await _bloc.createOrUpdateOffer(
+                                        user: SevaCore.of(context).loggedInUser,
+                                        timebankId: widget.timebankId,
+                                      );
+                                    } else {
+                                      _bloc.allowedCalenderEvent = true;
+                                      await _bloc.createOrUpdateOffer(
+                                        user: SevaCore.of(context).loggedInUser,
+                                        timebankId: widget.timebankId,
+                                      );
+                                      if (_bloc.offerCreatedBool) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return AddToCalendar(
+                                                  isOfferRequest: false,
+                                                  offer: _bloc.mainOfferModel,
+                                                  requestModel: null,
+                                                  userModel: null,
+                                                  eventsIdsArr: _bloc.offerIds);
+                                            },
+                                          ),
+                                        );
                                       }
+                                    }
                                   } else {
                                     _bloc.updateIndividualOffer(
                                       widget.offerModel,
