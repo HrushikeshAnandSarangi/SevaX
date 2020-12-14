@@ -243,12 +243,12 @@ class TransactionLimitCheck extends StatelessWidget {
 // }) {
 //   int activeCount = 0;
 //  if ((communityModel.payment['planId'] ==
-             // SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
-         //           communityModel.subscriptionCancelled) &&
+// SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
+//           communityModel.subscriptionCancelled) &&
 //       communityModel.billingQuota != null) {
 //     List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
 //        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
-            //             ['action']);
+//             ['action']);
 
 //     neighbourhoodPlanBillableTransactions.forEach((billableItem) {
 //       if (communityModel.billingQuota.containsKey(billableItem)) {
@@ -256,7 +256,7 @@ class TransactionLimitCheck extends StatelessWidget {
 //       }
 //     });
 //    return activeCount >=
-       //         SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
+//         SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
 //  } else {
 //     return false;
 //   }
@@ -289,7 +289,7 @@ class TransactionLimitCheck extends StatelessWidget {
 //       'action': [
 //         "quota_TypeJoinTimebank",
 //
-        "quota_TypeRequestApply",
+// "quota_TypeRequestApply",
 //        "quota_TypeRequestCreation",
 //        "quota_TypeRequestAccepted",
 //        "quota_TypeOfferCreated",
@@ -297,18 +297,18 @@ class TransactionLimitCheck extends StatelessWidget {
 //       ],
 //     },
 //     "community_plus_plan": {
-      "initial_transactions_amount": 0,
-      "initial_transactions_qty": 150,
-      'action': [
-        "quota_TypeJoinTimebank",
-        "quota_TypeRequestApply",
-        "quota_TypeRequestCreation",
-        "quota_TypeRequestAccepted",
-        "quota_TypeOfferCreated",
-        "quota_TypeOfferAccepted"
-      ],
-    },
-    "grande_plan": {
+//   "initial_transactions_amount": 0,
+//   "initial_transactions_qty": 150,
+//   'action': [
+//     "quota_TypeJoinTimebank",
+//     "quota_TypeRequestApply",
+//     "quota_TypeRequestCreation",
+//     "quota_TypeRequestAccepted",
+//     "quota_TypeOfferCreated",
+//     "quota_TypeOfferAccepted"
+//   ],
+// },
+// "grande_plan": {
 //       "initial_transactions_amount": 0,
 //       "initial_transactions_qty": 3000,
 //      'action': [
