@@ -76,7 +76,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             tabs: <Widget>[
               Tab(text: S.of(context).edit_timebank),
               // Tab(text: "Upgrade"),
-              Tab(text: S.of(context).billing),
+              // Tab(text: S.of(context).billing),
               Tab(
                 text: S.of(context).settings,
               ),

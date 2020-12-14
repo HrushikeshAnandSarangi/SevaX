@@ -864,6 +864,20 @@ class CreateEditCommunityViewFormState
                                             location;
                                         snapshot.data.community.softDelete =
                                             false;
+                                        snapshot.data.community.members = [
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID
+                                        ];
+
+                                        //by default every community is on neighbourhood plan
+                                        snapshot.data.community.payment = {
+                                          "planId": "neighbourhood_plan",
+                                          "payment_success": true,
+                                          "message":
+                                              "You are on Neighbourhood plan",
+                                          "status": 200,
+                                        };
 
                                         snapshot.data.community.billMe = false;
 
