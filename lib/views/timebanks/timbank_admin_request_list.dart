@@ -622,7 +622,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         timebankModel: timebankModel,
       ));
     }
-    _organizersWidgets.add(getSectionTitle(context, 'Organizers'));
+    log('length organizer ' + organizerUserModel.values.length.toString());
+    if (organizerUserModel.values != null &&
+        organizerUserModel.values.length > 0) {
+      _organizersWidgets.add(getSectionTitle(context, 'Organizers'));
+    }
     SplayTreeMap<String, dynamic>.from(
         organizerUserModel, (a, b) => a.compareTo(b)).forEach((key, user) {
       String email = user.email.toString().trim();
