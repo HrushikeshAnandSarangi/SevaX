@@ -194,20 +194,22 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   projectModel.creatorId ==
                           SevaCore.of(context).loggedInUser.sevaUserID
                       ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AddManualTimeButton(
-                              timeFor: ManualTimeType.Project,
-                              typeId: projectModel.id,
-                              userType: getLoggedInUserRole(
-                                widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                              ),
-                              timebankId:
-                                  widget.timebankModel.parentTimebankId ==
-                                          FlavorConfig.values.timebankId
-                                      ? widget.timebankModel.id
-                                      : widget.timebankModel.parentTimebankId,
-                            ),
+                            addManualTime,
+                            // AddManualTimeButton(
+                            //   timeFor: ManualTimeType.Project,
+                            //   typeId: projectModel.id,
+                            //   userType: getLoggedInUserRole(
+                            //     widget.timebankModel,
+                            //     SevaCore.of(context).loggedInUser.sevaUserID,
+                            //   ),
+                            //   timebankId:
+                            //       widget.timebankModel.parentTimebankId ==
+                            //               FlavorConfig.values.timebankId
+                            //           ? widget.timebankModel.id
+                            //           : widget.timebankModel.parentTimebankId,
+                            // ),
                             deleteProject,
                           ],
                         )
@@ -216,6 +218,35 @@ class _AboutProjectViewState extends State<AboutProjectView> {
               ),
             )
           : LoadingIndicator(),
+    );
+  }
+
+  Widget get addManualTime {
+    return GestureDetector(
+      onTap: () => AddManualTimeButton.onPressed(
+        context: context,
+        timeFor: ManualTimeType.Project,
+        typeId: projectModel.id,
+        userType: getLoggedInUserRole(
+          widget.timebankModel,
+          SevaCore.of(context).loggedInUser.sevaUserID,
+        ),
+        timebankId: widget.timebankModel.parentTimebankId ==
+                FlavorConfig.values.timebankId
+            ? widget.timebankModel.id
+            : widget.timebankModel.parentTimebankId,
+      ),
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Add manual time',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ),
     );
   }
 

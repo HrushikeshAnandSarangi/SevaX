@@ -21,18 +21,32 @@ class AddManualTimeButton extends StatelessWidget {
       width: double.infinity,
       child: RaisedButton(
         child: Text('Add manual time'),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AddMnualTimeDetailsPage(
-                typeId: typeId,
-                type: timeFor,
-                userType: userType,
-                timebankId: timebankId,
-              ),
-            ),
-          );
-        },
+        onPressed: () => onPressed(
+          context: context,
+          typeId: typeId,
+          timeFor: timeFor,
+          userType: userType,
+          timebankId: timebankId,
+        ),
+      ),
+    );
+  }
+
+  static void onPressed({
+    @required BuildContext context,
+    @required ManualTimeType timeFor,
+    @required String typeId,
+    @required String timebankId,
+    @required UserRole userType,
+  }) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AddMnualTimeDetailsPage(
+          typeId: typeId,
+          type: timeFor,
+          userType: userType,
+          timebankId: timebankId,
+        ),
       ),
     );
   }
