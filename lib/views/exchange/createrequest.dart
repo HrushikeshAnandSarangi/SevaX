@@ -1022,6 +1022,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   List<Widget> _buildselectedSubCategories(List categories) {
     List<CategoryModel> subCategories = [];
     subCategories = categories[1];
+    selectedCategoryIds.clear();
     List<Widget> selectedSubCategories = [];
     logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {

@@ -1021,6 +1021,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     List<CategoryModel> subCategories = [];
     subCategories = categories[1];
     List<Widget> selectedSubCategories = [];
+    selectedCategoryIds.clear();
+
     logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
