@@ -928,36 +928,38 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       setState(() => {});
                     },
                   ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_cash,
-                      value: RequestType.CASH,
-                      isEnabled: !widget.isOfferRequest,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      },
-                    ),
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.cash_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   child:
+                  _optionRadioButton<RequestType>(
+                    title: S.of(context).request_type_cash,
+                    value: RequestType.CASH,
+                    isEnabled: !widget.isOfferRequest,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    },
                   ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.goods_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    child: _optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_goods,
-                      isEnabled: !(widget.isOfferRequest ?? false),
-                      value: RequestType.GOODS,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      },
-                    ),
+                  // ),
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.goods_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   child:
+                  _optionRadioButton<RequestType>(
+                    title: S.of(context).request_type_goods,
+                    isEnabled: !(widget.isOfferRequest ?? false),
+                    value: RequestType.GOODS,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    },
                   ),
+                  // ),
                 ],
               )
             ],

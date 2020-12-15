@@ -1,46 +1,45 @@
+// import 'package:rxdart/rxdart.dart';
+// import 'package:sevaexchange/models/models.dart';
 
-import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/models.dart';
+// import '../resources/repository.dart';
 
-import '../resources/repository.dart';
+// class PaymentCards {
 
-class PaymentCards {
+// }
+// class PaymentsModel {
+// }
 
-}
-class PaymentsModel {
-}
+// class PaymentsController {
+//   PaymentsModel payment;
+//   List<PaymentCards> cards = [];
 
-class PaymentsController {
-  PaymentsModel payment;
-  List<PaymentCards> cards = [];
+//   paymentsController() {}
+//   setIsAdmin(isAdminStatus) {}
+// }
 
-  paymentsController() {}
-  setIsAdmin(isAdminStatus) {}
-}
+// class PaymentsBloc {
+//   final _repository = Repository();
+//   final _paymentsController = BehaviorSubject<PaymentsController>();
+//   Observable<PaymentsController> get paymentsController =>
+//       _paymentsController.stream;
 
-class PaymentsBloc {
-  final _repository = Repository();
-  final _paymentsController = BehaviorSubject<PaymentsController>();
-  Observable<PaymentsController> get paymentsController =>
-      _paymentsController.stream;
+//   paymentsBloc() {
+//     _paymentsController.add(PaymentsController());
+//   }
 
-  paymentsBloc() {
-    _paymentsController.add(PaymentsController());
-  }
+//   storeNewCard(token, timebankid, UserModel user,String planName) {
+//     // storing a new card
+//     _repository.storeCard(token, timebankid, user,planName);
+//     //
+//   }
 
-  storeNewCard(token, timebankid, UserModel user,String planName) {
-    // storing a new card
-    _repository.storeCard(token, timebankid, user,planName);
-    //
-  }
+//   setIsAdmin(isAdminStatus) {
+//     _paymentsController.value.setIsAdmin(isAdminStatus);
+//     _paymentsController.add(_paymentsController.value);
+//   }
 
-  setIsAdmin(isAdminStatus) {
-    _paymentsController.value.setIsAdmin(isAdminStatus);
-    _paymentsController.add(_paymentsController.value);
-  }
-
-  dispose() {
-    _paymentsController.close();
-  }
-}
-final paymentsBloc = PaymentsBloc();
+//   dispose() {
+//     _paymentsController.close();
+//   }
+// }
+// final paymentsBloc = PaymentsBloc();

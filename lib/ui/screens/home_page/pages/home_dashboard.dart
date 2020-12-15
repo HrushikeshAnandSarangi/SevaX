@@ -210,7 +210,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               length: isAdmin ? tabLength + 1 : tabLength,
               child: Column(
                 children: <Widget>[
-                  ShowLimitBadge(),
+                  // ShowLimitBadge(),
                   TabBar(
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,

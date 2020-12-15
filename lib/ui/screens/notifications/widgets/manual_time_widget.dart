@@ -70,10 +70,25 @@ void manualTimeActionDialog(
               ),
             ),
             Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  "${S.of(context).by_approving_you_accept} ${model.userDetails.name} has worked for ${model.claimedTime / 60} hours",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Europa',
+                    fontStyle: FontStyle.italic,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Center(
                   child: Text(
-                    "${S.of(context).by_approving_you_accept} ${model.userDetails.name} has worked for ${model.claimedTime / 60} hours",
+                    model.reason,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Europa',

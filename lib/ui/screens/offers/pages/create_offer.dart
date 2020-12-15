@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
-import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CreateOffer extends StatefulWidget {
@@ -44,17 +41,18 @@ class _CreateOfferState extends State<CreateOffer> {
                   IndividualOffer(
                     timebankId: widget.timebankId,
                   ),
-                  TransactionsMatrixCheck.checkAllowedTransaction(
-                          'onetomany_offers')
-                      ? OneToManyOffer(
-                          timebankId: widget.timebankId,
-                        )
-                      : UpgradePlanBanner(
-                          activePlanName: AppConfig.paymentStatusMap['planId'],
-                          details:
-                              AppConfig.upgradePlanBannerModel.onetomany_offers,
-                          showAppBar: false,
-                        ),
+                  // TransactionsMatrixCheck.checkAllowedTransaction(
+                  //         'onetomany_offers')
+                  // ?
+                  OneToManyOffer(
+                    timebankId: widget.timebankId,
+                  )
+                  // : UpgradePlanBanner(
+                  //     activePlanName: AppConfig.paymentStatusMap['planId'],
+                  //     details:
+                  //         AppConfig.upgradePlanBannerModel.onetomany_offers,
+                  //     showAppBar: false,
+                  //   ),
                 ],
               ),
             ),

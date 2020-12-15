@@ -21,6 +21,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -29,7 +30,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -864,6 +864,20 @@ class CreateEditCommunityViewFormState
                                             location;
                                         snapshot.data.community.softDelete =
                                             false;
+                                        snapshot.data.community.members = [
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID
+                                        ];
+
+                                        //by default every community is on neighbourhood plan
+                                        snapshot.data.community.payment = {
+                                          "planId": "neighbourhood_plan",
+                                          "payment_success": true,
+                                          "message":
+                                              "You are on Neighbourhood plan",
+                                          "status": 200,
+                                        };
 
                                         snapshot.data.community.billMe = false;
 
@@ -902,19 +916,25 @@ class CreateEditCommunityViewFormState
                                             SevaCore.of(context).loggedInUser;
                                         _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
-                                        Navigator.pushReplacement(
-                                          context,
+                                        Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                BillingPlanDetails(
-                                              user: user,
-                                              isPlanActive: false,
-                                              activePlanId: "",
-                                              isPrivateTimebank:
-                                                  timebankModel.private,
-                                            ),
+                                                HomePageRouter(),
                                           ),
                                         );
+                                        // Navigator.pushReplacement(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) =>
+                                        //         BillingPlanDetails(
+                                        //       user: user,
+                                        //       isPlanActive: false,
+                                        //       activePlanId: "",
+                                        //       isPrivateTimebank:
+                                        //           timebankModel.private,
+                                        //     ),
+                                        //   ),
+                                        // );
                                       }
                                     } else {
                                       setState(() {

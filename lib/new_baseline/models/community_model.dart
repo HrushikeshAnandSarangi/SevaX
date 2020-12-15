@@ -389,6 +389,10 @@ class CommunityModel extends DataModel {
       object['billMe'] = false;
     }
 
+    if (this.payment != null) {
+      object['payment'] = this.payment;
+    }
+
     object['softDelete'] = this.softDelete;
     object['parent_timebank_id'] =
         this.parentTimebankId == null ? null : this.parentTimebankId;

@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -17,9 +20,9 @@ import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
   final String project_id;
-  final String timebankId;
+  final TimebankModel timebankModel;
 
-  AboutProjectView({this.project_id, this.timebankId});
+  AboutProjectView({this.project_id, this.timebankModel});
 
   @override
   _AboutProjectViewState createState() => _AboutProjectViewState();
@@ -99,15 +102,16 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           child: FlatButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateEditProject(
-                                      timebankId: widget.timebankId,
-                                      isCreateProject: false,
-                                      projectId: projectModel.id,
-                                      projectTemplateModel: null,
-                                    ),
-                                  ));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateEditProject(
+                                    timebankId: widget.timebankModel.id,
+                                    isCreateProject: false,
+                                    projectId: projectModel.id,
+                                    projectTemplateModel: null,
+                                  ),
+                                ),
+                              );
                             },
                             child: Text(
                               S.of(context).edit,
@@ -189,12 +193,60 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   ),
                   projectModel.creatorId ==
                           SevaCore.of(context).loggedInUser.sevaUserID
-                      ? deleteProject
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            addManualTime,
+                            // AddManualTimeButton(
+                            //   timeFor: ManualTimeType.Project,
+                            //   typeId: projectModel.id,
+                            //   userType: getLoggedInUserRole(
+                            //     widget.timebankModel,
+                            //     SevaCore.of(context).loggedInUser.sevaUserID,
+                            //   ),
+                            //   timebankId:
+                            //       widget.timebankModel.parentTimebankId ==
+                            //               FlavorConfig.values.timebankId
+                            //           ? widget.timebankModel.id
+                            //           : widget.timebankModel.parentTimebankId,
+                            // ),
+                            deleteProject,
+                          ],
+                        )
                       : Container(),
                 ],
               ),
             )
           : LoadingIndicator(),
+    );
+  }
+
+  Widget get addManualTime {
+    return GestureDetector(
+      onTap: () => AddManualTimeButton.onPressed(
+        context: context,
+        timeFor: ManualTimeType.Project,
+        typeId: projectModel.id,
+        userType: getLoggedInUserRole(
+          widget.timebankModel,
+          SevaCore.of(context).loggedInUser.sevaUserID,
+        ),
+        timebankId: widget.timebankModel.parentTimebankId ==
+                FlavorConfig.values.timebankId
+            ? widget.timebankModel.id
+            : widget.timebankModel.parentTimebankId,
+      ),
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Add manual time',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ),
     );
   }
 

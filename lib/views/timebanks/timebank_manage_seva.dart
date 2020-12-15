@@ -8,13 +8,10 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
@@ -67,96 +64,96 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   @override
   Widget build(BuildContext context) {
-    if (isSuperAdmin) {
-      return DefaultTabController(
-        length: 4,
-        child: Column(
-          children: <Widget>[
-            TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: true,
-              tabs: <Widget>[
-                Tab(text: S.of(context).edit_timebank),
-                // Tab(text: "Upgrade"),
-                Tab(text: S.of(context).billing),
-                Tab(
-                  text: S.of(context).settings,
+    // if (isSuperAdmin) {
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: <Widget>[
+          TabBar(
+            indicatorColor: Colors.black,
+            labelColor: Colors.black,
+            isScrollable: true,
+            tabs: <Widget>[
+              Tab(text: S.of(context).edit_timebank),
+              // Tab(text: "Upgrade"),
+              // Tab(text: S.of(context).billing),
+              Tab(
+                text: S.of(context).settings,
+              ),
+              Tab(
+                text: S.of(context).bottom_nav_notifications,
+              ),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                CreateEditCommunityView(
+                  isCreateTimebank: false,
+                  isFromFind: false,
+                  timebankId: widget.timebankModel.id,
                 ),
-                Tab(
-                  text: S.of(context).bottom_nav_notifications,
-                ),
+                // TimeBankBillingAdminView(),
+                Settings,
+                NotificationManagerForAmins(
+                  widget.timebankModel.id,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                  widget.timebankModel.parentTimebankId ==
+                      FlavorConfig.values.timebankId,
+                )
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  CreateEditCommunityView(
-                    isCreateTimebank: false,
-                    isFromFind: false,
-                    timebankId: widget.timebankModel.id,
-                  ),
-                  TimeBankBillingAdminView(),
-                  Settings,
-                  NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: false,
-              tabs: <Widget>[
-                Tab(text: S.of(context).edit_timebank),
-                Tab(
-                  text: S.of(context).settings,
-                ),
-                Tab(
-                  text: S.of(context).bottom_nav_notifications,
-                ),
-              ],
-//                onTap: (index) {
-//                  if (_indextab != index) {
-//                    _indextab = index;
-//                    setState(() {});
-//                  }
-//                },
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  CreateEditCommunityView(
-                    isCreateTimebank: false,
-                    isFromFind: false,
-                    timebankId: widget.timebankModel.id,
-                  ),
-                  Settings,
-                  NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+//     } else {
+//       return DefaultTabController(
+//         length: 3,
+//         child: Column(
+//           children: <Widget>[
+//             TabBar(
+//               indicatorColor: Colors.black,
+//               labelColor: Colors.black,
+//               isScrollable: false,
+//               tabs: <Widget>[
+//                 Tab(text: S.of(context).edit_timebank),
+//                 Tab(
+//                   text: S.of(context).settings,
+//                 ),
+//                 Tab(
+//                   text: S.of(context).bottom_nav_notifications,
+//                 ),
+//               ],
+// //                onTap: (index) {
+// //                  if (_indextab != index) {
+// //                    _indextab = index;
+// //                    setState(() {});
+// //                  }
+// //                },
+//             ),
+//             Expanded(
+//               child: TabBarView(
+//                 children: [
+//                   CreateEditCommunityView(
+//                     isCreateTimebank: false,
+//                     isFromFind: false,
+//                     timebankId: widget.timebankModel.id,
+//                   ),
+//                   Settings,
+//                   NotificationManagerForAmins(
+//                     widget.timebankModel.id,
+//                     SevaCore.of(context).loggedInUser.sevaUserID,
+//                     widget.timebankModel.parentTimebankId ==
+//                         FlavorConfig.values.timebankId,
+//                   )
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
   }
 
 //  Widget get normalAdminWidget {
@@ -300,35 +297,36 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         Theme.of(context).platform == TargetPlatform.iOS) {
       return Container();
     }
-    return TransactionsMatrixCheck(
-      upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
-      transaction_matrix_type: "invoice_generation",
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => MonthsListing.of(
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
-                  planId: planId,
-                  communityModel: communityModel),
+    return
+        // TransactionsMatrixCheck(
+        //   upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
+        //   transaction_matrix_type: "invoice_generation",
+        //   child:
+        GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MonthsListing.of(
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                planId: planId,
+                communityModel: communityModel),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Text(
+            "${S.of(context).invoice_and_reports}",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
             ),
-          );
-        },
-        child: Column(
-          children: [
-            Text(
-              "${S.of(context).invoice_and_reports}",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-            SizedBox(height: 20),
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+        ],
       ),
+      // ),
     );
   }
 
