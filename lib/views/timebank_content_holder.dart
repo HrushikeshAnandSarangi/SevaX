@@ -664,7 +664,7 @@ class DiscussionListState extends State<DiscussionList> {
 
   Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
-    var feedAddress = getLocation(news.placeAddress);
+    var feedAddress = getLocation(news.placeAddress ?? '');
 
     return InkWell(
       onTap: () {
@@ -705,13 +705,13 @@ class DiscussionListState extends State<DiscussionList> {
                               ),
                               child: Row(
                                 children: <Widget>[
-                                  feedAddress != null
+                                  feedAddress != null && feedAddress != ''
                                       ? Icon(
                                           Icons.location_on,
                                           color: Theme.of(context).primaryColor,
                                         )
                                       : Container(),
-                                  feedAddress != null
+                                  feedAddress != null && feedAddress != ''
                                       ? Text(feedAddress)
                                       : Container(),
                                   Spacer(),
