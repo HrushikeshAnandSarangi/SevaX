@@ -32,7 +32,6 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -696,7 +695,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     } else {
       return S.of(context).enter_valid_link;
     }
-    return null;
   }
 
   String _validateEmailId(String value) {
@@ -1255,23 +1253,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                      "Choose Category and Sub Category",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
                         : Text(
-                      "${categories[0]}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
                     Spacer(),
                     Icon(
                       Icons.arrow_forward_ios_outlined,
@@ -1293,9 +1291,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 SizedBox(height: 20),
                 categories != null
                     ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(categories),
-                )
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
                     : Container(),
               ],
             ),
@@ -1428,23 +1426,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                      "Choose Category and Sub Category",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
+                            "Choose Category and Sub Category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
                         : Text(
-                      "${categories[0]}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
                     Spacer(),
                     Icon(
                       Icons.arrow_forward_ios_outlined,
@@ -1466,9 +1464,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 SizedBox(height: 20),
                 categories != null
                     ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(categories),
-                )
+                        alignment: WrapAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
                     : Container(),
               ],
             ),
@@ -1673,6 +1671,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.accepted = false;
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
+      requestModel.recommendedMemberIdsForRequest = [];
       requestModel.categories = selectedCategoryIds.toList();
       requestModel.address = selectedAddress;
       requestModel.location = location;

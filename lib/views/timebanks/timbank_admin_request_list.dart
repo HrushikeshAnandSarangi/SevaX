@@ -592,7 +592,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           timebankModel: timebankModel,
         ));
       }
-      _adminsWidgets.add(getSectionTitle(context, S.of(context).admins));
+      if (adminUserModel.values != null && adminUserModel.values.length > 0) {
+        _adminsWidgets.add(getSectionTitle(context, S.of(context).admins));
+      }
       SplayTreeMap<String, dynamic>.from(
           adminUserModel, (a, b) => a.compareTo(b)).forEach((key, user) {
         String email = user.email.toString().trim();
@@ -625,7 +627,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     log('length organizer ' + organizerUserModel.values.length.toString());
     if (organizerUserModel.values != null &&
         organizerUserModel.values.length > 0) {
-      _organizersWidgets.add(getSectionTitle(context, 'Organizers'));
+      _organizersWidgets.add(getSectionTitle(context, 'Owners'));
     }
     SplayTreeMap<String, dynamic>.from(
         organizerUserModel, (a, b) => a.compareTo(b)).forEach((key, user) {
@@ -925,7 +927,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
                     // PROMOTTE
 
-                    log('inside organizer');
+                    log('inside owner');
                     await MembershipManager.updateOrganizerStatus(
                       associatedName:
                           SevaCore.of(context).loggedInUser.fullname,
@@ -989,7 +991,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     });
                     // DEMOTE
                     if (isDemoteOrganizer) {
-                      log('inside organizer');
+                      log('inside owner');
 
                       await MembershipManager.updateOrganizerStatus(
                         associatedName:

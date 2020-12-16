@@ -194,7 +194,10 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.oldHours = widget.requestModel.numberOfHours;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
-
+    if (widget.requestModel.categories != null &&
+        widget.requestModel.categories.length > 0) {
+      getCategoryModels(widget.requestModel.categories, 'Selected Categories');
+    }
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -981,7 +984,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         List<String> categoriesList = bodyMap.containsKey('string_vec')
             ? List.castFrom(bodyMap['string_vec'])
             : [];
-        getCategoryModels(categoriesList);
+        getCategoryModels(categoriesList, 'Suggested Categories');
       } else {
         return null;
       }
@@ -991,7 +994,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-  Future<void> getCategoryModels(List<String> categoriesList) async {
+  Future<void> getCategoryModels(
+      List<String> categoriesList, String title) async {
     List<CategoryModel> modelList = List();
     for (int i = 0; i < categoriesList.length; i += 1) {
       CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
@@ -1000,7 +1004,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       modelList.add(categoryModel);
     }
 
-    updateInformation(['Suggested Categories', modelList]);
+    updateInformation([title, modelList]);
   }
 
   // Navigat to Category class and geting data from the class
@@ -1022,8 +1026,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     subCategories = categories[1];
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
-
-    logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
