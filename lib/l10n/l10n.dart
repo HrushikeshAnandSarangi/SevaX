@@ -5,6 +5,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import 'messages_all.dart';
 
 class S {
@@ -1191,7 +1192,7 @@ class S {
       );
 
   String get organizer => Intl.message(
-        'Organiser',
+        'Owner',
         name: 'organizer',
       );
 
@@ -3426,7 +3427,7 @@ class S {
       );
 
   String get admins_organizers => Intl.message(
-        'Admins & Organizers',
+        'Admins & Owners',
         name: 'admins_organizers',
       );
 

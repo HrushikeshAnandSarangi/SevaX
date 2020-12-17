@@ -571,10 +571,6 @@ PODS:
     - FMDB (~> 2.7.2)
   - store_redirect (0.0.1):
     - Flutter
-  - Stripe (19.2.0)
-  - stripe_payment (1.0.0):
-    - Flutter
-    - Stripe (>= 19.0.1)
   - TOCropViewController (2.3.8)
   - url_launcher (0.0.1):
     - Flutter
@@ -633,7 +629,6 @@ DEPENDENCIES:
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - store_redirect (from `.symlinks/plugins/store_redirect/ios`)
-  - stripe_payment (from `.symlinks/plugins/stripe_payment/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
@@ -682,7 +677,6 @@ SPEC REPOS:
     - Reachability
     - SDWebImage
     - SDWebImageFLPlugin
-    - Stripe
     - TOCropViewController
 
 EXTERNAL SOURCES:
@@ -784,8 +778,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
   store_redirect:
     :path: ".symlinks/plugins/store_redirect/ios"
-  stripe_payment:
-    :path: ".symlinks/plugins/stripe_payment/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
   webview_flutter:
@@ -802,12 +794,12 @@ SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   connectivity_for_web: 2b8584556930d4bd490d82b836bcf45067ce345b
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
-  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: e880aef16c108333240e1e7327896f2ea380f4f0
   emoji_picker: 0e868059aa18f9473d234f3d0701fbd4d5fd310c
-  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
+  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Firebase: 5719b4f965f76643241a1bb8244483ff6117db39
   firebase_analytics: 9118044ffb98bee71d84733fc594f5134fe4bc1b
@@ -884,8 +876,6 @@ SPEC CHECKSUMS:
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   store_redirect: 2977747cf81689a39bd62c248c2deacb7a0d131e
-  Stripe: d481c2dab9a892fd923f097f854661217f70dc7f
-  stripe_payment: ad86f099179edb7b9fe12b9b62ac3746d5e56802
   TOCropViewController: 0a075f02c253e88095143bbac7b013fc6fba5090
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96

@@ -124,6 +124,7 @@ class CommunityModel extends DataModel {
   String created_at;
   String primary_timebank;
   bool private;
+  bool isCreatedFromWeb;
 
   double taxPercentage;
   double negativeCreditsThreshold;
@@ -175,6 +176,8 @@ class CommunityModel extends DataModel {
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
     this.private = map.containsKey('private') ? map['private'] : false;
+    this.isCreatedFromWeb =
+        map.containsKey('isCreatedFromWeb') ? map['isCreatedFromWeb'] : false;
 
     this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())
@@ -257,6 +260,10 @@ class CommunityModel extends DataModel {
     }
     if (key == 'taxPercentage') {
       this.taxPercentage = value;
+    }
+
+    if (key == 'isCreatedFromWeb') {
+      this.isCreatedFromWeb = value;
     }
     if (key == 'primary_email') {
       this.primary_email = value;
@@ -353,6 +360,10 @@ class CommunityModel extends DataModel {
     if (this.private != null) {
       object['private'] = this.private;
     }
+
+    if (this.isCreatedFromWeb != null) {
+      object['isCreatedFromWeb'] = this.isCreatedFromWeb;
+    }
     if (this.created_by != null) {
       object['created_by'] = this.created_by;
     }
@@ -411,6 +422,7 @@ class CommunityModel extends DataModel {
         ' payment_records: $payment_records, '
         ' logo_url: $logo_url, '
         ' cover_url: $cover_url,'
+        ' isCreatedFromWeb: $isCreatedFromWeb,'
         ' creator_email: $creator_email,'
         ' created_by: $created_by, '
         'created_at: $created_at, '

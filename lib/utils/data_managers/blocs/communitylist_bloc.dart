@@ -120,6 +120,7 @@ class CommunityCreateEditController {
     this.community.admins = [user.sevaUserID];
     this.community.organizers = [user.sevaUserID];
     this.community.location = location;
+    this.community.isCreatedFromWeb = false;
   }
 
   UpdateTimebankDetails(user, timebankimageurl, widget) {

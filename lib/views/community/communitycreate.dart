@@ -856,9 +856,9 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.community.timebanks = [
                                           snapshot.data.timebank.id
                                         ].cast<String>();
-
                                         snapshot.data.community
-                                                .primary_timebank =
+                                            .primary_timebank = snapshot.data
+                                                .community.primary_timebank =
                                             snapshot.data.timebank.id;
                                         snapshot.data.community.location =
                                             location;
