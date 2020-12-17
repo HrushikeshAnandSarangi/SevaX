@@ -18,38 +18,65 @@ class GroupMembersPage extends StatelessWidget {
           return LoadingIndicator();
         }
         return StreamBuilder<List<String>>(
-            stream: _bloc.selectedMembers,
-            builder: (context, selectedMembers) {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data.length,
-                itemBuilder: (_, int index) {
-                  TimebankModel model = snapshot.data[index];
+          stream: _bloc.selectedMembers,
+          builder: (context, selectedMembers) {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: snapshot.data.length,
+              itemBuilder: (_, int index) {
+                TimebankModel model = snapshot.data[index];
 
-                  return ExpansionTile(
-                    leading: CustomNetworkImage(
-                        model.photoUrl ?? defaultGroupImageURL),
-                    title: Text(model.name),
-                    children: List.generate(
-                      model.members.length,
-                      (idx) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 4),
-                        child: _bloc.allMembers.containsKey(model.members[idx])
-                            ? MemberCard(
-                                info: _bloc.allMembers[model.members[idx]],
-                                isSelected: selectedMembers.data
-                                        ?.contains(model.members[idx]) ??
-                                    false,
-                              )
-                            : Container(),
+                return ExpansionTile(
+                  leading: CustomNetworkImage(
+                    model.photoUrl ?? defaultGroupImageURL,
+                  ),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          model.name,
+                          maxLines: 1,
+                        ),
                       ),
+                      Offstage(
+                        offstage: !BlocProvider.of<CreateChatBloc>(context)
+                            .isSelectionEnabled,
+                        child: FlatButton(
+                          child: Text('Select All'),
+                          textColor: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            model.members.forEach((element) {
+                              if (_bloc.allMembers.containsKey(element)) {
+                                BlocProvider.of<CreateChatBloc>(context)
+                                    .selectMember(element);
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  children: List.generate(
+                    model.members.length,
+                    (idx) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 4),
+                      child: _bloc.allMembers.containsKey(model.members[idx])
+                          ? MemberCard(
+                              info: _bloc.allMembers[model.members[idx]],
+                              isSelected: selectedMembers.data
+                                      ?.contains(model.members[idx]) ??
+                                  false,
+                            )
+                          : Container(),
                     ),
-                  );
-                },
-              );
-            });
+                  ),
+                );
+              },
+            );
+          },
+        );
       },
     );
   }
