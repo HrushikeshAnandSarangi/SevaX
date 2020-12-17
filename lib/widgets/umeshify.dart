@@ -18,6 +18,17 @@ class _UmeshifyState extends State<Umeshify> {
     var matches = exp.allMatches(widget.text);
     var lastPosition = 0;
 
+    if (def.isEmpty) {
+      def.add(
+        TextSpan(
+          text: widget.text,
+          style: const TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      );
+    }
+
     for (var match in matches) {
       def
         ..add(
