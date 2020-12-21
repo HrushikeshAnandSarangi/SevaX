@@ -9,9 +9,12 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/projects/bloc/project_description_bloc.dart';
+import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -50,10 +53,17 @@ class RequestsState extends State<ProjectRequests>
   UserModel user = null;
   TabController tabController;
   ProjectModel projectModel;
+  bool isProjectMember = false;
+  final ProjectDescriptionBloc bloc = ProjectDescriptionBloc();
 
   @override
   void initState() {
     super.initState();
+
+    //todo add chatid from project model
+    //todo update isProjectMember from project model
+    isProjectMember = true;
+    bloc.init("MnD15clIiTKXs9zgDaXU");
     tabController = TabController(length: 2, vsync: this);
     projectModel = widget.projectModel;
   }
@@ -78,57 +88,62 @@ class RequestsState extends State<ProjectRequests>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.5,
-          title: Text(
-            '${projectModel.name}',
-            style: TextStyle(
-              fontSize: 20,
+    return BlocProvider(
+      bloc: bloc,
+      child: DefaultTabController(
+        length: isProjectMember ? 3 : 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            elevation: 0.5,
+            title: Text(
+              '${projectModel.name}',
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        backgroundColor: Colors.white,
-        body: Column(
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints(maxHeight: 150.0),
-              child: Material(
-                color: Theme.of(context).primaryColor,
-                child: TabBar(
-                  indicatorColor: Theme.of(context).accentColor,
-                  labelColor: Colors.white,
-                  isScrollable: false,
-                  tabs: <Widget>[
-                    Tab(
-                      text: S.of(context).requests,
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              Container(
+                constraints: BoxConstraints(maxHeight: 150.0),
+                child: Material(
+                  color: Theme.of(context).primaryColor,
+                  child: TabBar(
+                    indicatorColor: Theme.of(context).accentColor,
+                    labelColor: Colors.white,
+                    isScrollable: false,
+                    tabs: <Widget>[
+                      Tab(
+                        text: S.of(context).requests,
+                      ),
+                      Tab(
+                        text: S.of(context).about,
+                      ),
+                      ...isProjectMember ? [Tab(text: 'Chat')] : [],
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    ProjectRequestList(
+                      timebankModel: widget.timebankModel,
+                      projectModel: projectModel,
+                      userModel: user,
                     ),
-                    Tab(
-                      text: S.of(context).about,
+                    AboutProjectView(
+                      project_id: projectModel.id,
+                      timebankModel: widget.timebankModel,
                     ),
+                    ...isProjectMember ? [ProjectChatView()] : [],
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ProjectRequestList(
-                    timebankModel: widget.timebankModel,
-                    projectModel: projectModel,
-                    userModel: user,
-                  ),
-                  AboutProjectView(
-                    project_id: projectModel.id,
-                    timebankModel: widget.timebankModel,
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
