@@ -361,10 +361,6 @@ class UserModel extends DataModel {
     } else {
       this.deviceDetails = DeviceDetails();
     }
-
-//    else{
-//      this.cvUrl='';
-//    }
   }
 
   UserModel.fromDynamic(dynamic user) {

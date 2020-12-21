@@ -21,6 +21,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -29,6 +30,7 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
+import 'package:device_info/device_info.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
-  var location;
+  GeoFirePoint location;
 
   void initState() {
     super.initState();
@@ -833,6 +835,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Future<DeviceDetails> getDeviceDetails() async {
+    DeviceDetails deviceDetails = DeviceDetails();
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      deviceDetails.deviceId = 'Android';
+      deviceDetails.deviceType = androidInfo.androidId;
+    }else if (Platform.isIOS) {
+      var iosInfo = await DeviceInfoPlugin().iosInfo;
+      deviceDetails.deviceId = 'IOS';
+      deviceDetails.deviceType = iosInfo.identifierForVendor;
+    }
+    deviceDetails.location = location?.data;
+    return deviceDetails;
+  }
+
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -850,6 +867,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
+    user.deviceDetails = await getDeviceDetails();
     try {
       user = await auth.signInWithApple();
     } on PlatformException catch (erorr) {
@@ -884,6 +902,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
+    user.deviceDetails = await getDeviceDetails();
     try {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
@@ -901,6 +920,7 @@ class _LoginPageState extends State<LoginPage> {
     if (validate) _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
+    user.deviceDetails = await getDeviceDetails();
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
