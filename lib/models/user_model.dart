@@ -67,6 +67,7 @@ class UserModel extends DataModel {
   String calendarAccessToken;
   String calendarEmail;
   String calendarScope;
+  DeviceDetails deviceDetails;
 
   UserModel(
       {this.seenIntro,
@@ -111,10 +112,12 @@ class UserModel extends DataModel {
       this.notificationAlerts,
       this.cvUrl,
       this.cvName,
+        this.deviceDetails,
       this.curatedRequestIds,
       this.recommendedForRequestIds});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
+
     if (map.containsKey('calendarScope')) {
       this.calendarScope = map['calendarScope'];
     }
@@ -352,6 +355,12 @@ class UserModel extends DataModel {
       this.cvUrl = map['cvUrl'];
     }
 
+    if (map.containsKey('deviceDetails')) {
+      this.deviceDetails = DeviceDetails.fromMap(map['deviceDetails']);
+    } else {
+      this.deviceDetails = DeviceDetails();
+    }
+
 //    else{
 //      this.cvUrl='';
 //    }
@@ -523,7 +532,9 @@ class UserModel extends DataModel {
     if (this.cvName != null) {
       object['cvName'] = this.cvName;
     }
-
+    if (this.deviceDetails != null) {
+      object['deviceDetails'] = this.deviceDetails;
+    }
     return object;
   }
 
@@ -561,6 +572,7 @@ class UserModel extends DataModel {
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
       ${this.cvUrl.toString()},
+      ${this.deviceDetails.toString()},
       Communities:${this.communities.toString()},
     ''';
   }
@@ -580,4 +592,8 @@ class UserListModel {
   }
 
   List<UserModel> get getUsers => users;
+}
+
+class DeviceDetails{
+
 }
