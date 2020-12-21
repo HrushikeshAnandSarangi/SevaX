@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import '../flavor_config.dart';
@@ -533,7 +534,7 @@ class UserModel extends DataModel {
       object['cvName'] = this.cvName;
     }
     if (this.deviceDetails != null) {
-      object['deviceDetails'] = this.deviceDetails;
+      object['deviceDetails'] = this.deviceDetails.toMap();
     }
     return object;
   }
@@ -594,6 +595,4 @@ class UserListModel {
   List<UserModel> get getUsers => users;
 }
 
-class DeviceDetails{
 
-}
