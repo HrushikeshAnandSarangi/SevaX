@@ -31,6 +31,7 @@ class ChatPage extends StatefulWidget {
   final bool isFromShare;
   final String feedId;
   final String senderId;
+  final bool showAppBar;
 
   ChatPage({
     Key key,
@@ -40,6 +41,7 @@ class ChatPage extends StatefulWidget {
     this.senderId,
     this.feedId,
     this.isAdminMessage,
+    this.showAppBar = true,
   }) : super(key: key);
 
   @override
@@ -129,38 +131,42 @@ class _ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       backgroundColor: Colors.indigo[50],
-      appBar: ChatAppBar(
-        isGroupMessage: isGroupMessage,
-        recieverInfo: isGroupMessage ? null : recieverInfo,
-        groupDetails: isGroupMessage ? chatModel.groupDetails : null,
-        clearChat: () {
-          exitFromChatPage = true;
-          _bloc.clearChat(chatModel.id, widget.senderId);
-          Navigator.pop(context);
-        },
-        blockUser: () {
-          _bloc.blockMember(
-            loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            blockedUserId: recieverId,
-          );
-
-          Navigator.pop(context);
-        },
-        exitGroup: isGroupMessage
-            ? () {
-                String userId = SevaCore.of(context).loggedInUser.sevaUserID;
-                _bloc.removeMember(
-                  chatModel.id,
-                  userId,
-                  chatModel.groupDetails.admins.contains(userId),
-                );
+      appBar: widget.showAppBar
+          ? ChatAppBar(
+              isGroupMessage: isGroupMessage,
+              recieverInfo: isGroupMessage ? null : recieverInfo,
+              groupDetails: isGroupMessage ? chatModel.groupDetails : null,
+              clearChat: () {
+                exitFromChatPage = true;
+                _bloc.clearChat(chatModel.id, widget.senderId);
                 Navigator.pop(context);
-              }
-            : () {},
-        isBlockEnabled: chatModel.isTimebankMessage || chatModel.isGroupMessage,
-        openGroupInfo: isGroupMessage ? openGroupInfo : null,
-      ),
+              },
+              blockUser: () {
+                _bloc.blockMember(
+                  loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  blockedUserId: recieverId,
+                );
+
+                Navigator.pop(context);
+              },
+              exitGroup: isGroupMessage
+                  ? () {
+                      String userId =
+                          SevaCore.of(context).loggedInUser.sevaUserID;
+                      _bloc.removeMember(
+                        chatModel.id,
+                        userId,
+                        chatModel.groupDetails.admins.contains(userId),
+                      );
+                      Navigator.pop(context);
+                    }
+                  : () {},
+              isBlockEnabled:
+                  chatModel.isTimebankMessage || chatModel.isGroupMessage,
+              openGroupInfo: isGroupMessage ? openGroupInfo : null,
+            )
+          : null,
       body: Column(
         children: <Widget>[
           Expanded(

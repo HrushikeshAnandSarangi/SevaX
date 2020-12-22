@@ -162,7 +162,7 @@ class CommunityModel extends DataModel {
         map.containsKey('negativeCreditsThreshold') &&
                 map["negativeCreditsThreshold"] != null
             ? map["negativeCreditsThreshold"].toDouble()
-            : 50;
+            : -50;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
@@ -318,6 +318,10 @@ class CommunityModel extends DataModel {
     if (this.taxPercentage != null) {
       object['taxPercentage'] = this.taxPercentage;
     }
+    if (this.negativeCreditsThreshold != null) {
+      object['negativeCreditsThreshold'] = this.negativeCreditsThreshold;
+    }
+
     if (this.subscriptionCancelled != null) {
       object['subscriptionCancelled'] = this.subscriptionCancelled;
     }

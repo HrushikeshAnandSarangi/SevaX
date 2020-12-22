@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
@@ -67,6 +68,7 @@ class UserModel extends DataModel {
   String calendarAccessToken;
   String calendarEmail;
   String calendarScope;
+  DeviceDetails deviceDetails;
 
   UserModel(
       {this.seenIntro,
@@ -111,6 +113,7 @@ class UserModel extends DataModel {
       this.notificationAlerts,
       this.cvUrl,
       this.cvName,
+      this.deviceDetails,
       this.curatedRequestIds,
       this.recommendedForRequestIds});
 
@@ -352,9 +355,15 @@ class UserModel extends DataModel {
       this.cvUrl = map['cvUrl'];
     }
 
-//    else{
-//      this.cvUrl='';
-//    }
+    if (map.containsKey('deviceDetails')) {
+      this.deviceDetails = DeviceDetails.fromMap(
+        Map<String, dynamic>.from(
+          map['deviceDetails'],
+        ),
+      );
+    } else {
+      this.deviceDetails = DeviceDetails();
+    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -523,7 +532,9 @@ class UserModel extends DataModel {
     if (this.cvName != null) {
       object['cvName'] = this.cvName;
     }
-
+    if (this.deviceDetails != null) {
+      object['deviceDetails'] = this.deviceDetails.toMap();
+    }
     return object;
   }
 
@@ -561,6 +572,7 @@ class UserModel extends DataModel {
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
       ${this.cvUrl.toString()},
+      ${this.deviceDetails.toString()},
       Communities:${this.communities.toString()},
     ''';
   }
