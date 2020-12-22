@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-
+import 'package:device_info/device_info.dart';
 import '../../flavor_config.dart';
 
 /// Create a [user]
@@ -111,6 +114,21 @@ Future<int> getTimebankRaisedAmountAndGoods({
     logger.e(e);
   }
   return totalGoodsOrAmount;
+}
+
+Future<DeviceDetails> getDeviceDetails({GeoFirePoint location}) async {
+  DeviceDetails deviceDetails = DeviceDetails();
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    deviceDetails.deviceId = 'Android';
+    deviceDetails.deviceType = androidInfo.androidId;
+  } else if (Platform.isIOS) {
+    var iosInfo = await DeviceInfoPlugin().iosInfo;
+    deviceDetails.deviceId = 'IOS';
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+  }
+  deviceDetails.location = location == null ? null : location.data;
+  return deviceDetails;
 }
 
 Future<int> getRequestRaisedGoods({
