@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/device_details.dart';
@@ -117,8 +118,14 @@ Future<int> getTimebankRaisedAmountAndGoods({
   return totalGoodsOrAmount;
 }
 
-Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationData, String userEmailId}) async {
+Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal, String userEmailId}) async {
   GeoFirePoint location;
+  Location templocation = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  Geoflutterfire geo = Geoflutterfire();
+  LocationData locationData;
+
   String userEmail = userEmailId??(await FirebaseAuth.instance.currentUser())?.email;
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
@@ -131,12 +138,18 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationData
     deviceDetails.deviceType = iosInfo.identifierForVendor;
   }
 
-  if(locationData == null){
-
+  if(locationVal == null){
+    _permissionGranted = await templocation.hasPermission();
+    if(_permissionGranted == PermissionStatus.granted){
+      locationData = await templocation.getLocation();
+      double lat = locationData?.latitude;
+      double lng = locationData?.longitude;
+      location = geo.point(latitude: lat, longitude: lng);
+    }
   } else {
-    deviceDetails.location = locationData;
+    location = locationVal;
   }
-
+  deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail)
       .updateData({
     'deviceDetails': deviceDetails.toMap(),

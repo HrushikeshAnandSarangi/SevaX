@@ -856,7 +856,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
-      await getAndUpdateDeviceDetailsOfUser(locationData: location,);
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location,);
 
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
@@ -892,7 +892,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
-      await getAndUpdateDeviceDetailsOfUser(locationData: location);
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
 
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
@@ -915,7 +915,7 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
-      await getAndUpdateDeviceDetailsOfUser(locationData: location);
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
 
     } on NoSuchMethodError catch (error) {
       handleException();
