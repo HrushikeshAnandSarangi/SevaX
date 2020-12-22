@@ -84,11 +84,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       setState(() {
         if (widget.projectTemplateModel != null) {
           this.projectModel.mode = widget.projectTemplateModel.mode;
-          this.projectModel.mode == 'Timebank'
+          this.projectModel.mode == ProjectMode.TIMEBANK_PROJECT
               ? sharedValue = 0
               : sharedValue = 1;
         } else {
-          this.projectModel.mode = 'Timebank';
+          this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
         }
       });
     }
@@ -214,9 +214,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (val != sharedValue) {
                   setState(() {
                     if (val == 0) {
-                      projectModel.mode = 'Timebank';
+                      projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
                     } else {
-                      projectModel.mode = 'Personal';
+                      projectModel.mode = ProjectMode.MEMBER_PROJECT;
                     }
                     sharedValue = val;
                   });
@@ -226,8 +226,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
           );
         } else {
-          this.projectModel.mode = 'Personal';
-
+          this.projectModel.mode = ProjectMode.MEMBER_PROJECT;
           return Container();
         }
       },
