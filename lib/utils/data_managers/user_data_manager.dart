@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -16,7 +17,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:device_info/device_info.dart';
+
 import '../../flavor_config.dart';
 
 /// Create a [user]
@@ -118,7 +119,8 @@ Future<int> getTimebankRaisedAmountAndGoods({
   return totalGoodsOrAmount;
 }
 
-Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal, String userEmailId}) async {
+Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
+    {GeoFirePoint locationVal, String userEmailId}) async {
   GeoFirePoint location;
   Location templocation = Location();
   bool _serviceEnabled;
@@ -126,21 +128,22 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal,
   Geoflutterfire geo = Geoflutterfire();
   LocationData locationData;
 
-  String userEmail = userEmailId??(await FirebaseAuth.instance.currentUser())?.email;
+  String userEmail =
+      userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
-    deviceDetails.deviceType = 'Android';
-    deviceDetails.deviceId = androidInfo.androidId;
+    deviceDetails.deviceType = androidInfo.androidId;
+    deviceDetails.deviceId = 'Android';
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceType = 'IOS';
-    deviceDetails.deviceId = iosInfo.identifierForVendor;
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+    deviceDetails.deviceId = 'IOS';
   }
 
-  if(locationVal == null){
+  if (locationVal == null) {
     _permissionGranted = await templocation.hasPermission();
-    if(_permissionGranted == PermissionStatus.granted){
+    if (_permissionGranted == PermissionStatus.granted) {
       locationData = await templocation.getLocation();
       double lat = locationData?.latitude;
       double lng = locationData?.longitude;
@@ -150,8 +153,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal,
     location = locationVal;
   }
   deviceDetails.location = location;
-  await Firestore.instance.collection("users").document(userEmail)
-      .updateData({
+  await Firestore.instance.collection("users").document(userEmail).updateData({
     'deviceDetails': deviceDetails.toMap(),
   });
   return deviceDetails;

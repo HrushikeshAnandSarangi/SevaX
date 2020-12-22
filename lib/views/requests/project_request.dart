@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
@@ -54,6 +55,7 @@ class RequestsState extends State<ProjectRequests>
   TabController tabController;
   ProjectModel projectModel;
   bool isProjectMember = false;
+  bool isChatVisible = false;
   final ProjectDescriptionBloc bloc = ProjectDescriptionBloc();
 
   @override
@@ -63,7 +65,7 @@ class RequestsState extends State<ProjectRequests>
     //todo add chatid from project model
     //todo update isProjectMember from project model
     isProjectMember = true;
-    bloc.init("MnD15clIiTKXs9zgDaXU");
+    bloc.init(projectModel.associatedMessaginfRoomId);
     tabController = TabController(length: 2, vsync: this);
     projectModel = widget.projectModel;
   }
@@ -88,6 +90,13 @@ class RequestsState extends State<ProjectRequests>
 
   @override
   Widget build(BuildContext context) {
+    final user = SevaCore.of(context).loggedInUser;
+    isChatVisible = (ProjectMessagingRoomHelper.getAssociatedMembers(
+              associatedmembers: projectModel.associatedmembers,
+            ).contains(user.sevaUserID) ||
+            projectModel.creatorId == user.sevaUserID) &&
+        projectModel.associatedmembers.isNotEmpty;
+
     return BlocProvider(
       bloc: bloc,
       child: DefaultTabController(
