@@ -1,5 +1,6 @@
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 
 class ProjectTemplateModel extends DataModel {
   String id;
@@ -10,7 +11,7 @@ class ProjectTemplateModel extends DataModel {
   String description;
   String creatorId;
   String photoUrl;
-  String mode;
+  ProjectMode mode;
   int createdAt;
   bool softDelete;
 
@@ -38,7 +39,11 @@ class ProjectTemplateModel extends DataModel {
         description: json["description"] == null ? null : json["description"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        mode: json["mode"] == null ? null : json["mode"],
+        mode: json["mode"] == null
+            ? null
+            : json["mode"] == 'Timebank'
+                ? ProjectMode.TIMEBANK_PROJECT
+                : ProjectMode.MEMBER_PROJECT,
         createdAt: json["created_at"] == null ? null : json["created_at"],
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
       );

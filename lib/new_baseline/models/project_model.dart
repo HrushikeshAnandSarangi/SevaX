@@ -3,7 +3,26 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
+enum ProjectMode {
+  TIMEBANK_PROJECT,
+  MEMBER_PROJECT,
+}
+
+extension ProjectModelLabel on ProjectMode {
+  String get readable {
+    switch (this) {
+      case ProjectMode.TIMEBANK_PROJECT:
+        return 'Timebank';
+      case ProjectMode.MEMBER_PROJECT:
+        return 'Personal';
+      default:
+        return 'Timebank';
+    }
+  }
+}
+
 class ProjectModel extends DataModel {
+  static const String NO_MESSAGING_ROOM_CREATED = 'NOT_YET_CREATED';
   String id;
   String name;
   String timebankId;
@@ -14,7 +33,7 @@ class ProjectModel extends DataModel {
   String creatorId;
   String address;
   String photoUrl;
-  String mode;
+  ProjectMode mode;
   int createdAt;
   int startTime;
   int endTime;
@@ -22,8 +41,12 @@ class ProjectModel extends DataModel {
   List<String> members;
   List<String> pendingRequests;
   List<String> completedRequests;
+
+  List<String> associatedmembers;
+
   bool requestedSoftDelete;
   bool softDelete;
+  String associatedMessaginfRoomId;
 
   ProjectModel({
     this.id,
@@ -46,6 +69,8 @@ class ProjectModel extends DataModel {
     this.completedRequests,
     this.softDelete,
     this.requestedSoftDelete,
+    this.associatedMessaginfRoomId,
+    this.associatedmembers,
   });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => ProjectModel(
@@ -59,7 +84,14 @@ class ProjectModel extends DataModel {
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         address: json["address"] == null ? null : json["address"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        mode: json["mode"] == null ? null : json["mode"],
+        associatedMessaginfRoomId: json["associatedMessaginfRoomId"] == null
+            ? null
+            : json["associatedMessaginfRoomId"],
+        mode: json["mode"] == null
+            ? null
+            : json["mode"] == 'Timebank'
+                ? ProjectMode.TIMEBANK_PROJECT
+                : ProjectMode.MEMBER_PROJECT,
         createdAt: json["created_at"] == null ? null : json["created_at"],
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
@@ -86,7 +118,14 @@ class ProjectModel extends DataModel {
             : List<String>.from(json["pendingRequests"].map((x) => x)),
         completedRequests: json["completedRequests"] == null
             ? null
-            : List<String>.from(json["completedRequests"].map((x) => x)),
+            : List<String>.from(
+                json["completedRequests"].map((x) => x),
+              ),
+        associatedmembers: json["associatedmembers"] == null
+            ? null
+            : List<String>.from(
+                json["associatedmembers"].map((x) => x),
+              ),
       );
 
   Map<String, dynamic> toMap() {
@@ -102,7 +141,7 @@ class ProjectModel extends DataModel {
       "creator_id": creatorId == null ? null : creatorId,
       "address": address == null ? null : address,
       "photo_url": photoUrl == null ? null : photoUrl,
-      "mode": mode == null ? null : mode,
+      "mode": mode == null ? null : mode.readable,
       "created_at": createdAt == null ? null : createdAt,
       "start_time": startTime == null ? null : startTime,
       "end_time": endTime == null ? null : endTime,
@@ -113,11 +152,13 @@ class ProjectModel extends DataModel {
       "pendingRequests": pendingRequests == null
           ? null
           : List<dynamic>.from(pendingRequests.map((x) => x)),
-      "completedRequests": completedRequests == null
+      "associatedmembers": associatedmembers == null
           ? null
           : List<dynamic>.from(
-              completedRequests.map((x) => x),
+              associatedmembers.map((x) => x),
             ),
+      "associatedMessaginfRoomId":
+          associatedMessaginfRoomId == null ? null : associatedMessaginfRoomId,
     };
     if (location != null) {
       projectDetails['location'] = location?.data;
@@ -130,5 +171,3 @@ class ProjectModel extends DataModel {
     return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests}';
   }
 }
-
-enum ProjectMode { PERSONAL, TIMEBANK }

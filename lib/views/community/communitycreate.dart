@@ -102,7 +102,7 @@ GlobalKey<FormState> _billingInformationKey = GlobalKey();
 class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
   double taxPercentage = 0.0;
-  double negativeCreditsThreshold = -20.0;
+  double negativeCreditsThreshold = 0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
@@ -232,9 +232,9 @@ class CreateEditCommunityViewFormState
               communityId: SevaCore.of(context).loggedInUser.currentCommunity)
           .then((onValue) {
         communityModel = onValue;
-
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
+        negativeCreditsThreshold = onValue.negativeCreditsThreshold;
         searchTextController.text = communityModel.name;
         descriptionTextController.text = communityModel.about;
       });
@@ -249,7 +249,8 @@ class CreateEditCommunityViewFormState
         timebankModel.associatedParentTimebankId != null &&
         timebankModel.associatedParentTimebankId.isNotEmpty) {
       parentTimebank = await FirestoreManager.getTimeBankForId(
-          timebankId: timebankModel.associatedParentTimebankId);
+        timebankId: timebankModel.associatedParentTimebankId,
+      );
       selectedTimebank = parentTimebank.name;
     }
 
@@ -636,10 +637,13 @@ class CreateEditCommunityViewFormState
                                 onChanged: (value) {
                                   snapshot.data.community.updateValueByKey(
                                       'taxPercentage', value / 100);
-                                  setState(() {
-                                    taxPercentage = value;
-                                    communityModel.taxPercentage = value / 100;
-                                  });
+                                  setState(
+                                    () {
+                                      taxPercentage = value;
+                                      communityModel.taxPercentage =
+                                          value / 100;
+                                    },
+                                  );
                                 },
                               ),
                         Offstage(
@@ -657,35 +661,62 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            headingText("Negative credits threshold"),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
-                              child: infoButton(
-                                context: context,
-                                key: GlobalKey(),
-                                type: InfoType.TAX_CONFIGURATION,
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  headingText("Negative credits threshold"),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                                    child: infoButton(
+                                      context: context,
+                                      key: GlobalKey(),
+                                      type: InfoType.TAX_CONFIGURATION,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-
-                        Slider(
-                          label: "${negativeCreditsThreshold.toInt()}%",
-                          value: negativeCreditsThreshold,
-                          min: -50,
-                          max: 0,
-                          divisions: 50,
-                          onChanged: (value) {
-                            snapshot.data.community.updateValueByKey(
-                                'negativeCreditsThreshold', value);
-                            setState(() {
-                              negativeCreditsThreshold = value;
-                              communityModel.negativeCreditsThreshold = value;
-                            });
-                          },
+                              Slider(
+                                label:
+                                    "${negativeCreditsThreshold.toInt()} ${S.of(context).seva_credits}",
+                                value: negativeCreditsThreshold,
+                                min: -50,
+                                max: 0,
+                                divisions: 50,
+                                onChanged: (value) {
+                                  snapshot.data.community.updateValueByKey(
+                                    'negativeCreditsThreshold',
+                                    value,
+                                  );
+                                  setState(
+                                    () {
+                                      negativeCreditsThreshold = value;
+                                      communityModel.negativeCreditsThreshold =
+                                          value;
+                                    },
+                                  );
+                                },
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    "Current Negative credit threshold " +
+                                        ' : ${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
 
                         headingText(S.of(context).timebank_has_parent),
@@ -1006,6 +1037,9 @@ class CreateEditCommunityViewFormState
                                       .then((onValue) {});
                                   communityModel.taxPercentage =
                                       taxPercentage / 100;
+
+                                  communityModel.negativeCreditsThreshold =
+                                      negativeCreditsThreshold;
 //                            //updating community with latest values
                                   await FirestoreManager.updateCommunityDetails(
                                           communityModel: communityModel)
