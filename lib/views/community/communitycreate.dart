@@ -718,7 +718,6 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-
                         headingText(S.of(context).timebank_has_parent),
                         Text(
                           S.of(context).timebank_location_has_parent_hint_text,
