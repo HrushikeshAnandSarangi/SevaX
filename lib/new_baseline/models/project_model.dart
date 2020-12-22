@@ -42,7 +42,7 @@ class ProjectModel extends DataModel {
   List<String> pendingRequests;
   List<String> completedRequests;
 
-  List<String> associatedmembers;
+  Map<String, dynamic> associatedmembers;
 
   bool requestedSoftDelete;
   bool softDelete;
@@ -121,11 +121,8 @@ class ProjectModel extends DataModel {
             : List<String>.from(
                 json["completedRequests"].map((x) => x),
               ),
-        associatedmembers: json["associatedmembers"] == null
-            ? null
-            : List<String>.from(
-                json["associatedmembers"].map((x) => x),
-              ),
+        associatedmembers:
+            json["associatedmembers"] == null ? {} : json["associatedmembers"],
       );
 
   Map<String, dynamic> toMap() {
@@ -152,11 +149,6 @@ class ProjectModel extends DataModel {
       "pendingRequests": pendingRequests == null
           ? null
           : List<dynamic>.from(pendingRequests.map((x) => x)),
-      "associatedmembers": associatedmembers == null
-          ? null
-          : List<dynamic>.from(
-              associatedmembers.map((x) => x),
-            ),
       "associatedMessaginfRoomId":
           associatedMessaginfRoomId == null ? null : associatedMessaginfRoomId,
     };
