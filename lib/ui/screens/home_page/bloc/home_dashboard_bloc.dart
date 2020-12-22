@@ -49,6 +49,11 @@ class HomeDashBoardBloc extends BlocBase {
           _selectedCommunity.drain();
           _selectedCommunity.add(CommunityModel(value.data));
         }
+        c.sort(
+          (a, b) => a.name.toLowerCase().compareTo(
+                b.name.toLowerCase(),
+              ),
+        );
         if (!_communities.isClosed) _communities.add(c);
       });
     } else {
