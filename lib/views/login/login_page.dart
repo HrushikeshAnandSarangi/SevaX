@@ -854,14 +854,10 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    DeviceDetails deviceDetailsModel = await getDeviceDetails(location: location);
     try {
       user = await auth.signInWithApple();
-      String userEmailId = (await FirebaseAuth.instance.currentUser())?.email;
-      await Firestore.instance.collection("users").document(userEmailId)
-          .updateData({
-        'deviceDetails': deviceDetailsModel.toMap(),
-      });
+      await getAndUpdateDeviceDetailsOfUser(locationData: location,);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -894,14 +890,10 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    DeviceDetails deviceDetailsModel = await getDeviceDetails(location: location);
     try {
       user = await auth.handleGoogleSignIn();
-      String userEmailId = (await FirebaseAuth.instance.currentUser())?.email;
-      await Firestore.instance.collection("users").document(userEmailId)
-          .updateData({
-        'deviceDetails': deviceDetailsModel.toMap(),
-      });
+      await getAndUpdateDeviceDetailsOfUser(locationData: location);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -917,18 +909,14 @@ class _LoginPageState extends State<LoginPage> {
     if (validate) _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    DeviceDetails deviceDetailsModel = await getDeviceDetails(location: location);
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
         email: emailId.trim(),
         password: password,
       );
-      String userEmailId = (await FirebaseAuth.instance.currentUser())?.email;
-      await Firestore.instance.collection("users").document(userEmailId)
-          .updateData({
-        'deviceDetails': deviceDetailsModel.toMap(),
-      });
+      await getAndUpdateDeviceDetailsOfUser(locationData: location);
+
     } on NoSuchMethodError catch (error) {
       handleException();
       Crashlytics.instance.log("No Such methods error in login!");

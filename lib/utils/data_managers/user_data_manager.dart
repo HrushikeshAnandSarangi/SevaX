@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
@@ -116,7 +117,9 @@ Future<int> getTimebankRaisedAmountAndGoods({
   return totalGoodsOrAmount;
 }
 
-Future<DeviceDetails> getDeviceDetails({GeoFirePoint location}) async {
+Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationData, String userEmailId}) async {
+  GeoFirePoint location;
+  String userEmail = userEmailId??(await FirebaseAuth.instance.currentUser())?.email;
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -127,7 +130,17 @@ Future<DeviceDetails> getDeviceDetails({GeoFirePoint location}) async {
     deviceDetails.deviceId = 'IOS';
     deviceDetails.deviceType = iosInfo.identifierForVendor;
   }
-  deviceDetails.location = location == null ? null : location;
+
+  if(locationData == null){
+
+  } else {
+    deviceDetails.location = locationData;
+  }
+
+  await Firestore.instance.collection("users").document(userEmail)
+      .updateData({
+    'deviceDetails': deviceDetails.toMap(),
+  });
   return deviceDetails;
 }
 
