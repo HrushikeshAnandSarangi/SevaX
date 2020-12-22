@@ -1162,9 +1162,14 @@ class CreateEditCommunityViewFormState
         context: context,
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
-          return AlertDialog(
-            title: Text(message),
-            content: LinearProgressIndicator(),
+          return WillPopScope(
+            onWillPop: () async {
+              return false;
+            },
+            child: AlertDialog(
+              title: Text(message),
+              content: LinearProgressIndicator(),
+            ),
           );
         });
   }
