@@ -978,91 +978,95 @@ class CreateEditCommunityViewFormState
                                     }
                                   } else {}
                                 } else {
-                                  if (!hasRegisteredLocation()) {
-                                    showDialogForSuccess(
-                                        dialogTitle: S
-                                            .of(context)
-                                            .timebank_location_error,
-                                        err: true);
-                                    return;
-                                  }
+                                  if (_formKey.currentState.validate()) {
+                                    if (!hasRegisteredLocation()) {
+                                      showDialogForSuccess(
+                                          dialogTitle: S
+                                              .of(context)
+                                              .timebank_location_error,
+                                          err: true);
+                                      return;
+                                    }
 
-                                  showProgressDialog(
-                                    S.of(context).updating_timebank,
-                                  );
-                                  if (globals.timebankAvatarURL != null) {
-                                    communityModel.logo_url =
-                                        globals.timebankAvatarURL;
-                                    timebankModel.photoUrl =
-                                        globals.timebankAvatarURL;
-                                  }
-
-                                  timebankModel.name =
-                                      searchTextController.text;
-                                  communityModel.name =
-                                      searchTextController.text;
-
-                                  timebankModel.location = location;
-
-                                  timebankModel.address = selectedAddress;
-
-                                  if (selectedUsers != null) {
-                                    selectedUsers.forEach((key, user) {
-                                      if (timebankModel.members
-                                          .contains(user.sevaUserID)) {
-                                        selectedUsers.remove(user);
-                                      }
-                                    });
-                                    selectedUsers.forEach((key, user) {
-                                      members.add(user.sevaUserID);
-                                    });
-                                  }
-                                  if (widget.isCreateTimebank) {
-                                    var taxDefaultVal = (json.decode(
-                                            AppConfig.remoteConfig.getString(
-                                                'defaultTaxPercentValue')))
-                                        .toDouble();
-                                    snapshot.data.community.updateValueByKey(
-                                        'taxPercentage', taxDefaultVal / 100);
-                                    communityModel.taxPercentage =
-                                        taxDefaultVal / 100;
-                                  }
-
-                                  // creation of community;
-
-                                  // updating timebank with latest values
-                                  await FirestoreManager.updateTimebankDetails(
-                                          timebankModel: timebankModel,
-                                          members: members)
-                                      .then((onValue) {});
-                                  communityModel.taxPercentage =
-                                      taxPercentage / 100;
-
-                                  communityModel.negativeCreditsThreshold =
-                                      negativeCreditsThreshold;
-//                            //updating community with latest values
-                                  await FirestoreManager.updateCommunityDetails(
-                                          communityModel: communityModel)
-                                      .then((onValue) {});
-
-                                  globals.timebankAvatarURL = null;
-                                  globals.webImageUrl = null;
-                                  if (dialogContext != null) {
-                                    Navigator.pop(dialogContext);
-                                  }
-                                  _formKey.currentState.reset();
-                                  if (widget.isFromFind) {
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SwitchTimebank(
-                                          content:
-                                              S.of(context).updating_timebank,
-                                        ),
-                                      ),
+                                    showProgressDialog(
+                                      S.of(context).updating_timebank,
                                     );
+                                    if (globals.timebankAvatarURL != null) {
+                                      communityModel.logo_url =
+                                          globals.timebankAvatarURL;
+                                      timebankModel.photoUrl =
+                                          globals.timebankAvatarURL;
+                                    }
+
+                                    timebankModel.name =
+                                        searchTextController.text;
+                                    communityModel.name =
+                                        searchTextController.text;
+
+                                    timebankModel.location = location;
+
+                                    timebankModel.address = selectedAddress;
+
+                                    if (selectedUsers != null) {
+                                      selectedUsers.forEach((key, user) {
+                                        if (timebankModel.members
+                                            .contains(user.sevaUserID)) {
+                                          selectedUsers.remove(user);
+                                        }
+                                      });
+                                      selectedUsers.forEach((key, user) {
+                                        members.add(user.sevaUserID);
+                                      });
+                                    }
+                                    if (widget.isCreateTimebank) {
+                                      var taxDefaultVal = (json.decode(
+                                              AppConfig.remoteConfig.getString(
+                                                  'defaultTaxPercentValue')))
+                                          .toDouble();
+                                      snapshot.data.community.updateValueByKey(
+                                          'taxPercentage', taxDefaultVal / 100);
+                                      communityModel.taxPercentage =
+                                          taxDefaultVal / 100;
+                                    }
+
+                                    // creation of community;
+
+                                    // updating timebank with latest values
+                                    await FirestoreManager
+                                            .updateTimebankDetails(
+                                                timebankModel: timebankModel,
+                                                members: members)
+                                        .then((onValue) {});
+                                    communityModel.taxPercentage =
+                                        taxPercentage / 100;
+
+                                    communityModel.negativeCreditsThreshold =
+                                        negativeCreditsThreshold;
+//                            //updating community with latest values
+                                    await FirestoreManager
+                                            .updateCommunityDetails(
+                                                communityModel: communityModel)
+                                        .then((onValue) {});
+
+                                    globals.timebankAvatarURL = null;
+                                    globals.webImageUrl = null;
+                                    if (dialogContext != null) {
+                                      Navigator.pop(dialogContext);
+                                    }
+                                    _formKey.currentState.reset();
+                                    if (widget.isFromFind) {
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SwitchTimebank(
+                                            content:
+                                                S.of(context).updating_timebank,
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   }
                                 }
                               },
