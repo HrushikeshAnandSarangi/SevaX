@@ -130,12 +130,12 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal,
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
-    deviceDetails.deviceId = 'Android';
-    deviceDetails.deviceType = androidInfo.androidId;
+    deviceDetails.deviceType = 'Android';
+    deviceDetails.deviceId = androidInfo.androidId;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceId = 'IOS';
-    deviceDetails.deviceType = iosInfo.identifierForVendor;
+    deviceDetails.deviceType = 'IOS';
+    deviceDetails.deviceId = iosInfo.identifierForVendor;
   }
 
   if(locationVal == null){
