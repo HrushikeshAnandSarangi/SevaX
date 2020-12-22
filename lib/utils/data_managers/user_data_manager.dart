@@ -127,7 +127,7 @@ Future<DeviceDetails> getDeviceDetails({GeoFirePoint location}) async {
     deviceDetails.deviceId = 'IOS';
     deviceDetails.deviceType = iosInfo.identifierForVendor;
   }
-  deviceDetails.location = location == null ? null : location.data;
+  deviceDetails.location = location == null ? null : location;
   return deviceDetails;
 }
 
