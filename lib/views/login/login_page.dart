@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -20,8 +21,8 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/device_details.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -30,7 +31,6 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
-import 'package:device_info/device_info.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -841,7 +841,7 @@ class _LoginPageState extends State<LoginPage> {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
       deviceDetails.deviceId = 'Android';
       deviceDetails.deviceType = androidInfo.androidId;
-    }else if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
       deviceDetails.deviceId = 'IOS';
       deviceDetails.deviceType = iosInfo.identifierForVendor;
@@ -920,7 +920,7 @@ class _LoginPageState extends State<LoginPage> {
     if (validate) _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    user.deviceDetails = await getDeviceDetails();
+    // user.deviceDetails = await getDeviceDetails();
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
