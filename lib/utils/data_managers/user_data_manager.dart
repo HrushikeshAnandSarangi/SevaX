@@ -133,12 +133,12 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
-    deviceDetails.deviceId = androidInfo.androidId;
-    deviceDetails.deviceType = 'Android';
+    deviceDetails.deviceType = androidInfo.androidId;
+    deviceDetails.deviceId = 'Android';
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceId = iosInfo.identifierForVendor;
-    deviceDetails.deviceType = 'IOS';
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+    deviceDetails.deviceId = 'IOS';
   }
 
   if (locationVal == null) {
