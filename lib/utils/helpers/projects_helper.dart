@@ -17,50 +17,31 @@ class ProjectMessagingRoomHelper {
     @required UserModel candidateUserModel,
     @required RequestMode requestMode,
   }) {
+    _addMemberToAssociatedMessagingRoom(
+      candidateUserModel: candidateUserModel,
+      projectId: projectId,
+      requestId: requestId,
+      requestMode: requestMode,
+      timebankId: timebankId,
+    );
+
     return showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
             title: Text(
-              'Would you like to jump in to messaging for project communication?',
+              'Since you are volunteering for this event, you’ve been added to the messaging room. You may leave this room at any time.',
             ),
             actions: [
               FlatButton(
                 onPressed: () async {
                   Navigator.pop(_);
-                  _addMemberToAssociatedMessagingRoom(
-                    candidateUserModel: candidateUserModel,
-                    projectId: projectId,
-                    requestId: requestId,
-                    requestMode: requestMode,
-                    timebankId: timebankId,
-                  );
                 },
-                child: Text('I\'m in'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.pop(_);
-                  _justAddMemberToProjectAssiciatedMembers(
-                    newMemberSignup: candidateUserModel.sevaUserID,
-                    projectId: projectId,
-                  );
-                },
-                child: Text('Cancel'),
+                child: Text('Okay'),
               ),
             ],
           );
         });
-  }
-
-  static List<String> getAssociatedMembers({
-    Map<String, int> getAssociatedmembers,
-  }) {
-    List<String> membersArray = [];
-    getAssociatedmembers.forEach((k, v) {
-      if (v != null && v > 0) membersArray.add(k);
-    });
-    return membersArray;
   }
 
   static Future<bool> removeMemberFromProjectCommuication({
@@ -107,10 +88,21 @@ class ProjectMessagingRoomHelper {
         .collection('projects')
         .document(projectId)
         .updateData({
-      DBHelper.ASSOCIATED_MEMBERS + '.' + newMemberSignup: FieldValue.increment(
-        (1),
+      DBHelper.ASSOCIATED_MEMBERS: FieldValue.arrayUnion(
+        [newMemberSignup],
       )
     });
+  }
+
+  static List<String> getAssociatedMembers(
+      {Map<String, dynamic> associatedmembers}) {
+    List<String> associatedMembersArray = [];
+
+    associatedmembers.forEach((key, value) {
+      if (value != null && value > 0) associatedMembersArray.add(key);
+    });
+
+    return associatedMembersArray;
   }
 
   static Future<bool> _addMemberToAssociatedMessagingRoom({
@@ -206,9 +198,8 @@ class ProjectMessagingRoomHelper {
     var batch = DBHelper.batch;
 
     batch.updateData(DBHelper.projectsRef.document(projectId), {
-      DBHelper.ASSOCIATED_MEMBERS: FieldValue.arrayUnion(
-        [candidateUserModel.sevaUserID],
-      )
+      DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel.sevaUserID:
+          FieldValue.increment(1)
     });
 
     batch.updateData(DBHelper.chatsRef.document(projectId + "*" + timebankId), {
