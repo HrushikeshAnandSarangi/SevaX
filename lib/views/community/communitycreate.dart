@@ -642,35 +642,6 @@ class CreateEditCommunityViewFormState
                                   });
                                 },
                               ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            headingText("Negative credits threshold"),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
-                              child: infoButton(
-                                context: context,
-                                key: GlobalKey(),
-                                type: InfoType.TAX_CONFIGURATION,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Slider(
-                          label: "${negativeCreditsThreshold.toInt()}%",
-                          value: negativeCreditsThreshold,
-                          min: -50,
-                          max: 0,
-                          divisions: 50,
-                          onChanged: (value) {
-                            snapshot.data.community.updateValueByKey(
-                                'negativeCreditsThreshold', value);
-                            setState(() {
-                              negativeCreditsThreshold = value;
-                              communityModel.negativeCreditsThreshold = value;
-                            });
-                          },
-                        ),
                         Offstage(
                           offstage: widget.isCreateTimebank,
                           child: Row(
@@ -686,6 +657,37 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            headingText("Negative credits threshold"),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.TAX_CONFIGURATION,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Slider(
+                          label: "${negativeCreditsThreshold.toInt()}%",
+                          value: negativeCreditsThreshold,
+                          min: -50,
+                          max: 0,
+                          divisions: 50,
+                          onChanged: (value) {
+                            snapshot.data.community.updateValueByKey(
+                                'negativeCreditsThreshold', value);
+                            setState(() {
+                              negativeCreditsThreshold = value;
+                              communityModel.negativeCreditsThreshold = value;
+                            });
+                          },
+                        ),
+
                         headingText(S.of(context).timebank_has_parent),
                         Text(
                           S.of(context).timebank_location_has_parent_hint_text,
