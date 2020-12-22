@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-
+import 'package:device_info/device_info.dart';
 import '../../flavor_config.dart';
 
 /// Create a [user]
@@ -111,6 +116,45 @@ Future<int> getTimebankRaisedAmountAndGoods({
     logger.e(e);
   }
   return totalGoodsOrAmount;
+}
+
+Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser({GeoFirePoint locationVal, String userEmailId}) async {
+  GeoFirePoint location;
+  Location templocation = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  Geoflutterfire geo = Geoflutterfire();
+  LocationData locationData;
+
+  String userEmail = userEmailId??(await FirebaseAuth.instance.currentUser())?.email;
+  DeviceDetails deviceDetails = DeviceDetails();
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    deviceDetails.deviceId = 'Android';
+    deviceDetails.deviceType = androidInfo.androidId;
+  } else if (Platform.isIOS) {
+    var iosInfo = await DeviceInfoPlugin().iosInfo;
+    deviceDetails.deviceId = 'IOS';
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+  }
+
+  if(locationVal == null){
+    _permissionGranted = await templocation.hasPermission();
+    if(_permissionGranted == PermissionStatus.granted){
+      locationData = await templocation.getLocation();
+      double lat = locationData?.latitude;
+      double lng = locationData?.longitude;
+      location = geo.point(latitude: lat, longitude: lng);
+    }
+  } else {
+    location = locationVal;
+  }
+  deviceDetails.location = location;
+  await Firestore.instance.collection("users").document(userEmail)
+      .updateData({
+    'deviceDetails': deviceDetails.toMap(),
+  });
+  return deviceDetails;
 }
 
 Future<int> getRequestRaisedGoods({

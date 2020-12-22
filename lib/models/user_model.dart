@@ -2,8 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/device_details.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import '../flavor_config.dart';
@@ -113,12 +113,11 @@ class UserModel extends DataModel {
       this.notificationAlerts,
       this.cvUrl,
       this.cvName,
-        this.deviceDetails,
+      this.deviceDetails,
       this.curatedRequestIds,
       this.recommendedForRequestIds});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
-
     if (map.containsKey('calendarScope')) {
       this.calendarScope = map['calendarScope'];
     }
@@ -357,14 +356,14 @@ class UserModel extends DataModel {
     }
 
     if (map.containsKey('deviceDetails')) {
-      this.deviceDetails = DeviceDetails.fromMap(map['deviceDetails']);
+      this.deviceDetails = DeviceDetails.fromMap(
+        Map<String, dynamic>.from(
+          map['deviceDetails'],
+        ),
+      );
     } else {
       this.deviceDetails = DeviceDetails();
     }
-
-//    else{
-//      this.cvUrl='';
-//    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -594,5 +593,3 @@ class UserListModel {
 
   List<UserModel> get getUsers => users;
 }
-
-

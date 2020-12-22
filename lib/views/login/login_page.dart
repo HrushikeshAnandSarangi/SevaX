@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -20,10 +22,12 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
@@ -50,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
-  var location;
+  GeoFirePoint location;
 
   void initState() {
     super.initState();
@@ -852,6 +856,8 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location,);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -886,6 +892,8 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -907,6 +915,8 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
+
     } on NoSuchMethodError catch (error) {
       handleException();
       Crashlytics.instance.log("No Such methods error in login!");
