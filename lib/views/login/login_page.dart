@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
@@ -835,21 +837,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<DeviceDetails> getDeviceDetails() async {
-    DeviceDetails deviceDetails = DeviceDetails();
-    if (Platform.isAndroid) {
-      var androidInfo = await DeviceInfoPlugin().androidInfo;
-      deviceDetails.deviceId = 'Android';
-      deviceDetails.deviceType = androidInfo.androidId;
-    } else if (Platform.isIOS) {
-      var iosInfo = await DeviceInfoPlugin().iosInfo;
-      deviceDetails.deviceId = 'IOS';
-      deviceDetails.deviceType = iosInfo.identifierForVendor;
-    }
-    deviceDetails.location = location?.data;
-    return deviceDetails;
-  }
-
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -867,9 +854,10 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    user.deviceDetails = await getDeviceDetails();
     try {
       user = await auth.signInWithApple();
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location,);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -902,9 +890,10 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    user.deviceDetails = await getDeviceDetails();
     try {
       user = await auth.handleGoogleSignIn();
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
+
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -920,13 +909,14 @@ class _LoginPageState extends State<LoginPage> {
     if (validate) _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
-    // user.deviceDetails = await getDeviceDetails();
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
         email: emailId.trim(),
         password: password,
       );
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
+
     } on NoSuchMethodError catch (error) {
       handleException();
       Crashlytics.instance.log("No Such methods error in login!");
