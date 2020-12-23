@@ -121,8 +121,11 @@ class ProjectModel extends DataModel {
             : List<String>.from(
                 json["completedRequests"].map((x) => x),
               ),
-        associatedmembers:
-            json["associatedmembers"] == null ? {} : json["associatedmembers"],
+        associatedmembers: json["associatedmembers"] == null
+            ? {}
+            : Map<String, dynamic>.from(
+                json["associatedmembers"],
+              ),
       );
 
   Map<String, dynamic> toMap() {
