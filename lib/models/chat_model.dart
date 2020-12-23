@@ -60,7 +60,11 @@ class ChatModel {
         communityId: map["communityId"],
         timestamp: map["timestamp"],
         chatContext: map.containsKey('chatContext')
-            ? ChatContext.fromMap(map['chatContext'])
+            ? ChatContext.fromMap(
+                Map<String, dynamic>.from(
+                  map['chatContext'],
+                ),
+              )
             : null,
       );
 
