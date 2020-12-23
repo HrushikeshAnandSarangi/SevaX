@@ -95,7 +95,7 @@ class AddManualTimeBloc {
               model,
             ),
             model: model,
-            notificationId: '',
+            notificationId: null,
             userModel: user,
           );
         } else {
