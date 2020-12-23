@@ -175,10 +175,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   true,
-                ).then((_) {
-                  Navigator.of(context).pop();
-                });
-                ;
+                );
               } catch (_) {
                 progressDialog.hide();
                 showFinalResultConfirmation(
@@ -186,9 +183,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   false,
-                ).then((_) {
-                  Navigator.of(context).pop();
-                });
+                );
               }
             },
             child: Text(
