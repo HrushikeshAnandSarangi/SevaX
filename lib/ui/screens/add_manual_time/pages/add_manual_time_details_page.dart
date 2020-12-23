@@ -30,6 +30,8 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
     borderRadius: BorderRadius.circular(8),
   );
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,67 +134,78 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                   ),
                   SizedBox(height: 4),
                   StreamBuilder<bool>(
-                      initialData: false,
-                      stream: _bloc.error,
-                      builder: (context, snapshot) {
-                        return Text(
-                          snapshot.data ?? false
-                              ? S.of(context).validation_error_invalid_hours
-                              : '',
-                          style: TextStyle(color: Colors.red),
-                        );
-                      }),
+                    initialData: false,
+                    stream: _bloc.error,
+                    builder: (context, snapshot) {
+                      return Text(
+                        snapshot.data ?? false
+                            ? S.of(context).validation_error_invalid_hours
+                            : '',
+                        style: TextStyle(color: Colors.red),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
             SizedBox(height: 20),
             RaisedButton(
               child: Text('Create Request'),
-              onPressed: () {
-                try {
-                  _bloc
-                      .claim(
-                    SevaCore.of(context).loggedInUser,
-                    widget.type,
-                    widget.typeId,
-                    widget.timebankId,
-                    widget.userType,
-                  )
-                      .then(
-                    (value) {
-                      if (value) {
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      try {
+                        changeLoadingState(true);
+                        _bloc
+                            .claim(
+                          SevaCore.of(context).loggedInUser,
+                          widget.type,
+                          widget.typeId,
+                          widget.timebankId,
+                          widget.userType,
+                        )
+                            .then(
+                          (value) {
+                            if (value) {
+                              _key.currentState.hideCurrentSnackBar();
+                              _key.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text('Claimed Successfully'),
+                                ),
+                              );
+                              Future.delayed(Duration(seconds: 2), () {
+                                Navigator.of(context).pop();
+                              });
+                            }
+                          },
+                        );
+                      } catch (e) {
+                        changeLoadingState(false);
                         _key.currentState.hideCurrentSnackBar();
                         _key.currentState.showSnackBar(
                           SnackBar(
-                            content: Text('Claimed Successfully'),
+                            content: Text(S.of(context).general_stream_error),
+                            action: SnackBarAction(
+                              label: S.of(context).dismiss,
+                              onPressed: () {
+                                _key.currentState.hideCurrentSnackBar();
+                              },
+                            ),
                           ),
                         );
-                        Future.delayed(Duration(seconds: 2), () {
-                          Navigator.of(context).pop();
-                        });
                       }
                     },
-                  );
-                } catch (e) {
-                  _key.currentState.hideCurrentSnackBar();
-                  _key.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(S.of(context).general_stream_error),
-                      action: SnackBarAction(
-                        label: S.of(context).dismiss,
-                        onPressed: () {
-                          _key.currentState.hideCurrentSnackBar();
-                        },
-                      ),
-                    ),
-                  );
-                }
-              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void changeLoadingState(bool status) {
+    setState(() {
+      isLoading = status;
+    });
   }
 
   Widget circularDot() {
