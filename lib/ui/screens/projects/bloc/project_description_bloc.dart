@@ -9,6 +9,7 @@ class ProjectDescriptionBloc extends BlocBase {
   Stream<ChatModel> get chatModel => _chatModel.stream;
 
   void init(String chatId) {
+    if (chatId == null) return;
     Firestore.instance
         .collection("chatsnew")
         .document(chatId)

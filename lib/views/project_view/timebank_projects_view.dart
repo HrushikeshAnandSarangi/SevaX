@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +139,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
+                  log("===================== ===== > ${projectListSnapshot.error}");
                   return Text(S.of(context).general_stream_error);
                 }
                 switch (projectListSnapshot.connectionState) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -64,10 +65,10 @@ class RequestsState extends State<ProjectRequests>
 
     //todo add chatid from project model
     //todo update isProjectMember from project model
-    isProjectMember = true;
+    projectModel = widget.projectModel;
+
     bloc.init(projectModel.associatedMessaginfRoomId);
     tabController = TabController(length: 2, vsync: this);
-    projectModel = widget.projectModel;
   }
 
   @override
@@ -91,7 +92,7 @@ class RequestsState extends State<ProjectRequests>
   @override
   Widget build(BuildContext context) {
     final user = SevaCore.of(context).loggedInUser;
-    isChatVisible = (ProjectMessagingRoomHelper.getAssociatedMembers(
+    isProjectMember = (ProjectMessagingRoomHelper.getAssociatedMembers(
               associatedmembers: projectModel.associatedmembers,
             ).contains(user.sevaUserID) ||
             projectModel.creatorId == user.sevaUserID) &&
@@ -248,10 +249,10 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if ((widget.projectModel.mode == "Timebank" &&
+    if ((widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT &&
             isAccessAvailable(widget.timebankModel,
                 SevaCore.of(context).loggedInUser.sevaUserID)) ||
-        (widget.projectModel.mode == "Personal" &&
+        (widget.projectModel.mode == ProjectMode.MEMBER_PROJECT &&
             widget.projectModel.creatorId == sevaUserId)) {
       proceedCreatingRequest();
     } else {
