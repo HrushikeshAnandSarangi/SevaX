@@ -36,7 +36,7 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bloc
           .getMembers(
-        SevaCore.of(context).loggedInUser.sevaUserID,
+        SevaCore.of(context).loggedInUser,
         SevaCore.of(context).loggedInUser.currentCommunity,
       )
           .then((_) {

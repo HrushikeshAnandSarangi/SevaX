@@ -11,6 +11,7 @@ import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -50,20 +51,24 @@ class CreateChatBloc extends BlocBase {
     _selectedMembers.add(_selectedMembersList);
   }
 
-  Future<void> getMembers(String userId, String communityId) async {
+  Future<void> getMembers(UserModel user, String communityId) async {
     List<ParticipantInfo> users =
         await UserRepository.getShortDetailsOfAllMembersOfCommunity(
-            communityId, userId);
-    users.removeWhere((ParticipantInfo info) => info.id == userId);
+      communityId,
+      user.sevaUserID,
+    );
+    users.removeWhere((ParticipantInfo info) => info.id == user.sevaUserID);
     users.forEach((ParticipantInfo info) {
-      allMembers[info.id] = info;
-      String key = info.name[0].toUpperCase();
-      if (sortedMembers.containsKey(key)) {
-        sortedMembers[key].add(info);
-        // scrollOffset[key] += 1;
-      } else {
-        sortedMembers[key] = [info];
-        // scrollOffset[key] = 1;
+      if (!isMemberBlocked(user, info.id)) {
+        allMembers[info.id] = info;
+        String key = info.name[0].toUpperCase();
+        if (sortedMembers.containsKey(key)) {
+          sortedMembers[key].add(info);
+          // scrollOffset[key] += 1;
+        } else {
+          sortedMembers[key] = [info];
+          // scrollOffset[key] = 1;
+        }
       }
     });
 
@@ -75,7 +80,7 @@ class CreateChatBloc extends BlocBase {
 
     List<TimebankModel> timebanks =
         await TimebankRepository.getTimebanksWhichUserIsPartOf(
-            userId, communityId);
+            user.sevaUserID, communityId);
     timebanks.removeWhere(
       (TimebankModel model) =>
           model.members.length == 1 ||

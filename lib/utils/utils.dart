@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -38,6 +39,11 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
   } else {
     return false;
   }
+}
+
+bool isMemberBlocked(UserModel user, String idToCheck) {
+  return user.blockedBy.contains(idToCheck) ||
+      user.blockedMembers.contains(idToCheck);
 }
 
 UserRole getLoggedInUserRole(TimebankModel model, String userId) {
