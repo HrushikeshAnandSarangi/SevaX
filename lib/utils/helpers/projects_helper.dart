@@ -26,22 +26,23 @@ class ProjectMessagingRoomHelper {
     );
 
     return showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(
-              'Since you are volunteering for this event, you’ve been added to the messaging room. You may leave this room at any time.',
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            'Since you are volunteering for this event, you’ve been added to the messaging room. You may leave this room at any time.',
+          ),
+          actions: [
+            FlatButton(
+              onPressed: () async {
+                Navigator.pop(_);
+              },
+              child: Text('Okay'),
             ),
-            actions: [
-              FlatButton(
-                onPressed: () async {
-                  Navigator.pop(_);
-                },
-                child: Text('Okay'),
-              ),
-            ],
-          );
-        });
+          ],
+        );
+      },
+    );
   }
 
   static Future<bool> removeMemberFromProjectCommuication({
