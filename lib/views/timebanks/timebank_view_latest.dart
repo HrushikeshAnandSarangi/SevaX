@@ -157,21 +157,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AddManualTimeButton(
-                typeId: widget.timebankModel.id,
-                timebankId: widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId
-                    ? widget.timebankModel.id
-                    : widget.timebankModel.parentTimebankId,
-                timeFor: ManualTimeType.Timebank,
-                userType: getLoggedInUserRole(
-                  widget.timebankModel,
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
-              ),
-            ),
+            isAccessAvailable(
+              widget.timebankModel,
+              SevaCore.of(context).loggedInUser.sevaUserID,
+            )
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AddManualTimeButton(
+                      typeId: widget.timebankModel.id,
+                      timebankId: widget.timebankModel.parentTimebankId ==
+                              FlavorConfig.values.timebankId
+                          ? widget.timebankModel.id
+                          : widget.timebankModel.parentTimebankId,
+                      timeFor: ManualTimeType.Timebank,
+                      userType: getLoggedInUserRole(
+                        widget.timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID,
+                      ),
+                    ),
+                  )
+                : Container(),
             isAccessAvailable(widget.timebankModel,
                     SevaCore.of(context).loggedInUser.sevaUserID)
                 ? Column(
