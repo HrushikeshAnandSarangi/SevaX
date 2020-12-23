@@ -111,13 +111,13 @@ class ProjectModel extends DataModel {
                   )
             : null,
         members: json["members"] == null
-            ? null
+            ? []
             : List<String>.from(json["members"].map((x) => x)),
         pendingRequests: json["pendingRequests"] == null
-            ? null
+            ? []
             : List<String>.from(json["pendingRequests"].map((x) => x)),
         completedRequests: json["completedRequests"] == null
-            ? null
+            ? []
             : List<String>.from(
                 json["completedRequests"].map((x) => x),
               ),
