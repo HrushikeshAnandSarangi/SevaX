@@ -11,6 +11,7 @@ import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 import '../../../../flavor_config.dart';
@@ -91,12 +92,15 @@ class CreateChatBloc extends BlocBase {
   }
 
   Future<ChatModel> createMultiUserMessaging(UserModel creator) async {
-    if (profanityDetector.isProfaneString(_groupName.value)) {
+    if (_groupName.value == null || _groupName.value.isEmpty) {
+      _groupName.addError("validation_error_room_name");
+      logger.e('error');
+      return null;
+    } else if (profanityDetector.isProfaneString(_groupName.value)) {
       _groupName.addError("profanity");
       return null;
-    } else if (_groupName.value != null) {
+    } else {
       String imageUrl;
-
       if (_file.value != null && _file.value.selectedImage != null) {
         imageUrl = _file.value != null
             ? await StorageRepository.uploadFile(
@@ -105,7 +109,7 @@ class CreateChatBloc extends BlocBase {
       } else if (_file.value != null && _file.value.stockImageUrl != null) {
         imageUrl = _file.value.stockImageUrl;
       } else {
-        return null;
+        imageUrl = null;
       }
       MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
         name: _groupName.value,
@@ -137,9 +141,6 @@ class CreateChatBloc extends BlocBase {
       );
       String chatId = await ChatsRepository.createNewChat(model);
       return model..id = chatId;
-    } else {
-      _groupName.addError("validation_error_room_name");
-      return null;
     }
   }
 
