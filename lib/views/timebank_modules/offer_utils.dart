@@ -185,6 +185,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
     //Check balance here
     var hasSufficientCredits =
         await SevaCreditLimitManager.hasSufficientCredits(
+      email: SevaCore.of(context).loggedInUser.email,
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
       associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,

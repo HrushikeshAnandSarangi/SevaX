@@ -220,17 +220,16 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                     Navigator.pop(progressContext);
                   }
                   dialogBox(
-                      message: S.of(context).change_ownership_pending_payment1 +
-                              responseObj['planName'] ??
-                          ' ' +
-                              S.of(context).change_ownership_pending_payment2);
+                    message: S.of(context).change_ownership_pending_payment1 +
+                            responseObj['planName'] ??
+                        ' ' + S.of(context).change_ownership_pending_payment2,
+                  );
                 } else {
                   if (progressContext != null) {
                     Navigator.pop(progressContext);
                   }
                   getErrorDialog(context);
                 }
-
                 //Navigator.of(context).pop();
               }
             }

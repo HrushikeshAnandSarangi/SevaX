@@ -497,18 +497,20 @@ Future<String> updateChangeOwnerDetails(
     String state}) async {
   var result = await http.post(
       "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
-      body: jsonEncode({
-        "communityId": communityId,
-        "email": email,
-        "billing_address": {
-          "street_address1": streetAddress1,
-          "street_address2": streetAddress2,
-          "country": country,
-          "city": city,
-          "pincode": pinCode,
-          "state": state
-        }
-      }),
+      body: jsonEncode(
+        {
+          "communityId": communityId,
+          "email": email,
+          "billing_address": {
+            "street_address1": streetAddress1,
+            "street_address2": streetAddress2,
+            "country": country,
+            "city": city,
+            "pincode": pinCode,
+            "state": state
+          }
+        },
+      ),
       headers: {"Content-Type": "application/json"});
   //var data = json.decode(result.body);
   return result.statusCode.toString();

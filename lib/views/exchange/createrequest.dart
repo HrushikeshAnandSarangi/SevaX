@@ -280,6 +280,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
+  Widget headerContainer(snapshot) {
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Container();
+    }
+    timebankModel = snapshot.data;
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+      return requestSwitch();
+    } else {
+      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel.requestType = RequestType.TIME;
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     hoursMessage = S.of(context).set_duration;
@@ -288,22 +304,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
     this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
     log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
-
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -1550,7 +1550,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == 'Timebank') {
+        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -1643,6 +1643,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           this.requestModel.photoUrl = myDetails.photoURL;
           var onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
             associatedCommunity: timebankModel.communityId,
