@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -53,7 +52,7 @@ class ProjectRequests extends StatefulWidget {
 class RequestsState extends State<ProjectRequests>
     with SingleTickerProviderStateMixin {
   UserModel user = null;
-  TabController tabController;
+
   ProjectModel projectModel;
   bool isProjectMember = false;
   bool isChatVisible = false;
@@ -62,13 +61,8 @@ class RequestsState extends State<ProjectRequests>
   @override
   void initState() {
     super.initState();
-
-    //todo add chatid from project model
-    //todo update isProjectMember from project model
     projectModel = widget.projectModel;
-
     bloc.init(projectModel.associatedMessaginfRoomId);
-    tabController = TabController(length: 2, vsync: this);
   }
 
   @override

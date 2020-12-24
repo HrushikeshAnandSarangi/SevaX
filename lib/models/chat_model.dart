@@ -77,7 +77,7 @@ class ChatModel {
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
-        "chatContext": chatContext.toMap(),
+        "chatContext": chatContext?.toMap() ?? {},
       };
 
   Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {

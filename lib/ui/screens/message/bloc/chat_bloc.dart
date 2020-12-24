@@ -1,17 +1,31 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
-import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
+import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
+import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 
 class ChatBloc {
   final _messages = BehaviorSubject<List<MessageModel>>();
+  final _feedsCache = HashMap<String, NewsModel>();
 
   Stream<List<MessageModel>> get messages => _messages.stream;
+
+  NewsModel getNewsModel(String id) {
+    if (_feedsCache.containsKey(id)) {
+      return _feedsCache[id];
+    }
+    return null;
+  }
+
+  void setNewsModel(NewsModel model) {
+    _feedsCache.putIfAbsent(model.id, () => model);
+  }
 
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =

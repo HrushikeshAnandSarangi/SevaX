@@ -3,9 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -22,7 +20,6 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
-import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -673,15 +670,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
-    'adi007footballer@gmail.com',
-    'adityatestacc123@gmail.com',
-    'adityazzz@yopmail.com',
-    'amazinggg@yopmail.com',
-    'sam1@yopmail.com',
-    'sam2@yopmail.com',
-    'sam3@yopmail.com',
     'burhan@uipep.com',
     'user15ec27@gmail.com',
+    'monica@yopmail.com',
+    'test333@yopmail.com'
   ];
   Widget get directDevLogin {
     return Padding(
