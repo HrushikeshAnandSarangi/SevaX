@@ -13,7 +13,6 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
@@ -222,28 +221,28 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  Widget get changeOwnerShip {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChangeOwnerShipView(
-              timebankId: widget.timebankModel.id,
-            ),
-          ),
-        );
-      },
-      child: Text(
-        S.of(context).change_ownership,
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-        ),
-      ),
-    );
-  }
+  // Widget get changeOwnerShip {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => ChangeOwnerShipView(
+  //             timebankId: widget.timebankModel.id,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //     child: Text(
+  //       S.of(context).change_ownership,
+  //       textAlign: TextAlign.left,
+  //       style: TextStyle(
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.blue,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget viewRequests({BuildContext context}) {
     return GestureDetector(
@@ -352,13 +351,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           SizedBox(height: 20),
           viewRequests(context: context),
           SizedBox(height: 20),
-          widget.timebankModel.creatorId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: changeOwnerShip,
-                )
-              : Container(),
+          // widget.timebankModel.creatorId ==
+          //         SevaCore.of(context).loggedInUser.sevaUserID
+          //     ? Padding(
+          //         padding: const EdgeInsets.only(bottom: 20),
+          //         child: changeOwnerShip,
+          //       )
+          //     : Container(),
           viewInvoice(context: context),
           viewReportedMembers(context: context),
           SizedBox(height: 20),

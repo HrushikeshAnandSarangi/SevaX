@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -15,7 +14,6 @@ import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/change_ownership_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -229,18 +227,18 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return Container();
                       break;
 
-                    case NotificationType.TypeChangeOwnership:
-                      ChangeOwnershipModel ownershipModel =
-                          ChangeOwnershipModel.fromMap(notification.data);
-                      return ChangeOwnershipWidget(
-                        timestamp: notification.timestamp,
-                        notificationId: notification.id,
-                        communityId: notification.communityId,
-                        changeOwnershipModel: ownershipModel,
-                        timebankId: notification.timebankId,
-                        notificationsModel: notification,
-                      );
-                      break;
+                    // case NotificationType.TypeChangeOwnership:
+                    //   ChangeOwnershipModel ownershipModel =
+                    //       ChangeOwnershipModel.fromMap(notification.data);
+                    //   return ChangeOwnershipWidget(
+                    //     timestamp: notification.timestamp,
+                    //     notificationId: notification.id,
+                    //     communityId: notification.communityId,
+                    //     changeOwnershipModel: ownershipModel,
+                    //     timebankId: notification.timebankId,
+                    //     notificationsModel: notification,
+                    //   );
+                    //   break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
