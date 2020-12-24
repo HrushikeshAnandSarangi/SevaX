@@ -199,19 +199,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             addManualTime,
-                            // AddManualTimeButton(
-                            //   timeFor: ManualTimeType.Project,
-                            //   typeId: projectModel.id,
-                            //   userType: getLoggedInUserRole(
-                            //     widget.timebankModel,
-                            //     SevaCore.of(context).loggedInUser.sevaUserID,
-                            //   ),
-                            //   timebankId:
-                            //       widget.timebankModel.parentTimebankId ==
-                            //               FlavorConfig.values.timebankId
-                            //           ? widget.timebankModel.id
-                            //           : widget.timebankModel.parentTimebankId,
-                            // ),
                             deleteProject,
                           ],
                         )
