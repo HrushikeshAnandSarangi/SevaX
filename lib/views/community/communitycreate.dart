@@ -950,9 +950,8 @@ class CreateEditCommunityViewFormState
                                         // _billingInformationKey.currentState.reset();
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                HomePageRouter(),
-                                          ),
+                                              builder: (context) =>
+                                                  HomePageRouter()),
                                         );
                                         // Navigator.pushReplacement(
                                         //   context,
