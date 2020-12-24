@@ -3,47 +3,46 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
-class ShowLimitBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final _userBloc = BlocProvider.of<UserDataBloc>(context);
-    bool isAdmin =
-        _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
+// class ShowLimitBadge extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final _userBloc = BlocProvider.of<UserDataBloc>(context);
+//     bool isAdmin =
+//         _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
 
-    return StreamBuilder<CommunityModel>(
-      stream: _userBloc.comunityStream,
-      builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
-        return Offstage(
-          offstage: PaymentUtils.getFailedBannerVisibilityStatus(
-            communityModel: _userBloc.community,
-          ),
-          child: Container(
-            height: 20,
-            width: double.infinity,
-            color: Colors.red,
-            alignment: Alignment.center,
-            child: Center(
-              child: Text(
-                isAdmin
-                    ? (_userBloc.community.payment['message'] != null
-                        ? _userBloc.community.payment['message']
-                        : S.of(context).payment_data_syncing)
-                    : S.of(context).actions_not_allowed,
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
+//     return StreamBuilder<CommunityModel>(
+//       stream: _userBloc.comunityStream,
+//       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
+//         return Offstage(
+//           offstage: PaymentUtils.getFailedBannerVisibilityStatus(
+//             communityModel: _userBloc.community,
+//           ),
+//           child: Container(
+//             height: 20,
+//             width: double.infinity,
+//             color: Colors.red,
+//             alignment: Alignment.center,
+//             child: Center(
+//               child: Text(
+//                 isAdmin
+//                     ? (_userBloc.community.payment['message'] != null
+//                         ? _userBloc.community.payment['message']
+//                         : S.of(context).payment_data_syncing)
+//                     : S.of(context).actions_not_allowed,
+//                 style: TextStyle(color: Colors.white),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 class PaymentUtils {
   static bool getFailedBannerVisibilityStatus({
@@ -206,18 +205,18 @@ class TransactionLimitCheck extends StatelessWidget {
                       : Container(),
                   onPressed: () {
                     Navigator.of(_context).pop();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BillingPlanDetails(
-                          activePlanId: activePlanId,
-                          autoImplyLeading: true,
-                          user: user,
-                          isPlanActive: false,
-                          isPrivateTimebank: isPrivate,
-                          isBillMe: isBillMe,
-                        ),
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    // MaterialPageRoute(
+                    //   builder: (context) => BillingPlanDetails(
+                    //     activePlanId: activePlanId,
+                    //     autoImplyLeading: true,
+                    //     user: user,
+                    //     isPlanActive: false,
+                    //     isPrivateTimebank: isPrivate,
+                    //     isBillMe: isBillMe,
+                    //   ),
+                    // ),
+                    // );
                   },
                 ),
               ),
@@ -244,31 +243,33 @@ bool getTransactionStatus({
   CommunityModel communityModel,
 }) {
   int activeCount = 0;
-  if ((communityModel.payment['planId'] == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN || communityModel.subscriptionCancelled) &&
+  if ((communityModel.payment['planId'] ==
+              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
+          communityModel.subscriptionCancelled) &&
       communityModel.billingQuota != null) {
     List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
-        SevaPlansBillingConfig
-            .billingPlans[communityModel.payment['planId']]['action']);
+        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
+            ['action']);
 
     neighbourhoodPlanBillableTransactions.forEach((billableItem) {
       if (communityModel.billingQuota.containsKey(billableItem)) {
         activeCount += communityModel.billingQuota[billableItem];
       }
     });
-    return activeCount >= SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
+    return activeCount >=
+        SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
   } else {
-
     return false;
   }
 }
 
 class SevaPlansBillingConfig {
-    static Map<String, dynamic> plansLimit = {
-    "neighbourhood_plan":15,
-    "tall_plan":50,
-    "grande_plan":3000,
-    "venti_plan":5000
-    };
+  static Map<String, dynamic> plansLimit = {
+    "neighbourhood_plan": 15,
+    "tall_plan": 50,
+    "grande_plan": 3000,
+    "venti_plan": 5000
+  };
 
   static Map<String, dynamic> billingPlans = {
     "neighbourhood_plan": {
@@ -287,36 +288,36 @@ class SevaPlansBillingConfig {
       "initial_transactions_amount": 0,
       "initial_transactions_qty": 50,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     },
     "grande_plan": {
       "initial_transactions_amount": 0,
       "initial_transactions_qty": 50,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     },
     "venti_plan": {
       "initial_transactions_amount": 0,
       "initial_transactions_qty": 50,
       'action': [
-           "quota_TypeJoinTimebank",
-          "quota_TypeRequestApply",
-          "quota_TypeRequestCreation",
-          "quota_TypeRequestAccepted",
-          "quota_TypeOfferCreated",
-          "quota_TypeOfferAccepted"
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
       ],
     }
   };

@@ -15,7 +15,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -139,7 +138,7 @@ Widget createAdminTabBar(
     ),
     body: Column(
       children: <Widget>[
-        ShowLimitBadge(),
+        // ShowLimitBadge(),
         Stack(
           children: <Widget>[
             TabBar(

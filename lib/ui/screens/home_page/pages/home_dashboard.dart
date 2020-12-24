@@ -13,7 +13,6 @@ import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -204,7 +203,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               length: isAdmin ? tabLength + 1 : tabLength,
               child: Column(
                 children: <Widget>[
-                  ShowLimitBadge(),
+                  // ShowLimitBadge(),
                   TabBar(
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,

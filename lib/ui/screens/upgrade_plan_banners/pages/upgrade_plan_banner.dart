@@ -9,7 +9,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 
 class UpgradePlanBanner extends StatefulWidget {
   final BannerDetails details;
@@ -165,19 +164,19 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                             style: TextStyle(fontSize: 16),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BillingPlanDetails(
-                                  user: SevaCore.of(context).loggedInUser,
-                                  activePlanId: widget.activePlanName,
-                                  isPlanActive: true,
-                                  autoImplyLeading: true,
-                                  isPrivateTimebank:
-                                      widget.isCommunityPrivate ?? false,
-                                ),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => BillingPlanDetails(
+                            //       user: SevaCore.of(context).loggedInUser,
+                            //       activePlanId: widget.activePlanName,
+                            //       isPlanActive: true,
+                            //       autoImplyLeading: true,
+                            //       isPrivateTimebank:
+                            //           widget.isCommunityPrivate ?? false,
+                            //     ),
+                            //   ),
+                            // );
                           },
                         )
                       : timebankModel.admins.contains(currentUser.sevaUserID)

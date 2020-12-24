@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
@@ -67,7 +66,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   Widget build(BuildContext context) {
     if (isSuperAdmin) {
       return DefaultTabController(
-        length: 4,
+        length: 3,
         child: Column(
           children: <Widget>[
             TabBar(
@@ -77,7 +76,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               tabs: <Widget>[
                 Tab(text: S.of(context).edit_timebank),
                 // Tab(text: "Upgrade"),
-                Tab(text: S.of(context).billing),
+                // Tab(text: S.of(context).billing),
                 Tab(
                   text: S.of(context).settings,
                 ),
@@ -94,7 +93,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                     isFromFind: false,
                     timebankId: widget.timebankModel.id,
                   ),
-                  TimeBankBillingAdminView(),
+                  // TimeBankBillingAdminView(),
                   Settings,
                   NotificationManagerForAmins(
                     widget.timebankModel.id,
