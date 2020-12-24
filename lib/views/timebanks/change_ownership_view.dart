@@ -115,10 +115,10 @@
 //                     SizedBox(
 //                       height: 15,
 //                     ),
-// //              getInfoWidget(),
-// //              SizedBox(
-// //                height: 15,
-// //              ),
+//               getInfoWidget(),
+//               SizedBox(
+//                 height: 15,
+//               ),
 //                     Text(
 //                       S.of(context).change_to,
 //                       style: TextStyle(
