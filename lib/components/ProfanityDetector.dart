@@ -445,7 +445,6 @@ class ProfanityDetector {
     'yiffy',
     'zoophilia',
     '🖕',
-
     //additional
     'arse',
     'ballsack',
@@ -774,7 +773,6 @@ class ProfanityDetector {
     'estrellas de mar arrugada',
     'duchas amarillas',
     'zoofilia',
-
     //portugeese
     '2 meninas um copo',
     'acrotomophilia',

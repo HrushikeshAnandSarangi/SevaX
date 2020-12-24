@@ -115,10 +115,10 @@
 //                     SizedBox(
 //                       height: 15,
 //                     ),
-// //              getInfoWidget(),
-// //              SizedBox(
-// //                height: 15,
-// //              ),
+//               getInfoWidget(),
+//               SizedBox(
+//                 height: 15,
+//               ),
 //                     Text(
 //                       S.of(context).change_to,
 //                       style: TextStyle(
@@ -204,6 +204,40 @@
 //                       sevauserid: loggedInUser.sevaUserID,
 //                       timebankId: tbmodel.id);
 
+//             if (responseObj['transferable'] == true) {
+//               invtitedUsers.add(selectedNewOwner.email);
+//               sendNotificationToAdmin();
+//             } else {
+//               if (responseObj['tasksCheck'] == false) {
+//                 if (progressContext != null) {
+//                   Navigator.pop(progressContext);
+//                 }
+//                 dialogBox(
+//                     message:
+//                         S.of(context).change_ownership_pending_task_message);
+//               } else if (responseObj['pendingPaymentsCheck'] == false) {
+//                 if (progressContext != null) {
+//                   Navigator.pop(progressContext);
+//                 }
+//                 dialogBox(
+//                   message: S.of(context).change_ownership_pending_payment1 +
+//                           responseObj['planName'] ??
+//                       ' ' + S.of(context).change_ownership_pending_payment2,
+//                 );
+//               } else {
+//                 if (progressContext != null) {
+//                   Navigator.pop(progressContext);
+//                 }
+//                 getErrorDialog(context);
+//               }
+//               //Navigator.of(context).pop();
+//             }
+//           }
+//         },
+//       )
+//     ],
+//   );
+// }
 //               if (responseObj['transferable'] == true) {
 //                 invtitedUsers.add(selectedNewOwner.email);
 //                 sendNotificationToAdmin();
