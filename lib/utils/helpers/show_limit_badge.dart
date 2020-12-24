@@ -98,7 +98,7 @@ class TransactionLimitCheck extends StatelessWidget {
         super(key: key);
 
   ViewerRole initViewerRole(UserDataBloc _userBloc) {
-    if (_userBloc.community.creator_email == _userBloc.user.sevaUserID) {
+    if (_userBloc.community.created_by == _userBloc.user.sevaUserID) {
       return ViewerRole.CREATOR;
     }
 
@@ -190,35 +190,6 @@ class TransactionLimitCheck extends StatelessWidget {
                   exaustedLimit: exaustedLimit,
                 ),
                 textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              Offstage(
-                offstage: viewRole != ViewerRole.CREATOR ||
-                    (isSoftDeleteRequested && !isBillingFailed),
-                child: FlatButton(
-                  color: Theme.of(context).accentColor,
-                  child: viewRole == ViewerRole.CREATOR
-                      ? Text(
-                          S.of(context).configure_billing,
-                          style: TextStyle(color: Colors.white),
-                        )
-                      : Container(),
-                  onPressed: () {
-                    Navigator.of(_context).pop();
-                    // Navigator.of(context).push(
-                    // MaterialPageRoute(
-                    //   builder: (context) => BillingPlanDetails(
-                    //     activePlanId: activePlanId,
-                    //     autoImplyLeading: true,
-                    //     user: user,
-                    //     isPlanActive: false,
-                    //     isPrivateTimebank: isPrivate,
-                    //     isBillMe: isBillMe,
-                    //   ),
-                    // ),
-                    // );
-                  },
-                ),
               ),
               SizedBox(width: 10),
               FlatButton(
@@ -353,12 +324,15 @@ String getMessage({
   bool exaustedLimit,
 }) {
   if (exaustedLimit) {
-    String exhausted = S.of(context).exhausted_free_quota;
+    // String exhausted = S.of(context).exhausted_free_quota;
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
-      forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
-      forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
+      forAdmin:
+          'This is currently not permitted. Please contact the Community Creator for more information',
+      forCreator:
+          'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/',
+      forMember:
+          'This is currently not permitted. Please contact the Community Creator for more information',
     );
   }
 
