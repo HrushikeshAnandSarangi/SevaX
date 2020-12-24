@@ -318,22 +318,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 type: InfoType.PRIVATE_GROUP,
               ),
             ),
-            // TransactionsMatrixCheck(
-            //   upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
-            //   transaction_matrix_type: "private_groups",
-            //   child:
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-              child: Checkbox(
-                value: timebankModel.private,
-                onChanged: (bool value) {
-                  setState(() {
-                    timebankModel.private = value;
-                  });
-                },
+            TransactionsMatrixCheck(
+              upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+              transaction_matrix_type: "private_groups",
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.private,
+                  onChanged: (bool value) {
+                    setState(() {
+                      timebankModel.private = value;
+                    });
+                  },
+                ),
               ),
             ),
-            // ),
           ],
         ),
         Row(

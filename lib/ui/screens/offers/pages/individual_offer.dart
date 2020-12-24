@@ -9,6 +9,8 @@ import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -82,39 +84,38 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         color: Colors.black,
                       ),
                     ),
-                    // TransactionsMatrixCheck(
-                    //   upgradeDetails:
-                    //       AppConfig.upgradePlanBannerModel.cash_donation,
-                    //   transaction_matrix_type: "cash_goods_offers",
-                    //   child:
-                    Column(
-                      children: <Widget>[
-                        _optionRadioButton(
-                          title: S.of(context).request_type_time,
-                          value: RequestType.TIME,
-                          groupvalue: snapshot.data != null
-                              ? snapshot.data
-                              : RequestType.TIME,
-                          onChanged: _bloc.onTypeChanged,
-                        ),
-                        _optionRadioButton(
-                            title: S.of(context).request_type_cash,
-                            value: RequestType.CASH,
+                    TransactionsMatrixCheck(
+                      upgradeDetails:
+                          AppConfig.upgradePlanBannerModel.cash_donation,
+                      transaction_matrix_type: "cash_goods_offers",
+                      child: Column(
+                        children: <Widget>[
+                          _optionRadioButton(
+                            title: S.of(context).request_type_time,
+                            value: RequestType.TIME,
                             groupvalue: snapshot.data != null
                                 ? snapshot.data
                                 : RequestType.TIME,
-                            onChanged: (data) =>
-                                {_bloc.onTypeChanged(data), setState(() {})}),
-                        _optionRadioButton(
-                            title: S.of(context).request_type_goods,
-                            value: RequestType.GOODS,
-                            groupvalue: snapshot.data != null
-                                ? snapshot.data
-                                : RequestType.TIME,
-                            onChanged: _bloc.onTypeChanged)
-                      ],
-                    ),
-                    // )
+                            onChanged: _bloc.onTypeChanged,
+                          ),
+                          _optionRadioButton(
+                              title: S.of(context).request_type_cash,
+                              value: RequestType.CASH,
+                              groupvalue: snapshot.data != null
+                                  ? snapshot.data
+                                  : RequestType.TIME,
+                              onChanged: (data) =>
+                                  {_bloc.onTypeChanged(data), setState(() {})}),
+                          _optionRadioButton(
+                              title: S.of(context).request_type_goods,
+                              value: RequestType.GOODS,
+                              groupvalue: snapshot.data != null
+                                  ? snapshot.data
+                                  : RequestType.TIME,
+                              onChanged: _bloc.onTypeChanged)
+                        ],
+                      ),
+                    )
                   ],
                 );
               })

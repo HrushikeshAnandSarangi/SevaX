@@ -32,6 +32,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -926,38 +927,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       setState(() => {});
                     },
                   ),
-                  // TransactionsMatrixCheck(
-                  //   upgradeDetails:
-                  //       AppConfig.upgradePlanBannerModel.cash_request,
-                  //   transaction_matrix_type: 'cash_goods_requests',
-                  //   child:
-                  _optionRadioButton<RequestType>(
-                    title: S.of(context).request_type_cash,
-                    value: RequestType.CASH,
-                    isEnabled: !widget.isOfferRequest,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      requestModel.requestType = value;
-                      setState(() => {});
-                    },
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.cash_request,
+                    transaction_matrix_type: 'cash_goods_requests',
+                    child: _optionRadioButton<RequestType>(
+                      title: S.of(context).request_type_cash,
+                      value: RequestType.CASH,
+                      isEnabled: !widget.isOfferRequest,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      },
+                    ),
                   ),
-                  // ),
-                  // TransactionsMatrixCheck(
-                  //   upgradeDetails:
-                  //       AppConfig.upgradePlanBannerModel.goods_request,
-                  //   transaction_matrix_type: 'cash_goods_requests',
-                  //   child:
-                  _optionRadioButton<RequestType>(
-                    title: S.of(context).request_type_goods,
-                    isEnabled: !(widget.isOfferRequest ?? false),
-                    value: RequestType.GOODS,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      requestModel.requestType = value;
-                      setState(() => {});
-                    },
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.goods_request,
+                    transaction_matrix_type: 'cash_goods_requests',
+                    child: _optionRadioButton<RequestType>(
+                      title: S.of(context).request_type_goods,
+                      isEnabled: !(widget.isOfferRequest ?? false),
+                      value: RequestType.GOODS,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      },
+                    ),
                   ),
-                  // ),
                 ],
               )
             ],

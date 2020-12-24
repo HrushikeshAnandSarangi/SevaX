@@ -5,8 +5,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -270,28 +272,26 @@ class AddToCalendarState extends State<AddToCalendar> {
     String title,
     CircleAvatar icon,
   }) {
-    return
-        // TransactionsMatrixCheck(
-        //     upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-        //     transaction_matrix_type: "calendar_sync",
-        //     child:
-        Container(
-      margin: EdgeInsets.only(left: 10),
-      child: Row(
-        children: [
-          icon,
-          FlatButton(
-            onPressed: onPressed,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.black,
+    return TransactionsMatrixCheck(
+      upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+      transaction_matrix_type: "calendar_sync",
+      child: Container(
+        margin: EdgeInsets.only(left: 10),
+        child: Row(
+          children: [
+            icon,
+            FlatButton(
+              onPressed: onPressed,
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
-      // ),
     );
   }
 }
