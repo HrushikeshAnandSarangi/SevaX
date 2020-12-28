@@ -148,10 +148,13 @@ class _EarningListItemState extends State<EarningListItem> {
               leading:
                   EarningImageItem(model: widget.model, snapshot: snapshot),
               trailing: () {
-                String plus = widget.model.debitCreditSymbol(
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.model.timebankid,
-                    widget.viewtype);
+                String plus = widget.model.from == widget.model.to
+                    ? '+'
+                    : widget.model.debitCreditSymbol(
+                        SevaCore.of(context).loggedInUser.sevaUserID,
+                        widget.model.timebankid,
+                        widget.viewtype,
+                      );
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,

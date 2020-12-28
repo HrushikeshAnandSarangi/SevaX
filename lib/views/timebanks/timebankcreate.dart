@@ -382,13 +382,18 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             Column(
               children: <Widget>[
                 Divider(),
-                Checkbox(
-                  value: sponsored,
-                  onChanged: (bool value) {
-                    setState(() {
-                      sponsored = !sponsored;
-                    });
-                  },
+                TransactionsMatrixCheck(
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.sponsored_groups,
+                  transaction_matrix_type: "sponsored_groups",
+                  child: Checkbox(
+                    value: sponsored,
+                    onChanged: (bool value) {
+                      setState(() {
+                        sponsored = !sponsored;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
