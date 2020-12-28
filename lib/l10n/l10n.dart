@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -572,7 +571,7 @@ class S {
       );
 
   String get projects => Intl.message(
-        'Projects',
+        'Events',
         name: 'projects',
       );
 
@@ -1062,7 +1061,7 @@ class S {
       );
 
   String get no_projects_message => Intl.message(
-        'No projects available.Try',
+        'No events available.Try',
         name: 'no_projects_message',
       );
 
@@ -1197,27 +1196,27 @@ class S {
       );
 
   String get delete_project => Intl.message(
-        'Delete Project',
+        'Delete Event',
         name: 'delete_project',
       );
 
   String get create_project => Intl.message(
-        'Create a Project',
+        'Create a Event',
         name: 'create_project',
       );
 
   String get edit_project => Intl.message(
-        'Edit Project',
+        'Edit Event',
         name: 'edit_project',
       );
 
   String get project_logo => Intl.message(
-        'Project Logo',
+        'Event Logo',
         name: 'project_logo',
       );
 
   String get project_name => Intl.message(
-        'Project Name',
+        'Event Name',
         name: 'project_name',
       );
 
@@ -1227,17 +1226,17 @@ class S {
       );
 
   String get validation_error_project_name_empty => Intl.message(
-        'Project name cannot be empty',
+        'Event name cannot be empty',
         name: 'validation_error_project_name_empty',
       );
 
   String get project_duration => Intl.message(
-        'Project duration',
+        'Event duration',
         name: 'project_duration',
       );
 
   String get project_mission_statement_hint => Intl.message(
-        'Tell us why this project or event is happening. How will it help your community?',
+        'Tell us why this event or event is happening. How will it help your community',
         name: 'project_mission_statement_hint',
       );
 
@@ -1257,12 +1256,12 @@ class S {
       );
 
   String get project_location => Intl.message(
-        'Your project location.',
+        'Your event location',
         name: 'project_location',
       );
 
   String get project_location_hint => Intl.message(
-        'Project location will help your members to locate',
+        'Event location will help your members to locate',
         name: 'project_location_hint',
       );
 
@@ -1277,7 +1276,7 @@ class S {
       );
 
   String get creating_project => Intl.message(
-        'Creating project',
+        'Creating event',
         name: 'creating_project',
       );
 
@@ -1287,12 +1286,12 @@ class S {
       );
 
   String get validation_error_add_project_location => Intl.message(
-        'Please add location to your project',
+        'Please add location to your event',
         name: 'validation_error_add_project_location',
       );
 
   String get updating_project => Intl.message(
-        'Updating project',
+        'Updating event',
         name: 'updating_project',
       );
 
@@ -1357,12 +1356,12 @@ class S {
       );
 
   String get advisory_for_timebank => Intl.message(
-        'All relevant information including projects, requests and offers under the group will be deleted!',
+        'All relevant information including events, requests and offers under the group will be deleted!',
         name: 'advisory_for_timebank',
       );
 
   String get advisory_for_projects => Intl.message(
-        'All requests associated to this request would be removed',
+        'All events associated to this request would be removed',
         name: 'advisory_for_projects',
       );
 
@@ -1482,7 +1481,7 @@ class S {
       );
 
   String get create_project_request => Intl.message(
-        'Create Project Request',
+        'Create Event Request',
         name: 'create_project_request',
       );
 
@@ -1597,12 +1596,12 @@ class S {
       );
 
   String get assign_to_project => Intl.message(
-        'Assign to project',
+        'Assign to event',
         name: 'assign_to_project',
       );
 
   String get assign_to_one_project => Intl.message(
-        'Please assign to one project',
+        'Please assign to one event',
         name: 'assign_to_one_project',
       );
 
@@ -2212,7 +2211,7 @@ class S {
       );
 
   String get pending_projects => Intl.message(
-        'pending projects',
+        'pending events',
         name: 'pending_projects',
       );
 
@@ -2892,17 +2891,17 @@ class S {
       );
 
   String get search_template_hint => Intl.message(
-        'Enter name of a Project Template',
+        'Enter name of a Event Template',
         name: 'search_template_hint',
       );
 
   String get create_project_from_template => Intl.message(
-        'Create Project from Template',
+        'Create Event from Template',
         name: 'create_project_from_template',
       );
 
   String get create_new_project => Intl.message(
-        'Create new Project',
+        'Create new Event',
         name: 'create_new_project',
       );
 
@@ -2922,7 +2921,7 @@ class S {
       );
 
   String get new_project => Intl.message(
-        'New Project',
+        'New Event',
         name: 'new_project',
       );
 
@@ -3833,75 +3832,61 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
+        name: 'hour',        
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4037,13 +4022,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4498,7 +4483,7 @@ class S {
       );
 
   String get nearby_settings_content => Intl.message(
-        'This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in a Project',
+        'This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in a Event',
         name: 'nearby_settings_content',
       );
 
@@ -5168,12 +5153,12 @@ class S {
       );
 
   String get select_project => Intl.message(
-        'Select project',
+        'Select event',
         name: 'select_project',
       );
 
   String get projects_here => Intl.message(
-        'Projects here',
+        'Events here',
         name: 'projects_here',
       );
 
@@ -5353,7 +5338,7 @@ class S {
       );
 
   String get reliability_score => Intl.message(
-        'Reliability score',
+        'Reliability',
         name: 'reliability_score',
       );
 
@@ -5677,7 +5662,7 @@ class S {
         name: 'endorsed_notification_desc',
       );
 
-  String get enable_ => Intl.message(
+  String get enable_gps => Intl.message(
         'You will need to enable location services on your browser: Chrome; Edge; Firefox; Safari to allow us to display nearby Communities.',
         name: 'enable_gps',
       );
@@ -5796,6 +5781,36 @@ class S {
         'Suggested Categories',
         name: 'suggested_categories',
       );
+
+  String get manual_notification_title => Intl.message(
+        'Manual time notification',
+        name: 'manual_notification_title',
+      );
+
+  String get manual_notification_subtitle => Intl.message(
+        'name has requested by number hours.',
+        name: 'manual_notification_subtitle',
+      );
+
+  String get manual_time_request_title => Intl.message(
+        'Status of your Seva Credit request',
+        name: 'manual_time_request_title',
+      );
+
+  String get manual_time_request_subtitle => Intl.message(
+        'Your request for ',
+        name: 'manual_time_request_subtitle',
+      );
+
+  String get seva_community_events => Intl.message(
+        'Seva Community Events',
+        name: 'seva_community_events',
+      );
+
+  String get personal_events => Intl.message(
+        'Personal Events',
+        name: 'personal_events',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -5805,13 +5820,13 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
-      ];
+  ];
 
   @override
   bool isSupported(Locale locale) => [
