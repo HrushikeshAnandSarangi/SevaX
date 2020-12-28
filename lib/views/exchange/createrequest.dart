@@ -1009,7 +1009,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
     var category = await Navigator.push(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => Category(selectedSubCategoriesids: [],)),
+          fullscreenDialog: true,
+          builder: (context) => Category(
+                selectedSubCategoriesids: [],
+              )),
     );
     updateInformation(category);
     logger.i(
@@ -1253,9 +1256,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
-
-                      style: TextStyle(
+                            S.of(context).choose_category,
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1427,9 +1429,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
-
-                      style: TextStyle(
+                            S.of(context).choose_category,
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -2024,7 +2025,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       list.add({
         "name": widget.projectModelList[i].name,
         "code": widget.projectModelList[i].id,
-        "timebankproject": widget.projectModelList[i].mode == 'Timebank'
+        "timebankproject":
+            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
     return MultiSelect(
