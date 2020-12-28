@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/feed_shared
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/image_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/message_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
+import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -33,6 +34,7 @@ class ChatPage extends StatefulWidget {
   final String feedId;
   final String senderId;
   final bool showAppBar;
+  final ChatViewContext chatViewContext;
 
   ChatPage({
     Key key,
@@ -43,6 +45,7 @@ class ChatPage extends StatefulWidget {
     this.feedId,
     this.isAdminMessage,
     this.showAppBar = true,
+    this.chatViewContext = ChatViewContext.UNDEFINED,
   }) : super(key: key);
 
   @override
@@ -99,7 +102,8 @@ class _ChatPageState extends State<ChatPage> {
           );
 
           if (model == null) {
-            if (!exitFromChatPage) {
+            if (!exitFromChatPage &&
+                widget.chatViewContext != ChatViewContext.PROJECT) {
               Navigator.of(context).pop();
             }
           } else {
@@ -160,6 +164,7 @@ class _ChatPageState extends State<ChatPage> {
                         userId,
                         chatModel.groupDetails.admins.contains(userId),
                       );
+                      exitFromChatPage = true;
                       Navigator.pop(context);
                     }
                   : () {},

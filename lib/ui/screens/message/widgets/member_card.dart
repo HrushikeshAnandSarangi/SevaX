@@ -3,6 +3,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
+import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -57,6 +58,7 @@ class MemberCard extends StatelessWidget {
                   chatModel: chatModel,
                   senderId: SevaCore.of(context).loggedInUser.sevaUserID,
                   isAdminMessage: false,
+                  chatViewContext: ChatViewContext.MEMBER_CHAT_LIST,
                 ),
               ),
             );

@@ -967,6 +967,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
+
   void updateInformation(List category) {
     setState(() => categories = category);
   }
@@ -1000,7 +1001,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       modelList.add(categoryModel);
     }
 
-    updateInformation(['Suggested Categories', modelList]);
+    updateInformation([S.of(context).suggested_categories, modelList]);
   }
 
   // Navigat to Category class and geting data from the class
@@ -1008,7 +1009,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     var category = await Navigator.push(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => Category()),
+          fullscreenDialog: true, builder: (context) => Category(selectedSubCategoriesids: [],)),
     );
     updateInformation(category);
     logger.i(
@@ -1063,7 +1064,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1154,11 +1155,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) == 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1252,8 +1253,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
-                            style: TextStyle(
+                      S.of(context).choose_category,
+
+                      style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1425,8 +1427,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
-                            style: TextStyle(
+                      S.of(context).choose_category,
+
+                      style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',

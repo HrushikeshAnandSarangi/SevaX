@@ -166,6 +166,16 @@ class ChatAppBar extends PreferredSize {
                   )
                 ]
               : [],
+          ...isGroupMessage
+              ? [
+                  PopupMenuItem(
+                    child: Text(
+                      S.of(context).exit,
+                    ),
+                    value: MessageMenu.EXIT_CHAT,
+                  )
+                ]
+              : [],
         ];
       },
     );

@@ -627,7 +627,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     log('length organizer ' + organizerUserModel.values.length.toString());
     if (organizerUserModel.values != null &&
         organizerUserModel.values.length > 0) {
-      _organizersWidgets.add(getSectionTitle(context, 'Owners'));
+      _organizersWidgets.add(getSectionTitle(context, S.of(context).owners));
     }
     SplayTreeMap<String, dynamic>.from(
         organizerUserModel, (a, b) => a.compareTo(b)).forEach((key, user) {
@@ -1786,7 +1786,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             // return object of type Dialog
             return AlertDialog(
               content: Text(
-                  "Cannot remove yourself from the group. Instead, please try deleting the group."),
+                  S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
@@ -1891,7 +1891,7 @@ String actionToStringMapper(BuildContext context, Actions action) {
       break;
 
     case Actions.MakeOwner:
-      return 'Make Owner';
+      return S.of(context).make_owner;
       break;
     case Actions.Reject:
       return s.reject;

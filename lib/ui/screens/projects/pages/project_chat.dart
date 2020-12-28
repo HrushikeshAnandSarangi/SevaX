@@ -10,6 +10,8 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+enum ChatViewContext { PROJECT, REQUEST, MEMBER_CHAT_LIST, UNDEFINED }
+
 class ProjectChatView extends StatefulWidget {
   @override
   _ProjectChatViewState createState() => _ProjectChatViewState();
@@ -41,6 +43,7 @@ class _ProjectChatViewState extends State<ProjectChatView> {
               isAdminMessage: false,
               showAppBar: false,
               senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+              chatViewContext: ChatViewContext.PROJECT,
             ),
             isMember
                 ? Container()

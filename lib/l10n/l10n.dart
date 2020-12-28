@@ -5677,7 +5677,7 @@ class S {
         name: 'endorsed_notification_desc',
       );
 
-  String get enable_gps => Intl.message(
+  String get enable_ => Intl.message(
         'You will need to enable location services on your browser: Chrome; Edge; Firefox; Safari to allow us to display nearby Communities.',
         name: 'enable_gps',
       );

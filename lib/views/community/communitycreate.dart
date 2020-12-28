@@ -670,7 +670,8 @@ class CreateEditCommunityViewFormState
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  headingText("Negative credits threshold"),
+                                  headingText(
+                                      S.of(context).negative_threshold_title),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(2, 15, 0, 0),
@@ -706,8 +707,7 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    "Current Negative credit threshold " +
-                                        ' : ${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,
