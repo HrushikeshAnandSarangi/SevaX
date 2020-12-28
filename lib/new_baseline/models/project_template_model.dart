@@ -15,18 +15,19 @@ class ProjectTemplateModel extends DataModel {
   int createdAt;
   bool softDelete;
 
-  ProjectTemplateModel(
-      {this.id,
-      this.name,
-      this.templateName,
-      this.timebankId,
-      this.communityId,
-      this.description,
-      this.creatorId,
-      this.photoUrl,
-      this.mode,
-      this.createdAt,
-      this.softDelete});
+  ProjectTemplateModel({
+    this.id,
+    this.name,
+    this.templateName,
+    this.timebankId,
+    this.communityId,
+    this.description,
+    this.creatorId,
+    this.photoUrl,
+    this.mode,
+    this.createdAt,
+    this.softDelete,
+  });
 
   factory ProjectTemplateModel.fromMap(Map<String, dynamic> json) =>
       ProjectTemplateModel(

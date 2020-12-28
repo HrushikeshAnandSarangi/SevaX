@@ -1596,19 +1596,38 @@ class RequestEditFormState extends State<RequestEditForm> {
                       widget.requestModel.occurenceCount)
                   .abs()
               : calculateRecurrencesOnMode(widget.requestModel);
-          onBalanceCheckResult = await SevaCreditLimitManager
-              .hasSufficientCreditsIncludingRecurring(
-                  credits: widget.requestModel.numberOfHours.toDouble(),
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  isRecurring: widget.requestModel.isRecurring,
-                  recurrences: recurrences);
+          onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: widget.requestModel.isRecurring
+                ? widget.requestModel.numberOfHours.toDouble() * recurrences
+                : widget.requestModel.numberOfHours.toDouble(),
+            associatedCommunity: SevaCore.of(context).loggedInUser.sevaUserID,
+          );
+          // .hasSufficientCreditsIncludingRecurring(
+          //   credits: widget.requestModel.numberOfHours.toDouble(),
+          //   userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          //   isRecurring: widget.requestModel.isRecurring,
+          //   recurrences: recurrences,
+          // );
         } else {
-          onBalanceCheckResult = await SevaCreditLimitManager
-              .hasSufficientCreditsIncludingRecurring(
-                  credits: widget.requestModel.numberOfHours.toDouble(),
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  isRecurring: widget.requestModel.isRecurring,
-                  recurrences: 0);
+          onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: widget.requestModel.isRecurring
+                ? widget.requestModel.numberOfHours.toDouble() * 0
+                : widget.requestModel.numberOfHours.toDouble(),
+            associatedCommunity:
+                SevaCore.of(context).loggedInUser.currentCommunity,
+          );
+
+          // .hasSufficientCreditsIncludingRecurring(
+          //     credits: widget.requestModel.numberOfHours.toDouble(),
+          //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          //     isRecurring: widget.requestModel.isRecurring,
+          //     recurrences: 0);
         }
 
         if (!onBalanceCheckResult) {
@@ -2131,7 +2150,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                   dataCopy.retainWhere((s) => s.suggesttionTitle
                       .toLowerCase()
                       .contains(pattern.toLowerCase()));
-
                   if (pattern.length > 2 &&
                       !dataCopy.contains(
                           SuggestedItem()..suggesttionTitle = pattern)) {

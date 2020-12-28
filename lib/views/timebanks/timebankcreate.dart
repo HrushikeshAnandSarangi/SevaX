@@ -351,7 +351,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ),
           ],
         ),
-        tappableInviteMembers,
+        // tappableInviteMembers,
         headingText(S.of(context).is_pin_at_right_place, false),
         Center(
           child: LocationPickerWidget(
@@ -557,7 +557,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   color: Colors.blue,
                 ),
               ),
-            ))
+            ),
+          )
         : Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: FlatButton(
