@@ -280,6 +280,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
+  Widget headerContainer(snapshot) {
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Container();
+    }
+    timebankModel = snapshot.data;
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+      return requestSwitch();
+    } else {
+      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel.requestType = RequestType.TIME;
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     hoursMessage = S.of(context).set_duration;
@@ -288,22 +304,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
     this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
     log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
-
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -968,6 +968,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
+
   void updateInformation(List category) {
     setState(() => categories = category);
   }
@@ -1001,7 +1002,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       modelList.add(categoryModel);
     }
 
-    updateInformation(['Suggested Categories', modelList]);
+    updateInformation([S.of(context).suggested_categories, modelList]);
   }
 
   // Navigat to Category class and geting data from the class
@@ -1009,7 +1010,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     var category = await Navigator.push(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => Category()),
+          fullscreenDialog: true, builder: (context) => Category(selectedSubCategoriesids: [],)),
     );
     updateInformation(category);
     logger.i(
@@ -1064,7 +1065,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1155,11 +1156,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) == 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1253,8 +1254,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
-                            style: TextStyle(
+                      S.of(context).choose_category,
+
+                      style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1426,8 +1428,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
-                            style: TextStyle(
+                      S.of(context).choose_category,
+
+                      style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1550,7 +1553,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == 'Timebank') {
+        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -1643,6 +1646,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           this.requestModel.photoUrl = myDetails.photoURL;
           var onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
             associatedCommunity: timebankModel.communityId,

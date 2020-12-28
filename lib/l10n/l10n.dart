@@ -317,7 +317,7 @@ class S {
       );
 
   String get skills_description => Intl.message(
-        'What skills are you good at that you\'d like to share with your community?',
+        'Please list ass many as skills that you are willing to share with others within your community.',
         name: 'skills_description',
       );
 
@@ -347,7 +347,7 @@ class S {
       );
 
   String get interests_description => Intl.message(
-        'What are some of your interests and passions that you would be willing to share with your community?',
+        'Please list as many of your interests or passions that you are willing to share with others within your community.',
         name: 'interests_description',
       );
 
@@ -362,12 +362,12 @@ class S {
       );
 
   String get bio_description => Intl.message(
-        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+        'Please tell us a little bit about yourself in a few sentences.For example, you can tell us what makes you unique.',
         name: 'bio_description',
       );
 
   String get bio_hint => Intl.message(
-        'Tell us a little about yourself.',
+        'What makes me unique is',
         name: 'bio_hint',
       );
 
@@ -377,7 +377,7 @@ class S {
       );
 
   String get validation_error_bio_min_characters => Intl.message(
-        '* min 50 characters',
+        '* min 100 characters',
         name: 'validation_error_bio_min_characters',
       );
 
@@ -467,7 +467,7 @@ class S {
       );
 
   String get join_timebank_code_message => Intl.message(
-        'Enter the code you received from your admin to see the volunteer opportunities.',
+        'Enter the code you received from your Seva Community admin to join now.',
         name: 'join_timebank_code_message',
       );
 
@@ -627,7 +627,7 @@ class S {
       );
 
   String get protected_timebank => Intl.message(
-        'Protected Seva Community',
+        'Restricted Seva Community',
         name: 'protected_timebank',
       );
 
@@ -1192,7 +1192,7 @@ class S {
       );
 
   String get organizer => Intl.message(
-        'Owner',
+        'Organiser',
         name: 'organizer',
       );
 
@@ -1237,7 +1237,7 @@ class S {
       );
 
   String get project_mission_statement_hint => Intl.message(
-        'Ex: A bit more about your project which will help to associate with',
+        'Tell us why this project or event is happening. How will it help your community?',
         name: 'project_mission_statement_hint',
       );
 
@@ -1442,7 +1442,7 @@ class S {
       );
 
   String get past_hired => Intl.message(
-        'Past Hired',
+        'Previously Selected',
         name: 'past_hired',
       );
 
@@ -1517,7 +1517,7 @@ class S {
       );
 
   String get request_description_hint => Intl.message(
-        'Your Request and any #hashtags',
+        'Please describe what you need to have done./n /nExample, I need help removing weeds from  my small garden.',
         name: 'request_description_hint',
       );
 
@@ -1957,7 +1957,7 @@ class S {
       );
 
   String get offer_title_hint => Intl.message(
-        'Ex babysitting',
+        'Ex babysitting, math tutoring',
         name: 'offer_title_hint',
       );
 
@@ -1967,7 +1967,7 @@ class S {
       );
 
   String get offer_description_hint => Intl.message(
-        'Your offer and any #hashtags',
+        'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #babysitting or #mathhelp',
         name: 'offer_description_hint',
       );
 
@@ -1977,7 +1977,7 @@ class S {
       );
 
   String get availablity_description => Intl.message(
-        'Describe my availability',
+        'Tell us the days or times you are generally available or not available. Example, I\'m available only on weekends or weeknights after 6pm.',
         name: 'availablity_description',
       );
 
@@ -2322,7 +2322,7 @@ class S {
       );
 
   String get create_timebank_description => Intl.message(
-        'A Seva Community is a community of volunteers that give and receive time to each other and to the larger community',
+        'A Seva Community is timebanking community where volunteers give and receive help to each other and the greater community through time, money or goods.',
         name: 'create_timebank_description',
       );
 
@@ -2337,7 +2337,7 @@ class S {
       );
 
   String get timebank_name_hint => Intl.message(
-        'Ex: Pets-in-town, Citizen collab',
+        'Example: Evergreen Neighborhood, Acme Organization, XYZ Food Bank',
         name: 'timebank_name_hint',
       );
 
@@ -2407,12 +2407,12 @@ class S {
       );
 
   String get timebank_configure_profile_info => Intl.message(
-        'Configure profile information',
+        'Configure account information',
         name: 'timebank_configure_profile_info',
       );
 
   String get timebank_profile_info => Intl.message(
-        'Profile Information',
+        'Account Information',
         name: 'timebank_profile_info',
       );
 
@@ -2472,7 +2472,7 @@ class S {
       );
 
   String get edit_profile_information => Intl.message(
-        'Edit Profile Information',
+        'Edit Account Information',
         name: 'edit_profile_information',
       );
 
@@ -2577,7 +2577,7 @@ class S {
       );
 
   String get add_new => Intl.message(
-        'Add New',
+        'Add New Card',
         name: 'add_new',
       );
 
@@ -2672,7 +2672,7 @@ class S {
       );
 
   String get select_category => Intl.message(
-        'Please select a category',
+        'Select Category',
         name: 'select_category',
       );
 
@@ -3187,7 +3187,7 @@ class S {
       );
 
   String get name_your_group => Intl.message(
-        'Name your group',
+        'Name your specific Group',
         name: 'name_your_group',
       );
 
@@ -3417,7 +3417,7 @@ class S {
       );
 
   String get group_description => Intl.message(
-        'Groups within a Seva Community allow for granular activities. You can join one of the groups below or create your own group',
+        'Groups within a Seva Community allow for those with shared interests to meet regularly and organize separately.',
         name: 'group_description',
       );
 
@@ -3572,7 +3572,7 @@ class S {
       );
 
   String get group_subset => Intl.message(
-        'Group is a subset of a Seva Community that may be temporary. Ex: committees, project teams.',
+        'Group is a subset of a community who share common goals or interests. (Finance Committee, Parent Teacher Assoc., LGBTQ)',
         name: 'group_subset',
       );
 
@@ -3762,12 +3762,12 @@ class S {
       );
 
   String get upload_cv_resume => Intl.message(
-        'Upload my CV/Resume',
+        'Upload your CV or resume',
         name: 'upload_cv_resume',
       );
 
   String get cv_message => Intl.message(
-        'A CV / Resume will help members in the Seva Community know you better',
+        'Uploading your CV or resume helps us match you better to opportunities.',
         name: 'cv_message',
       );
 
@@ -4113,7 +4113,7 @@ class S {
       );
 
   String get describe_goods => Intl.message(
-        'Describe your goods / supplies and select from checkbox below',
+        'Describe the type of goods or supplies you donated and select from the list of items below.',
         name: 'describe_goods',
       );
 
@@ -4138,7 +4138,7 @@ class S {
       );
 
   String get add_amount_donated => Intl.message(
-        'Add amount that you have donated.',
+        'Add the amount you have pledged to donate',
         name: 'add_amount_donated',
       );
 
@@ -4518,7 +4518,7 @@ class S {
       );
 
   String get i_received_amount => Intl.message(
-        'I acknowledge that I have received',
+        'I acknowledge that our community/organization has received',
         name: 'i_received_amount',
       );
 
@@ -4528,7 +4528,7 @@ class S {
       );
 
   String get acknowledge_desc_two => Intl.message(
-        'This may be lower than the pledged amount due to a transaction fee. If there is a mismatch, please message',
+        'This may be more or less than the pledged amount. If there is a discrepancy in the amount, please message the member.',
         name: 'acknowledge_desc_two',
       );
 
@@ -4693,7 +4693,7 @@ class S {
       );
 
   String get look_for_existing_siblings => Intl.message(
-        'Feed is visible to following Seva Communities',
+        'Your post is visible to the following Seva Communities:',
         name: 'look_for_existing_siblings',
       );
 
@@ -4793,7 +4793,7 @@ class S {
       );
 
   String get would_like_to_donate => Intl.message(
-        'Would you like to donate for this request.',
+        'Would you like to make a donation for this request?',
         name: 'would_like_to_donate',
       );
 
@@ -4888,7 +4888,7 @@ class S {
       );
 
   String get add_amount_donate => Intl.message(
-        'Add amount that you want to donate.',
+        'Tell us the maximum amount you are willing to donate towards your community.',
         name: 'add_amount_donate',
       );
 
@@ -5013,7 +5013,7 @@ class S {
       );
 
   String get accept_offer => Intl.message(
-        'Accept Offer',
+        'Would you like to accept this offer?',
         name: 'accept_offer',
       );
 
@@ -5211,34 +5211,619 @@ class S {
         'Your subscription is now cancelled. Until beginning at the conclusion of the current subscription period, your credit card will not be charged and transactions can be made until free limit of the current plan is reached.',
         name: 'cancel_subscription_success_label',
       );
+
+  String get notifications_promoted_organizer_subtitle_phrase => Intl.message(
+        'has promoted you to be the Organizer for the',
+        name: 'notifications_promoted_organizer_subtitle_phrase',
+      );
+
+  String get notifications_organizer_demoted_subtitle_phrase => Intl.message(
+        'has demoted you from being an Organizer for the ',
+        name: 'notifications_organizer_demoted_subtitle_phrase',
+      );
+
+  String get timebank_about_hint => Intl.message(
+        'Our Community is made up of local residents primarily from...',
+        name: 'timebank_about_hint',
+      );
+
+  String get login_title => Intl.message(
+        'Register or Sign into Your Account',
+        name: 'login_title',
+      );
+
+  String get login_subtitle => Intl.message(
+        'Use your email and password to access your account.',
+        name: 'login_subtitle',
+      );
+
+  String get register => Intl.message(
+        'Register',
+        name: 'register',
+      );
+
+  String get register_subtitle => Intl.message(
+        'Please create an account to begin giving and receiving',
+        name: 'register_subtitle',
+      );
+
+  String get register_with => Intl.message(
+        'Register with',
+        name: 'register_with',
+      );
+
+  String get register_with_apple => Intl.message(
+        'Register with Google',
+        name: 'register_with_apple',
+      );
+
+  String get go_back => Intl.message(
+        'Go Back',
+        name: 'go_back',
+      );
+
+  String get step => Intl.message(
+        'Step',
+        name: 'step',
+      );
+
+  String get you_entered => Intl.message(
+        'You entered',
+        name: 'you_entered',
+      );
+
+  String get prev => Intl.message(
+        'Prev',
+        name: 'prev',
+      );
+
+  String get profile_details => Intl.message(
+        'Profile Details',
+        name: 'profile_details',
+      );
+
+  String get seva_community_info => Intl.message(
+        'A Seva Community is a community of volunteers that give and receive time to each other and to the larger community.',
+        name: 'seva_community_info',
+      );
+
+  String get seva_logo_info => Intl.message(
+        'Upload a Photo ot pic to represent your community',
+        name: 'seva_logo_info',
+      );
+
+  String get what_is_community => Intl.message(
+        'What is Seva Community',
+        name: 'what_is_community',
+      );
+
+  String get change_plan_confirm => Intl.message(
+        'Change plan confirmation',
+        name: 'change_plan_confirm',
+      );
+
+  String get upgrade_plan_confirm => Intl.message(
+        'Are you sure you want to upgrade the plan ?',
+        name: 'upgrade_plan_confirm',
+      );
+
+  String get contact_seva_team => Intl.message(
+        'Please contact Sevax support for downgrading your plan',
+        name: 'contact_seva_team',
+      );
+
+  String get clear_dues => Intl.message(
+        'Please clear your dues and try again !',
+        name: 'clear_dues',
+      );
+
+  String get add_new_card => Intl.message(
+        'Add New Card',
+        name: 'add_new_card',
+      );
+
+  String get card_number => Intl.message(
+        'Card Number',
+        name: 'card_number',
+      );
+
+  String get donation_offered => Intl.message(
+        'Donation Offered',
+        name: 'donation_offered',
+      );
+
+  String get acknowledged => Intl.message(
+        'Acknowledged',
+        name: 'acknowledged',
+      );
+
+  String get modified => Intl.message(
+        'Modified',
+        name: 'modified',
+      );
+
+  String get expiry_date => Intl.message(
+        'Expiration Date',
+        name: 'expiry_date',
+      );
+
+  String get trustworthiness => Intl.message(
+        'Trustworthiness',
+        name: 'trustworthiness',
+      );
+
+  String get reliability_score => Intl.message(
+        'Reliability score',
+        name: 'reliability_score',
+      );
+
+  String get donation_dispute_info => Intl.message(
+        'If there is discrepancy in the items received, please message the number.',
+        name: 'donation_dispute_info',
+      );
+
+  String get part_of_seva_communication => Intl.message(
+        'Part of SevaX global network of Communication',
+        name: 'part_of_seva_communication',
+      );
+
+  String get no_near_communities => Intl.message(
+        'No nearby Seva Communities',
+        name: 'no_near_communities',
+      );
+
+  String get find_near_timebanks => Intl.message(
+        'Find a Seva Community near you',
+        name: 'find_near_timebanks',
+      );
+
+  String get gps_reminder_near => Intl.message(
+        'Please make sure you have GPS turned on to see the list of Seva Communities around you',
+        name: 'gps_reminder_near',
+      );
+
+  String get see_all => Intl.message(
+        'See All',
+        name: 'see_all',
+      );
+
+  String get see_less => Intl.message(
+        'See Less',
+        name: 'see_less',
+      );
+
+  String get start_request_date => Intl.message(
+        'Start adding the first request',
+        name: 'start_request_date',
+      );
+
+  String get seva_community_requests => Intl.message(
+        'Seva Community Requests',
+        name: 'seva_community_requests',
+      );
+
+  String get enter_max_credits => Intl.message(
+        'Please enter maximum credits',
+        name: 'enter_max_credits',
+      );
+
+  String get existing_requests => Intl.message(
+        'Existing Requests',
+        name: 'existing_requests',
+      );
+
+  String get edit_request => Intl.message(
+        'Edit Request',
+        name: 'edit_request',
+      );
+
+  String get description => Intl.message(
+        'Description',
+        name: 'description',
+      );
+
+  String get donation_address => Intl.message(
+        'Donation Address',
+        name: 'donation_address',
+      );
+
+  String get bank_address => Intl.message(
+        'Bank Address',
+        name: 'bank_address',
+      );
+
+  String get routing_number => Intl.message(
+        'Routing number',
+        name: 'routing_number',
+      );
+
+  String get last_option => Intl.message(
+        'last option',
+        name: 'last_option',
+      );
+
+  String get no_record_transactions_yet => Intl.message(
+        'No recorded transactions yet !',
+        name: 'no_record_transactions_yet',
+      );
+
+  String get task_desc => Intl.message(
+        'Here is the list of pending tasks that are waiting for your acceptance, not accepted tasks and the tasks you have completed.',
+        name: 'task_desc',
+      );
+
+  String get total_earned => Intl.message(
+        'Total Earned',
+        name: 'total_earned',
+      );
+
+  String get start_new_offer => Intl.message(
+        'Start adding the first offer',
+        name: 'start_new_offer',
+      );
+
+  String get compose_new_msg => Intl.message(
+        'Compose new message',
+        name: 'compose_new_msg',
+      );
+
+  String get admin_msg => Intl.message(
+        'Admin Messages',
+        name: 'admin_msg',
+      );
+
+  String get personal_messages => Intl.message(
+        'Personal Messages',
+        name: 'personal_messages',
+      );
+
+  String get messaging_room_logo => Intl.message(
+        'Messaging Room Logo',
+        name: 'messaging_room_logo',
+      );
+
+  String get no_msg_yet => Intl.message(
+        'No messages yet',
+        name: 'no_msg_yet',
+      );
+
+  String get no_feeds_yet => Intl.message(
+        'No feeds yet',
+        name: 'no_feeds_yet',
+      );
+
+  String get add_new_feed => Intl.message(
+        'Start adding the first feed',
+        name: 'add_new_feed',
+      );
+
+  String get comments => Intl.message(
+        'Comments',
+        name: 'comments',
+      );
+
+  String get add_comment => Intl.message(
+        'Add a comment...',
+        name: 'add_comment',
+      );
+
+  String get view_prev_replies => Intl.message(
+        'View Previous Replies',
+        name: 'view_prev_replies',
+      );
+
+  String get reply => Intl.message(
+        'Reply',
+        name: 'reply',
+      );
+
+  String get liked => Intl.message(
+        'Liked',
+        name: 'liked',
+      );
+
+  String get like => Intl.message(
+        'Like',
+        name: 'like',
+      );
+
+  String get report_on => Intl.message(
+        'Reports on',
+        name: 'report_on',
+      );
+
+  String get switch_timebank => Intl.message(
+        'Switch To Seva Community',
+        name: 'switch_timebank',
+      );
+
+  String get type_group => Intl.message(
+        'Type a group name',
+        name: 'type_group',
+      );
+
+  String get admin_tools => Intl.message(
+        'Admin Tools',
+        name: 'admin_tools',
+      );
+
+  String get of_text => Intl.message(
+        'of',
+        name: 'of_text',
+      );
+
+  String get start_new_feed => Intl.message(
+        'Start a new feed..',
+        name: 'start_new_feed',
+      );
+
+  String get view_more_comments => Intl.message(
+        'View more comments',
+        name: 'view_more_comments',
+      );
+
+  String get people => Intl.message(
+        'people',
+        name: 'people',
+      );
+
+  String get replies => Intl.message(
+        'Replies',
+        name: 'replies',
+      );
+
+  String get near_by_timebank_search_hint => Intl.message(
+        'Type in the name of your Seva Community here.',
+        name: 'near_by_timebank_search_hint',
+      );
+
+  String get near_by_timebank_subtitle => Intl.message(
+        'Search here if you know the name of your existing Seva Community.',
+        name: 'near_by_timebank_subtitle',
+      );
+
+  String get near_by_timebank_title => Intl.message(
+        'Find a Seva Community near you.',
+        name: 'near_by_timebank_title',
+      );
+
+  String get timebank_about_title => Intl.message(
+        'Tell Us About your Seva Community',
+        name: 'timebank_about_title',
+      );
+
+  String get who_can_see_feed => Intl.message(
+        'Who can see your Feed?',
+        name: 'who_can_see_feed',
+      );
+
+  String get notification_settings => Intl.message(
+        'Notification Settings',
+        name: 'notification_settings',
+      );
+
+  String get open_notification => Intl.message(
+        'Open notifications',
+        name: 'open_notification',
+      );
+
+  String get owners => Intl.message(
+        'Owners',
+        name: 'owners',
+      );
+
+  String get make_owner => Intl.message(
+        'Make Owner',
+        name: 'make_owner',
+      );
+
+  String get owner => Intl.message(
+        'Owner',
+        name: 'owner',
+      );
+
+  String get add_to_existing_reqest => Intl.message(
+        'Add to Existing Request',
+        name: 'add_to_existing_reqest',
+      );
+
+  String get save_as_sponsored => Intl.message(
+        'Save as Endorsed',
+        name: 'save_as_sponsored',
+      );
+
+  String get create_feed_desc_hint => Intl.message(
+        'Please share only relevant information to your Group, Project, or Community. Example, you can talk about your latest volunteer exchange and post a photo of you or the person doing the task',
+        name: 'create_feed_desc_hint',
+      );
+
+  String get admin_promoted_to_owner => Intl.message(
+        'creator_name the creator of Community community_name has made you an admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things',
+        name: 'admin_promoted_to_owner',
+      );
+
+  String get owner_demoted_to_admin => Intl.message(
+        'associatedName has demoted you from being an Organizer for the groupName',
+        name: 'owner_demoted_to_admin',
+      );
+
+  String get extra_amount_charge => Intl.message(
+        'There is an additional cost of \$15 / month / community to create a Private Community',
+        name: 'extra_amount_charge',
+      );
+
+  String get sponsored_groups => Intl.message(
+        'Endorsed Groups',
+        name: 'sponsored_groups',
+      );
+
+  String get endorsed_group_request_title => Intl.message(
+        'Endorsed Group Approval Request',
+        name: 'endorsed_group_request_title',
+      );
+
+  String get endorsed_group_request_desc => Intl.message(
+        'user_name has created a group group_name. Please approve if this newly formed group is indeed endorsed by your organization, so it can be shown with the Endorsed Badge.',
+        name: 'endorsed_group_request_desc',
+      );
+
+  String get endorsed_notification_title => Intl.message(
+        'Group group_name requires your approval',
+        name: 'endorsed_notification_title',
+      );
+
+  String get endorsed_notification_desc => Intl.message(
+        'user_name has created a group group_name. They have requested this group to be approved - to allow the group to have an endorsed badge.',
+        name: 'endorsed_notification_desc',
+      );
+
+  String get enable_ => Intl.message(
+        'You will need to enable location services on your browser: Chrome; Edge; Firefox; Safari to allow us to display nearby Communities.',
+        name: 'enable_gps',
+      );
+
+  String get browser_support_info => Intl.message(
+        'This browser is currently not supported in the current release. We recommend using Google Chrome for now to optimize your experience. Thank you for your patience.',
+        name: 'browser_support_info',
+      );
+
+  String get project_message_room_invite => Intl.message(
+        '',
+        name: 'project_message_room_invite',
+      );
+
+  String get new_post_notification => Intl.message(
+        'There is a new Post by ',
+        name: 'new_post_notification',
+      );
+
+  String get new_message_notification => Intl.message(
+        '',
+        name: 'new_message_notification',
+      );
+
+  String get member_creates_transaction => Intl.message(
+        'This is currently not permitted. Please contact the Community Creator ',
+        name: 'member_creates_transaction',
+      );
+
+  String get creator_creates_transaction => Intl.message(
+        'This is currently not permitted. Please see the following link for more information: ',
+        name: 'creator_creates_transaction',
+      );
+
+  String get negative_threshold_title => Intl.message(
+        'Threshold for negative credits',
+        name: 'negative_threshold_title',
+      );
+
+  String get generate_report => Intl.message(
+        'Generate Report',
+        name: 'generate_report',
+      );
+
+  String get time_period => Intl.message(
+        'Time period',
+        name: 'time_period',
+      );
+
+  String get select_time_period => Intl.message(
+        'Select Time Period',
+        name: 'select_time_period',
+      );
+
+  String get select_transaction_type => Intl.message(
+        'Select Transaction Types',
+        name: 'select_transaction_type',
+      );
+
+  String get select_transaction_type_valid => Intl.message(
+        'Select a transaction type',
+        name: 'select_transaction_type_valid',
+      );
+
+  String get generating_report => Intl.message(
+        'Generating Report',
+        name: 'generating_report',
+      );
+
+  String get downloading_report => Intl.message(
+        'Downloading Report',
+        name: 'downloading_report',
+      );
+
+  String get specific_data_range => Intl.message(
+        'Specific date range',
+        name: 'specific_data_range',
+      );
+
+  String get year_to_date => Intl.message(
+        'Year to date',
+        name: 'year_to_date',
+      );
+
+  String get month_to_date => Intl.message(
+        'Month to date',
+        name: 'month_to_date',
+      );
+
+  String get reports => Intl.message(
+        'Reports',
+        name: 'reports',
+      );
+
+  String get reports_charging_info => Intl.message(
+        'Reports are emailed to the creator of each community once a month. There is a cost of \\\$9.95 per report - which will be billed to the credit card on file to generate this report. By clicking ‘Proceed’, you are agreeing to this cost. Otherwise click \\\'Cancel\\\'.',
+        name: 'reports_charging_info',
+      );
+
+  String get no_categories_available => Intl.message(
+        'No categories Available',
+        name: 'no_categories_available',
+      );
+
+  String get search_category => Intl.message(
+        'Search Category',
+        name: 'search_category',
+      );
+
+  String get choose_category => Intl.message(
+        'Choose Category and Sub Category',
+        name: 'choose_category',
+      );
+
+  String get suggested_categories => Intl.message(
+        'Suggested Categories',
+        name: 'suggested_categories',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
-        Locale.fromSubtags(languageCode: 'af'),
-        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
-        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'sw'),
+        Locale.fromSubtags(languageCode: 'en'),
+        Locale.fromSubtags(languageCode: 'fr'),
       ];
 
   @override
   bool isSupported(Locale locale) => [
-        'af',
-        'en',
         'es',
-        'fr',
         'pt',
         'sn',
+        'zh',
+        'zh',
+        'af',
         'sw',
-        'zh',
-        'zh',
+        'en',
+        'fr',
       ].contains(locale.languageCode);
 
   @override

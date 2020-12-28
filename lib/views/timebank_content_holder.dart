@@ -29,7 +29,9 @@ import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../flavor_config.dart';
 import 'core.dart';
@@ -744,16 +746,23 @@ class DiscussionListState extends State<DiscussionList> {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.only(top: 5),
-                            child: Text(
-                              news.title != null && news.title != "NoData"
+                            child: Umeshify(
+                              text: news.title != null && news.title != "NoData"
                                   ? news.title.trim()
                                   : news.subheading.trim(),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 7,
-                              style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Europa"),
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                              // overflow: TextOverflow.ellipsis,
+                              // maxLines: 7,
+                              // style: TextStyle(
+                              //     fontSize: 15.0,
+                              //     fontWeight: FontWeight.bold,
+                              //     fontFamily: "Europa"),
                             ),
                           ),
                         ],

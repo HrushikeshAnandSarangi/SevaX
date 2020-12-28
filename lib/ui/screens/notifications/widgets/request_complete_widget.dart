@@ -62,6 +62,7 @@ class RequestCompleteWidget extends StatelessWidget {
               onTap: () async {
                 var canApproveTransaction =
                     await SevaCreditLimitManager.hasSufficientCredits(
+                  email: SevaCore.of(context).loggedInUser.email,
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   associatedCommunity:

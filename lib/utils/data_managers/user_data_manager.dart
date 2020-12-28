@@ -133,12 +133,12 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
-    deviceDetails.deviceId = androidInfo.androidId;
-    deviceDetails.deviceType = 'Android';
+    deviceDetails.deviceType = androidInfo.androidId;
+    deviceDetails.deviceId = 'Android';
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceId = iosInfo.identifierForVendor;
-    deviceDetails.deviceType = 'IOS';
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+    deviceDetails.deviceId = 'IOS';
   }
 
   if (locationVal == null) {
@@ -497,18 +497,20 @@ Future<String> updateChangeOwnerDetails(
     String state}) async {
   var result = await http.post(
       "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
-      body: jsonEncode({
-        "communityId": communityId,
-        "email": email,
-        "billing_address": {
-          "street_address1": streetAddress1,
-          "street_address2": streetAddress2,
-          "country": country,
-          "city": city,
-          "pincode": pinCode,
-          "state": state
-        }
-      }),
+      body: jsonEncode(
+        {
+          "communityId": communityId,
+          "email": email,
+          "billing_address": {
+            "street_address1": streetAddress1,
+            "street_address2": streetAddress2,
+            "country": country,
+            "city": city,
+            "pincode": pinCode,
+            "state": state
+          }
+        },
+      ),
       headers: {"Content-Type": "application/json"});
   //var data = json.decode(result.body);
   return result.statusCode.toString();

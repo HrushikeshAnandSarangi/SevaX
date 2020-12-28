@@ -34,9 +34,12 @@ class SponsorGroupRequestWidget extends StatelessWidget {
         return user != null && user.fullname != null
             ? NotificationCard(
                 timestamp: notification.timestamp,
-                title: 'Sponsor group request approval',
-                subTitle:
-                    '${user.fullname.toLowerCase()} created ${model.timebankTitle} as sponsored group. Tap to approve.',
+                title: S.of(context).endorsed_notification_title,
+                subTitle: S
+                    .of(context)
+                    .endorsed_notification_desc
+                    .replaceAll('user_name', user.fullname.toLowerCase())
+                    .replaceAll('group_name', model.timebankTitle),
                 photoUrl: user.photoURL,
                 entityName: user.fullname,
                 onDismissed: () {
@@ -124,7 +127,12 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(0.0),
                   child: Text(
-                    '${userModel.fullname.toLowerCase()} created ${model.timebankTitle} as sponsored group. By approving group will have verified badge in groups section',
+                    S
+                        .of(context)
+                        .endorsed_group_request_desc
+                        .replaceAll(
+                            'user_name', userModel.fullname.toLowerCase())
+                        .replaceAll('group_name', model.timebankTitle),
                     style: TextStyle(
                       fontSize: 14,
                     ),

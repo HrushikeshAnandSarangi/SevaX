@@ -20,6 +20,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/message_bub
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
@@ -359,6 +360,16 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
+    var newsModel = _bloc.getNewsModel(messageModel.message);
+    if (newsModel != null) {
+      logger.i('picking from cache');
+      return FeedBubble(
+        news: newsModel,
+        messageModel: messageModel,
+        senderId: widget.senderId,
+        isSent: messageModel.fromId == widget.senderId,
+      );
+    }
     return FutureBuilder<Object>(
       future: FeedsRepository.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
@@ -371,6 +382,7 @@ class _ChatPageState extends State<ChatPage> {
         }
 
         NewsModel news = snapshot.data;
+        _bloc.setNewsModel(news);
         return FeedBubble(
           news: news,
           messageModel: messageModel,

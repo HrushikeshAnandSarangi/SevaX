@@ -25,7 +25,7 @@ class CreateGroupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Map validationString = {
       'profanity': S.of(context).profanity_text_alert,
-      'validation_error_room_name': S.of(context).profanity_text_alert
+      'validation_error_room_name': S.of(context).validation_error_general_text
     };
     return Scaffold(
       appBar: AppBar(

@@ -129,31 +129,39 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(""),
                 ),
-                if (userModel.bio != null)
-                  Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: Text(
-                      "${S.of(context).about} ${userModel.fullname}",
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        if (userModel.bio != null)
+                          Padding(
+                            padding: EdgeInsets.all(0.0),
+                            child: Text(
+                              "${S.of(context).about} ${userModel.fullname}",
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        getBio(context, userModel, isScrollable: false),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "${S.of(context).reason_to_join}:",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            model.reason ?? S.of(context).reason_not_mentioned,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                getBio(context, userModel),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "${S.of(context).reason_to_join}:",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text(
-                    model.reason ?? S.of(context).reason_not_mentioned,
                   ),
                 ),
                 Padding(

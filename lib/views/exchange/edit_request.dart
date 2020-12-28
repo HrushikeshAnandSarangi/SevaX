@@ -32,7 +32,6 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -970,6 +969,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
+  List<CategoryModel> modelList = List();
+
   void updateInformation(List category) {
     setState(() => categories = category);
   }
@@ -984,7 +985,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         List<String> categoriesList = bodyMap.containsKey('string_vec')
             ? List.castFrom(bodyMap['string_vec'])
             : [];
-        getCategoryModels(categoriesList, 'Suggested Categories');
+        getCategoryModels(categoriesList, S.of(context).suggested_categories);
       } else {
         return null;
       }
@@ -1012,12 +1013,14 @@ class RequestEditFormState extends State<RequestEditForm> {
     var category = await Navigator.push(
       context,
       MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => Category()),
+          fullscreenDialog: true,
+          builder: (context) => Category(
+                selectedSubCategoriesids: widget.requestModel.categories,
+              )),
     );
 
     updateInformation(category);
-    logger.i(
-        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
+    log(' poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
   }
 
   //building list of selectedSubCategories
@@ -1064,7 +1067,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
+                      S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1156,11 +1159,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
+
                     } else if (int.parse(value) == 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
+
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1346,7 +1351,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
+                           S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1421,8 +1426,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                            "Choose Category and Sub Category",
-                            style: TextStyle(
+                      S.of(context).choose_category,
+
+                      style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',

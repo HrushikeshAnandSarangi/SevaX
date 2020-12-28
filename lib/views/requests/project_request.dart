@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
@@ -51,21 +52,17 @@ class ProjectRequests extends StatefulWidget {
 class RequestsState extends State<ProjectRequests>
     with SingleTickerProviderStateMixin {
   UserModel user = null;
-  TabController tabController;
+
   ProjectModel projectModel;
   bool isProjectMember = false;
+  bool isChatVisible = false;
   final ProjectDescriptionBloc bloc = ProjectDescriptionBloc();
 
   @override
   void initState() {
     super.initState();
-
-    //todo add chatid from project model
-    //todo update isProjectMember from project model
-    isProjectMember = true;
-    bloc.init("MnD15clIiTKXs9zgDaXU");
-    tabController = TabController(length: 2, vsync: this);
     projectModel = widget.projectModel;
+    bloc.init(projectModel.associatedMessaginfRoomId);
   }
 
   @override
@@ -88,6 +85,13 @@ class RequestsState extends State<ProjectRequests>
 
   @override
   Widget build(BuildContext context) {
+    final user = SevaCore.of(context).loggedInUser;
+    isProjectMember = (ProjectMessagingRoomHelper.getAssociatedMembers(
+              associatedmembers: projectModel.associatedmembers,
+            ).contains(user.sevaUserID) ||
+            projectModel.creatorId == user.sevaUserID) &&
+        projectModel.associatedmembers.isNotEmpty;
+
     return BlocProvider(
       bloc: bloc,
       child: DefaultTabController(
@@ -239,10 +243,10 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if ((widget.projectModel.mode == "Timebank" &&
+    if ((widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT &&
             isAccessAvailable(widget.timebankModel,
                 SevaCore.of(context).loggedInUser.sevaUserID)) ||
-        (widget.projectModel.mode == "Personal" &&
+        (widget.projectModel.mode == ProjectMode.MEMBER_PROJECT &&
             widget.projectModel.creatorId == sevaUserId)) {
       proceedCreatingRequest();
     } else {

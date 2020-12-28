@@ -217,7 +217,7 @@ class BookmarkedOffers extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             child: Text(
-                              'Add to Existing Request',
+                              S.of(context).add_to_existing_reqest,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.white),
                             ),

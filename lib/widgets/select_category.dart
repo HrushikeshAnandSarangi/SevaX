@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class Category extends StatefulWidget {
+  final List<String> selectedSubCategoriesids;
+
+  Category({this.selectedSubCategoriesids});
+
   @override
   _CategoryState createState() => _CategoryState();
 }
@@ -14,6 +21,7 @@ class _CategoryState extends State<Category> {
   bool _isSearching = false;
   String selectedCategory = '';
   List<CategoryModel> selectedSubCategories = [];
+  List<String> selectedSubCategoriesIds = [];
   List<CategoryModel> categories = [];
   List<CategoryModel> mainCategories = [];
   List<CategoryModel> subCategories = [];
@@ -32,6 +40,14 @@ class _CategoryState extends State<Category> {
       categories = value;
       mainCategories = filterMainCategories(value);
       dataLoaded = true;
+      if (widget.selectedSubCategoriesids != null &&
+          widget.selectedSubCategoriesids.length > 0) {
+        selectedSubCategoriesIds = widget.selectedSubCategoriesids;
+        selectedSubCategories = List<CategoryModel>.from(categories.where(
+            (element) => selectedSubCategoriesIds.contains(element.typeId)));
+        log('len  ' + selectedSubCategories.length.toString());
+      }
+
       setState(() {});
     });
   }
@@ -53,17 +69,27 @@ class _CategoryState extends State<Category> {
     var color = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Select Category"),
-        leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Icon(Icons.arrow_back_ios, size: 20, color: Colors.white)),
+        title: Text(S.of(context).select_category),
+        leading: IconButton(
+          onPressed: () {
+            Future.delayed(Duration.zero, () {
+              Navigator.pop(context,
+                  [S.of(context).suggested_categories, selectedSubCategories]);
+            });
+            ;
+          },
+          icon: Icon(Icons.arrow_back, size: 20, color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () {
+              log('models  ' + selectedSubCategories[0].toString());
               Future.delayed(Duration.zero, () {
-                Navigator.pop(
-                    context, [selectedCategory, selectedSubCategories]);
+                Navigator.pop(context, [
+                  S.of(context).suggested_categories,
+                  selectedSubCategories
+                ]);
               });
             },
           ),
@@ -84,7 +110,7 @@ class _CategoryState extends State<Category> {
                         },
                         controller: _textEditingController,
                         decoration: InputDecoration(
-                          hintText: "Search Category",
+                          hintText: S.of(context).search_category,
                           hintStyle: TextStyle(fontSize: 14),
                           filled: true,
                           fillColor: Colors.grey[100],
@@ -149,7 +175,7 @@ class _CategoryState extends State<Category> {
                   ],
                 )
               : Center(
-                  child: Text('No categories Available'),
+                  child: Text(S.of(context).no_categories_available),
                 ),
     );
   }
@@ -170,8 +196,11 @@ class _CategoryState extends State<Category> {
             value: selectedSubCategories.contains(subs[index]),
             onChanged: (value) {
               if (value) {
+                selectedSubCategoriesIds.add(subs[index].typeId);
                 selectedSubCategories.add(subs[index]);
               } else {
+                selectedSubCategoriesIds.remove(subs[index].typeId);
+
                 selectedSubCategories.remove(subs[index]);
               }
               setState(() {});

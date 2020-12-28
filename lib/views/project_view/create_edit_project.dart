@@ -22,6 +22,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -698,13 +699,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                           // }
                           showProgressDialog(S.of(context).creating_project);
-//                          setState(() {
-//                            this.communityImageError = '';
-//                          });
-                          await FirestoreManager.createProject(
-                              projectModel: projectModel);
-                          globals.projectsAvtaarURL = null;
-                          globals.webImageUrl = null;
+                          await ProjectMessagingRoomHelper
+                              .createProjectWithMessaging(
+                            projectModel: projectModel,
+                            projectCreator: SevaCore.of(context).loggedInUser,
+                          );
+                          // await FirestoreManager.createProject(
+                          //     projectModel: projectModel);
+                          // globals.projectsAvtaarURL = null;
+                          // globals.webImageUrl = null;
 
                           if (dialogContext != null) {
                             Navigator.pop(dialogContext);

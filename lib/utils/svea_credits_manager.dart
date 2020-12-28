@@ -81,24 +81,45 @@ class SevaCreditLimitManager {
     var userModel = await FirestoreManager.getUserForIdFuture(
       sevaUserId: userId,
     );
-    sevaCoins = userModel.currentBalance;
 
+    sevaCoins = userModel.currentBalance;
     return double.parse(sevaCoins.toStringAsFixed(2));
   }
 
   static Future<bool> hasSufficientCredits({
+    @required String email,
     @required String userId,
     @required double credits,
     @required String associatedCommunity,
   }) async {
-    double communityAssociatedBalance = await getMemberBalancePerTimebank(
-      userSevaId: userId,
-      associatedCommunity: associatedCommunity,
-    );
+    var currentGlobalBalance = await getCurrentBalance(email: email);
+    if (currentGlobalBalance >= credits) {
+      return true;
+    } else {
+      var associatedBalanceWithinThisCommunity =
+          await getMemberBalancePerTimebank(
+        userSevaId: userId,
+        associatedCommunity: associatedCommunity,
+      );
 
-    double communityThreshold =
-        await getNegativeThresholdForCommunity(associatedCommunity);
-    log("Response = >$communityThreshold  $communityAssociatedBalance  ${communityThreshold - (communityAssociatedBalance + credits)}");
-    return communityAssociatedBalance + credits <= communityThreshold;
+      var communityThreshold =
+          await getNegativeThresholdForCommunity(associatedCommunity);
+
+      if (associatedBalanceWithinThisCommunity > communityThreshold) {
+        return (currentGlobalBalance > 0 ? currentGlobalBalance : 0) +
+                (communityThreshold.abs() +
+                    associatedBalanceWithinThisCommunity) >=
+            credits;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  static Future<double> getCurrentBalance({String email}) {
+    int FALLBACK_BALANCE = 0;
+    return FirestoreManager.getUserForEmail(emailAddress: email)
+        .then((value) => value.currentBalance)
+        .catchError((onError) => FALLBACK_BALANCE);
   }
 }

@@ -305,7 +305,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           !widget.timebankModel.sponsored
               ? Row(
                   children: <Widget>[
-                    headingText('Save as Sponsored', false),
+                    headingText(S.of(context).save_as_sponsored, false),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                       child: infoButton(

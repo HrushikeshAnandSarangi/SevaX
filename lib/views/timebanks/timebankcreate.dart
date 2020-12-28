@@ -21,9 +21,7 @@ import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
@@ -371,7 +369,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
         Row(
           children: <Widget>[
-            headingText('Save as Sponsored', false),
+            headingText(S.of(context).save_as_sponsored, false),
             Padding(
               padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
               child: infoButton(

@@ -231,16 +231,18 @@ class ManualTimeRepository {
     );
 
     //Clear notification
-    batchWrite.updateData(
-      _firestore
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(notificationId),
-      {
-        'isRead': true,
-      },
-    );
+    if (notificationId != null) {
+      batchWrite.updateData(
+        _firestore
+            .collection('timebanknew')
+            .document(model.timebankId)
+            .collection('notifications')
+            .document(notificationId),
+        {
+          'isRead': true,
+        },
+      );
+    }
     return batchWrite;
   }
 

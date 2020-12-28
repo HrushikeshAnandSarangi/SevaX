@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -87,16 +88,17 @@ class NewsCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Text('pppppppppppp'),
                         Container(
                           margin: EdgeInsets.only(top: 5),
-                          child: Umeshify(
+                          child: Linkify(
                               text: title != null && title != "NoData"
                                   ? title.trim()
                                   : "titile",
                               onOpen: (url) async {
-                                if (await canLaunch(url)) {
-                                  launch(url);
-                                }
+                                // if (await canLaunch(url)) {
+                                //   launch(url);
+                                // }
                               }
                               // overflow: TextOverflow.ellipsis,
                               // maxLines: 7,
