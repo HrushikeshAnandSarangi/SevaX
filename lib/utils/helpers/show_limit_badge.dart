@@ -3,6 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
@@ -97,7 +98,7 @@ class TransactionLimitCheck extends StatelessWidget {
         super(key: key);
 
   ViewerRole initViewerRole(UserDataBloc _userBloc) {
-    if (_userBloc.community.creator_email == _userBloc.user.sevaUserID) {
+    if (_userBloc.community.created_by == _userBloc.user.sevaUserID) {
       return ViewerRole.CREATOR;
     }
 
@@ -190,36 +191,7 @@ class TransactionLimitCheck extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
-              // Offstage(
-              //   offstage: viewRole != ViewerRole.CREATOR ||
-              //       (isSoftDeleteRequested && !isBillingFailed),
-              //   child: FlatButton(
-              //     color: Theme.of(context).accentColor,
-              //     child: viewRole == ViewerRole.CREATOR
-              //         ? Text(
-              //             S.of(context).configure_billing,
-              //             style: TextStyle(color: Colors.white),
-              //           )
-              //         : Container(),
-              //     onPressed: () {
-              //       Navigator.of(_context).pop();
-              //       Navigator.of(context).push(
-              //         MaterialPageRoute(
-              //           builder: (context) => BillingPlanDetails(
-              //             activePlanId: activePlanId,
-              //             autoImplyLeading: true,
-              //             user: user,
-              //             isPlanActive: false,
-              //             isPrivateTimebank: isPrivate,
-              //             isBillMe: isBillMe,
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   ),
-              // ),
-              // SizedBox(width: 10),
+              SizedBox(width: 10),
               FlatButton(
                 color: Theme.of(context).accentColor,
                 child: Text(
@@ -238,102 +210,101 @@ class TransactionLimitCheck extends StatelessWidget {
   }
 }
 
-// bool getTransactionStatus({
-//   CommunityModel communityModel,
-// }) {
-//   int activeCount = 0;
-//  if ((communityModel.payment['planId'] ==
-// SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
-//           communityModel.subscriptionCancelled) &&
-//       communityModel.billingQuota != null) {
-//     List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
-//        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
-//             ['action']);
+bool getTransactionStatus({
+  CommunityModel communityModel,
+}) {
+  int activeCount = 0;
+  if ((communityModel.payment['planId'] ==
+              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
+          communityModel.subscriptionCancelled) &&
+      communityModel.billingQuota != null) {
+    List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
+        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
+            ['action']);
 
-//     neighbourhoodPlanBillableTransactions.forEach((billableItem) {
-//       if (communityModel.billingQuota.containsKey(billableItem)) {
-//         activeCount += communityModel.billingQuota[billableItem];
-//       }
-//     });
-//    return activeCount >=
-//         SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
-//  } else {
-//     return false;
-//   }
-// }
+    neighbourhoodPlanBillableTransactions.forEach((billableItem) {
+      if (communityModel.billingQuota.containsKey(billableItem)) {
+        activeCount += communityModel.billingQuota[billableItem];
+      }
+    });
+    return activeCount >=
+        SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
+  } else {
+    return false;
+  }
+}
 
-// class SevaPlansBillingConfig {
-//   static Map<String, dynamic> plansLimit = {
-//     "neighbourhood_plan": 15,
-//     "tall_plan": 50,
-//     "grande_plan": 3000,
-//     "venti_plan": 5000
-//   };
+class SevaPlansBillingConfig {
+  static Map<String, dynamic> plansLimit = {
+    "neighbourhood_plan": 15,
+    "tall_plan": 50,
+    "grande_plan": 3000,
+    "venti_plan": 5000
+  };
 
-//   static Map<String, dynamic> billingPlans = {
-//     "neighbourhood_plan": {
-//       "initial_transactions_amount": 0,
-//       "initial_transactions_qty": 50,
-//       'action': [
-// //         "quota_TypeJoinTimebank",
-//         "quota_TypeRequestApply",
-//         "quota_TypeRequestCreation",
-//         "quota_TypeRequestAccepted",
-//         "quota_TypeOfferCreated",
-//         "quota_TypeOfferAccepted"
-//       ],
-//     },
-//     "tall_plan": {
-//       "initial_transactions_amount": 0,
-//       "initial_transactions_qty": 50,
-//       'action': [
+  static Map<String, dynamic> billingPlans = {
+    "neighbourhood_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 50,
+      'action': [
 //         "quota_TypeJoinTimebank",
-//
-// "quota_TypeRequestApply",
-//        "quota_TypeRequestCreation",
-//        "quota_TypeRequestAccepted",
-//        "quota_TypeOfferCreated",
-//         "quota_TypeOfferAccepted"
-//       ],
-//     },
-//     "community_plus_plan": {
-//   "initial_transactions_amount": 0,
-//   "initial_transactions_qty": 150,
-//   'action': [
-//     "quota_TypeJoinTimebank",
-//     "quota_TypeRequestApply",
-//     "quota_TypeRequestCreation",
-//     "quota_TypeRequestAccepted",
-//     "quota_TypeOfferCreated",
-//     "quota_TypeOfferAccepted"
-//   ],
-// },
-// "grande_plan": {
-//       "initial_transactions_amount": 0,
-//       "initial_transactions_qty": 3000,
-//      'action': [
-//        "quota_TypeJoinTimebank",
-//        "quota_TypeRequestApply",
-//        "quota_TypeRequestCreation",
-//        "quota_TypeRequestAccepted",
-//        "quota_TypeOfferCreated",
-//         "quota_TypeOfferAccepted"
-//       ],
-//     },
-//     "venti_plan": {
-//       "initial_transactions_amount": 0,
-//       "initial_transactions_qty": 5000,
-//      'action': [
-//        "quota_TypeJoinTimebank",
-//        "quota_TypeRequestApply",
-//        "quota_TypeRequestCreation",
-//        "quota_TypeRequestAccepted",
-//        "quota_TypeOfferCreated",
-//         "quota_TypeOfferAccepted"
-//       ],
-//     }
-//   };
-// }
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+    "tall_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 50,
+      'action': [
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+    "tall_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 50,
+      'action': [
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+    "grande_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 50,
+      'action': [
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+    "venti_plan": {
+      "initial_transactions_amount": 0,
+      "initial_transactions_qty": 50,
+      'action': [
+        "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    }
+  };
+}
 
 String getRoleAssociatedMessage({
   ViewerRole viewRole,
@@ -359,38 +330,41 @@ String getRoleAssociatedMessage({
 String getMessage({
   BuildContext context,
   ViewerRole viewRole,
-  // bool isBillingFailed,
+  bool isBillingFailed,
   bool isSoftDeleteRequested,
-  // bool isUpdatingPlan,
-  // bool exaustedLimit,
+  bool isUpdatingPlan,
+  bool exaustedLimit,
 }) {
-  // if (exaustedLimit) {
-  //   String exhausted = S.of(context).exhausted_free_quota;
-  //   return getRoleAssociatedMessage(
-  //     viewRole: viewRole,
-  //     forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
-  //     forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
-  //     forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
-  //   );
-  // }
+  if (exaustedLimit) {
+    // String exhausted = S.of(context).exhausted_free_quota;
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin:
+          'This is currently not permitted. Please contact the Community Creator for more information',
+      forCreator:
+          'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/',
+      forMember:
+          'This is currently not permitted. Please contact the Community Creator for more information',
+    );
+  }
 
-  // if (isUpdatingPlan) {
-  //   return getRoleAssociatedMessage(
-  //     viewRole: viewRole,
-  //     forAdmin: S.of(context).payment_still_processing,
-  //     forCreator: S.of(context).payment_still_processing,
-  //     forMember: S.of(context).limit_badge_contact_admin,
-  //   );
-  // }
+  if (isUpdatingPlan) {
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).payment_still_processing,
+      forCreator: S.of(context).payment_still_processing,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
+  }
 
-  // if (isBillingFailed) {
-  //   return getRoleAssociatedMessage(
-  //     viewRole: viewRole,
-  //     forAdmin: S.of(context).limit_badge_billing_failed,
-  //     forCreator: S.of(context).limit_badge_billing_failed,
-  //     forMember: S.of(context).limit_badge_contact_admin,
-  //   );
-  // }
+  if (isBillingFailed) {
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).limit_badge_billing_failed,
+      forCreator: S.of(context).limit_badge_billing_failed,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
+  }
   if (isSoftDeleteRequested) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,

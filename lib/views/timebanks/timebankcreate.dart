@@ -21,7 +21,9 @@ import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
@@ -316,22 +318,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 type: InfoType.PRIVATE_GROUP,
               ),
             ),
-            // TransactionsMatrixCheck(
-            //   upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
-            //   transaction_matrix_type: "private_groups",
-            //   child:
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-              child: Checkbox(
-                value: timebankModel.private,
-                onChanged: (bool value) {
-                  setState(() {
-                    timebankModel.private = value;
-                  });
-                },
+            TransactionsMatrixCheck(
+              upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
+              transaction_matrix_type: "private_groups",
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.private,
+                  onChanged: (bool value) {
+                    setState(() {
+                      timebankModel.private = value;
+                    });
+                  },
+                ),
               ),
             ),
-            // ),
           ],
         ),
         Row(

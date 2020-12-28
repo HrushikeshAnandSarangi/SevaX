@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
@@ -342,77 +343,76 @@ class _EditProfilePageState extends State<EditProfilePage>
         SizedBox(
           height: 15,
         ),
-        // TransactionsMatrixCheck(
-        //   upgradeDetails: AppConfig.upgradePlanBannerModel.upload_cv,
-        //   transaction_matrix_type: "upload_cv",
-        //   child:
-        GestureDetector(
-          onTap: () {
-            _openFileExplorer();
-          },
-          child: Container(
-            height: 150,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: DashPathBorder.all(
-                dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+        TransactionsMatrixCheck(
+          upgradeDetails: AppConfig.upgradePlanBannerModel.upload_cv,
+          transaction_matrix_type: "upload_cv",
+          child: GestureDetector(
+            onTap: () {
+              _openFileExplorer();
+            },
+            child: Container(
+              height: 150,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: DashPathBorder.all(
+                  dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'lib/assets/images/cv.png',
-                  height: 50,
-                  width: 50,
-                  color: FlavorConfig.values.theme.primaryColor,
-                ),
-                Text(
-                  S.of(context).choose_pdf_file,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
-                ),
-                _isDocumentBeingUploaded
-                    ? Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Center(
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'lib/assets/images/cv.png',
+                    height: 50,
+                    width: 50,
+                    color: FlavorConfig.values.theme.primaryColor,
+                  ),
+                  Text(
+                    S.of(context).choose_pdf_file,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  _isDocumentBeingUploaded
+                      ? Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: Center(
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(
-                        child: cvUrl == null
-                            ? Offstage()
-                            : Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  color: Colors.grey[100],
-                                  child: ListTile(
-                                    leading: Icon(Icons.attachment),
-                                    title: Text(
-                                      cvName ?? "cv not available",
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(Icons.clear),
-                                      onPressed: () => setState(() {
-                                        cvName = null;
-                                        cvUrl = null;
-                                      }),
+                        )
+                      : Container(
+                          child: cvUrl == null
+                              ? Offstage()
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Card(
+                                    color: Colors.grey[100],
+                                    child: ListTile(
+                                      leading: Icon(Icons.attachment),
+                                      title: Text(
+                                        cvName ?? "cv not available",
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () => setState(() {
+                                          cvName = null;
+                                          cvUrl = null;
+                                        }),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                      ),
-              ],
+                        ),
+                ],
+              ),
             ),
           ),
         ),
-        // ),
         Text(
           S.of(context).validation_error_cv_size,
           style: TextStyle(color: Colors.grey),

@@ -12,11 +12,14 @@
 // import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 // import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
 // import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+// import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 // import 'package:sevaexchange/views/core.dart';
 // import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 // import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 
+// import '../../../main_app.dart';
+// import '../../../main_seva_dev.dart' as dev;
 // import '../../../widgets/credit_card/credit_card.dart';
 
 // class BillingView extends StatefulWidget {
@@ -98,10 +101,10 @@
 //           setState(() {});
 //         });
 //       } else {
-//         // _cardAlertMessage(
-//         //   isSuccess: true,
-//         //   communityId: widget.user.currentCommunity,
-//         // );
+//         _cardAlertMessage(
+//           isSuccess: true,
+//           communityId: widget.user.currentCommunity,
+//         );
 //       }
 //     }
 //   }
@@ -125,7 +128,7 @@
 //       if (dialogContext != null) {
 //         Navigator.pop(dialogContext);
 //       }
-//       // _cardAlertMessage(isSuccess: false);
+//       _cardAlertMessage(isSuccess: false);
 //     }
 //   }
 
@@ -438,64 +441,64 @@
 //     );
 //   }
 
-//   // void _cardAlertMessage({
-//   //   bool isSuccess = true,
-//   //   String communityId,
-//   // }) {
-//   //   showDialog(
-//   //     barrierDismissible: false,
-//   //     context: context,
-//   //     builder: (BuildContext context) {
-//   //       if (isSuccess) {
-//   //         Future.delayed(Duration(milliseconds: 600), () {
-//   //           // Here we need to update the payment to false
-//   //           Firestore.instance
-//   //               .collection('communities')
-//   //               .document(communityId)
-//   //               .updateData({
-//   //             'payment.message': 'Syncing payment data',
-//   //             "payment.payment_success": false,
-//   //             'payment.status': SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE,
-//   //           });
-//   //           Navigator.of(context).pushAndRemoveUntil(
-//   //             MaterialPageRoute(
-//   //               builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
-//   //                   ? MainApplication()
-//   //                   : dev.MainApplication(),
-//   //             ),
-//   //             (Route<dynamic> route) => false,
-//   //           );
-//   //         });
-//   //       }
-//   //       return AlertDialog(
-//   //         shape: RoundedRectangleBorder(
-//   //           borderRadius: BorderRadius.circular(8),
-//   //         ),
-//   //         content: isSuccess
-//   //             ? Column(
-//   //                 mainAxisSize: MainAxisSize.min,
-//   //                 children: <Widget>[
-//   //                   Text(S.of(context).card_added),
-//   //                   Text(S.of(context).card_sync),
-//   //                 ],
-//   //               )
-//   //             : Column(
-//   //                 mainAxisSize: MainAxisSize.min,
-//   //                 children: [
-//   //                   Text(S.of(context).general_stream_error),
-//   //                   SizedBox(height: 12),
-//   //                   RaisedButton(
-//   //                     child: Text(S.of(context).ok),
-//   //                     onPressed: () {
-//   //                       Navigator.of(context).pop();
-//   //                     },
-//   //                   )
-//   //                 ],
-//   //               ),
-//   //       );
-//   //     },
-//   //   );
-//   // }
+//   void _cardAlertMessage({
+//     bool isSuccess = true,
+//     String communityId,
+//   }) {
+//     showDialog(
+//       barrierDismissible: false,
+//       context: context,
+//       builder: (BuildContext context) {
+//         if (isSuccess) {
+//           Future.delayed(Duration(milliseconds: 600), () {
+//             // Here we need to update the payment to false
+//             Firestore.instance
+//                 .collection('communities')
+//                 .document(communityId)
+//                 .updateData({
+//               'payment.message': 'Syncing payment data',
+//               "payment.payment_success": false,
+//               'payment.status': SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE,
+//             });
+//             Navigator.of(context).pushAndRemoveUntil(
+//               MaterialPageRoute(
+//                 builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
+//                     ? MainApplication()
+//                     : dev.MainApplication(),
+//               ),
+//               (Route<dynamic> route) => false,
+//             );
+//           });
+//         }
+//         return AlertDialog(
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(8),
+//           ),
+//           content: isSuccess
+//               ? Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: <Widget>[
+//                     Text(S.of(context).card_added),
+//                     Text(S.of(context).card_sync),
+//                   ],
+//                 )
+//               : Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     Text(S.of(context).general_stream_error),
+//                     SizedBox(height: 12),
+//                     RaisedButton(
+//                       child: Text(S.of(context).ok),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     )
+//                   ],
+//                 ),
+//         );
+//       },
+//     );
+//   }
 // }
 
 // Future<UserCardsModel> getUserCard(String communityId) async {

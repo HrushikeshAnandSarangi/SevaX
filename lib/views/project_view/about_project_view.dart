@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -197,19 +199,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             addManualTime,
-                            // AddManualTimeButton(
-                            //   timeFor: ManualTimeType.Project,
-                            //   typeId: projectModel.id,
-                            //   userType: getLoggedInUserRole(
-                            //     widget.timebankModel,
-                            //     SevaCore.of(context).loggedInUser.sevaUserID,
-                            //   ),
-                            //   timebankId:
-                            //       widget.timebankModel.parentTimebankId ==
-                            //               FlavorConfig.values.timebankId
-                            //           ? widget.timebankModel.id
-                            //           : widget.timebankModel.parentTimebankId,
-                            // ),
                             deleteProject,
                           ],
                         )

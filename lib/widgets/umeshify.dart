@@ -18,7 +18,7 @@ class _UmeshifyState extends State<Umeshify> {
     var matches = exp.allMatches(widget.text);
     var lastPosition = 0;
 
-    if (def.isEmpty) {
+    if (matches.length < 1) {
       def.add(
         TextSpan(
           text: widget.text,
