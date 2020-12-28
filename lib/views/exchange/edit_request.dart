@@ -1067,7 +1067,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1162,10 +1162,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                       return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
                       return S.of(context).enter_max_credits;
-
                     } else if (int.parse(value) == 0) {
                       return S.of(context).enter_max_credits;
-
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1351,7 +1349,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                           S.of(context).choose_category,
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1426,9 +1424,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
-
-                      style: TextStyle(
+                            S.of(context).choose_category,
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1545,7 +1542,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == 'Timebank') {
+        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
           widget.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           widget.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -1985,7 +1982,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       list.add({
         "name": widget.projectModelList[i].name,
         "code": widget.projectModelList[i].id,
-        "timebankproject": widget.projectModelList[i].mode == 'Timebank'
+        "timebankproject":
+            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
     return MultiSelect(
