@@ -40,10 +40,12 @@ class RequestDonationDisputeBloc {
     if (_cashAmount.value == '' || _cashAmount.value == null) {
       _cashAmount.addError('amount1');
       return false;
-    } else if (int.parse(_cashAmount.value) < minmumAmount) {
-      _cashAmount.addError('min');
-      return false;
-    } else {
+    }
+    // else if (int.parse(_cashAmount.value) < minmumAmount) {
+    //   _cashAmount.addError('min');
+    //   return false;
+    // }
+    else {
       return true;
     }
   }
