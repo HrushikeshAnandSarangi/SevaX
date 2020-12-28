@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -848,8 +849,9 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location,);
-
+      await getAndUpdateDeviceDetailsOfUser(
+        locationVal: location,
+      );
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -885,7 +887,6 @@ class _LoginPageState extends State<LoginPage> {
     try {
       user = await auth.handleGoogleSignIn();
       await getAndUpdateDeviceDetailsOfUser(locationVal: location);
-
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -907,9 +908,13 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
-
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location)
+          .timeout(Duration(seconds: 3));
+      logger.i('device details fixed');
+    } on TimeoutException catch (e) {
+      logger.e('timeout exception $e');
     } on NoSuchMethodError catch (error) {
+      logger.e(error);
       handleException();
       Crashlytics.instance.log("No Such methods error in login!");
     } on PlatformException catch (erorr) {
