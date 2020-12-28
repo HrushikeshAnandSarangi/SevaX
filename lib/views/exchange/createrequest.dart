@@ -327,7 +327,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
                             Text(
-                              "${S.of(context).request_title} *",
+                              "${S.of(context).request_title}",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -852,7 +852,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "${S.of(context).request_description} *",
+            "${S.of(context).request_description}",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
