@@ -20,11 +20,14 @@ import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
+import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -921,26 +924,41 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   action: Actions.MakeOwner,
                   onTap: () async {
                     Navigator.pop(_context);
-                    setState(() {
-                      isProgressBarActive = true;
-                    });
+                    if (TransactionsMatrixCheck.checkAllowedTransaction(
+                        'multiple_super_admins')) {
+                      setState(() {
+                        isProgressBarActive = true;
+                      });
 
-                    // PROMOTTE
+                      // PROMOTTE
 
-                    log('inside owner');
-                    await MembershipManager.updateOrganizerStatus(
-                      associatedName:
-                          SevaCore.of(context).loggedInUser.fullname,
-                      communityId:
-                          SevaCore.of(context).loggedInUser.currentCommunity,
-                      timebankId: timebankModel.id,
-                      notificationType:
-                          NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
-                      parentTimebankId: timebankModel.parentTimebankId,
-                      targetUserId: user.sevaUserID,
-                      timebankName: timebankModel.name,
-                      userEmail: user.email,
-                    );
+                      log('inside owner');
+                      await MembershipManager.updateOrganizerStatus(
+                        associatedName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                        timebankId: timebankModel.id,
+                        notificationType:
+                            NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+                        parentTimebankId: timebankModel.parentTimebankId,
+                        targetUserId: user.sevaUserID,
+                        timebankName: timebankModel.name,
+                        userEmail: user.email,
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => UpgradePlanBanner(
+                            activePlanName:
+                                AppConfig.paymentStatusMap['planId'],
+                            details: AppConfig
+                                .upgradePlanBannerModel.multiple_super_admins,
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -1785,8 +1803,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: Text(
-                  S.of(context).remove_self_from_group_error),
+              content: Text(S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(

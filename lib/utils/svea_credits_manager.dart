@@ -31,7 +31,6 @@ class SevaCreditLimitManager {
         .collection('transactions')
         .where("associatedCommunity", isEqualTo: associatedCommunity)
         .where("isApproved", isEqualTo: true)
-        .where('from', isEqualTo: userSevaId)
         .where('transactionbetween', arrayContains: userSevaId)
         .orderBy("timestamp", descending: true)
         .getDocuments();

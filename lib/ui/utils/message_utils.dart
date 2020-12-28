@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
@@ -39,6 +41,9 @@ Future<void> createAndOpenChat({
   )
     ..id = "${participants[0]}*${participants[1]}*$communityId"
     ..isGroupMessage = false;
+
+  log("Sender : -> " + sender.toMap().toString());
+  log("Receiver : -> " + reciever.toMap().toString());
 
   assert(sender.id != reciever.id);
 

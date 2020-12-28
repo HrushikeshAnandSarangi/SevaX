@@ -351,7 +351,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ),
           ],
         ),
-        tappableInviteMembers,
+        // tappableInviteMembers,
         headingText(S.of(context).is_pin_at_right_place, false),
         Center(
           child: LocationPickerWidget(
@@ -382,13 +382,18 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             Column(
               children: <Widget>[
                 Divider(),
-                Checkbox(
-                  value: sponsored,
-                  onChanged: (bool value) {
-                    setState(() {
-                      sponsored = !sponsored;
-                    });
-                  },
+                TransactionsMatrixCheck(
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.sponsored_groups,
+                  transaction_matrix_type: "sponsored_groups",
+                  child: Checkbox(
+                    value: sponsored,
+                    onChanged: (bool value) {
+                      setState(() {
+                        sponsored = !sponsored;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),
@@ -557,7 +562,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   color: Colors.blue,
                 ),
               ),
-            ))
+            ),
+          )
         : Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: FlatButton(
