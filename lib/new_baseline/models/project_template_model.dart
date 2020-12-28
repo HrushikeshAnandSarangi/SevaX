@@ -57,7 +57,7 @@ class ProjectTemplateModel extends DataModel {
         "description": description == null ? null : description,
         "creator_id": creatorId == null ? null : creatorId,
         "photo_url": photoUrl == null ? null : photoUrl,
-        "mode": mode == null ? null : mode,
+        "mode": mode == null ? null : mode.readable,
         "softDelete": softDelete ?? false,
         "created_at": createdAt == null ? null : createdAt,
       };

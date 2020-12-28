@@ -275,12 +275,12 @@ class _RequestDonationDisputePageState
                   RaisedButton(
                     child: Text(S.of(context).message),
                     onPressed: () async {
-                      var a = getOperatingMode(
+                      var operatingModel = getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
                       );
 
-                      switch (a) {
+                      switch (operatingModel) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
