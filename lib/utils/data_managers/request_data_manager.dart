@@ -81,7 +81,8 @@ Future<List<String>> createRecurringEvents({
   );
   double negativeThresholdTimebank =
       await SevaCreditLimitManager.getNegativeThresholdForCommunity(
-          communityId);
+    communityId,
+  );
   List<Map<String, dynamic>> temparr = [];
   List<String> eventsIdsArr = [];
   DocumentSnapshot projectDoc = null;
