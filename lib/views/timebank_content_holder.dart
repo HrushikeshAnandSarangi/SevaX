@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 
@@ -436,6 +437,19 @@ class DiscussionListState extends State<DiscussionList> {
   String pinnedNewsId = '';
   bool isPinned = false;
   NewsModel pinnedNewsModel;
+  StreamController<List<NewsModel>> newsStream = StreamController();
+
+  @override
+  void initState() {
+    FirestoreManager.getNewsStream(
+      timebankID: widget.timebankId,
+    ).listen((event) {
+      newsStream.add(event);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -514,88 +528,84 @@ class DiscussionListState extends State<DiscussionList> {
           ),
         ),
         StreamBuilder<List<NewsModel>>(
-          stream: FirestoreManager.getNewsStream(timebankID: widget.timebankId),
+          stream: newsStream.stream,
           builder: (context, snapshot) {
             if (snapshot.hasError)
               return Text(
                 S.of(context).gps_on_reminder,
               );
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Container(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 3),
-                  child: LoadingIndicator(),
-                );
+            if (!snapshot.hasData)
+              return Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 3),
+                child: LoadingIndicator(),
+              );
 
-                break;
-              default:
-                List<NewsModel> newsList = snapshot.data;
-                newsList = filterBlockedContent(newsList, context);
-                newsList = filterPinnedNews(newsList, context);
+            List<NewsModel> newsList = snapshot.data;
+            newsList = filterBlockedContent(newsList, context);
+            newsList = filterPinnedNews(newsList, context);
 
-                if (newsList.length == 1 && newsList[0].isPinned == true) {
-                  return Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        newFeedsCard(
-                          news: newsList.elementAt(0),
+            if (newsList.length == 1 && newsList[0].isPinned == true) {
+              return Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    newFeedsCard(
+                      news: newsList.elementAt(0),
+                      isFromMessage: false,
+                    )
+                  ],
+                ),
+              );
+            }
+            if (newsList.length == 0) {
+              return Padding(
+                padding: const EdgeInsets.all(28.0),
+                child: Center(
+                  child: Text(S.of(context).empty_feed),
+                ),
+              );
+            }
+            return Expanded(
+              child: ListView(
+                children: <Widget>[
+                  isPinned
+                      ? newFeedsCard(
+                          news: pinnedNewsModel,
                           isFromMessage: false,
                         )
-                      ],
-                    ),
-                  );
-                }
-                if (newsList.length == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(28.0),
-                    child: Center(
-                      child: Text(S.of(context).empty_feed),
-                    ),
-                  );
-                }
-                return Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      isPinned
-                          ? newFeedsCard(
-                              news: pinnedNewsModel,
-                              isFromMessage: false,
-                            )
-                          : Offstage(),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: newsList.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index >= newsList.length) {
-                            return Container(
-                              width: double.infinity,
-                              height: 20,
-                            );
-                          }
+                      : Offstage(),
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: newsList.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index >= newsList.length) {
+                        return Container(
+                          width: double.infinity,
+                          height: 20,
+                        );
+                      }
 
-                          if (newsList.elementAt(index).reports.length > 2) {
-                            return Offstage();
-                          } else {
-                            if (index == 0) {
-                              return newFeedsCard(
-                                news: newsList.elementAt(index),
-                                isFromMessage: false,
-                              );
-                            } else {
-                              return newFeedsCard(
-                                news: newsList.elementAt(index),
-                                isFromMessage: false,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ],
+                      if (newsList.elementAt(index).reports.length > 2) {
+                        return Offstage();
+                      } else {
+                        if (index == 0) {
+                          return newFeedsCard(
+                            news: newsList.elementAt(index),
+                            isFromMessage: false,
+                          );
+                        } else {
+                          return newFeedsCard(
+                            news: newsList.elementAt(index),
+                            isFromMessage: false,
+                          );
+                        }
+                      }
+                    },
                   ),
-                );
-            }
+                ],
+              ),
+            );
           },
         )
       ],

@@ -61,9 +61,13 @@ class _DonationViewState extends State<DonationView> {
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
             ? 3
-            : widget.offerModel.type == RequestType.CASH ? 4 : 0)
+            : widget.offerModel.type == RequestType.CASH
+                ? 4
+                : 0)
         : widget.requestModel != null
-            ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1
+            ? widget.requestModel.requestType == RequestType.GOODS
+                ? 0
+                : 1
             : 0);
     pageController = PageController(initialPage: temp);
 
@@ -789,6 +793,7 @@ class _DonationViewState extends State<DonationView> {
                     minmumAmount: widget.requestModel.cashModel.minAmount,
                   )
                       .then((value) {
+                    FocusScope.of(context).unfocus();
                     if (value) {
                       pageController.animateToPage(2,
                           curve: Curves.easeInOut,
