@@ -17,6 +17,7 @@ enum InfoType {
   TAX_CONFIGURATION,
   MAX_CREDITS,
   SPONSORED,
+  NEGATIVE_CREDITS,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -30,6 +31,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.TAX_CONFIGURATION: "taxInfo",
   InfoType.MAX_CREDITS: "maxCredit",
   InfoType.SPONSORED: "sponsored",
+  InfoType.NEGATIVE_CREDITS: 'negativeCredits',
 };
 
 Widget infoButton({
