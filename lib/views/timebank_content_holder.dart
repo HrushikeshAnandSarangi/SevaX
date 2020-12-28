@@ -437,10 +437,12 @@ class DiscussionListState extends State<DiscussionList> {
   String pinnedNewsId = '';
   bool isPinned = false;
   NewsModel pinnedNewsModel;
-  StreamController<List<NewsModel>> newsStream = StreamController();
+  StreamController<List<NewsModel>> newsStream;
 
   @override
   void initState() {
+    newsStream = StreamController();
+
     FirestoreManager.getNewsStream(
       timebankID: widget.timebankId,
     ).listen((event) {

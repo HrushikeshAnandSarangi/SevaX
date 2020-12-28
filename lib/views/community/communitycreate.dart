@@ -678,7 +678,7 @@ class CreateEditCommunityViewFormState
                                     child: infoButton(
                                       context: context,
                                       key: GlobalKey(),
-                                      type: InfoType.TAX_CONFIGURATION,
+                                      type: InfoType.NEGATIVE_CREDITS,
                                     ),
                                   ),
                                 ],
