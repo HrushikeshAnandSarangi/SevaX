@@ -327,7 +327,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
                             Text(
-                              S.of(context).request_title,
+                              "${S.of(context).request_title} *",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -352,7 +352,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
-                                hintText: S.of(context).request_title_hint,
+                                hintText: requestModel.requestType == RequestType.TIME ?
+                                S.of(context).request_title_hint : requestModel.requestType == RequestType.CASH ? "Fundraiser for women’s shelter..." : "Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -376,7 +377,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             ),
                             SizedBox(height: 30),
                             OfferDurationWidget(
-                              title: S.of(context).request_duration,
+                              title: "${S.of(context).request_duration} *",
                             ),
                             requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
@@ -391,14 +392,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S
-                                          .of(context)
-                                          .create_request
+                                      S.of(context).create_request
                                           .padLeft(10)
                                           .padRight(10),
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .button,
+                                      style: Theme.of(context).primaryTextTheme.button,
                                     ),
                                   ),
                                 ),
@@ -822,8 +819,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: S.of(context).request_paymenttype_zellepay,
-          value: RequestPaymentType.ZELLEPAY,
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -831,8 +828,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: 'Venmo',
-          value: RequestPaymentType.VENMO,
+          title: S.of(context).request_paymenttype_zellepay,
+          value: RequestPaymentType.ZELLEPAY,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -855,7 +852,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).request_description,
+            "${S.of(context).request_description} *",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1418,7 +1415,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_goods),
+          RequestDescriptionData("Local Food Bank has a shortage..."),
+          // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           InkWell(
             child: Column(
