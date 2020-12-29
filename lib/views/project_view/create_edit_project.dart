@@ -285,7 +285,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   ),
                 ),
               ),
-              headingText("Project_name} *"),
+              headingText("${S.of(context).project_name} *"),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
@@ -332,17 +332,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
-                          title: ' Project_duration} *',
+                          title: ' ${S.of(context).project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
-                          title: ' Project_duration} *',
+                          title: ' ${S.of(context).project_duration} *',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )
                   : OfferDurationWidget(
-                      title: ' Project_duration}',
+                      title: ' ${S.of(context).project_duration}',
                       startTime: startDate,
                       endTime: endDate,
                     ),
