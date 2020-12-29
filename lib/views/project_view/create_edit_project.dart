@@ -200,7 +200,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               selectedColor: Theme.of(context).primaryColor,
               children: {
                 0: Text(
-                  S.of(context).timebank_project(1),
+                  timebankModel.parentTimebankId ==
+                          FlavorConfig.values.timebankId
+                      ? S.of(context).timebank_project(1)
+                      : "Seva " + timebankModel.name + " Event",
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -282,7 +285,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   ),
                 ),
               ),
-              headingText("${S.of(context).project_name} *"),
+              headingText("Project_name} *"),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
@@ -329,17 +332,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration} *',
+                          title: ' Project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration} *',
+                          title: ' Project_duration} *',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )
                   : OfferDurationWidget(
-                      title: ' ${S.of(context).project_duration}',
+                      title: ' Project_duration}',
                       startTime: startDate,
                       endTime: endDate,
                     ),
