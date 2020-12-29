@@ -289,7 +289,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     timebankModel = snapshot.data;
     if (isAccessAvailable(
         snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-      return requestSwitch();
+      return requestSwitch(
+        timebankModel: timebankModel,
+      );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -327,7 +329,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
                             Text(
-                              "${S.of(context).request_title} *",
+                              "${S.of(context).request_title}",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -352,8 +354,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
-                                hintText: requestModel.requestType == RequestType.TIME ?
-                                S.of(context).request_title_hint : requestModel.requestType == RequestType.CASH ? "Fundraiser for women’s shelter..." : "Non-perishable goods for Food Bank...",
+                                hintText: requestModel.requestType ==
+                                        RequestType.TIME
+                                    ? S.of(context).request_title_hint
+                                    : requestModel.requestType ==
+                                            RequestType.CASH
+                                        ? "Fundraiser for women’s shelter..."
+                                        : "Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -392,10 +399,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S.of(context).create_request
+                                      S
+                                          .of(context)
+                                          .create_request
                                           .padLeft(10)
                                           .padRight(10),
-                                      style: Theme.of(context).primaryTextTheme.button,
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button,
                                     ),
                                   ),
                                 ),
@@ -852,7 +863,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "${S.of(context).request_description} *",
+            "${S.of(context).request_description}",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1511,7 +1522,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     );
   }
 
-  Widget requestSwitch() {
+  Widget requestSwitch({
+    TimebankModel timebankModel,
+  }) {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
@@ -1522,7 +1535,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
           selectedColor: Theme.of(context).primaryColor,
           children: {
             0: Text(
-              S.of(context).timebank_request(1),
+              timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? S.of(context).timebank_request(1)
+                  : "Seva " +
+                      timebankModel.name +
+                      " ${S.of(context).group} " +
+                      S.of(context).request,
               style: TextStyle(fontSize: 12.0),
             ),
             1: Text(
