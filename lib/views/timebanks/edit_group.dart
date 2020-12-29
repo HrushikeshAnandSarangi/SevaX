@@ -12,7 +12,9 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -302,35 +304,39 @@ class EditGroupFormState extends State<EditGroupForm> {
           SizedBox(
             height: 10,
           ),
-          !widget.timebankModel.sponsored
-              ? Row(
+          TransactionsMatrixCheck(
+            upgradeDetails: AppConfig.upgradePlanBannerModel.sponsored_groups,
+            transaction_matrix_type: "sponsored_groups",
+            child: Row(
+              children: <Widget>[
+                headingText(S.of(context).save_as_sponsored, false),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                  child: infoButton(
+                    context: context,
+                    key: GlobalKey(),
+                    type: InfoType.SPONSORED,
+                  ),
+                ),
+                Column(
                   children: <Widget>[
-                    headingText(S.of(context).save_as_sponsored, false),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
-                      child: infoButton(
-                        context: context,
-                        key: GlobalKey(),
-                        type: InfoType.SPONSORED,
-                      ),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Divider(),
-                        Checkbox(
-                          value: widget.timebankModel.sponsored,
-                          onChanged: (bool value) {
-                            setState(() {
-                              widget.timebankModel.sponsored =
-                                  !widget.timebankModel.sponsored;
-                            });
-                          },
-                        ),
-                      ],
+                    Divider(),
+                    Checkbox(
+                      value: widget.timebankModel.sponsored,
+                      onChanged: (bool value) {
+                        if (!widget.timebankModel.sponsored) {
+                          setState(() {
+                            widget.timebankModel.sponsored =
+                                !widget.timebankModel.sponsored;
+                          });
+                        }
+                      },
                     ),
                   ],
-                )
-              : Offstage(),
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(

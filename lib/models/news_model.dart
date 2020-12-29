@@ -31,30 +31,30 @@ class NewsModel extends DataModel {
   String imageScraped = "NoData";
   List<String> timebanksPosted = List();
 
-  NewsModel(
-      {this.id,
-      this.title,
-      this.subheading,
-      this.description,
-      this.email,
-      this.fullName,
-      this.sevaUserId,
-      this.newsImageUrl,
-      this.photoCredits,
-      this.postTimestamp,
-      this.location,
-      this.entity,
-      this.likes,
-      this.reports,
-      this.root_timebank_id,
-      this.isPinned,
-      this.userPhotoURL,
-      this.newsDocumentName,
-      this.newsDocumentUrl,
-      this.softDelete,
-      this.timebanksPosted,
-      this.comments,
-      });
+  NewsModel({
+    this.id,
+    this.title,
+    this.subheading,
+    this.description,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.newsImageUrl,
+    this.photoCredits,
+    this.postTimestamp,
+    this.location,
+    this.entity,
+    this.likes,
+    this.reports,
+    this.root_timebank_id,
+    this.isPinned,
+    this.userPhotoURL,
+    this.newsDocumentName,
+    this.newsDocumentUrl,
+    this.softDelete,
+    this.timebanksPosted,
+    this.comments,
+  });
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -464,7 +464,6 @@ class EntityModel extends DataModel {
 }
 
 enum EntityType { timebank, campaign, general }
-
 
 class Comments extends DataModel {
   String userPhotoURL; // create photo URL

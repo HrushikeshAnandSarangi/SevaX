@@ -252,7 +252,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
-                                heading: S.of(context).offer_class_description,
+                                heading: "${S.of(context).offer_class_description} *",
                                 onChanged: _bloc.onclassDescriptionChanged,
                                 hint: S.of(context).offer_description_error,
                                 maxLength: 500,

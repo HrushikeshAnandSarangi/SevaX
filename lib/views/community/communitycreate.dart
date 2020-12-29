@@ -333,7 +333,7 @@ class CreateEditCommunityViewFormState
                                       ),
                                 Text(''),
                                 Text(
-                                  S.of(context).timebank_logo,
+                                  "${S.of(context).timebank_logo} *",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey,
@@ -349,7 +349,7 @@ class CreateEditCommunityViewFormState
                             ),
                           ),
                         ),
-                        headingText(S.of(context).timebank_name),
+                        headingText('${S.of(context).timebank_name} *'),
                         TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: nameFocus,
@@ -399,10 +399,9 @@ class CreateEditCommunityViewFormState
                             return null;
                           },
                         ),
-                        headingText(S.of(context).about),
+                        headingText('${S.of(context).about} *'),
                         TextFormField(
                           controller: descriptionTextController,
-
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
@@ -473,79 +472,79 @@ class CreateEditCommunityViewFormState
                         //     ],
                         //   ),
                         // ),
-                        !widget.isCreateTimebank
-                            ? Row(
-                                children: <Widget>[
-                                  headingText(S.of(context).private_timebank),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                                    child: infoButton(
-                                      context: context,
-                                      key: GlobalKey(),
-                                      type: InfoType.PRIVATE_TIMEBANK,
-                                    ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Divider(),
-                                      Checkbox(
-                                        value: widget.isCreateTimebank
-                                            ? snapshot.data.timebank.private
-                                            : timebankModel.private,
-                                        onChanged: (bool value) {
-                                          if (widget.isCreateTimebank) {
-                                            if (timebankModel.private != null &&
-                                                timebankModel.private == true) {
-                                              timebankModel.private = false;
-                                              snapshot.data.community
-                                                  .updateValueByKey(
-                                                      'private', false);
-                                              communityModel.private = false;
-                                              snapshot.data.timebank
-                                                  .updateValueByKey(
-                                                      'private', false);
-                                              createEditCommunityBloc
-                                                  .onChange(snapshot.data);
-                                            } else {
-                                              _showPrivateTimebankAdvisory()
-                                                  .then((status) {
-                                                if (status == 'Proceed') {
-                                                  timebankModel.private = true;
-                                                  snapshot.data.community
-                                                      .updateValueByKey(
-                                                          'private', true);
-                                                  communityModel.private = true;
-                                                  snapshot.data.timebank
-                                                      .updateValueByKey(
-                                                          'private', true);
-                                                  createEditCommunityBloc
-                                                      .onChange(snapshot.data);
-                                                } else {
-                                                  timebankModel.private = false;
-                                                  snapshot.data.community
-                                                      .updateValueByKey(
-                                                          'private', false);
-                                                  communityModel.private =
-                                                      false;
-                                                  snapshot.data.timebank
-                                                      .updateValueByKey(
-                                                          'private', false);
-                                                  createEditCommunityBloc
-                                                      .onChange(snapshot.data);
-                                                }
-                                              });
-                                            }
-                                          } else {
-                                            null;
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Offstage(),
+                        // !widget.isCreateTimebank
+                        //     ? Row(
+                        //         children: <Widget>[
+                        //           headingText(S.of(context).private_timebank),
+                        //           Padding(
+                        //             padding:
+                        //                 const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                        //             child: infoButton(
+                        //               context: context,
+                        //               key: GlobalKey(),
+                        //               type: InfoType.PRIVATE_TIMEBANK,
+                        //             ),
+                        //           ),
+                        //           Column(
+                        //             children: <Widget>[
+                        //               Divider(),
+                        //               Checkbox(
+                        //                 value: widget.isCreateTimebank
+                        //                     ? snapshot.data.timebank.private
+                        //                     : timebankModel.private,
+                        //                 onChanged: (bool value) {
+                        //                   if (widget.isCreateTimebank) {
+                        //                     if (timebankModel.private != null &&
+                        //                         timebankModel.private == true) {
+                        //                       timebankModel.private = false;
+                        //                       snapshot.data.community
+                        //                           .updateValueByKey(
+                        //                               'private', false);
+                        //                       communityModel.private = false;
+                        //                       snapshot.data.timebank
+                        //                           .updateValueByKey(
+                        //                               'private', false);
+                        //                       createEditCommunityBloc
+                        //                           .onChange(snapshot.data);
+                        //                     } else {
+                        //                       _showPrivateTimebankAdvisory()
+                        //                           .then((status) {
+                        //                         if (status == 'Proceed') {
+                        //                           timebankModel.private = true;
+                        //                           snapshot.data.community
+                        //                               .updateValueByKey(
+                        //                                   'private', true);
+                        //                           communityModel.private = true;
+                        //                           snapshot.data.timebank
+                        //                               .updateValueByKey(
+                        //                                   'private', true);
+                        //                           createEditCommunityBloc
+                        //                               .onChange(snapshot.data);
+                        //                         } else {
+                        //                           timebankModel.private = false;
+                        //                           snapshot.data.community
+                        //                               .updateValueByKey(
+                        //                                   'private', false);
+                        //                           communityModel.private =
+                        //                               false;
+                        //                           snapshot.data.timebank
+                        //                               .updateValueByKey(
+                        //                                   'private', false);
+                        //                           createEditCommunityBloc
+                        //                               .onChange(snapshot.data);
+                        //                         }
+                        //                       });
+                        //                     }
+                        //                   } else {
+                        //                     null;
+                        //                   }
+                        //                 },
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ],
+                        //       )
+                        //     : Offstage(),
                         Row(
                           children: <Widget>[
                             headingText(S.of(context).protected_timebank),
@@ -678,7 +677,7 @@ class CreateEditCommunityViewFormState
                                     child: infoButton(
                                       context: context,
                                       key: GlobalKey(),
-                                      type: InfoType.TAX_CONFIGURATION,
+                                      type: InfoType.NEGATIVE_CREDITS,
                                     ),
                                   ),
                                 ],
@@ -1394,7 +1393,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.state != null
-              ? controller.community.billing_address.state
+              ? '${controller.community.billing_address.state} *'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1429,7 +1428,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.city != null
-              ? controller.community.billing_address.city
+              ? '${controller.community.billing_address.city} *'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1461,7 +1460,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.pincode != null
-              ? controller.community.billing_address.pincode.toString()
+              ? '${controller.community.billing_address.pincode.toString()} *'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1545,7 +1544,7 @@ class CreateEditCommunityViewFormState
           textInputAction: TextInputAction.done,
           initialValue:
               controller.community.billing_address.street_address1 != null
-                  ? controller.community.billing_address.street_address1
+                  ? '${controller.community.billing_address.street_address1} *'
                   : '',
           decoration: getInputDecoration(
             fieldTitle: S.of(context).street_add1,
@@ -1638,7 +1637,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.country != null
-              ? controller.community.billing_address.country
+              ? '${controller.community.billing_address.country} *'
               : '',
           validator: (value) {
             return value.isEmpty

@@ -1067,7 +1067,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1162,10 +1162,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                       return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
                       return S.of(context).enter_max_credits;
-
                     } else if (int.parse(value) == 0) {
                       return S.of(context).enter_max_credits;
-
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1351,7 +1349,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                           S.of(context).choose_category,
+                            S.of(context).choose_category,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -1426,9 +1424,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   children: [
                     categories == null
                         ? Text(
-                      S.of(context).choose_category,
-
-                      style: TextStyle(
+                            S.of(context).choose_category,
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa',
@@ -1545,7 +1542,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == 'Timebank') {
+        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
           widget.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           widget.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -1599,19 +1596,38 @@ class RequestEditFormState extends State<RequestEditForm> {
                       widget.requestModel.occurenceCount)
                   .abs()
               : calculateRecurrencesOnMode(widget.requestModel);
-          onBalanceCheckResult = await SevaCreditLimitManager
-              .hasSufficientCreditsIncludingRecurring(
-                  credits: widget.requestModel.numberOfHours.toDouble(),
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  isRecurring: widget.requestModel.isRecurring,
-                  recurrences: recurrences);
+          onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: widget.requestModel.isRecurring
+                ? widget.requestModel.numberOfHours.toDouble() * recurrences
+                : widget.requestModel.numberOfHours.toDouble(),
+            associatedCommunity: SevaCore.of(context).loggedInUser.sevaUserID,
+          );
+          // .hasSufficientCreditsIncludingRecurring(
+          //   credits: widget.requestModel.numberOfHours.toDouble(),
+          //   userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          //   isRecurring: widget.requestModel.isRecurring,
+          //   recurrences: recurrences,
+          // );
         } else {
-          onBalanceCheckResult = await SevaCreditLimitManager
-              .hasSufficientCreditsIncludingRecurring(
-                  credits: widget.requestModel.numberOfHours.toDouble(),
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  isRecurring: widget.requestModel.isRecurring,
-                  recurrences: 0);
+          onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            credits: widget.requestModel.isRecurring
+                ? widget.requestModel.numberOfHours.toDouble() * 0
+                : widget.requestModel.numberOfHours.toDouble(),
+            associatedCommunity:
+                SevaCore.of(context).loggedInUser.currentCommunity,
+          );
+
+          // .hasSufficientCreditsIncludingRecurring(
+          //     credits: widget.requestModel.numberOfHours.toDouble(),
+          //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          //     isRecurring: widget.requestModel.isRecurring,
+          //     recurrences: 0);
         }
 
         if (!onBalanceCheckResult) {
@@ -1985,7 +2001,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       list.add({
         "name": widget.projectModelList[i].name,
         "code": widget.projectModelList[i].id,
-        "timebankproject": widget.projectModelList[i].mode == 'Timebank'
+        "timebankproject":
+            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
     return MultiSelect(
@@ -2133,7 +2150,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                   dataCopy.retainWhere((s) => s.suggesttionTitle
                       .toLowerCase()
                       .contains(pattern.toLowerCase()));
-
                   if (pattern.length > 2 &&
                       !dataCopy.contains(
                           SuggestedItem()..suggesttionTitle = pattern)) {
