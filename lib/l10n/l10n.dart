@@ -1197,17 +1197,17 @@ class S {
       );
 
   String get delete_project => Intl.message(
-        'Delete Event',
+        'Delete an Event',
         name: 'delete_project',
       );
 
   String get create_project => Intl.message(
-        'Create a Event',
+        'Create an Event',
         name: 'create_project',
       );
 
   String get edit_project => Intl.message(
-        'Edit Event',
+        'Edit an Event',
         name: 'edit_project',
       );
 
@@ -1237,7 +1237,7 @@ class S {
       );
 
   String get project_mission_statement_hint => Intl.message(
-        'Tell us why this event or event is happening. How will it help your community',
+        'Tell us why this event is happening. How will it help your community',
         name: 'project_mission_statement_hint',
       );
 
@@ -1277,7 +1277,7 @@ class S {
       );
 
   String get creating_project => Intl.message(
-        'Creating event',
+        'Creating an event',
         name: 'creating_project',
       );
 
@@ -1292,7 +1292,7 @@ class S {
       );
 
   String get updating_project => Intl.message(
-        'Updating event',
+        'Updating an event',
         name: 'updating_project',
       );
 
@@ -1482,7 +1482,7 @@ class S {
       );
 
   String get create_project_request => Intl.message(
-        'Create Event Request',
+        'Create an Event Request',
         name: 'create_project_request',
       );
 
@@ -1597,7 +1597,7 @@ class S {
       );
 
   String get assign_to_project => Intl.message(
-        'Assign to event',
+        'Assign to an event',
         name: 'assign_to_project',
       );
 
@@ -2897,7 +2897,7 @@ class S {
       );
 
   String get create_project_from_template => Intl.message(
-        'Create Event from Template',
+        'Create an Event from Template',
         name: 'create_project_from_template',
       );
 
@@ -5013,7 +5013,7 @@ class S {
       );
 
   String get accept_offer => Intl.message(
-        'Would you like to accept this offer?',
+        'Accept Offer',
         name: 'accept_offer',
       );
 
@@ -5168,7 +5168,7 @@ class S {
       );
 
   String get select_project => Intl.message(
-        'Select event',
+        'Select an event',
         name: 'select_project',
       );
 
@@ -5803,7 +5803,7 @@ class S {
       );
 
   String get manual_notification_subtitle => Intl.message(
-        'name has requested by number hours.',
+        'Admin **name has requested for **number hours of Seva Credit(s) towards Admin-related activities for Community **communityName',
         name: 'manual_notification_subtitle',
       );
 
@@ -5825,6 +5825,36 @@ class S {
   String get personal_events => Intl.message(
         'Personal Events',
         name: 'personal_events',
+      );
+
+  String get details_updated_success => Intl.message(
+        'Details updated successfully.',
+        name: 'details_updated_success',
+      );
+
+  String get manual_time_request_rejected => Intl.message(
+        'Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been rejected.',
+        name: 'manual_time_request_rejected',
+      );
+
+  String get manual_time_request_approved => Intl.message(
+        'Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been approved.',
+        name: 'manual_time_request_approved',
+      );
+
+  String get added_to_messaging_room => Intl.message(
+        'Since you are volunteering for this event, you\'ve been added to the messaging room. You may leave this room at any time',
+        name: 'added_to_messaging_room',
+      );
+
+  String get seva_community_event => Intl.message(
+        'Seva Community Event',
+        name: 'seva_community_event',
+      );
+
+  String get personal_event => Intl.message(
+        'Personal Event',
+        name: 'personal_event',
       );
 }
 
