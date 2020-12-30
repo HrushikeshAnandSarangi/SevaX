@@ -242,9 +242,9 @@ class RequestAcceptedWidget extends StatelessWidget {
 Widget getBio(BuildContext context, UserModel userModel,
     {bool isScrollable = true}) {
   if (userModel.bio != null) {
-    if (userModel.bio.length < 100) {
+    if (userModel.bio.trim().length < 100) {
       return Text(
-        userModel.bio,
+        userModel.bio.trim(),
         textAlign: TextAlign.center,
       );
     }
@@ -256,6 +256,7 @@ Widget getBio(BuildContext context, UserModel userModel,
     );
     return isScrollable
         ? Container(
+            color: Colors.red,
             height: 150,
             child: SingleChildScrollView(
               physics: isScrollable ? null : NeverScrollableScrollPhysics(),
