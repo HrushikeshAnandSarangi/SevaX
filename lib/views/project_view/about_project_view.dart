@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -220,6 +218,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
         context: context,
         timeFor: ManualTimeType.Project,
         typeId: projectModel.id,
+        communityName: widget.timebankModel.name,
         userType: getLoggedInUserRole(
           widget.timebankModel,
           SevaCore.of(context).loggedInUser.sevaUserID,

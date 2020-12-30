@@ -147,7 +147,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           communityId: widget.timebankModel.communityId);
     }
     updateTimebank(timebankModel: widget.timebankModel).then((onValue) {
-      showDialogForSuccess(dialogTitle: "Details updated successfully.");
+      showDialogForSuccess(dialogTitle: S.of(context).details_updated_success);
     });
     globals.timebankAvatarURL = null;
     globals.webImageUrl = null;

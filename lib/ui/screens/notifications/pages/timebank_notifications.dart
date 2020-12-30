@@ -342,9 +342,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: body.userDetails.name,
                   photoUrl: body.userDetails.photoUrl,
-                  title: "Manual time Notification",
-                  subTitle:
-                      "${body.userDetails.name} requested for ${body.claimedTime / 60} hours",
+                  title: S.of(context).manual_notification_title,
+                  subTitle: S
+                      .of(context)
+                      .manual_notification_subtitle
+                      .replaceAll('**name', body.userDetails.name)
+                      .replaceAll('**number', '${body.claimedTime / 60}')
+                      .replaceAll('**communityName', body.communityName ?? ' '),
                   isDissmissible: false,
                   onPressed: () {
                     manualTimeActionDialog(

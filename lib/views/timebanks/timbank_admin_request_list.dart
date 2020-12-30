@@ -28,6 +28,7 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -331,7 +332,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             setState(() {
                               isProgressBarActive = true;
                             });
-
                             await addMemberToTimebank(
                               timebankId: joinRequestModel.entityId,
                               joinRequestId: joinRequestModel.id,
@@ -340,7 +340,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               communityId: communityId,
                               newMemberJoinedEmail: user.email,
                               isFromGroup: joinRequestModel.isFromGroup,
-                            ).commit();
+                            ).commit().catchError((onError) {
+                              logger.e("FAILED TO ADD MEMBER TO TOMEBANK");
+                            });
+
+                            setState(() {
+                              isProgressBarActive = false;
+                            });
                           },
                         ),
                       ),
@@ -351,7 +357,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                           debouncer: debounceValue,
                           onTap: () async {
                             setState(() {
-//                              isProgressBarActive = true;
+                              // isProgressBarActive = true;
                             });
 
                             rejectMemberJoinRequest(
@@ -360,7 +366,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               timebankId: joinRequestModel.entityId,
                             ).commit().then((onValue) {
                               resetAndLoad();
+                            }).catchError((onError) {
+                              logger.e("FAILED TO REMOVE TO TOMEBANK");
+                              resetAndLoad();
                             });
+                            ;
                           },
                         ),
                       ),

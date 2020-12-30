@@ -326,11 +326,11 @@ class _SelectionModalState extends State<SelectionModal> {
             selectedColor: Theme.of(context).primaryColor,
             children: {
               0: Text(
-                S.of(context).timebank_project(3),
+                S.of(context).seva_community_events,
                 style: TextStyle(fontSize: 12.0),
               ),
               1: Text(
-                S.of(context).personal_project(3),
+                S.of(context).personal_events,
                 style: TextStyle(fontSize: 12.0),
               ),
             },
