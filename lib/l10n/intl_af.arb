@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-12-29T18:24:09+00:00",
+    "@@last_modified": "2020-12-30T16:54:53+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -166,7 +166,7 @@
     "notifications_added_you": "het u bygevoeg",
     "notifications_request_rejected_by": "Versoek afgekeur deur",
     "notifications_join_request": "Sluit aan by versoek",
-    "notifications_requested_join": "het u versoek om aan te sluit",
+    "notifications_requested_join": "het versoek om aan te sluit",
     "notifications_tap_to_view": "Tik om aansluitingsversoek te sien",
     "notifications_task_rejected_by": "Taak voltooiing verwerp deur",
     "notifications_approved_for": "het die voltooiing van die taak goedgekeur vir",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "U versoek om ** nommer Seva-krediet (s) ten opsigte van administratiewe aktiwiteite vir gemeenskaps ** gemeenskapsnaam is goedgekeur.",
     "added_to_messaging_room": "Aangesien u as vrywilliger vir hierdie geleentheid deelneem, is u bygevoeg in die boodskapkamer.U mag hierdie kamer te eniger tyd verlaat",
     "seva_community_event": "Seva Gemeenskapsgeleentheid",
-    "personal_event": "Persoonlike gebeurtenis"
+    "personal_event": "Persoonlike gebeurtenis",
+    "manual_time_add": "Voeg handtyd by",
+    "manual_time_textfield_hint": "Verskaf 'n rede vir hierdie versoek - om die goedkeuring te help",
+    "manual_time_button_text": "Stuur versoek",
+    "manual_time_title": "Versoek Seva-krediete vir administratiewe take wat uitgevoer word",
+    "manual_time_info": "Admins kan Seva-krediete aanvra vir die tyd wat hulle spandeer om administratiewe take in die SevaX-toepassing uit te voer",
+    "exchanges": "Uitruilings",
+    "create_event": "Skep geleentheid",
+    "join_message_room_hint": "Om die boodskappe in hierdie boodskapkamer te kan sien, moet u by die kamer aansluit deur op die knoppie 'Sluit aan by die chat' te klik",
+    "join_message_room": "** Message_room_creator_name het 'n boodskapkamer ** message_room_name in die gemeenskap ** gemeenskapsnaam geskep en u uitgenooi om aan te sluit.Aanvaar of weier die uitnodiging asseblief",
+    "action_not_permitted": "Optrede nie toegelaat nie",
+    "contact_community_creator": "Dit is tans nie toegelaat nie.Kontak die Gemeenskapskepper vir meer inligting.",
+    "follow_link_to_upgrade": "Dit is tans nie toegelaat nie.Raadpleeg die volgende skakel vir meer inligting: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Wil u die aanbod aanvaar?"
 }

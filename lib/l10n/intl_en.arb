@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-12-29T18:24:08+00:00",
+    "@@last_modified": "2020-12-30T16:54:53+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -166,7 +166,7 @@
     "notifications_added_you": "has added you to",
     "notifications_request_rejected_by": "Request rejected by",
     "notifications_join_request": "Join request",
-    "notifications_requested_join": "has requested you to join",
+    "notifications_requested_join": "has requested to join",
     "notifications_tap_to_view": "Tap to view join request",
     "notifications_task_rejected_by": "Task completion rejected by",
     "notifications_approved_for": "approved the task completion for",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Your request for **number Seva Credit(s) towards Admin-related activities for Community **communityName has been approved.",
     "added_to_messaging_room": "Since you are volunteering for this event, you've been added to the messaging room. You may leave this room at any time",
     "seva_community_event": "Seva Community Event",
-    "personal_event": "Personal Event"
+    "personal_event": "Personal Event",
+    "manual_time_add": "Add Manual Time",
+    "manual_time_textfield_hint": "Please provide a rationale for this request - to assist the approver",
+    "manual_time_button_text": "Send Request",
+    "manual_time_title": "Request Seva Credits for Admin tasks performed",
+    "manual_time_info": "Admins can request Seva Credits for the time that they spend in performing Admin Tasks in the SevaX Application",
+    "exchanges": "Exchanges",
+    "create_event": "Create Event",
+    "join_message_room_hint": "In order to view the messages in this Message Room, you need to join the room by clicking the 'Join Chat' button below",
+    "join_message_room": " **Message_room_creator_name has created a message room **message_room_name in the Community **community_name and invited you to join. Please accept or decline the invitation",
+    "action_not_permitted": "Action not permitted",
+    "contact_community_creator": "This is currently not permitted. Please contact the Community Creator for more information.",
+    "follow_link_to_upgrade": "This is currently not permitted. Please see the following link for more information: **link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Would you like to accept offer?"
 }

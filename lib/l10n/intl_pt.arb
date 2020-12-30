@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-12-29T18:24:08+00:00",
+    "@@last_modified": "2020-12-30T16:54:53+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -166,7 +166,7 @@
     "notifications_added_you": "te ha agregado a",
     "notifications_request_rejected_by": "Pedido rejeitado por",
     "notifications_join_request": "Pedido de adesão",
-    "notifications_requested_join": "solicitou que você participe",
+    "notifications_requested_join": "pediu para entrar",
     "notifications_tap_to_view": "Toque para ver o pedido de adesão",
     "notifications_task_rejected_by": "Conclusão da tarefa rejeitada por",
     "notifications_approved_for": "aprovou a conclusão da tarefa para",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Sua solicitação de ** número (s) de crédito (s) Seva para atividades relacionadas ao administrador da comunidade ** communityName foi aprovada.",
     "added_to_messaging_room": "Como você é voluntário para este evento, você foi adicionado à sala de mensagens.Você pode sair desta sala a qualquer momento",
     "seva_community_event": "Evento da Comunidade Seva",
-    "personal_event": "Evento Pessoal"
+    "personal_event": "Evento Pessoal",
+    "manual_time_add": "Adicionar hora manual",
+    "manual_time_textfield_hint": "Forneça uma justificativa para esta solicitação - para ajudar o aprovador",
+    "manual_time_button_text": "Enviar pedido",
+    "manual_time_title": "Solicitar créditos Seva para tarefas administrativas realizadas",
+    "manual_time_info": "Os administradores podem solicitar créditos Seva pelo tempo que gastam na execução de tarefas administrativas no aplicativo SevaX",
+    "exchanges": "Intercâmbios",
+    "create_event": "Criar Evento",
+    "join_message_room_hint": "Para ver as mensagens nesta sala de mensagens, você precisa entrar na sala clicando no botão 'Entrar no Chat' abaixo",
+    "join_message_room": "** Message_room_creator_name criou uma sala de mensagens ** message_room_name na Comunidade ** community_name e o convidou a participar.Aceite ou recuse o convite",
+    "action_not_permitted": "Ação não permitida",
+    "contact_community_creator": "Isso não é permitido no momento.Entre em contato com o criador da comunidade para obter mais informações.",
+    "follow_link_to_upgrade": "Isso não é permitido no momento.Consulte o seguinte link para obter mais informações: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Você gostaria de aceitar a oferta?"
 }

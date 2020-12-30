@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-12-29T18:24:08+00:00",
+    "@@last_modified": "2020-12-30T16:54:53+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -166,7 +166,7 @@
     "notifications_added_you": "vous a ajouté à",
     "notifications_request_rejected_by": "Demande rejetée par",
     "notifications_join_request": "Rejoindre la demande",
-    "notifications_requested_join": "vous a demandé de rejoindre",
+    "notifications_requested_join": "a demandé à rejoindre",
     "notifications_tap_to_view": "Appuyez pour afficher la demande d'adhésion",
     "notifications_task_rejected_by": "Achèvement de la tâche rejeté par",
     "notifications_approved_for": "approuvé l'achèvement de la tâche pour",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Votre demande de ** number Seva Credit (s) pour des activités liées à l'administration pour Community ** communityName a été approuvée.",
     "added_to_messaging_room": "Puisque vous êtes bénévole pour cet événement, vous avez été ajouté à la salle de messagerie.Vous pouvez quitter cette salle à tout moment",
     "seva_community_event": "Événement communautaire Seva",
-    "personal_event": "Événement personnel"
+    "personal_event": "Événement personnel",
+    "manual_time_add": "Ajouter du temps manuel",
+    "manual_time_textfield_hint": "Veuillez fournir une justification pour cette demande - pour aider l'approbateur",
+    "manual_time_button_text": "Envoyer une demande",
+    "manual_time_title": "Demander des crédits Seva pour les tâches d'administration effectuées",
+    "manual_time_info": "Les administrateurs peuvent demander des crédits Seva pour le temps qu'ils passent à effectuer des tâches d'administration dans l'application SevaX",
+    "exchanges": "Échanges",
+    "create_event": "Créer un évènement",
+    "join_message_room_hint": "Pour afficher les messages dans cette salle de messages, vous devez rejoindre la salle en cliquant sur le bouton `` Rejoindre le chat '' ci-dessous",
+    "join_message_room": "** Message_room_creator_name a créé une salle de messages ** message_room_name dans la communauté ** community_name et vous a invité à la rejoindre.Veuillez accepter ou refuser l'invitation",
+    "action_not_permitted": "Action non autorisée",
+    "contact_community_creator": "Ceci n'est actuellement pas autorisé.Veuillez contacter le créateur de la communauté pour plus d'informations.",
+    "follow_link_to_upgrade": "Ceci n'est actuellement pas autorisé.Veuillez consulter le lien suivant pour plus d'informations: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Souhaitez-vous accepter l'offre?"
 }

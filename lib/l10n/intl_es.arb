@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-12-29T18:24:07+00:00",
+    "@@last_modified": "2020-12-30T16:54:53+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -166,7 +166,7 @@
     "notifications_added_you": "adicionou você a",
     "notifications_request_rejected_by": "Solicitud rechazada por",
     "notifications_join_request": "Solicitud de inscripción",
-    "notifications_requested_join": "te ha pedido que te unas",
+    "notifications_requested_join": "ha solicitado unirse",
     "notifications_tap_to_view": "Toque para ver la solicitud de ingreso",
     "notifications_task_rejected_by": "Finalización de tarea rechazada por",
     "notifications_approved_for": "aprobó la finalización de la tarea para",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Se ha aprobado su solicitud de ** número de Crédito (s) Seva para actividades relacionadas con el administrador para la comunidad ** communityName.",
     "added_to_messaging_room": "Como eres voluntario para este evento, te agregaron a la sala de mensajes.Puede salir de esta habitación en cualquier momento",
     "seva_community_event": "Evento de la comunidad de Seva",
-    "personal_event": "Evento personal"
+    "personal_event": "Evento personal",
+    "manual_time_add": "Agregar hora manual",
+    "manual_time_textfield_hint": "Proporcione una justificación para esta solicitud: para ayudar al aprobador",
+    "manual_time_button_text": "Enviar petición",
+    "manual_time_title": "Solicitar Seva Credits para tareas administrativas realizadas",
+    "manual_time_info": "Los administradores pueden solicitar créditos Seva por el tiempo que dedican a realizar tareas administrativas en la aplicación SevaX.",
+    "exchanges": "Intercambios",
+    "create_event": "Crear evento",
+    "join_message_room_hint": "Para ver los mensajes en esta sala de mensajes, debe unirse a la sala haciendo clic en el botón 'Unirse al chat' a continuación",
+    "join_message_room": "** Message_room_creator_name ha creado una sala de mensajes ** message_room_name en la Comunidad ** community_name y te invitó a unirte.Acepta o rechaza la invitación.",
+    "action_not_permitted": "Acción no permitida",
+    "contact_community_creator": "Actualmente esto no está permitido.Comuníquese con el Creador de la comunidad para obtener más información.",
+    "follow_link_to_upgrade": "Actualmente esto no está permitido.Consulte el siguiente enlace para obtener más información: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "¿Le gustaría aceptar la oferta?"
 }

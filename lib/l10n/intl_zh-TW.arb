@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-12-29T18:24:08+00:00",
+    "@@last_modified": "2020-12-30T16:54:54+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -166,7 +166,7 @@
     "notifications_added_you": "已將您添加到",
     "notifications_request_rejected_by": "要求被拒絕",
     "notifications_join_request": "加入要求",
-    "notifications_requested_join": "已要求您加入",
+    "notifications_requested_join": "已要求加入",
     "notifications_tap_to_view": "點按即可查看加入請求",
     "notifications_task_rejected_by": "任務完成被拒絕",
     "notifications_approved_for": "批准完成任務",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "您為社區 **communityName 的與 Admin 相關的活動申請 **number Seva 積分的請求已獲批准",
     "added_to_messaging_room": "由於您是自願參加此活動的，因此您已被添加到消息收發室。 您可以隨時離開這個房間",
     "seva_community_event": "塞瓦社區活動",
-    "personal_event": "個人活動"
+    "personal_event": "個人活動",
+    "manual_time_add": "添加手動時間",
+    "manual_time_textfield_hint": "請提供此請求的理由-以協助批准人",
+    "manual_time_button_text": "發送請求",
+    "manual_time_title": "請求執行任務的Seva積分",
+    "manual_time_info": "管理員可以要求他們在SevaX應用程序中執行管理任務所花費的時間",
+    "exchanges": "交流交流",
+    "create_event": "建立活動",
+    "join_message_room_hint": "為了在此消息室中查看消息，您需要通過單擊下面的“加入聊天”按鈕加入該室",
+    "join_message_room": "** Message_room_creator_name已在社區** community_name中創建了一個消息室** message_room_name，並邀請您加入。請接受或拒絕邀請",
+    "action_not_permitted": "不允許採取行動",
+    "contact_community_creator": "目前不允許這樣做。請聯繫社區創建者以獲取更多信息。",
+    "follow_link_to_upgrade": "目前不允許這樣做。請查看以下鏈接以獲取更多信息：** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "您要接受報價嗎？"
 }

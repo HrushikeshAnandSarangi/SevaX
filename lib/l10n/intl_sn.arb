@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-12-29T18:24:09+00:00",
+    "@@last_modified": "2020-12-30T16:54:54+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -166,7 +166,7 @@
     "notifications_added_you": "akakuwedzera iwe",
     "notifications_request_rejected_by": "Chikumbiro chakarambwa na",
     "notifications_join_request": "Join chikumbiro",
-    "notifications_requested_join": "akakumbira kuti ubatane",
+    "notifications_requested_join": "akakumbira kujoina",
     "notifications_tap_to_view": "Tinya kuti uone chikumbiro chekujoina",
     "notifications_task_rejected_by": "Basa kupedzwa rakarambwa na",
     "notifications_approved_for": "bvumidza kupedzwa kwebasa re",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Chikumbiro chako che ** nhamba Seva Chikwereti (s) chakanangana nezviitiko zvine chekuita neAdmin zveNharaunda ** nharaundaName yakatenderwa.",
     "added_to_messaging_room": "Sezvo iwe uri kuzvipira pachiitiko ichi, iwe wakawedzerwa kune mameseji mukamuri.Unogona kubva mukamuri ino chero nguva",
     "seva_community_event": "Seva Nharaunda Chiitiko",
-    "personal_event": "Chiitiko Chega"
+    "personal_event": "Chiitiko Chega",
+    "manual_time_add": "Wedzera Manual Nguva",
+    "manual_time_textfield_hint": "Ndokumbira upe chikonzero chechikumbiro ichi - kubatsira anobvumidza",
+    "manual_time_button_text": "Tumira Chikumbiro",
+    "manual_time_title": "Kumbira Seva Kiredhiti eAdmin mabasa akaitwa",
+    "manual_time_info": "Admins vanogona kukumbira Seva Credits yenguva yavanoshandisa mukuita Admin Tasks muSevaX Chikumbiro",
+    "exchanges": "Kuchinjana",
+    "create_event": "Gadzira Chiitiko",
+    "join_message_room_hint": "Kuti uone mameseji mune ino Kamuri Yemashoko, iwe unofanirwa kujoina mukamuri nekudzvanya bhatani 'Join Chat' pazasi",
+    "join_message_room": "** Message_room_creator_name yakagadzira imba yemeseji ** message_room_name muCommunity ** munharaunda_name uye yakakoka iwe kujoina.Ndapota bvuma kana kuramba kukoka",
+    "action_not_permitted": "Chiito hachibvumirwi",
+    "contact_community_creator": "Izvi hazvibvumirwe parizvino.Ndokumbirawo ubate Community Community kuti uwane rumwe ruzivo.",
+    "follow_link_to_upgrade": "Izvi hazvibvumirwe parizvino.Ndokumbira kuti uone chinotevera chinongedzo kuti uwane rumwe ruzivo: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Ungada here kubvuma kupihwa?"
 }

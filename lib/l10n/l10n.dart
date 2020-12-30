@@ -852,7 +852,7 @@ class S {
       );
 
   String get notifications_requested_join => Intl.message(
-        'has requested you to join',
+        'has requested to join',
         name: 'notifications_requested_join',
       );
 
@@ -5855,6 +5855,71 @@ class S {
   String get personal_event => Intl.message(
         'Personal Event',
         name: 'personal_event',
+      );
+
+  String get manual_time_add => Intl.message(
+        'Add Manual Time',
+        name: 'manual_time_add',
+      );
+
+  String get manual_time_textfield_hint => Intl.message(
+        'Please provide a rationale for this request - to assist the approver',
+        name: 'manual_time_textfield_hint',
+      );
+
+  String get manual_time_button_text => Intl.message(
+        'Send Request',
+        name: 'manual_time_button_text',
+      );
+
+  String get manual_time_title => Intl.message(
+        'Request Seva Credits for Admin tasks performed',
+        name: 'manual_time_title',
+      );
+
+  String get manual_time_info => Intl.message(
+        'Admins can request Seva Credits for the time that they spend in performing Admin Tasks in the SevaX Application',
+        name: 'manual_time_info',
+      );
+
+  String get exchanges => Intl.message(
+        'Exchanges',
+        name: 'exchanges',
+      );
+
+  String get create_event => Intl.message(
+        'Create Event',
+        name: 'create_event',
+      );
+
+  String get join_message_room_hint => Intl.message(
+        'In order to view the messages in this Message Room, you need to join the room by clicking the \'Join Chat\' button below',
+        name: 'join_message_room_hint',
+      );
+
+  String get join_message_room => Intl.message(
+        ' **Message_room_creator_name has created a message room **message_room_name in the Community **community_name and invited you to join. Please accept or decline the invitation',
+        name: 'join_message_room',
+      );
+
+  String get action_not_permitted => Intl.message(
+        'Action not permitted',
+        name: 'action_not_permitted',
+      );
+
+  String get contact_community_creator => Intl.message(
+        'This is currently not permitted. Please contact the Community Creator for more information.',
+        name: 'contact_community_creator',
+      );
+
+  String get follow_link_to_upgrade => Intl.message(
+        'This is currently not permitted. Please see the following link for more information: **link_on_web_to_upgrade_plan',
+        name: 'follow_link_to_upgrade',
+      );
+
+  String get would_like_to_accept_offer => Intl.message(
+        'Would you like to accept offer?',
+        name: 'would_like_to_accept_offer',
       );
 }
 

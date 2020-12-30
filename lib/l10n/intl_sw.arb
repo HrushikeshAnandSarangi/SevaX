@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-12-29T18:24:07+00:00",
+    "@@last_modified": "2020-12-30T16:54:54+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -166,7 +166,7 @@
     "notifications_added_you": "amekuongeza kwa",
     "notifications_request_rejected_by": "Ombi lililokataliwa na",
     "notifications_join_request": "Jiunge na ombi",
-    "notifications_requested_join": "amekuomba ujiunge",
+    "notifications_requested_join": "ameomba kujiunga",
     "notifications_tap_to_view": "Gonga ili uone ombi la kujiunga",
     "notifications_task_rejected_by": "Kukamilisha kazi kukataliwa na",
     "notifications_approved_for": "imeidhinisha kukamilisha kazi kwa",
@@ -1161,5 +1161,18 @@
     "manual_time_request_approved": "Ombi lako la ** nambari ya Seva (s) ya ** kuelekea shughuli zinazohusiana na Usimamizi kwa Jumuiya ** JamiiName imeidhinishwa.",
     "added_to_messaging_room": "Kwa kuwa unajitolea kwa hafla hii, umeongezwa kwenye chumba cha kutuma ujumbe.Unaweza kuondoka kwenye chumba hiki wakati wowote",
     "seva_community_event": "Tukio la Jumuiya ya Seva",
-    "personal_event": "Tukio la Kibinafsi"
+    "personal_event": "Tukio la Kibinafsi",
+    "manual_time_add": "Ongeza Muda wa Mwongozo",
+    "manual_time_textfield_hint": "Tafadhali toa sababu ya ombi hili - kumsaidia anayekubali",
+    "manual_time_button_text": "Tuma ombi",
+    "manual_time_title": "Omba Sifa za Seva kwa kazi za Usimamizi zilizofanywa",
+    "manual_time_info": "Wasimamizi wanaweza kuomba Seva Credits kwa wakati ambao wanatumia kufanya Kazi za Usimamizi katika Maombi ya SevaX",
+    "exchanges": "Kubadilishana",
+    "create_event": "Unda Tukio",
+    "join_message_room_hint": "Ili kuona ujumbe katika Chumba hiki cha Ujumbe, unahitaji kujiunga na chumba kwa kubofya kitufe cha 'Jiunge na Gumzo' hapa chini",
+    "join_message_room": "** Jina_ya_msanii_waumba_jumbe limeunda chumba cha ujumbe ** jina_jina_ya_jukumu katika Jumuiya ** jina_jamii na kukualika ujiunge.Tafadhali kubali au kataa mwaliko",
+    "action_not_permitted": "Hatua hairuhusiwi",
+    "contact_community_creator": "Hii kwa sasa hairuhusiwi.Tafadhali wasiliana na Muundaji wa Jumuiya kwa habari zaidi.",
+    "follow_link_to_upgrade": "Hii kwa sasa hairuhusiwi.Tafadhali angalia kiunga kifuatacho kwa habari zaidi: ** link_on_web_to_upgrade_plan",
+    "would_like_to_accept_offer": "Je! Ungependa kukubali ofa?"
 }
