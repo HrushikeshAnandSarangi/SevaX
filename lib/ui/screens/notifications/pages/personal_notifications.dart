@@ -619,9 +619,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: body.userDetails.name,
                         photoUrl: body.userDetails.photoUrl,
-                        title: "Manual time Notification",
-                        subTitle:
-                            "Your request for ${body.claimedTime / 60} hours has been approved",
+                        title: S.of(context).manual_notification_title,
+                        subTitle: S
+                            .of(context)
+                            .manual_time_request_approved
+                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll(
+                                '**communityName', body.communityName ?? ' '),
                         isDissmissible: true,
                         onDismissed: onDismissed,
                       );
@@ -634,9 +638,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: body.userDetails.name,
                         photoUrl: body.userDetails.photoUrl,
-                        title: "Manual time Notification",
-                        subTitle:
-                            "Your request for ${body.claimedTime / 60} hours has been rejected",
+                        title: S.of(context).manual_notification_title,
+                        subTitle: S
+                            .of(context)
+                            .manual_time_request_rejected
+                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll(
+                                '**communityName', body.communityName ?? ' '),
                         isDissmissible: true,
                         onDismissed: onDismissed,
                       );

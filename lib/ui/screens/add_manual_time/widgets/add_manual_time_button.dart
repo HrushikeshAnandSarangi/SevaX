@@ -6,6 +6,7 @@ class AddManualTimeButton extends StatelessWidget {
   final ManualTimeType timeFor;
   final String typeId;
   final String timebankId;
+  final String communityName;
   final UserRole userType;
 
   const AddManualTimeButton({
@@ -14,6 +15,7 @@ class AddManualTimeButton extends StatelessWidget {
     @required this.typeId,
     @required this.userType,
     @required this.timebankId,
+    @required this.communityName,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class AddManualTimeButton extends StatelessWidget {
           timeFor: timeFor,
           userType: userType,
           timebankId: timebankId,
+          communityName: communityName,
         ),
       ),
     );
@@ -37,6 +40,7 @@ class AddManualTimeButton extends StatelessWidget {
     @required ManualTimeType timeFor,
     @required String typeId,
     @required String timebankId,
+    @required String communityName,
     @required UserRole userType,
   }) {
     Navigator.of(context).push(
@@ -46,6 +50,7 @@ class AddManualTimeButton extends StatelessWidget {
           type: timeFor,
           userType: userType,
           timebankId: timebankId,
+          communityName: communityName,
         ),
       ),
     );

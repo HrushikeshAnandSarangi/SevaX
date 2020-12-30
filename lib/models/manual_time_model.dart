@@ -20,6 +20,7 @@ class ManualTimeModel {
     @required this.relatedNotificationId,
     @required this.timestamp,
     @required this.timebankId,
+    @required this.communityName,
   });
 
   String id;
@@ -35,11 +36,13 @@ class ManualTimeModel {
   String relatedNotificationId;
   int timestamp;
   String timebankId;
+  String communityName;
 
   factory ManualTimeModel.fromSnapshot(DocumentSnapshot snapshot) =>
       ManualTimeModel(
         id: snapshot.documentID,
         communityId: snapshot.data["communityId"],
+        communityName: snapshot.data["communityName"],
         typeId: snapshot.data['typeId'],
         type: _manualTypeMap[snapshot.data['type']],
         status: snapshot.data.containsKey('status')
@@ -58,6 +61,7 @@ class ManualTimeModel {
   factory ManualTimeModel.fromMap(Map<String, dynamic> map) => ManualTimeModel(
         id: map["id"],
         communityId: map["communityId"],
+        communityName: map["communityName"],
         typeId: map["typeId"],
         type: _manualTypeMap[map['type']],
         status: map.containsKey('status')
@@ -78,6 +82,7 @@ class ManualTimeModel {
   Map<String, dynamic> toMap() => {
         "id": id,
         "communityId": communityId,
+        "communityName": communityName,
         "typeId": typeId,
         "type": type.toString().split('.')[1],
         "status": status.toString().split('.')[1],

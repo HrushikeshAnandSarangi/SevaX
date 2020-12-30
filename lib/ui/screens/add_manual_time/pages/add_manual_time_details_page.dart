@@ -9,6 +9,7 @@ class AddMnualTimeDetailsPage extends StatefulWidget {
   final ManualTimeType type;
   final UserRole userType;
   final String timebankId;
+  final String communityName;
 
   const AddMnualTimeDetailsPage({
     Key key,
@@ -16,6 +17,7 @@ class AddMnualTimeDetailsPage extends StatefulWidget {
     @required this.type,
     @required this.userType,
     @required this.timebankId,
+    @required this.communityName,
   }) : super(key: key);
   @override
   _AddMnualTimeDetailsPageState createState() =>
@@ -162,6 +164,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                           widget.type,
                           widget.typeId,
                           widget.timebankId,
+                          widget.communityName,
                           widget.userType,
                         )
                             .then(

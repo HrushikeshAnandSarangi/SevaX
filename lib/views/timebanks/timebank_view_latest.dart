@@ -174,6 +174,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         widget.timebankModel,
                         SevaCore.of(context).loggedInUser.sevaUserID,
                       ),
+                      communityName: widget.timebankModel.name,
                     ),
                   )
                 : Container(),
