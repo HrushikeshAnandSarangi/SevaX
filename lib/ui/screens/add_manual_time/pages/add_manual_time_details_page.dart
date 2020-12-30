@@ -38,14 +38,32 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
       key: _key,
       appBar: AppBar(
         title: Text(
-          'Add Manual Time',
+          S.of(context).manual_time_add,
           style: TextStyle(fontSize: 18),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Text(
+                    S.of(context).manual_time_title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    S.of(context).manual_time_info,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<String>(
@@ -61,7 +79,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                       enabledBorder: border,
                       disabledBorder: border,
                       focusedBorder: border,
-                      hintText: 'Why are you adding this time? Please specify',
+                      hintText: S.of(context).manual_time_textfield_hint,
                       errorText: snapshot.hasError
                           ? S.of(context).validation_error_general_text
                           : null,
@@ -150,7 +168,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
             ),
             SizedBox(height: 20),
             RaisedButton(
-              child: Text('Create Request'),
+              child: Text(S.of(context).manual_time_button_text),
               onPressed: isLoading
                   ? null
                   : () {
