@@ -47,6 +47,7 @@ class AddManualTimeBloc {
     ManualTimeType type,
     String typeId,
     String timebankId,
+    String communityName,
     UserRole userType,
   ) async {
     if (_error.value == false && _reason.value != null) {
@@ -69,6 +70,7 @@ class AddManualTimeBloc {
         timestamp: DateTime.now().millisecondsSinceEpoch,
         claimedBy: userType,
         timebankId: timebankId,
+        communityName: communityName,
       );
 
       NotificationsModel notificationsModel = NotificationsModel()
