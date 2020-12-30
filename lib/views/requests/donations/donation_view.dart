@@ -559,6 +559,7 @@ class _DonationViewState extends State<DonationView> {
                           showScaffold(S.of(context).check_internet);
                           return;
                         }
+                        showProgress(S.of(context).please_wait);
                         donationBloc
                             .donateOfferGoods(
                                 notificationId: widget.notificationId,
@@ -572,7 +573,7 @@ class _DonationViewState extends State<DonationView> {
                                     sevaUserID: donationsModel.donorSevaUserId))
                             .then((value) {
                           if (value) {
-                            // hideProgress();
+                            hideProgress();
                             getSuccessDialog().then(
                               //to pop the screen
                               (_) => Navigator.of(context).pop(),
@@ -1024,8 +1025,7 @@ class _DonationViewState extends State<DonationView> {
                     if (donationBloc.selectedList == null) {
                       showScaffold(S.of(context).select_goods_category);
                     } else {
-                      // showProgress();
-
+                      showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateGoods(
                               notificationId: widget.notificationId,
@@ -1034,7 +1034,7 @@ class _DonationViewState extends State<DonationView> {
                               donor: sevaUser)
                           .then((value) {
                         if (value) {
-                          // hideProgress();
+                          hideProgress();
                           getSuccessDialog().then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),

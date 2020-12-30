@@ -208,7 +208,6 @@ class _RequestDonationDisputePageState
                             if (value) {
                               FocusScope.of(context).unfocus();
                               showProgress(S.of(context).please_wait);
-
                               _bloc
                                   .disputeCash(
                                 pledgedAmount: amount.toDouble(),
@@ -247,6 +246,8 @@ class _RequestDonationDisputePageState
                           log("Donated Goods" +
                               widget.model.goodsDetails.donatedGoods
                                   .toString());
+                          showProgress(S.of(context).please_wait);
+
                           _bloc
                               .disputeGoods(
                             donatedGoods:
@@ -261,12 +262,12 @@ class _RequestDonationDisputePageState
                           )
                               .then(
                             (value) {
+                              hideProgress();
                               if (value) {
                                 Navigator.of(context).pop();
                               }
                             },
                           );
-
                           break;
                       }
                     },
@@ -343,11 +344,6 @@ class _RequestDonationDisputePageState
                           TimebankModel timebankModel = await getTimeBankForId(
                             timebankId: widget.model.timebankId,
                           );
-
-                          // UserModel fundRaiserDetails =
-                          //     await FirestoreManager.getUserForId(
-                          //   sevaUserId: widget.model.donorDetails.name,
-                          // );
 
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 

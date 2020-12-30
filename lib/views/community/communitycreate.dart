@@ -1393,7 +1393,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.state != null
-              ? '${controller.community.billing_address.state} *'
+              ? '${controller.community.billing_address.state}'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1405,7 +1405,7 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: S.of(context).state,
+            fieldTitle: '${S.of(context).state} *',
           ),
         ),
       );
@@ -1428,7 +1428,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.city != null
-              ? '${controller.community.billing_address.city} *'
+              ? '${controller.community.billing_address.city}'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1440,7 +1440,7 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: S.of(context).city,
+            fieldTitle: '${S.of(context).city} *',
           ),
         ),
       );
@@ -1460,7 +1460,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.pincode != null
-              ? '${controller.community.billing_address.pincode.toString()} *'
+              ? '${controller.community.billing_address.pincode.toString()}'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1474,7 +1474,7 @@ class CreateEditCommunityViewFormState
           textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(
-            fieldTitle: S.of(context).zip,
+            fieldTitle: '${S.of(context).zip} *',
           ),
         ),
       );
@@ -1544,10 +1544,10 @@ class CreateEditCommunityViewFormState
           textInputAction: TextInputAction.done,
           initialValue:
               controller.community.billing_address.street_address1 != null
-                  ? '${controller.community.billing_address.street_address1} *'
+                  ? '${controller.community.billing_address.street_address1}'
                   : '',
           decoration: getInputDecoration(
-            fieldTitle: S.of(context).street_add1,
+            fieldTitle: "${S.of(context).street_add1} *",
           ),
         ),
       );
@@ -1637,7 +1637,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.country != null
-              ? '${controller.community.billing_address.country} *'
+              ? '${controller.community.billing_address.country}'
               : '',
           validator: (value) {
             return value.isEmpty
@@ -1649,7 +1649,7 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: S.of(context).country,
+            fieldTitle: '${S.of(context).country} *',
           ),
         ),
       );
