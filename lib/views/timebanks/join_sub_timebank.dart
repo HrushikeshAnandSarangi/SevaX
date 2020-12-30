@@ -456,7 +456,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       senderUserId: userIdForNewMember,
       type: prefix0.NotificationType.JoinRequest,
       data: joinRequestModel.toMap(),
-      communityId: "NOT_REQUIRED",
+      communityId: widget.loggedInUserModel.currentCommunity,
     );
   }
 
