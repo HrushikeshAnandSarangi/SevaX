@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
@@ -42,10 +40,9 @@ class _CategoryState extends State<Category> {
       dataLoaded = true;
       if (widget.selectedSubCategoriesids != null &&
           widget.selectedSubCategoriesids.length > 0) {
-        selectedSubCategoriesIds = widget.selectedSubCategoriesids;
+        selectedSubCategoriesIds.addAll(widget.selectedSubCategoriesids);
         selectedSubCategories = List<CategoryModel>.from(categories.where(
             (element) => selectedSubCategoriesIds.contains(element.typeId)));
-        log('len  ' + selectedSubCategories.length.toString());
       }
 
       setState(() {});
@@ -64,8 +61,6 @@ class _CategoryState extends State<Category> {
 
   @override
   Widget build(BuildContext context) {
-    logger.i('selectedCategory =>  ${selectedCategory}');
-    logger.i('selectedSubCategories =>  ${selectedSubCategories}');
     var color = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
@@ -73,8 +68,8 @@ class _CategoryState extends State<Category> {
         leading: IconButton(
           onPressed: () {
             Future.delayed(Duration.zero, () {
-              Navigator.pop(context,
-                  [S.of(context).suggested_categories, selectedSubCategories]);
+              Navigator.pop(
+                  context, ['Selected Categories', selectedSubCategories]);
             });
             ;
           },
@@ -84,12 +79,9 @@ class _CategoryState extends State<Category> {
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () {
-              log('models  ' + selectedSubCategories[0].toString());
               Future.delayed(Duration.zero, () {
-                Navigator.pop(context, [
-                  S.of(context).suggested_categories,
-                  selectedSubCategories
-                ]);
+                Navigator.pop(
+                    context, ['Selected Categories', selectedSubCategories]);
               });
             },
           ),

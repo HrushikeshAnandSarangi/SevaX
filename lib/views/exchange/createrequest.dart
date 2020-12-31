@@ -26,6 +26,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -168,6 +169,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   String hoursMessage;
   String selectedAddress;
   int sharedValue = 0;
+  final _debouncer = Debouncer(milliseconds: 500);
 
   String _selectedTimebankId;
 
@@ -874,8 +876,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
-              if (value != null && value.length > 1) {
-                getCategoriesFromApi(value);
+              if (value != null && value.length > 5) {
+                _debouncer.run(() {
+                  getCategoriesFromApi(value);
+                });
               }
               updateExitWithConfirmationValue(context, 9, value);
             },
@@ -1019,7 +1023,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       MaterialPageRoute(
           fullscreenDialog: true,
           builder: (context) => Category(
-                selectedSubCategoriesids: [],
+                selectedSubCategoriesids: selectedCategoryIds,
               )),
     );
     updateInformation(category);
@@ -1038,7 +1042,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
         Padding(
-          padding: const EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.only(right: 5, bottom: 5),
           child: Container(
             height: 30,
             decoration: BoxDecoration(
@@ -1114,6 +1118,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),
@@ -1304,6 +1309,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),
@@ -1478,6 +1484,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),

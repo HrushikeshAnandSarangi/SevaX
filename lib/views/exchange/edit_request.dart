@@ -24,6 +24,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
@@ -157,6 +158,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   RequestModel requestModel;
   GeoFirePoint location;
+  final _debouncer = Debouncer(milliseconds: 500);
 
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
@@ -886,7 +888,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (value) {
             if (value != null && value.length > 1) {
-              getCategoriesFromApi(value);
+              _debouncer.run(() {
+                getCategoriesFromApi(value);
+              });
             }
             updateExitWithConfirmationValue(context, 9, value);
           },
@@ -1015,7 +1019,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       MaterialPageRoute(
           fullscreenDialog: true,
           builder: (context) => Category(
-                selectedSubCategoriesids: widget.requestModel.categories,
+                selectedSubCategoriesids: selectedCategoryIds,
               )),
     );
 
@@ -1033,7 +1037,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
         Padding(
-          padding: const EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.only(right: 5, bottom: 5),
           child: Container(
             height: 30,
             decoration: BoxDecoration(
@@ -1106,6 +1110,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),
@@ -1388,6 +1393,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),
@@ -1463,6 +1469,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 categories != null
                     ? Wrap(
                         alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
                         children: _buildselectedSubCategories(categories),
                       )
                     : Container(),
