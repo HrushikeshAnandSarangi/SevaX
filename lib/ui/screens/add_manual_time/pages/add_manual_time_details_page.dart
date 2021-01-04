@@ -197,9 +197,13 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                               Future.delayed(Duration(seconds: 2), () {
                                 Navigator.of(context).pop();
                               });
+                            } else {
+                              changeLoadingState(false);
                             }
                           },
-                        );
+                        ).catchError((onError) {
+                          changeLoadingState(false);
+                        });
                       } catch (e) {
                         changeLoadingState(false);
                         _key.currentState.hideCurrentSnackBar();
