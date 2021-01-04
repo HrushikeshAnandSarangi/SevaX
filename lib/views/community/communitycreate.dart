@@ -30,7 +30,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -1004,17 +1003,6 @@ class CreateEditCommunityViewFormState
 
                                     timebankModel.address = selectedAddress;
 
-                                    if (selectedUsers != null) {
-                                      selectedUsers.forEach((key, user) {
-                                        if (timebankModel.members
-                                            .contains(user.sevaUserID)) {
-                                          selectedUsers.remove(user);
-                                        }
-                                      });
-                                      selectedUsers.forEach((key, user) {
-                                        members.add(user.sevaUserID);
-                                      });
-                                    }
                                     if (widget.isCreateTimebank) {
                                       var taxDefaultVal = (json.decode(
                                               AppConfig.remoteConfig.getString(
@@ -1029,11 +1017,9 @@ class CreateEditCommunityViewFormState
                                     // creation of community;
 
                                     // updating timebank with latest values
-                                    await FirestoreManager
-                                            .updateTimebankDetails(
-                                                timebankModel: timebankModel,
-                                                members: members)
-                                        .then((onValue) {});
+                                    await FirestoreManager.updateTimebank(
+                                      timebankModel: timebankModel,
+                                    ).then((onValue) {});
                                     communityModel.taxPercentage =
                                         taxPercentage / 100;
 
@@ -1732,33 +1718,6 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  void addVolunteers() async {
-    onActivityResult = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SelectMembersInGroup(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-          userSelected:
-              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
-          userEmail: SevaCore.of(context).loggedInUser.email,
-          listOfalreadyExistingMembers: [],
-        ),
-      ),
-    );
-
-    if (onActivityResult != null &&
-        onActivityResult.containsKey("membersSelected")) {
-      selectedUsers = onActivityResult['membersSelected'];
-      setState(() {
-        if (selectedUsers.length == 0)
-          memberAssignment = "Assign to volunteers";
-        else
-          memberAssignment = "${selectedUsers.length} volunteers selected";
-      });
-    } else {
-      //no users where selected
-    }
-  }
-
   void showDialogForSuccess({String dialogTitle, bool err}) {
     showDialog(
         context: context,
@@ -1768,7 +1727,7 @@ class CreateEditCommunityViewFormState
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  S.of(context).ok,
                   style: TextStyle(
                       fontSize: 16, color: err ? Colors.red : Colors.green),
                 ),
