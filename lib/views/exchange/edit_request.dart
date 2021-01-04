@@ -281,6 +281,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     color: Colors.grey,
     fontFamily: 'Europa',
   );
+
   Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1060,7 +1061,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          RepeatWidget(),
+          EditRepeatWidget(requestModel: widget.requestModel, offerModel: null,),
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint),
           SizedBox(height: 20),
