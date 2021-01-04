@@ -10,6 +10,8 @@ import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
+import 'requests_tab_view.dart';
+import 'projects_tab_view.dart';
 import 'feeds_tab_view.dart';
 import 'group_tab_view.dart';
 import 'members_tab_view.dart';

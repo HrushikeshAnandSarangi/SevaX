@@ -5,6 +5,11 @@ import 'package:http/http.dart' as http;
 class FeedsWebScraperError implements Exception {
   final String message;
   FeedsWebScraperError(this.message);
+
+  @override
+  String toString() {
+    return message;
+  }
 }
 
 class FeedWebScraperData {

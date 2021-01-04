@@ -239,7 +239,7 @@ class RequestCompleteWidget extends StatelessWidget {
                             notificationId: notificationId,
                             user: userModel,
                             userId: userId,
-                            sevaCore: SevaCore.of(context),
+                            loggedInUser: SevaCore.of(context).loggedInUser,
                           );
                           Navigator.pop(viewContext);
                         },
@@ -281,7 +281,7 @@ class RequestCompleteWidget extends StatelessWidget {
     RequestModel model,
     String notificationId,
     BuildContext context,
-    SevaCore sevaCore,
+    UserModel loggedInUser,
   }) async {
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
@@ -297,7 +297,7 @@ class RequestCompleteWidget extends StatelessWidget {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
-          sevaCore: sevaCore,
+          loggedInUser: loggedInUser,
           requestModel: model,
           userId: userId,
           notificationId: notificationId,
@@ -311,7 +311,7 @@ class RequestCompleteWidget extends StatelessWidget {
   }
 
   void onActivityResult({
-    SevaCore sevaCore,
+    UserModel loggedInUser,
     RequestModel requestModel,
     String userId,
     String notificationId,
@@ -332,17 +332,17 @@ class RequestCompleteWidget extends StatelessWidget {
             ? results['comment']
             : S.of(context).no_comments)
       });
+      await approveTransaction(
+          requestModel, userId, notificationId, loggedInUser);
+
       await sendMessageToMember(
         receiverUser: receiverUser,
         requestModel: requestModel,
         message: (results['didComment']
             ? results['comment']
             : S.of(context).no_comments),
-        loggedInUser: sevaCore.loggedInUser,
-        context: context,
+        loggedInUser: loggedInUser,
       );
-
-      approveTransaction(requestModel, userId, notificationId, sevaCore);
     } on Exception catch (e) {
       logger.e(e.toString());
     }
@@ -403,17 +403,17 @@ class RequestCompleteWidget extends StatelessWidget {
     RequestModel model,
     String userId,
     String notificationId,
-    SevaCore sevaCore,
+    UserModel loggedInUser,
   ) {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
-      communityId: sevaCore.loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity,
     );
     log('clearing notification');
     FirestoreManager.readUserNotification(
       notificationId,
-      sevaCore.loggedInUser.email,
+      loggedInUser.email,
     );
   }
 

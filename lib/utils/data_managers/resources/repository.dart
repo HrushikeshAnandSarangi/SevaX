@@ -37,12 +37,20 @@ class Repository {
       requestApiProvider.getRequestListStream(timebankId: timebankId);
   Future getUsersFromRequest(requestID) =>
       requestApiProvider.getUserFromRequest(requestID);
-  Future updateInvitedUsersForRequest(requestID, sevauserid) =>
-      requestApiProvider.updateInvitedUsersForRequest(requestID, sevauserid);
+  Future updateInvitedUsersForRequest(requestID, sevauserid, email) =>
+      requestApiProvider.updateInvitedUsersForRequest(
+          requestID, sevauserid, email);
 
   // functions for payments
-  Future storeCard(token, timebankid, user, planName) =>
-      paymentsApiProvider.addCard(token, timebankid, user, planName);
+  Future storeCard(
+          {token, timebankid, user, planName, bool isNegotiatedPlan}) =>
+      paymentsApiProvider.addCard(
+          token,
+          timebankid,
+          isNegotiatedPlan,
+          user,
+          planName);
+  // token, timebankid, user, planName
 
   Future searchUserByName(name, UserListModel userListModel) {}
   Future searchTimebankSiblingsByParentId(id, TimebankListModel timebanks) =>

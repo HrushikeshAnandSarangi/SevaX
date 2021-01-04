@@ -3,6 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
@@ -87,15 +88,17 @@ enum ViewerRole {
 }
 
 class TransactionLimitCheck extends StatelessWidget {
+  final String timebankId;
   final Widget child;
-  final bool isSoftDeleteRequested;
+  bool isSoftDeleteRequested;
+  final ComingFrom comingFrom;
 
-  const TransactionLimitCheck({
+  TransactionLimitCheck({
     Key key,
     this.child,
-    @required this.isSoftDeleteRequested,
-  })  : assert(isSoftDeleteRequested != null),
-        super(key: key);
+    @required this.comingFrom,
+    @required this.timebankId,
+  });
 
   ViewerRole initViewerRole(UserDataBloc _userBloc) {
     if (_userBloc.community.created_by == _userBloc.user.sevaUserID) {
@@ -238,6 +241,7 @@ class SevaPlansBillingConfig {
   static Map<String, dynamic> plansLimit = {
     "neighbourhood_plan": 15,
     "tall_plan": 50,
+    "community_plus_plan": 150,
     "grande_plan": 3000,
     "venti_plan": 5000
   };
@@ -245,7 +249,7 @@ class SevaPlansBillingConfig {
   static Map<String, dynamic> billingPlans = {
     "neighbourhood_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 15,
       'action': [
 //         "quota_TypeJoinTimebank",
         "quota_TypeRequestApply",
@@ -267,9 +271,9 @@ class SevaPlansBillingConfig {
         "quota_TypeOfferAccepted"
       ],
     },
-    "tall_plan": {
+    "community_plus_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 150,
       'action': [
         "quota_TypeJoinTimebank",
         "quota_TypeRequestApply",
@@ -281,7 +285,7 @@ class SevaPlansBillingConfig {
     },
     "grande_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 3000,
       'action': [
         "quota_TypeJoinTimebank",
         "quota_TypeRequestApply",
@@ -293,7 +297,7 @@ class SevaPlansBillingConfig {
     },
     "venti_plan": {
       "initial_transactions_amount": 0,
-      "initial_transactions_qty": 50,
+      "initial_transactions_qty": 5000,
       'action': [
         "quota_TypeJoinTimebank",
         "quota_TypeRequestApply",
@@ -336,15 +340,12 @@ String getMessage({
   bool exaustedLimit,
 }) {
   if (exaustedLimit) {
-    // String exhausted = S.of(context).exhausted_free_quota;
+     String exhausted = S.of(context).exhausted_free_quota;
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin:
-          'This is currently not permitted. Please contact the Community Creator for more information',
-      forCreator:
-          'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/',
-      forMember:
-          'This is currently not permitted. Please contact the Community Creator for more information',
+      forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
+      forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
+      forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
     );
   }
 

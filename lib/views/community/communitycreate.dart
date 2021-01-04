@@ -677,7 +677,7 @@ class CreateEditCommunityViewFormState
                                     child: infoButton(
                                       context: context,
                                       key: GlobalKey(),
-                                      type: InfoType.NEGATIVE_CREDITS,
+                                      type: InfoType.TAX_CONFIGURATION,
                                     ),
                                   ),
                                 ],
@@ -713,6 +713,21 @@ class CreateEditCommunityViewFormState
                                     ),
                                   ),
                                 ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                S.of(context).timebank_current_tax_percentage +
+                                    ' : ${taxPercentage.toInt()}%',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ],
                           ),
@@ -1453,6 +1468,9 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+          ],
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 5, value);
             controller.community.billing_address

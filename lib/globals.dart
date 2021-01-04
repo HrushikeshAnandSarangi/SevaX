@@ -51,6 +51,7 @@ bool isSame = false;
 bool isFromOnBoarding = false;
 
 bool userRecordExists = false;
+bool isBillingDetailsProvided = false;
 
 // Google User Details
 //String photoURL;

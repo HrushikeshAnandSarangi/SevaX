@@ -11,6 +11,7 @@ class FlavorValues {
   final String offertitle;
   final ThemeData theme;
   final Color buttonTextColor;
+  final Color textColor;
   final String timebankTitle;
   final String cloudFunctionBaseURL;
   final String elasticSearchBaseURL;
@@ -35,6 +36,7 @@ class FlavorValues {
     this.offertitle = 'Offer',
     this.theme,
     this.buttonTextColor = Colors.white,
+    this.textColor,
     this.timebankTitle = 'Seva Community',
     @required this.cloudFunctionBaseURL,
     @required this.elasticSearchBaseURL,
@@ -67,6 +69,7 @@ class FlavorConfig {
           timebankName: 'Seva Exchange',
           offertitle: 'Offer',
           requestTitle: 'Request',
+          textColor: Color(0x0FFD8D8D8),
           buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
@@ -79,7 +82,7 @@ class FlavorConfig {
                 color: Colors.white,
               ),
               elevation: 0.7,
-              actionsIconTheme: IconThemeData(color: Colors.white),
+              actionsIconTheme: IconThemeData(color: Colors.black54),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
@@ -148,6 +151,7 @@ class FlavorConfig {
           offertitle: 'Offer',
           requestTitle: 'Request',
           buttonTextColor: Colors.black,
+          textColor: Color(0x0FFD8D8D8),
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,

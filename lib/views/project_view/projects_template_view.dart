@@ -135,6 +135,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             }),
           ),
           TransactionsMatrixCheck(
+              comingFrom: ComingFrom.Projects,
             upgradeDetails: AppConfig.upgradePlanBannerModel.project_templates,
             transaction_matrix_type: "project_templates",
             child: searchFieldWidget(),

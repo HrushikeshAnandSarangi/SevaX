@@ -92,7 +92,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
-        validItems = onValue;
+        validItems = onValue.listOfElement;
       });
     });
   }
@@ -344,6 +344,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TransactionsMatrixCheck(
+            comingFrom: ComingFrom.Members,
             upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
             transaction_matrix_type: "csv_import_users",
             child: GestureDetector(

@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 
 import '../../flavor_config.dart';
@@ -176,7 +177,7 @@ bool isParticipant(BuildContext context, OfferModel model) {
       .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 }
 
-Future<bool> offerActions(BuildContext context, OfferModel model) async {
+Future<bool> offerActions(BuildContext context, OfferModel model, ComingFrom comingFromVar) async {
   var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
   bool _isParticipant = getOfferParticipants(offerDataModel: model)
       .contains(SevaCore.of(context).loggedInUser.sevaUserID);
@@ -245,11 +246,37 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
     }
   } else if ((model.type == RequestType.CASH ||
       model.type == RequestType.GOODS)) {
-//    if (!_isParticipant) addBookMark(model.id, _userId);
+    switch (comingFromVar) {
+      case ComingFrom.Offers:
+        // TODO: navigate to offerdetails router from offers router.
+
+        break;
+      case ComingFrom.Elasticsearch:
+//        ExtendedNavigator.ofRouter<ElasticsearchRouter>()
+//            .pushOfferDetailsRouterElastic(
+//          offerModel: model,
+//          comingFrom: ComingFrom.Elasticsearch,
+//        );
+        break;
+      //no need to handle below cases as it is only for offers so user comes from either offers router or elasticsearch router
+      case ComingFrom.Requests:
+      case ComingFrom.Projects:
+      case ComingFrom.Chats:
+      case ComingFrom.Groups:
+      case ComingFrom.Settings:
+      case ComingFrom.Members:
+      case ComingFrom.Profile:
+      case ComingFrom.Home:
+      case ComingFrom.Billing:
+        break;
+    }
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model),
+        builder: (context) => OfferDetailsRouter(
+          offerModel: model,
+          comingFrom: comingFromVar,
+        ),
       ),
     );
   } else {

@@ -357,6 +357,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       targetUserId: timebankModel.creatorId,
       senderUserId: userIdForNewMember,
       type: prefix0.NotificationType.JoinRequest,
+      isRead: false,
+      isTimebankNotification: true,
       data: joinRequestModel.toMap(),
       communityId: widget.communityModel.id,
     );
@@ -561,6 +563,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   setState(() {
                     widget.user.communities.add(widget.communityModel.id);
                     widget.user.currentCommunity = widget.communityModel.id;
+                    widget.user.currentTimebank =
+                        widget.communityModel.primary_timebank;
                   });
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(

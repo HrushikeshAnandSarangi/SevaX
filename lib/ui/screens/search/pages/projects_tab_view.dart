@@ -6,6 +6,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -80,6 +81,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
       context,
       MaterialPageRoute(
         builder: (context) => ProjectRequests(
+          ComingFrom.Projects,
           timebankId: timebank.id,
           projectModel: project,
           timebankModel: timebank,

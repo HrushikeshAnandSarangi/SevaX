@@ -189,14 +189,11 @@ class RequestModel extends DataModel {
   String donationInstructionLink;
   List<String> allowedCalenderUsers;
   List<String> recommendedMemberIdsForRequest = [];
-
-  String associatedCommunityId;
-
   RequestMode requestMode;
   RequestType requestType;
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
-
+  String associatedCommunityId;
   RequestModel({
     this.id,
     this.title,
@@ -246,14 +243,6 @@ class RequestModel extends DataModel {
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
     }
-
-    if (map.containsKey('allowedCalenderUsers')) {
-      List<String> allowedCalenderUsers =
-          List.castFrom(map['allowedCalenderUsers']);
-      this.allowedCalenderUsers = allowedCalenderUsers;
-    } else {
-      this.allowedCalenderUsers = [];
-    }
     if (map.containsKey('recommendedMemberIdsForRequest')) {
       List<String> recommendedMembeIds =
           List.castFrom(map['recommendedMemberIdsForRequest']);
@@ -266,6 +255,14 @@ class RequestModel extends DataModel {
       this.categories = categories;
     } else {
       this.categories = List();
+    }
+
+    if (map.containsKey('allowedCalenderUsers')) {
+      List<String> allowedCalenderUsers =
+          List.castFrom(map['allowedCalenderUsers']);
+      this.allowedCalenderUsers = allowedCalenderUsers;
+    } else {
+      this.allowedCalenderUsers = [];
     }
 
     if (map.containsKey('id')) {
@@ -330,6 +327,10 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('address')) {
       this.address = map['address'];
+    }
+
+    if (map.containsKey('associatedCommunityId')) {
+      this.associatedCommunityId = map['associatedCommunityId'];
     }
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
@@ -444,6 +445,20 @@ class RequestModel extends DataModel {
     } else {
       this.allowedCalenderUsers = [];
     }
+    if (map.containsKey('recommendedMemberIdsForRequest')) {
+      List<String> recommendedMembeIds =
+          List.castFrom(map['recommendedMemberIdsForRequest']);
+      this.recommendedMemberIdsForRequest = recommendedMembeIds;
+    } else {
+      this.recommendedMemberIdsForRequest = List();
+    }
+    if (map.containsKey('categories')) {
+      List<String> categories = List.castFrom(map['categories']);
+      this.categories = categories;
+    } else {
+      this.categories = List();
+    }
+
     if (map.containsKey('requestMode')) {
       if (map['requestMode'] == "PERSONAL_REQUEST") {
         this.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -476,9 +491,6 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('address')) {
       this.address = map['address'];
-    }
-    if (map.containsKey('associatedCommunityId')) {
-      this.associatedCommunityId = map['associatedCommunityId'];
     }
 
     if (map.containsKey('projectId')) {
@@ -560,19 +572,6 @@ class RequestModel extends DataModel {
     if (map.containsKey('approvedUsers')) {
       List<String> approvedUserList = List.castFrom(map['approvedUsers']);
       this.approvedUsers = approvedUserList;
-    }
-    if (map.containsKey('recommendedMemberIdsForRequest')) {
-      List<String> recommendedMembeIds =
-          List.castFrom(map['recommendedMemberIdsForRequest']);
-      this.recommendedMemberIdsForRequest = recommendedMembeIds;
-    } else {
-      this.recommendedMemberIdsForRequest = List();
-    }
-    if (map.containsKey('categories')) {
-      List<String> categoriesIds = List.castFrom(map['categories']);
-      this.categories = categoriesIds;
-    } else {
-      this.categories = List();
     }
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
@@ -707,12 +706,13 @@ class RequestModel extends DataModel {
     if (this.requestStart != null) {
       object['request_start'] = this.requestStart;
     }
-    if (this.associatedCommunityId != null) {
-      object['associatedCommunityId'] = this.associatedCommunityId;
-    }
 
     if (this.accepted != null) {
       object['accepted'] = this.accepted;
+    }
+
+    if (this.associatedCommunityId != null) {
+      object['associatedCommunityId'] = this.associatedCommunityId;
     }
 
     if (this.address != null) {

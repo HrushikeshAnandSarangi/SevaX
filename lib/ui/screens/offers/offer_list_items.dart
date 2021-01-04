@@ -143,7 +143,7 @@ class OfferListItems extends StatelessWidget {
     Navigator.push(
       parentContext,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model),
+        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Offers,),
       ),
     );
   }
@@ -188,6 +188,7 @@ class OfferListItems extends StatelessWidget {
                 offerModel: model,
                 timebankModel: timebankModel,
                 requestModel: null,
+                comingFrom: ComingFrom.Offers,
               ),
             ),
           );
@@ -230,7 +231,7 @@ class OfferListItems extends StatelessWidget {
         //   _settingModalBottomSheet(parentContext, model);
         // }
         else {
-          offerActions(parentContext, model);
+          offerActions(parentContext, model, ComingFrom.Offers);
         }
       },
     );
@@ -241,6 +242,7 @@ class OfferListItems extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => CreateRequest(
+          comingFrom: ComingFrom.Offers,
           isOfferRequest: true,
           offer: offerModel,
           projectId: '',
@@ -303,6 +305,7 @@ class OfferListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -326,6 +329,7 @@ class OfferListItems extends StatelessWidget {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -349,6 +353,7 @@ class OfferListItems extends StatelessWidget {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -385,7 +390,7 @@ class OfferListItems extends StatelessWidget {
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(parentContext, model);
+                          offerActions(parentContext, model, ComingFrom.Offers);
                         }),
                   ],
                 )

@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -101,8 +102,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   width: 5,
                 ),
                 TransactionLimitCheck(
-                  isSoftDeleteRequested:
-                      widget.timebankModel.requestedSoftDelete,
+                  comingFrom: ComingFrom.Projects,
+                  timebankId: widget.timebankId,
+//                  isSoftDeleteRequested:
+//                      widget.timebankModel.requestedSoftDelete,
                   child: GestureDetector(
                     child: Container(
                       margin: EdgeInsets.only(left: 0),
@@ -203,6 +206,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProjectRequests(
+                                ComingFrom.Projects,
                                 timebankId: widget.timebankId,
                                 projectModel: project,
                                 timebankModel: widget.timebankModel,

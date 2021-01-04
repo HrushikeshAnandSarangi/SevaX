@@ -97,7 +97,7 @@ class ProjectsCard extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Text(
-                              getTimeFormattedString(startTime),
+                              getTimeFormattedString(startTime, S.of(context).localeName,),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey),
                             ),
@@ -109,7 +109,7 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             SizedBox(width: 2),
                             Text(
-                              getTimeFormattedString(endTime),
+                              getTimeFormattedString(endTime, S.of(context).localeName,),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.grey),
                             ),

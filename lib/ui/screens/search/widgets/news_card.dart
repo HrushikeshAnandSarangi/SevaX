@@ -88,7 +88,6 @@ class NewsCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('pppppppppppp'),
                         Container(
                           margin: EdgeInsets.only(top: 5),
                           child: Linkify(

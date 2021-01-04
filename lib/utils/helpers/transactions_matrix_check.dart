@@ -7,12 +7,16 @@ class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
   final String transaction_matrix_type;
   final BannerDetails upgradeDetails;
+  final ComingFrom comingFrom;
+
 
   TransactionsMatrixCheck({
     Key key,
     @required this.child,
     this.transaction_matrix_type,
     @required this.upgradeDetails,
+      @required
+      this.comingFrom,
     // this.paymentStatusMap,
     // this.allowTransaction,
   });
@@ -46,3 +50,5 @@ class TransactionsMatrixCheck extends StatelessWidget {
         : true;
   }
 }
+
+enum ComingFrom { Requests, Projects, Offers, Chats, Groups, Settings, Members, Profile, Elasticsearch, Billing, Home}

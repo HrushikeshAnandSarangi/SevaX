@@ -77,6 +77,10 @@ class JoinRequestModel extends DataModel {
     return joinRequestModel;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      other is JoinRequestModel && other.entityId == entityId;
+
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       "user_id": userId == null ? null : userId,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -17,8 +18,12 @@ Future<String> getLocation(GeoFirePoint location) async {
   return address;
 }
 
+bool isPrimaryTimebank({@required String parentTimebankId}) {
+  return parentTimebankId == FlavorConfig.values.timebankId;
+}
+
 handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
-    type, results, model, UserModel user) async {
+    FeedbackType type, results, RequestModel model, UserModel user) async {
   /* Here are the questions that should be asked (replacing the current ones)
     How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely
 

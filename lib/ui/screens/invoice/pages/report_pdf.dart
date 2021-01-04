@@ -128,7 +128,9 @@ class ReportPdf {
                     "Account Number:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("3630943624", style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.sevaxAccountNo == null ? '' : communityModel.sevaxAccountNo}",
+                      style: TextStyle(fontSize: 14)),
                   SizedBox(height: 8),
                   Text(
                     "BILLING STATEMENT:",
@@ -136,7 +138,8 @@ class ReportPdf {
                   ),
                   Text("Statement Number: 142544581",
                       style: TextStyle(fontSize: 14)),
-                  Text("Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0])-1]}, ${date.split('_')[1]}",
+                  Text(
+                      "Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0]) - 1]}, ${date.split('_')[1]}",
                       style: TextStyle(fontSize: 14)),
                 ],
               ),

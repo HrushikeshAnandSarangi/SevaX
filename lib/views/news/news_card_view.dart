@@ -213,7 +213,7 @@ class NewsCardViewState extends State<NewsCardView> {
                                 defaultUserImageURL,
                           )),
                         ),
-                        labelText: 'Add a comment...',
+                        labelText: S.of(context).add_comment,
                         isDense: true,
                         contentPadding: EdgeInsets.all(3.0),
                       ),
@@ -907,7 +907,7 @@ class NewsCardViewState extends State<NewsCardView> {
                     },
                     child: Text(
                         commentsList.comments.length > 0
-                            ? 'View Previous Replies'
+                            ? S.of(context).view_prev_replies
                             : '',
                         style: TextStyle(
                           fontSize: 11,
@@ -1170,7 +1170,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                 ),
                               ),
                             ),
-                            labelText: 'Add a comment...',
+                            labelText: S.of(context).add_comment,
                             isDense: true,
                             contentPadding: EdgeInsets.all(3.0),
                           ),
@@ -1382,7 +1382,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                     },
                     child: Text(
                         commentsList.comments.length > 0
-                            ? 'View Previous Replies'
+                            ? S.of(context).view_prev_replies
                             : '',
                         style: TextStyle(
                           fontSize: 11,
@@ -1635,7 +1635,7 @@ class _LikeCommentState extends State<LikeComment> {
             padding: EdgeInsets.only(left: 3, top: 10),
             child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('comments',
+                child: Text(S.of(context).comments,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -1844,7 +1844,7 @@ class _RepliesViewState extends State<RepliesView> {
           onPressed: () => Navigator.pop(context, false),
         ),
         title: Text(
-          "Replies",
+          S.of(context).replies,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.black,
@@ -2174,7 +2174,7 @@ class _RepliesViewState extends State<RepliesView> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'likes',
+                          S.of(context).like + 's',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,

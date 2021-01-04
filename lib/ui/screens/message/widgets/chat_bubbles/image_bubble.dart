@@ -71,6 +71,7 @@ class ImageBubble extends StatelessWidget {
                 formatChatDate(
                   messageModel.timestamp,
                   SevaCore.of(context).loggedInUser.timezone,
+                  S.of(context).localeName,
                 ),
                 style: TextStyle(fontSize: 10, color: Colors.grey[700]),
               ),

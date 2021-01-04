@@ -253,7 +253,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         ),
                         onPressed: () async {
                           await timeBankBloc.updateInvitedUsersForRequest(
-                              model.id, widget.userModel.sevaUserID);
+                              model.id, widget.userModel.sevaUserID, widget.userModel.email);
 
                           //showProgressDialog(context);
                           sendNotification(

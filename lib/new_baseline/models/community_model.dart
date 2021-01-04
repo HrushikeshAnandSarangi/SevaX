@@ -124,7 +124,6 @@ class CommunityModel extends DataModel {
   String created_at;
   String primary_timebank;
   bool private;
-  bool isCreatedFromWeb;
 
   double taxPercentage;
   double negativeCreditsThreshold;
@@ -137,6 +136,7 @@ class CommunityModel extends DataModel {
   GeoFirePoint location;
   bool softDelete;
   bool billMe;
+  bool isCreatedFromWeb;
   String billingStmtNo;
   String sevaxAccountNo;
 
@@ -258,12 +258,12 @@ class CommunityModel extends DataModel {
     if (key == 'about') {
       this.about = value;
     }
-    if (key == 'taxPercentage') {
-      this.taxPercentage = value;
-    }
 
     if (key == 'isCreatedFromWeb') {
       this.isCreatedFromWeb = value;
+    }
+    if (key == 'taxPercentage') {
+      this.taxPercentage = value;
     }
     if (key == 'primary_email') {
       this.primary_email = value;
@@ -426,9 +426,9 @@ class CommunityModel extends DataModel {
         ' payment_records: $payment_records, '
         ' logo_url: $logo_url, '
         ' cover_url: $cover_url,'
-        ' isCreatedFromWeb: $isCreatedFromWeb,'
         ' creator_email: $creator_email,'
         ' created_by: $created_by, '
+        ' isCreatedFromWeb: $isCreatedFromWeb, '
         'created_at: $created_at, '
         'primary_timebank: $primary_timebank, '
         'timebanks: $timebanks, '
