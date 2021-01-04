@@ -869,6 +869,8 @@ class _RegisterPageState extends State<RegisterPage>
     String documentURL =
         await (await uploadTask.onComplete).ref.getDownloadURL();
 
+    log('link  ' + documentURL);
+
     cvName = _fileName;
     cvUrl = documentURL;
     return documentURL;

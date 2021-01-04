@@ -171,7 +171,7 @@ class CreateEditCommunityViewFormState
         });
       } else {
         if (communitynName != s) {
-          SearchManager.searchCommunityForDuplicate(queryString: s)
+          SearchManager.searchCommunityForDuplicate(queryString: s.trim())
               .then((commFound) {
             if (commFound) {
               setState(() {
@@ -361,7 +361,6 @@ class CreateEditCommunityViewFormState
                             updateExitWithConfirmationValue(context, 1, value);
                           },
                           decoration: InputDecoration(
-                            errorText: errTxt,
                             errorMaxLines: 2,
                             hintText: S.of(context).timebank_name_hint,
                           ),
@@ -376,7 +375,7 @@ class CreateEditCommunityViewFormState
                           ],
                           onSaved: (value) {
                             enteredName =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                                value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
@@ -389,9 +388,9 @@ class CreateEditCommunityViewFormState
                               return S.of(context).profanity_text_alert;
                             } else {
                               enteredName =
-                                  value.replaceAll("[^a-zA-Z0-9]", "");
-                              snapshot.data.community.updateValueByKey(
-                                  'name', value.replaceAll("[^a-zA-Z0-9]", ""));
+                                  value.replaceAll("[^a-zA-Z0-9]", "").trim();
+                              snapshot.data.community.updateValueByKey('name',
+                                  value.replaceAll("[^a-zA-Z0-9]", "").trim());
                               createEditCommunityBloc.onChange(snapshot.data);
                             }
 
@@ -995,9 +994,9 @@ class CreateEditCommunityViewFormState
                                     }
 
                                     timebankModel.name =
-                                        searchTextController.text;
+                                        searchTextController.text.trim();
                                     communityModel.name =
-                                        searchTextController.text;
+                                        searchTextController.text.trim();
 
                                     timebankModel.location = location;
 
