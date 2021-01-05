@@ -119,11 +119,9 @@ class DonationBloc {
   Future<bool> validateAmount({int minmumAmount}) async {
     if (_amountPledged.value == '' || _amountPledged.value == null) {
       _amountPledged.addError('amount1');
-    }
-    // else if (int.parse(_amountPledged.value) < minmumAmount) {
-    //   _amountPledged.addError('amount2');
-    // }
-    else {
+    } else if (int.parse(_amountPledged.value) < minmumAmount) {
+      _amountPledged.addError('amount2');
+    } else {
       return true;
     }
 
