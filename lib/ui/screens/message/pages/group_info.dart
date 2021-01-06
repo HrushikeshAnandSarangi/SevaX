@@ -39,6 +39,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
     _bloc.addParticipants(chatModel.participantInfo);
+    _bloc.onImageChanged(MessageRoomImageModel(
+        stockImageUrl: chatModel.groupDetails.imageUrl ?? ''));
     super.initState();
   }
 
@@ -77,9 +79,12 @@ class _GroupInfoState extends State<GroupInfoPage> {
                   },
                 );
                 _bloc.editGroupDetails(widget.chatModel.id).then(
-                  (_) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    Navigator.of(context).pop();
+                  (value) {
+                    if (value) {
+                      Navigator.of(context).pop();
+
+                      Navigator.of(context, rootNavigator: true).pop();
+                    }
                   },
                 );
               },
