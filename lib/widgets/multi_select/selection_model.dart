@@ -73,7 +73,7 @@ class SelectionModal extends StatefulWidget {
 }
 
 class _SelectionModalState extends State<SelectionModal> {
-  RequestModel requestModel = RequestModel();
+  RequestModel requestModel;
   int sharedValue = 0;
   final globalKey = GlobalKey<ScaffoldState>();
   final TextEditingController _controller = TextEditingController();
@@ -99,6 +99,7 @@ class _SelectionModalState extends State<SelectionModal> {
   @override
   void initState() {
     super.initState();
+    requestModel = RequestModel(associatedCommunityId: '');
     requestModel.requestMode = widget.admin
         ? RequestMode.TIMEBANK_REQUEST
         : RequestMode.PERSONAL_REQUEST;
@@ -325,11 +326,11 @@ class _SelectionModalState extends State<SelectionModal> {
             selectedColor: Theme.of(context).primaryColor,
             children: {
               0: Text(
-                S.of(context).timebank_project(3),
+                S.of(context).seva_community_events,
                 style: TextStyle(fontSize: 12.0),
               ),
               1: Text(
-                S.of(context).personal_project(3),
+                S.of(context).personal_events,
                 style: TextStyle(fontSize: 12.0),
               ),
             },

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 class TimebankRepository {
@@ -25,11 +26,39 @@ class TimebankRepository {
     return _ref.where("community_id", isEqualTo: communityId).snapshots();
   }
 
-  static Stream<QuerySnapshot> getAllTimebanksUserIsAdminOf(
+  static Stream<List<TimebankModel>> getAllTimebanksUserIsAdminOf(
       String userId, String communityId) {
-    return _ref
-        .where("community_id", isEqualTo: communityId)
-        .where("admins", arrayContains: userId)
-        .snapshots();
+    return CombineLatestStream.combine2<QuerySnapshot, QuerySnapshot,
+        List<TimebankModel>>(
+      //use single stream
+      //fetch all timebanks of community
+      _ref
+          .where("community_id", isEqualTo: communityId)
+          .where("admins", arrayContains: userId)
+          .snapshots(),
+      _ref
+          .where("community_id", isEqualTo: communityId)
+          .where("organizers", arrayContains: userId)
+          .snapshots(),
+      (a, b) {
+        List<TimebankModel> _timebanks = [];
+        a.documents.forEach((element) {
+          _timebanks.add(TimebankModel.fromMap(element.data));
+        });
+        b.documents.forEach((element) {
+          _timebanks.add(TimebankModel.fromMap(element.data));
+        });
+
+        return _timebanks;
+      },
+    );
   }
+
+  // static Stream<QuerySnapshot> getAllTimebanksUserIsAdminOf(
+  //     String userId, String communityId) {
+  //   return _ref
+  //       .where("community_id", isEqualTo: communityId)
+  //       .where("admins", arrayContains: userId)
+  //       .snapshots();
+  // }
 }

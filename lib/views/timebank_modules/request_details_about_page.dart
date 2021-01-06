@@ -17,7 +17,9 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -105,7 +107,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return UserMode.APPROVED_MEMBER;
         else if (widget.requestItem.acceptors.contains(loggedInUser))
           return UserMode.ACCEPTED_MEMBER;
-        else if (widget.timebankModel.admins.contains(loggedInUser))
+        else if (isAccessAvailable(widget.timebankModel, loggedInUser))
           return UserMode.TIMEBANK_ADMIN;
         else {
           return UserMode.NOT_YET_SIGNED_UP;
@@ -115,7 +117,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestMode.TIMEBANK_REQUEST:
         if (widget.requestItem.sevaUserId == loggedInUser) {
           return UserMode.REQUEST_CREATOR;
-        } else if (widget.timebankModel.admins.contains(loggedInUser)) {
+        } else if (isAccessAvailable(widget.timebankModel, loggedInUser)) {
           return UserMode.TIMEBANK_ADMIN;
         } else {
           return UserMode.NOT_YET_SIGNED_UP;
@@ -593,56 +595,73 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void applyAction() async {
     if (isApplied) {
-        _withdrawRequest();
+      _withdrawRequest();
     } else {
-        if (SevaCore.of(context).loggedInUser.calendarId != null) {
-            showDialog(
-                context: context,
-                builder: (_context) {
-                    return CalenderEventConfirmationDialog(
-                        title: widget.requestItem.title,
-                        isrequest: true,
-                        cancelled: () async {
-                            await _acceptRequest();
-                            Navigator.pop(_context);
-                            Navigator.pop(context);
-                        },
-                        addToCalender: () async {
-                            await _acceptRequest();
-                            Set<String> acceptorList =
-                            Set.from(widget.requestItem.allowedCalenderUsers);
-                            acceptorList.add(SevaCore.of(context).loggedInUser.email);
-                            widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-                            await FirestoreManager.updateRequest(
-                                requestModel: widget.requestItem);
-                            Navigator.pop(_context);
-                            Navigator.pop(context);
-                        },
-                    );
-                },
-            );
-        }
-        else {
-        showDialog(
+      if (widget.requestItem.projectId != null &&
+          widget.requestItem.projectId.isNotEmpty) {
+        await ProjectMessagingRoomHelper.createAdvisoryForJoiningMessagingRoom(
           context: context,
-          builder: (_context) {
-            return CalenderEventConfirmationDialog(
-              title: widget.requestItem.title,
-              isrequest: true,
-              cancelled: () async {
-                  await _acceptRequest();
-                Navigator.pop(_context);
-                Navigator.pop(context);
-              },
-              addToCalender: () async {
-                  await _acceptRequest();
-                  Navigator.pop(_context);
-                  _settingModalBottomSheet(context);
-              },
-            );
-          },
-        );
-        }
+          requestId: widget.requestItem.id,
+          projectId: widget.requestItem.projectId,
+          timebankId: widget.requestItem.timebankId,
+          candidateUserModel: SevaCore.of(context).loggedInUser,
+          requestMode: widget.requestItem.requestMode,
+        ).then((value) {
+          proccedWithCalander();
+        });
+      } else {
+        proccedWithCalander();
+      }
+    }
+  }
+
+  void proccedWithCalander() {
+    if (SevaCore.of(context).loggedInUser.calendarId != null) {
+      showDialog(
+        context: context,
+        builder: (_context) {
+          return CalenderEventConfirmationDialog(
+            title: widget.requestItem.title,
+            isrequest: true,
+            cancelled: () async {
+              await _acceptRequest();
+              Navigator.pop(_context);
+              Navigator.pop(context);
+            },
+            addToCalender: () async {
+              await _acceptRequest();
+              Set<String> acceptorList =
+                  Set.from(widget.requestItem.allowedCalenderUsers);
+              acceptorList.add(SevaCore.of(context).loggedInUser.email);
+              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
+              await FirestoreManager.updateRequest(
+                  requestModel: widget.requestItem);
+              Navigator.pop(_context);
+              Navigator.pop(context);
+            },
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_context) {
+          return CalenderEventConfirmationDialog(
+            title: widget.requestItem.title,
+            isrequest: true,
+            cancelled: () async {
+              await _acceptRequest();
+              Navigator.pop(_context);
+              Navigator.pop(context);
+            },
+            addToCalender: () async {
+              await _acceptRequest();
+              Navigator.pop(_context);
+              _settingModalBottomSheet(context);
+            },
+          );
+        },
+      );
     }
   }
 
@@ -662,7 +681,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void _withdrawRequest() {
     bool alreadyCompleted = false;
-
     if (widget.requestItem.transactions != null) {
       for (int i = 0; i < widget.requestItem.transactions.length; i++) {
         if (widget.requestItem.transactions[i].to ==
@@ -697,6 +715,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         }
         widget.requestItem.approvedUsers = approvedUsers.toList();
       }
+
+      if (widget.requestItem.projectId != null &&
+          widget.requestItem.projectId.isNotEmpty)
+        ProjectMessagingRoomHelper.removeMemberFromProjectCommuication(
+          projectId: widget.requestItem.projectId,
+          timebankId: widget.requestItem.timebankId,
+          candidateUserModel: SevaCore.of(context).loggedInUser,
+          requestMode: widget.requestItem.requestMode,
+        );
 
       acceptRequest(
         loggedInUser: SevaCore.of(context).loggedInUser,

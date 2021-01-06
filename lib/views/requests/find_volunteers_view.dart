@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
@@ -29,7 +30,6 @@ class FindVolunteersView extends StatefulWidget {
 
 class _FindVolunteersViewState extends State<FindVolunteersView> {
   final TextEditingController searchTextController = TextEditingController();
-  final _firestore = Firestore.instance;
   bool isAdmin = false;
   final _textUpdates = StreamController<String>();
 
@@ -52,7 +52,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
       });
     });
 
-    if (timebankModel.model.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(timebankModel.model, widget.sevaUserId)) {
       isAdmin = true;
     }
 
@@ -87,7 +87,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -190,7 +189,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   @override
   void initState() {
     super.initState();
-    if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(widget.timebankModel, widget.sevaUserId)) {
       isAdmin = true;
     }
 
@@ -221,22 +220,73 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   Widget buildWidget() {
-    if (widget.controller.text.trim().isEmpty) {
-      return Center(
-        child: ClipOval(
-          child: ClipOval(
-            child: Image.asset('lib/assets/images/search.png'),
-          ),
-        ),
-      );
+    if (widget.controller.text.trim().length < 1) {
+      return recommendedUsers();
     } else if (widget.controller.text.trim().length < 3) {
       return getEmptyWidget(
-          'Users', S.of(context).validation_error_search_min_characters);
+          S.of(context).validation_error_search_min_characters);
+    } else {
+      return StreamBuilder<List<UserModel>>(
+        stream: SearchManager.searchForUserWithTimebankId(
+          queryString: widget.controller.text,
+          validItems: widget.validItems,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            Text(snapshot.error.toString());
+          }
+          if (!snapshot.hasData) {
+            return Center(
+              child: SizedBox(
+                height: 48,
+                width: 48,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
+          List<UserModel> userList = snapshot.data;
+          userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
+
+          if (userList.length == 0) {
+            return getEmptyWidget(S.of(context).no_user_found);
+          }
+          return ListView.builder(
+            itemCount: userList.length,
+            itemBuilder: (context, index) {
+              UserModel user = userList[index];
+              List<String> timeBankIds =
+                  snapshot.data[index].favoriteByTimeBank ?? [];
+              List<String> memberId = user.favoriteByMember ?? [];
+
+              return RequestCardWidget(
+                userModel: user,
+                requestModel: requestModel,
+                timebankModel: widget.timebankModel,
+                isAdmin: isAdmin,
+                refresh: refresh,
+                currentCommunity: loggedinUser.currentCommunity,
+                loggedUserId: loggedinUser.sevaUserID,
+                isFavorite: isAdmin
+                    ? timeBankIds.contains(requestModel.timebankId)
+                    : memberId.contains(widget.sevaUserId),
+                reqStatus: getRequestUserStatus(
+                    requestModel: requestModel,
+                    userId: user.sevaUserID,
+                    email: user.email,
+                    context: context),
+              );
+            },
+          );
+        },
+      );
     }
+  }
+
+  Widget recommendedUsers() {
     return StreamBuilder<List<UserModel>>(
-      stream: SearchManager.searchForUserWithTimebankId(
-        queryString: widget.controller.text,
-        validItems: widget.validItems,
+      stream: FirestoreManager.getRecommendedUsersStream(
+        requestId: requestModel.id,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -256,34 +306,51 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users', S.of(context).no_user_found);
+          return Center(
+            child: ClipOval(
+              child: ClipOval(
+                child: Image.asset('lib/assets/images/search.png'),
+              ),
+            ),
+          );
         }
-        return ListView.builder(
-          itemCount: userList.length,
-          itemBuilder: (context, index) {
-            UserModel user = userList[index];
-            List<String> timeBankIds =
-                snapshot.data[index].favoriteByTimeBank ?? [];
-            List<String> memberId = user.favoriteByMember ?? [];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: getEmptyWidget('Recommended'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: userList.length,
+                itemBuilder: (context, index) {
+                  UserModel user = userList[index];
+                  List<String> timeBankIds =
+                      snapshot.data[index].favoriteByTimeBank ?? [];
+                  List<String> memberId = user.favoriteByMember ?? [];
 
-            return RequestCardWidget(
-              userModel: user,
-              requestModel: requestModel,
-              timebankModel: widget.timebankModel,
-              isAdmin: isAdmin,
-              refresh: refresh,
-              currentCommunity: loggedinUser.currentCommunity,
-              loggedUserId: loggedinUser.sevaUserID,
-              isFavorite: isAdmin
-                  ? timeBankIds.contains(requestModel.timebankId)
-                  : memberId.contains(widget.sevaUserId),
-              reqStatus: getRequestUserStatus(
-                  requestModel: requestModel,
-                  userId: user.sevaUserID,
-                  email: user.email,
-                  context: context),
-            );
-          },
+                  return RequestCardWidget(
+                    userModel: user,
+                    requestModel: requestModel,
+                    timebankModel: widget.timebankModel,
+                    isAdmin: isAdmin,
+                    refresh: refresh,
+                    currentCommunity: loggedinUser.currentCommunity,
+                    loggedUserId: loggedinUser.sevaUserID,
+                    isFavorite: isAdmin
+                        ? timeBankIds.contains(requestModel.timebankId)
+                        : memberId.contains(widget.sevaUserId),
+                    reqStatus: getRequestUserStatus(
+                        requestModel: requestModel,
+                        userId: user.sevaUserID,
+                        email: user.email,
+                        context: context),
+                  );
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -306,13 +373,11 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     });
   }
 
-  Widget getEmptyWidget(String title, String notFoundValue) {
-    return Center(
-      child: Text(
-        notFoundValue,
-        overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
-      ),
+  Widget getEmptyWidget(String notFoundValue) {
+    return Text(
+      notFoundValue,
+      overflow: TextOverflow.ellipsis,
+      style: sectionHeadingStyle,
     );
   }
 

@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class GroupTabView extends StatefulWidget {
@@ -101,7 +102,7 @@ class _GroupTabViewState extends State<GroupTabView> {
     if (timebank.members.contains(userId)) {
       return JoinStatus.JOINED;
     }
-    if (timebank.admins.contains(userId)) {
+    if (isAccessAvailable(timebank, userId)) {
       return JoinStatus.JOINED;
     }
     if (timebank.coordinators.contains(userId)) {

@@ -12,27 +12,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -47,7 +50,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -137,7 +140,7 @@ class RequestCreateForm extends StatefulWidget {
     this.offer,
     this.timebankId,
     this.userModel,
-    this.loggedInUser,
+    @required this.loggedInUser,
     this.projectId,
     this.projectModel,
   });
@@ -154,15 +157,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel(
-    requestType: RequestType.TIME,
-    cashModel: CashModel(
-        paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
-    goodsDonationDetails: GoodsDonationDetails(),
-  );
+  RequestModel requestModel;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
+  List<String> selectedCategoryIds = [];
   bool comingFromDynamicLink = false;
   GeoFirePoint location;
 
@@ -170,6 +169,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   String hoursMessage;
   String selectedAddress;
   int sharedValue = 0;
+  final _debouncer = Debouncer(milliseconds: 500);
 
   String _selectedTimebankId;
 
@@ -188,6 +188,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+    requestModel = RequestModel(
+      requestType: RequestType.TIME,
+      cashModel: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+      goodsDonationDetails: GoodsDonationDetails(),
+      associatedCommunityId: widget.loggedInUser.currentCommunity,
+    );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
@@ -205,7 +212,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     fetchRemoteConfig();
-
     if ((FlavorConfig.appFlavor == Flavor.APP ||
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       // _fetchCurrentlocation;
@@ -252,14 +258,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return Container();
     }
     timebankModel = snapshot.data;
-    if (snapshot.data.admins
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
           selectedProject: null,
-          admin: snapshot.data.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID));
+          admin: isAccessAvailable(
+              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -277,28 +283,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
     ExitWithConfirmation.of(context).fieldValues[index] = value;
   }
 
+  Widget headerContainer(snapshot) {
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Container();
+    }
+    timebankModel = snapshot.data;
+    if (isAccessAvailable(
+        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+      return requestSwitch(
+        timebankModel: timebankModel,
+      );
+    } else {
+      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel.requestType = RequestType.TIME;
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     hoursMessage = S.of(context).set_duration;
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (snapshot.data.admins
-          .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
+    this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
+    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -321,7 +331,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
                             Text(
-                              S.of(context).request_title,
+                              "${S.of(context).request_title}",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -346,7 +356,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
-                                hintText: S.of(context).request_title_hint,
+                                hintText: requestModel.requestType ==
+                                        RequestType.TIME
+                                    ? S.of(context).request_title_hint
+                                    : requestModel.requestType ==
+                                            RequestType.CASH
+                                        ? "Fundraiser for women’s shelter..."
+                                        : "Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -370,7 +386,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             ),
                             SizedBox(height: 30),
                             OfferDurationWidget(
-                              title: S.of(context).request_duration,
+                              title: "${S.of(context).request_duration} *",
                             ),
                             requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
@@ -690,7 +706,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     } else {
       return S.of(context).enter_valid_link;
     }
-    return null;
   }
 
   String _validateEmailId(String value) {
@@ -817,8 +832,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: S.of(context).request_paymenttype_zellepay,
-          value: RequestPaymentType.ZELLEPAY,
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -826,8 +841,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: 'Venmo',
-          value: RequestPaymentType.VENMO,
+          title: S.of(context).request_paymenttype_zellepay,
+          value: RequestPaymentType.ZELLEPAY,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -850,7 +865,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).request_description,
+            "${S.of(context).request_description}",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -861,6 +876,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
           TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: (value) {
+              if (value != null && value.length > 5) {
+                _debouncer.run(() {
+                  getCategoriesFromApi(value);
+                });
+              }
               updateExitWithConfirmationValue(context, 9, value);
             },
             focusNode: focusNodes[0],
@@ -956,13 +976,156 @@ class RequestCreateFormState extends State<RequestCreateForm>
         : Container();
   }
 
+// Choose Category and Sub Category function
+  // get data from Category class
+  List categories;
+
+  void updateInformation(List category) {
+    setState(() => categories = category);
+  }
+
+  Future<void> getCategoriesFromApi(String query) async {
+    try {
+      const url =
+          'https://run.mocky.io/v3/91c859ce-13c7-425a-b177-76629a83ca02';
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> bodyMap = json.decode(response.body);
+        List<String> categoriesList = bodyMap.containsKey('string_vec')
+            ? List.castFrom(bodyMap['string_vec'])
+            : [];
+        getCategoryModels(categoriesList);
+      } else {
+        return null;
+      }
+    } catch (exception) {
+      log(exception);
+      return null;
+    }
+  }
+
+  Future<void> getCategoryModels(List<String> categoriesList) async {
+    List<CategoryModel> modelList = List();
+    for (int i = 0; i < categoriesList.length; i += 1) {
+      CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
+        categoryID: categoriesList[i],
+      );
+      modelList.add(categoryModel);
+    }
+
+    updateInformation([S.of(context).suggested_categories, modelList]);
+  }
+
+  // Navigat to Category class and geting data from the class
+  void moveToCategory() async {
+    var category = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (context) => Category(
+                selectedSubCategoriesids: selectedCategoryIds,
+              )),
+    );
+    updateInformation(category);
+    logger.i(
+        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
+  }
+
+  //building list of selectedSubCategories
+  List<Widget> _buildselectedSubCategories(List categories) {
+    List<CategoryModel> subCategories = [];
+    subCategories = categories[1];
+    selectedCategoryIds.clear();
+    List<Widget> selectedSubCategories = [];
+    logger.i('poped selectedSubCategories => ${categories[1]} ');
+    subCategories.forEach((item) {
+      selectedCategoryIds.add(item.typeId);
+      selectedSubCategories.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 5, bottom: 5),
+          child: Container(
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: Text("${item.title_en.toString()}",
+                  style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ),
+      );
+    });
+    return selectedSubCategories;
+  }
+
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RepeatWidget(),
+
           SizedBox(height: 20),
+
           RequestDescriptionData(S.of(context).request_description_hint),
+          SizedBox(height: 20),
+          // Choose Category and Sub Category
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1008,11 +1171,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) < 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else if (int.parse(value) == 0) {
-                      return "Please enter maximum credits";
+                      return S.of(context).enter_max_credits;
                     } else {
                       requestModel.maxCredits = int.parse(value);
                       setState(() {});
@@ -1097,7 +1260,63 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_cash),
+          RequestDescriptionData("Ex: Fundraiser to expand women’s shelter..."),
+          // RequestDescriptionData(S.of(context).request_description_hint_cash),
+          SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
@@ -1216,7 +1435,63 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_goods),
+          RequestDescriptionData("Ex: Local Food Bank has a shortage..."),
+          // RequestDescriptionData(S.of(context).request_description_hint_goods),
+          SizedBox(height: 20),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1254,7 +1529,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     );
   }
 
-  Widget requestSwitch() {
+  Widget requestSwitch({
+    TimebankModel timebankModel,
+  }) {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
@@ -1265,7 +1542,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
           selectedColor: Theme.of(context).primaryColor,
           children: {
             0: Text(
-              S.of(context).timebank_request(1),
+              timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                  ? S.of(context).timebank_request(1)
+                  : "Seva " +
+                      timebankModel.name +
+                      " ${S.of(context).group} " +
+                      S.of(context).request,
               style: TextStyle(fontSize: 12.0),
             ),
             1: Text(
@@ -1295,7 +1577,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       if (widget.projectModel != null) {
-        if (widget.projectModel.mode == 'Timebank') {
+        if (widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT) {
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
@@ -1386,9 +1668,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
           var myDetails = SevaCore.of(context).loggedInUser;
           this.requestModel.fullName = myDetails.fullname;
           this.requestModel.photoUrl = myDetails.photoURL;
-          var onBalanceCheckResult = await hasSufficientCredits(
+          var onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
+            associatedCommunity: timebankModel.communityId,
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
@@ -1414,6 +1699,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.accepted = false;
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
+      requestModel.recommendedMemberIdsForRequest = [];
+      requestModel.categories = selectedCategoryIds.toList();
       requestModel.address = selectedAddress;
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
@@ -1421,10 +1708,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
-        List<String> acceptorList =
-            widget.isOfferRequest
-                ? widget.offer.creatorAllowedCalender==null || widget.offer.creatorAllowedCalender==false ? [requestModel.email]:[widget.offer.email, requestModel.email]
-                : [requestModel.email];
+        List<String> acceptorList = widget.isOfferRequest
+            ? widget.offer.creatorAllowedCalender == null ||
+                    widget.offer.creatorAllowedCalender == false
+                ? [requestModel.email]
+                : [widget.offer.email, requestModel.email]
+            : [requestModel.email];
         requestModel.allowedCalenderUsers = acceptorList.toList();
         await continueCreateRequest(confirmationDialogContext: null);
       } else {
@@ -1625,14 +1914,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
-        requestModel.timebankId,
-        requestModel.timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        requestModel.numberOfHours ?? 0,
-        true,
-        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-        requestModel.id,
-        requestModel.timebankId);
+      requestModel.timebankId,
+      requestModel.timebankId,
+      DateTime.now().millisecondsSinceEpoch,
+      requestModel.numberOfHours ?? 0,
+      true,
+      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+      requestModel.id,
+      requestModel.timebankId,
+      associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
@@ -1654,7 +1945,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return resultVar;
     } else {
       resultVar = await FirestoreManager.createRecurringEvents(
-          requestModel: requestModel);
+        requestModel: requestModel,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+      );
       return resultVar;
     }
   }
@@ -1755,7 +2049,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       list.add({
         "name": widget.projectModelList[i].name,
         "code": widget.projectModelList[i].id,
-        "timebankproject": widget.projectModelList[i].mode == 'Timebank'
+        "timebankproject":
+            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
     return MultiSelect(

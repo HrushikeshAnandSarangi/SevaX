@@ -18,8 +18,10 @@ import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/feed_shared
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/image_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/message_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
+import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
@@ -31,6 +33,8 @@ class ChatPage extends StatefulWidget {
   final bool isFromShare;
   final String feedId;
   final String senderId;
+  final bool showAppBar;
+  final ChatViewContext chatViewContext;
 
   ChatPage({
     Key key,
@@ -40,6 +44,8 @@ class ChatPage extends StatefulWidget {
     this.senderId,
     this.feedId,
     this.isAdminMessage,
+    this.showAppBar = true,
+    this.chatViewContext = ChatViewContext.UNDEFINED,
   }) : super(key: key);
 
   @override
@@ -96,7 +102,8 @@ class _ChatPageState extends State<ChatPage> {
           );
 
           if (model == null) {
-            if (!exitFromChatPage) {
+            if (!exitFromChatPage &&
+                widget.chatViewContext != ChatViewContext.PROJECT) {
               Navigator.of(context).pop();
             }
           } else {
@@ -129,38 +136,43 @@ class _ChatPageState extends State<ChatPage> {
 
     return Scaffold(
       backgroundColor: Colors.indigo[50],
-      appBar: ChatAppBar(
-        isGroupMessage: isGroupMessage,
-        recieverInfo: isGroupMessage ? null : recieverInfo,
-        groupDetails: isGroupMessage ? chatModel.groupDetails : null,
-        clearChat: () {
-          exitFromChatPage = true;
-          _bloc.clearChat(chatModel.id, widget.senderId);
-          Navigator.pop(context);
-        },
-        blockUser: () {
-          _bloc.blockMember(
-            loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            blockedUserId: recieverId,
-          );
-
-          Navigator.pop(context);
-        },
-        exitGroup: isGroupMessage
-            ? () {
-                String userId = SevaCore.of(context).loggedInUser.sevaUserID;
-                _bloc.removeMember(
-                  chatModel.id,
-                  userId,
-                  chatModel.groupDetails.admins.contains(userId),
-                );
+      appBar: widget.showAppBar
+          ? ChatAppBar(
+              isGroupMessage: isGroupMessage,
+              recieverInfo: isGroupMessage ? null : recieverInfo,
+              groupDetails: isGroupMessage ? chatModel.groupDetails : null,
+              clearChat: () {
+                exitFromChatPage = true;
+                _bloc.clearChat(chatModel.id, widget.senderId);
                 Navigator.pop(context);
-              }
-            : () {},
-        isBlockEnabled: chatModel.isTimebankMessage || chatModel.isGroupMessage,
-        openGroupInfo: isGroupMessage ? openGroupInfo : null,
-      ),
+              },
+              blockUser: () {
+                _bloc.blockMember(
+                  loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  blockedUserId: recieverId,
+                );
+
+                Navigator.pop(context);
+              },
+              exitGroup: isGroupMessage
+                  ? () {
+                      String userId =
+                          SevaCore.of(context).loggedInUser.sevaUserID;
+                      _bloc.removeMember(
+                        chatModel.id,
+                        userId,
+                        chatModel.groupDetails.admins.contains(userId),
+                      );
+                      exitFromChatPage = true;
+                      Navigator.pop(context);
+                    }
+                  : () {},
+              isBlockEnabled:
+                  chatModel.isTimebankMessage || chatModel.isGroupMessage,
+              openGroupInfo: isGroupMessage ? openGroupInfo : null,
+            )
+          : null,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -353,6 +365,16 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
+    var newsModel = _bloc.getNewsModel(messageModel.message);
+    if (newsModel != null) {
+      logger.i('picking from cache');
+      return FeedBubble(
+        news: newsModel,
+        messageModel: messageModel,
+        senderId: widget.senderId,
+        isSent: messageModel.fromId == widget.senderId,
+      );
+    }
     return FutureBuilder<Object>(
       future: FeedsRepository.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
@@ -365,6 +387,7 @@ class _ChatPageState extends State<ChatPage> {
         }
 
         NewsModel news = snapshot.data;
+        _bloc.setNewsModel(news);
         return FeedBubble(
           news: news,
           messageModel: messageModel,

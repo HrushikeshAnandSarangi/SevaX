@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class MessageBloc extends BlocBase {
   final _personalMessage = BehaviorSubject<List<ChatModel>>();
@@ -48,13 +49,19 @@ class MessageBloc extends BlocBase {
         );
         log("===> sender id :$senderId");
         if (senderId != null) {
-          if (userModel.blockedBy.contains(senderId) ||
-              userModel.blockedMembers.contains(senderId) ||
+          if (isMemberBlocked(userModel, senderId) ||
               (chat.deletedBy.containsKey(userModel.sevaUserID) &&
                   chat.deletedBy[userModel.sevaUserID] >
                       (chat.timestamp ?? 0)) ||
               (chat.lastMessage == '' || chat.lastMessage == null) &&
                   !chat.isGroupMessage) {
+            if (chat.isGroupMessage) {
+              if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
+                  chat.unreadStatus[userModel.sevaUserID] > 0) {
+                unreadCount++;
+              }
+              chats.add(chat);
+            }
             log("Blocked or no message");
           } else {
             if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&

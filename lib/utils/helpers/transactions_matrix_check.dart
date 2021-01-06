@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
-
-import '../app_config.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;

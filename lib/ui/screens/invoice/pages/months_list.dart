@@ -4,10 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'invoice_pdf.dart';
@@ -30,7 +28,19 @@ class _MonthsListingState extends State<MonthsListing> {
   String communityId = "";
   CommunityModel communityModel = null;
   String planId = "";
-  List<String> monthsArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+  List<String> monthsArr = [
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
 
   Map<String, dynamic> plans = {
@@ -38,6 +48,12 @@ class _MonthsListingState extends State<MonthsListing> {
       "name": "Tall Plan",
       "initial_transactions_amount": 15,
       "initial_transactions_qty": 50,
+      "pro_data_bill_amount": 0.05,
+    },
+    "community_plus_plan": {
+      "name": "Community Plus Plan",
+      "initial_transactions_amount": 50,
+      "initial_transactions_qty": 150,
       "pro_data_bill_amount": 0.05,
     },
     "grande_plan": {
@@ -179,10 +195,10 @@ class _MonthsListingState extends State<MonthsListing> {
                 var sum = 0;
                 transactionsMonthsList[index].forEach((k, v) {
                   if (transactionTypes.containsKey(k)) {
-                    if(k!="billedquota") {
-                        if (transactionTypes[k]["billable"] == true) {
-                            sum += v;
-                        }
+                    if (k != "billedquota") {
+                      if (transactionTypes[k]["billable"] == true) {
+                        sum += v;
+                      }
                     }
                   }
                 });
@@ -235,7 +251,7 @@ class _MonthsListingState extends State<MonthsListing> {
                                 details: [
                                   Detail(
                                       description:
-                                          "${planId == "tall_plan" ? "Monthly" : "Yearly"} ${plans[planId]["name"]} Initial Charges",
+                                          "${planId == "tall_plan" ? "Monthly" : planId == "community_plus_plan" ? "Monthly" : planId == "neighbourhood_plan" ? "Monthly" : "Yearly"} ${plans[planId]["name"]} Initial Charges",
                                       units: 1.00,
                                       price: plans[planId]
                                               ["initial_transactions_amount"]

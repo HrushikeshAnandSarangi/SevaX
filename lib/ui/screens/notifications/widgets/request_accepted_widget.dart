@@ -4,12 +4,12 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/repositories/user_repository.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
   final String userId;
@@ -239,26 +239,32 @@ class RequestAcceptedWidget extends StatelessWidget {
   }
 }
 
-Widget getBio(BuildContext context, UserModel userModel) {
+Widget getBio(BuildContext context, UserModel userModel,
+    {bool isScrollable = true}) {
   if (userModel.bio != null) {
-    if (userModel.bio.length < 100) {
+    if (userModel.bio.trim().length < 100) {
       return Text(
-        userModel.bio,
+        userModel.bio.trim(),
         textAlign: TextAlign.center,
       );
     }
-    return Container(
-      height: 150,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Text(
-          userModel.bio,
-          maxLines: null,
-          overflow: null,
-          textAlign: TextAlign.center,
-        ),
-      ),
+    var child = Text(
+      userModel.bio,
+      maxLines: null,
+      overflow: null,
+      textAlign: TextAlign.center,
     );
+    return isScrollable
+        ? Container(
+            color: Colors.red,
+            height: 150,
+            child: SingleChildScrollView(
+              physics: isScrollable ? null : NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              child: child,
+            ),
+          )
+        : child;
   }
   return Padding(
     padding: EdgeInsets.all(8.0),

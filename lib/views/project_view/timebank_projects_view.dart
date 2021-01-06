@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +139,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
+                  log("===================== ===== > ${projectListSnapshot.error}");
                   return Text(S.of(context).general_stream_error);
                 }
                 switch (projectListSnapshot.connectionState) {
@@ -221,8 +223,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   void navigateToCreateProject() {
     if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-        !widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        !isAccessAvailable(widget.timebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
       showAdminAccessMessage(context: context);
     } else {
       Navigator.push(

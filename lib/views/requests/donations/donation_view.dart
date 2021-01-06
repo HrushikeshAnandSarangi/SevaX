@@ -61,9 +61,13 @@ class _DonationViewState extends State<DonationView> {
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
             ? 3
-            : widget.offerModel.type == RequestType.CASH ? 4 : 0)
+            : widget.offerModel.type == RequestType.CASH
+                ? 4
+                : 0)
         : widget.requestModel != null
-            ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1
+            ? widget.requestModel.requestType == RequestType.GOODS
+                ? 0
+                : 1
             : 0);
     pageController = PageController(initialPage: temp);
 
@@ -555,6 +559,7 @@ class _DonationViewState extends State<DonationView> {
                           showScaffold(S.of(context).check_internet);
                           return;
                         }
+                        showProgress(S.of(context).please_wait);
                         donationBloc
                             .donateOfferGoods(
                                 notificationId: widget.notificationId,
@@ -568,7 +573,7 @@ class _DonationViewState extends State<DonationView> {
                                     sevaUserID: donationsModel.donorSevaUserId))
                             .then((value) {
                           if (value) {
-                            // hideProgress();
+                            hideProgress();
                             getSuccessDialog().then(
                               //to pop the screen
                               (_) => Navigator.of(context).pop(),
@@ -789,6 +794,7 @@ class _DonationViewState extends State<DonationView> {
                     minmumAmount: widget.requestModel.cashModel.minAmount,
                   )
                       .then((value) {
+                    FocusScope.of(context).unfocus();
                     if (value) {
                       pageController.animateToPage(2,
                           curve: Curves.easeInOut,
@@ -1019,8 +1025,7 @@ class _DonationViewState extends State<DonationView> {
                     if (donationBloc.selectedList == null) {
                       showScaffold(S.of(context).select_goods_category);
                     } else {
-                      // showProgress();
-
+                      showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateGoods(
                               notificationId: widget.notificationId,
@@ -1029,7 +1034,7 @@ class _DonationViewState extends State<DonationView> {
                               donor: sevaUser)
                           .then((value) {
                         if (value) {
-                          // hideProgress();
+                          hideProgress();
                           getSuccessDialog().then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),

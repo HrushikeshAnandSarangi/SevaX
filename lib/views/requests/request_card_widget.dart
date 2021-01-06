@@ -109,22 +109,31 @@ class RequestCardWidget extends StatelessWidget {
                     ),
                   ),
 //              Spacer(),
+                  requestModel.recommendedMemberIdsForRequest != null &&
+                          requestModel.recommendedMemberIdsForRequest
+                              .contains(userModel.sevaUserID)
+                      ? Image.asset(
+                          'images/icons/recommended.png',
+                          height: 30,
+                          width: 30,
+                          color: Colors.orange,
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: 8,
+                  ),
                   InkWell(
-                    child: Row(
-                      children: <Widget>[
-                        isFavorite
-                            ? Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 30,
-                              )
-                            : Icon(
-                                Icons.favorite,
-                                color: Colors.grey,
-                                size: 30,
-                              ),
-                      ],
-                    ),
+                    child: isFavorite
+                        ? Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                            size: 30,
+                          )
+                        : Icon(
+                            Icons.favorite,
+                            color: Colors.grey,
+                            size: 30,
+                          ),
                     onTap: () async {
                       if (isFavorite) {
                         await removeFromFavoriteList(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsCard extends StatelessWidget {
   final String id;
@@ -45,7 +48,6 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -86,24 +88,29 @@ class NewsCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Text('pppppppppppp'),
                         Container(
                           margin: EdgeInsets.only(top: 5),
-                          child: Text(
-                            title != null && title != "NoData"
-                                ? title.trim()
-                                : "titile",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 7,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Europa"),
-                          ),
+                          child: Linkify(
+                              text: title != null && title != "NoData"
+                                  ? title.trim()
+                                  : "titile",
+                              onOpen: (url) async {
+                                // if (await canLaunch(url)) {
+                                //   launch(url);
+                                // }
+                              }
+                              // overflow: TextOverflow.ellipsis,
+                              // maxLines: 7,
+                              // style: TextStyle(
+                              //     fontSize: 15.0,
+                              //     fontWeight: FontWeight.bold,
+                              //     fontFamily: "Europa"),
+                              ),
                         ),
                       ],
                     ),
                   ),
-                  //  SizedBox(width: 8.0),
                 ],
               ),
             ),

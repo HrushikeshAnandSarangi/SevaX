@@ -46,7 +46,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
   void initState() {
     super.initState();
 
-    if (timebank.model.admins.contains(widget.sevaUserId)) {
+    if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
       isAdmin = true;
     }
 

@@ -18,9 +18,11 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
+import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -78,7 +80,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   final _formKey = GlobalKey<FormState>();
   var groupFound = false;
   TimebankModel timebankModel = TimebankModel({});
+  TimebankModel parentTimebankModel = TimebankModel({});
   bool protectedVal = false;
+  bool sponsored = false;
   GeoFirePoint location;
   String selectedAddress;
   TextEditingController searchTextController = TextEditingController();
@@ -100,6 +104,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       fetchCurrentlocation();
     }
+    getParentTimebank();
     // ignore: close_sinks
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -131,6 +136,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     });
   }
 
+  Future<void> getParentTimebank() async {
+    Future.delayed(Duration.zero, () async {
+      parentTimebankModel = await FirestoreManager.getTimeBankForId(
+          timebankId: widget.timebankId);
+    });
+    setState(() {});
+  }
+
   HashMap<String, UserModel> selectedUsers = HashMap();
   String memberAssignment;
 
@@ -141,7 +154,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
     selectedUsers.forEach((key, value) {
-        members.add(value.sevaUserID);
+      members.add(value.sevaUserID);
     });
     Set<String> membersSet = members.toList().toSet();
     String id = Utils.getUuid();
@@ -152,6 +165,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+    timebankModel.organizers = [SevaCore.of(context).loggedInUser.sevaUserID];
     timebankModel.emailId = SevaCore.of(context).loggedInUser.email;
     timebankModel.coordinators = [];
     timebankModel.members = membersSet.toList();
@@ -163,7 +177,26 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.address = selectedAddress;
     timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    if (sponsored == true &&
+        !isAccessAvailable(parentTimebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID) &&
+        parentTimebankModel.creatorId !=
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+      timebankModel.sponsored = false;
 
+      assembleAndSendRequest(
+          creatorId: timebankModel.creatorId,
+          timebankName: timebankModel.name,
+          adminId: parentTimebankModel.creatorId,
+          subTimebankId: timebankModel.id,
+          targetTimebankId: parentTimebankModel.id,
+          timebankPhotoUrl: timebankModel.photoUrl,
+          creatorName: SevaCore.of(context).loggedInUser.fullname,
+          creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+          communityId: timebankModel.communityId);
+    } else {
+      timebankModel.sponsored = sponsored;
+    }
     createTimebank(timebankModel: timebankModel);
 
     Firestore.instance
@@ -175,6 +208,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
       },
     );
     sendInviteNotification();
+
     globals.timebankAvatarURL = null;
     globals.webImageUrl = null;
     globals.addedMembersId = [];
@@ -317,7 +351,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ),
           ],
         ),
-        tappableInviteMembers,
+        // tappableInviteMembers,
         headingText(S.of(context).is_pin_at_right_place, false),
         Center(
           child: LocationPickerWidget(
@@ -330,6 +364,40 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               });
             },
           ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: <Widget>[
+            headingText(S.of(context).save_as_sponsored, false),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+              child: infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.SPONSORED,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Divider(),
+                TransactionsMatrixCheck(
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.sponsored_groups,
+                  transaction_matrix_type: "sponsored_groups",
+                  child: Checkbox(
+                    value: sponsored,
+                    onChanged: (bool value) {
+                      setState(() {
+                        sponsored = !sponsored;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -408,12 +476,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (selectedUsers.length > 0) {
       selectedUsers.forEach((key, user) async {
         GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
-            timebankId: widget.timebankId,
-            timebankName: timebankModel.name,
-            timebankImage: timebankModel.photoUrl,
-            aboutTimebank: timebankModel.missionStatement,
-            adminName: SevaCore.of(context).loggedInUser.fullname,
-            groupId: timebankModel.id,
+          timebankId: widget.timebankId,
+          timebankName: timebankModel.name,
+          timebankImage: timebankModel.photoUrl,
+          aboutTimebank: timebankModel.missionStatement,
+          adminName: SevaCore.of(context).loggedInUser.fullname,
+          groupId: timebankModel.id,
         );
 
         NotificationsModel notification = NotificationsModel(
@@ -494,7 +562,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   color: Colors.blue,
                 ),
               ),
-            ))
+            ),
+          )
         : Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: FlatButton(
@@ -528,4 +597,96 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     super.dispose();
     _textUpdates.close();
   }
+}
+
+Future assembleAndSendRequest({
+  String creatorId,
+  String timebankName,
+  String subTimebankId,
+  String targetTimebankId,
+  String adminId,
+  String communityId,
+  String timebankPhotoUrl,
+  String creatorName,
+  String creatorPhotoUrl,
+}) async {
+  var sponsoredRequesrModel = _assembleSponsoredRequestModel(
+      creatorId: creatorId,
+      timebankName: timebankName,
+      subtimebankId: subTimebankId,
+      timebankPhotoUrl: timebankPhotoUrl,
+      creatorName: creatorName,
+      creatorPhotoUrl: creatorPhotoUrl);
+
+  var notification = _assembleNotificationForSponsorRequest(
+    sponsoredGroupModel: sponsoredRequesrModel,
+    adminId: adminId,
+    creatorId: creatorId,
+    targetTimebankId: targetTimebankId,
+    communityId: communityId,
+  );
+
+  await createAndSendSponserRequest(
+    sponsoredGroupModel: sponsoredRequesrModel,
+    notification: notification,
+    targetTimebankId: targetTimebankId,
+  ).commit();
+}
+
+NotificationsModel _assembleNotificationForSponsorRequest({
+  String adminId,
+  SponsoredGroupModel sponsoredGroupModel,
+  String targetTimebankId,
+  String creatorId,
+  String communityId,
+}) {
+  return NotificationsModel(
+    timebankId: targetTimebankId,
+    id: sponsoredGroupModel.notificationId,
+    targetUserId: adminId,
+    isRead: false,
+    isTimebankNotification: true,
+    senderUserId: creatorId,
+    type: NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
+    data: sponsoredGroupModel.toMap(),
+    communityId: communityId,
+  );
+}
+
+WriteBatch createAndSendSponserRequest({
+  String targetTimebankId,
+  NotificationsModel notification,
+  SponsoredGroupModel sponsoredGroupModel,
+}) {
+  WriteBatch batchWrite = Firestore.instance.batch();
+  batchWrite.setData(
+      Firestore.instance
+          .collection('timebanknew')
+          .document(
+            targetTimebankId,
+          )
+          .collection("notifications")
+          .document(notification.id),
+      (notification..isTimebankNotification = true).toMap());
+  return batchWrite;
+}
+
+SponsoredGroupModel _assembleSponsoredRequestModel({
+  String creatorId,
+  String creatorName,
+  String creatorPhotoUrl,
+  String subtimebankId,
+  String timebankName,
+  String timebankPhotoUrl,
+}) {
+  return SponsoredGroupModel(
+    timebankId: subtimebankId,
+    timebankTitle: timebankName,
+    creatorName: creatorName,
+    userPhotoUrl: creatorPhotoUrl,
+    timebankPhotUrl: timebankPhotoUrl,
+    timestamp: DateTime.now().millisecondsSinceEpoch,
+    creatorId: creatorId,
+    notificationId: utils.Utils.getUuid(),
+  );
 }

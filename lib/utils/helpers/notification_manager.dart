@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FCMNotificationManager {
@@ -26,17 +27,32 @@ class FCMNotificationManager {
     });
   }
 
-  static Future<bool> setFirebaseTokenForMemberWithEmail(
-      {String email, String token}) async {
+  static Future<bool> setFirebaseTokenForMemberWithEmail({
+    String email,
+    String token,
+  }) async {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
     return await Firestore.instance
         .collection('users')
         .document(email)
         .updateData({
-          'tokens': token,
+          'tokenDetails.' + androidInfo.androidId: token,
         })
         .then((e) => true)
         .catchError((onError) => false);
   }
+
+//  static Future<bool> setFirebaseTokenForMemberWithEmail(
+//      {String email, String token}) async {
+//    return await Firestore.instance
+//        .collection('users')
+//        .document(email)
+//        .updateData({
+//          'tokens': token,
+//        })
+//        .then((e) => true)
+//        .catchError((onError) => false);
+//  }
 
   static Future<void> removeDeviceRegisterationForMember({String email}) async {
     const String UNREGISTER_DEVICE = "";

@@ -124,10 +124,13 @@ class CommunityModel extends DataModel {
   String created_at;
   String primary_timebank;
   bool private;
+  bool isCreatedFromWeb;
 
   double taxPercentage;
+  double negativeCreditsThreshold;
   List<String> timebanks;
   List<String> admins;
+  List<String> organizers;
   List<String> coordinators;
   List<String> members;
   int transactionCount;
@@ -143,18 +146,38 @@ class CommunityModel extends DataModel {
   bool subscriptionCancelled;
 
   CommunityModel(Map<String, dynamic> map) {
-    this.subscriptionCancelled = map.containsKey('subscriptionCancelled') && map['subscriptionCancelled'] != null ? map['subscriptionCancelled'] : false;
-    this.transactionCount = map.containsKey('transactionCount') && map["transactionCount"] != null ? map['transactionCount'] ?? 0 : null;
-    this.taxPercentage = map.containsKey('taxPercentage') && map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
+    this.subscriptionCancelled = map.containsKey('subscriptionCancelled') &&
+            map['subscriptionCancelled'] != null
+        ? map['subscriptionCancelled']
+        : false;
+    this.transactionCount =
+        map.containsKey('transactionCount') && map["transactionCount"] != null
+            ? map['transactionCount'] ?? 0
+            : null;
+    this.taxPercentage =
+        map.containsKey('taxPercentage') && map["taxPercentage"] != null
+            ? map["taxPercentage"].toDouble()
+            : 0.0;
+    this.negativeCreditsThreshold =
+        map.containsKey('negativeCreditsThreshold') &&
+                map["negativeCreditsThreshold"] != null
+            ? map["negativeCreditsThreshold"].toDouble()
+            : -50;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
-    this.id = map != null ? map.containsKey('id') ? map['id'] : '' : '';
+    this.id = map != null
+        ? map.containsKey('id')
+            ? map['id']
+            : ''
+        : '';
     this.name = map.containsKey('name') ? map['name'] : '';
     this.about = map.containsKey('about') ? map['about'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
     this.private = map.containsKey('private') ? map['private'] : false;
+    this.isCreatedFromWeb =
+        map.containsKey('isCreatedFromWeb') ? map['isCreatedFromWeb'] : false;
 
     this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())
@@ -174,6 +197,8 @@ class CommunityModel extends DataModel {
     this.timebanks =
         map.containsKey('timebanks') ? List.castFrom(map['timebanks']) : [];
     this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
+    this.organizers =
+        map.containsKey('organizers') ? List.castFrom(map['organizers']) : [];
     this.coordinators = map.containsKey('coordinators')
         ? List.castFrom(map['coordinators'])
         : [];
@@ -183,11 +208,13 @@ class CommunityModel extends DataModel {
     this.softDelete = map.containsKey('softDelete') ? map['softDelete'] : false;
     this.billMe = map.containsKey('billMe') ? map['billMe'] : false;
     this.billingStmtNo =
-    map.containsKey('billingStmtNo') ? map['billingStmtNo'] : '';
+        map.containsKey('billingStmtNo') ? map['billingStmtNo'] : '';
     this.sevaxAccountNo =
-    map.containsKey('sevaxAccountNo') ? map['sevaxAccountNo'] : '';
-    this.parentTimebankId = map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
+        map.containsKey('sevaxAccountNo') ? map['sevaxAccountNo'] : '';
+    this.parentTimebankId =
+        map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
   }
+
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
     if (map.containsKey("location") &&
@@ -210,14 +237,17 @@ class CommunityModel extends DataModel {
   }
 
   void updateValueByKey(String key, dynamic value) {
+    if (key == 'negativeCreditsThreshold') {
+      this.negativeCreditsThreshold = value;
+    }
     if (key == 'billingStmtNo') {
-      this.id = value;
+      this.billingStmtNo = value;
     }
     if (key == 'subscriptionCancelled') {
-        this.id = value;
+      this.subscriptionCancelled = value;
     }
     if (key == 'sevaxAccountNo') {
-      this.id = value;
+      this.sevaxAccountNo = value;
     }
     if (key == 'id') {
       this.id = value;
@@ -230,6 +260,10 @@ class CommunityModel extends DataModel {
     }
     if (key == 'taxPercentage') {
       this.taxPercentage = value;
+    }
+
+    if (key == 'isCreatedFromWeb') {
+      this.isCreatedFromWeb = value;
     }
     if (key == 'primary_email') {
       this.primary_email = value;
@@ -284,8 +318,12 @@ class CommunityModel extends DataModel {
     if (this.taxPercentage != null) {
       object['taxPercentage'] = this.taxPercentage;
     }
+    if (this.negativeCreditsThreshold != null) {
+      object['negativeCreditsThreshold'] = this.negativeCreditsThreshold;
+    }
+
     if (this.subscriptionCancelled != null) {
-        object['subscriptionCancelled'] = this.subscriptionCancelled;
+      object['subscriptionCancelled'] = this.subscriptionCancelled;
     }
     if (this.id != null && this.id.isNotEmpty) {
       object['id'] = this.id;
@@ -326,6 +364,10 @@ class CommunityModel extends DataModel {
     if (this.private != null) {
       object['private'] = this.private;
     }
+
+    if (this.isCreatedFromWeb != null) {
+      object['isCreatedFromWeb'] = this.isCreatedFromWeb;
+    }
     if (this.created_by != null) {
       object['created_by'] = this.created_by;
     }
@@ -334,6 +376,10 @@ class CommunityModel extends DataModel {
     }
     if (this.admins != null) {
       object['admins'] = this.admins;
+    }
+
+    if (this.organizers != null) {
+      object['organizers'] = this.organizers;
     }
     if (this.coordinators != null) {
       object['coordinators'] = this.coordinators;
@@ -358,8 +404,13 @@ class CommunityModel extends DataModel {
       object['billMe'] = false;
     }
 
+    if (this.payment != null) {
+      object['payment'] = this.payment;
+    }
+
     object['softDelete'] = this.softDelete;
-    object['parent_timebank_id'] = this.parentTimebankId == null ? null : this.parentTimebankId;
+    object['parent_timebank_id'] =
+        this.parentTimebankId == null ? null : this.parentTimebankId;
     return object;
   }
 
@@ -375,12 +426,14 @@ class CommunityModel extends DataModel {
         ' payment_records: $payment_records, '
         ' logo_url: $logo_url, '
         ' cover_url: $cover_url,'
+        ' isCreatedFromWeb: $isCreatedFromWeb,'
         ' creator_email: $creator_email,'
         ' created_by: $created_by, '
         'created_at: $created_at, '
         'primary_timebank: $primary_timebank, '
         'timebanks: $timebanks, '
         'admins: $admins, '
+        'organizers: $organizers, '
         'location: $location, '
         'coordinators: $coordinators,'
         ' members: $members, '

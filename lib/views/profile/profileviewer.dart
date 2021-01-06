@@ -12,7 +12,6 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
-import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -633,7 +632,7 @@ class JobsCounter extends StatelessWidget {
                       style: title,
                     ),
                     TextSpan(
-                      text: S.of(context).jobs,
+                      text: S.of(context).exchanges,
                       style: subTitle,
                     ),
                   ],

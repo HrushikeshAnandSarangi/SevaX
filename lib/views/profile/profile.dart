@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:core' as prefix0;
 import 'dart:core';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -26,6 +26,7 @@ import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'edit_profile.dart';
@@ -187,6 +188,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 20,
                         ),
+                        // Container(
+                        //     height:50,
+                        //     padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+                        //     child: RaisedButton(
+                        //         shape:StadiumBorder(),
+                        //         onPressed: () async {
+                        //             Navigator.of(context).push(
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) => AddManualTimeWidget(
+                        //                         userModel: SevaCore.of(context).loggedInUser,
+                        //                     ),
+                        //                 ),
+                        //             );
+                        //         },
+                        //         color: Theme.of(context).primaryColor,
+                        //         child: Text("Add Manual time", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),),
+
+                        //     )
+                        // ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         GoodsAndAmountDonations(
                             isGoods: false,
                             isTimeBank: false,
@@ -281,11 +304,32 @@ class _ProfilePageState extends State<ProfilePage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: StreamBuilder<List<Widget>>(
+                          child: StreamBuilder<List<CommunityModel>>(
                             stream: _profileBloc.communities,
                             builder: (context, snapshot) {
                               if (snapshot.data != null)
-                                return Column(children: snapshot.data);
+                                return Column(
+                                  children: snapshot.data
+                                      .map(
+                                        (model) => CommunityCard(
+                                          selected:
+                                              user.currentCommunity == model.id,
+                                          community: model,
+                                          onTap: () {
+                                            _profileBloc.setDefaultCommunity(
+                                                user.email, model, context);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SwitchTimebank(),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                );
 
                               if (snapshot.hasError)
                                 return Center(

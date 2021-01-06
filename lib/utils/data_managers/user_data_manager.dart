@@ -1,11 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -113,6 +119,46 @@ Future<int> getTimebankRaisedAmountAndGoods({
   return totalGoodsOrAmount;
 }
 
+Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
+    {GeoFirePoint locationVal, String userEmailId}) async {
+  GeoFirePoint location;
+  Location templocation = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  Geoflutterfire geo = Geoflutterfire();
+  LocationData locationData;
+
+  String userEmail =
+      userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
+  DeviceDetails deviceDetails = DeviceDetails();
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    deviceDetails.deviceType = androidInfo.androidId;
+    deviceDetails.deviceId = 'Android';
+  } else if (Platform.isIOS) {
+    var iosInfo = await DeviceInfoPlugin().iosInfo;
+    deviceDetails.deviceType = iosInfo.identifierForVendor;
+    deviceDetails.deviceId = 'IOS';
+  }
+
+  if (locationVal == null) {
+    _permissionGranted = await templocation.hasPermission();
+    if (_permissionGranted == PermissionStatus.granted) {
+      locationData = await templocation.getLocation();
+      double lat = locationData?.latitude;
+      double lng = locationData?.longitude;
+      location = geo.point(latitude: lat, longitude: lng);
+    }
+  } else {
+    location = locationVal;
+  }
+  deviceDetails.location = location;
+  await Firestore.instance.collection("users").document(userEmail).updateData({
+    'deviceDetails': deviceDetails.toMap(),
+  });
+  return deviceDetails;
+}
+
 Future<int> getRequestRaisedGoods({
   @required String requestId,
 }) async {
@@ -181,6 +227,32 @@ Future<Map<String, UserModel>> getUserForUserModels(
     map[user.fullname.toLowerCase()] = user;
   }
   return map;
+}
+
+Stream<List<UserModel>> getRecommendedUsersStream(
+    {@required String requestId}) async* {
+  var data = Firestore.instance
+      .collection('users')
+      .where('recommendedForRequestIds', arrayContains: requestId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<UserModel>>.fromHandlers(
+      handleData: (snapshot, usersListSink) {
+        List<UserModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            UserModel model =
+                UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+            modelList.add(model);
+          },
+        );
+        modelList.sort((a, b) =>
+            a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
+        usersListSink.add(modelList);
+      },
+    ),
+  );
 }
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
@@ -425,18 +497,20 @@ Future<String> updateChangeOwnerDetails(
     String state}) async {
   var result = await http.post(
       "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
-      body: jsonEncode({
-        "communityId": communityId,
-        "email": email,
-        "billing_address": {
-          "street_address1": streetAddress1,
-          "street_address2": streetAddress2,
-          "country": country,
-          "city": city,
-          "pincode": pinCode,
-          "state": state
-        }
-      }),
+      body: jsonEncode(
+        {
+          "communityId": communityId,
+          "email": email,
+          "billing_address": {
+            "street_address1": streetAddress1,
+            "street_address2": streetAddress2,
+            "country": country,
+            "city": city,
+            "pincode": pinCode,
+            "state": state
+          }
+        },
+      ),
       headers: {"Content-Type": "application/json"});
   //var data = json.decode(result.body);
   return result.statusCode.toString();

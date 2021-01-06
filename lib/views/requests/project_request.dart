@@ -9,15 +9,20 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/projects/bloc/project_description_bloc.dart';
+import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -48,14 +53,17 @@ class ProjectRequests extends StatefulWidget {
 class RequestsState extends State<ProjectRequests>
     with SingleTickerProviderStateMixin {
   UserModel user = null;
-  TabController tabController;
+
   ProjectModel projectModel;
+  bool isProjectMember = false;
+  bool isChatVisible = false;
+  final ProjectDescriptionBloc bloc = ProjectDescriptionBloc();
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
     projectModel = widget.projectModel;
+    bloc.init(projectModel.associatedMessaginfRoomId);
   }
 
   @override
@@ -78,57 +86,69 @@ class RequestsState extends State<ProjectRequests>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.5,
-          title: Text(
-            '${projectModel.name}',
-            style: TextStyle(
-              fontSize: 20,
+    final user = SevaCore.of(context).loggedInUser;
+    isProjectMember = (ProjectMessagingRoomHelper.getAssociatedMembers(
+              associatedmembers: projectModel.associatedmembers,
+            ).contains(user.sevaUserID) ||
+            projectModel.creatorId == user.sevaUserID) &&
+        projectModel.associatedmembers.isNotEmpty;
+
+    return BlocProvider(
+      bloc: bloc,
+      child: DefaultTabController(
+        length: isProjectMember ? 3 : 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            elevation: 0.5,
+            title: Text(
+              '${projectModel.name}',
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        backgroundColor: Colors.white,
-        body: Column(
-          children: <Widget>[
-            Container(
-              constraints: BoxConstraints(maxHeight: 150.0),
-              child: Material(
-                color: Theme.of(context).primaryColor,
-                child: TabBar(
-                  indicatorColor: Theme.of(context).accentColor,
-                  labelColor: Colors.white,
-                  isScrollable: false,
-                  tabs: <Widget>[
-                    Tab(
-                      text: S.of(context).requests,
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              Container(
+                constraints: BoxConstraints(maxHeight: 150.0),
+                child: Material(
+                  color: Theme.of(context).primaryColor,
+                  child: TabBar(
+                    indicatorColor: Theme.of(context).accentColor,
+                    labelColor: Colors.white,
+                    isScrollable: false,
+                    tabs: <Widget>[
+                      Tab(
+                        text: S.of(context).requests,
+                      ),
+                      Tab(
+                        text: S.of(context).about,
+                      ),
+                      ...isProjectMember ? [Tab(text: 'Chat')] : [],
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    ProjectRequestList(
+                      timebankModel: widget.timebankModel,
+                      projectModel: projectModel,
+                      userModel: user,
                     ),
-                    Tab(
-                      text: S.of(context).about,
+                    AboutProjectView(
+                      project_id: projectModel.id,
+                      timebankModel: widget.timebankModel,
                     ),
+                    ...isProjectMember ? [ProjectChatView()] : [],
                   ],
                 ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ProjectRequestList(
-                    timebankModel: widget.timebankModel,
-                    projectModel: projectModel,
-                    userModel: user,
-                  ),
-                  AboutProjectView(
-                    project_id: projectModel.id,
-                    timebankId: widget.timebankId,
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -224,9 +244,10 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if ((widget.projectModel.mode == "Timebank" &&
-            widget.timebankModel.admins.contains(sevaUserId)) ||
-        (widget.projectModel.mode == "Personal" &&
+    if ((widget.projectModel.mode == ProjectMode.TIMEBANK_PROJECT &&
+            isAccessAvailable(widget.timebankModel,
+                SevaCore.of(context).loggedInUser.sevaUserID)) ||
+        (widget.projectModel.mode == ProjectMode.MEMBER_PROJECT &&
             widget.projectModel.creatorId == sevaUserId)) {
       proceedCreatingRequest();
     } else {
@@ -644,8 +665,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }) {
     bool isAdmin = false;
     if (model.sevaUserId == SevaCore.of(mContext).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins
-            .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+        isAccessAvailable(widget.timebankModel,
+            SevaCore.of(mContext).loggedInUser.sevaUserID)) {
       isAdmin = true;
     }
     return Container(
@@ -658,8 +679,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           onTap: () {
             if (model.sevaUserId ==
                     SevaCore.of(mContext).loggedInUser.sevaUserID ||
-                widget.timebankModel.admins
-                    .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+                isAccessAvailable(widget.timebankModel,
+                    SevaCore.of(mContext).loggedInUser.sevaUserID)) {
               timeBankBloc.setSelectedRequest(model);
               timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
               timeBankBloc.setIsAdmin(isAdmin);
@@ -912,7 +933,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 
     requestModelList.forEach((request) {
       if (sevauserid != request.sevaUserId ||
-          !widget.timebankModel.admins.contains(sevauserid)) {
+          !isAccessAvailable(widget.timebankModel,
+              SevaCore.of(context).loggedInUser.sevaUserID)) {
         requestModelList.removeWhere((request) =>
             widget.projectModel.completedRequests.contains(request.id));
       }

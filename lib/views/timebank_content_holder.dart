@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:core';
 
@@ -15,7 +16,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -30,7 +30,9 @@ import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../flavor_config.dart';
 import 'core.dart';
@@ -139,7 +141,7 @@ Widget createAdminTabBar(
     ),
     body: Column(
       children: <Widget>[
-        ShowLimitBadge(),
+        // ShowLimitBadge(),
         Stack(
           children: <Widget>[
             TabBar(
@@ -203,8 +205,8 @@ Widget createAdminTabBar(
                 userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
               TimebankRequestAdminPage(
-                isUserAdmin: timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                isUserAdmin: isAccessAvailable(timebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID),
                 timebankId: timebankModel.id,
                 userEmail: SevaCore.of(context).loggedInUser.email,
                 isFromGroup: true,
@@ -333,9 +335,11 @@ Widget createJoinedUserTabBar(
               //   timebankId: timebankModel.id,
               // ),
               TimebankRequestAdminPage(
-                isUserAdmin: timebankModel.admins.contains(
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
+                isUserAdmin: isAccessAvailable(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID) ||
+                    timebankModel.organizers.contains(
+                      SevaCore.of(context).loggedInUser.sevaUserID,
+                    ),
                 timebankId: timebankModel.id,
                 userEmail: SevaCore.of(context).loggedInUser.email,
                 isFromGroup: true,
@@ -405,7 +409,7 @@ Widget createNormalUserTabBar(
 
 AboutUserRole determineUserRoleInAbout(
     {String sevaUserId, TimebankModel timeBankModel}) {
-  if (timeBankModel.admins.contains(sevaUserId)) {
+  if (isAccessAvailable(timeBankModel, sevaUserId)) {
     return AboutUserRole.ADMIN;
   } else if (timeBankModel.members.contains(sevaUserId)) {
     return AboutUserRole.JOINED_USER;
@@ -433,6 +437,21 @@ class DiscussionListState extends State<DiscussionList> {
   String pinnedNewsId = '';
   bool isPinned = false;
   NewsModel pinnedNewsModel;
+  StreamController<List<NewsModel>> newsStream;
+
+  @override
+  void initState() {
+    newsStream = StreamController();
+
+    FirestoreManager.getNewsStream(
+      timebankID: widget.timebankId,
+    ).listen((event) {
+      newsStream.add(event);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -465,8 +484,8 @@ class DiscussionListState extends State<DiscussionList> {
         InkWell(
           onTap: () {
             if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-                !widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                !isAccessAvailable(widget.timebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID)) {
               showAdminAccessMessage(context: context);
             } else {
               Navigator.of(context).push(MaterialPageRoute(
@@ -511,88 +530,84 @@ class DiscussionListState extends State<DiscussionList> {
           ),
         ),
         StreamBuilder<List<NewsModel>>(
-          stream: FirestoreManager.getNewsStream(timebankID: widget.timebankId),
+          stream: newsStream.stream,
           builder: (context, snapshot) {
             if (snapshot.hasError)
               return Text(
                 S.of(context).gps_on_reminder,
               );
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Container(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height / 3),
-                  child: LoadingIndicator(),
-                );
+            if (!snapshot.hasData)
+              return Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 3),
+                child: LoadingIndicator(),
+              );
 
-                break;
-              default:
-                List<NewsModel> newsList = snapshot.data;
-                newsList = filterBlockedContent(newsList, context);
-                newsList = filterPinnedNews(newsList, context);
+            List<NewsModel> newsList = snapshot.data;
+            newsList = filterBlockedContent(newsList, context);
+            newsList = filterPinnedNews(newsList, context);
 
-                if (newsList.length == 1 && newsList[0].isPinned == true) {
-                  return Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        newFeedsCard(
-                          news: newsList.elementAt(0),
+            if (newsList.length == 1 && newsList[0].isPinned == true) {
+              return Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    newFeedsCard(
+                      news: newsList.elementAt(0),
+                      isFromMessage: false,
+                    )
+                  ],
+                ),
+              );
+            }
+            if (newsList.length == 0) {
+              return Padding(
+                padding: const EdgeInsets.all(28.0),
+                child: Center(
+                  child: Text(S.of(context).empty_feed),
+                ),
+              );
+            }
+            return Expanded(
+              child: ListView(
+                children: <Widget>[
+                  isPinned
+                      ? newFeedsCard(
+                          news: pinnedNewsModel,
                           isFromMessage: false,
                         )
-                      ],
-                    ),
-                  );
-                }
-                if (newsList.length == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(28.0),
-                    child: Center(
-                      child: Text(S.of(context).empty_feed),
-                    ),
-                  );
-                }
-                return Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      isPinned
-                          ? newFeedsCard(
-                              news: pinnedNewsModel,
-                              isFromMessage: false,
-                            )
-                          : Offstage(),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: newsList.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index >= newsList.length) {
-                            return Container(
-                              width: double.infinity,
-                              height: 20,
-                            );
-                          }
+                      : Offstage(),
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: newsList.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index >= newsList.length) {
+                        return Container(
+                          width: double.infinity,
+                          height: 20,
+                        );
+                      }
 
-                          if (newsList.elementAt(index).reports.length > 2) {
-                            return Offstage();
-                          } else {
-                            if (index == 0) {
-                              return newFeedsCard(
-                                news: newsList.elementAt(index),
-                                isFromMessage: false,
-                              );
-                            } else {
-                              return newFeedsCard(
-                                news: newsList.elementAt(index),
-                                isFromMessage: false,
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ],
+                      if (newsList.elementAt(index).reports.length > 2) {
+                        return Offstage();
+                      } else {
+                        if (index == 0) {
+                          return newFeedsCard(
+                            news: newsList.elementAt(index),
+                            isFromMessage: false,
+                          );
+                        } else {
+                          return newFeedsCard(
+                            news: newsList.elementAt(index),
+                            isFromMessage: false,
+                          );
+                        }
+                      }
+                    },
                   ),
-                );
-            }
+                ],
+              ),
+            );
           },
         )
       ],
@@ -663,9 +678,10 @@ class DiscussionListState extends State<DiscussionList> {
 
   Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
-    var feedAddress = getLocation(news.placeAddress);
+    var feedAddress = getLocation(news.placeAddress ?? '');
 
     return InkWell(
+      key: UniqueKey(),
       onTap: () {
         Navigator.push(
           context,
@@ -704,13 +720,13 @@ class DiscussionListState extends State<DiscussionList> {
                               ),
                               child: Row(
                                 children: <Widget>[
-                                  feedAddress != null
+                                  feedAddress != null && feedAddress != ''
                                       ? Icon(
                                           Icons.location_on,
                                           color: Theme.of(context).primaryColor,
                                         )
                                       : Container(),
-                                  feedAddress != null
+                                  feedAddress != null && feedAddress != ''
                                       ? Text(feedAddress)
                                       : Container(),
                                   Spacer(),
@@ -743,23 +759,30 @@ class DiscussionListState extends State<DiscussionList> {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.only(top: 5),
-                            child: Text(
-                              news.title != null && news.title != "NoData"
+                            child: Umeshify(
+                              text: news.title != null && news.title != "NoData"
                                   ? news.title.trim()
                                   : news.subheading.trim(),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 7,
-                              style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Europa"),
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                              // overflow: TextOverflow.ellipsis,
+                              // maxLines: 7,
+                              // style: TextStyle(
+                              //     fontSize: 15.0,
+                              //     fontWeight: FontWeight.bold,
+                              //     fontFamily: "Europa"),
                             ),
                           ),
                         ],
                       ),
                     ),
                     //  SizedBox(width: 8.0),
-                    widget.timebankModel.admins.contains(
+                    isAccessAvailable(widget.timebankModel,
                             SevaCore.of(context).loggedInUser.sevaUserID)
                         ? getOptionButtons(
                             Padding(
@@ -1154,7 +1177,7 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                           ),
-                          widget.timebankModel.admins.contains(
+                          isAccessAvailable(widget.timebankModel,
                                   SevaCore.of(context).loggedInUser.sevaUserID)
                               ? getOptionButtons(
                                   Padding(

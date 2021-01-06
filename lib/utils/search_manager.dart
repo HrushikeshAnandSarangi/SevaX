@@ -123,7 +123,8 @@ class SearchManager {
 //    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
     bool commFound = false;
     for (var map in hitList) {
-      if (map['_source']['name'].toLowerCase() == queryString.toLowerCase()) {
+      if (map['_source']['name'].toLowerCase().trim() ==
+          queryString.toLowerCase()) {
         commFound = true;
         break;
       }
@@ -358,8 +359,55 @@ class SearchManager {
     yield userList;
   }
 
+  static Future<List<TimebankModel>> searchTimebankModelsOfUserFuture(
+      {@required String queryString, @required UserModel currentUser}) async {
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        "//elasticsearch/sevaxtimebanks/sevaxtimebank/_search";
+    dynamic body = json.encode({
+      "size": 3000,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"community_id.keyword": currentUser.currentCommunity}
+            },
+            {
+              "multi_match": {
+                "query": queryString,
+                "fields": ["address", "email_id", "missionStatement", "name"],
+                "type": "phrase_prefix"
+              }
+            }
+          ]
+        }
+      },
+      "sort": {
+        "name.keyword": {"order": "asc"}
+      }
+    });
+
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<TimebankModel> timeBanksList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false &&
+          currentUser.blockedBy.length == 0) {
+        var timeBank = TimebankModel.fromMap(sourceMap);
+        timeBanksList.add(timeBank);
+      } else {
+        if (sourceMap['softDelete'] == false &&
+            !currentUser.blockedBy.contains(sourceMap["creator_id"])) {
+          var timeBank = TimebankModel.fromMap(sourceMap);
+          timeBanksList.add(timeBank);
+        }
+      }
+    });
+    return timeBanksList;
+  }
+
   static Future<List<UserModel>> searchForUserWithTimebankIdFuture({
-    @required queryString,
+    @required String queryString,
     @required List<String> validItems,
   }) async {
     String url =

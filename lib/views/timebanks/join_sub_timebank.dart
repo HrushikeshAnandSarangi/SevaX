@@ -4,6 +4,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
@@ -15,7 +16,9 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../timebank_content_holder.dart';
@@ -54,6 +57,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   String errorMessage1 = '';
   List<JoinRequestModel> _joinRequestModels;
   bool isDataLoaded = false;
+  ProgressDialog progressDialog;
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +81,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   Widget build(BuildContext context) {
+    init(context);
     title = S.of(context).loading;
     JOIN = S.of(context).join;
     JOINED = S.of(context).joined;
@@ -172,8 +178,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     String userStatus = S.of(context).join;
 //ytrtrvtfffddxxszwawqewc bunyinuyuty tfgftftf ttftftftftb ftyhbyytbtytuknt  kmiolll908786756 53423saqaqaaxesecsrsescsrsevdvvfdvtfhby byu kmn tbvrtrtrtrvrrrtrvrtvty
                     TimebankModel timebank = timebankList.elementAt(index);
-                    if (timebank.admins
-                            .contains(widget.loggedInUserModel.sevaUserID) ||
+                    if (isAccessAvailable(
+                            timebank, widget.loggedInUserModel.sevaUserID) ||
                         timebank.coordinators
                             .contains(widget.loggedInUserModel.sevaUserID) ||
                         timebank.members
@@ -238,6 +244,15 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
+  void init(BuildContext context) {
+    if (progressDialog == null)
+      progressDialog = ProgressDialog(
+        context,
+        type: ProgressDialogType.Normal,
+        isDismissible: false,
+      );
+  }
+
   Widget makeItem(TimebankModel timebank, CompareToTimeBank status, bloc,
       {String userStatus}) {
     return InkWell(
@@ -260,18 +275,35 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AspectRatio(
-                aspectRatio: 3.3 / 2.3,
-                child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
-                  fit: BoxFit.fitWidth,
-                  errorWidget: (context, url, error) => Center(
-                    child: Text(S.of(context).no_image_available),
+              Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 3.3 / 2.3,
+                    child: CachedNetworkImage(
+                      imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
+                      fit: BoxFit.fitWidth,
+                      errorWidget: (context, url, error) => Center(
+                        child: Text(S.of(context).no_image_available),
+                      ),
+                      placeholder: (conext, url) {
+                        return LoadingIndicator();
+                      },
+                    ),
                   ),
-                  placeholder: (conext, url) {
-                    return LoadingIndicator();
-                  },
-                ),
+                  timebank.sponsored
+                      ? Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, right: 5),
+                            child: Image.asset(
+                              'images/icons/verified.png',
+                              color: Colors.orange,
+                              height: 28,
+                              width: 28,
+                            ),
+                          ))
+                      : Offstage(),
+                ],
               ),
               Row(
                 children: <Widget>[
@@ -315,12 +347,18 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                       onPressed: () async {
                         if (userStatus == S.of(context).join) {
+                          //TOFO
+                          progressDialog.show();
+
                           await _assembleAndSendRequest(
                             subTimebankId: timebank.id,
                             subTimebankLabel: timebank.name,
                             userIdForNewMember:
                                 widget.loggedInUserModel.sevaUserID,
-                          );
+                          ).catchError((onError) {
+                            logger.e("Could not send request for group Join");
+                          });
+                          progressDialog.hide();
 
                           setState(() {
                             getData();
@@ -418,7 +456,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       senderUserId: userIdForNewMember,
       type: prefix0.NotificationType.JoinRequest,
       data: joinRequestModel.toMap(),
-      communityId: "NOT_REQUIRED",
+      communityId: widget.loggedInUserModel.currentCommunity,
     );
   }
 
@@ -451,8 +489,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (joinRequestModels[i].entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
         return CompareToTimeBank.JOINED;
-      } else if (timeBank.admins
-              .contains(widget.loggedInUserModel.sevaUserID) ||
+      } else if (isAccessAvailable(
+              timeBank, widget.loggedInUserModel.sevaUserID) ||
           timeBank.coordinators.contains(widget.loggedInUserModel.sevaUserID) ||
           timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
@@ -494,4 +532,14 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
   }).catchError((onError) {
     return onError;
   });
+}
+
+class SevaProgressBar {
+  // void cancelDialog() {
+  //   progressDialog.hide();
+  // }
+
+  // void showDialog() {
+  //   progressDialog.show();
+  // }
 }

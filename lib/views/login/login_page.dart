@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -11,7 +12,9 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -22,6 +25,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -47,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
   BuildContext parentContext;
+  GeoFirePoint location;
 
   void initState() {
     super.initState();
@@ -471,6 +477,63 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => this._isLoading = isLoading);
   }
 
+  Future<void> gpsCheck() async {
+    Location templocation = Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    Geoflutterfire geo = Geoflutterfire();
+    LocationData locationData;
+
+    try {
+      _serviceEnabled = await templocation.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await templocation.requestService();
+        logger.i("requesting location");
+
+        if (!_serviceEnabled) {
+          return;
+        } else {
+          locationData = await templocation.getLocation();
+
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          location = geo.point(latitude: lat, longitude: lng);
+          setState(() {});
+        }
+      }
+
+      _permissionGranted = await templocation.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await templocation.requestPermission();
+        logger.i("requesting permission");
+        if (_permissionGranted != PermissionStatus.granted) {
+          return;
+        } else {
+          locationData = await templocation.getLocation();
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          location = geo.point(latitude: lat, longitude: lng);
+
+          setState(() {});
+        }
+      } else {
+        locationData = await templocation.getLocation();
+
+        double lat = locationData?.latitude;
+        double lng = locationData?.longitude;
+        location = geo.point(latitude: lat, longitude: lng);
+
+        setState(() {});
+      }
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        logger.e(e);
+      } else if (e.code == 'SERVICE_STATUS_ERROR') {
+        logger.e(e);
+      }
+    }
+  }
+
   Widget get logo {
     return Container(
       child: Column(
@@ -608,15 +671,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
-    'adi007footballer@gmail.com',
-    'adityatestacc123@gmail.com',
-    'adityazzz@yopmail.com',
-    'amazinggg@yopmail.com',
-    'sam1@yopmail.com',
-    'sam2@yopmail.com',
-    'sam3@yopmail.com',
     'burhan@uipep.com',
     'user15ec27@gmail.com',
+    'monica@yopmail.com',
+    'test333@yopmail.com'
   ];
   Widget get directDevLogin {
     return Padding(
@@ -791,6 +849,9 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
+      await getAndUpdateDeviceDetailsOfUser(
+        locationVal: location,
+      );
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -825,6 +886,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -846,7 +908,13 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location)
+          .timeout(Duration(seconds: 3));
+      logger.i('device details fixed');
+    } on TimeoutException catch (e) {
+      logger.e('timeout exception $e');
     } on NoSuchMethodError catch (error) {
+      logger.e(error);
       handleException();
       Crashlytics.instance.log("No Such methods error in login!");
     } on PlatformException catch (erorr) {

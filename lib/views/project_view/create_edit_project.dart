@@ -22,6 +22,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -84,11 +85,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       setState(() {
         if (widget.projectTemplateModel != null) {
           this.projectModel.mode = widget.projectTemplateModel.mode;
-          this.projectModel.mode == 'Timebank'
+          this.projectModel.mode == ProjectMode.TIMEBANK_PROJECT
               ? sharedValue = 0
               : sharedValue = 1;
         } else {
-          this.projectModel.mode = 'Timebank';
+          this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
         }
       });
     }
@@ -190,8 +191,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           return Container();
         }
         timebankModel = snapshot.data;
-        if (snapshot.data.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
           return Container(
             margin: EdgeInsets.only(bottom: 20),
             width: double.infinity,
@@ -199,11 +200,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               selectedColor: Theme.of(context).primaryColor,
               children: {
                 0: Text(
-                  S.of(context).timebank_project(1),
+                  timebankModel.parentTimebankId ==
+                          FlavorConfig.values.timebankId
+                      ? S.of(context).seva_community_event
+                      : "Seva " + timebankModel.name + " Event",
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
-                  S.of(context).personal_project(1),
+                  S.of(context).personal_event,
                   style: TextStyle(fontSize: 10.0),
                 ),
               },
@@ -214,9 +218,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (val != sharedValue) {
                   setState(() {
                     if (val == 0) {
-                      projectModel.mode = 'Timebank';
+                      projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
                     } else {
-                      projectModel.mode = 'Personal';
+                      projectModel.mode = ProjectMode.MEMBER_PROJECT;
                     }
                     sharedValue = val;
                   });
@@ -226,8 +230,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
           );
         } else {
-          this.projectModel.mode = 'Personal';
-
+          this.projectModel.mode = ProjectMode.MEMBER_PROJECT;
           return Container();
         }
       },
@@ -282,7 +285,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   ),
                 ),
               ),
-              headingText(S.of(context).project_name),
+              headingText("${S.of(context).project_name} *"),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: (value) {
@@ -329,12 +332,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration}',
+                          title: ' ${S.of(context).project_duration} *',
                           startTime: startDate,
                           endTime: endDate,
                         )
                       : OfferDurationWidget(
-                          title: ' ${S.of(context).project_duration}',
+                          title: ' ${S.of(context).project_duration} *',
                           //startTime: CalendarWidgetState.startDate,
                           //endTime: CalendarWidgetState.endDate
                         )
@@ -351,7 +354,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   fontSize: 12,
                 ),
               ),
-              headingText(S.of(context).mission_statement),
+              headingText("${S.of(context).mission_statement} *"),
               TextFormField(
                 decoration: InputDecoration(
                   errorMaxLines: 2,
@@ -699,13 +702,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                           // }
                           showProgressDialog(S.of(context).creating_project);
-//                          setState(() {
-//                            this.communityImageError = '';
-//                          });
-                          await FirestoreManager.createProject(
-                              projectModel: projectModel);
-                          globals.projectsAvtaarURL = null;
-                          globals.webImageUrl = null;
+                          await ProjectMessagingRoomHelper
+                              .createProjectWithMessaging(
+                            projectModel: projectModel,
+                            projectCreator: SevaCore.of(context).loggedInUser,
+                          );
+                          // await FirestoreManager.createProject(
+                          //     projectModel: projectModel);
+                          // globals.projectsAvtaarURL = null;
+                          // globals.webImageUrl = null;
 
                           if (dialogContext != null) {
                             Navigator.pop(dialogContext);

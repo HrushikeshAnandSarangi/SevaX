@@ -13,7 +13,7 @@ import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -195,7 +195,12 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               );
 
               if (primaryTimebank != null &&
-                  primaryTimebank.admins
+                  isAccessAvailable(primaryTimebank,
+                      SevaCore.of(context).loggedInUser.sevaUserID)) {
+                isAdmin = true;
+              }
+              if (primaryTimebank != null &&
+                  primaryTimebank.organizers
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
                 isAdmin = true;
               }
@@ -204,7 +209,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               length: isAdmin ? tabLength + 1 : tabLength,
               child: Column(
                 children: <Widget>[
-                  ShowLimitBadge(),
+                  // ShowLimitBadge(),
                   TabBar(
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,
@@ -249,9 +254,14 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           userId: SevaCore.of(context).loggedInUser.sevaUserID,
                         ),
                         TimebankRequestAdminPage(
-                          isUserAdmin: primaryTimebank.admins.contains(
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                          ),
+                          isUserAdmin: isAccessAvailable(
+                                  primaryTimebank,
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID) ||
+                              primaryTimebank.organizers.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID,
+                              ),
                           timebankId: primaryTimebank.id,
                           userEmail: SevaCore.of(context).loggedInUser.email,
                           isCommunity: true,

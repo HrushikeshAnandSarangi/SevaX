@@ -9,7 +9,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/edit_group.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
@@ -41,7 +40,9 @@ class _ManageGroupView extends State<ManageGroupView> {
           .then((onValue) {
         communityModel = onValue;
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
-            communityModel.created_by) {
+                communityModel.created_by ||
+            communityModel.organizers
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
           setState(() {});
         }
@@ -270,7 +271,7 @@ class _ManageGroupView extends State<ManageGroupView> {
           isFromFind: false,
           timebankId: widget.timebankModel.id,
         ),
-        TimeBankBillingAdminView(),
+        // TimeBankBillingAdminView(),
         Settings,
       ],
     );

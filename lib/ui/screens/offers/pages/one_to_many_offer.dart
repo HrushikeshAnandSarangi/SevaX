@@ -252,7 +252,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
-                                heading: S.of(context).offer_class_description,
+                                heading: "${S.of(context).offer_class_description} *",
                                 onChanged: _bloc.onclassDescriptionChanged,
                                 hint: S.of(context).offer_description_error,
                                 maxLength: 500,
@@ -310,7 +310,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         return;
                                       }
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState.starttimestamp != 0) {
+                                      if (OfferDurationWidgetState
+                                              .starttimestamp !=
+                                          0) {
                                         _bloc.startTime =
                                             OfferDurationWidgetState
                                                 .starttimestamp;
@@ -502,20 +504,20 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId);
 
-      if (_bloc.offerCreatedBool){
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) {
-                      return AddToCalendar(
-                          isOfferRequest: null,
-                          offer: _bloc.mainOfferModel,
-                          requestModel: null,
-                          userModel: null,
-                          eventsIdsArr: _bloc.offerIds);
-                  },
-              ),
-          );
+      if (_bloc.offerCreatedBool) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddToCalendar(
+                  isOfferRequest: null,
+                  offer: _bloc.mainOfferModel,
+                  requestModel: null,
+                  userModel: null,
+                  eventsIdsArr: _bloc.offerIds);
+            },
+          ),
+        );
       }
     }
   }

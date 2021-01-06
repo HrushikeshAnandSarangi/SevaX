@@ -14,9 +14,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
@@ -46,10 +44,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           .then((onValue) {
         communityModel = onValue;
         if (SevaCore.of(context).loggedInUser.sevaUserID ==
-            communityModel.created_by) {
+                communityModel.created_by ||
+            widget.timebankModel.organizers
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           isSuperAdmin = true;
-          setState(() {});
         }
+        setState(() {});
       });
     });
     Future.delayed(Duration.zero, () {
@@ -65,96 +65,96 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   @override
   Widget build(BuildContext context) {
-    if (isSuperAdmin) {
-      return DefaultTabController(
-        length: 4,
-        child: Column(
-          children: <Widget>[
-            TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: true,
-              tabs: <Widget>[
-                Tab(text: S.of(context).edit_timebank),
-                // Tab(text: "Upgrade"),
-                Tab(text: S.of(context).billing),
-                Tab(
-                  text: S.of(context).settings,
+    // if (isSuperAdmin) {
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: <Widget>[
+          TabBar(
+            indicatorColor: Colors.black,
+            labelColor: Colors.black,
+            isScrollable: true,
+            tabs: <Widget>[
+              Tab(text: S.of(context).edit_timebank),
+              // Tab(text: "Upgrade"),
+              // Tab(text: S.of(context).billing),
+              Tab(
+                text: S.of(context).settings,
+              ),
+              Tab(
+                text: S.of(context).bottom_nav_notifications,
+              ),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                CreateEditCommunityView(
+                  isCreateTimebank: false,
+                  isFromFind: false,
+                  timebankId: widget.timebankModel.id,
                 ),
-                Tab(
-                  text: S.of(context).bottom_nav_notifications,
-                ),
+                // TimeBankBillingAdminView(),
+                Settings,
+                NotificationManagerForAmins(
+                  widget.timebankModel.id,
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+                  widget.timebankModel.parentTimebankId ==
+                      FlavorConfig.values.timebankId,
+                )
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  CreateEditCommunityView(
-                    isCreateTimebank: false,
-                    isFromFind: false,
-                    timebankId: widget.timebankModel.id,
-                  ),
-                  TimeBankBillingAdminView(),
-                  Settings,
-                  NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return DefaultTabController(
-        length: 3,
-        child: Column(
-          children: <Widget>[
-            TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: false,
-              tabs: <Widget>[
-                Tab(text: S.of(context).edit_timebank),
-                Tab(
-                  text: S.of(context).settings,
-                ),
-                Tab(
-                  text: S.of(context).bottom_nav_notifications,
-                ),
-              ],
-//                onTap: (index) {
-//                  if (_indextab != index) {
-//                    _indextab = index;
-//                    setState(() {});
-//                  }
-//                },
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  CreateEditCommunityView(
-                    isCreateTimebank: false,
-                    isFromFind: false,
-                    timebankId: widget.timebankModel.id,
-                  ),
-                  Settings,
-                  NotificationManagerForAmins(
-                    widget.timebankModel.id,
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.timebankModel.parentTimebankId ==
-                        FlavorConfig.values.timebankId,
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+//     } else {
+//       return DefaultTabController(
+//         length: 3,
+//         child: Column(
+//           children: <Widget>[
+//             TabBar(
+//               indicatorColor: Colors.black,
+//               labelColor: Colors.black,
+//               isScrollable: false,
+//               tabs: <Widget>[
+//                 Tab(text: S.of(context).edit_timebank),
+//                 Tab(
+//                   text: S.of(context).settings,
+//                 ),
+//                 Tab(
+//                   text: S.of(context).bottom_nav_notifications,
+//                 ),
+//               ],
+// //                onTap: (index) {
+// //                  if (_indextab != index) {
+// //                    _indextab = index;
+// //                    setState(() {});
+// //                  }
+// //                },
+//             ),
+//             Expanded(
+//               child: TabBarView(
+//                 children: [
+//                   CreateEditCommunityView(
+//                     isCreateTimebank: false,
+//                     isFromFind: false,
+//                     timebankId: widget.timebankModel.id,
+//                   ),
+//                   Settings,
+//                   NotificationManagerForAmins(
+//                     widget.timebankModel.id,
+//                     SevaCore.of(context).loggedInUser.sevaUserID,
+//                     widget.timebankModel.parentTimebankId ==
+//                         FlavorConfig.values.timebankId,
+//                   )
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
   }
 
 //  Widget get normalAdminWidget {
@@ -223,28 +223,28 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  Widget get changeOwnerShip {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChangeOwnerShipView(
-              timebankId: widget.timebankModel.id,
-            ),
-          ),
-        );
-      },
-      child: Text(
-        S.of(context).change_ownership,
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-        ),
-      ),
-    );
-  }
+  // Widget get changeOwnerShip {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => ChangeOwnerShipView(
+  //             timebankId: widget.timebankModel.id,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //     child: Text(
+  //       S.of(context).change_ownership,
+  //       textAlign: TextAlign.left,
+  //       style: TextStyle(
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.blue,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget viewRequests({BuildContext context}) {
     return GestureDetector(
@@ -352,13 +352,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           SizedBox(height: 20),
           viewRequests(context: context),
           SizedBox(height: 20),
-          widget.timebankModel.creatorId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: changeOwnerShip,
-                )
-              : Container(),
+          // widget.timebankModel.creatorId ==
+          //         SevaCore.of(context).loggedInUser.sevaUserID
+          //     ? Padding(
+          //         padding: const EdgeInsets.only(bottom: 20),
+          //         child: changeOwnerShip,
+          //       )
+          //     : Container(),
           viewInvoice(context: context),
           viewReportedMembers(context: context),
           SizedBox(height: 20),

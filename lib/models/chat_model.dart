@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
 
 class ChatModel {
   String id;
@@ -15,7 +16,7 @@ class ChatModel {
   String communityId;
   bool isGroupMessage;
   MultiUserMessagingModel groupDetails;
-
+  ChatContext chatContext;
   int timestamp;
 
   ChatModel({
@@ -31,6 +32,7 @@ class ChatModel {
     this.timestamp,
     this.isGroupMessage,
     this.groupDetails,
+    this.chatContext,
   });
 
   factory ChatModel.fromMap(Map<String, dynamic> map) => ChatModel(
@@ -57,6 +59,14 @@ class ChatModel {
         // timebankId: map["timebankId"],
         communityId: map["communityId"],
         timestamp: map["timestamp"],
+        chatContext:
+            map.containsKey('chatContext') && map['chatContext'] != null
+                ? ChatContext.fromMap(
+                    Map<String, dynamic>.from(
+                      map['chatContext'],
+                    ),
+                  )
+                : null,
       );
 
   Map<String, dynamic> toMap() => {
@@ -65,10 +75,23 @@ class ChatModel {
             List<dynamic>.from(participantInfo.map((x) => x.toMap())),
         "unreadStatus": unreadStatus,
         "isTimebankMessage": isTimebankMessage,
-        // "timebankId": timebankId,
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
-        "groupDetails": groupDetails?.toMap()
+        "groupDetails": groupDetails?.toMap(),
+        "chatContext": chatContext?.toMap() ?? {},
+      };
+
+  Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {
+        "lastMessage": lastMessage,
+        "participants": List<dynamic>.from(participants.map((x) => x)),
+        "participantInfo":
+            List<dynamic>.from(participantInfo.map((x) => x.toMap())),
+        "unreadStatus": unreadStatus,
+        "isTimebankMessage": isTimebankMessage,
+        "communityId": communityId,
+        "isGroupMessage": isGroupMessage ?? false,
+        "groupDetails": groupDetails?.toMap(),
+        "chatContext": chatContext.toMap(),
       };
 }
 

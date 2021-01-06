@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -14,7 +14,6 @@ import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/change_ownership_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -228,18 +227,18 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return Container();
                       break;
 
-                    case NotificationType.TypeChangeOwnership:
-                      ChangeOwnershipModel ownershipModel =
-                          ChangeOwnershipModel.fromMap(notification.data);
-                      return ChangeOwnershipWidget(
-                        timestamp: notification.timestamp,
-                        notificationId: notification.id,
-                        communityId: notification.communityId,
-                        changeOwnershipModel: ownershipModel,
-                        timebankId: notification.timebankId,
-                        notificationsModel: notification,
-                      );
-                      break;
+                    // case NotificationType.TypeChangeOwnership:
+                    //   ChangeOwnershipModel ownershipModel =
+                    //       ChangeOwnershipModel.fromMap(notification.data);
+                    //   return ChangeOwnershipWidget(
+                    //     timestamp: notification.timestamp,
+                    //     notificationId: notification.id,
+                    //     communityId: notification.communityId,
+                    //     changeOwnershipModel: ownershipModel,
+                    //     timebankId: notification.timebankId,
+                    //     notificationsModel: notification,
+                    //   );
+                    //   break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -304,6 +303,32 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                       );
 
+                    case NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER:
+                      bool isGroup = false;
+                      String associatedName =
+                          notification.data['associatedName'];
+
+                      // bool
+                      String timebankTitle = notification.data['timebankName'];
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        title:
+                            '${S.of(context).notifications_demoted_title.replaceAll('Admin', S.of(context).owner)}',
+                        subTitle: S
+                            .of(context)
+                            .owner_demoted_to_admin
+                            .replaceAll('associatedName', associatedName)
+                            .replaceAll('groupName', timebankTitle),
+                        entityName: S.of(context).demoted,
+                        onDismissed: () {
+                          // Dismiss notification
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                      );
+
                     case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
                       String associatedName =
                           notification.data['associatedName'];
@@ -315,6 +340,30 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         title: '${S.of(context).notifications_promoted_title}',
                         subTitle:
                             '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
+                        entityName: S.of(context).promoted,
+                        onDismissed: () {
+                          // Dismiss notification
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                      );
+                    case NotificationType.ADMIN_PROMOTED_AS_ORGANIZER:
+                      String associatedName =
+                          notification.data['associatedName'];
+                      bool isGroup = notification.data['isGroup'];
+                      String timebankTitle = notification.data['timebankName'];
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        title: '${S.of(context).notifications_promoted_title}',
+                        subTitle: S
+                                .of(context)
+                                .owner_demoted_to_admin
+                                .replaceAll('associatedName', associatedName)
+                                .replaceAll('groupName', timebankTitle) +
+                            '$associatedName has promoted you to be the Owner for the ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
                         entityName: S.of(context).promoted,
                         onDismissed: () {
                           // Dismiss notification
@@ -548,7 +597,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: "${S.of(context).notifications_credited_msg}",
                         subTitle:
-                            "${S.of(context).notifications_credited_msg} ",
+                            "${notification.data.containsKey('credits') ? notification.data['credits'] : ''} ${S.of(context).notifications_credited_msg} ",
                         onDismissed: onDismissed,
                       );
 
@@ -559,6 +608,44 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: "${S.of(context).notifications_debited_msg}",
                         subTitle: "${S.of(context).notifications_debited_msg} ",
+                        onDismissed: onDismissed,
+                      );
+
+                    case NotificationType.MANUAL_TIME_CLAIM_APPROVED:
+                      var body = ManualTimeModel.fromMap(
+                          Map<String, dynamic>.from(notification.data));
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: body.userDetails.name,
+                        photoUrl: body.userDetails.photoUrl,
+                        title: S.of(context).manual_notification_title,
+                        subTitle: S
+                            .of(context)
+                            .manual_time_request_approved
+                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll(
+                                '**communityName', body.communityName ?? ' '),
+                        isDissmissible: true,
+                        onDismissed: onDismissed,
+                      );
+
+                    case NotificationType.MANUAL_TIME_CLAIM_REJECTED:
+                      var body = ManualTimeModel.fromMap(
+                          Map<String, dynamic>.from(notification.data));
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: body.userDetails.name,
+                        photoUrl: body.userDetails.photoUrl,
+                        title: S.of(context).manual_notification_title,
+                        subTitle: S
+                            .of(context)
+                            .manual_time_request_rejected
+                            .replaceAll('**number', '${body.claimedTime / 60}')
+                            .replaceAll(
+                                '**communityName', body.communityName ?? ' '),
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                       );
 

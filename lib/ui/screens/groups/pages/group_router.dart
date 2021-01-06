@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 enum UserType { GROUP_ADMIN, GROUP_MEMBER, NOT_MEMBER }
 
@@ -119,7 +120,7 @@ UserType checkUserRole({
   String userId,
   TimebankModel timeBankModel,
 }) {
-  if (timeBankModel.admins.contains(userId)) {
+  if (isAccessAvailable(timeBankModel, userId)) {
     return UserType.GROUP_ADMIN;
   } else if (timeBankModel.members.contains(userId)) {
     return UserType.GROUP_MEMBER;

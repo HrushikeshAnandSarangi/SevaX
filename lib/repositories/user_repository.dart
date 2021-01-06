@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class UserRepository {
   static CollectionReference ref = Firestore.instance.collection("users");
@@ -93,7 +94,7 @@ class UserRepository {
     TimebankModel timebankModel;
     if (communityId == FlavorConfig.values.timebankId) {
       timebankModel = await getTimeBankForId(timebankId: communityId);
-      isAdmin = timebankModel.admins.contains(userId);
+      isAdmin = isAccessAvailable(timebankModel, userId);
     }
 
 //      timebankModel.admins.forEach((sevauserid) async {
@@ -121,7 +122,7 @@ class UserRepository {
 
     querySnapshot.documents.forEach((DocumentSnapshot document) {
       if (timebankModel != null && !isAdmin) {
-        if (timebankModel.admins.contains(document.data["sevauserid"]))
+        if (isAccessAvailable(timebankModel, document.data["sevauserid"]))
           members.add(ParticipantInfo(
             id: document.data["sevauserid"],
             name: document.data["fullname"],

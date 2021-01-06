@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
@@ -21,6 +22,7 @@ class UserModel extends DataModel {
   List<String> membershipCampaigns;
   List<String> favoriteByTimeBank;
   List<String> favoriteByMember;
+  List<String> recommendedForRequestIds;
   String photoURL;
   String sevaUserID;
   List<String> invitedRequests;
@@ -57,6 +59,7 @@ class UserModel extends DataModel {
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
+  List<String> curatedRequestIds = [];
   LocationData currentPosition;
   bool notificationAlerts;
 
@@ -65,6 +68,7 @@ class UserModel extends DataModel {
   String calendarAccessToken;
   String calendarEmail;
   String calendarScope;
+  DeviceDetails deviceDetails;
 
   UserModel(
       {this.seenIntro,
@@ -108,7 +112,10 @@ class UserModel extends DataModel {
       this.language,
       this.notificationAlerts,
       this.cvUrl,
-      this.cvName});
+      this.cvName,
+      this.deviceDetails,
+      this.curatedRequestIds,
+      this.recommendedForRequestIds});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
@@ -161,6 +168,13 @@ class UserModel extends DataModel {
     } else {
       this.pastHires = List();
     }
+    if (map.containsKey('recommendedForRequestIds')) {
+      List<String> recommendedForRequests =
+          List.castFrom(map['recommendedForRequestIds']);
+      this.recommendedForRequestIds = recommendedForRequests;
+    } else {
+      this.recommendedForRequestIds = List();
+    }
     if (map.containsKey('emailSent')) {
       this.emailSent = map['emailSent'] ?? false;
     } else {
@@ -173,12 +187,18 @@ class UserModel extends DataModel {
     if (map.containsKey('completedIntro')) {
       this.completedIntro = map['completedIntro'];
     }
-
     if (map.containsKey('blockedMembers')) {
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
       this.blockedMembers = blockedMembers;
     } else {
       this.blockedMembers = List();
+    }
+
+    if (map.containsKey('curatedRequestIds')) {
+      List<String> curatedRequests = List.castFrom(map['curatedRequestIds']);
+      this.curatedRequestIds = curatedRequests;
+    } else {
+      this.curatedRequestIds = List();
     }
 
     if (map.containsKey('currentCommunity')) {
@@ -335,9 +355,15 @@ class UserModel extends DataModel {
       this.cvUrl = map['cvUrl'];
     }
 
-//    else{
-//      this.cvUrl='';
-//    }
+    if (map.containsKey('deviceDetails')) {
+      this.deviceDetails = DeviceDetails.fromMap(
+        Map<String, dynamic>.from(
+          map['deviceDetails'],
+        ),
+      );
+    } else {
+      this.deviceDetails = DeviceDetails();
+    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -401,6 +427,13 @@ class UserModel extends DataModel {
     }
     if (this.reportedUsers != null && this.reportedUsers.isNotEmpty) {
       object['reportedUsers'] = this.reportedUsers;
+    }
+    if (this.recommendedForRequestIds != null &&
+        this.recommendedForRequestIds.isNotEmpty) {
+      object['recommendedForRequestIds'] = this.recommendedForRequestIds;
+    }
+    if (this.curatedRequestIds != null && this.curatedRequestIds.isNotEmpty) {
+      object['curatedRequestIds'] = this.curatedRequestIds;
     }
     if (this.requestStatus != null) {
       object['requestStatus'] = this.requestStatus;
@@ -499,6 +532,9 @@ class UserModel extends DataModel {
     if (this.cvName != null) {
       object['cvName'] = this.cvName;
     }
+    if (this.deviceDetails != null) {
+      object['deviceDetails'] = this.deviceDetails.toMap();
+    }
     return object;
   }
 
@@ -514,6 +550,7 @@ class UserModel extends DataModel {
       ${this.membershipTimebanks.toString()},
       ${this.favoriteByMember.toString()},
       ${this.favoriteByTimeBank.toString()},
+      ${this.recommendedForRequestIds.toString()},
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},
@@ -527,6 +564,7 @@ class UserModel extends DataModel {
       ${this.language.toString()},
       ${this.tokens.toString()},
       ${this.reportedUsers.toString()},
+      ${this.curatedRequestIds.toString()},
       ${this.blockedMembers.toString()},
       ${this.blockedBy.toString()},
       ${this.currentPosition.toString()},
@@ -534,6 +572,7 @@ class UserModel extends DataModel {
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
       ${this.cvUrl.toString()},
+      ${this.deviceDetails.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

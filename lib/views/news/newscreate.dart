@@ -12,10 +12,10 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -279,14 +279,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     ),
 
                     Offstage(
-                      offstage: !widget.timebankModel.admins.contains(
+                      offstage: isAccessAvailable(widget.timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Center(
-                          child: TransactionsMatrixCheck(
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.parent_timebanks,
-                        transaction_matrix_type: "parent_timebanks",
-                        child: RaisedButton(
+                        child:
+                            //  TransactionsMatrixCheck(
+                            //   upgradeDetails:
+                            //       AppConfig.upgradePlanBannerModel.parent_timebanks,
+                            //   transaction_matrix_type: "parent_timebanks",
+                            //   child:
+                            RaisedButton(
                           textColor: Colors.green,
                           elevation: 0,
                           child: Container(
@@ -322,7 +324,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     });
                           },
                         ),
-                      )),
+                        // )
+                      ),
                     ),
                     // Text(""),
                     Padding(

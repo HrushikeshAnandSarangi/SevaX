@@ -81,7 +81,7 @@ class OffersState extends State<OffersModule> {
                       onTap: () {
                         if (widget.timebankModel.id ==
                                 FlavorConfig.values.timebankId &&
-                            !widget.timebankModel.admins.contains(
+                            !isAccessAvailable(widget.timebankModel,
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
                           showAdminAccessMessage(context: context);
                         } else {
