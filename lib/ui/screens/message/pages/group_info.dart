@@ -38,7 +38,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
   void initState() {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
-    _bloc.addParticipants(chatModel.participantInfo);
+    _bloc.addParticipants(chatModel.participantInfo.where((p)=> chatModel.participants.contains(p.id),).toList(),);
     _bloc.onImageChanged(MessageRoomImageModel(
         stockImageUrl: chatModel.groupDetails.imageUrl ?? ''));
     super.initState();
