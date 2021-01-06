@@ -57,7 +57,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     Future.delayed(
       Duration.zero,
           () {
-        log("home page router init <> ${SevaCore.of(context).loggedInUser.email} ${SevaCore.of(context).loggedInUser.currentCommunity}");
         _userBloc.getData(
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
