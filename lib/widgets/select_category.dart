@@ -24,7 +24,6 @@ class _CategoryState extends State<Category> {
   List<CategoryModel> mainCategories = [];
   List<CategoryModel> subCategories = [];
   List<CategoryModel> searchcategories = [];
-  List<CategoryModel> searchSubcategories = [];
   TextEditingController _textEditingController = TextEditingController();
   bool dataLoaded = false;
   @override
@@ -51,10 +50,9 @@ class _CategoryState extends State<Category> {
 
   // search function
   void filterSearchResults(String query) {
-    searchcategories = List<CategoryModel>.from(mainCategories.where(
-        (element) =>
-            element.title_en.toLowerCase().contains(query.toLowerCase())));
-    _isSearching = true;
+    searchcategories = List<CategoryModel>.from(categories.where((element) =>
+        element.title_en.toLowerCase().contains(query.toLowerCase())));
+    //   _isSearching = true;
     setState(() {});
     logger.i("Categories =>\n${searchcategories}");
   }
@@ -126,49 +124,89 @@ class _CategoryState extends State<Category> {
                     ),
                     SizedBox(height: 10),
                     //list view
-                    Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        child: ListView.builder(
-                          itemCount: !_isSearching
-                              ? mainCategories.length
-                              : searchcategories.length,
-                          itemBuilder: (con, ind) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(width: 0.03)),
-                              child: Theme(
-                                data: ThemeData(
-                                  accentColor: color,
-                                ),
-                                child: ExpansionTile(
-                                  title: Text(
-                                    '${!_isSearching ? mainCategories[ind].title_en : searchcategories[ind].title_en}',
-                                  ),
-                                  onExpansionChanged: (bool expanding) {
-                                    if (true) {
-                                      selectedCategory = !_isSearching
-                                          ? mainCategories[ind].title_en
-                                          : searchcategories[ind].title_en;
-                                      this.isExpanded = expanding;
-                                      setState(() {});
-                                    }
-                                  },
-                                  children: subCategoryWidgets(!_isSearching
-                                      ? mainCategories[ind].typeId
-                                      : searchcategories[ind].typeId),
-                                ),
+                    _textEditingController.text != null &&
+                            _textEditingController.text.length > 0
+                        ? searchResults()
+                        : Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: ListView.builder(
+                                itemCount: !_isSearching
+                                    ? mainCategories.length
+                                    : searchcategories.length,
+                                itemBuilder: (con, ind) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(width: 0.03)),
+                                    child: Theme(
+                                      data: ThemeData(
+                                        accentColor: color,
+                                      ),
+                                      child: ExpansionTile(
+                                        title: Text(
+                                          '${!_isSearching ? mainCategories[ind].title_en : searchcategories[ind].title_en}',
+                                        ),
+                                        onExpansionChanged: (bool expanding) {
+                                          if (true) {
+                                            selectedCategory = !_isSearching
+                                                ? mainCategories[ind].title_en
+                                                : searchcategories[ind]
+                                                    .title_en;
+                                            this.isExpanded = expanding;
+                                            setState(() {});
+                                          }
+                                        },
+                                        children: subCategoryWidgets(
+                                            !_isSearching
+                                                ? mainCategories[ind].typeId
+                                                : searchcategories[ind].typeId),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                            ),
+                          ),
                   ],
                 )
               : Center(
                   child: Text(S.of(context).no_categories_available),
                 ),
+    );
+  }
+
+  Widget searchResults() {
+    List<CategoryModel> subs = [];
+    subs = List<CategoryModel>.from(searchcategories
+        .where((element) => element.type == CategoryType.SUB_CATEGORY));
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: subs.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: CheckboxListTile(
+            title: Text(subs[index].title_en ?? '',
+                style: TextStyle(color: Colors.black)),
+            value: selectedSubCategories.contains(subs[index]),
+            onChanged: (value) {
+              if (value) {
+                selectedSubCategoriesIds.add(subs[index].typeId);
+                selectedSubCategories.add(subs[index]);
+              } else {
+                selectedSubCategoriesIds.remove(subs[index].typeId);
+
+                selectedSubCategories.remove(subs[index]);
+              }
+              setState(() {});
+            },
+            activeColor: Colors.grey[300],
+            checkColor: Colors.black,
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+        );
+      },
     );
   }
 

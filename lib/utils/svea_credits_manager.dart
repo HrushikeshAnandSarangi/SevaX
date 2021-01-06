@@ -105,7 +105,10 @@ class SevaCreditLimitManager {
           await getNegativeThresholdForCommunity(associatedCommunity);
 
       if (associatedBalanceWithinThisCommunity > communityThreshold) {
-        return (currentGlobalBalance > 0 ? currentGlobalBalance : 0) +
+        return (currentGlobalBalance > 0
+                    ? currentGlobalBalance -
+                        associatedBalanceWithinThisCommunity
+                    : 0) +
                 (communityThreshold.abs() +
                     associatedBalanceWithinThisCommunity) >=
             credits;

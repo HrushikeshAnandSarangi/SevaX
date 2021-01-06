@@ -61,6 +61,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                         timebankId: model.entityId,
                         joinRequestId: model.id,
                         memberJoiningSevaUserId: model.userId,
+                        user: user,
                         notificaitonId: notification.id,
                         communityId:
                             SevaCore.of(context).loggedInUser.currentCommunity,
@@ -229,6 +230,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   WriteBatch addMemberToTimebank({
     String timebankId,
     String memberJoiningSevaUserId,
+    UserModel user,
     String joinRequestId,
     String communityId,
     String newMemberJoinedEmail,
@@ -260,7 +262,12 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       batch.updateData(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
       });
-
+      if (user.communities != null &&
+          user.communities.length == 1 &&
+          user.communities.elementAt(0) == FlavorConfig.values.timebankId) {
+        batch.updateData(
+            newMemberDocumentReference, {'currentCommunity': communityId});
+      }
       var addToCommunityRef =
           Firestore.instance.collection('communities').document(communityId);
       batch.updateData(addToCommunityRef, {

@@ -213,7 +213,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               } else if (profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
               } else {
-                widget.timebankModel.name = value;
+                widget.timebankModel.name = value.trim();
                 return null;
               }
             },

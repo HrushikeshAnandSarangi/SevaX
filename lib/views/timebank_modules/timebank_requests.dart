@@ -473,10 +473,8 @@ class RequestListItemsState extends State<RequestListItems> {
     switch (requestType) {
       case RequestType.CASH:
         return getTagMainFrame(S.of(context).cash_request);
-
       case RequestType.GOODS:
         return getTagMainFrame(S.of(context).goods_request);
-
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -33,13 +35,16 @@ class EditGroupInfoBloc {
     List<ParticipantInfo> infos = _participantInfo.value;
     infos.removeWhere((ParticipantInfo info) => info.id == userId);
     _participantInfo.add(infos);
+    log('part  ${_participantInfo.value.length}');
   }
 
-  Future<void> editGroupDetails(String chatId) async {
+  Future<bool> editGroupDetails(String chatId) async {
     if (_groupName.value == null || _groupName.value.isEmpty) {
       _groupName.addError("Group name cannot be empty");
+      return false;
     } else if (profanityDetector.isProfaneString(_groupName.value)) {
       _groupName.addError('profanity');
+      return false;
     } else {
       String imageUrl;
 
@@ -50,12 +55,12 @@ class EditGroupInfoBloc {
             : null;
       } else if (_file.value != null && _file.value.stockImageUrl != null) {
         imageUrl = _file.value.stockImageUrl;
-      } else {
-        return null;
       }
 
-      ChatsRepository.editGroup(
+      await ChatsRepository.editGroup(
           chatId, _groupName.value, imageUrl, _participantInfo.value);
+
+      return true;
     }
   }
 

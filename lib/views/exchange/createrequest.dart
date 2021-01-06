@@ -1717,7 +1717,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
       requestModel.recommendedMemberIdsForRequest = [];
-      requestModel.categories = selectedCategoryIds.toList();
+      requestModel.categories = selectedCategoryIds;
       requestModel.address = selectedAddress;
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;

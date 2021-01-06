@@ -133,7 +133,8 @@ class OfferCard extends StatelessWidget {
                             ),
                           ),
                           Offstage(
-                            offstage: isCreator || isRecurring,
+                            // offstage: isCreator || isRecurring,
+                            offstage: true,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[

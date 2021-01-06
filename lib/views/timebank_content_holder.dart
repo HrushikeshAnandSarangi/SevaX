@@ -681,6 +681,7 @@ class DiscussionListState extends State<DiscussionList> {
     var feedAddress = getLocation(news.placeAddress ?? '');
 
     return InkWell(
+      key: UniqueKey(),
       onTap: () {
         Navigator.push(
           context,

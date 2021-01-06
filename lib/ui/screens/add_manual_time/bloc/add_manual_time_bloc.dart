@@ -115,6 +115,7 @@ class AddManualTimeBloc {
       }
     } else if (_reason.value == null) {
       _reason.addError('error');
+      throw 'No Description';
     } else {
       _error.add(true);
     }
