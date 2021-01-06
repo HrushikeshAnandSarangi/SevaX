@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -492,7 +493,8 @@ class OfferDetails extends StatelessWidget {
                           if (offerModel.type == RequestType.CASH ||
                               offerModel.type == RequestType.GOODS &&
                                   !isAccepted) {
-                            navigateToCreateRequestFromOffer(
+                            //TOFO Here we navigate to create request
+                            navigateToDonations(
                               context,
                               offerModel,
                             );
@@ -519,6 +521,21 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
+  void navigateToDonations(context, OfferModel offerModel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
+        ),
+      ),
+    );
+  }
+
+  @Deprecated('Now navigating to donations')
   void navigateToCreateRequestFromOffer(context, OfferModel offerModel) {
     Navigator.push(
       context,

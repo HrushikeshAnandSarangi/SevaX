@@ -45,6 +45,7 @@ class _DonationViewState extends State<DonationView> {
   PageController pageController;
   DonationModel donationsModel = DonationModel(
     donorDetails: DonorDetails(),
+    receiverDetails: DonorDetails(),
     cashDetails: CashDetails(
         cashDetails: CashModel(
             paymentType: RequestPaymentType.ZELLEPAY,
@@ -145,6 +146,10 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
       donationsModel.donorDetails.email = sevaUser.email;
       donationsModel.donorDetails.bio = sevaUser.bio;
+      donationsModel.receiverDetails.name = widget.requestModel.fullName;
+      donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
+      donationsModel.receiverDetails.email = widget.requestModel.email;
+
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -160,6 +165,9 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.name = widget.offerModel.fullName;
       donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
       donationsModel.donorDetails.email = widget.offerModel.email;
+      donationsModel.receiverDetails.name = sevaUser.fullname;
+      donationsModel.receiverDetails.email = sevaUser.email;
+      donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;
     }
     donationsModel.communityId = sevaUser.currentCommunity;
     donationsModel.id = Utils.getUuid();
@@ -443,6 +451,9 @@ class _DonationViewState extends State<DonationView> {
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+                height: 10,
+              ),
               Text(
                 S.of(context).donations_cash_request,
                 style: TextStyle(
@@ -462,6 +473,9 @@ class _DonationViewState extends State<DonationView> {
                 ),
               ),
               TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                ],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focusNodes[1],
                 onFieldSubmitted: (v) {
@@ -473,6 +487,12 @@ class _DonationViewState extends State<DonationView> {
                   if (value.isEmpty) {
                     return S.of(context).validation_error_general_text;
                   } else if (!value.isEmpty) {
+                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                      return "Requested amount cannot be greater than offered amount!";
+                    }
+                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                      return "Requested amount cannot be greater than offered amount!";
+                    }
                     donationsModel.cashDetails.cashDetails.amountRaised =
                         int.parse(value);
                   } else {
@@ -552,6 +572,7 @@ class _DonationViewState extends State<DonationView> {
                 children: <Widget>[
                   actionButton(
                       buttonTitle: S.of(context).submit,
+                      buttonColor: Colors.orange,
                       onPressed: () async {
                         var connResult =
                             await Connectivity().checkConnectivity();
@@ -565,7 +586,7 @@ class _DonationViewState extends State<DonationView> {
                                 notificationId: widget.notificationId,
                                 donationModel: donationsModel,
                                 offerModel: widget.offerModel,
-                                donor: UserModel(
+                                notify: UserModel(
                                     email: donationsModel.donorDetails.email,
                                     fullname: donationsModel.donorDetails.name,
                                     photoURL:
@@ -573,8 +594,12 @@ class _DonationViewState extends State<DonationView> {
                                     sevaUserID: donationsModel.donorSevaUserId))
                             .then((value) {
                           if (value) {
-                            hideProgress();
-                            getSuccessDialog().then(
+                             hideProgress();
+                            getSuccessDialog(S
+                                    .of(context)
+                                    .donations_requested
+                                    .toLowerCase())
+                                .then(
                               //to pop the screen
                               (_) => Navigator.of(context).pop(),
                             );
@@ -585,6 +610,7 @@ class _DonationViewState extends State<DonationView> {
                     width: 20,
                   ),
                   actionButton(
+                      buttonColor: Colors.grey,
                       buttonTitle: S.of(context).do_it_later,
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -592,6 +618,135 @@ class _DonationViewState extends State<DonationView> {
                 ],
               )
             ])));
+  }
+
+  Widget donatedItems() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+            SizedBox(
+              height: 10,
+            ),
+          titleText(title: S.of(context).tell_what_you_donated),
+            SizedBox(
+              height: 10,
+            ),
+          StreamBuilder<String>(
+              stream: donationBloc.commentEntered,
+              builder: (context, snapshot) {
+                return TextFormField(
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.done,
+                  maxLines: 2,
+                  onChanged: donationBloc.onCommentChanged,
+                  decoration: InputDecoration(
+                      filled: true,
+                      focusColor: Colors.grey[200],
+                      focusedErrorBorder: customTextFieldBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: customTextFieldBorder(),
+                      errorBorder: customTextFieldBorder(),
+                      enabledBorder: customTextFieldBorder(),
+                    hintStyle: subTitleStyle,
+                    hintText: S.of(context).describe_goods,
+                  ),
+                );
+              }),
+          StreamBuilder<Map<dynamic, dynamic>>(
+              stream: donationBloc.selectedList,
+              builder: (context, snapshot) {
+                List<String> keys = List.from(widget
+                    .requestModel.goodsDonationDetails.requiredGoods.keys);
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget
+                      .requestModel.goodsDonationDetails.requiredGoods.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value:
+                          snapshot.data?.containsKey(keys[index]) ?? false,
+                          checkColor: _checkColor,
+                          onChanged: (bool value) {
+                            donationBloc.addAddRemove(
+                              selectedValue: widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]],
+                              selectedKey: keys[index],
+                            );
+                          },
+                          activeColor: Colors.grey[200],
+                        ),
+                        Text(
+                          widget.requestModel.goodsDonationDetails
+                              .requiredGoods[keys[index]],
+                          style: subTitleStyle,
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              actionButton(
+                  buttonTitle: S.of(context).do_it_later,
+                    textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              SizedBox(
+                width: 20,
+              ),
+
+              actionButton(
+                  buttonTitle: S.of(context).donated,
+                  buttonColor: Colors.orange,
+                  onPressed: () async {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if (connResult == ConnectivityResult.none) {
+                      showScaffold(S.of(context).check_internet);
+                      return;
+                    }
+                    if (donationBloc.selectedList == null) {
+                      showScaffold(S.of(context).select_goods_category);
+                    } else {
+                      showProgress(S.of(context).please_wait);
+                      donationBloc
+                          .donateGoods(
+                          notificationId: widget.notificationId,
+                          donationModel: donationsModel,
+                          requestModel: widget.requestModel,
+                          donor: sevaUser)
+                          .then((value) {
+                        if (value) {
+                        // hideProgress();
+                        getSuccessDialog(S.of(context).pledged.toLowerCase())
+                            .then(
+                            //to pop the screen
+                                (_) => Navigator.of(context).pop(),
+                          );
+                        }
+                      });
+                    }
+                  }),
+
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget donationOfferAt() {
@@ -607,6 +762,9 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(
+            height: 10,
+          ),
           Text(
             S.of(context).request_goods_address,
             style: TextStyle(
@@ -637,6 +795,15 @@ class _DonationViewState extends State<DonationView> {
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
+              filled: true,
+              focusColor: Colors.grey[200],
+              focusedErrorBorder: customTextFieldBorder(),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: customTextFieldBorder(),
+              errorBorder: customTextFieldBorder(),
+              enabledBorder: customTextFieldBorder(),
               errorMaxLines: 2,
               hintText: S.of(context).request_goods_address_inputhint,
               hintStyle: hintTextStyle,
@@ -688,7 +855,10 @@ class _DonationViewState extends State<DonationView> {
                         Text(
                           widget.offerModel.goodsDonationDetails
                               .requiredGoods[keys[index]],
-                          style: subTitleStyle,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     );
@@ -700,6 +870,7 @@ class _DonationViewState extends State<DonationView> {
             children: <Widget>[
               actionButton(
                   buttonTitle: S.of(context).submit,
+                  buttonColor: Colors.orange,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -715,16 +886,19 @@ class _DonationViewState extends State<DonationView> {
                               notificationId: widget.notificationId,
                               donationModel: donationsModel,
                               offerModel: widget.offerModel,
-                              donor: UserModel(
-                                  email: donationsModel.donorDetails.email,
-                                  fullname: donationsModel.donorDetails.name,
-                                  photoURL:
-                                      donationsModel.donorDetails.photoUrl,
-                                  sevaUserID: donationsModel.donorSevaUserId))
+                              notify: UserModel(
+                                  email: widget.offerModel.email,
+                                  fullname: widget.offerModel.fullName,
+                                  photoURL: widget.offerModel.photoUrlImage,
+                                  sevaUserID: widget.offerModel.sevaUserId))
                           .then((value) {
                         if (value) {
-                          // hideProgress();
-                          getSuccessDialog().then(
+                           hideProgress();
+                          getSuccessDialog(S
+                                  .of(context)
+                                  .donations_requested
+                                  .toLowerCase())
+                              .then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),
                           );
@@ -737,6 +911,7 @@ class _DonationViewState extends State<DonationView> {
               ),
               actionButton(
                   buttonTitle: S.of(context).do_it_later,
+                  textColor: Colors.black,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -752,12 +927,21 @@ class _DonationViewState extends State<DonationView> {
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          titleText(title: S.of(context).amount_donated),
+          SizedBox(
+            height: 10,
+          ),
+          titleText(title: S.of(context).amount_pledged + '?'),
+          SizedBox(
+            height: 10,
+          ),
           StreamBuilder<String>(
               stream: donationBloc.amountPledged,
               builder: (context, snapshot) {
-                return TextField(
+                return Container(
+                  constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
+                  child: TextField(
                   onChanged: (value) {
                     donationBloc.onAmountChange(value);
                     setState(() {
@@ -767,6 +951,15 @@ class _DonationViewState extends State<DonationView> {
                   maxLines: 1,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                      filled: true,
+                      focusColor: Colors.grey[200],
+                      focusedErrorBorder: customTextFieldBorder(),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: customTextFieldBorder(),
+                      errorBorder: customTextFieldBorder(),
+                      enabledBorder: customTextFieldBorder(),
                     errorText: snapshot.error == 'amount1'
                         ? S.of(context).enter_valid_amount
                         : snapshot.error == 'amount2'
@@ -787,7 +980,18 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: S.of(context).done,
+                buttonTitle: S.of(context).cancel,
+                textColor: Colors.black,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              actionButton(
+                buttonTitle: S.of(context).send_request,
+                buttonColor: Colors.orange,
                 onPressed: () {
                   donationBloc
                       .validateAmount(
@@ -817,20 +1021,29 @@ class _DonationViewState extends State<DonationView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             titleText(title: S.of(context).donations),
             SizedBox(
               height: 10,
             ),
             Text(
               '${S.of(context).donation_description_one + widget.timabankName + ' ${S.of(context).donation_description_two} ' + amountEntered.toString() + S.of(context).donation_description_three}',
-              style: subTitleStyle,
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 10,
             ),
             Text(
               S.of(context).payment_link_description,
-              style: subTitleStyle,
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 20,
@@ -861,7 +1074,18 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
+                  buttonTitle: S.of(context).do_it_later,
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                actionButton(
                   buttonTitle: S.of(context).pledge,
+                  buttonColor: Colors.orange,
                   onPressed: () {
                     showProgress(S.of(context).please_wait);
                     donationBloc
@@ -873,21 +1097,13 @@ class _DonationViewState extends State<DonationView> {
                         .then((value) {
                       if (value) {
                         hideProgress();
-                        getSuccessDialog().then(
+                        getSuccessDialog(S.of(context).pledged.toLowerCase())
+                            .then(
                           //to pop the screen
                           (_) => Navigator.of(context).pop(),
                         );
                       }
                     });
-                  },
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                actionButton(
-                  buttonTitle: S.of(context).do_it_later,
-                  onPressed: () {
-                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -934,12 +1150,18 @@ class _DonationViewState extends State<DonationView> {
   void showProgress(String message) {
     progressDialog = ProgressDialog(
       context,
-      type: ProgressDialogType.Normal,
+      customBody: Container(
+        height: 100,
+        width: 100,
+        child: LoadingIndicator(),
+      ),
       isDismissible: false,
     );
     progressDialog.style(
       progressWidget: Container(
-          padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+          width: 400,
+          padding: EdgeInsets.all(8.0),
+          child: CircularProgressIndicator()),
       message: message,
     );
     progressDialog.show();
@@ -949,121 +1171,18 @@ class _DonationViewState extends State<DonationView> {
     progressDialog.hide();
   }
 
-  Widget donatedItems() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          titleText(title: S.of(context).tell_what_you_donated),
-          StreamBuilder<String>(
-              stream: donationBloc.commentEntered,
-              builder: (context, snapshot) {
-                return TextFormField(
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.sentences,
-                  textInputAction: TextInputAction.done,
-                  maxLines: 2,
-                  onChanged: donationBloc.onCommentChanged,
-                  decoration: InputDecoration(
-                    hintStyle: subTitleStyle,
-                    hintText: S.of(context).describe_goods,
-                  ),
-                );
-              }),
-          StreamBuilder<Map<dynamic, dynamic>>(
-              stream: donationBloc.selectedList,
-              builder: (context, snapshot) {
-                List<String> keys = List.from(widget
-                    .requestModel.goodsDonationDetails.requiredGoods.keys);
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget
-                      .requestModel.goodsDonationDetails.requiredGoods.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Checkbox(
-                          value:
-                              snapshot.data?.containsKey(keys[index]) ?? false,
-                          checkColor: _checkColor,
-                          onChanged: (bool value) {
-                            donationBloc.addAddRemove(
-                              selectedValue: widget
-                                  .requestModel
-                                  .goodsDonationDetails
-                                  .requiredGoods[keys[index]],
-                              selectedKey: keys[index],
-                            );
-                          },
-                          activeColor: Colors.grey[200],
-                        ),
-                        Text(
-                          widget.requestModel.goodsDonationDetails
-                              .requiredGoods[keys[index]],
-                          style: subTitleStyle,
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              actionButton(
-                  buttonTitle: S.of(context).donated,
-                  onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      showScaffold(S.of(context).check_internet);
-                      return;
-                    }
-                    if (donationBloc.selectedList == null) {
-                      showScaffold(S.of(context).select_goods_category);
-                    } else {
-                      showProgress(S.of(context).please_wait);
-                      donationBloc
-                          .donateGoods(
-                              notificationId: widget.notificationId,
-                              donationModel: donationsModel,
-                              requestModel: widget.requestModel,
-                              donor: sevaUser)
-                          .then((value) {
-                        if (value) {
-                          hideProgress();
-                          getSuccessDialog().then(
-                            //to pop the screen
-                            (_) => Navigator.of(context).pop(),
-                          );
-                        }
-                      });
-                    }
-                  }),
-              SizedBox(
-                width: 20,
-              ),
-              actionButton(
-                  buttonTitle: S.of(context).do_it_later,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget actionButton({Function onPressed, String buttonTitle}) {
+  Widget actionButton({
+    Function onPressed,
+    String buttonTitle,
+    Color buttonColor,
+    Color textColor,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 30,
         child: RaisedButton(
+          textColor: textColor ?? Colors.white,
           onPressed: onPressed,
           child: Text(
             buttonTitle,
@@ -1072,7 +1191,7 @@ class _DonationViewState extends State<DonationView> {
               fontSize: 12,
             ),
           ),
-          color: Colors.grey[200],
+          color: buttonColor ?? Colors.grey[200],
           shape: StadiumBorder(),
         ),
       ),
