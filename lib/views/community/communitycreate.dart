@@ -935,7 +935,7 @@ class CreateEditCommunityViewFormState
                                                   .loggedInUser.currentCommunity =
                                               snapshot.data.community.id;
                                           SevaCore.of(context)
-                                              .loggedInUser.currentCommunity =
+                                              .loggedInUser.currentTimebank =
                                               snapshot.data.community.primary_timebank;
                                         });
 
@@ -950,10 +950,19 @@ class CreateEditCommunityViewFormState
                                         _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
                                         Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePageRouter()),
-                                        );
+                                            MaterialPageRoute(
+                                              builder: (context1) => SevaCore(
+                                                loggedInUser: user,
+                                                child: HomePageRouter(),
+                                              ),
+                                            ));
+
+                                        // Navigator.of(context).pushReplacement(
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           HomePageRouter()),
+                                        // );
+
                                         // Navigator.pushReplacement(
                                         //   context,
                                         //   MaterialPageRoute(
