@@ -826,6 +826,12 @@ class PersonalNotificationsRedcerForDonations {
     BuildContext context,
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
+    var amount;
+    if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+      amount = donationModel.cashDetails.cashDetails.amountRaised;
+    } else {
+      amount = donationModel.cashDetails.pledgedAmount;
+    }
     return NotificationCard(
       isDissmissible: false,
       timestamp: notification.timestamp,
@@ -846,9 +852,9 @@ class PersonalNotificationsRedcerForDonations {
           ),
         );
       },
-      photoUrl: donationModel.donorDetails.photoUrl,
+      photoUrl: donationModel.receiverDetails.photoUrl,
       subTitle:
-          "${donationModel.donorDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+          "${donationModel.receiverDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
       title: S.of(context).donations_requested,
     );
   }

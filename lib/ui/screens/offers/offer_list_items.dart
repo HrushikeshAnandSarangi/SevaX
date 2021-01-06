@@ -208,10 +208,12 @@ class OfferListItems extends StatelessWidget {
 
         if (model.type == RequestType.CASH ||
             model.type == RequestType.GOODS && !isAccepted) {
-          navigateToCreateRequestFromOffer(
-            context,
-            model,
-          );
+          navigateToDonations(context, model);
+
+          // navigateToCreateRequestFromOffer(
+          //   context,
+          //   model,
+          // );
         }
         //  else {
         //   if (SevaCore.of(context).loggedInUser.calendarId == null &&

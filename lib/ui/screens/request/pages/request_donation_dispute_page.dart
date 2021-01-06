@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -40,7 +42,7 @@ class RequestDonationDisputePage extends StatefulWidget {
 class _RequestDonationDisputePageState
     extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
-  int AMOUNT_NOT_DEFINED = 0;
+  int AMOUNT_NOT_DEFINED = null;
   _AckType ackType;
   OperatingMode operatingMode;
   final _key = GlobalKey<ScaffoldState>();
@@ -97,13 +99,133 @@ class _RequestDonationDisputePageState
     super.dispose();
   }
 
+  void actionExecute(_key) async {
+    // print('Inside action Execute');
+    var handleCallBackDisputeCash = ((value) {
+      // print('Inside CallBackDisputeCash');
+      // print(value);
+      hideProgress();
+      if (value) {
+        Navigator.of(context).pop();
+      } else {
+        _key.currentState.hideCurrentSnackBar();
+        _key.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              S.of(context).general_stream_error +
+                  ' ' +
+                  S.of(context).try_later +
+                  '.',
+            ),
+          ),
+        );
+      }
+    });
+
+    var amount = widget.model.cashDetails.pledgedAmount == null
+        ? AMOUNT_NOT_DEFINED
+        : widget.model.minimumAmount;
+    switch (ackType) {
+      case _AckType.CASH:
+        // print('Inside, switch');
+        // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
+        // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
+        var id = widget.model.notificationId;
+        if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.PLEDGED) {
+//          id = widget.notificationId;
+          amount = 0;
+        }
+        if (widget.model.cashDetails.pledgedAmount != null) {
+          _bloc
+              .validateAmount(
+                  minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount)
+              .then((value) {
+            if (value) {
+              FocusScope.of(context).unfocus();
+              showProgress(S.of(context).please_wait);
+              _bloc
+                  .disputeCash(
+                    pledgedAmount:
+                        widget.model.cashDetails.pledgedAmount.toDouble(),
+                    operationMode: operatingMode,
+                    donationId: widget.model.id,
+                    donationModel: widget.model,
+                    notificationId: id,
+                    requestMode: widget.model.donatedToTimebank
+                        ? RequestMode.TIMEBANK_REQUEST
+                        : RequestMode.PERSONAL_REQUEST,
+                  )
+                  .then(handleCallBackDisputeCash);
+            }
+          });
+        } else {
+          // offers flow initial requested flow and pledged later its works same as requests.
+          _bloc
+              .validateAmount(
+                  minmumAmount:
+                      widget.model.cashDetails.cashDetails.amountRaised)
+              .then((value) {
+            if (value) {
+              FocusScope.of(context).unfocus();
+              showProgress(S.of(context).please_wait);
+              // amountRaised is used for requested amount before donor pledges the amount
+              _bloc
+                  .callDonateOfferCreatorPledge(
+                    pledgedAmount: widget
+                        .model.cashDetails.cashDetails.amountRaised
+                        .toDouble(),
+                    operationMode: operatingMode,
+                    donationId: widget.model.id,
+                    donationModel: widget.model,
+                    notificationId: widget.model.notificationId,
+                    requestMode: widget.model.donatedToTimebank
+                        ? RequestMode.TIMEBANK_REQUEST
+                        : RequestMode.PERSONAL_REQUEST,
+                  )
+                  .then(handleCallBackDisputeCash);
+            }
+          });
+        }
+        break;
+      case _AckType.GOODS:
+          if (widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.requestIdType == 'offer') {
+            // for the offers.
+            widget.model.donationStatus = DonationStatus.PLEDGED;
+          }
+        _bloc
+            .disputeGoods(
+          donatedGoods: widget.model.goodsDetails.donatedGoods,
+          donationId: widget.model.id,
+          donationModel: widget.model,
+          notificationId: widget.model.notificationId,
+          operationMode: operatingMode,
+          requestMode: widget.model.donatedToTimebank
+              ? RequestMode.TIMEBANK_REQUEST
+              : RequestMode.PERSONAL_REQUEST,
+        )
+            .then((value) {
+          if (value) {
+            Navigator.of(context).pop();
+          }
+        }).catchError((onError) => logger.i(onError));
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     operatingMode = widget.model.donorSevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID
         ? OperatingMode.USER
         : OperatingMode.CREATOR;
-    var name = widget.model.donorDetails.name;
+    var name;
+    var toWhom;
+    if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.REQUESTED) {
+      name = widget.model.receiverDetails.name;
+    } else {
+      name = widget.model.donorDetails.name;
+      toWhom = operatingMode == OperatingMode.USER ?  widget.model.receiverDetails.name:  widget.model.donorDetails.name;
+    }
     return Scaffold(
       key: _key,
       appBar: AppBar(
@@ -124,11 +246,19 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
-                      to: widget.model.cashDetails.pledgedAmount != null
-                          ? widget.model.donationAssociatedTimebankDetails
+                    model: widget.model,
+                    scaffoldKey: _key,
+                                          to: widget.model.cashDetails
+                                                      .pledgedAmount !=
+                                                  null
+                                              ? widget.model.requestIdType == 'offer' ? toWhom : widget
+                                              .model
+                                              .donationAssociatedTimebankDetails
                               .timebankTitle
-                          : widget.model.donorDetails.name,
-                      title: widget.model.cashDetails.pledgedAmount != null
+                                              : name,
+                                          title: widget.model.cashDetails
+                                                      .pledgedAmount !=
+                                                  null
                           ? '$name ${S.of(context).pledged_to_donate}'
                           : '$name ${S.of(context).requested.toLowerCase()}',
                       status: widget.model.donationStatus,
@@ -142,11 +272,22 @@ class _RequestDonationDisputePageState
                       bloc: _bloc,
                       name: name,
                       currency: '\$',
-                      amount: widget.model.cashDetails.pledgedAmount != null
-                          ? widget.model.cashDetails.pledgedAmount.toString()
-                          : widget.model.cashDetails.cashDetails.amountRaised
-                              .toString(),
-                      minAmount: widget.model.minimumAmount.toString(),
+                amount:
+                widget.model.cashDetails
+                    .pledgedAmount !=
+                    null
+                    ? widget.model.cashDetails
+                    .pledgedAmount
+                    .toString()
+                    : widget.model.cashDetails
+                    .cashDetails.amountRaised
+                    .toString(),
+                minAmount:  widget.model.cashDetails
+                    .pledgedAmount !=
+                    null ? widget.model.minimumAmount
+                    .toString(): widget.model.cashDetails
+                    .cashDetails.amountRaised
+                    .toString(),
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
@@ -187,102 +328,23 @@ class _RequestDonationDisputePageState
                         widget.model.donationStatus == DonationStatus.REQUESTED
                             ? S.of(context).donate
                             : S.of(context).acknowledge),
-                    onPressed: () {
-                      if (widget.model.donationStatus ==
-                          DonationStatus.REQUESTED) {
-                        // for the offers.
-                        widget.model.goodsDetails.donatedGoods =
-                            _bloc.getgoodsRecieved();
-                      }
-                      var amount =
-                          widget.model.cashDetails.pledgedAmount == null
-                              ? AMOUNT_NOT_DEFINED
-                              : widget.model.cashDetails.pledgedAmount;
-                      switch (ackType) {
-                        case _AckType.CASH:
-                          // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
-                          _bloc
-                              .validateAmount(
-                                  minmumAmount: widget.model.minimumAmount ?? 0)
-                              .then((value) {
-                            if (value) {
-                              FocusScope.of(context).unfocus();
-                              showProgress(S.of(context).please_wait);
-                              _bloc
-                                  .disputeCash(
-                                pledgedAmount: amount.toDouble(),
-                                operationMode: operatingMode,
-                                donationId: widget.model.id,
-                                donationModel: widget.model,
-                                notificationId: widget.model.notificationId,
-                                requestMode: widget.model.donatedToTimebank
-                                    ? RequestMode.TIMEBANK_REQUEST
-                                    : RequestMode.PERSONAL_REQUEST,
-                              )
-                                  .then(
-                                (value) {
-                                  hideProgress();
-                                  if (value) {
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    _key.currentState.hideCurrentSnackBar();
-                                    _key.currentState.showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          S.of(context).general_stream_error +
-                                              ' ' +
-                                              S.of(context).try_later +
-                                              '.',
+                                          onPressed: () => actionExecute(_key),
                                         ),
-                                      ),
-                                    );
-                                  }
-                                },
-                              );
-                            }
-                          });
-                          break;
-                        case _AckType.GOODS:
-                          log("Donated Goods" +
-                              widget.model.goodsDetails.donatedGoods
-                                  .toString());
-                          showProgress(S.of(context).please_wait);
 
-                          _bloc
-                              .disputeGoods(
-                            donatedGoods:
-                                widget.model.goodsDetails.donatedGoods,
-                            donationId: widget.model.id,
-                            donationModel: widget.model,
-                            notificationId: widget.model.notificationId,
-                            operationMode: operatingMode,
-                            requestMode: widget.model.donatedToTimebank
-                                ? RequestMode.TIMEBANK_REQUEST
-                                : RequestMode.PERSONAL_REQUEST,
-                          )
-                              .then(
-                            (value) {
-                              hideProgress();
-                              if (value) {
-                                Navigator.of(context).pop();
-                              }
-                            },
-                          );
-                          break;
-                      }
-                    },
-                  ),
                   SizedBox(width: 12),
                   RaisedButton(
                     child: Text(S.of(context).message),
+                                          color: Colors.orange,
+                                          textColor: Colors.white,
                     onPressed: () async {
-                      var operatingModel = getOperatingMode(
+                                            var a = getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
                       );
 
-                      switch (operatingModel) {
-                        case ChatModeForDispute.MEMBER_TO_MEMBER:
+                                            switch (a) {
+                                              case ChatModeForDispute
+                                                  .MEMBER_TO_MEMBER:
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
                             sevaUserId: widget.model.donatedTo,
@@ -415,6 +477,8 @@ class _CashFlow extends StatelessWidget {
   const _CashFlow({
     Key key,
     @required RequestDonationDisputeBloc bloc,
+    this.model,
+    this.scaffoldKey,
     this.title,
     this.to,
     this.status,
@@ -428,6 +492,7 @@ class _CashFlow extends StatelessWidget {
     this.minAmount,
   })  : _bloc = bloc,
         super(key: key);
+  final model;
   final to;
   final title;
   final status;
@@ -440,19 +505,190 @@ class _CashFlow extends StatelessWidget {
   final String creatorName;
   final RequestMode requestMode;
   final OperatingMode operatingMode;
+  final scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
+    Widget getACHDetails(data) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "${S.of(context).account_no} : " +
+                data.achdetails.account_number,
+          ),
+          Text(
+            "${S.of(context).bank_address} : " +
+                data.achdetails.bank_address,
+          ),
+          Text(
+            "${S.of(context).bank_name} : " + data.achdetails.bank_name,
+          ),
+          Text(
+            "${S.of(context).routing_number} : " +
+                data.achdetails.routing_number,
+          ),
+        ],
+      );
+    }
+    String modeOfPayment() {
+      if (model != null && model.cashDetails != null &&
+          model.cashDetails.cashDetails != null &&
+          model.donationType == RequestType.CASH) {
+        switch (model.cashDetails.cashDetails.paymentType) {
+          case RequestPaymentType.ACH:
+            return S
+                .of(context)
+                .request_paymenttype_ach;
+          case RequestPaymentType.ZELLEPAY:
+            return S
+                .of(context)
+                .request_paymenttype_zellepay;
+          case RequestPaymentType.PAYPAL:
+            return S
+                .of(context)
+                .request_paymenttype_paypal;
+          case RequestPaymentType.VENMO:
+            return S
+                .of(context)
+                .request_paymenttype_venmo;
+          default:
+            return "";
+        }
+        return "";
+      }
+    }
+    getDonationLink() {
+      if (model != null && model.cashDetails != null &&
+          model.cashDetails.cashDetails != null &&
+          model.donationType == RequestType.CASH) {
+        switch (model.cashDetails.cashDetails.paymentType) {
+          case RequestPaymentType.ACH:
+            return getACHDetails(model.cashDetails.cashDetails);
+            break;
+          case RequestPaymentType.ZELLEPAY:
+            return model.cashDetails.cashDetails.zelleId;
+          case RequestPaymentType.PAYPAL:
+            return model.cashDetails.cashDetails.paypalId ?? '';
+          case RequestPaymentType.VENMO:
+            return model.cashDetails.cashDetails.venmoId ?? '';
+
+          default:
+            return "Link not registered!";
+        }
+      }
+      return "";
+    }
+    void showScaffold(context, String message) {
+      scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+    }
+    Widget offerDonatePaymentDetails() {
+      return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${S
+                      .of(context)
+                      .donation_description_one + ' $name:' + ' $amount' + S
+                      .of(context)
+                      .donation_description_three}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              Text(
+                S.of(context)
+                    .payment_link_description,
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                S.of(context)
+                  .request_payment_description + ': '+ modeOfPayment(),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+                model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH ?
+                getDonationLink()
+              : InkWell(
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(
+                      text: model.donationInstructionLink));
+                  showScaffold(context, S
+                      .of(context)
+                      .copied_to_clipboard);
+                },
+                onTap: () async {
+                  String link = getDonationLink();
+                  if (await canLaunch(link)) {
+                    await launch(link);
+                  } else {
+                    showScaffold(context, 'Could not launch');
+                  }
+                },
+                child: Text(
+                  getDonationLink(),
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+                SizedBox(
+                  height: 20,
+                ),
+              ]));
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PledgedAmountCard(
-          title: title,
-          name: name,
-          amount: amount,
-          currency: currency,
+        CircleAvatar(
+          radius: 25,
+          child: Icon(Icons.check, size: 30),
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
         ),
-        SizedBox(height: 40),
+        SizedBox(height: 10),
+
+        Text(
+          '$title',
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        Text(
+          '$currency$amount',
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        model.requestIdType == 'offer' && model.donationStatus == DonationStatus.REQUESTED ?  offerDonatePaymentDetails(): Text(''),
+        Divider(
+          thickness: 1,
+        ),
+        SizedBox(
+          height: 20,
+        ),
         Text(
           operatingMode == OperatingMode.CREATOR
               ? "${S.of(context).amount_received_from} ${name}"
@@ -488,10 +724,10 @@ class _CashFlow extends StatelessWidget {
         SizedBox(height: 20),
         Text(
           operatingMode == OperatingMode.CREATOR
-              ? '${S.of(context).acknowledge_desc_one} $name. ${S.of(context).acknowledge_desc_two} $name'
-              : '${S.of(context).acknowledge_desc_donor_one} $to ${S.of(context).acknowledge_desc_donor_two}',
+              ? '${S.of(context).acknowledge_desc_one} ${name}. ${S.of(context).acknowledge_desc_two} ${name}'
+              : '${S.of(context).acknowledge_desc_donor_one} ${to} ${S.of(context).acknowledge_desc_donor_two}',
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.black,
           ),
         ),
       ],
@@ -554,12 +790,16 @@ class _GoodsFlow extends StatelessWidget {
                       requiredGoods[key],
                     );
                   },
-                  text: requiredGoods[keys[index]],
+                  text: requiredGoods[keys[index]].toString(),
                 );
               },
             );
           },
         ),
+        Text(
+          S.of(context).donation_dispute_info,
+          style: TextStyle(color: Colors.grey, fontSize: 11),
+        )
       ],
     );
   }
