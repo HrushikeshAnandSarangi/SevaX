@@ -40,7 +40,7 @@ class DonationParticipantPage extends StatelessWidget {
           itemCount: snapshot.data.length,
           itemBuilder: (_, index) {
             DonationModel model = snapshot.data[index];
-            // DonationButtonActionModel buttonStatus =
+            // DonationButtonActionModel buttonStatus =i
             //     buttonActionModel(context, model);
             // return RequestParticipantCard(
             //   name: model.donorDetails.name,
@@ -53,7 +53,7 @@ class DonationParticipantPage extends StatelessWidget {
             log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
               type: requestModel != null ? 'request' : 'offer',
-              name: model.donorDetails.name,
+              name: requestModel != null ? model.donorDetails.name: model.receiverDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
               goods: model.donationStatus == DonationStatus.REQUESTED
                   ? (model.goodsDetails?.requiredGoods != null
@@ -65,7 +65,7 @@ class DonationParticipantPage extends StatelessWidget {
                           model.goodsDetails.donatedGoods.values)
                       : []),
               status: model.donationStatus,
-              photoUrl: model.donorDetails.photoUrl,
+              photoUrl: requestModel != null ? model.donorDetails.photoUrl: model.receiverDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
               comments: model.goodsDetails.comments,
               timestamp: model.timestamp,
@@ -99,7 +99,8 @@ class DonationParticipantPage extends StatelessWidget {
                         )
                       : model.lastModifiedBy == model.donatedTo
                           ? null
-                          : Container(
+                          : !(model.donationStatus ==
+                          DonationStatus.PLEDGED && model.requestIdType == 'offer') ?  Container(
                               height: 20,
                               child: RaisedButton(
                                 color: Colors.white,
@@ -123,7 +124,7 @@ class DonationParticipantPage extends StatelessWidget {
                                   );
                                 },
                               ),
-                            ),
+                            ): Text("Waiting acknowledgement"),
             );
           },
           separatorBuilder: (context, index) {
@@ -141,14 +142,14 @@ class DonationParticipantPage extends StatelessWidget {
         return DonationButtonActionModel(
           buttonColor: Theme.of(context).primaryColor,
           onTap: null,
-          buttonText: 'ACKLOWLEDGED',
+          buttonText: S.of(context).acknowledged,
         );
         break;
       case DonationStatus.PLEDGED:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           onTap: () => onPledged(context, model),
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
 
@@ -156,27 +157,26 @@ class DonationParticipantPage extends StatelessWidget {
         return DonationButtonActionModel(
           buttonColor: Colors.red,
           //TODO: Update methods accordingly
-          buttonText: 'MODIFIED',
+          buttonText: '${S.of(context).modified.toUpperCase}',
         );
         break;
       case DonationStatus.APPROVED_BY_DONOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           //TODO: Update methods accordingly
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
       case DonationStatus.APPROVED_BY_CREATOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           //TODO: Update methods accordingly
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
       default:
         Crashlytics.instance.log(
             'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
-        log('UnImplemented DonationStatus case ${model.donationStatus.toString()}');
         return DonationButtonActionModel(
           buttonColor: Colors.grey,
           buttonText: 'UN-IMPLEMENTED',

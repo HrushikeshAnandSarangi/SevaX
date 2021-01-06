@@ -878,7 +878,7 @@ class _DonationViewState extends State<DonationView> {
                     if (donationBloc.selectedList == null) {
                       showScaffold(S.of(context).select_goods_category);
                     } else {
-                      // showProgress();
+                      // showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateOfferGoods(
                               notificationId: widget.notificationId,
@@ -891,7 +891,7 @@ class _DonationViewState extends State<DonationView> {
                                   sevaUserID: widget.offerModel.sevaUserId))
                           .then((value) {
                         if (value) {
-                          hideProgress();
+                          // hideProgress();
                           getSuccessDialog(S
                                   .of(context)
                                   .donations_requested
@@ -1149,27 +1149,30 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void showProgress(String message) {
+    logger.i("===========================HHHHH==============================");
     progressDialog = ProgressDialog(
       context,
-      customBody: Container(
-        height: 100,
-        width: 100,
-        child: LoadingIndicator(),
-      ),
+      type: ProgressDialogType.Normal,
       isDismissible: false,
     );
-    progressDialog.style(
-      progressWidget: Container(
-          width: 400,
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator()),
-      message: message,
-    );
+    progressDialog.show();
+    // progressDialog.style(
+    //   progressWidget: Container(
+    //     width: 400,
+    //     padding: EdgeInsets.all(8.0),
+    //     child: CircularProgressIndicator(),
+    //   ),
+    //   message: message,
+    // );
     progressDialog.show();
   }
 
   void hideProgress() {
-    progressDialog.hide();
+    try {
+      progressDialog.hide();
+    } catch (e) {
+      logger.i("ERROR Please ADDDRESS");
+    }
   }
 
   Widget actionButton({

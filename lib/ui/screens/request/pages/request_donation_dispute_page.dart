@@ -131,7 +131,8 @@ class _RequestDonationDisputePageState
         // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
         // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
         var id = widget.model.notificationId;
-        if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.PLEDGED) {
+        if (widget.model.requestIdType == 'offer' &&
+            widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
           amount = 0;
         }
@@ -188,10 +189,11 @@ class _RequestDonationDisputePageState
         }
         break;
       case _AckType.GOODS:
-          if (widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.requestIdType == 'offer') {
-            // for the offers.
-            widget.model.donationStatus = DonationStatus.PLEDGED;
-          }
+        if (widget.model.donationStatus == DonationStatus.REQUESTED &&
+            widget.model.requestIdType == 'offer') {
+          // for the offers.
+          widget.model.donationStatus = DonationStatus.PLEDGED;
+        }
         _bloc
             .disputeGoods(
           donatedGoods: widget.model.goodsDetails.donatedGoods,
@@ -220,11 +222,14 @@ class _RequestDonationDisputePageState
         : OperatingMode.CREATOR;
     var name;
     var toWhom;
-    if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.REQUESTED) {
+    if (widget.model.requestIdType == 'offer' &&
+        widget.model.donationStatus == DonationStatus.REQUESTED) {
       name = widget.model.receiverDetails.name;
     } else {
       name = widget.model.donorDetails.name;
-      toWhom = operatingMode == OperatingMode.USER ?  widget.model.receiverDetails.name:  widget.model.donorDetails.name;
+      toWhom = operatingMode == OperatingMode.USER
+          ? widget.model.receiverDetails.name
+          : widget.model.donorDetails.name;
     }
     return Scaffold(
       key: _key,
@@ -246,19 +251,15 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
-                    model: widget.model,
-                    scaffoldKey: _key,
-                                          to: widget.model.cashDetails
-                                                      .pledgedAmount !=
-                                                  null
-                                              ? widget.model.requestIdType == 'offer' ? toWhom : widget
-                                              .model
-                                              .donationAssociatedTimebankDetails
-                              .timebankTitle
-                                              : name,
-                                          title: widget.model.cashDetails
-                                                      .pledgedAmount !=
-                                                  null
+                      model: widget.model,
+                      scaffoldKey: _key,
+                      to: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.requestIdType == 'offer'
+                              ? toWhom
+                              : widget.model.donationAssociatedTimebankDetails
+                                  .timebankTitle
+                          : name,
+                      title: widget.model.cashDetails.pledgedAmount != null
                           ? '$name ${S.of(context).pledged_to_donate}'
                           : '$name ${S.of(context).requested.toLowerCase()}',
                       status: widget.model.donationStatus,
@@ -272,22 +273,14 @@ class _RequestDonationDisputePageState
                       bloc: _bloc,
                       name: name,
                       currency: '\$',
-                amount:
-                widget.model.cashDetails
-                    .pledgedAmount !=
-                    null
-                    ? widget.model.cashDetails
-                    .pledgedAmount
-                    .toString()
-                    : widget.model.cashDetails
-                    .cashDetails.amountRaised
-                    .toString(),
-                minAmount:  widget.model.cashDetails
-                    .pledgedAmount !=
-                    null ? widget.model.minimumAmount
-                    .toString(): widget.model.cashDetails
-                    .cashDetails.amountRaised
-                    .toString(),
+                      amount: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.cashDetails.pledgedAmount.toString()
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
+                      minAmount: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.minimumAmount.toString()
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
@@ -328,23 +321,21 @@ class _RequestDonationDisputePageState
                         widget.model.donationStatus == DonationStatus.REQUESTED
                             ? S.of(context).donate
                             : S.of(context).acknowledge),
-                                          onPressed: () => actionExecute(_key),
-                                        ),
-
+                    onPressed: () => actionExecute(_key),
+                  ),
                   SizedBox(width: 12),
                   RaisedButton(
                     child: Text(S.of(context).message),
-                                          color: Colors.orange,
-                                          textColor: Colors.white,
+                    color: Colors.orange,
+                    textColor: Colors.white,
                     onPressed: () async {
-                                            var a = getOperatingMode(
+                      var a = getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
                       );
 
-                                            switch (a) {
-                                              case ChatModeForDispute
-                                                  .MEMBER_TO_MEMBER:
+                      switch (a) {
+                        case ChatModeForDispute.MEMBER_TO_MEMBER:
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
                             sevaUserId: widget.model.donatedTo,
@@ -507,79 +498,73 @@ class _CashFlow extends StatelessWidget {
   final OperatingMode operatingMode;
   final scaffoldKey;
 
-  @override
-  Widget build(BuildContext context) {
-    Widget getACHDetails(data) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "${S.of(context).account_no} : " +
-                data.achdetails.account_number,
-          ),
-          Text(
-            "${S.of(context).bank_address} : " +
-                data.achdetails.bank_address,
-          ),
-          Text(
-            "${S.of(context).bank_name} : " + data.achdetails.bank_name,
-          ),
-          Text(
-            "${S.of(context).routing_number} : " +
-                data.achdetails.routing_number,
-          ),
-        ],
-      );
-    }
-    String modeOfPayment() {
-      if (model != null && model.cashDetails != null &&
-          model.cashDetails.cashDetails != null &&
-          model.donationType == RequestType.CASH) {
-        switch (model.cashDetails.cashDetails.paymentType) {
-          case RequestPaymentType.ACH:
-            return S
-                .of(context)
-                .request_paymenttype_ach;
-          case RequestPaymentType.ZELLEPAY:
-            return S
-                .of(context)
-                .request_paymenttype_zellepay;
-          case RequestPaymentType.PAYPAL:
-            return S
-                .of(context)
-                .request_paymenttype_paypal;
-          case RequestPaymentType.VENMO:
-            return S
-                .of(context)
-                .request_paymenttype_venmo;
-          default:
-            return "";
-        }
-        return "";
-      }
-    }
-    getDonationLink() {
-      if (model != null && model.cashDetails != null &&
-          model.cashDetails.cashDetails != null &&
-          model.donationType == RequestType.CASH) {
-        switch (model.cashDetails.cashDetails.paymentType) {
-          case RequestPaymentType.ACH:
-            return getACHDetails(model.cashDetails.cashDetails);
-            break;
-          case RequestPaymentType.ZELLEPAY:
-            return model.cashDetails.cashDetails.zelleId;
-          case RequestPaymentType.PAYPAL:
-            return model.cashDetails.cashDetails.paypalId ?? '';
-          case RequestPaymentType.VENMO:
-            return model.cashDetails.cashDetails.venmoId ?? '';
+  Widget getACHDetails(BuildContext context, data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          "${S.of(context).account_no} : " + data.achdetails.account_number,
+        ),
+        Text(
+          "${S.of(context).bank_address} : " + data.achdetails.bank_address,
+        ),
+        Text(
+          "${S.of(context).bank_name} : " + data.achdetails.bank_name,
+        ),
+        Text(
+          "${S.of(context).routing_number} : " + data.achdetails.routing_number,
+        ),
+      ],
+    );
+  }
 
-          default:
-            return "Link not registered!";
-        }
+  String modeOfPayment(BuildContext context) {
+    if (model != null &&
+        model.cashDetails != null &&
+        model.cashDetails.cashDetails != null &&
+        model.donationType == RequestType.CASH) {
+      switch (model.cashDetails.cashDetails.paymentType) {
+        case RequestPaymentType.ACH:
+          return S.of(context).request_paymenttype_ach;
+        case RequestPaymentType.ZELLEPAY:
+          return S.of(context).request_paymenttype_zellepay;
+        case RequestPaymentType.PAYPAL:
+          return S.of(context).request_paymenttype_paypal;
+        case RequestPaymentType.VENMO:
+          return S.of(context).request_paymenttype_venmo;
+        default:
+          return "";
       }
       return "";
     }
+  }
+
+  getDonationLink(BuildContext context) {
+    if (model != null &&
+        model.cashDetails != null &&
+        model.cashDetails.cashDetails != null &&
+        model.donationType == RequestType.CASH) {
+      switch (model.cashDetails.cashDetails.paymentType) {
+        case RequestPaymentType.ACH:
+          return getACHDetails(context, model.cashDetails.cashDetails);
+          break;
+        case RequestPaymentType.ZELLEPAY:
+          return model.cashDetails.cashDetails.zelleId;
+        case RequestPaymentType.PAYPAL:
+          return model.cashDetails.cashDetails.paypalId ?? '';
+        case RequestPaymentType.VENMO:
+          return model.cashDetails.cashDetails.venmoId ?? '';
+
+        default:
+          return "Link not registered!";
+      }
+    }
+    return "";
+  }
+
+  @override
+  Widget build(BuildContext context) {
     void showScaffold(context, String message) {
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -591,73 +576,68 @@ class _CashFlow extends StatelessWidget {
         ),
       );
     }
+
     Widget offerDonatePaymentDetails() {
       return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${S
-                      .of(context)
-                      .donation_description_one + ' $name:' + ' $amount' + S
-                      .of(context)
-                      .donation_description_three}',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-              Text(
-                S.of(context)
-                    .payment_link_description,
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                S.of(context)
-                  .request_payment_description + ': '+ modeOfPayment(),
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-                model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH ?
-                getDonationLink()
-              : InkWell(
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(
-                      text: model.donationInstructionLink));
-                  showScaffold(context, S
-                      .of(context)
-                      .copied_to_clipboard);
-                },
-                onTap: () async {
-                  String link = getDonationLink();
-                  if (await canLaunch(link)) {
-                    await launch(link);
-                  } else {
-                    showScaffold(context, 'Could not launch');
-                  }
-                },
-                child: Text(
-                  getDonationLink(),
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-                SizedBox(
-                  height: 20,
-                ),
-              ]));
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              '${S.of(context).donation_description_one + ' $name:' + ' $amount' + S.of(context).donation_description_three}',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              S.of(context).payment_link_description,
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              S.of(context).request_payment_description +
+                  ': ' +
+                  modeOfPayment(context),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH
+                ? getDonationLink(context)
+                : InkWell(
+                    onLongPress: () {
+                      Clipboard.setData(
+                          ClipboardData(text: model.donationInstructionLink));
+                      showScaffold(context, S.of(context).copied_to_clipboard);
+                    },
+                    onTap: () async {
+                      String link = getDonationLink(context);
+                      if (await canLaunch(link)) {
+                        await launch(link);
+                      } else {
+                        showScaffold(context, 'Could not launch');
+                      }
+                    },
+                    child: Text(
+                      getDonationLink(context),
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+            SizedBox(
+              height: 20,
+            ),
+          ]));
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -668,7 +648,6 @@ class _CashFlow extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
         SizedBox(height: 10),
-
         Text(
           '$title',
           style: TextStyle(
@@ -682,7 +661,10 @@ class _CashFlow extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == 'offer' && model.donationStatus == DonationStatus.REQUESTED ?  offerDonatePaymentDetails(): Text(''),
+        model.requestIdType == 'offer' &&
+                model.donationStatus == DonationStatus.REQUESTED
+            ? offerDonatePaymentDetails()
+            : Text(''),
         Divider(
           thickness: 1,
         ),
