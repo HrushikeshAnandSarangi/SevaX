@@ -925,14 +925,18 @@ class CreateEditCommunityViewFormState
                                           'communities': FieldValue.arrayUnion(
                                               [snapshot.data.community.id]),
                                           'currentCommunity':
-                                              snapshot.data.community.id
+                                              snapshot.data.community.id,
+                                          'currentTimebank':
+                                          snapshot.data.community.primary_timebank,
                                         });
 
                                         setState(() {
                                           SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentCommunity =
+                                                  .loggedInUser.currentCommunity =
                                               snapshot.data.community.id;
+                                          SevaCore.of(context)
+                                              .loggedInUser.currentCommunity =
+                                              snapshot.data.community.primary_timebank;
                                         });
 
                                         globals.timebankAvatarURL = null;
