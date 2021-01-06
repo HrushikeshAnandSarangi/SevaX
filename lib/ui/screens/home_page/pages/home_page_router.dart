@@ -47,8 +47,12 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   void initState() {
     log("home page router init");
     super.initState();
-    Future.delayed(
-      Duration.zero,
+    setState(() {});
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(
+      // Duration.zero,
+      Duration(milliseconds: 500),
       () {
         _userBloc.getData(
           email: SevaCore.of(context).loggedInUser.email,
@@ -68,6 +72,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         });
       },
     );
+    });
+    setState(() {});
   }
 
   @override

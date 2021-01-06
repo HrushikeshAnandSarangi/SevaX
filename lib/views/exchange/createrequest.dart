@@ -807,11 +807,20 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
         ),
         Text(
-          S.of(context).request_payment_description_hint,
+          "SevaX does not process the payment. Please select from among Venmo, PayPal, ZellePay or ACH in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.",
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey,
           ),
+        ),
+        _optionRadioButton<RequestPaymentType>(
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
         ),
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_ach,
@@ -825,15 +834,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_paypal,
           value: RequestPaymentType.PAYPAL,
-          groupvalue: requestModel.cashModel.paymentType,
-          onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
-            setState(() => {});
-          },
-        ),
-        _optionRadioButton<RequestPaymentType>(
-          title: 'Venmo',
-          value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
