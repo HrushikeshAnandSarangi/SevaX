@@ -42,6 +42,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   void initState() {
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
+      title = widget.offerModel.individualOfferDataModel.title;
     }
     super.initState();
   }
@@ -88,6 +89,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       upgradeDetails:
                           AppConfig.upgradePlanBannerModel.cash_donation,
                       transaction_matrix_type: "cash_goods_offers",
+                      comingFrom: ComingFrom.Offers,
                       child: Column(
                         children: <Widget>[
                           _optionRadioButton(

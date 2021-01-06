@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -116,19 +117,31 @@ class RequestApiProvider {
   }
 
   Future<void> updateInvitedUsersForRequest(
-      String requestID, String sevaUserId) async {
+    String requestID,
+    String sevaUserId,
+    String email,
+  ) async {
     List<String> list = List();
     list.add(sevaUserId);
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestID)
-        .updateData({
+    var batch = Firestore.instance.batch();
+
+    batch.updateData(
+        Firestore.instance.collection('requests').document(requestID), {
       'invitedUsers': FieldValue.arrayUnion([sevaUserId])
-    }).then((onValue) {
-      return "Updated invitedUsers";
+    });
+
+    batch.updateData(
+      Firestore.instance.collection('users').document(email),
+      {
+        'invitedRequests': FieldValue.arrayUnion([requestID])
+      },
+    );
+
+    await batch.commit().then((onValue) {
+      log("Updated invitedUsers");
     }).catchError((onError) {
-      return "Error Updating invitedUsers";
+      log("Error Updating invitedUsers");
     });
   }
 }

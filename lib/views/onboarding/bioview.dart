@@ -9,8 +9,9 @@ class BioView extends StatefulWidget {
   final VoidCallback onSkipped;
   final StringCallback onSave;
   final VoidCallback onBacked;
+  final VoidCallback onPrevious;
 
-  BioView({@required this.onSkipped, @required this.onSave, this.onBacked});
+  BioView({@required this.onSkipped, @required this.onSave, this.onBacked, this.onPrevious});
 
   @override
   _BioViewState createState() => _BioViewState();

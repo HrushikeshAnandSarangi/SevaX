@@ -8,6 +8,7 @@ class GroupInviteUserModel extends DataModel {
   String timebankId;
   String groupId;
   String invitedUserId;
+  String invitationId;
   String adminId;
   int timestamp;
   String communityId;
@@ -23,6 +24,7 @@ class GroupInviteUserModel extends DataModel {
       this.aboutTimebank,
       this.groupId,
       this.invitedUserId,
+      this.invitationId,
       this.timestamp,
       this.communityId,
       this.adminId,
@@ -50,6 +52,10 @@ class GroupInviteUserModel extends DataModel {
     }
     if (this.groupId != null && this.groupId.isNotEmpty) {
       object['groupId'] = this.groupId;
+    }
+
+    if (this.invitationId != null && this.invitationId.isNotEmpty) {
+      object['invitationId'] = this.invitationId;
     }
     if (this.aboutTimebank != null && this.aboutTimebank.isNotEmpty) {
       object['aboutTimebank'] = this.aboutTimebank;
@@ -101,6 +107,9 @@ class GroupInviteUserModel extends DataModel {
 
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('invitationId')) {
+      this.invitationId = map['invitationId'];
     }
     if (map.containsKey('groupId')) {
       this.groupId = map['groupId'];

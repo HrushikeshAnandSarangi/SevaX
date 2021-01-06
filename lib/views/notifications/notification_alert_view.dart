@@ -41,6 +41,10 @@ class _NotificationAlertState extends State<NotificationAlert> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           S.of(context).notification_alerts,
           style: TextStyle(fontFamily: 'Europa', fontSize: 18),

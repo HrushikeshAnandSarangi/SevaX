@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -96,3 +98,82 @@ class _CreateOfferState extends State<CreateOffer> {
     );
   }
 }
+
+//class EditIndividualOfferContainer extends StatelessWidget {
+//  final OfferModel offerModel;
+//  final String timebankId;
+//  final OfferType type;
+//
+//  const EditIndividualOfferContainer(
+//      {Key key, this.type, this.offerModel, this.timebankId})
+//      : super(key: key);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return ExitWithConfirmation(
+//        child: Container(
+//            color: Colors.white24,
+//            padding: EdgeInsets.only(left: 50, right: 120, top: 30),
+//            child: CustomScrollWithKeyboard(
+//                child: Container(
+//              margin: EdgeInsets.only(right: 30),
+//              child: Row(
+//                mainAxisAlignment: MainAxisAlignment.start,
+//                crossAxisAlignment: CrossAxisAlignment.start,
+//                children: [
+//                  SevaPrefixIconForTitle(
+//                    margin: EdgeInsets.only(top: 0, right: 15),
+//                    prefixIcon: SevaWebAssetIcons.offers,
+//                  ),
+//                  Expanded(
+//                    child: Padding(
+//                      padding: const EdgeInsets.symmetric(horizontal: 10),
+//                      child: Column(
+//                        crossAxisAlignment: CrossAxisAlignment.start,
+//                        children: <Widget>[
+//                          Row(
+//                            children: [
+//                              Padding(
+//                                padding: EdgeInsets.symmetric(
+//                                    // horizontal: 20,
+//                                    // vertical: 10,
+//                                    ),
+//                                child: Text(
+//                                  S.of(context).edit,
+//                                  // textAlign: TextAlign.center,
+//                                  style: TextStyle(
+//                                    fontSize: 32,
+//                                    color: HexColor('#212121'),
+//                                    fontWeight: FontWeight.bold,
+//                                  ),
+//                                ),
+//                              ),
+//                              const Spacer(),
+//                              CustomCloseButton(
+//                                onCleared: () {
+//                                  ExtendedNavigator.of(context).pop();
+//                                },
+//                              ),
+//                            ],
+//                          ),
+//                          SizedBox(height: 20),
+//                          this.type == OfferType.INDIVIDUAL_OFFER
+//                              ? IndividualOffer(
+//                                  timebankId: timebankId,
+//                                  offerModel: offerModel,
+//                                )
+//                              : this.type == OfferType.GROUP_OFFER
+//                                  ? OneToManyOffer(
+//                                      timebankId: timebankId,
+//                                      offerModel: offerModel,
+//                                    )
+//                                  : Text('')
+//                        ],
+//                      ),
+//                    ),
+//                  ),
+//                ],
+//              ),
+//            ))));
+//  }
+//}

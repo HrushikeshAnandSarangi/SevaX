@@ -455,6 +455,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       targetUserId: creatorId,
       senderUserId: userIdForNewMember,
       type: prefix0.NotificationType.JoinRequest,
+      isRead: false,
+      isTimebankNotification: true,
       data: joinRequestModel.toMap(),
       communityId: widget.loggedInUserModel.currentCommunity,
     );

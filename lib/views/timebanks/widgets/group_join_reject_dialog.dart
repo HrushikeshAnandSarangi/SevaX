@@ -181,6 +181,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
   void declineInvitationRequest({
     String notificationId,
     String userEmail,
+    String invitationId,
   }) async {
     QuerySnapshot invitationSnap = await Firestore.instance
         .collection('invitations')

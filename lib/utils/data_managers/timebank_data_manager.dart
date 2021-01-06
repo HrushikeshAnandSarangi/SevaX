@@ -25,6 +25,13 @@ Future<void> createTimebank({@required TimebankModel timebankModel}) async {
       .setData(timebankModel.toMap());
 }
 
+Future<void> createCommunityByName(CommunityModel community) async {
+  await Firestore.instance
+      .collection('communities')
+      .document(community.id)
+      .setData(community.toMap());
+}
+
 Future<void> createJoinInvite(
     {@required InvitationModel invitationModel}) async {
   return await Firestore.instance
@@ -359,13 +366,14 @@ Future<List<Map<String, dynamic>>> getTransactionsCountsList(
       .collection("transactions")
       .getDocuments();
   List<Map<String, dynamic>> transactionsDocs = [];
-  var d = DateTime.now();
+  DateTime d = DateTime.now();
+  Map<String, dynamic> tempObj = {};
   String dStr = "${d.month}_${d.year}";
   transactionsSnap.documents.forEach((doc) {
-    log("trans list doc id " + doc.documentID);
-    doc.data['id'] = doc.documentID;
-    if (doc.data['id'] != dStr) {
-      transactionsDocs.add(doc.data);
+    tempObj = doc.data;
+    tempObj['id'] = doc.documentID;
+    if (tempObj['id'] != dStr) {
+      transactionsDocs.add(tempObj);
     }
   });
   List<Map<String, dynamic>> L = transactionsDocs.reversed.toList();
@@ -480,7 +488,7 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
   );
 }
 
-Future<List<String>> getAllTimebankIdStream(
+Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
     {@required String timebankId}) async {
   DocumentSnapshot onValue = await Firestore.instance
       .collection('timebanknew')
@@ -496,7 +504,14 @@ Future<List<String>> getAllTimebankIdStream(
   allItems.addAll(admins);
   allItems.addAll(coordinators);
   allItems.addAll(members);
-  return allItems;
+  return TimebankParticipantsDataHolder()
+    ..listOfElement = allItems
+    ..timebankModel = model;
+}
+
+class TimebankParticipantsDataHolder {
+  List<String> listOfElement;
+  TimebankModel timebankModel;
 }
 
 Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
@@ -510,12 +525,13 @@ Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
   return model;
 }
 
-Future<int> changePlan(String communityId, String planId) async {
+Future<int> changePlan(
+    String communityId, String planId, bool isPrivate) async {
   // failure is 0, success is 1, error is 2
   try {
     http.Response result = await http.post(
       FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-      body: json.encode({'communityId': communityId, "newPlanId": planId}),
+      body: json.encode({'communityId': communityId, "newPlanId": planId, 'private': isPrivate}),
       headers: {"Content-type": "application/json"},
     );
     if (result.statusCode == 200) {

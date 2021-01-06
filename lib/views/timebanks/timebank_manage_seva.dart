@@ -299,6 +299,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       return Container();
     }
     return TransactionsMatrixCheck(
+      comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
       transaction_matrix_type: "invoice_generation",
       child: GestureDetector(

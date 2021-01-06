@@ -273,6 +273,7 @@ class AddToCalendarState extends State<AddToCalendar> {
     CircleAvatar icon,
   }) {
     return TransactionsMatrixCheck(
+      comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
       transaction_matrix_type: "calendar_sync",
       child: Container(

@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,6 +26,7 @@ import 'one_to_many_offer.dart';
 
 class OfferDetails extends StatelessWidget {
   final OfferModel offerModel;
+  final ComingFrom comingFrom;
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
     color: Colors.black,
@@ -34,7 +36,8 @@ class OfferDetails extends StatelessWidget {
     color: Colors.grey,
   );
 
-  OfferDetails({Key key, this.offerModel}) : super(key: key);
+
+  OfferDetails({Key key, this.offerModel, this.comingFrom}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,7 +75,12 @@ class OfferDetails extends StatelessWidget {
                       DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            offerModel.timestamp,
+                            offerModel?.groupOfferDataModel
+                                ?.startDate !=
+                                null
+                                ? offerModel
+                                ?.groupOfferDataModel?.startDate
+                                : offerModel.timestamp,
                           ),
                           timezoneAbb:
                               SevaCore.of(context).loggedInUser.timezone,
@@ -492,10 +500,7 @@ class OfferDetails extends StatelessWidget {
                           if (offerModel.type == RequestType.CASH ||
                               offerModel.type == RequestType.GOODS &&
                                   !isAccepted) {
-                            navigateToCreateRequestFromOffer(
-                              context,
-                              offerModel,
-                            );
+                            navigateToDonations(context, offerModel);
                           } else {
                             if (SevaCore.of(context).loggedInUser.calendarId ==
                                     null &&
@@ -505,7 +510,7 @@ class OfferDetails extends StatelessWidget {
                                 offerModel,
                               );
                             } else {
-                              offerActions(context, offerModel)
+                              offerActions(context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }
                           }
@@ -519,17 +524,15 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
-  void navigateToCreateRequestFromOffer(context, OfferModel offerModel) {
+  void navigateToDonations(context, OfferModel offerModel) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CreateRequest(
-          isOfferRequest: true,
-          offer: offerModel,
-          projectId: '',
-          projectModel: null,
-          timebankId: offerModel.timebankId,
-          userModel: SevaCore.of(context).loggedInUser,
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
         ),
       ),
     );
@@ -563,6 +566,7 @@ class OfferDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -583,11 +587,12 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel)
+                              offerActions(context, offerModel, ComingFrom.Offers,)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -608,11 +613,12 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel)
+                              offerActions(context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -632,7 +638,7 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel)
+                              offerActions(context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       )
@@ -650,7 +656,7 @@ class OfferDetails extends StatelessWidget {
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(context, offerModel)
+                          offerActions(context, offerModel, ComingFrom.Offers)
                               .then((_) => Navigator.of(context).pop());
                         }),
                   ],

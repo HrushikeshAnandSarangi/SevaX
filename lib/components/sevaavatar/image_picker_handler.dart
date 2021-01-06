@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -32,6 +31,8 @@ class ImagePickerHandler {
   }
 
   void openStockImages(context) async {
+    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+
     FocusScope.of(context).requestFocus(FocusNode());
     Navigator.of(context)
         .push(
@@ -50,16 +51,16 @@ class ImagePickerHandler {
         .then((value) {
       globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
     });
-    // _parentStockSelectionBottomsheet(context, (image) {
-    //   log("inside stock images onchanged callback");
-    //   _listener.userImage(image, 'stock_image');
-    //   Navigator.pop(context);
-    // });
   }
 
   addImageUrl() async {
     globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
     _listener.addWebImageUrl();
+  }
+
+  addStockImageUrl(String image) async {
+    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+    _listener.userImage(image, 'stock_image');
   }
 
   void init() {
@@ -93,20 +94,6 @@ abstract class ImagePickerListener {
   addWebImageUrl();
 }
 
-// void _parentStockSelectionBottomsheet(BuildContext mcontext, onChanged) {
-//   showModalBottomSheet(
-//     context: mcontext,
-//     isScrollControlled: true,
-//     builder: (BuildContext bc) {
-//       return SearchStockImages(
-//           keepOnBackPress: false,
-//           showBackBtn: false,
-//           isFromHome: false,
-//           onChanged: onChanged);
-//     },
-//   );
-// }
-
 class SearchStockImages extends StatefulWidget {
   // final bool keepOnBackPress;
   // final bool showBackBtn;
@@ -139,11 +126,11 @@ class SearchStockImagesViewState extends State<SearchStockImages>
     super.dispose();
   }
 
-  onCatSelected(dynamic index) {
+  void onCatSelected(dynamic index) {
     setState(() => this.catSelected = index);
   }
 
-  build(context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -214,8 +201,8 @@ class StockImageListingView extends StatelessWidget {
       padding: EdgeInsets.all(4),
       primary: false,
       crossAxisCount: 4,
-      mainAxisSpacing: 4.0,
-      crossAxisSpacing: 4.0,
+      mainAxisSpacing: 1.0,
+      crossAxisSpacing: 1.0,
       children: categoriesList,
       staggeredTiles: staggeredtiles,
     );
@@ -247,8 +234,8 @@ class _Tile extends StatelessWidget {
       },
       child: Column(
         children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: source,
+          Image.network(
+            source,
             fit: BoxFit.contain,
           ),
           SizedBox(height: 2),

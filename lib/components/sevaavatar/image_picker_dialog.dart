@@ -113,8 +113,19 @@ class ImagePickerDialog extends StatelessWidget {
                     if (!globals.isFromOnBoarding) {
                       dismissDialog();
                     }
-
-                    _listener.openStockImages(context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SearchStockImages(
+                          // keepOnBackPress: false,
+                          // showBackBtn: false,
+                          // isFromHome: false,
+                          onChanged: (image) {
+                            _listener.addStockImageUrl(image);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
                   },
                   child: roundedButton(
                       S.of(context).stock_images,
@@ -127,7 +138,6 @@ class ImagePickerDialog extends StatelessWidget {
                     if (!globals.isFromOnBoarding) {
                       dismissDialog();
                     }
-
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {

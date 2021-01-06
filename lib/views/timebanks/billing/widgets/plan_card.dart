@@ -531,6 +531,7 @@
 class SevaBillingPlans {
   static String NEIGHBOUR_HOOD_PLAN = 'neighbourhood_plan';
   static String COMMUNITY_PLAN = 'tall_plan';
+  static String COMMUNITY_PLUS = 'community_plus_plan';
   static String NON_PROFIT = 'grande_plan';
   static String ENTERPRISE = 'venti_plan';
 }

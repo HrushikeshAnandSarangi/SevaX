@@ -288,6 +288,11 @@ class TimebankModel extends DataModel {
     } else {
       map['softDelete'] = false;
     }
+    if (this.sponsored != null) {
+      map['sponsored'] = this.sponsored;
+    } else {
+      map['sponsored'] = false;
+    }
 
     if (this.requestedSoftDelete != null) {
       map['requestedSoftDelete'] = this.requestedSoftDelete;

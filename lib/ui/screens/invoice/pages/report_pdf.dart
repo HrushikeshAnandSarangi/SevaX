@@ -66,9 +66,8 @@ class ReportPdf {
             alignment: Alignment.centerRight,
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-            decoration: const BoxDecoration(
-                border:
-                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+            decoration: BoxDecoration(
+                border: BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
               'Report',
               style: Theme.of(context)
@@ -128,7 +127,9 @@ class ReportPdf {
                     "Account Number:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("3630943624", style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.sevaxAccountNo == null ? '' : communityModel.sevaxAccountNo}",
+                      style: TextStyle(fontSize: 14)),
                   SizedBox(height: 8),
                   Text(
                     "BILLING STATEMENT:",
@@ -136,7 +137,8 @@ class ReportPdf {
                   ),
                   Text("Statement Number: 142544581",
                       style: TextStyle(fontSize: 14)),
-                  Text("Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0])-1]}, ${date.split('_')[1]}",
+                  Text(
+                      "Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0]) - 1]}, ${date.split('_')[1]}",
                       style: TextStyle(fontSize: 14)),
                 ],
               ),

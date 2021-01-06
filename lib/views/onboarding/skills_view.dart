@@ -393,6 +393,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
         return getSuggestionLayout(
           suggestion: keyword,
           suggestionMode: suggestionMode,
+          add: S.of(context).add + ' ',
         );
       },
     );
@@ -408,6 +409,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   Padding getSuggestionLayout({
     String suggestion,
     SuggestionMode suggestionMode,
+    String add,
   }) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -426,7 +428,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
-                            text: "Add ",
+                            text: add,
                             style: TextStyle(
                               color: Colors.blue,
                             ),
@@ -452,8 +454,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     ),
                     Text(
                       suggestionMode == SuggestionMode.SUGGESTED
-                          ? 'Suggested'
-                          : 'You entered',
+                          ? S.of(context).suggested
+                          : S.of(context).you_entered,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,

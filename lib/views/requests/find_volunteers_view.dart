@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -30,6 +31,7 @@ class FindVolunteersView extends StatefulWidget {
 
 class _FindVolunteersViewState extends State<FindVolunteersView> {
   final TextEditingController searchTextController = TextEditingController();
+  final _firestore = Firestore.instance;
   bool isAdmin = false;
   final _textUpdates = StreamController<String>();
 
@@ -44,17 +46,20 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     super.initState();
     String _searchText = "";
 
-    FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.timebankId,
-    ).then((onValue) {
-      setState(() {
-        validItems = onValue;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FirestoreManager.getAllTimebankIdStream(
+        timebankId: widget.timebankId,
+      ).then((onValue) {
+        setState(() {
+          validItems = onValue.listOfElement;
+          timebankModel.model = onValue.timebankModel;
+        });
+        if (isAccessAvailable(timebankModel.model, widget.sevaUserId)) {
+          isAdmin = true;
+        }
       });
+      // executes after build
     });
-
-    if (isAccessAvailable(timebankModel.model, widget.sevaUserId)) {
-      isAdmin = true;
-    }
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -189,7 +194,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   @override
   void initState() {
     super.initState();
-    if (isAccessAvailable(widget.timebankModel, widget.sevaUserId)) {
+    if (widget.timebankModel != null &&
+        widget.timebankModel.admins != null &&
+        isAccessAvailable(widget.timebankModel, widget.sevaUserId)) {
       isAdmin = true;
     }
 
@@ -246,7 +253,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           }
 
           List<UserModel> userList = snapshot.data;
-          userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
+          userList.removeWhere((user) =>
+              user.sevaUserID == widget.sevaUserId ||
+              user.sevaUserID == requestModel.sevaUserId);
 
           if (userList.length == 0) {
             return getEmptyWidget(S.of(context).no_user_found);
@@ -255,6 +264,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             itemCount: userList.length,
             itemBuilder: (context, index) {
               UserModel user = userList[index];
+
               List<String> timeBankIds =
                   snapshot.data[index].favoriteByTimeBank ?? [];
               List<String> memberId = user.favoriteByMember ?? [];

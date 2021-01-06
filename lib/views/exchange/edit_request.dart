@@ -204,7 +204,9 @@ class RequestEditFormState extends State<RequestEditForm> {
     );
     getProjectsByFuture =
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
-
+    if (widget.requestModel.categories != null) {
+      getCategoryModels(widget.requestModel.categories, '');
+    }
     fetchRemoteConfig();
 
     if ((FlavorConfig.appFlavor == Flavor.APP ||
@@ -1653,6 +1655,19 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
 
+      if (OfferDurationWidgetState.starttimestamp == 0 ||
+          OfferDurationWidgetState.endtimestamp == 0) {
+        showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
+        return;
+      }
+
+      if (OfferDurationWidgetState.starttimestamp >
+          OfferDurationWidgetState.endtimestamp) {
+        showDialogForTitle(
+            dialogTitle: S.of(context).validation_error_end_date_greater);
+        return;
+      }
+
       // if (location != null) {
       widget.requestModel.requestStart =
           OfferDurationWidgetState.starttimestamp;
@@ -1931,7 +1946,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         builder: (BuildContext viewContext) {
           return AlertDialog(
             title: Text(
-              "Select Project",
+              S.of(context).select_project,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -1942,7 +1957,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Text(
-                    "Projects here",
+                    S.of(context).projects_here,
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -2431,7 +2446,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
-                            text: "Add ",
+                            text: S.of(context).add + ' ',
                             style: TextStyle(
                               color: Colors.blue,
                             ),
@@ -2457,8 +2472,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     ),
                     Text(
                       suggestionMode == SuggestionMode.SUGGESTED
-                          ? 'Suggested'
-                          : 'You entered',
+                          ? S.of(context).suggested
+                          : S.of(context).you_entered,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,

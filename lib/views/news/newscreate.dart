@@ -285,6 +285,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       child: Center(
                         child:
                              TransactionsMatrixCheck(
+                              comingFrom: ComingFrom.Home,
                               upgradeDetails:
                                   AppConfig.upgradePlanBannerModel.parent_timebanks,
                               transaction_matrix_type: "parent_timebanks",

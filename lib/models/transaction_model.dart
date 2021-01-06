@@ -52,13 +52,13 @@ class TransactionModel extends DataModel {
     if (map.containsKey('timebankid')) {
       this.timebankid = map['timebankid'];
     }
-    if (map.containsKey('associatedCommunity')) {
-      this.associatedCommunity = map['associatedCommunity'];
-    }
     if (map.containsKey('transactionbetween')) {
       List<String> transactionbetween =
           List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
+    }
+    if (map.containsKey('associatedCommunity')) {
+      this.associatedCommunity = map['associatedCommunity'];
     }
   }
 
@@ -89,12 +89,12 @@ class TransactionModel extends DataModel {
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
     }
+    if (this.transactionbetween != null && this.transactionbetween.isNotEmpty) {
+      map['transactionbetween'] = this.transactionbetween;
+    }
 
     if (this.associatedCommunity != null) {
       map['associatedCommunity'] = this.associatedCommunity;
-    }
-    if (this.transactionbetween != null && this.transactionbetween.isNotEmpty) {
-      map['transactionbetween'] = this.transactionbetween;
     }
     return map;
   }

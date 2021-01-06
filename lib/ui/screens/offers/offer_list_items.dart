@@ -143,7 +143,7 @@ class OfferListItems extends StatelessWidget {
     Navigator.push(
       parentContext,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model),
+        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Offers,),
       ),
     );
   }
@@ -174,7 +174,8 @@ class OfferListItems extends StatelessWidget {
                   ? Colors.grey
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
-        if (model.type != RequestType.TIME &&
+        // if goods/cash and not the creator and not a admin trying accept donation show dialog
+        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
@@ -188,6 +189,7 @@ class OfferListItems extends StatelessWidget {
                 offerModel: model,
                 timebankModel: timebankModel,
                 requestModel: null,
+                comingFrom: ComingFrom.Offers,
               ),
             ),
           );
@@ -198,8 +200,8 @@ class OfferListItems extends StatelessWidget {
       onActionPressed: () async {
         bool isAccepted = getOfferParticipants(offerDataModel: model)
             .contains(model.sevaUserId);
-
-        if (model.type != RequestType.TIME &&
+        // if goods/cash and not the creator and not a admin trying accept donation show dialog
+        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
@@ -208,29 +210,9 @@ class OfferListItems extends StatelessWidget {
 
         if (model.type == RequestType.CASH ||
             model.type == RequestType.GOODS && !isAccepted) {
-          navigateToCreateRequestFromOffer(
-            context,
-            model,
-          );
-        }
-        //  else {
-        //   if (SevaCore.of(context).loggedInUser.calendarId == null &&
-        //       !isAccepted) {
-        //     _settingModalBottomSheet(
-        //       context,
-        //       model,
-        //     );
-        //   } else {
-        //     offerActions(parentContext, model)
-        //         .then((_) => Navigator.of(context).pop());
-        //   }
-        // }
-        // if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
-        //     model.offerType == OfferType.GROUP_OFFER) {
-        //   _settingModalBottomSheet(parentContext, model);
-        // }
-        else {
-          offerActions(parentContext, model);
+          navigateToDonations(context, model);
+        } else {
+          offerActions(parentContext, model, ComingFrom.Offers);
         }
       },
     );
@@ -241,6 +223,7 @@ class OfferListItems extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => CreateRequest(
+          comingFrom: ComingFrom.Offers,
           isOfferRequest: true,
           offer: offerModel,
           projectId: '',
@@ -303,6 +286,7 @@ class OfferListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -326,6 +310,7 @@ class OfferListItems extends StatelessWidget {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -349,6 +334,7 @@ class OfferListItems extends StatelessWidget {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -385,7 +371,7 @@ class OfferListItems extends StatelessWidget {
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(parentContext, model);
+                          offerActions(parentContext, model, ComingFrom.Offers);
                         }),
                   ],
                 )

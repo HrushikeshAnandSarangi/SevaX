@@ -44,13 +44,13 @@ class ParentTimebankPickerWidget extends StatelessWidget {
       color: Colors.grey[200],
       onPressed: () async {
         FocusScope.of(parentContext).requestFocus(FocusNode());
-        _parentSelectionBottomsheet(parentContext, onChanged);
+        _parentSelectionBottomsheet(parentContext, onChanged, selectedTimebank);
       },
     );
   }
 }
 
-void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
+void _parentSelectionBottomsheet(BuildContext mcontext, onChanged, String selectedTimebank) {
   showModalBottomSheet(
     context: mcontext,
     isScrollControlled: true,
@@ -81,7 +81,7 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
                   showBackBtn: false,
                   isFromHome: false,
                   onChanged: onChanged,
-                  selectedTimebank: null,
+                  selectedTimebank: selectedTimebank,
                 ),
               ));
         }),

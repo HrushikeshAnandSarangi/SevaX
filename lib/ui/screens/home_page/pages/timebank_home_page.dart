@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -260,8 +261,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           ),
                         ),
                         TransactionLimitCheck(
-                          isSoftDeleteRequested:
-                              widget.primaryTimebankModel.requestedSoftDelete,
+                          comingFrom: ComingFrom.Home,
+                          timebankId: widget.primaryTimebankModel.id,
+                         isSoftDeleteRequested:
+                             widget.primaryTimebankModel.requestedSoftDelete,
                           child: IconButton(
                             icon: Icon(Icons.add_circle),
                             color: FlavorConfig.values.theme.primaryColor,

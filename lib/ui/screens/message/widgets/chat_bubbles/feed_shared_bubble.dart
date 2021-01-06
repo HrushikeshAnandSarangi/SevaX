@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -44,6 +45,7 @@ class FeedBubble extends StatelessWidget {
                   formatChatDate(
                     messageModel.timestamp,
                     SevaCore.of(context).loggedInUser.timezone,
+                    S.of(context).localeName,
                   ),
                   style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                 ),
@@ -56,6 +58,9 @@ class FeedBubble extends StatelessWidget {
   }
 
   Widget getFeedCard(context) {
+    if (news == null) {
+      return Container();
+    }
     var imageBanner = news.newsImageUrl == null
         ? (news.imageScraped == null ? "NoData" : news.imageScraped)
         : news.newsImageUrl;

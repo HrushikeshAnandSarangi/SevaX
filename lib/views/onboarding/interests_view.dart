@@ -19,6 +19,8 @@ class InterestViewNew extends StatefulWidget {
   final UserModel userModel;
   final VoidCallback onSkipped;
   final VoidCallback onBacked;
+  final VoidCallback onPrevious;
+
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
   final bool isFromProfile;
@@ -29,7 +31,8 @@ class InterestViewNew extends StatefulWidget {
       this.onBacked,
       this.userModel,
       this.automaticallyImplyLeading,
-      this.isFromProfile});
+      this.isFromProfile,
+      this.onPrevious});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
@@ -387,9 +390,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
         }
 
         return getSuggestionLayout(
-          suggestion: keyword,
-          suggestionMode: suggestionMode,
-        );
+            suggestion: keyword,
+            suggestionMode: suggestionMode,
+            add: S.of(context).add + ' ',
+            context: context);
       },
     );
   }
@@ -404,7 +408,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
 Padding getSuggestionLayout({
   String suggestion,
+  String add,
   SuggestionMode suggestionMode,
+  BuildContext context,
 }) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
@@ -423,7 +429,7 @@ Padding getSuggestionLayout({
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: "Add ",
+                          text: add,
                           style: TextStyle(
                             color: Colors.blue,
                           ),
@@ -449,8 +455,8 @@ Padding getSuggestionLayout({
                   ),
                   Text(
                     suggestionMode == SuggestionMode.SUGGESTED
-                        ? 'Suggested'
-                        : 'You entered',
+                        ? S.of(context).suggested
+                        : S.of(context).you_entered,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,

@@ -45,6 +45,7 @@ class _DonationViewState extends State<DonationView> {
   PageController pageController;
   DonationModel donationsModel = DonationModel(
     donorDetails: DonorDetails(),
+    receiverDetails: DonorDetails(),
     cashDetails: CashDetails(
         cashDetails: CashModel(
             paymentType: RequestPaymentType.ZELLEPAY,
@@ -70,6 +71,18 @@ class _DonationViewState extends State<DonationView> {
                 : 1
             : 0);
     pageController = PageController(initialPage: temp);
+
+//    popUpHeight = (widget.offerModel != null
+//        ? (widget.offerModel.type == RequestType.GOODS
+//            ? 450
+//            : widget.offerModel.type == RequestType.CASH
+//                ? 280
+//                : 280)
+//        : widget.requestModel != null
+//            ? widget.requestModel.requestType == RequestType.GOODS
+//                ? 450
+//                : 280
+//            : 280);
 
     super.initState();
     donationBloc.errorMessage.listen((event) {
@@ -102,19 +115,84 @@ class _DonationViewState extends State<DonationView> {
         ),
         centerTitle: true,
       ),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: pageController,
-        scrollDirection: Axis.horizontal,
-        pageSnapping: true,
-        onPageChanged: (number) {},
-        children: [
-          donatedItems(),
-          amountWidget(),
-          donationDetails(),
-          donationOfferAt(),
-          RequestPaymentDescriptionData(widget.offerModel),
-        ],
+      body: Container(
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.width * 0.03,
+              0,
+              MediaQuery.of(context).size.width * 0.03,
+              0),
+          child: Card(
+              margin: EdgeInsets.only(bottom: 10, top: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+              elevation: 2,
+              child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                      child: SizedBox(
+                          height: MediaQuery.of(context)
+                              .size
+                              .height, // or something simular :)
+                          child: new Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              // horizontal: 20,
+                                              // vertical: 10,
+                                            ),
+                                            child: Text(
+                                              S.of(context).donations,
+                                              // textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 32,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          const Spacer(),
+//                                          close(
+//                                            onTap: () {
+//                                              ExtendedNavigator.of(context)
+//                                                  .pop();
+//                                            },
+//                                          ),
+                                        ],
+                                      ),
+                                    ]),
+                                new Expanded(
+                                    child: PageView(
+                                        physics:
+                                        NeverScrollableScrollPhysics(),
+                                        controller: pageController,
+                                        scrollDirection: Axis.horizontal,
+                                        pageSnapping: true,
+                                        onPageChanged: (number) {},
+                                        children: [
+                                          donatedItems(),
+                                          amountWidget(),
+                                          donationDetails(),
+                                          donationOfferAt(),
+                                          RequestPaymentDescriptionData(
+                                              widget.offerModel),
+                                        ]
+                                    )
+                                )
+                              ]
+                          )
+                      )
+                  )
+              )
+          )
       ),
     );
   }
@@ -145,6 +223,10 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
       donationsModel.donorDetails.email = sevaUser.email;
       donationsModel.donorDetails.bio = sevaUser.bio;
+      donationsModel.receiverDetails.name = widget.requestModel.fullName;
+      donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
+      donationsModel.receiverDetails.email = widget.requestModel.email;
+
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -160,6 +242,9 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.name = widget.offerModel.fullName;
       donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
       donationsModel.donorDetails.email = widget.offerModel.email;
+      donationsModel.receiverDetails.name = sevaUser.fullname;
+      donationsModel.receiverDetails.email = sevaUser.email;
+      donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;
     }
     donationsModel.communityId = sevaUser.currentCommunity;
     donationsModel.id = Utils.getUuid();
@@ -440,9 +525,12 @@ class _DonationViewState extends State<DonationView> {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+                height: 10,
+              ),
               Text(
                 S.of(context).donations_cash_request,
                 style: TextStyle(
@@ -462,6 +550,9 @@ class _DonationViewState extends State<DonationView> {
                 ),
               ),
               TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                ],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focusNodes[1],
                 onFieldSubmitted: (v) {
@@ -473,6 +564,12 @@ class _DonationViewState extends State<DonationView> {
                   if (value.isEmpty) {
                     return S.of(context).validation_error_general_text;
                   } else if (!value.isEmpty) {
+                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                      return "Requested amount cannot be greater than offered amount!";
+                    }
+                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                      return "Requested amount cannot be greater than offered amount!";
+                    }
                     donationsModel.cashDetails.cashDetails.amountRaised =
                         int.parse(value);
                   } else {
@@ -551,6 +648,8 @@ class _DonationViewState extends State<DonationView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   actionButton(
+                      buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                      textColor: Colors.white,
                       buttonTitle: S.of(context).submit,
                       onPressed: () async {
                         var connResult =
@@ -565,7 +664,7 @@ class _DonationViewState extends State<DonationView> {
                                 notificationId: widget.notificationId,
                                 donationModel: donationsModel,
                                 offerModel: widget.offerModel,
-                                donor: UserModel(
+                                notify: UserModel(
                                     email: donationsModel.donorDetails.email,
                                     fullname: donationsModel.donorDetails.name,
                                     photoURL:
@@ -574,7 +673,11 @@ class _DonationViewState extends State<DonationView> {
                             .then((value) {
                           if (value) {
                             hideProgress();
-                            getSuccessDialog().then(
+                            getSuccessDialog(S
+                                    .of(context)
+                                    .donations_requested
+                                    .toLowerCase())
+                                .then(
                               //to pop the screen
                               (_) => Navigator.of(context).pop(),
                             );
@@ -585,6 +688,7 @@ class _DonationViewState extends State<DonationView> {
                     width: 20,
                   ),
                   actionButton(
+                      buttonColor: Colors.grey,
                       buttonTitle: S.of(context).do_it_later,
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -592,6 +696,117 @@ class _DonationViewState extends State<DonationView> {
                 ],
               )
             ])));
+  }
+
+  Widget donatedItems() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          titleText(title: S.of(context).tell_what_you_donated),
+          StreamBuilder<String>(
+              stream: donationBloc.commentEntered,
+              builder: (context, snapshot) {
+                return TextFormField(
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.done,
+                  maxLines: 2,
+                  onChanged: donationBloc.onCommentChanged,
+                  decoration: InputDecoration(
+                    hintStyle: subTitleStyle,
+                    hintText: S.of(context).describe_goods,
+                  ),
+                );
+              }),
+          StreamBuilder<Map<dynamic, dynamic>>(
+              stream: donationBloc.selectedList,
+              builder: (context, snapshot) {
+                List<String> keys = List.from(widget
+                    .requestModel.goodsDonationDetails.requiredGoods.keys);
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget
+                      .requestModel.goodsDonationDetails.requiredGoods.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value:
+                          snapshot.data?.containsKey(keys[index]) ?? false,
+                          checkColor: _checkColor,
+                          onChanged: (bool value) {
+                            donationBloc.addAddRemove(
+                              selectedValue: widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]],
+                              selectedKey: keys[index],
+                            );
+                          },
+                          activeColor: Colors.grey[200],
+                        ),
+                        Text(
+                          widget.requestModel.goodsDonationDetails
+                              .requiredGoods[keys[index]],
+                          style: subTitleStyle,
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              actionButton(
+                  buttonTitle: S.of(context).do_it_later,
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              SizedBox(
+                width: 20,
+              ),
+              actionButton(
+                  buttonTitle: S.of(context).donated,
+                  buttonColor: Colors.orange,
+                  onPressed: () async {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if (connResult == ConnectivityResult.none) {
+                      showScaffold(S.of(context).check_internet);
+                      return;
+                    }
+                    if (donationBloc.selectedList == null) {
+                      showScaffold(S.of(context).select_goods_category);
+                    } else {
+                      showProgress(S.of(context).please_wait);
+                      donationBloc
+                          .donateGoods(
+                          notificationId: widget.notificationId,
+                          donationModel: donationsModel,
+                          requestModel: widget.requestModel,
+                          donor: sevaUser)
+                          .then((value) {
+                        if (value) {
+                          hideProgress();
+                          getSuccessDialog(S.of(context).pledged.toLowerCase()).then(
+                            //to pop the screen
+                                (_) => Navigator.of(context).pop(),
+                          );
+                        }
+                      });
+                    }
+                  }),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget donationOfferAt() {
@@ -603,10 +818,13 @@ class _DonationViewState extends State<DonationView> {
     );
     var focusNodes = List.generate(2, (_) => FocusNode());
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(
+            height: 10,
+          ),
           Text(
             S.of(context).request_goods_address,
             style: TextStyle(
@@ -699,6 +917,8 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
+                  buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                  textColor: Colors.white,
                   buttonTitle: S.of(context).submit,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
@@ -715,16 +935,19 @@ class _DonationViewState extends State<DonationView> {
                               notificationId: widget.notificationId,
                               donationModel: donationsModel,
                               offerModel: widget.offerModel,
-                              donor: UserModel(
-                                  email: donationsModel.donorDetails.email,
-                                  fullname: donationsModel.donorDetails.name,
-                                  photoURL:
-                                      donationsModel.donorDetails.photoUrl,
-                                  sevaUserID: donationsModel.donorSevaUserId))
+                              notify: UserModel(
+                                  email: widget.offerModel.email,
+                                  fullname: widget.offerModel.fullName,
+                                  photoURL: widget.offerModel.photoUrlImage,
+                                  sevaUserID: widget.offerModel.sevaUserId))
                           .then((value) {
                         if (value) {
                           // hideProgress();
-                          getSuccessDialog().then(
+                          getSuccessDialog(S
+                                  .of(context)
+                                  .donations_requested
+                                  .toLowerCase())
+                              .then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),
                           );
@@ -749,11 +972,11 @@ class _DonationViewState extends State<DonationView> {
 
   Widget amountWidget() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleText(title: S.of(context).amount_donated),
+          titleText(title: S.of(context).amount_pledged + '?'),
           StreamBuilder<String>(
               stream: donationBloc.amountPledged,
               builder: (context, snapshot) {
@@ -787,7 +1010,7 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: S.of(context).done,
+                buttonTitle: S.of(context).cancel,
                 onPressed: () {
                   donationBloc
                       .validateAmount(
@@ -813,7 +1036,7 @@ class _DonationViewState extends State<DonationView> {
   Widget donationDetails() {
     if (widget.requestModel != null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -861,7 +1084,18 @@ class _DonationViewState extends State<DonationView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 actionButton(
+                  buttonTitle: S.of(context).do_it_later,
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                actionButton(
                   buttonTitle: S.of(context).pledge,
+                  buttonColor: Colors.orange,
                   onPressed: () {
                     showProgress(S.of(context).please_wait);
                     donationBloc
@@ -873,7 +1107,8 @@ class _DonationViewState extends State<DonationView> {
                         .then((value) {
                       if (value) {
                         hideProgress();
-                        getSuccessDialog().then(
+                        getSuccessDialog(S.of(context).pledged.toLowerCase())
+                            .then(
                           //to pop the screen
                           (_) => Navigator.of(context).pop(),
                         );
@@ -949,121 +1184,18 @@ class _DonationViewState extends State<DonationView> {
     progressDialog.hide();
   }
 
-  Widget donatedItems() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          titleText(title: S.of(context).tell_what_you_donated),
-          StreamBuilder<String>(
-              stream: donationBloc.commentEntered,
-              builder: (context, snapshot) {
-                return TextFormField(
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.sentences,
-                  textInputAction: TextInputAction.done,
-                  maxLines: 2,
-                  onChanged: donationBloc.onCommentChanged,
-                  decoration: InputDecoration(
-                    hintStyle: subTitleStyle,
-                    hintText: S.of(context).describe_goods,
-                  ),
-                );
-              }),
-          StreamBuilder<Map<dynamic, dynamic>>(
-              stream: donationBloc.selectedList,
-              builder: (context, snapshot) {
-                List<String> keys = List.from(widget
-                    .requestModel.goodsDonationDetails.requiredGoods.keys);
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget
-                      .requestModel.goodsDonationDetails.requiredGoods.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Checkbox(
-                          value:
-                              snapshot.data?.containsKey(keys[index]) ?? false,
-                          checkColor: _checkColor,
-                          onChanged: (bool value) {
-                            donationBloc.addAddRemove(
-                              selectedValue: widget
-                                  .requestModel
-                                  .goodsDonationDetails
-                                  .requiredGoods[keys[index]],
-                              selectedKey: keys[index],
-                            );
-                          },
-                          activeColor: Colors.grey[200],
-                        ),
-                        Text(
-                          widget.requestModel.goodsDonationDetails
-                              .requiredGoods[keys[index]],
-                          style: subTitleStyle,
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              actionButton(
-                  buttonTitle: S.of(context).donated,
-                  onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      showScaffold(S.of(context).check_internet);
-                      return;
-                    }
-                    if (donationBloc.selectedList == null) {
-                      showScaffold(S.of(context).select_goods_category);
-                    } else {
-                      showProgress(S.of(context).please_wait);
-                      donationBloc
-                          .donateGoods(
-                              notificationId: widget.notificationId,
-                              donationModel: donationsModel,
-                              requestModel: widget.requestModel,
-                              donor: sevaUser)
-                          .then((value) {
-                        if (value) {
-                          hideProgress();
-                          getSuccessDialog().then(
-                            //to pop the screen
-                            (_) => Navigator.of(context).pop(),
-                          );
-                        }
-                      });
-                    }
-                  }),
-              SizedBox(
-                width: 20,
-              ),
-              actionButton(
-                  buttonTitle: S.of(context).do_it_later,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget actionButton({Function onPressed, String buttonTitle}) {
+  Widget actionButton({
+    Function onPressed,
+    String buttonTitle,
+    Color buttonColor,
+    Color textColor,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 30,
         child: RaisedButton(
+          textColor: textColor ?? Colors.white,
           onPressed: onPressed,
           child: Text(
             buttonTitle,
@@ -1072,7 +1204,7 @@ class _DonationViewState extends State<DonationView> {
               fontSize: 12,
             ),
           ),
-          color: Colors.grey[200],
+          color: buttonColor ?? Colors.grey[200],
           shape: StadiumBorder(),
         ),
       ),
@@ -1096,7 +1228,7 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
-  Future<bool> getSuccessDialog() async {
+  Future<bool> getSuccessDialog(data) async {
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -1109,7 +1241,7 @@ class _DonationViewState extends State<DonationView> {
                   .firstWordUpperCase()
                   .replaceFirst('.', '') +
               ' ' +
-              S.of(context).pledged),
+              data),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(

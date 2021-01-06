@@ -195,6 +195,7 @@ class RequestCardWidget extends StatelessWidget {
                               await timeBankBloc.updateInvitedUsersForRequest(
                                 requestModel.id,
                                 userModel.sevaUserID,
+                                userModel.email,
                               );
 
                               sendNotification(
@@ -252,7 +253,8 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> addToFavoriteList(
-      {String email, String loggedInUserId, String timebankId}) async {
+      {String email, String loggedInUserId, String timebankId,
+        RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayUnion(
@@ -262,7 +264,7 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> removeFromFavoriteList(
-      {String email, String timeBankId, String loggedInUserId}) async {
+      {String email, String timeBankId, String loggedInUserId, RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(

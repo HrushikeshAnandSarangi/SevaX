@@ -50,6 +50,54 @@ class RequestDonationDisputeBloc {
     }
   }
 
+  Future<bool> callDonateOfferCreatorPledge({
+    OperatingMode operationMode,
+    double pledgedAmount,
+    String donationId,
+    String notificationId,
+    DonationModel donationModel,
+    RequestMode requestMode,
+  }) async {
+    var amountMatched = pledgedAmount == double.parse(_cashAmount.value);
+    logger.i("$amountMatched ========================<<<<<<<<>>>>>>>>>>>>");
+    if (_cashAmount.value == null || _cashAmount.value == '') {
+      _cashAmount.addError('amount1');
+      return false;
+    } else if (donationModel.minimumAmount != null &&
+        int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+      _cashAmount.addError('min');
+      return false;
+    } else {
+      donationModel.donationStatus = donationModel.donationStatus ==  DonationStatus.REQUESTED ? DonationStatus.PLEDGED: donationModel.donationStatus;
+      donationModel.minimumAmount = 0;
+      return await _donationsRepository
+          .donateOfferCreatorPledge(
+        operatoreMode: operationMode,
+        requestType: donationModel.donationType,
+        donationStatus: donationModel.donationStatus,
+        associatedId: operationMode == OperatingMode.CREATOR &&
+            donationModel.donatedToTimebank
+            ? donationModel.timebankId
+            : donationModel.donorDetails.email,
+        donationId: donationId,
+        isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+            donationModel.donatedToTimebank,
+        notificationId: notificationId,
+        acknowledgementNotification: getAcknowlegementNotification(
+          updatedAmount: double.parse(_cashAmount.value),
+          model: donationModel,
+          operatorMode: operationMode,
+          requestMode: requestMode,
+          notificationType: donationModel.donationStatus == DonationStatus.PLEDGED
+              ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
+              : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+        ),
+      )
+          .then((value) => true)
+          .catchError((onError) => false);
+    }
+  }
+
   Future<bool> disputeCash({
     OperatingMode operationMode,
     double pledgedAmount,
@@ -81,6 +129,9 @@ class RequestDonationDisputeBloc {
             associatedId: operationMode == OperatingMode.CREATOR &&
                     donationModel.donatedToTimebank
                 ? donationModel.timebankId
+                : donationModel.requestIdType == 'offer'
+                ? operationMode != OperatingMode.CREATOR ? donationModel.donorDetails.email
+                : donationModel.receiverDetails.email
                 : donationModel.donorDetails.email,
             donationId: donationId,
             isTimebankNotification: operationMode == OperatingMode.CREATOR &&
@@ -171,6 +222,9 @@ class RequestDonationDisputeBloc {
       associatedId: operationMode == OperatingMode.CREATOR &&
               donationModel.donatedToTimebank
           ? donationModel.timebankId
+          : donationModel.requestIdType == 'offer'
+          ? operationMode != OperatingMode.CREATOR ? donationModel.donorDetails.email
+          : donationModel.receiverDetails.email
           : donationModel.donorDetails.email,
       donationId: donationId,
       // if status is true that means the notification will go to user only as the request is acknowledged

@@ -52,10 +52,36 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
     List<NewsModel> modelList = [];
 
     querySnapshot.documents.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data));
+      var newsModel = NewsModel.fromMap(document.data);
+      //futures.add(getUserInfo(newsModel.email));
+      modelList.add(newsModel);
     });
 
-    // await Future.delayed(Duration(seconds: 1));
+//    //await process goes here
+//    for (int i = 0; i < modelList.length; i += 1) {
+//      UserModel userModel = await getUserForId(
+//        sevaUserId: modelList[i].sevaUserId,
+//      );
+//      modelList[i].userPhotoURL=userModel.photoURL;
+//      timeBankModelList.add(timeBankModel);
+//    }
+    // await Future.wait(futures).then((onValue) async {
+    for (var i = 0; i < modelList.length; i++) {
+      //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+      UserModel userModel = await getUserForId(
+        sevaUserId: modelList[i].sevaUserId,
+      );
+      modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
+
+      if (modelList[i].placeAddress == null) {
+        var data = await _getLocation(
+          modelList[i].location.geoPoint.latitude,
+          modelList[i].location.geoPoint.longitude,
+        );
+        modelList[i].placeAddress = data;
+      }
+    }
+
     newsSink.add(modelList);
     // });
   }));

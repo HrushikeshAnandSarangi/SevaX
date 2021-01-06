@@ -74,6 +74,7 @@ class _NewChatPageState extends State<NewChatPage> {
                 _bloc.isSelectionEnabled
                     ? SelectedMemberListBuilder()
                     : TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Chats,
                         upgradeDetails: AppConfig
                             .upgradePlanBannerModel.multi_member_messaging,
                         transaction_matrix_type: "multi_member_messaging",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/goods_display_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
@@ -43,7 +44,14 @@ class DonationParticipantCard extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => GoodsDisplayPage(
-                    label: status ==  DonationStatus.REQUESTED ? 'Donation Requested' : this.type == 'request'? 'Donation Received': 'Donation Offered',
+                    label: status == DonationStatus.REQUESTED
+                        ? S.of(context).donations_received.replaceAll('s', '')
+                        : this.type == 'request'
+                            ? S
+                                .of(context)
+                                .donations_received
+                                .replaceAll('s', '')
+                            : S.of(context).donation_offered,
                     name: name,
                     photoUrl: photoUrl,
                     goods: goods,
@@ -91,7 +99,9 @@ class DonationParticipantCard extends StatelessWidget {
           ),
           child ??
               Text(
-                isCashDonation ? '$currency$amount' : '${goods.length} Items',
+                isCashDonation
+                    ? '$currency$amount'
+                    : '${goods.length} ${S.of(context).items}',
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

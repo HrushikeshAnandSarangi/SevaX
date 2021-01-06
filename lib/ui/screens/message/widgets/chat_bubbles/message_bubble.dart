@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -65,6 +66,7 @@ class MessageBubble extends StatelessWidget {
                   formatChatDate(
                     timestamp,
                     SevaCore.of(context).loggedInUser.timezone,
+                    S.of(context).localeName,
                   ),
                   style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                 ),

@@ -27,7 +27,9 @@ class GroupCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 3 / 2,
             child: CachedNetworkImage(
-              imageUrl: image ?? defaultGroupImageURL,
+              imageUrl: image != null
+                  ? image ?? defaultGroupImageURL
+                  : defaultGroupImageURL,
               fit: BoxFit.fitWidth,
             ),
           ),
@@ -42,14 +44,14 @@ class GroupCard extends StatelessWidget {
                       Text(
                         title,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           color: Colors.black,
                         ),
                       ),
                       Text(
                         subtitle,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.grey,
                         ),
                       ),

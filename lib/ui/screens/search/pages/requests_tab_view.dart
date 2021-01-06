@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -82,12 +83,13 @@ class RequestsTabView extends StatelessWidget {
       {BuildContext context,
       RequestModel requestModel,
       TimebankModel timebankModel}) {
-    bool isAdmin = false;
-    if (requestModel.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID ||
-        isAccessAvailable(
-            timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
-      isAdmin = true;
+    var isAdmin;
+    if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+      isAdmin = requestModel.sevaUserId ==
+          SevaCore.of(context).loggedInUser.sevaUserID;
+    } else {
+      isAdmin = isAccessAvailable(
+          timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
     }
 
     if (requestModel.isRecurring) {
@@ -97,6 +99,8 @@ class RequestsTabView extends StatelessWidget {
           builder: (context) => RecurringListing(
             requestModel: requestModel,
             offerModel: null,
+            timebankModel: timebankModel,
+            comingFrom: ComingFrom.Requests
           ),
         ),
       );

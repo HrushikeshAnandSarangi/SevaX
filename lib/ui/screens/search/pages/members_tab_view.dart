@@ -74,6 +74,8 @@ class _MembersTabViewState extends State<MembersTabView> {
                           builder: (context) => ProfileViewer(
                             userEmail: user.email,
                             timebankId: _bloc.timebank.id,
+                            isFromTimebank: false,
+                            entityName: _bloc.timebank.id,
                           ),
                         ),
                       );

@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         checkReleaseBuilds false
@@ -55,8 +55,8 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-       storeFile file(keystoreProperties['storeFile'])
-       storePassword keystoreProperties['storePassword']
+         storeFile file(keystoreProperties['storeFile'])
+        storePassword keystoreProperties['storePassword']
         }
     }
 

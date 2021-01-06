@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -75,8 +76,10 @@ class OffersState extends State<OffersModule> {
                     ),
                   ),
                   TransactionLimitCheck(
-                    isSoftDeleteRequested:
-                        widget.timebankModel.requestedSoftDelete,
+                    comingFrom: ComingFrom.Offers,
+                    timebankId: widget.timebankId,
+                   isSoftDeleteRequested:
+                       widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
                         if (widget.timebankModel.id ==

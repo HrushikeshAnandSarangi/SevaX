@@ -899,38 +899,103 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get requestDescriptionComponent {
-    if (widget.requestItem.requestType == RequestType.GOODS) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+    switch (widget.requestItem.requestType) {
+      case RequestType.GOODS:
+        return getAddressWidgetForGoodsDonationRequest;
+
+      case RequestType.CASH:
+        return getCashDetailsForCashDonations;
+
+      case RequestType.TIME:
+        return timeDetailsForTimerequest;
+
+      default:
+        return timeDetailsForTimerequest;
+    }
+  }
+
+  Widget get timeDetailsForTimerequest {
+    return Text(
+      widget.requestItem.description,
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Widget get getCashDetailsForCashDonations {
+    switch (widget.requestItem.cashModel.paymentType) {
+      case RequestPaymentType.ACH:
+        return getACHDetails;
+
+      case RequestPaymentType.ZELLEPAY:
+        return timeDetailsForTimerequest;
+
+      case RequestPaymentType.PAYPAL:
+        return timeDetailsForTimerequest;
+
+      default:
+        return timeDetailsForTimerequest;
+    }
+  }
+
+  // Widget get getZelpayAndPaypalDetails
+
+  Widget get getACHDetails {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          child: Text(
             widget.requestItem.description,
             style: TextStyle(fontSize: 16),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Text(
-              'Donation Address',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+        ),
+        Text(
+          "Account number : " +
+              widget.requestItem.cashModel.achdetails.account_number,
+        ),
+        Text(
+          "${S.of(context).bank_address} : " +
+              widget.requestItem.cashModel.achdetails.bank_address,
+        ),
+        Text(
+          "Bank Name : " + widget.requestItem.cashModel.achdetails.bank_name,
+        ),
+        Text(
+          "${S.of(context).routing_number} : " +
+              widget.requestItem.cashModel.achdetails.routing_number,
+        ),
+      ],
+    );
+  }
+
+  Widget get getAddressWidgetForGoodsDonationRequest {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.requestItem.description,
+          style: TextStyle(fontSize: 16),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Donation Address',
+            style: TextStyle(
+              fontSize: 16,
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child: Text(
-              widget.requestItem.goodsDonationDetails.address ?? '',
-            ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text(
+            widget.requestItem.goodsDonationDetails.address ?? '',
           ),
-        ],
-      );
-    } else {
-      return Text(
-        widget.requestItem.description,
-        style: TextStyle(fontSize: 16),
-      );
-    }
+        ),
+      ],
+    );
   }
 
   Widget get engagedMembersPicturesScroll {
@@ -1148,6 +1213,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
+  Widget optionText({String title}) {
+    return Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    );
+  }
+
   WriteBatch deleteRequest() {
     //add to timebank members
 
@@ -1228,6 +1303,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
+                        comingFrom: ComingFrom.Requests,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -1257,6 +1333,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -1291,6 +1368,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",

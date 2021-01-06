@@ -512,9 +512,9 @@ class TimeBankBloc {
     _timebankController.add(TimebankController());
   }
 
-  updateInvitedUsersForRequest(requestID, sevauserid) async {
-    var result =
-        await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
+  updateInvitedUsersForRequest(requestID, sevauserid, email) async {
+    var result = await _repository.updateInvitedUsersForRequest(
+        requestID, sevauserid, email);
   }
 
   setIsAdmin(isAdminStatus) {
