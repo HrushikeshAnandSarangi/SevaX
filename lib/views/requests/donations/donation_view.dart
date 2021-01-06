@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
@@ -998,9 +999,11 @@ class _DonationViewState extends State<DonationView> {
                       .then((value) {
                     FocusScope.of(context).unfocus();
                     if (value) {
-                      pageController.animateToPage(2,
-                          curve: Curves.easeInOut,
-                          duration: Duration(milliseconds: 500));
+                      pageController.animateToPage(
+                        2,
+                        curve: Curves.easeInOut,
+                        duration: Duration(milliseconds: 500),
+                      );
                     }
                   });
                 },
@@ -1249,5 +1252,11 @@ class _DonationViewState extends State<DonationView> {
     pageController.dispose();
     donationBloc.dispose();
     amountEntered = 0;
+  }
+
+  OutlineInputBorder customTextFieldBorder() {
+    return OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey[600], width: 0.5),
+        borderRadius: BorderRadius.circular(5));
   }
 }
