@@ -256,7 +256,6 @@ Widget getBio(BuildContext context, UserModel userModel,
     );
     return isScrollable
         ? Container(
-            color: Colors.red,
             height: 150,
             child: SingleChildScrollView(
               physics: isScrollable ? null : NeverScrollableScrollPhysics(),

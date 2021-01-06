@@ -48,7 +48,7 @@ class MessageBloc extends BlocBase {
           orElse: () => null,
         );
         log("===> sender id :$senderId");
-        if (senderId != null) {
+         if (senderId != null || chat.isGroupMessage) {
           if (isMemberBlocked(userModel, senderId) ||
               (chat.deletedBy.containsKey(userModel.sevaUserID) &&
                   chat.deletedBy[userModel.sevaUserID] >

@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
@@ -70,6 +71,7 @@ class ChatBloc {
     String recieverId,
     MessageType type,
     File file,
+     @required String timebankId
   }) async {
     MessageModel messageModel = MessageModel(
       fromId: senderId,
@@ -85,7 +87,7 @@ class ChatBloc {
       chatId: chatModel.id,
       senderId: senderId,
       messageModel: messageModel,
-      timebankId: senderId,
+      timebankId: timebankId,
       isTimebankMessage: chatModel.isTimebankMessage,
       isAdmin: senderId.contains("-"), //timebank id contains "-"
       file: file,

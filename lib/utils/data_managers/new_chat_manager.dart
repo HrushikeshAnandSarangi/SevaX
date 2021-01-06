@@ -117,13 +117,12 @@ Future<void> createNewMessage({
   //if sender is admin , mark the previous messages as read
 
   if (isAdmin) {
-    batch.setData(
+    batch.updateData(
       Firestore.instance.collection("timebanknew").document(timebankId),
       {
         "unreadMessages": FieldValue.arrayRemove([chatId]),
         // "lastMessageTimestamp": null,
       },
-      merge: true,
     );
     batch.setData(
       Firestore.instance.collection("chatsnew").document(chatId),
@@ -137,14 +136,13 @@ Future<void> createNewMessage({
   }
 
   //if timebank message add it to timebankModel for count purpose
-  if (isTimebankMessage && !isAdmin) {
-    batch.setData(
+  if (isTimebankMessage && !isAdmin && timebankId != null) {
+    batch.updateData(
       Firestore.instance.collection("timebanknew").document(timebankId),
       {
         "unreadMessages": FieldValue.arrayUnion([chatId]),
         "lastMessageTimestamp": FieldValue.serverTimestamp(),
       },
-      merge: true,
     );
   }
 

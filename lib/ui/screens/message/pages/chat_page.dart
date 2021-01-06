@@ -66,17 +66,31 @@ class _ChatPageState extends State<ChatPage> {
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
   String errorText = '';
+  String timebankId;
   @override
   void initState() {
+    chatModel = widget.chatModel;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isFromRejectCompletion)
         textcontroller.text = '${S.of(context).reject_task_completion} ';
     });
 
-    chatModel = widget.chatModel;
-    recieverId = chatModel.participants[0] != widget.senderId
-        ? chatModel.participants[0]
-        : chatModel.participants[1];
+    if (!chatModel.isGroupMessage) {
+      recieverId = chatModel.participants[0] != widget.senderId
+          ? chatModel.participants[0]
+          : chatModel.participants[1];
+    }
+
+    //set timebank id if it is timebank message
+    if (chatModel.isTimebankMessage) {
+      //checking timebank id based on uuid, expect to contain '-';
+      timebankId = chatModel.participants
+          .firstWhere((element) => element.contains('-'), orElse: () {
+        logger.e("timebank id not found");
+        return null;
+      });
+    }
 
     chatModel.participantInfo.forEach((ParticipantInfo info) {
       participantsInfoById[info.id] = info
@@ -128,7 +142,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     ParticipantInfo recieverInfo = getUserInfo(
-      recieverId,
+      recieverId??'',
       chatModel.participantInfo,
     );
 
@@ -358,6 +372,7 @@ class _ChatPageState extends State<ChatPage> {
       recieverId: recieverId,
       type: type,
       file: file,
+      timebankId: timebankId,
     );
 
     textcontroller.clear();
