@@ -28,7 +28,6 @@ class CustomNavigationItem extends StatelessWidget {
         Badge(
           showBadge: showBadge,
           animationDuration: Duration.zero,
-          borderRadius: 10,
           badgeColor: isSelected ? Colors.white : Colors.red,
           badgeContent: Text(
             count,

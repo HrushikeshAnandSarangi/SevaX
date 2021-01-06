@@ -174,7 +174,8 @@ class OfferListItems extends StatelessWidget {
                   ? Colors.grey
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
-        if (model.type != RequestType.TIME &&
+        // if goods/cash and not the creator and not a admin trying accept donation show dialog
+        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
@@ -199,8 +200,8 @@ class OfferListItems extends StatelessWidget {
       onActionPressed: () async {
         bool isAccepted = getOfferParticipants(offerDataModel: model)
             .contains(model.sevaUserId);
-
-        if (model.type != RequestType.TIME &&
+        // if goods/cash and not the creator and not a admin trying accept donation show dialog
+        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
@@ -209,28 +210,8 @@ class OfferListItems extends StatelessWidget {
 
         if (model.type == RequestType.CASH ||
             model.type == RequestType.GOODS && !isAccepted) {
-          navigateToCreateRequestFromOffer(
-            context,
-            model,
-          );
-        }
-        //  else {
-        //   if (SevaCore.of(context).loggedInUser.calendarId == null &&
-        //       !isAccepted) {
-        //     _settingModalBottomSheet(
-        //       context,
-        //       model,
-        //     );
-        //   } else {
-        //     offerActions(parentContext, model)
-        //         .then((_) => Navigator.of(context).pop());
-        //   }
-        // }
-        // if (SevaCore.of(parentContext).loggedInUser.calendarId == null &&
-        //     model.offerType == OfferType.GROUP_OFFER) {
-        //   _settingModalBottomSheet(parentContext, model);
-        // }
-        else {
+          navigateToDonations(context, model);
+        } else {
           offerActions(parentContext, model, ComingFrom.Offers);
         }
       },

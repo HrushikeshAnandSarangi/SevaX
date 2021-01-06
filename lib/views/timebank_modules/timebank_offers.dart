@@ -78,8 +78,8 @@ class OffersState extends State<OffersModule> {
                   TransactionLimitCheck(
                     comingFrom: ComingFrom.Offers,
                     timebankId: widget.timebankId,
-//                    isSoftDeleteRequested:
-//                        widget.timebankModel.requestedSoftDelete,
+                   isSoftDeleteRequested:
+                       widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
                         if (widget.timebankModel.id ==

@@ -525,7 +525,7 @@ class _DonationViewState extends State<DonationView> {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
@@ -648,6 +648,8 @@ class _DonationViewState extends State<DonationView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   actionButton(
+                      buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                      textColor: Colors.white,
                       buttonTitle: S.of(context).submit,
                       onPressed: () async {
                         var connResult =
@@ -670,7 +672,7 @@ class _DonationViewState extends State<DonationView> {
                                     sevaUserID: donationsModel.donorSevaUserId))
                             .then((value) {
                           if (value) {
-                            // hideProgress();
+                            hideProgress();
                             getSuccessDialog(S
                                     .of(context)
                                     .donations_requested
@@ -698,7 +700,7 @@ class _DonationViewState extends State<DonationView> {
 
   Widget donatedItems() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -816,7 +818,7 @@ class _DonationViewState extends State<DonationView> {
     );
     var focusNodes = List.generate(2, (_) => FocusNode());
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -915,6 +917,8 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
+                  buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                  textColor: Colors.white,
                   buttonTitle: S.of(context).submit,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
@@ -968,7 +972,7 @@ class _DonationViewState extends State<DonationView> {
 
   Widget amountWidget() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1032,7 +1036,7 @@ class _DonationViewState extends State<DonationView> {
   Widget donationDetails() {
     if (widget.requestModel != null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

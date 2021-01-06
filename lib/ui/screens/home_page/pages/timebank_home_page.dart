@@ -263,8 +263,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                         TransactionLimitCheck(
                           comingFrom: ComingFrom.Home,
                           timebankId: widget.primaryTimebankModel.id,
-//                          isSoftDeleteRequested:
-//                              widget.primaryTimebankModel.requestedSoftDelete,
+                         isSoftDeleteRequested:
+                             widget.primaryTimebankModel.requestedSoftDelete,
                           child: IconButton(
                             icon: Icon(Icons.add_circle),
                             color: FlavorConfig.values.theme.primaryColor,

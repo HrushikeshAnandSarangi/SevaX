@@ -96,6 +96,7 @@ class TransactionLimitCheck extends StatelessWidget {
   TransactionLimitCheck({
     Key key,
     this.child,
+    @required this.isSoftDeleteRequested,
     @required this.comingFrom,
     @required this.timebankId,
   });

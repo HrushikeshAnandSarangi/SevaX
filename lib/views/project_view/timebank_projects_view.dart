@@ -104,8 +104,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 TransactionLimitCheck(
                   comingFrom: ComingFrom.Projects,
                   timebankId: widget.timebankId,
-//                  isSoftDeleteRequested:
-//                      widget.timebankModel.requestedSoftDelete,
+                 isSoftDeleteRequested:
+                     widget.timebankModel.requestedSoftDelete,
                   child: GestureDetector(
                     child: Container(
                       margin: EdgeInsets.only(left: 0),

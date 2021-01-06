@@ -60,110 +60,105 @@ class OfferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Offstage(
       offstage: isCardVisible,
-      child: Card(
-        elevation: 2,
-        child: InkWell(
-          onTap: onCardPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          getOfferLocation(selectedAddress: selectedAddress) !=
-                                  null
-                              ? getStatsIcon(
-                                  label: getOfferLocation(
-                                      selectedAddress: selectedAddress),
-                                  icon: Icons.location_on)
-                              : Container(),
-                          SizedBox(width: 10),
-                          //todo pass current location and location from model
-                          !isCreator
-                              ? DistanceFromCurrentLocation(
-                                  coordinates: offerCoordinates,
-                                  currentLocation: userCoordinates,
-                                  isKm: true,
-                                )
-                              : Container(),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              title,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                              margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                              child: Center(
-                                child: Visibility(
-                                  visible: isRecurring,
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Icon(Icons.navigate_next),
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(13.0))),
+          margin: EdgeInsets.only(left: 5, right: 5, top: 10),
+          child: Card(
+            margin: EdgeInsets.only(bottom: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(13),
+            ),
+            shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+            elevation: 2,
+            child: InkWell(
+              onTap: onCardPressed,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  title,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(70, 72, 93, 1.0),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              )),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        subtitle,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.subtitle,
-                      ),
-                      Visibility(
-                        visible: !isRecurring,
-                        child: getOfferMetaData(
-                          context: context,
-                          startDate: startDate,
-                        ),
-                      ),
-                      Offstage(
-                        offstage: isCreator || isRecurring,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
                               ),
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              color:
-                                  buttonColor ?? Theme.of(context).primaryColor,
-                              child: Text(
-                                actionButtonLabel ?? '',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              onPressed: onActionPressed,
-                            )
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: isRecurring,
-                        child: Row(
-                            children: [
+                              Spacer(),
+                              Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                                  child: Center(
+                                    child: Visibility(
+                                      visible: isRecurring,
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: Icon(Icons.navigate_next),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            subtitle,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Color.fromRGBO(70, 72, 93, 1.0),
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Visibility(
+                            visible: !isRecurring,
+                            child: getOfferMetaData(
+                              context: context,
+                              startDate: startDate,
+                            ),
+                          ),
+                          Offstage(
+                            offstage: isCreator || isRecurring,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  color: buttonColor ??
+                                      Theme.of(context).primaryColor,
+                                  child: Text(
+                                    actionButtonLabel ?? '',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  onPressed: onActionPressed,
+                                )
+                              ],
+                            ),
+                          ),
+                          Visibility(
+                            visible: isRecurring,
+                            child: Row(children: [
                               SizedBox(
                                 height: 30,
                               ),
@@ -174,26 +169,17 @@ class OfferCard extends StatelessWidget {
                                 ],
                               ),
                               Spacer(),
-//                              Text(
-//                                RequestViewClassifer.getTimeInText(
-//                                  postTimeStamp: timestamp,
-//                                ),
-//                                style: TextStyle(
-//                                  color: Colors.black38,
-//                                ),
-//                              ),
-                            ]
-                        ),
+                            ]),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget getOfferMetaData({BuildContext context, int startDate}) {

@@ -66,9 +66,8 @@ class ReportPdf {
             alignment: Alignment.centerRight,
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-            decoration: const BoxDecoration(
-                border:
-                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+            decoration: BoxDecoration(
+                border: BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
               'Report',
               style: Theme.of(context)
