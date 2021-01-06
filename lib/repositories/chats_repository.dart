@@ -98,8 +98,8 @@ class ChatsRepository {
       batch.setData(
         collectionReference.document(chatId),
         {
-          "participantInfo": List<dynamic>.from(infos.map(
-              (x) => (x..type = ChatType.TYPE_MULTI_USER_MESSAGING).toMap())),
+          "participantInfo": FieldValue.arrayUnion(List<dynamic>.from(infos.map(
+              (x) => (x..type = ChatType.TYPE_MULTI_USER_MESSAGING).toMap(),),),),
           "participants": List<dynamic>.from(infos.map((x) => x.id))
         },
         merge: true,

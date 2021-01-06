@@ -32,11 +32,13 @@ class MessageCard extends StatelessWidget {
       isAdminMessage ? timebankId : userId,
       model.participantInfo,
     );
+    
+      var chatType =  model.isGroupMessage ? ChatType.TYPE_MULTI_USER_MESSAGING : info?.type;
+
     int unreadCount =
         model.unreadStatus.containsKey(isAdminMessage ? senderId : userId)
             ? model.unreadStatus[isAdminMessage ? senderId : userId]
             : 0;
-
     String photoUrl =
         model.isGroupMessage ? model.groupDetails.imageUrl : info.photoUrl;
     String name = model.isGroupMessage ? model.groupDetails.name : info.name;
@@ -71,16 +73,16 @@ class MessageCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      isAdminMessage || info.type == ChatType.TYPE_PERSONAL
+                      isAdminMessage || chatType == ChatType.TYPE_PERSONAL
                           ? Container()
                           : Container(
                               decoration: BoxDecoration(
-                                color: getMessageTypeColor(context, info.type),
+                                color: getMessageTypeColor(context,chatType),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 3),
                               child: Text(
-                                getMessageTypeName(context, info.type),
+                                getMessageTypeName(context, chatType),
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.white,
