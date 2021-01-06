@@ -9,6 +9,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -271,6 +272,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             IconButton(
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () async {
+                                globals.isFromOnBoarding = false;
+
                                 var timebankAdvisory =
                                     S.of(context).create_timebank_confirmation;
                                 Map<String, bool> onActivityResult =
@@ -282,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context1) => SevaCore(
+                                      builder: (context) => SevaCore(
                                         loggedInUser:
                                             SevaCore.of(context).loggedInUser,
                                         child: CreateEditCommunityView(

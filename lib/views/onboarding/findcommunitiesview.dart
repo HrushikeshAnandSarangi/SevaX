@@ -55,7 +55,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final profanityDetector = ProfanityDetector();
 
   String errorText = '';
-  BuildContext parentContext;
   @override
   void initState() {
     gpsCheck();
@@ -89,7 +88,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    parentContext = context;
     JOIN = S.of(context).join;
     JOINED = S.of(context).joined;
     nearTimebankText = S.of(context).timebanks_near_you;
@@ -109,7 +107,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         .push(
                           MaterialPageRoute(
                             builder: (context) => NearByFiltersView(
-                              SevaCore.of(parentContext).loggedInUser,
+                              SevaCore.of(context).loggedInUser,
                             ),
                           ),
                         )
@@ -603,7 +601,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     createEditCommunityBloc
                         .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
-                      parentContext,
+                      context,
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
                           loggedInUser: SevaCore.of(context).loggedInUser,
