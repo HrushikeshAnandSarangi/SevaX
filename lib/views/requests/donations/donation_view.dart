@@ -149,7 +149,6 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
-
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -594,7 +593,7 @@ class _DonationViewState extends State<DonationView> {
                                     sevaUserID: donationsModel.donorSevaUserId))
                             .then((value) {
                           if (value) {
-                             hideProgress();
+                            hideProgress();
                             getSuccessDialog(S
                                     .of(context)
                                     .donations_requested
@@ -626,13 +625,13 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            SizedBox(
-              height: 10,
-            ),
+          SizedBox(
+            height: 10,
+          ),
           titleText(title: S.of(context).tell_what_you_donated),
-            SizedBox(
-              height: 10,
-            ),
+          SizedBox(
+            height: 10,
+          ),
           StreamBuilder<String>(
               stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
@@ -643,15 +642,15 @@ class _DonationViewState extends State<DonationView> {
                   maxLines: 2,
                   onChanged: donationBloc.onCommentChanged,
                   decoration: InputDecoration(
-                      filled: true,
-                      focusColor: Colors.grey[200],
-                      focusedErrorBorder: customTextFieldBorder(),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: customTextFieldBorder(),
-                      errorBorder: customTextFieldBorder(),
-                      enabledBorder: customTextFieldBorder(),
+                    filled: true,
+                    focusColor: Colors.grey[200],
+                    focusedErrorBorder: customTextFieldBorder(),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: customTextFieldBorder(),
+                    errorBorder: customTextFieldBorder(),
+                    enabledBorder: customTextFieldBorder(),
                     hintStyle: subTitleStyle,
                     hintText: S.of(context).describe_goods,
                   ),
@@ -671,7 +670,7 @@ class _DonationViewState extends State<DonationView> {
                       children: [
                         Checkbox(
                           value:
-                          snapshot.data?.containsKey(keys[index]) ?? false,
+                              snapshot.data?.containsKey(keys[index]) ?? false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             donationBloc.addAddRemove(
@@ -702,14 +701,13 @@ class _DonationViewState extends State<DonationView> {
             children: <Widget>[
               actionButton(
                   buttonTitle: S.of(context).do_it_later,
-                    textColor: Colors.black,
+                  textColor: Colors.black,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
               SizedBox(
                 width: 20,
               ),
-
               actionButton(
                   buttonTitle: S.of(context).donated,
                   buttonColor: Colors.orange,
@@ -725,23 +723,22 @@ class _DonationViewState extends State<DonationView> {
                       showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateGoods(
-                          notificationId: widget.notificationId,
-                          donationModel: donationsModel,
-                          requestModel: widget.requestModel,
-                          donor: sevaUser)
+                              notificationId: widget.notificationId,
+                              donationModel: donationsModel,
+                              requestModel: widget.requestModel,
+                              donor: sevaUser)
                           .then((value) {
                         if (value) {
-                        // hideProgress();
-                        getSuccessDialog(S.of(context).pledged.toLowerCase())
-                            .then(
+                          // hideProgress();
+                          getSuccessDialog(S.of(context).pledged.toLowerCase())
+                              .then(
                             //to pop the screen
-                                (_) => Navigator.of(context).pop(),
+                            (_) => Navigator.of(context).pop(),
                           );
                         }
                       });
                     }
                   }),
-
             ],
           ),
         ],
@@ -893,7 +890,7 @@ class _DonationViewState extends State<DonationView> {
                                   sevaUserID: widget.offerModel.sevaUserId))
                           .then((value) {
                         if (value) {
-                           hideProgress();
+                          hideProgress();
                           getSuccessDialog(S
                                   .of(context)
                                   .donations_requested
@@ -937,20 +934,20 @@ class _DonationViewState extends State<DonationView> {
             height: 10,
           ),
           StreamBuilder<String>(
-              stream: donationBloc.amountPledged,
-              builder: (context, snapshot) {
-                return Container(
+            stream: donationBloc.amountPledged,
+            builder: (context, snapshot) {
+              return Container(
                   constraints: BoxConstraints(maxHeight: 55, minHeight: 50),
                   child: TextField(
-                  onChanged: (value) {
-                    donationBloc.onAmountChange(value);
-                    setState(() {
-                      amountEntered = int.parse(value);
-                    });
-                  },
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                    onChanged: (value) {
+                      donationBloc.onAmountChange(value);
+                      setState(() {
+                        amountEntered = int.parse(value);
+                      });
+                    },
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
                       filled: true,
                       focusColor: Colors.grey[200],
                       focusedErrorBorder: customTextFieldBorder(),
@@ -960,19 +957,20 @@ class _DonationViewState extends State<DonationView> {
                       focusedBorder: customTextFieldBorder(),
                       errorBorder: customTextFieldBorder(),
                       enabledBorder: customTextFieldBorder(),
-                    errorText: snapshot.error == 'amount1'
-                        ? S.of(context).enter_valid_amount
-                        : snapshot.error == 'amount2'
-                            ? S.of(context).minmum_amount +
-                                ' ' +
-                                widget.requestModel.cashModel.minAmount
-                                    .toString()
-                            : '',
-                    hintStyle: subTitleStyle,
-                    hintText: S.of(context).add_amount_donated,
-                  ),
-                );
-              }),
+                      errorText: snapshot.error == 'amount1'
+                          ? S.of(context).enter_valid_amount
+                          : snapshot.error == 'amount2'
+                              ? S.of(context).minmum_amount +
+                                  ' ' +
+                                  widget.requestModel.cashModel.minAmount
+                                      .toString()
+                              : '',
+                      hintStyle: subTitleStyle,
+                      hintText: S.of(context).add_amount_donated,
+                    ),
+                  ));
+            },
+          ),
           SizedBox(
             height: 20,
           ),
@@ -1215,7 +1213,7 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
-  Future<bool> getSuccessDialog() async {
+  Future<bool> getSuccessDialog(data) async {
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -1228,7 +1226,7 @@ class _DonationViewState extends State<DonationView> {
                   .firstWordUpperCase()
                   .replaceFirst('.', '') +
               ' ' +
-              S.of(context).pledged),
+              data),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(

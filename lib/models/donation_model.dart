@@ -35,6 +35,7 @@ class DonationModel {
     this.donationType,
     this.id,
     this.requestId,
+    this.requestIdType,
     this.requestTitle,
     this.timebankId,
     this.timestamp,
@@ -43,6 +44,7 @@ class DonationModel {
     this.donationStatus,
     this.notificationId,
     this.donorDetails,
+    this.receiverDetails,
     this.donationAssociatedTimebankDetails,
     this.lastModifiedBy,
     this.minimumAmount,
@@ -55,6 +57,7 @@ class DonationModel {
   RequestType donationType;
   String id;
   String requestId;
+  String requestIdType;
   String requestTitle;
   String timebankId;
   String notificationId;
@@ -64,6 +67,7 @@ class DonationModel {
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
+  DonorDetails receiverDetails;
   DonationAssociatedTimebankDetails donationAssociatedTimebankDetails;
   String lastModifiedBy;
 
@@ -86,6 +90,8 @@ class DonationModel {
                     : RequestType.TIME,
         id: json["id"] == null ? null : json["id"],
         requestId: json["requestId"] == null ? null : json["requestId"],
+        requestIdType:
+            json['requestIdType'] == null ? null : json["requestIdType"],
         requestTitle:
             json["requestTitle"] == null ? null : json["requestTitle"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
@@ -113,6 +119,13 @@ class DonationModel {
                   json['donorDetails'],
                 ),
               ),
+        receiverDetails: json['receiverDetails'] == null
+            ? null
+            : DonorDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['receiverDetails'],
+                ),
+              ),
         donationAssociatedTimebankDetails:
             json.containsKey('donationAssociatedTimebankDetails')
                 ? DonationAssociatedTimebankDetails.fromMap(
@@ -135,9 +148,12 @@ class DonationModel {
             ? null
             : donationType == RequestType.CASH
                 ? 'CASH'
-                : donationType == RequestType.GOODS ? 'GOODS' : 'TIME',
+                : donationType == RequestType.GOODS
+                    ? 'GOODS'
+                    : 'TIME',
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
+        "requestIdType": requestIdType == null ? null : requestIdType,
         "requestTitle": requestTitle == null ? null : requestTitle,
         "timebankId": timebankId == null ? null : timebankId,
         "minimumAmount": minimumAmount == null ? null : minimumAmount,
@@ -148,6 +164,8 @@ class DonationModel {
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
+        "receiverDetails":
+            receiverDetails == null ? null : receiverDetails.toMap(),
         'donationAssociatedTimebankDetails':
             donationAssociatedTimebankDetails.toMap(),
         "changeHistory": lastModifiedBy,
@@ -155,13 +173,14 @@ class DonationModel {
 
   @override
   String toString() {
-    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId,minimumAmount: $minimumAmount, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails}';
+    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId,minimumAmount: $minimumAmount, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails, receiverDetails: $receiverDetails}';
   }
 }
 
-class CashDetails{
+class CashDetails {
   int pledgedAmount;
-  CashModel cashDetails = CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel());
+  CashModel cashDetails = CashModel(
+      paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel());
 
   CashDetails({
     this.pledgedAmount,
@@ -169,19 +188,22 @@ class CashDetails{
   });
 
   factory CashDetails.fromMap(Map<String, dynamic> json) => CashDetails(
-        cashDetails: json['cashDetails'] == null? null : CashModel.fromMap(json['cashDetails']),
+        cashDetails: json['cashDetails'] == null
+            ? null
+            : CashModel.fromMap(json['cashDetails']),
         pledgedAmount:
             json["pledgedAmount"] == null ? null : json["pledgedAmount"],
       );
 
   Map<String, dynamic> toMap() => {
         "pledgedAmount": pledgedAmount == null ? null : pledgedAmount,
-        "cashDetails": cashDetails == null? null : cashDetails.toMap(),
+        "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
       };
 }
 
 class GoodsDetails {
-  GoodsDetails({this.toAddress, this.comments, this.donatedGoods, this.requiredGoods});
+  GoodsDetails(
+      {this.toAddress, this.comments, this.donatedGoods, this.requiredGoods});
   String toAddress;
   String comments;
   Map<String, String> donatedGoods;
@@ -189,7 +211,7 @@ class GoodsDetails {
 
   factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
     return GoodsDetails(
-      toAddress: json['toAddress'] == null ? null: json["toAddress"],
+      toAddress: json['toAddress'] == null ? null : json["toAddress"],
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<String, String>.from(json["donatedGoods"] ?? {})
@@ -201,7 +223,7 @@ class GoodsDetails {
   }
 
   Map<dynamic, dynamic> toMap() => {
-        "toAddress": toAddress == null? null: toAddress,
+        "toAddress": toAddress == null ? null : toAddress,
         "comments": comments == null ? null : comments,
         "donatedGoods": donatedGoods == null ? null : donatedGoods,
         "requiredGoods": requiredGoods == null ? null : requiredGoods,

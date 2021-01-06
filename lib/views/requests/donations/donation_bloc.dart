@@ -38,25 +38,27 @@ class DonationBloc {
       {DonationModel donationModel,
       OfferModel offerModel,
       String notificationId,
-      UserModel donor}) async {
+      UserModel notify}) async {
 //      donationModel.goodsDetails.donatedGoods = _selectedList.value;
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
         _errorMessage.add('goods');
         return false;
       } else {
+        donationModel.requestIdType = 'offer';
         donationModel.goodsDetails.comments = _comment.value;
         donationModel.goodsDetails.requiredGoods = _selectedList.value;
         donationModel.goodsDetails.toAddress =
             donationModel.goodsDetails.toAddress;
         var newDonors =
             new List<String>.from(offerModel.goodsDonationDetails.donors);
-        newDonors.add(donor.sevaUserID);
+        newDonors.add(donationModel.donatedTo);
         offerModel.goodsDonationDetails.donors = newDonors;
       }
     } else {
+      donationModel.requestIdType = 'offer';
       var newDonors = new List<String>.from(offerModel.cashModel.donors);
-      newDonors.add(donor.sevaUserID);
+      newDonors.add(donationModel.donatedTo);
       offerModel.cashModel.donors = newDonors;
     }
     try {
@@ -65,11 +67,11 @@ class DonationBloc {
       await sendNotification(
         donationModel: donationModel,
         offerModel: offerModel,
-        donor: donor,
+        donor: notify,
       );
       if (notificationId != null && notificationId != '') {
         await FirestoreManager.readUserNotification(
-            notificationId, donor.email);
+            notificationId, notify.email);
       }
       return true;
     } on Exception catch (e) {
@@ -86,6 +88,7 @@ class DonationBloc {
     if (_selectedList == null || _selectedList.value.isEmpty) {
       _errorMessage.add('goods');
     } else {
+      donationModel.requestIdType = 'request';
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
       donationModel.goodsDetails.requiredGoods =
@@ -133,8 +136,11 @@ class DonationBloc {
       RequestModel requestModel,
       String notificationId,
       UserModel donor}) async {
+    donationModel.requestIdType = 'request';
     donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
     donationModel.minimumAmount = requestModel.cashModel.minAmount;
+    donationModel.cashDetails.cashDetails.minAmount =
+        requestModel.cashModel.minAmount;
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =
