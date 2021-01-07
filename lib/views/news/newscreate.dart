@@ -177,8 +177,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.title;
-    var postNode = FocusNode();
     // Build a Form widget using the formKey we created above
+    var postNode = FocusNode();
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Form(
@@ -283,49 +283,49 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       offstage: !isAccessAvailable(widget.timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Center(
-                        child:
-                             TransactionsMatrixCheck(
-                              comingFrom: ComingFrom.Home,
-                              upgradeDetails:
-                                  AppConfig.upgradePlanBannerModel.parent_timebanks,
-                              transaction_matrix_type: "parent_timebanks",
-                              child:
-                            RaisedButton(
-                          textColor: Colors.green,
-                          elevation: 0,
-                          child: Container(
-                            constraints: BoxConstraints.loose(
-                              Size(MediaQuery.of(context).size.width - 200, 50),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    "Posting to ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                        child: TransactionsMatrixCheck(
+                          comingFrom: ComingFrom.Home,
+                          upgradeDetails:
+                              AppConfig.upgradePlanBannerModel.parent_timebanks,
+                          transaction_matrix_type: "parent_timebanks",
+                          child: RaisedButton(
+                            textColor: Colors.green,
+                            elevation: 0,
+                            child: Container(
+                              constraints: BoxConstraints.loose(
+                                Size(MediaQuery.of(context).size.width - 200,
+                                    50),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      "Posting to ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
                                   ),
-                                ),
-                                Icon(Icons.arrow_drop_down)
-                              ],
+                                  Icon(Icons.arrow_drop_down)
+                                ],
+                              ),
                             ),
-                          ),
-                          color: Colors.grey[200],
-                          onPressed: () async {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            _silblingTimebankSelectionBottomsheet(
+                            color: Colors.grey[200],
+                            onPressed: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              _silblingTimebankSelectionBottomsheet(
                                 context,
                                 this.widget.timebankModel,
                                 selectedTimebanks,
                                 (selectedTimebanks) => {
-                                      setState(() => {
-                                            selectedTimebanks =
-                                                selectedTimebanks
-                                          })
-                                    });
-                          },
-                        ),
+                                  setState(
+                                    () =>
+                                        {selectedTimebanks = selectedTimebanks},
+                                  )
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -344,10 +344,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                               this.selectedAddress = dataModel.location;
                             });
                           },
-                          //   (geoLocationPointSelected) async {
-                          // location = geoLocationPointSelected;
-                          // await _getLocation();
-                          // },
                           onCreditsEntered: (photoCreditsFromNews) {
                             photoCredits = photoCreditsFromNews;
                           },
@@ -396,9 +392,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 subheadingController.text);
 
                             if (newsObject.urlsFromPost.length > 0) {
-                              await scrapeURLDetails(subheadingController.text);
+                              await scrapeURLDetails(
+                                  newsObject.urlsFromPost.first);
                             }
-
                             writeToDB();
                           }
                         } else {

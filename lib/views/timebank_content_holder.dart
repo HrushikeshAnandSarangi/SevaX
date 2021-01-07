@@ -760,9 +760,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.title != null && news.title != "NoData"
-                                  ? news.title.trim()
-                                  : news.subheading.trim(),
+                              text: news.subheading.trim(),
                               onOpen: (url) async {
                                 if (await canLaunch(url)) {
                                   launch(url);
@@ -770,18 +768,27 @@ class DiscussionListState extends State<DiscussionList> {
                                   logger.e("could not launch");
                                 }
                               },
-                              // overflow: TextOverflow.ellipsis,
-                              // maxLines: 7,
-                              // style: TextStyle(
-                              //     fontSize: 15.0,
-                              //     fontWeight: FontWeight.bold,
-                              //     fontFamily: "Europa"),
+                            ),
+                          ),
+                          // scraped Data
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Umeshify(
+                              text: news.title != null && news.title != "NoData"
+                                  ? news.title.trim()
+                                  : '',
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
                             ),
                           ),
                         ],
                       ),
                     ),
-                    //  SizedBox(width: 8.0),
                     isAccessAvailable(widget.timebankModel,
                             SevaCore.of(context).loggedInUser.sevaUserID)
                         ? getOptionButtons(
@@ -789,9 +796,6 @@ class DiscussionListState extends State<DiscussionList> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 6, vertical: 2),
                               child: Container(
-//                                      color: news.isPinned
-//                                          ? Colors.green
-//                                          : Colors.black,
                                 height: 20,
                                 width: 20,
                                 child: Image.asset(

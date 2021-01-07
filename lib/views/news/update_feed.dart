@@ -114,26 +114,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     Navigator.pop(context);
   }
 
-//  EntityModel get _getSelectedEntityModel {
-//    if (this.selectedEntity.runtimeType == TimebankModel) {
-//      TimebankModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.timebank,
-//      );
-//    } else if (this.selectedEntity.runtimeType == CampaignModel) {
-//      CampaignModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.campaign,
-//      );
-//    } else {
-//      return EntityModel(entityType: EntityType.general);
-//    }
-//  }
-
   @override
   void initState() {
     newsObject = widget.newsModel;
@@ -360,7 +340,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
                         if (newsObject.urlsFromPost.length > 0) {
-                          await scrapeURLDetails(newsObject.subheading);
+                          await scrapeURLDetails(newsObject.urlsFromPost.first);
+                        } else {
+                          newsObject.title = '';
+                          newsObject.imageScraped = '';
+                          newsObject.newsImageUrl = '';
+                          newsObject.description = '';
                         }
 
                         writeToDB();
