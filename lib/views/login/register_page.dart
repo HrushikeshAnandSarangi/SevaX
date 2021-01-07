@@ -124,14 +124,14 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 16),
                             _imagePicker,
                             _formFields,
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              child: cvUpload(
-                                title: S.of(context).upload_cv_resume,
-                                text: S.of(context).cv_message,
-                              ),
-                            ),
+//                            Padding(
+//                              padding: const EdgeInsets.symmetric(
+//                                  horizontal: 16, vertical: 16),
+//                              child: cvUpload(
+//                                title: S.of(context).upload_cv_resume,
+//                                text: S.of(context).cv_message,
+//                              ),
+//                            ),
                             SizedBox(height: 24),
                             registerButton,
                             SizedBox(height: 8),
