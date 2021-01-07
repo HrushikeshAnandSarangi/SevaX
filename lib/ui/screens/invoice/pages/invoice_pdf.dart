@@ -11,9 +11,22 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 
 class InvoicePdf {
-  void invoicePdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
+  void invoicePdf(context, InvoiceModel model, CommunityModel communityModel,
+      String date, Map<String, dynamic> myPlan) async {
     final Document pdf = Document();
-    List<String> monthsArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    List<String> monthsArr = [
+      "January",
+      "Febuary",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
     ];
     PdfImage _logo = PdfImage.file(
       pdf.document,
@@ -38,12 +51,14 @@ class InvoicePdf {
       subtotal = model.details[1].price * model.details[1].units;
       return subtotal;
     }
-    var freeLimitAmount = myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
+
+    var freeLimitAmount =
+        myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
     var totalAmount = getSubTotal();
     pdf.addPage(
       MultiPage(
         pageFormat:
-        PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+            PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
         crossAxisAlignment: CrossAxisAlignment.start,
         header: (Context context) {
           if (context.pageNumber == 1) {
@@ -53,9 +68,9 @@ class InvoicePdf {
             alignment: Alignment.centerRight,
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
                 border:
-                BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
               'Invoice',
               style: Theme.of(context)
@@ -71,8 +86,8 @@ class InvoicePdf {
             child: Text(
               'Page ${context.pageNumber} of ${context.pagesCount}',
               style: Theme.of(context).defaultTextStyle.copyWith(
-                color: PdfColors.grey,
-              ),
+                    color: PdfColors.grey,
+                  ),
             ),
           );
         },
@@ -99,11 +114,17 @@ class InvoicePdf {
                     "Bill to Address",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("${communityModel.billing_address.companyname },", style: TextStyle(fontSize: 14)),
-                  Text("${communityModel.billing_address.street_address1!="" ? communityModel.billing_address.street_address1 : ""}", style: TextStyle(fontSize: 14)),
-                  Text("${communityModel.billing_address.street_address2!="" ? communityModel.billing_address.street_address2+' ' : ""}${communityModel.billing_address.city} ${communityModel.billing_address.pincode}", style: TextStyle(fontSize: 14)),
-
-                  Text("${communityModel.billing_address.state} ${communityModel.billing_address.country}", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.billing_address.companyname},",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.street_address1 != "" ? communityModel.billing_address.street_address1 : ""}",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.street_address2 != "" ? communityModel.billing_address.street_address2 + ' ' : ""}${communityModel.billing_address.city} ${communityModel.billing_address.pincode}",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.state} ${communityModel.billing_address.country}",
+                      style: TextStyle(fontSize: 14)),
                 ],
               ),
               Spacer(),
@@ -115,7 +136,8 @@ class InvoicePdf {
                     "Account Number:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("${communityModel.sevaxAccountNo}", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.sevaxAccountNo}",
+                      style: TextStyle(fontSize: 14)),
                   SizedBox(height: 8),
                   Text(
                     "BILLING STATEMENT:",
@@ -123,7 +145,8 @@ class InvoicePdf {
                   ),
                   Text("Statement Number: ${communityModel.billingStmtNo}",
                       style: TextStyle(fontSize: 14)),
-                  Text("Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0])-1]}, ${date.split('_')[1]}",
+                  Text(
+                      "Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0]) - 1]}, ${date.split('_')[1]}",
                       style: TextStyle(fontSize: 14)),
                 ],
               ),
@@ -171,7 +194,7 @@ class InvoicePdf {
             headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
             data: List.generate(
               model.details.length,
-                  (index) => [
+              (index) => [
                 model.details[index].description,
                 model.details[index].units,
                 model.details[index].price,
@@ -189,8 +212,8 @@ class InvoicePdf {
                   SizedBox(height: 12),
                   _rowText("SUB TOTAL", "\$ ${totalAmount}"),
                   SizedBox(height: 8),
-                  _rowText(
-                      "GRAND TOTAL", "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
+                  _rowText("GRAND TOTAL",
+                      "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
                   SizedBox(height: 12),
                 ],
               ),
@@ -206,12 +229,15 @@ class InvoicePdf {
 //    final String dir = (await getExternalStorageDirectory()).path;
     final String path = '$dir/invoice.pdf';
 //    final String path = 'C://invoice.pdf';
-    log("path to pdf file is "+path);
+    log("path to pdf file is " + path);
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
     material.Navigator.of(context).push(
       material.MaterialPageRoute(
-        builder: (_) => InvoiceScreen(path: path, pdfType: "invoice",),
+        builder: (_) => InvoiceScreen(
+          path: path,
+          pdfType: "invoice",
+        ),
       ),
     );
   }

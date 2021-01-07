@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class Umeshify extends StatefulWidget {
@@ -18,7 +20,7 @@ class _UmeshifyState extends State<Umeshify> {
     var matches = exp.allMatches(widget.text);
     var lastPosition = 0;
 
-    if (matches.length < 1) {
+    if (matches.isEmpty) {
       def.add(
         TextSpan(
           text: widget.text,
@@ -60,6 +62,17 @@ class _UmeshifyState extends State<Umeshify> {
         );
       lastPosition = match.end;
     }
+
+    if (matches.isNotEmpty)
+      def
+        ..add(
+          TextSpan(
+            text: widget.text.substring(lastPosition, widget.text.length),
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        );
 
     super.initState();
   }

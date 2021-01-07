@@ -105,7 +105,7 @@ class _CameraState extends State<CameraPage> {
     final String filePath = '$dirPath/${_timestamp()}.jpg';
 
     try {
-      await controller.takePicture(filePath);
+      await controller.takePicture();
     } on CameraException catch (e) {
       _showCameraException(e);
       return null;
