@@ -44,6 +44,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
       _bloc.loadData(widget.offerModel);
     }
     super.initState();
+    _bloc.errorMessage.listen((event) {
+      if (event.isNotEmpty && event != null) {
+        //hideProgress();
+        showScaffold(
+            event == 'goods' ? S.of(context).select_goods_category : null);
+      }
+    });
+  }
+
+  void showScaffold(String message) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: S.of(context).dismiss,
+          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+        ),
+      ),
+    );
   }
 
   @override
