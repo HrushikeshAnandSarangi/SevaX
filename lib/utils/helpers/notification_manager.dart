@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sevaexchange/models/device_details.dart';
 
 class FCMNotificationManager {
   static Future<bool> registerDeviceWithMemberForNotifications(
@@ -31,12 +34,21 @@ class FCMNotificationManager {
     String email,
     String token,
   }) async {
-    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    DeviceDetails deviceDetails = DeviceDetails();
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      deviceDetails.deviceType = androidInfo.androidId;
+      deviceDetails.deviceId = 'Android';
+    } else if (Platform.isIOS) {
+      var iosInfo = await DeviceInfoPlugin().iosInfo;
+      deviceDetails.deviceType = iosInfo.identifierForVendor;
+      deviceDetails.deviceId = 'IOS';
+    }
     return await Firestore.instance
         .collection('users')
         .document(email)
         .updateData({
-          'tokenDetails.' + androidInfo.androidId: token,
+          'tokenDetails.' + deviceDetails.deviceType: token,
         })
         .then((e) => true)
         .catchError((onError) => false);

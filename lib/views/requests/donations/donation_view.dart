@@ -652,7 +652,6 @@ class _DonationViewState extends State<DonationView> {
                       buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
                       textColor: Colors.white,
                       buttonTitle: S.of(context).submit,
-                      buttonColor: Colors.orange,
                       onPressed: () async {
                         var connResult =
                             await Connectivity().checkConnectivity();
@@ -950,7 +949,6 @@ class _DonationViewState extends State<DonationView> {
                   buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
                   textColor: Colors.white,
                   buttonTitle: S.of(context).submit,
-                  buttonColor: Colors.orange,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {

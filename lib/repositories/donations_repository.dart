@@ -209,12 +209,14 @@ class DonationsRepository {
               .collection(DBCollection.notifications);
         }
 
-      batch.setData(
-        notificationReferenceForDonor.document(acknowledgementNotification.id),
-        acknowledgementNotification.toMap(),
-      );
+        batch.setData(
+          notificationReferenceForDonor.document(
+              acknowledgementNotification.id),
+          acknowledgementNotification.toMap(),
+        );
 
-      await batch.commit();
+        await batch.commit();
+      }
     } on Exception catch (e) {
       logger.e(e);
     }

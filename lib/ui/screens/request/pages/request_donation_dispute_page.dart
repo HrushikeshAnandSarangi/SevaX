@@ -496,7 +496,6 @@ class _CashFlow extends StatelessWidget {
   final RequestMode requestMode;
   final OperatingMode operatingMode;
   final scaffoldKey;
-  final scaffoldKey;
 
   Widget getACHDetails(BuildContext context, data) {
     return Column(
