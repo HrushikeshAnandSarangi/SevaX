@@ -25,6 +25,12 @@ import '../../../../flavor_config.dart';
 import 'home_dashboard.dart';
 
 class HomePageRouter extends StatefulWidget {
+  // final UserModel userModel;
+
+  const HomePageRouter({Key key,
+    // @required this.userModel
+  }) : super(key: key);
+
   @override
   _BottomNavBarRouterState createState() => _BottomNavBarRouterState();
 }
@@ -45,11 +51,12 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
 
   @override
   void initState() {
-    log("home page router init");
     super.initState();
+    setState(() {});
+
     Future.delayed(
       Duration.zero,
-      () {
+          () {
         _userBloc.getData(
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
