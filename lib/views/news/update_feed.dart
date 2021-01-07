@@ -190,6 +190,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           child: TextFormField(
                             // controller: subheadingController,
                             initialValue: newsObject.subheading,
+                            textInputAction: TextInputAction.newline,
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
@@ -206,7 +207,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 ),
                               ),
                             ),
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.multiline,
                             maxLines: 5,
                             onChanged: (value) {
                               ExitWithConfirmation.of(context).fieldValues[1] =

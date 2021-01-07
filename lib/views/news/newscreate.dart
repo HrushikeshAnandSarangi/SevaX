@@ -253,8 +253,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                       ),
                                     ),
                                   ),
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.multiline,
                                   maxLines: 5,
+                                  textInputAction: TextInputAction.newline,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   onChanged: (value) {
