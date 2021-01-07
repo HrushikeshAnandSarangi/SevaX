@@ -30,7 +30,7 @@ class ChatBloc {
 
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =
-        await Firestore.instance.collection("chatsnew").document(chatId).get();
+    await Firestore.instance.collection("chatsnew").document(chatId).get();
     ChatModel chatModel = ChatModel.fromMap(chatModelSnapshot.data);
     chatModel.id = chatModelSnapshot.documentID;
     Stream<QuerySnapshot> querySnapshot;
@@ -71,7 +71,7 @@ class ChatBloc {
     String recieverId,
     MessageType type,
     File file,
-    @required String timebankId, 
+    @required String timebankId,
   }) async {
     MessageModel messageModel = MessageModel(
       fromId: senderId,
@@ -132,10 +132,10 @@ class ChatBloc {
   }
 
   Future<void> removeMember(
-    String chatId,
-    String userId,
-    bool isCreator,
-  ) async {
+      String chatId,
+      String userId,
+      bool isCreator,
+      ) async {
     await ChatsRepository.removeMember(chatId, userId);
     if (isCreator) {
       await ChatsRepository.transferOwnership(chatId);

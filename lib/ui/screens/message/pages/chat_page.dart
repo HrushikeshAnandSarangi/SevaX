@@ -69,7 +69,6 @@ class _ChatPageState extends State<ChatPage> {
   String timebankId;
   @override
   void initState() {
-
     chatModel = widget.chatModel;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

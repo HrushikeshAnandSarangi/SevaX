@@ -25,6 +25,7 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -85,9 +86,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 DonationModel donationModel =
                     DonationModel.fromMap(notification.data);
                 var amount;
-                if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+                if (donationModel.requestIdType == 'offer' &&
+                    donationModel.donationStatus == DonationStatus.REQUESTED) {
                   amount = donationModel.cashDetails.cashDetails.amountRaised;
-                } else if (donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.PLEDGED) {
+                } else if (donationModel.requestIdType == 'offer' &&
+                    donationModel.donationStatus == DonationStatus.PLEDGED) {
                   donationModel.notificationId = notification.id;
                 } else {
                   amount = donationModel.cashDetails.pledgedAmount;
@@ -117,7 +120,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_received,
                 );
                 break;
@@ -125,11 +128,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 DonationModel donationModel =
                     DonationModel.fromMap(notification.data);
                 var amount;
-                if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+                if (donationModel.requestIdType == 'offer' &&
+                    donationModel.donationStatus == DonationStatus.REQUESTED) {
                   amount = donationModel.cashDetails.cashDetails.amountRaised;
                 } else {
                   amount = donationModel.cashDetails.pledgedAmount;
                 }
+                logger.i("==============<<<<<<<<<<<<<<<>>>>>>>>> $amount");
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: donationModel.donorDetails.name,
@@ -155,7 +160,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_requested,
                 );
                 break;
@@ -193,7 +198,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.JoinRequest:
                 return TimebankJoinRequestWidget(notification: notification);
-                break;
 
               case NotificationType.APPROVE_SPONSORED_GROUP_REQUEST:
                 return SponsorGroupRequestWidget(notification: notification);
@@ -205,7 +209,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timebankModel: widget.timebankModel,
                   parentContext: parentContext,
                 );
-                break;
 
               case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
                 OneToManyNotificationDataModel data =

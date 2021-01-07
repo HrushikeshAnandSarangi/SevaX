@@ -152,7 +152,7 @@ class DonationsRepository {
               FieldValue.increment(donationModel.cashDetails.pledgedAmount),
             },
           );
-        }
+      }
         //send acknowledgement reciept
         await MailDonationReciept.sendReciept(donationModel);
       }
@@ -208,7 +208,6 @@ class DonationsRepository {
               .document(donationModel.requestId.split('*')[0])
               .collection(DBCollection.notifications);
         }
-      }
 
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),

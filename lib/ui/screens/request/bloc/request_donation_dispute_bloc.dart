@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/donations_repository.dart';
@@ -41,6 +42,7 @@ class RequestDonationDisputeBloc {
       _cashAmount.addError('amount1');
       return false;
     }
+    //BEWARE DONOT UNCOMMENT THIS
     // else if (int.parse(_cashAmount.value) < minmumAmount) {
     //   _cashAmount.addError('min');
     //   return false;
@@ -68,7 +70,10 @@ class RequestDonationDisputeBloc {
       _cashAmount.addError('min');
       return false;
     } else {
-      donationModel.donationStatus = donationModel.donationStatus ==  DonationStatus.REQUESTED ? DonationStatus.PLEDGED: donationModel.donationStatus;
+      donationModel.donationStatus =
+      donationModel.donationStatus == DonationStatus.REQUESTED
+          ? DonationStatus.PLEDGED
+          : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
@@ -88,7 +93,8 @@ class RequestDonationDisputeBloc {
           model: donationModel,
           operatorMode: operationMode,
           requestMode: requestMode,
-          notificationType: donationModel.donationStatus == DonationStatus.PLEDGED
+          notificationType:
+          donationModel.donationStatus == DonationStatus.PLEDGED
               ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
               : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
         ),
@@ -115,11 +121,13 @@ class RequestDonationDisputeBloc {
     if (_cashAmount.value == null || _cashAmount.value == '') {
       _cashAmount.addError('amount1');
       return false;
-    } else if (donationModel.minimumAmount != null &&
-        int.parse(_cashAmount.value) < donationModel.minimumAmount) {
-      _cashAmount.addError('min');
-      return false;
-    } else {
+    }
+    // else if (donationModel.minimumAmount != null &&
+    //     int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+    //   _cashAmount.addError('min');
+    //   return false;
+    // }
+    else {
       return await _donationsRepository
           .acknowledgeDonation(
             operatoreMode: operationMode,
