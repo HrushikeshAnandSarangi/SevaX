@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
@@ -203,6 +204,7 @@ class BookmarkedOffers extends StatelessWidget {
                               parentContext,
                               MaterialPageRoute(
                                 builder: (parentContext) => CreateRequest(
+                                  comingFrom: ComingFrom.Offers,
                                   isOfferRequest: true,
                                   offer: model,
                                   timebankId: model.timebankId,

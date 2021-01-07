@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -435,8 +436,8 @@ class OfferCardViewState extends State<OfferCardView> {
                                   .contains(SevaCore.of(context)
                                       .loggedInUser
                                       .sevaUserID)
-                              ? 'Accepted'
-                              : 'Accept',
+                              ? S.of(context).accepted
+                              : S.of(context).accept,
                           style: TextStyle(
                             color: isAccepted ? Colors.red : Colors.white,
                           ),

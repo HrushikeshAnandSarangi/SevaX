@@ -1,9 +1,12 @@
 library flutter_multiselect;
-
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/widgets/multi_select/selection_model.dart';
 
 class MultiSelect extends FormField<dynamic> {
+  final TimebankModel timebankModel;
+  final UserModel userModel;
   final String titleText;
   final String hintText;
   final bool required;
@@ -56,6 +59,8 @@ class MultiSelect extends FormField<dynamic> {
   MultiSelect(
       {FormFieldSetter<dynamic> onSaved,
       FormFieldValidator<dynamic> validator,
+      this.timebankModel,
+      this.userModel,
       dynamic initialValue,
       bool autovalidate = false,
       this.titleText = 'Title',

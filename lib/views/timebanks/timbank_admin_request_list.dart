@@ -1497,7 +1497,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
         var gesture = TransactionLimitCheck(
+          timebankId: timebankModel.id,
           isSoftDeleteRequested: timebankModel.requestedSoftDelete,
+          comingFrom: ComingFrom.Members,
           child: GestureDetector(
             child: Row(
               children: <Widget>[

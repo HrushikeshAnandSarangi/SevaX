@@ -18,9 +18,10 @@ class PastHiredUsersView extends StatefulWidget {
   final String timebankId;
   final RequestModel requestModel;
   final String sevaUserId;
+  final List<UserModel> favouriteMembers;
 
   PastHiredUsersView(
-      {@required this.timebankId, this.requestModel, this.sevaUserId});
+      {@required this.timebankId, this.requestModel, this.sevaUserId, this.favouriteMembers});
 
   @override
   _PastHiredUsersViewState createState() {

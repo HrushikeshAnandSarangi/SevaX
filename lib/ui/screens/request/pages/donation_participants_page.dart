@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_car
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class DonationParticipantPage extends StatelessWidget {
@@ -53,7 +54,7 @@ class DonationParticipantPage extends StatelessWidget {
             log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
               type: requestModel != null ? 'request' : 'offer',
-              name: model.donorDetails.name,
+              name: requestModel != null ? model.donorDetails.name: model.receiverDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
               goods: model.donationStatus == DonationStatus.REQUESTED
                   ? (model.goodsDetails?.requiredGoods != null
@@ -65,7 +66,7 @@ class DonationParticipantPage extends StatelessWidget {
                           model.goodsDetails.donatedGoods.values)
                       : []),
               status: model.donationStatus,
-              photoUrl: model.donorDetails.photoUrl,
+              photoUrl: requestModel != null ? model.donorDetails.photoUrl: model.receiverDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
               comments: model.goodsDetails.comments,
               timestamp: model.timestamp,
@@ -99,7 +100,8 @@ class DonationParticipantPage extends StatelessWidget {
                         )
                       : model.lastModifiedBy == model.donatedTo
                           ? null
-                          : Container(
+                          : !(model.donationStatus ==
+                          DonationStatus.PLEDGED && model.requestIdType == 'offer') ?  Container(
                               height: 20,
                               child: RaisedButton(
                                 color: Colors.white,
@@ -123,7 +125,7 @@ class DonationParticipantPage extends StatelessWidget {
                                   );
                                 },
                               ),
-                            ),
+                            ): Text("Waiting acknowledgement"),
             );
           },
           separatorBuilder: (context, index) {
@@ -141,14 +143,14 @@ class DonationParticipantPage extends StatelessWidget {
         return DonationButtonActionModel(
           buttonColor: Theme.of(context).primaryColor,
           onTap: null,
-          buttonText: 'ACKLOWLEDGED',
+          buttonText: S.of(context).acknowledged,
         );
         break;
       case DonationStatus.PLEDGED:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           onTap: () => onPledged(context, model),
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
 
@@ -156,21 +158,21 @@ class DonationParticipantPage extends StatelessWidget {
         return DonationButtonActionModel(
           buttonColor: Colors.red,
           //TODO: Update methods accordingly
-          buttonText: 'MODIFIED',
+          buttonText: '${S.of(context).modified.toUpperCase}',
         );
         break;
       case DonationStatus.APPROVED_BY_DONOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           //TODO: Update methods accordingly
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
       case DonationStatus.APPROVED_BY_CREATOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
           //TODO: Update methods accordingly
-          buttonText: 'ACKNOWLEDGE',
+          buttonText: S.of(context).acknowledge.toUpperCase(),
         );
         break;
       default:

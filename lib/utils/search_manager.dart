@@ -166,9 +166,9 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<ProjectTemplateModel> templatesList = [];
-
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
+
       var template = ProjectTemplateModel.fromMap(sourceMap);
       if (template.softDelete == false) {
         templatesList.add(template);

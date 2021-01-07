@@ -9,19 +9,19 @@ String getLangTag() {
   return langTag == 'sn' ? 'en' : langTag;
 }
 
-String getTimeFormattedString(int timeInMilliseconds) {
+String getTimeFormattedString(int timeInMilliseconds, String locale) {
   DateFormat dateFormat =
-      DateFormat('d MMM h:mm a ', Locale(getLangTag()).toLanguageTag());
+      DateFormat('d MMM h:mm a ', Locale(locale ?? 'en').toLanguageTag());
   String dateOfTransaction = dateFormat.format(
     DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
   );
   return dateOfTransaction;
 }
 
-String formatChatDate(int timestamp, String timezone) {
+String formatChatDate(int timestamp, String timezone, String locale) {
   return DateFormat(
     'h:mm a',
-    Locale(getLangTag()).toLanguageTag(),
+    Locale(locale ?? "en").toLanguageTag(),
   ).format(
     getDateTimeAccToUserTimezone(
       dateTime: DateTime.fromMillisecondsSinceEpoch(

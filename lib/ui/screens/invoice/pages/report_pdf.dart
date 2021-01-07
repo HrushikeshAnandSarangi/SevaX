@@ -137,7 +137,9 @@ class ReportPdf {
                     "Account Number:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("3630943624", style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.sevaxAccountNo == null ? '' : communityModel.sevaxAccountNo}",
+                      style: TextStyle(fontSize: 14)),
                   SizedBox(height: 8),
                   Text(
                     "BILLING STATEMENT:",

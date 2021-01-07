@@ -10,7 +10,6 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
-import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 
 class TimebankAvatar extends StatefulWidget {
@@ -126,10 +125,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
-    var widthOfAvtar = (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-        ? 150.0
-        : 150.0;
+    var widthOfAvtar = 150.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),

@@ -61,7 +61,7 @@ class TimebankRequestCard extends StatelessWidget {
                           title,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: Theme.of(context).textTheme.subhead,
+                          style: TextStyle(fontSize:16, fontWeight:FontWeight.w500, color:Colors.black87),
                         ),
                         Visibility(
                           visible: isRecurring,
@@ -88,13 +88,15 @@ class TimebankRequestCard extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: <Widget>[
                           Text(
-                            getTimeFormattedString(startTime),
+                            getTimeFormattedString(startTime, S.of(context).localeName),
+                            style: TextStyle(fontSize:14, fontWeight:FontWeight.w500, color: Colors.black54)
                           ),
                           SizedBox(width: 2),
                           Icon(Icons.arrow_forward, size: 14),
                           SizedBox(width: 4),
                           Text(
-                            getTimeFormattedString(endTime),
+                            getTimeFormattedString(endTime, S.of(context).localeName,),
+                            style: TextStyle(fontSize:14, fontWeight:FontWeight.w500, color: Colors.black54)
                           ),
                         ],
                       ),

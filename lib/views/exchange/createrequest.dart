@@ -60,9 +60,11 @@ class CreateRequest extends StatefulWidget {
   final UserModel userModel;
   final ProjectModel projectModel;
   final String projectId;
+  final ComingFrom comingFrom;
 
   CreateRequest({
     Key key,
+    @required this.comingFrom,
     this.isOfferRequest,
     this.offer,
     this.timebankId,
@@ -100,6 +102,7 @@ class _CreateRequestState extends State<CreateRequest> {
             }
             if (snapshot.data != null) {
               return RequestCreateForm(
+                comingFrom: widget.comingFrom,
                 isOfferRequest:
                     widget.offer != null ? widget.isOfferRequest : false,
                 offer: widget.offer,
@@ -135,8 +138,11 @@ class RequestCreateForm extends StatefulWidget {
   final UserModel loggedInUser;
   final ProjectModel projectModel;
   final String projectId;
+  final ComingFrom comingFrom;
+
   RequestCreateForm({
     this.isOfferRequest = false,
+    @required this.comingFrom,
     this.offer,
     this.timebankId,
     this.userModel,
@@ -156,7 +162,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
-
+  ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
@@ -174,7 +180,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   String _selectedTimebankId;
 
   Future<TimebankModel> getTimebankAdminStatus;
-  Future getProjectsByFuture;
+  Future<List<ProjectModel>> getProjectsByFuture;
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
 
@@ -814,15 +820,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: 'Venmo',
-          value: RequestPaymentType.VENMO,
-          groupvalue: requestModel.cashModel.paymentType,
-          onChanged: (value) {
-            requestModel.cashModel.paymentType = value;
-            setState(() => {});
-          },
-        ),
-        _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_ach,
           value: RequestPaymentType.ACH,
           groupvalue: requestModel.cashModel.paymentType,
@@ -834,6 +831,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
         _optionRadioButton<RequestPaymentType>(
           title: S.of(context).request_paymenttype_paypal,
           value: RequestPaymentType.PAYPAL,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton<RequestPaymentType>(
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -943,6 +949,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
+                    comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: S.of(context).request_type_cash,
                       value: RequestType.CASH,
@@ -955,6 +962,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ),
                   ),
                   TransactionsMatrixCheck(
+                    comingFrom: widget.comingFrom,
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.goods_request,
                     transaction_matrix_type: 'cash_goods_requests',
@@ -1035,8 +1043,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
   List<Widget> _buildselectedSubCategories(List categories) {
     List<CategoryModel> subCategories = [];
     subCategories = categories[1];
-    selectedCategoryIds.clear();
     List<Widget> selectedSubCategories = [];
+    selectedCategoryIds.clear();
+
     logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
@@ -1638,6 +1647,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 S.of(context).validation_error_same_start_date_end_date);
         return;
       }
+
+      if (OfferDurationWidgetState.starttimestamp >
+          OfferDurationWidgetState.endtimestamp) {
+        showDialogForTitle(
+            dialogTitle: S.of(context).validation_error_end_date_greater);
+        return;
+      }
+
       if (requestModel.requestType == RequestType.GOODS &&
           requestModel.goodsDonationDetails.requiredGoods == null) {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
@@ -1700,7 +1717,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.acceptors = [];
       requestModel.invitedUsers = [];
       requestModel.recommendedMemberIdsForRequest = [];
-      requestModel.categories = selectedCategoryIds.toList();
+      requestModel.categories = selectedCategoryIds;
       requestModel.address = selectedAddress;
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
@@ -2026,11 +2043,15 @@ class ProjectSelection extends StatefulWidget {
     this.admin,
     this.projectModelList,
     this.selectedProject,
+    this.timebankModel,
+    this.userModel,
   }) : super(key: key);
-  final admin;
+  final bool admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
+  TimebankModel timebankModel;
+  UserModel userModel;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -2054,6 +2075,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       });
     }
     return MultiSelect(
+      timebankModel: widget.timebankModel,
+      userModel: widget.userModel,
       autovalidate: true,
       initialValue: ['None'],
       titleText: S.of(context).assign_to_project,
@@ -2096,8 +2119,10 @@ typedef StringMapCallback = void Function(Map<String, dynamic> goods);
 class GoodsDynamicSelection extends StatefulWidget {
   final StringMapCallback onSelectedGoods;
   final Map<String, String> selectedGoods;
+  final ValueChanged<String> onRemoveGoods;
 
-  GoodsDynamicSelection({@required this.onSelectedGoods, this.selectedGoods});
+  GoodsDynamicSelection(
+      {@required this.onSelectedGoods, this.selectedGoods, this.onRemoveGoods});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
@@ -2456,4 +2481,17 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
           )),
     );
   }
+}
+
+Future<Map<String, String>> getGoodsFuture() async {
+  Map<String, String> goodsVar = {};
+  QuerySnapshot querySnapshot = await Firestore.instance
+      .collection('donationCategories')
+      .orderBy('goodTitle')
+      .getDocuments();
+  querySnapshot.documents.forEach((DocumentSnapshot docData) {
+    goodsVar[docData.documentID] = docData.data['goodTitle'];
+  });
+  log("goodsVar length ${goodsVar.length.toString()}");
+  return goodsVar;
 }

@@ -305,6 +305,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             height: 10,
           ),
           TransactionsMatrixCheck(
+            comingFrom: ComingFrom.Groups,
             upgradeDetails: AppConfig.upgradePlanBannerModel.sponsored_groups,
             transaction_matrix_type: "sponsored_groups",
             child: Row(

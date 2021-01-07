@@ -84,7 +84,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 DonationModel donationModel =
                     DonationModel.fromMap(notification.data);
-
+                var amount;
+                if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+                  amount = donationModel.cashDetails.cashDetails.amountRaised;
+                } else if (donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.PLEDGED) {
+                  donationModel.notificationId = notification.id;
+                } else {
+                  amount = donationModel.cashDetails.pledgedAmount;
+                }
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: donationModel.donorDetails.name,
@@ -117,7 +124,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
               case NotificationType.GOODS_DONATION_REQUEST:
                 DonationModel donationModel =
                     DonationModel.fromMap(notification.data);
-
+                var amount;
+                if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+                  amount = donationModel.cashDetails.cashDetails.amountRaised;
+                } else {
+                  amount = donationModel.cashDetails.pledgedAmount;
+                }
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: donationModel.donorDetails.name,

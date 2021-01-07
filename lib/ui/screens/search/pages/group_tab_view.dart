@@ -223,6 +223,8 @@ class _GroupTabViewState extends State<GroupTabView> {
       targetUserId: creatorId,
       senderUserId: userIdForNewMember,
       type: NotificationType.JoinRequest,
+      isTimebankNotification: true,
+      isRead: false,
       data: joinRequestModel.toMap(),
       communityId: "NOT_REQUIRED",
     );

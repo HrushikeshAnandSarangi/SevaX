@@ -22,6 +22,9 @@ class SevaCoinStarWidget extends StatelessWidget {
             fontSize: 16,
           ),
         ),
+        SizedBox(
+          height: 2,
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -29,7 +32,7 @@ class SevaCoinStarWidget extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.yellow[400],
+                color: Colors.yellow[700],
                 shape: BoxShape.circle,
               ),
               child: Container(

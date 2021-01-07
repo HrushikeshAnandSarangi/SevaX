@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -54,10 +55,10 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "Seva Community Requests",
+                  text: S.of(context).seva_community_requests,
                 ),
                 Tab(
-                  text: "Personal Requests",
+                  text: S.of(context).pending_requests
                 ),
               ],
             ),

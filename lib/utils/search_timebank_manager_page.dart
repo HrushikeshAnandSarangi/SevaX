@@ -45,7 +45,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
       timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
-        validItems = onValue;
+        validItems = onValue.listOfElement;
       });
     });
   }

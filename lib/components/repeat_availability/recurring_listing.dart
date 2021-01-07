@@ -23,16 +23,25 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
 
+enum ComingToRecurringFrom {
+  RecurringRequest,
+  RecurringOffer,
+  RecurringElastic,
+  RecurringProjectRequest
+}
+
 class RecurringListing extends StatefulWidget {
   final RequestModel requestModel;
   final TimebankModel timebankModel;
   final OfferModel offerModel;
+  final ComingFrom comingFrom;
 
   RecurringListing({
     Key key,
     @required this.requestModel,
     this.timebankModel,
     this.offerModel,
+    @required this.comingFrom,
   }) : super(key: key);
 
   @override
@@ -297,7 +306,8 @@ class _RecurringListState extends State<RecurringList> {
                                               widget.offerModel[index]);
                                         } else {
                                           offerActions(context,
-                                              widget.offerModel[index]);
+                                              widget.offerModel[index],
+                                              ComingFrom.Offers);
                                         }
                                       },
                                     )
@@ -321,7 +331,7 @@ class _RecurringListState extends State<RecurringList> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model),
+        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Offers),
       ),
     );
   }
@@ -442,6 +452,7 @@ class _RecurringListState extends State<RecurringList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -465,6 +476,7 @@ class _RecurringListState extends State<RecurringList> {
                         ),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -488,6 +500,7 @@ class _RecurringListState extends State<RecurringList> {
                         ),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -523,7 +536,7 @@ class _RecurringListState extends State<RecurringList> {
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(context, model);
+                          offerActions(context, model, ComingFrom.Offers);
                         }),
                   ],
                 )

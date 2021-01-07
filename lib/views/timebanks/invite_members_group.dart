@@ -59,7 +59,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       timebankId: widget.timebankModel.id,
     ).then((onValue) {
       setState(() {
-        groupMembersList = onValue;
+        groupMembersList = onValue.listOfElement;
       });
     });
   }
@@ -69,7 +69,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       timebankId: widget.parenttimebankid,
     ).then((onValue) {
       setState(() {
-        parentTimebankMembersList = onValue;
+        parentTimebankMembersList = onValue.listOfElement;
       });
     });
   }

@@ -284,6 +284,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               }),
                           SizedBox(height: 40),
                           TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Offers,
                             upgradeDetails: AppConfig
                                 .upgradePlanBannerModel.onetomany_offers,
                             transaction_matrix_type: "onetomany_offers",
@@ -310,14 +311,20 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         return;
                                       }
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState
-                                              .starttimestamp !=
-                                          0) {
+                                      if (OfferDurationWidgetState.starttimestamp != 0 &&
+                                          OfferDurationWidgetState.endtimestamp != 0) {
                                         _bloc.startTime =
-                                            OfferDurationWidgetState
-                                                .starttimestamp;
-                                        _bloc.endTime = OfferDurationWidgetState
-                                            .endtimestamp;
+                                            OfferDurationWidgetState.starttimestamp;
+                                        _bloc.endTime =
+                                            OfferDurationWidgetState.endtimestamp;
+                                        if (_bloc.endTime <=
+                                            _bloc.startTime) {
+                                          errorDialog(
+                                            context: context,
+                                            error: S.of(context).validation_error_end_date_greater,
+                                          );
+                                          return;
+                                        }
                                         if (widget.offerModel == null) {
                                           await createOneToManyOfferFunc();
                                         } else {

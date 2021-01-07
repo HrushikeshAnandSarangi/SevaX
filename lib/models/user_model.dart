@@ -86,6 +86,7 @@ class UserModel extends DataModel {
       this.membershipTimebanks,
       this.favoriteByMember,
       this.favoriteByTimeBank,
+      this.recommendedForRequestIds,
       this.sevaUserID,
       this.skills,
       this.currentBalance,
@@ -114,8 +115,7 @@ class UserModel extends DataModel {
       this.cvUrl,
       this.cvName,
       this.deviceDetails,
-      this.curatedRequestIds,
-      this.recommendedForRequestIds});
+      this.curatedRequestIds});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
@@ -550,6 +550,7 @@ class UserModel extends DataModel {
       ${this.membershipTimebanks.toString()},
       ${this.favoriteByMember.toString()},
       ${this.favoriteByTimeBank.toString()},
+      ${this.curatedRequestIds.toString()},
       ${this.recommendedForRequestIds.toString()},
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
@@ -564,7 +565,6 @@ class UserModel extends DataModel {
       ${this.language.toString()},
       ${this.tokens.toString()},
       ${this.reportedUsers.toString()},
-      ${this.curatedRequestIds.toString()},
       ${this.blockedMembers.toString()},
       ${this.blockedBy.toString()},
       ${this.currentPosition.toString()},

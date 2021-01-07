@@ -344,6 +344,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           height: 15,
         ),
         TransactionsMatrixCheck(
+          comingFrom: ComingFrom.Profile,
           upgradeDetails: AppConfig.upgradePlanBannerModel.upload_cv,
           transaction_matrix_type: "upload_cv",
           child: GestureDetector(

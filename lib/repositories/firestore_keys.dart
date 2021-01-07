@@ -28,6 +28,7 @@ enum Collections {
 class DBCollection {
   static const String notifications = 'notifications';
   static const String requests = 'requests';
+  static const String offers = 'offers';
   static const String cards = 'cards';
   static const String chats = 'chatsnew';
   static const String communities = 'communities';

@@ -45,7 +45,7 @@ class _MonthsListingState extends State<MonthsListing> {
 
   Map<String, dynamic> plans = {
     "tall_plan": {
-      "name": "Tall Plan",
+      "name": "Community Plan",
       "initial_transactions_amount": 15,
       "initial_transactions_qty": 50,
       "pro_data_bill_amount": 0.05,
@@ -57,13 +57,13 @@ class _MonthsListingState extends State<MonthsListing> {
       "pro_data_bill_amount": 0.05,
     },
     "grande_plan": {
-      "name": "Grande Plan",
+      "name": "Non-Profit Plan",
       "initial_transactions_amount": 1500,
       "initial_transactions_qty": 3000,
       "pro_data_bill_amount": 0.03,
     },
     "venti_plan": {
-      "name": "Venti Plan",
+      "name": "Enterprise Plan",
       "initial_transactions_amount": 2500,
       "initial_transactions_qty": 5000,
       "pro_data_bill_amount": 0.01,
@@ -171,8 +171,33 @@ class _MonthsListingState extends State<MonthsListing> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
+          if (!snapshot.hasData) {
+            return Center(
+              child: Text(S.of(context).no_record_transactions_yet,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87)),
+            );
+          }
           List<Map<String, dynamic>> transactionsMonthsList = snapshot.data;
-
+          if (transactionsMonthsList == null) {
+            return Center(
+              child: Text(S.of(context).no_record_transactions_yet,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87)),
+            );
+          } else if (transactionsMonthsList.length == 0) {
+            return Center(
+              child: Text(S.of(context).no_record_transactions_yet,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87)),
+            );
+          }
           return ListView.builder(
               itemCount: transactionsMonthsList.length,
               itemBuilder: (context, index) {
@@ -190,6 +215,9 @@ class _MonthsListingState extends State<MonthsListing> {
                           ? plans[planId]["pro_data_bill_amount"]
                           : 0,
                     ));
+                  }
+                  if (k == "planId") {
+                    planId = v;
                   }
                 });
                 var sum = 0;
@@ -257,15 +285,17 @@ class _MonthsListingState extends State<MonthsListing> {
                                               ["initial_transactions_amount"]
                                           .toDouble()),
                                   Detail(
-                                      description:
-                                          "Additional Billable Transactions",
+                                      description: S
+                                          .of(context)
+                                          .additional_billable_transactions,
                                       units: sum.toDouble(),
                                       price: plans[planId]
                                               ["pro_data_bill_amount"]
                                           .toDouble()),
                                   Detail(
-                                      description:
-                                          "Discounted Billable Transactions as per your current plan",
+                                      description: S
+                                          .of(context)
+                                          .discounted_transactions_msg,
                                       units: plans[planId]
                                               ["initial_transactions_qty"]
                                           .toDouble(),

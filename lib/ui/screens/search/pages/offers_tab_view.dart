@@ -72,6 +72,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                     subtitle: getOfferDescription(offerDataModel: offer),
                     offerType: offer.offerType,
                     startDate: offer?.groupOfferDataModel?.startDate,
+                    timestamp: offer?.timestamp,
                     selectedAddress: offer.selectedAdrress,
                     actionButtonLabel: getButtonLabel(context, offer,
                         SevaCore.of(context).loggedInUser.sevaUserID),
@@ -87,6 +88,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => RecurringListing(
+                                      comingFrom: ComingFrom.Offers,
                                       offerModel: offer,
                                       timebankModel: null,
                                       requestModel: null,
@@ -100,7 +102,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                           null) {
                         _settingModalBottomSheet(context, offer);
                       } else {
-                        offerActions(context, offer);
+                        offerActions(context, offer, ComingFrom.Offers);
                       }
                     },
                   );
@@ -141,6 +143,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -164,6 +167,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -187,6 +191,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                             }),
                       ),
                       TransactionsMatrixCheck(
+                        comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
                         transaction_matrix_type: "calendar_sync",
@@ -222,7 +227,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                         ),
                         onPressed: () {
                           Navigator.of(bc).pop();
-                          offerActions(context, model);
+                          offerActions(context, model, ComingFrom.Offers);
                         }),
                   ],
                 )
@@ -236,7 +241,7 @@ class _OffersTabViewState extends State<OffersTabView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model),
+        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Elasticsearch,),
       ),
     );
   }

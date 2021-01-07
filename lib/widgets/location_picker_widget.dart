@@ -48,7 +48,7 @@ class LocationPickerWidget extends StatelessWidget {
               selectedAddress: selectedAddress,
             ),
           ),
-        ).then((dataModel) {
+        ).then((LocationDataModel dataModel) {
           if (dataModel != null) {
             onChanged(dataModel);
           }
