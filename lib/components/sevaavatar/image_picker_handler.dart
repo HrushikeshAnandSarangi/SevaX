@@ -59,7 +59,7 @@ class ImagePickerHandler {
   }
 
   addStockImageUrl(String image) async {
-    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+    globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
     _listener.userImage(image, 'stock_image');
   }
 

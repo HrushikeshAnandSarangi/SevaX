@@ -113,7 +113,8 @@ class ImagePickerDialog extends StatelessWidget {
                     if (!globals.isFromOnBoarding) {
                       dismissDialog();
                     }
-                    Navigator.of(context).push(
+                    Navigator.of(context)
+                        .push(
                       MaterialPageRoute(
                         builder: (context) => SearchStockImages(
                           // keepOnBackPress: false,
@@ -125,7 +126,10 @@ class ImagePickerDialog extends StatelessWidget {
                           },
                         ),
                       ),
-                    );
+                    )
+                        .then((value) {
+                      dismissDialog();
+                    });
                   },
                   child: roundedButton(
                       S.of(context).stock_images,

@@ -11,7 +11,11 @@ class BioView extends StatefulWidget {
   final VoidCallback onBacked;
   final VoidCallback onPrevious;
 
-  BioView({@required this.onSkipped, @required this.onSave, this.onBacked, this.onPrevious});
+  BioView(
+      {@required this.onSkipped,
+      @required this.onSave,
+      this.onBacked,
+      this.onPrevious});
 
   @override
   _BioViewState createState() => _BioViewState();
@@ -101,7 +105,7 @@ class _BioViewState extends State<BioView> {
                                       .of(context)
                                       .validation_error_bio_empty;
                                 }
-                                if (value.length < 50) {
+                                if (value.length < 150) {
                                   this.bio = value;
                                   return S
                                       .of(context)
