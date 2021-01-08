@@ -99,7 +99,7 @@ class _SelectionModalState extends State<SelectionModal> {
   @override
   void initState() {
     super.initState();
-    requestModel = RequestModel(associatedCommunityId: '');
+    requestModel = RequestModel(communityId: '');
     requestModel.requestMode = widget.admin
         ? RequestMode.TIMEBANK_REQUEST
         : RequestMode.PERSONAL_REQUEST;

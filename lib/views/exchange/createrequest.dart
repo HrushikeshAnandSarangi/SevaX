@@ -199,7 +199,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       cashModel: CashModel(
           paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
       goodsDonationDetails: GoodsDonationDetails(),
-      associatedCommunityId: widget.loggedInUser.currentCommunity,
+      communityId: widget.loggedInUser.currentCommunity,
     );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -313,8 +313,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
-    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
+    this.requestModel.communityId = loggedInUser.currentCommunity;
+    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.communityId} ");
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,

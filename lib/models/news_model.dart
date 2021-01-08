@@ -10,6 +10,7 @@ class NewsModel extends DataModel {
   String email;
   String fullName;
   String sevaUserId;
+  String communityId;
   String newsImageUrl;
   String newsDocumentUrl;
   String newsDocumentName;
@@ -39,6 +40,7 @@ class NewsModel extends DataModel {
     this.email,
     this.fullName,
     this.sevaUserId,
+    this.communityId,
     this.newsImageUrl,
     this.photoCredits,
     this.postTimestamp,
@@ -108,6 +110,10 @@ class NewsModel extends DataModel {
     }
     if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
       map['sevauserid'] = this.sevaUserId;
+    }
+
+    if (this.communityId != null && this.communityId.isNotEmpty) {
+      map['communityId'] = this.communityId;
     }
     if (this.newsImageUrl != null && this.newsImageUrl.isNotEmpty) {
       map['newsimageurl'] = this.newsImageUrl;
@@ -215,6 +221,9 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
+    }
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];
@@ -332,6 +341,10 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
+    }
+
+    if (map.containsKey('communityId')) {
+      this.sevaUserId = map['communityId'];
     }
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];

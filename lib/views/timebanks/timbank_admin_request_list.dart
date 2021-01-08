@@ -628,15 +628,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     _organizerEmails = [];
     // _adminsWidgets.add(reportedMemberBuilder(
     //     SevaCore.of(context).loggedInUser.currentCommunity));
-    if (widget.isUserAdmin ||
-        SevaCore.of(context).loggedInUser.sevaUserID ==
-            timebankModel.creatorId) {
-      _organizersWidgets.add(ReportedMemberNavigatorWidget(
-        isTimebankReport: !widget.isFromGroup,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        timebankModel: timebankModel,
-      ));
-    }
+//    if (widget.isUserAdmin ||
+//        SevaCore.of(context).loggedInUser.sevaUserID ==
+//            timebankModel.creatorId) {
+//      _organizersWidgets.add(ReportedMemberNavigatorWidget(
+//        isTimebankReport: !widget.isFromGroup,
+//        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+//        timebankModel: timebankModel,
+//      ));
+//    }
     log('length organizer ' + organizerUserModel.values.length.toString());
     if (organizerUserModel.values != null &&
         organizerUserModel.values.length > 0) {

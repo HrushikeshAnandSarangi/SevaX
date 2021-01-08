@@ -186,7 +186,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     requestModel = RequestModel(
-      associatedCommunityId: widget.requestModel.associatedCommunityId,
+      communityId: widget.requestModel.communityId,
     );
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;

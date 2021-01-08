@@ -116,6 +116,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
+    newsObject.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
