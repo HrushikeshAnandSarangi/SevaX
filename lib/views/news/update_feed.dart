@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
@@ -28,6 +30,8 @@ class UpdateNewsFeed extends StatelessWidget {
           globals.newsImageURL = null;
           globals.newsDocumentName = null;
           globals.newsDocumentURL = null;
+          globals.webImageUrl = null;
+
           return true;
         },
         child: Scaffold(
@@ -80,6 +84,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String selectedAddress;
 
   Future<void> writeToDB() async {
+    log('url  ${globals.newsImageURL}');
     newsObject.placeAddress = selectedAddress;
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
@@ -88,10 +93,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
-    newsObject.newsDocumentUrl =
-        globals.newsDocumentURL ?? newsObject.newsDocumentUrl ?? '';
-    newsObject.newsDocumentName =
-        globals.newsDocumentName ?? newsObject.newsDocumentName ?? '';
+    newsObject.newsDocumentUrl = globals.newsDocumentURL;
+    newsObject.newsDocumentName = globals.newsDocumentName;
     //EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,

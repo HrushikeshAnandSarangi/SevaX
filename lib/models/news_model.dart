@@ -111,6 +111,8 @@ class NewsModel extends DataModel {
     }
     if (this.newsImageUrl != null && this.newsImageUrl.isNotEmpty) {
       map['newsimageurl'] = this.newsImageUrl;
+    } else {
+      map['newsimageurl'] = null;
     }
     if (this.photoCredits != null && this.photoCredits.isNotEmpty) {
       map['photocredits'] = this.photoCredits;
@@ -150,9 +152,13 @@ class NewsModel extends DataModel {
     }
     if (this.newsDocumentName != null && this.newsDocumentName.isNotEmpty) {
       map['newsDocumentName'] = this.newsDocumentName;
+    } else {
+      map['newsDocumentName'] = null;
     }
     if (this.newsDocumentUrl != null && this.newsDocumentUrl.isNotEmpty) {
       map['newsDocumentUrl'] = this.newsDocumentUrl;
+    } else {
+      map['newsDocumentUrl'] = null;
     }
     return map;
   }
