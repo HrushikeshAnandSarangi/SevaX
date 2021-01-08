@@ -116,11 +116,8 @@ class _DonationViewState extends State<DonationView> {
         centerTitle: true,
       ),
       body: Container(
-          padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.03,
-              0,
-              MediaQuery.of(context).size.width * 0.03,
-              0),
+          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
+              0, MediaQuery.of(context).size.width * 0.03, 0),
           child: Card(
               margin: EdgeInsets.only(bottom: 10, top: 20),
               shape: RoundedRectangleBorder(
@@ -140,15 +137,15 @@ class _DonationViewState extends State<DonationView> {
                               children: <Widget>[
                                 Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.symmetric(
-                                              // horizontal: 20,
-                                              // vertical: 10,
-                                            ),
+                                                // horizontal: 20,
+                                                // vertical: 10,
+                                                ),
                                             child: Text(
                                               S.of(context).donations,
                                               // textAlign: TextAlign.center,
@@ -171,29 +168,20 @@ class _DonationViewState extends State<DonationView> {
                                     ]),
                                 new Expanded(
                                     child: PageView(
-                                        physics:
-                                        NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         controller: pageController,
                                         scrollDirection: Axis.horizontal,
                                         pageSnapping: true,
                                         onPageChanged: (number) {},
                                         children: [
-                                          donatedItems(),
-                                          amountWidget(),
-                                          donationDetails(),
-                                          donationOfferAt(),
-                                          RequestPaymentDescriptionData(
-                                              widget.offerModel),
-                                        ]
-                                    )
-                                )
-                              ]
-                          )
-                      )
-                  )
-              )
-          )
-      ),
+                                      donatedItems(),
+                                      amountWidget(),
+                                      donationDetails(),
+                                      donationOfferAt(),
+                                      RequestPaymentDescriptionData(
+                                          widget.offerModel),
+                                    ]))
+                              ])))))),
     );
   }
 
@@ -226,7 +214,6 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
-
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -616,8 +603,8 @@ class _DonationViewState extends State<DonationView> {
                     setState(() => {});
                   }),
               _optionRadioButton(
-                  title: S.of(context).request_paymenttype_zellepay,
-                  value: RequestPaymentType.ZELLEPAY,
+                  title: 'Venmo',
+                  value: RequestPaymentType.VENMO,
                   groupvalue:
                       donationsModel.cashDetails.cashDetails.paymentType,
                   onChanged: (value) {
@@ -625,8 +612,8 @@ class _DonationViewState extends State<DonationView> {
                     setState(() => {});
                   }),
               _optionRadioButton(
-                  title: 'Venmo',
-                  value: RequestPaymentType.VENMO,
+                  title: S.of(context).request_paymenttype_zellepay,
+                  value: RequestPaymentType.ZELLEPAY,
                   groupvalue:
                       donationsModel.cashDetails.cashDetails.paymentType,
                   onChanged: (value) {
@@ -734,7 +721,7 @@ class _DonationViewState extends State<DonationView> {
                       children: [
                         Checkbox(
                           value:
-                          snapshot.data?.containsKey(keys[index]) ?? false,
+                              snapshot.data?.containsKey(keys[index]) ?? false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             donationBloc.addAddRemove(
@@ -787,16 +774,17 @@ class _DonationViewState extends State<DonationView> {
                       showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateGoods(
-                          notificationId: widget.notificationId,
-                          donationModel: donationsModel,
-                          requestModel: widget.requestModel,
-                          donor: sevaUser)
+                              notificationId: widget.notificationId,
+                              donationModel: donationsModel,
+                              requestModel: widget.requestModel,
+                              donor: sevaUser)
                           .then((value) {
                         if (value) {
                           hideProgress();
-                          getSuccessDialog(S.of(context).pledged.toLowerCase()).then(
+                          getSuccessDialog(S.of(context).pledged.toLowerCase())
+                              .then(
                             //to pop the screen
-                                (_) => Navigator.of(context).pop(),
+                            (_) => Navigator.of(context).pop(),
                           );
                         }
                       });
