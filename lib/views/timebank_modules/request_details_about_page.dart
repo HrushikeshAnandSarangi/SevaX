@@ -1076,7 +1076,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               width: 30,
             ),
             trailing: Text(
-              snapshot.data.toString(),
+              "${snapshot.data ?? ''}",
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,

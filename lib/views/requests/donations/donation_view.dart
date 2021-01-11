@@ -998,7 +998,8 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: S.of(context).cancel,
+                buttonTitle: S.of(context).next,
+                buttonColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   donationBloc
                       .validateAmount(
@@ -1007,9 +1008,13 @@ class _DonationViewState extends State<DonationView> {
                       .then((value) {
                     FocusScope.of(context).unfocus();
                     if (value) {
-                      pageController.animateToPage(2,
-                          curve: Curves.easeInOut,
-                          duration: Duration(milliseconds: 500));
+                      pageController.animateToPage(
+                        2,
+                        curve: Curves.easeInOut,
+                        duration: Duration(
+                          milliseconds: 500,
+                        ),
+                      );
                     }
                   });
                 },
@@ -1102,15 +1107,6 @@ class _DonationViewState extends State<DonationView> {
                         );
                       }
                     });
-                  },
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                actionButton(
-                  buttonTitle: S.of(context).do_it_later,
-                  onPressed: () {
-                    Navigator.of(context).pop();
                   },
                 ),
               ],
