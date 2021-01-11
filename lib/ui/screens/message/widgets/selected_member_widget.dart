@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 
@@ -22,7 +23,7 @@ class SelectedMemberWidget extends StatelessWidget {
                 width: 70,
                 height: 70,
                 child: CustomNetworkImage(
-                  info.photoUrl,
+                  info.photoUrl??defaultUserImageURL,
                 ),
               ),
               Offstage(
