@@ -107,7 +107,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         .push(
                           MaterialPageRoute(
                             builder: (context) => NearByFiltersView(
-                              SevaCore.of(context).loggedInUser,
+                              widget.loggedInUser,
                             ),
                           ),
                         )

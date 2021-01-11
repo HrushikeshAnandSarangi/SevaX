@@ -186,7 +186,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               Column(
                 children: <Widget>[
                   PinCodeTextField(
-                    pinBoxWidth: 50,
+                    pinBoxWidth: 45,
                     autofocus: false,
                     controller: controller,
                     hideCharacter: false,
