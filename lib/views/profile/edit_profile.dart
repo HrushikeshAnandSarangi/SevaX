@@ -922,6 +922,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                       return S.of(context).profanity_text_alert;
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
+                    } else if (value.length > 250) {
+                      return '* max 250 characters';
                     } else {
                       widget.userModel.bio = value;
                       return null;
