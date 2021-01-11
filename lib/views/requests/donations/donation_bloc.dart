@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -38,7 +42,7 @@ class DonationBloc {
       {DonationModel donationModel,
       OfferModel offerModel,
       String notificationId,
-      UserModel notify}) async {
+      UserModel notify,}) async {
 //      donationModel.goodsDetails.donatedGoods = _selectedList.value;
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
@@ -62,8 +66,22 @@ class DonationBloc {
       offerModel.cashModel.donors = newDonors;
     }
     try {
+      // var batch = Firestore.instance.batch();
+      // batch.setData(
+      //   Firestore.instance.collection('donations').document(donationModel.id),
+      //   donationModel.toMap(),
+      // );
+
+      // batch.updateData(
+      //   Firestore.instance.collection('offers').document(offerModel.id),
+      //   offerModel.toMap(),
+      // );
+
+      log("===================DDID  B4${donationModel.notificationId}");
       await FirestoreManager.createDonation(donationModel: donationModel);
       await updateOfferWithRequest(offer: offerModel);
+      log("===================DDID  AF${donationModel.notificationId}");
+
       await sendNotification(
         donationModel: donationModel,
         offerModel: offerModel,
@@ -183,6 +201,7 @@ class DonationBloc {
         targetUserId: offerModel.sevaUserId,
         data: donationModel.toMap(),
       );
+      log("WRITIN ID  NMID ${notificationsModel.id}=================DONATION MODEL NID=====${donationModel.notificationId}");
       await Firestore.instance
           .collection('users')
           .document(donor.email)
