@@ -745,6 +745,21 @@ class _RegisterPageState extends State<RegisterPage>
         ),
       );
       return null;
+    } on EmailAlreadyInUseException catch (e) {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+              // "Email address already in use, please use a different email!"),
+              e._message),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
     } catch (error) {
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
@@ -1176,5 +1191,18 @@ class _RegisterPageState extends State<RegisterPage>
         ),
       ));
     });
+  }
+}
+
+class EmailAlreadyInUseException implements Exception {
+  String _message;
+
+  EmailAlreadyInUseException([String message = 'Invalid value']) {
+    this._message = message;
+  }
+
+  @override
+  String toString() {
+    return _message;
   }
 }
