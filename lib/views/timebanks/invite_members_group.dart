@@ -515,6 +515,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     UserModel userModel,
   }) async {
     String notificationId = utils.Utils.getUuid();
+    String invitationId = utils.Utils.getUuid();
     GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.parenttimebankid,
@@ -526,6 +527,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         invitedUserId: userModel.sevaUserID,
         declined: false,
         declinedTimestamp: 0,
+        invitationId: invitationId,
         adminId: SevaCore.of(context).loggedInUser.sevaUserID,
         notificationId: notificationId);
 

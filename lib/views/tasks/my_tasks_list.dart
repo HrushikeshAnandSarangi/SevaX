@@ -710,7 +710,7 @@ class TaskCardViewState extends State<TaskCardView> {
         to: SevaCore.of(context).loggedInUser.sevaUserID,
         credits: totalMinutes / 60,
         timestamp: DateTime.now().millisecondsSinceEpoch,
-        associatedCommunity: requestModel.communityId,
+        communityId: requestModel.communityId,
       );
 
       if (requestModel.transactions == null) {
@@ -735,7 +735,7 @@ class TaskCardViewState extends State<TaskCardView> {
             : RequestMode.PERSONAL_REQUEST.toString(),
         this.requestModel.id,
         this.requestModel.timebankId,
-        associatedCommunity: requestModel.communityId,
+        communityId: requestModel.communityId,
       );
 
       FirestoreManager.createTaskCompletedNotification(

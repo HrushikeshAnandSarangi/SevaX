@@ -16,7 +16,7 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.RequestScheduleReminder,
   NotificationType.RecurringRequestUpdated,
   NotificationType.RecurringOfferUpdated,
-  NotificationType.RequestInvite,
+  // NotificationType.RequestInvite,
   NotificationType.RequestReject,
   NotificationType.RequestCompletedApproved,
   NotificationType.RequestCompletedRejected,

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -22,6 +24,8 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmailState extends State<VerifyEmail> {
+  ProgressDialog progressDialog;
+
   @override
   void initState() {
     if (!widget.emailSent) {
@@ -116,11 +120,23 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   child: FlatButton(
                     child: Text(S.of(context).resend_email),
                     onPressed: () {
+                      progressDialog = ProgressDialog(
+                        context,
+                        customBody: Container(
+                          height: 100,
+                          width: 100,
+                          child: LoadingIndicator(),
+                        ),
+                        isDismissible: false,
+                      );
+                      progressDialog.show();
                       widget.firebaseUser
                           .sendEmailVerification()
                           .then((onValue) {
+                        progressDialog.hide();
                         showVerificationEmailDialog();
                       }).catchError((onError) {
+                        progressDialog.hide();
                         logger.e(onError);
                       });
                     },

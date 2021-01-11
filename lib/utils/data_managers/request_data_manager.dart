@@ -76,7 +76,7 @@ Future<List<String>> createRecurringEvents({
       eventEndDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
   double balanceVar = await SevaCreditLimitManager.getMemberBalancePerTimebank(
-    associatedCommunity: communityId,
+    communityId: communityId,
     userSevaId: requestModel.sevaUserId,
   );
   double negativeThresholdTimebank =
@@ -253,7 +253,7 @@ Future<void> updateRecurrenceRequestsFrontEnd(
   var futures = <Future>[];
 //  double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
   double balanceVar = await SevaCreditLimitManager.getMemberBalancePerTimebank(
-    associatedCommunity: communityId,
+    communityId: communityId,
     userSevaId: updatedRequestModel.sevaUserId,
   );
   double negativeThresholdTimebank =
@@ -1068,7 +1068,7 @@ Future<void> approveRequestCompletion({
     model.id,
     model.timebankId,
     false,
-    associatedCommunity: communityId,
+    communityId: communityId,
   );
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
@@ -1086,7 +1086,7 @@ Future<void> approveRequestCompletion({
     userId: userId,
     to: editedTransaction.to,
     credits: editedTransaction.credits,
-    associatedCommunity: communityId,
+    communityId: communityId,
   );
 
   await utils.createTaskCompletedApprovedNotification(model: notification);

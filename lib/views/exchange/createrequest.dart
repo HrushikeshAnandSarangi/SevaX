@@ -1690,7 +1690,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             email: SevaCore.of(context).loggedInUser.email,
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
-            associatedCommunity: timebankModel.communityId,
+                communityId: timebankModel.communityId,
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
@@ -1939,7 +1939,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
       requestModel.id,
       requestModel.timebankId,
-      associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {

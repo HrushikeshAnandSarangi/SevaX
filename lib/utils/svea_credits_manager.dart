@@ -23,13 +23,13 @@ class SevaCreditLimitManager {
 
   static Future<double> getMemberBalancePerTimebank({
     String userSevaId,
-    String associatedCommunity,
+    String communityId,
   }) async {
     double sevaCoinsBalance = 0.0;
 
     var snapTransactions = await Firestore.instance
         .collection('transactions')
-        .where("associatedCommunity", isEqualTo: associatedCommunity)
+        .where("communityId", isEqualTo: communityId)
         .where("isApproved", isEqualTo: true)
         .where('transactionbetween', arrayContains: userSevaId)
         .orderBy("timestamp", descending: true)
@@ -89,7 +89,7 @@ class SevaCreditLimitManager {
     @required String email,
     @required String userId,
     @required double credits,
-    @required String associatedCommunity,
+    @required String communityId,
   }) async {
     var currentGlobalBalance = await getCurrentBalance(email: email);
     if (currentGlobalBalance >= credits) {
@@ -98,11 +98,11 @@ class SevaCreditLimitManager {
       var associatedBalanceWithinThisCommunity =
           await getMemberBalancePerTimebank(
         userSevaId: userId,
-        associatedCommunity: associatedCommunity,
+            communityId: communityId,
       );
 
       var communityThreshold =
-          await getNegativeThresholdForCommunity(associatedCommunity);
+          await getNegativeThresholdForCommunity(communityId);
 
       if (associatedBalanceWithinThisCommunity > communityThreshold) {
         return (currentGlobalBalance > 0

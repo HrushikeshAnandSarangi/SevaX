@@ -12,7 +12,7 @@ class TransactionModel extends DataModel {
   String typeid;
   String timebankid;
   List<String> transactionbetween;
-  String associatedCommunity;
+  String communityId;
 
   TransactionModel({
     this.from,
@@ -24,7 +24,7 @@ class TransactionModel extends DataModel {
     this.typeid,
     this.timebankid,
     this.transactionbetween,
-    @required this.associatedCommunity,
+    @required this.communityId,
   });
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
@@ -57,8 +57,8 @@ class TransactionModel extends DataModel {
           List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
-    if (map.containsKey('associatedCommunity')) {
-      this.associatedCommunity = map['associatedCommunity'];
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
   }
 
@@ -93,8 +93,8 @@ class TransactionModel extends DataModel {
       map['transactionbetween'] = this.transactionbetween;
     }
 
-    if (this.associatedCommunity != null) {
-      map['associatedCommunity'] = this.associatedCommunity;
+    if (this.communityId != null) {
+      map['communityId'] = this.communityId;
     }
     return map;
   }

@@ -1619,7 +1619,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * recurrences
                 : widget.requestModel.numberOfHours.toDouble(),
-            associatedCommunity: SevaCore.of(context).loggedInUser.sevaUserID,
+                communityId: SevaCore.of(context).loggedInUser.sevaUserID,
           );
           // .hasSufficientCreditsIncludingRecurring(
           //   credits: widget.requestModel.numberOfHours.toDouble(),
@@ -1635,7 +1635,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * 0
                 : widget.requestModel.numberOfHours.toDouble(),
-            associatedCommunity:
+                communityId:
                 SevaCore.of(context).loggedInUser.currentCommunity,
           );
 
