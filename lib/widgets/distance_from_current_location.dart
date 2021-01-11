@@ -51,6 +51,7 @@ class DistanceFromCurrentLocation extends StatelessWidget {
   }
 
   String distanceConvertorForKm(double distance) {
+    assert(distance != null);
     if (distance < 1) {
       return "${(distance * 1000).toInt()} m";
     } else {
