@@ -799,20 +799,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get subtitleComponent {
     return Text(
-      DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
-            getDateTimeAccToUserTimezone(
-                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                    widget.requestItem.requestStart),
-                timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
-          ) +
+      // DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
+      //       getDateTimeAccToUserTimezone(
+      //           dateTime: DateTime.fromMillisecondsSinceEpoch(
+      //               widget.requestItem.requestStart),
+      //           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+      //     ) +
+      DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                    widget.requestItem.requestStart,
+                  ),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+              ) +
           ' - ' +
-          DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
-            getDateTimeAccToUserTimezone(
-              dateTime: DateTime.fromMillisecondsSinceEpoch(
-                  widget.requestItem.requestEnd),
-              timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-            ),
-          ),
+          DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      widget.requestItem.requestEnd),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+                // ),
+                // DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
+                //   getDateTimeAccToUserTimezone(
+                //     dateTime: DateTime.fromMillisecondsSinceEpoch(
+                //         widget.requestItem.requestEnd),
+                //     timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                //   ),
+              ),
       style: subTitleStyle,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
