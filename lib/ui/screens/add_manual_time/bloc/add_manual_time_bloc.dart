@@ -81,11 +81,12 @@ class AddManualTimeBloc {
         ..isTimebankNotification = true
         ..timebankId = timebankId
         ..senderUserId = user.sevaUserID;
-      logger.i(model, 'claiming');
       try {
         if (userType == UserRole.TimebankCreator) {
           model.actionBy = user.sevaUserID;
           model.status = ClaimStatus.Approved;
+          model.relatedNotificationId = null;
+          logger.i(model, 'claiming');
           await ManualTimeRepository.createClaim(model);
           await ManualTimeRepository.approveManualCreditClaim(
             memberTransactionModel:
