@@ -83,8 +83,9 @@ class LocationConfimationCard extends StatelessWidget {
                       locData.location =
                           locationDataModel.location.split('*')[1];
                     }
-                    
+
                     log(locationDataModel.location);
+                    
                     Navigator.pop(
                       context,
                       locData,
