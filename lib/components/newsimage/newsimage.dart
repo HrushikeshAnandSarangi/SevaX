@@ -237,7 +237,10 @@ class NewsImageState extends State<NewsImage>
   Widget build(BuildContext context) {
     parentContext = context;
     return GestureDetector(
-      onTap: () => imagePicker.showDialog(context),
+      onTap: () {
+        FocusScope.of(context).requestFocus( FocusNode());
+        imagePicker.showDialog(context);
+      },
       child: Column(
         children: <Widget>[
           _isImageBeingUploaded

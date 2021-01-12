@@ -922,7 +922,6 @@ class _DonationViewState extends State<DonationView> {
                     } else {
                       // showProgress();
                       log("IMPORTANT ==== ${widget.notificationId}============");
-                      return;
                       donationBloc
                           .donateOfferGoods(
                               notificationId: widget.notificationId,
