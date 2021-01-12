@@ -1,8 +1,6 @@
 name: sevaexchange
 description: A new Flutter application.
 
-publish_to: none
-
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -31,11 +29,11 @@ dependencies:
   async: null
   badges: ^1.1.1
   cached_network_image: ^2.0.0
-  camera: 0.6.0
+  camera: null
   cloud_firestore: ^0.12.5
-  connectivity: ^2.0.0
+  connectivity: ^0.4.8+6
   curved_navigation_bar: ^0.3.2
-  device_info: ^0.4.2+10
+  device_info: ^0.4.2+4
   emoji_picker: ^0.1.0
   file_picker: ^1.10.0
   firebase_analytics: ^5.0.14
@@ -93,8 +91,8 @@ dependencies:
   usage: ^3.4.1
   webview_flutter: ^0.3.22+1
 
-#dependency_overrides:
-# intl: ^0.17.0-nullsafety.2
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 dev_dependencies:
   pedantic: ^1.9.0
