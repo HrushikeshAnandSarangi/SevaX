@@ -855,7 +855,7 @@ class PersonalNotificationsRedcerForDonations {
       },
       photoUrl: donationModel.receiverDetails.photoUrl,
       subTitle:
-          "${donationModel.receiverDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+          "${donationModel.receiverDetails.name} ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${amount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
       title: S.of(context).donations_requested,
     );
   }

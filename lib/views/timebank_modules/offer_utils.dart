@@ -189,7 +189,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model, ComingFrom com
       email: SevaCore.of(context).loggedInUser.email,
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
-      associatedCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
 
     if (hasSufficientCredits) {
