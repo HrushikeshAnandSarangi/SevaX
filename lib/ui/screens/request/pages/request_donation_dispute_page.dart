@@ -11,7 +11,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -199,7 +198,7 @@ class _RequestDonationDisputePageState
         }
         _bloc
             .disputeGoods(
-          donatedGoods: widget.model.goodsDetails.donatedGoods,
+          donatedGoods: widget.model.goodsDetails.requiredGoods,
           donationId: widget.model.id,
           donationModel: widget.model,
           notificationId: widget.model.notificationId,
