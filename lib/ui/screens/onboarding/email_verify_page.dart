@@ -24,6 +24,7 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmailState extends State<VerifyEmail> {
+  GlobalKey<ScaffoldState> _key = GlobalKey();
   ProgressDialog progressDialog;
 
   @override
@@ -45,9 +46,23 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.initState();
   }
 
+  void sendVerificationEmail(FirebaseUser user, {VoidCallback onSuccess}) {
+    user?.sendEmailVerification()?.then((onValue) {
+      onSuccess?.call();
+    })?.catchError((onError) {
+      logger.e(onError);
+      final snackBar = SnackBar(content: Text(onError.message));
+      _key.currentState.hideCurrentSnackBar();
+      _key.currentState.showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       body: Stack(
         fit: StackFit.expand,
         // crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,6 +152,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         showVerificationEmailDialog();
                       }).catchError((onError) {
                         progressDialog.hide();
+                        final snackBar =
+                            SnackBar(content: Text(onError.message));
+                        _key.currentState.hideCurrentSnackBar();
+                        _key.currentState.showSnackBar(snackBar);
                         logger.e(onError);
                       });
                     },

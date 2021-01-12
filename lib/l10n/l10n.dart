@@ -487,7 +487,7 @@ class S {
       );
 
   String get join_timebank_question => Intl.message(
-        'Why do you want to join the',
+        'Why do you want to join this',
         name: 'join_timebank_question',
       );
 
@@ -2487,7 +2487,7 @@ class S {
       );
 
   String get private_timebank_alert_hint => Intl.message(
-        'Please be informed that Private Seva Communities do not have a free option. You will need to provide your billing details to continue to create this Seva Community',
+        'Please be informed that Private Seva Communities do not have a free option. You will need to provide your account details to continue to create this Seva Community',
         name: 'private_timebank_alert_hint',
       );
 

@@ -678,7 +678,7 @@ class CreateEditCommunityViewFormState
                                     child: infoButton(
                                       context: context,
                                       key: GlobalKey(),
-                                      type: InfoType.TAX_CONFIGURATION,
+                                      type: InfoType.NEGATIVE_CREDITS,
                                     ),
                                   ),
                                 ],
@@ -858,14 +858,14 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (!hasRegisteredLocation()) {
-                                    showDialogForSuccess(
-                                        dialogTitle: S
-                                            .of(context)
-                                            .timebank_location_error,
-                                        err: true);
-                                    return;
-                                  }
+//                                  if (!hasRegisteredLocation()) {
+//                                    showDialogForSuccess(
+//                                        dialogTitle: S
+//                                            .of(context)
+//                                            .timebank_location_error,
+//                                        err: true);
+//                                    return;
+//                                  }
 
                                   if (_formKey.currentState.validate()) {
                                     if (isBillingDetailsProvided) {
@@ -971,12 +971,16 @@ class CreateEditCommunityViewFormState
                                         _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
                                         Navigator.of(context)
-                                            .pushReplacement(MaterialPageRoute(
-                                          builder: (context1) => SevaCore(
-                                            loggedInUser: user,
-                                            child: HomePageRouter(),
-                                          ),
-                                        ));
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SevaCore(
+                                                    loggedInUser: user,
+                                                    child: HomePageRouter(),
+                                                  ),
+                                                ),
+                                                (Route<dynamic> route) =>
+                                                    false);
 
                                         // Navigator.of(context).pushReplacement(
                                         //   MaterialPageRoute(
@@ -1002,7 +1006,7 @@ class CreateEditCommunityViewFormState
                                       setState(() {
                                         this._billingDetailsError = S
                                             .of(context)
-                                            .timebank_billing_error;
+                                            .timebank_account_error;
                                       });
                                     }
                                   } else {}
@@ -1218,7 +1222,7 @@ class CreateEditCommunityViewFormState
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              S.of(context).timebank_configure_profile_info,
+              S.of(context).timebank_configure_accounr_info,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -1340,7 +1344,7 @@ class CreateEditCommunityViewFormState
             Column(
               children: <Widget>[
                 Text(
-                  S.of(context).timebank_profile_info,
+                  S.of(context).account_information,
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
