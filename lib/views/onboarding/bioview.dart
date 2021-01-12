@@ -114,7 +114,9 @@ class _BioViewState extends State<BioView> {
                                       .validation_error_bio_min_characters;
                                 } else if (value.length > 250) {
                                   this.bio = value;
-                                  return '* max 250 characters';
+                                  return S
+                                      .of(context)
+                                      .validation_error_bio_max_characters;
                                 }
                                 this.bio = value;
                                 return null;
