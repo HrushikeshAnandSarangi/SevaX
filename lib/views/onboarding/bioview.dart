@@ -104,15 +104,19 @@ class _BioViewState extends State<BioView> {
                                   return S
                                       .of(context)
                                       .validation_error_bio_empty;
-                                }
-                                if (value.length < 150) {
+                                } else if (profanityDetector
+                                    .isProfaneString(value)) {
+                                  return S.of(context).profanity_text_alert;
+                                } else if (value.length < 50) {
                                   this.bio = value;
                                   return S
                                       .of(context)
                                       .validation_error_bio_min_characters;
-                                }
-                                if (profanityDetector.isProfaneString(value)) {
-                                  return S.of(context).profanity_text_alert;
+                                } else if (value.length > 250) {
+                                  this.bio = value;
+                                  return S
+                                      .of(context)
+                                      .validation_error_bio_max_characters;
                                 }
                                 this.bio = value;
                                 return null;

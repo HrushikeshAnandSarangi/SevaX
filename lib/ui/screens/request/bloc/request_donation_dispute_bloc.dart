@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -58,41 +60,55 @@ class RequestDonationDisputeBloc {
     DonationModel donationModel,
     RequestMode requestMode,
   }) async {
+    log("Inside callDonateOfferCreatorPledge");
+    logger
+        .i("${_cashAmount.value} ========================<<<<<<<<>>>>>>>>>>>>");
+
     var amountMatched = pledgedAmount == double.parse(_cashAmount.value);
     logger.i("$amountMatched ========================<<<<<<<<>>>>>>>>>>>>");
     if (_cashAmount.value == null || _cashAmount.value == '') {
+      log("Inside amount 1");
+
       _cashAmount.addError('amount1');
       return false;
     } else if (donationModel.minimumAmount != null &&
         int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+      log("Inside min");
+
       _cashAmount.addError('min');
       return false;
     } else {
-      donationModel.donationStatus = donationModel.donationStatus ==  DonationStatus.REQUESTED ? DonationStatus.PLEDGED: donationModel.donationStatus;
+      log("Inside else");
+
+      donationModel.donationStatus =
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
-        operatoreMode: operationMode,
-        requestType: donationModel.donationType,
-        donationStatus: donationModel.donationStatus,
-        associatedId: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank
-            ? donationModel.timebankId
-            : donationModel.donorDetails.email,
-        donationId: donationId,
-        isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank,
-        notificationId: notificationId,
-        acknowledgementNotification: getAcknowlegementNotification(
-          updatedAmount: double.parse(_cashAmount.value),
-          model: donationModel,
-          operatorMode: operationMode,
-          requestMode: requestMode,
-          notificationType: donationModel.donationStatus == DonationStatus.PLEDGED
-              ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
-              : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
-        ),
-      )
+            operatoreMode: operationMode,
+            requestType: donationModel.donationType,
+            donationStatus: donationModel.donationStatus,
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
+                ? donationModel.timebankId
+                : donationModel.donorDetails.email,
+            donationId: donationId,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
+            notificationId: notificationId,
+            acknowledgementNotification: getAcknowlegementNotification(
+              updatedAmount: double.parse(_cashAmount.value),
+              model: donationModel,
+              operatorMode: operationMode,
+              requestMode: requestMode,
+              notificationType:
+                  donationModel.donationStatus == DonationStatus.PLEDGED
+                      ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
+                      : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+            ),
+          )
           .then((value) => true)
           .catchError((onError) => false);
     }
@@ -106,8 +122,8 @@ class RequestDonationDisputeBloc {
     DonationModel donationModel,
     RequestMode requestMode,
   }) async {
-    logger.e(
-        "$pledgedAmount ========================<<<<<<<<INSIDE DISPUTE CASH>>>>>>>>>>>> ${double.parse(_cashAmount.value)}");
+    // logger.e(
+    //     "$pledgedAmount ========================<<<<<<<<INSIDE DISPUTE CASH>>>>>>>>>>>> ${double.parse(_cashAmount.value)}");
 
     var status = pledgedAmount == double.parse(_cashAmount.value);
     logger.i("$status ========================<<<<<<<<>>>>>>>>>>>>");
@@ -130,9 +146,10 @@ class RequestDonationDisputeBloc {
                     donationModel.donatedToTimebank
                 ? donationModel.timebankId
                 : donationModel.requestIdType == 'offer'
-                ? operationMode != OperatingMode.CREATOR ? donationModel.donorDetails.email
-                : donationModel.receiverDetails.email
-                : donationModel.donorDetails.email,
+                    ? operationMode != OperatingMode.CREATOR
+                        ? donationModel.donorDetails.email
+                        : donationModel.receiverDetails.email
+                    : donationModel.donorDetails.email,
             donationId: donationId,
             isTimebankNotification: operationMode == OperatingMode.CREATOR &&
                 donationModel.donatedToTimebank,
@@ -223,9 +240,10 @@ class RequestDonationDisputeBloc {
               donationModel.donatedToTimebank
           ? donationModel.timebankId
           : donationModel.requestIdType == 'offer'
-          ? operationMode != OperatingMode.CREATOR ? donationModel.donorDetails.email
-          : donationModel.receiverDetails.email
-          : donationModel.donorDetails.email,
+              ? operationMode != OperatingMode.CREATOR
+                  ? donationModel.donorDetails.email
+                  : donationModel.receiverDetails.email
+              : donationModel.donorDetails.email,
       donationId: donationId,
       // if status is true that means the notification will go to user only as the request is acknowledged
       // if true then we check whether it should go to timebank or user

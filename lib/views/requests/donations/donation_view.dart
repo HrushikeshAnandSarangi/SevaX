@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,6 +60,8 @@ class _DonationViewState extends State<DonationView> {
   var focusNodes = List.generate(16, (_) => FocusNode());
   @override
   void initState() {
+    donationsModel.id = Utils.getUuid();
+    donationsModel.notificationId = Utils.getUuid();
     if (none == '') {}
     var temp = (widget.offerModel != null
         ? (widget.offerModel.type == RequestType.GOODS
@@ -234,8 +238,6 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;
     }
     donationsModel.communityId = sevaUser.currentCommunity;
-    donationsModel.id = Utils.getUuid();
-    donationsModel.notificationId = Utils.getUuid();
   }
 
   TextStyle hintTextStyle = TextStyle(
@@ -645,6 +647,7 @@ class _DonationViewState extends State<DonationView> {
                           showScaffold(S.of(context).check_internet);
                           return;
                         }
+                        log("tapped on Submit ${widget.notificationId} --");
                         showProgress(S.of(context).please_wait);
                         donationBloc
                             .donateOfferGoods(
@@ -918,6 +921,8 @@ class _DonationViewState extends State<DonationView> {
                       showScaffold(S.of(context).select_goods_category);
                     } else {
                       // showProgress();
+                      log("IMPORTANT ==== ${widget.notificationId}============");
+                      return;
                       donationBloc
                           .donateOfferGoods(
                               notificationId: widget.notificationId,
@@ -998,7 +1003,8 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: S.of(context).cancel,
+                buttonTitle: S.of(context).next,
+                buttonColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   donationBloc
                       .validateAmount(
@@ -1007,9 +1013,13 @@ class _DonationViewState extends State<DonationView> {
                       .then((value) {
                     FocusScope.of(context).unfocus();
                     if (value) {
-                      pageController.animateToPage(2,
-                          curve: Curves.easeInOut,
-                          duration: Duration(milliseconds: 500));
+                      pageController.animateToPage(
+                        2,
+                        curve: Curves.easeInOut,
+                        duration: Duration(
+                          milliseconds: 500,
+                        ),
+                      );
                     }
                   });
                 },
@@ -1102,15 +1112,6 @@ class _DonationViewState extends State<DonationView> {
                         );
                       }
                     });
-                  },
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                actionButton(
-                  buttonTitle: S.of(context).do_it_later,
-                  onPressed: () {
-                    Navigator.of(context).pop();
                   },
                 ),
               ],

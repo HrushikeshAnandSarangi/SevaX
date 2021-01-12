@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -84,50 +83,32 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: (context, child) {
-        return GestureDetector(
-          child: child,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-        );
-      },
-      supportedLocales: S.delegate.supportedLocales,
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      title: AppConfig.appName,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            S.of(context).review,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () => {
-              //  Navigator.popUntil(
-              //     context, ModalRoute.withName(Navigator.defaultRouteName))
-
-              Navigator.of(context).pop()
-            },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(
+          S.of(context).review,
+          style: TextStyle(
+            color: Colors.white,
           ),
         ),
-        body: questionIndex < getQuestions(widget.feedbackType).length
-            ? getFeebackQuestions()
-            : getTextFeedback(context),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () => {
+            //  Navigator.popUntil(
+            //     context, ModalRoute.withName(Navigator.defaultRouteName))
+
+            Navigator.of(context).pop()
+          },
+        ),
       ),
+      body: questionIndex < getQuestions(widget.feedbackType).length
+          ? getFeebackQuestions()
+          : getTextFeedback(context),
     );
   }
 

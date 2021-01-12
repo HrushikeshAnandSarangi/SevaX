@@ -317,7 +317,7 @@ class S {
       );
 
   String get skills_description => Intl.message(
-        'Please list ass many as skills that you are willing to share with others within your community.',
+        'Please list as many as skills that you are willing to share with others within your community.',
         name: 'skills_description',
       );
 
@@ -377,7 +377,7 @@ class S {
       );
 
   String get validation_error_bio_min_characters => Intl.message(
-        '* min 100 characters',
+        '*min 50 characters',
         name: 'validation_error_bio_min_characters',
       );
 
@@ -1192,12 +1192,12 @@ class S {
       );
 
   String get organizer => Intl.message(
-        'Organiser',
+        'Organizer',
         name: 'organizer',
       );
 
   String get delete_project => Intl.message(
-        'Delete an Event',
+        'Delete Event',
         name: 'delete_project',
       );
 
@@ -1207,7 +1207,7 @@ class S {
       );
 
   String get edit_project => Intl.message(
-        'Edit an Event',
+        'Edit Event',
         name: 'edit_project',
       );
 
@@ -1397,7 +1397,7 @@ class S {
       );
 
   String get applied_for_request => Intl.message(
-        'You have applied for the request.',
+        'You have accepted this offer.',
         name: 'applied_for_request',
       );
 
@@ -1517,7 +1517,7 @@ class S {
       );
 
   String get request_description_hint => Intl.message(
-        'Please describe what you need to have done./n /nExample, I need help removing weeds from  my small garden.',
+        'Please describe what you need to have done. \n \nExample, I need help removing weeds from  my small garden.',
         name: 'request_description_hint',
       );
 
@@ -2402,17 +2402,17 @@ class S {
       );
 
   String get timebank_billing_error => Intl.message(
-        'Please configure your personal information details',
+        'Please configure your billing information details',
         name: 'timebank_billing_error',
       );
 
   String get timebank_configure_profile_info => Intl.message(
-        'Configure account information',
+        'Configure billing information',
         name: 'timebank_configure_profile_info',
       );
 
   String get timebank_profile_info => Intl.message(
-        'Account Information',
+        'Billing Information',
         name: 'timebank_profile_info',
       );
 
@@ -3037,7 +3037,7 @@ class S {
       );
 
   String get changing_ownership_of => Intl.message(
-        'Changing ownership of this ',
+        'Changing ownership',
         name: 'changing_ownership_of',
       );
 
@@ -4568,7 +4568,7 @@ class S {
       );
 
   String get donations_requested => Intl.message(
-        'Donation requested',
+        'Requested Donation',
         name: 'donations_requested',
       );
 
@@ -5288,7 +5288,7 @@ class S {
       );
 
   String get seva_logo_info => Intl.message(
-        'Upload a Photo ot pic to represent your community',
+        'Upload a Photo to represent your community',
         name: 'seva_logo_info',
       );
 
@@ -5773,7 +5773,7 @@ class S {
       );
 
   String get reports_charging_info => Intl.message(
-        'Reports are emailed to the creator of each community once a month. There is a cost of \\\$9.95 per report - which will be billed to the credit card on file to generate this report. By clicking ‘Proceed’, you are agreeing to this cost. Otherwise click \\\'Cancel\\\'.',
+        'Reports are emailed to the creator of each community once a month. There is a cost of \$9.95 per report - which will be billed to the credit card on file to generate this report. By clicking Proceed, you are agreeing to this cost. Otherwise click Cancel.',
         name: 'reports_charging_info',
       );
 
@@ -5920,6 +5920,66 @@ class S {
   String get would_like_to_accept_offer => Intl.message(
         'Would you like to accept offer?',
         name: 'would_like_to_accept_offer',
+      );
+
+  String get account_information => Intl.message(
+        'Account Information',
+        name: 'account_information',
+      );
+
+  String get timebank_configure_accounr_info => Intl.message(
+        'Configure account information',
+        name: 'timebank_configure_accounr_info',
+      );
+
+  String get timebank_account_error => Intl.message(
+        'Please configure your account information details',
+        name: 'timebank_account_error',
+      );
+
+  String get timebank_about_hint_example => Intl.message(
+        'Our Community is made up of local residents primarily from...',
+        name: 'timebank_about_hint_example',
+      );
+
+  String get contact_for_enterprise_price => Intl.message(
+        'To get a price estimate for Enterprise (SMB or large Enterprise), please contact our Sevax team.',
+        name: 'contact_for_enterprise_price',
+      );
+
+  String get contact_for_nonprofitt_price => Intl.message(
+        'To get a price estimate for non-profit, please contact our Sevax team.',
+        name: 'contact_for_nonprofitt_price',
+      );
+
+  String get send_invitation => Intl.message(
+        'Send Invitation',
+        name: 'send_invitation',
+      );
+
+  String get selected_categories => Intl.message(
+        'Selected Categories',
+        name: 'selected_categories',
+      );
+
+  String get copied_community_code => Intl.message(
+        'Copied Community Code',
+        name: 'copied_community_code',
+      );
+
+  String get no_events => Intl.message(
+        'No Events yes',
+        name: 'no_events',
+      );
+
+  String get manage_notofications => Intl.message(
+        'Manage Notifications',
+        name: 'manage_notofications',
+      );
+
+  String get validation_error_bio_max_characters => Intl.message(
+        '* max 250 characters',
+        name: 'validation_error_bio_max_characters',
       );
 }
 

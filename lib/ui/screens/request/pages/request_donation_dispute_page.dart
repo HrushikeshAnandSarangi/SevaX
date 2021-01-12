@@ -11,7 +11,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -42,7 +41,7 @@ class RequestDonationDisputePage extends StatefulWidget {
 class _RequestDonationDisputePageState
     extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
-  int AMOUNT_NOT_DEFINED = 0;
+  int AMOUNT_NOT_DEFINED = null;
   _AckType ackType;
   OperatingMode operatingMode;
   final _key = GlobalKey<ScaffoldState>();
@@ -131,7 +130,8 @@ class _RequestDonationDisputePageState
         // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
         // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
         var id = widget.model.notificationId;
-        if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.PLEDGED) {
+        if (widget.model.requestIdType == 'offer' &&
+            widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
           amount = 0;
         }
@@ -159,6 +159,7 @@ class _RequestDonationDisputePageState
             }
           });
         } else {
+          log("Inside Else part =================================");
           // offers flow initial requested flow and pledged later its works same as requests.
           _bloc
               .validateAmount(
@@ -184,17 +185,20 @@ class _RequestDonationDisputePageState
                   )
                   .then(handleCallBackDisputeCash);
             }
+          }).catchError((onError) {
+            log("Inside ERROR PART $onError");
           });
         }
         break;
       case _AckType.GOODS:
-          if (widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.requestIdType == 'offer') {
-            // for the offers.
-            widget.model.donationStatus = DonationStatus.PLEDGED;
-          }
+        if (widget.model.donationStatus == DonationStatus.REQUESTED &&
+            widget.model.requestIdType == 'offer') {
+          // for the offers.
+          widget.model.donationStatus = DonationStatus.PLEDGED;
+        }
         _bloc
             .disputeGoods(
-          donatedGoods: widget.model.goodsDetails.donatedGoods,
+          donatedGoods: widget.model.goodsDetails.requiredGoods,
           donationId: widget.model.id,
           donationModel: widget.model,
           notificationId: widget.model.notificationId,
@@ -220,11 +224,14 @@ class _RequestDonationDisputePageState
         : OperatingMode.CREATOR;
     var name;
     var toWhom;
-    if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.REQUESTED) {
+    if (widget.model.requestIdType == 'offer' &&
+        widget.model.donationStatus == DonationStatus.REQUESTED) {
       name = widget.model.receiverDetails.name;
     } else {
       name = widget.model.donorDetails.name;
-      toWhom = operatingMode == OperatingMode.USER ?  widget.model.receiverDetails.name:  widget.model.donorDetails.name;
+      toWhom = operatingMode == OperatingMode.USER
+          ? widget.model.receiverDetails.name
+          : widget.model.donorDetails.name;
     }
     return Scaffold(
       key: _key,
@@ -248,13 +255,11 @@ class _RequestDonationDisputePageState
                   ? _CashFlow(
                       model: widget.model,
                       scaffoldKey: _key,
-                      to: widget.model.cashDetails
-                          .pledgedAmount !=
-                          null
-                          ? widget.model.requestIdType == 'offer' ? toWhom : widget
-                          .model
-                          .donationAssociatedTimebankDetails
-                          .timebankTitle
+                      to: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.requestIdType == 'offer'
+                              ? toWhom
+                              : widget.model.donationAssociatedTimebankDetails
+                                  .timebankTitle
                           : name,
                       title: widget.model.cashDetails.pledgedAmount != null
                           ? '$name ${S.of(context).pledged_to_donate}'
@@ -274,12 +279,10 @@ class _RequestDonationDisputePageState
                           ? widget.model.cashDetails.pledgedAmount.toString()
                           : widget.model.cashDetails.cashDetails.amountRaised
                               .toString(),
-                      minAmount:  widget.model.cashDetails
-                          .pledgedAmount !=
-                          null ? widget.model.minimumAmount
-                          .toString(): widget.model.cashDetails
-                          .cashDetails.amountRaised
-                          .toString(),
+                      minAmount: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.minimumAmount.toString()
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
@@ -325,19 +328,30 @@ class _RequestDonationDisputePageState
                   SizedBox(width: 12),
                   RaisedButton(
                     child: Text(S.of(context).message),
+                    color: Colors.orange,
+                    textColor: Colors.white,
                     onPressed: () async {
-                      var operatingModel = getOperatingMode(
+                      var a = getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
                       );
 
-                      switch (operatingModel) {
+                      logger.wtf(widget.model.toMap());
+                      switch (a) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
+                          var loggedInUser = SevaCore.of(context).loggedInUser;
+                          String recieverId = widget.model.donorSevaUserId ==
+                                  loggedInUser.sevaUserID
+                              ? widget.model.donatedTo
+                              : widget.model.donorSevaUserId;
+
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
-                            sevaUserId: widget.model.donatedTo,
+                            sevaUserId:
+                                recieverId != null && !recieverId.contains('-')
+                                    ? recieverId
+                                    : widget.model.donatedTo,
                           );
-                          var loggedInUser = SevaCore.of(context).loggedInUser;
 
                           await HandlerForModificationManager
                               .createChatForDispute(
@@ -503,12 +517,10 @@ class _CashFlow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            "${S.of(context).account_no} : " +
-                data.achdetails.account_number,
+            "${S.of(context).account_no} : " + data.achdetails.account_number,
           ),
           Text(
-            "${S.of(context).bank_address} : " +
-                data.achdetails.bank_address,
+            "${S.of(context).bank_address} : " + data.achdetails.bank_address,
           ),
           Text(
             "${S.of(context).bank_name} : " + data.achdetails.bank_name,
@@ -520,35 +532,31 @@ class _CashFlow extends StatelessWidget {
         ],
       );
     }
+
     String modeOfPayment() {
-      if (model != null && model.cashDetails != null &&
+      if (model != null &&
+          model.cashDetails != null &&
           model.cashDetails.cashDetails != null &&
           model.donationType == RequestType.CASH) {
         switch (model.cashDetails.cashDetails.paymentType) {
           case RequestPaymentType.ACH:
-            return S
-                .of(context)
-                .request_paymenttype_ach;
+            return S.of(context).request_paymenttype_ach;
           case RequestPaymentType.ZELLEPAY:
-            return S
-                .of(context)
-                .request_paymenttype_zellepay;
+            return S.of(context).request_paymenttype_zellepay;
           case RequestPaymentType.PAYPAL:
-            return S
-                .of(context)
-                .request_paymenttype_paypal;
+            return S.of(context).request_paymenttype_paypal;
           case RequestPaymentType.VENMO:
-            return S
-                .of(context)
-                .request_paymenttype_venmo;
+            return S.of(context).request_paymenttype_venmo;
           default:
             return "";
         }
         return "";
       }
     }
+
     getDonationLink() {
-      if (model != null && model.cashDetails != null &&
+      if (model != null &&
+          model.cashDetails != null &&
           model.cashDetails.cashDetails != null &&
           model.donationType == RequestType.CASH) {
         switch (model.cashDetails.cashDetails.paymentType) {
@@ -568,6 +576,7 @@ class _CashFlow extends StatelessWidget {
       }
       return "";
     }
+
     void showScaffold(context, String message) {
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -579,73 +588,68 @@ class _CashFlow extends StatelessWidget {
         ),
       );
     }
+
     Widget offerDonatePaymentDetails() {
       return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${S
-                      .of(context)
-                      .donation_description_one + ' $name:' + ' $amount' + S
-                      .of(context)
-                      .donation_description_three}',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-              Text(
-                S.of(context)
-                    .payment_link_description,
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                S.of(context)
-                  .request_payment_description + ': '+ modeOfPayment(),
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-                model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH ?
-                getDonationLink()
-              : InkWell(
-                onLongPress: () {
-                  Clipboard.setData(ClipboardData(
-                      text: model.donationInstructionLink));
-                  showScaffold(context, S
-                      .of(context)
-                      .copied_to_clipboard);
-                },
-                onTap: () async {
-                  String link = getDonationLink();
-                  if (await canLaunch(link)) {
-                    await launch(link);
-                  } else {
-                    showScaffold(context, 'Could not launch');
-                  }
-                },
-                child: Text(
-                  getDonationLink(),
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-                SizedBox(
-                  height: 20,
-                ),
-              ]));
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              '${S.of(context).donation_description_one + ' $name:' + ' $amount' + S.of(context).donation_description_three}',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              S.of(context).payment_link_description,
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              S.of(context).request_payment_description +
+                  ': ' +
+                  modeOfPayment(),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH
+                ? getDonationLink()
+                : InkWell(
+                    onLongPress: () {
+                      Clipboard.setData(
+                          ClipboardData(text: model.donationInstructionLink));
+                      showScaffold(context, S.of(context).copied_to_clipboard);
+                    },
+                    onTap: () async {
+                      String link = getDonationLink();
+                      if (await canLaunch(link)) {
+                        await launch(link);
+                      } else {
+                        showScaffold(context, 'Could not launch');
+                      }
+                    },
+                    child: Text(
+                      getDonationLink(),
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+            SizedBox(
+              height: 20,
+            ),
+          ]));
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -656,7 +660,6 @@ class _CashFlow extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
         SizedBox(height: 10),
-
         Text(
           '$title',
           style: TextStyle(
@@ -670,7 +673,10 @@ class _CashFlow extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == 'offer' && model.donationStatus == DonationStatus.REQUESTED ?  offerDonatePaymentDetails(): Text(''),
+        model.requestIdType == 'offer' &&
+                model.donationStatus == DonationStatus.REQUESTED
+            ? offerDonatePaymentDetails()
+            : Text(''),
         Divider(
           thickness: 1,
         ),
@@ -711,17 +717,17 @@ class _CashFlow extends StatelessWidget {
               ? '${S.of(context).i_received_amount} \$${amount}'
               : S.of(context).i_pledged_amount,
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(height: 20),
         Text(
           operatingMode == OperatingMode.CREATOR
-              ? '${S.of(context).acknowledge_desc_one} $name. ${S.of(context).acknowledge_desc_two} $name'
-              : '${S.of(context).acknowledge_desc_donor_one} $to ${S.of(context).acknowledge_desc_donor_two}',
+              ? '${S.of(context).acknowledge_desc_one} ${name}. ${S.of(context).acknowledge_desc_two} ${name}'
+              : '${S.of(context).acknowledge_desc_donor_one} ${to} ${S.of(context).acknowledge_desc_donor_two}',
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.black,
           ),
         ),
       ],

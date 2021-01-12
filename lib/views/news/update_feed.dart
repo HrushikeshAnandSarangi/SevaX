@@ -95,17 +95,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
     newsObject.newsDocumentUrl = globals.newsDocumentURL;
     newsObject.newsDocumentName = globals.newsDocumentName;
-    //EntityModel entityModel = _getSelectedEntityModel;
-    EntityModel entityModel = EntityModel(
-      entityId: widget.timebankId,
-      //entityName: FlavorConfig.timebankName,
-      entityType: EntityType.timebank,
-    );
 
-    newsObject.entity.entityType = entityModel.entityType;
-    newsObject.entity.entityName = entityModel.entityName;
-
-    // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
     globals.newsDocumentName = null;
