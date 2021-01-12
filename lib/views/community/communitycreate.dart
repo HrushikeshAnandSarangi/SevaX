@@ -419,17 +419,20 @@ class CreateEditCommunityViewFormState
                           validator: (value) {
                             if (value.trim().isEmpty) {
                               return S.of(context).timebank_tell_more;
-                            }
-                            if (profanityDetector.isProfaneString(value)) {
+                            } else if (profanityDetector
+                                .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
-                            }
-                            snapshot.data.community
-                                .updateValueByKey('about', value);
+                            } else {
+                              snapshot.data.community
+                                  .updateValueByKey('about', value);
 
-                            snapshot.data.timebank
-                                .updateValueByKey('missionStatement', value);
-                            createEditCommunityBloc.onChange(snapshot.data);
-                            return null;
+                              snapshot.data.timebank
+                                  .updateValueByKey('missionStatement', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                              timebankModel.missionStatement = value;
+                              communityModel.about = value;
+                              return null;
+                            }
                           },
                         ),
                         Padding(
@@ -940,7 +943,9 @@ class CreateEditCommunityViewFormState
                                           'communities': FieldValue.arrayUnion(
                                               [snapshot.data.community.id]),
                                           'currentCommunity':
-                                              snapshot.data.community.id
+                                              snapshot.data.community.id,
+                                          'currentTimebank': snapshot
+                                              .data.community.primary_timebank,
                                         });
 
                                         setState(() {
@@ -948,6 +953,11 @@ class CreateEditCommunityViewFormState
                                                   .loggedInUser
                                                   .currentCommunity =
                                               snapshot.data.community.id;
+                                          SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .currentTimebank =
+                                              snapshot.data.community
+                                                  .primary_timebank;
                                         });
 
                                         globals.timebankAvatarURL = null;
@@ -960,11 +970,20 @@ class CreateEditCommunityViewFormState
                                             SevaCore.of(context).loggedInUser;
                                         _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePageRouter()),
-                                        );
+                                        Navigator.of(context)
+                                            .pushReplacement(MaterialPageRoute(
+                                          builder: (context1) => SevaCore(
+                                            loggedInUser: user,
+                                            child: HomePageRouter(),
+                                          ),
+                                        ));
+
+                                        // Navigator.of(context).pushReplacement(
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           HomePageRouter()),
+                                        // );
+
                                         // Navigator.pushReplacement(
                                         //   context,
                                         //   MaterialPageRoute(

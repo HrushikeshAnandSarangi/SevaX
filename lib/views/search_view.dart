@@ -3,7 +3,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
@@ -308,7 +307,7 @@ class _ResultViewState extends State<ResultView> {
                   );
                 }
                 NewsModel news = newsList.elementAt(index - 1);
-                return GestureDetector(
+                return InkWell(
                   onTap: () async {
                     showDialog(
                         barrierDismissible: false,
@@ -351,50 +350,50 @@ class _ResultViewState extends State<ResultView> {
                     ),
                   ),
                 );
-                Card(
-                  child: ListTile(
-                    onTap: () async {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Loading'),
-                              content: LinearProgressIndicator(),
-                            );
-                          });
-                      NewsModel newsModel = await FirestoreManager.getNewsForId(
-                        news.id,
-                      );
-                      Navigator.of(context, rootNavigator: true).pop();
-                      if (newsModel == null) return;
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return NewsCardView(
-                              newsModel: newsModel,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    title: Text(news.title),
-                    subtitle: Text(news.description),
-                    leading: Hero(
-                      tag: news.id,
-                      child: CircleAvatar(
-                        child: ClipOval(
-                          child: FadeInImage.assetNetwork(
-                            height: 70,
-                            width: 70,
-                            placeholder: 'lib/assets/images/noimagefound.png',
-                            image: news.newsImageUrl,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
+//                Card(
+//                  child: ListTile(
+//                    onTap: () async {
+//                      showDialog(
+//                          barrierDismissible: false,
+//                          context: context,
+//                          builder: (context) {
+//                            return AlertDialog(
+//                              title: Text('Loading'),
+//                              content: LinearProgressIndicator(),
+//                            );
+//                          });
+//                      NewsModel newsModel = await FirestoreManager.getNewsForId(
+//                        news.id,
+//                      );
+//                      Navigator.of(context, rootNavigator: true).pop();
+//                      if (newsModel == null) return;
+//                      Navigator.of(context).push(
+//                        MaterialPageRoute(
+//                          builder: (context) {
+//                            return NewsCardView(
+//                              newsModel: newsModel,
+//                            );
+//                          },
+//                        ),
+//                      );
+//                    },
+//                    title: Text(news.title),
+//                    subtitle: Text(news.description),
+//                    leading: Hero(
+//                      tag: news.id,
+//                      child: CircleAvatar(
+//                        child: ClipOval(
+//                          child: FadeInImage.assetNetwork(
+//                            height: 70,
+//                            width: 70,
+//                            placeholder: 'lib/assets/images/noimagefound.png',
+//                            image: news.newsImageUrl,
+//                          ),
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                );
               },
               itemCount: newsList.length + 1,
             );

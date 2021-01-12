@@ -12,7 +12,9 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/preference_manager.dart';
+import 'package:sevaexchange/views/login/register_page.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -113,12 +115,13 @@ class Auth {
       );
       return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {}
-      Crashlytics.instance.log(error.toString());
-      error;
+      logger.i(
+          "${error.code} ==================================================");
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
+        Crashlytics.instance.log(error.toString());
+      throw EmailAlreadyInUseException(error.message);
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
-
       return null;
     }
   }

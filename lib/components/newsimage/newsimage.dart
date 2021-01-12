@@ -210,8 +210,8 @@ class NewsImageState extends State<NewsImage>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    globals.newsDocumentURL = null;
-    globals.newsDocumentName = null;
+//    globals.newsDocumentURL = null;
+//    globals.newsDocumentName = null;
     imagePicker = NewsImagePickerHandler(this, _controller);
     imagePicker.init();
   }
@@ -249,8 +249,8 @@ class NewsImageState extends State<NewsImage>
                     width: 150,
                     child: Center(
                       child: Container(
-                        height: 50,
-                        width: 50,
+                        height: 30,
+                        width: 30,
                         child: CircularProgressIndicator(),
                       ),
                     ),
@@ -261,15 +261,44 @@ class NewsImageState extends State<NewsImage>
                       ? Offstage()
                       : Column(
                           children: <Widget>[
-                            Container(
-                              height: 200,
-                              width: 200,
-                              child: FadeInImage(
-                                image: NetworkImage(globals.newsImageURL),
-                                placeholder: AssetImage(
-                                  'lib/assets/images/noimagefound.png',
+                            Stack(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    height: 200,
+                                    width: 200,
+                                    child: FadeInImage(
+                                      image: NetworkImage(globals.newsImageURL),
+                                      placeholder: AssetImage(
+                                        'lib/assets/images/noimagefound.png',
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          globals.newsImageURL = null;
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                        ),
+                                        child: Icon(
+                                          Icons.cancel,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             //Text(profanityImageModel.toString()),
                             Container(
@@ -301,8 +330,8 @@ class NewsImageState extends State<NewsImage>
                   margin: EdgeInsets.only(top: 20),
                   child: Center(
                     child: Container(
-                      height: 50,
-                      width: 50,
+                      height: 30,
+                      width: 30,
                       child: CircularProgressIndicator(),
                     ),
                   ),
@@ -324,6 +353,7 @@ class NewsImageState extends State<NewsImage>
                                 icon: Icon(Icons.clear),
                                 onPressed: () => setState(() {
                                   globals.newsDocumentURL = null;
+                                  globals.newsDocumentName = null;
                                 }),
                               ),
                             ),

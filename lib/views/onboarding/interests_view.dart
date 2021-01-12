@@ -66,9 +66,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
         });
       }
 
-      setState(() {
-        isDataLoaded = true;
-      });
+      if (mounted)
+        setState(() {
+          isDataLoaded = true;
+        });
     });
     super.initState();
   }

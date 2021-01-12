@@ -131,7 +131,8 @@ class _RequestDonationDisputePageState
         // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
         // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
         var id = widget.model.notificationId;
-        if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.PLEDGED) {
+        if (widget.model.requestIdType == 'offer' &&
+            widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
           amount = 0;
         }
@@ -159,6 +160,7 @@ class _RequestDonationDisputePageState
             }
           });
         } else {
+          log("Inside Else part =================================");
           // offers flow initial requested flow and pledged later its works same as requests.
           _bloc
               .validateAmount(
@@ -184,14 +186,17 @@ class _RequestDonationDisputePageState
                   )
                   .then(handleCallBackDisputeCash);
             }
+          }).catchError((onError) {
+            log("Inside ERROR PART $onError");
           });
         }
         break;
       case _AckType.GOODS:
-          if (widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.requestIdType == 'offer') {
-            // for the offers.
-            widget.model.donationStatus = DonationStatus.PLEDGED;
-          }
+        if (widget.model.donationStatus == DonationStatus.REQUESTED &&
+            widget.model.requestIdType == 'offer') {
+          // for the offers.
+          widget.model.donationStatus = DonationStatus.PLEDGED;
+        }
         _bloc
             .disputeGoods(
           donatedGoods: widget.model.goodsDetails.donatedGoods,
@@ -220,11 +225,14 @@ class _RequestDonationDisputePageState
         : OperatingMode.CREATOR;
     var name;
     var toWhom;
-    if (widget.model.requestIdType == 'offer' && widget.model.donationStatus == DonationStatus.REQUESTED) {
+    if (widget.model.requestIdType == 'offer' &&
+        widget.model.donationStatus == DonationStatus.REQUESTED) {
       name = widget.model.receiverDetails.name;
     } else {
       name = widget.model.donorDetails.name;
-      toWhom = operatingMode == OperatingMode.USER ?  widget.model.receiverDetails.name:  widget.model.donorDetails.name;
+      toWhom = operatingMode == OperatingMode.USER
+          ? widget.model.receiverDetails.name
+          : widget.model.donorDetails.name;
     }
     return Scaffold(
       key: _key,
@@ -248,13 +256,11 @@ class _RequestDonationDisputePageState
                   ? _CashFlow(
                       model: widget.model,
                       scaffoldKey: _key,
-                      to: widget.model.cashDetails
-                          .pledgedAmount !=
-                          null
-                          ? widget.model.requestIdType == 'offer' ? toWhom : widget
-                          .model
-                          .donationAssociatedTimebankDetails
-                          .timebankTitle
+                      to: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.requestIdType == 'offer'
+                              ? toWhom
+                              : widget.model.donationAssociatedTimebankDetails
+                                  .timebankTitle
                           : name,
                       title: widget.model.cashDetails.pledgedAmount != null
                           ? '$name ${S.of(context).pledged_to_donate}'
@@ -274,12 +280,10 @@ class _RequestDonationDisputePageState
                           ? widget.model.cashDetails.pledgedAmount.toString()
                           : widget.model.cashDetails.cashDetails.amountRaised
                               .toString(),
-                      minAmount:  widget.model.cashDetails
-                          .pledgedAmount !=
-                          null ? widget.model.minimumAmount
-                          .toString(): widget.model.cashDetails
-                          .cashDetails.amountRaised
-                          .toString(),
+                      minAmount: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.minimumAmount.toString()
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
@@ -333,13 +337,22 @@ class _RequestDonationDisputePageState
                         widget.model.donatedToTimebank,
                       );
 
+                      logger.wtf(widget.model.toMap());
                       switch (a) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
+                          var loggedInUser = SevaCore.of(context).loggedInUser;
+                          String recieverId = widget.model.donorSevaUserId ==
+                                  loggedInUser.sevaUserID
+                              ? widget.model.donatedTo
+                              : widget.model.donorSevaUserId;
+
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
-                            sevaUserId: widget.model.donatedTo,
+                            sevaUserId:
+                                recieverId != null && !recieverId.contains('-')
+                                    ? recieverId
+                                    : widget.model.donatedTo,
                           );
-                          var loggedInUser = SevaCore.of(context).loggedInUser;
 
                           await HandlerForModificationManager
                               .createChatForDispute(
@@ -704,7 +717,7 @@ class _CashFlow extends StatelessWidget {
               ? '${S.of(context).i_received_amount} \$${amount}'
               : S.of(context).i_pledged_amount,
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),

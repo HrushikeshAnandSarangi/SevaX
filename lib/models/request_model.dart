@@ -193,7 +193,7 @@ class RequestModel extends DataModel {
   RequestType requestType;
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
-  String associatedCommunityId;
+  String communityId;
   RequestModel({
     this.id,
     this.title,
@@ -234,9 +234,9 @@ class RequestModel extends DataModel {
     this.allowedCalenderUsers,
     this.recommendedMemberIdsForRequest,
     this.categories,
-    @required this.associatedCommunityId,
+    @required this.communityId,
   }) {
-    log("===========Constructir called $associatedCommunityId =======");
+    log("===========Constructir called $communityId =======");
   }
 
   RequestModel.fromMap(Map<dynamic, dynamic> map) {
@@ -269,8 +269,8 @@ class RequestModel extends DataModel {
       this.id = map['id'];
     }
 
-    if (map.containsKey('associatedCommunityId')) {
-      this.associatedCommunityId = map['associatedCommunityId'];
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
 
     if (map.containsKey('softDelete')) {
@@ -329,8 +329,8 @@ class RequestModel extends DataModel {
       this.address = map['address'];
     }
 
-    if (map.containsKey('associatedCommunityId')) {
-      this.associatedCommunityId = map['associatedCommunityId'];
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
@@ -711,8 +711,8 @@ class RequestModel extends DataModel {
       object['accepted'] = this.accepted;
     }
 
-    if (this.associatedCommunityId != null) {
-      object['associatedCommunityId'] = this.associatedCommunityId;
+    if (this.communityId != null) {
+      object['communityId'] = this.communityId;
     }
 
     if (this.address != null) {

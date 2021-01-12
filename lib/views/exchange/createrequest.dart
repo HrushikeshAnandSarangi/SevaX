@@ -199,7 +199,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       cashModel: CashModel(
           paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
       goodsDonationDetails: GoodsDonationDetails(),
-      associatedCommunityId: widget.loggedInUser.currentCommunity,
+      communityId: widget.loggedInUser.currentCommunity,
     );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -313,8 +313,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    this.requestModel.associatedCommunityId = loggedInUser.currentCommunity;
-    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.associatedCommunityId} ");
+    this.requestModel.communityId = loggedInUser.currentCommunity;
+    log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.communityId} ");
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -813,7 +813,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
         ),
         Text(
-          S.of(context).request_payment_description_hint,
+          "SevaX does not process the payment. Please select from among Venmo, PayPal, ZellePay or ACH in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.",
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey,
@@ -838,8 +838,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: S.of(context).request_paymenttype_zellepay,
-          value: RequestPaymentType.ZELLEPAY,
+          title: 'Venmo',
+          value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;
@@ -847,8 +847,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
-          title: 'Venmo',
-          value: RequestPaymentType.VENMO,
+          title: S.of(context).request_paymenttype_zellepay,
+          value: RequestPaymentType.ZELLEPAY,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;

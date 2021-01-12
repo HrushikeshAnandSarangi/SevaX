@@ -11,7 +11,11 @@ class BioView extends StatefulWidget {
   final VoidCallback onBacked;
   final VoidCallback onPrevious;
 
-  BioView({@required this.onSkipped, @required this.onSave, this.onBacked, this.onPrevious});
+  BioView(
+      {@required this.onSkipped,
+      @required this.onSave,
+      this.onBacked,
+      this.onPrevious});
 
   @override
   _BioViewState createState() => _BioViewState();
@@ -100,15 +104,17 @@ class _BioViewState extends State<BioView> {
                                   return S
                                       .of(context)
                                       .validation_error_bio_empty;
-                                }
-                                if (value.length < 50) {
+                                } else if (profanityDetector
+                                    .isProfaneString(value)) {
+                                  return S.of(context).profanity_text_alert;
+                                } else if (value.length < 50) {
                                   this.bio = value;
                                   return S
                                       .of(context)
                                       .validation_error_bio_min_characters;
-                                }
-                                if (profanityDetector.isProfaneString(value)) {
-                                  return S.of(context).profanity_text_alert;
+                                } else if (value.length > 250) {
+                                  this.bio = value;
+                                  return '* max 250 characters';
                                 }
                                 this.bio = value;
                                 return null;

@@ -186,7 +186,7 @@ class ManualTimeRepository {
     );
 
     //Clear notification
-    if (notificationId != null || notificationId != '') {
+    if (notificationId != null && notificationId != '') {
       batchWrite.updateData(
         _firestore
             .collection('timebanknew')

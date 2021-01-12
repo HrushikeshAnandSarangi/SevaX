@@ -72,14 +72,6 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
         sevaUserId: modelList[i].sevaUserId,
       );
       modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
-
-      if (modelList[i].placeAddress == null) {
-        var data = await _getLocation(
-          modelList[i].location.geoPoint.latitude,
-          modelList[i].location.geoPoint.longitude,
-        );
-        modelList[i].placeAddress = data;
-      }
     }
 
     newsSink.add(modelList);

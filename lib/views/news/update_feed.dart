@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
@@ -28,6 +30,8 @@ class UpdateNewsFeed extends StatelessWidget {
           globals.newsImageURL = null;
           globals.newsDocumentName = null;
           globals.newsDocumentURL = null;
+          globals.webImageUrl = null;
+
           return true;
         },
         child: Scaffold(
@@ -80,6 +84,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String selectedAddress;
 
   Future<void> writeToDB() async {
+    log('url  ${globals.newsImageURL}');
     newsObject.placeAddress = selectedAddress;
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
@@ -88,21 +93,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
-    newsObject.newsDocumentUrl =
-        globals.newsDocumentURL ?? newsObject.newsDocumentUrl ?? '';
-    newsObject.newsDocumentName =
-        globals.newsDocumentName ?? newsObject.newsDocumentName ?? '';
-    //EntityModel entityModel = _getSelectedEntityModel;
-    EntityModel entityModel = EntityModel(
-      entityId: widget.timebankId,
-      //entityName: FlavorConfig.timebankName,
-      entityType: EntityType.timebank,
-    );
+    newsObject.newsDocumentUrl = globals.newsDocumentURL;
+    newsObject.newsDocumentName = globals.newsDocumentName;
 
-    newsObject.entity.entityType = entityModel.entityType;
-    newsObject.entity.entityName = entityModel.entityName;
-
-    // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
     globals.newsDocumentName = null;
@@ -113,26 +106,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     Navigator.pop(context);
     Navigator.pop(context);
   }
-
-//  EntityModel get _getSelectedEntityModel {
-//    if (this.selectedEntity.runtimeType == TimebankModel) {
-//      TimebankModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.timebank,
-//      );
-//    } else if (this.selectedEntity.runtimeType == CampaignModel) {
-//      CampaignModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.campaign,
-//      );
-//    } else {
-//      return EntityModel(entityType: EntityType.general);
-//    }
-//  }
 
   @override
   void initState() {
@@ -210,6 +183,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           child: TextFormField(
                             // controller: subheadingController,
                             initialValue: newsObject.subheading,
+                            textInputAction: TextInputAction.newline,
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
@@ -226,7 +200,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 ),
                               ),
                             ),
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.multiline,
                             maxLines: 5,
                             onChanged: (value) {
                               ExitWithConfirmation.of(context).fieldValues[1] =
@@ -360,7 +334,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
                         if (newsObject.urlsFromPost.length > 0) {
-                          await scrapeURLDetails(newsObject.subheading);
+                          await scrapeURLDetails(newsObject.urlsFromPost.first);
+                        } else {
+                          newsObject.title = '';
+                          newsObject.imageScraped = 'NoData';
+                          newsObject.newsImageUrl = '';
+                          newsObject.description = '';
                         }
 
                         writeToDB();

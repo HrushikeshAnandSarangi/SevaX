@@ -135,6 +135,7 @@ class ProjectModel extends DataModel {
       "id": id == null ? null : id,
       "name": name == null ? null : name,
       "timebank_id": timebankId == null ? null : timebankId,
+      "communityId": communityId == null ? null : communityId,
       "description": description == null ? null : description,
       "email_id": emailId == null ? null : emailId,
       "phone_number": phoneNumber == null ? null : phoneNumber,

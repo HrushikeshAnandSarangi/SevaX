@@ -11,7 +11,8 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 
 class ReportPdf {
-  void reportPdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
+  void reportPdf(context, InvoiceModel model, CommunityModel communityModel,
+      String date, Map<String, dynamic> myPlan) async {
     final Document pdf = Document();
     List<String> monthsArr = [
       "January",
@@ -51,7 +52,9 @@ class ReportPdf {
           .forEach((element) => subtotal += element.price * element.units);
       return subtotal;
     }
-    var freeLimitAmount = myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
+
+    var freeLimitAmount =
+        myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
     var totalAmount = getSubTotal();
     pdf.addPage(
       MultiPage(
@@ -67,7 +70,8 @@ class ReportPdf {
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             decoration: BoxDecoration(
-                border: BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+                border:
+                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
               'Report',
               style: Theme.of(context)
@@ -111,11 +115,17 @@ class ReportPdf {
                     "Bill to Address",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("${communityModel.billing_address.companyname },", style: TextStyle(fontSize: 14)),
-                  Text("${communityModel.billing_address.street_address1!="" ? communityModel.billing_address.street_address1 : ""}", style: TextStyle(fontSize: 14)),
-                  Text("${communityModel.billing_address.street_address2!="" ? communityModel.billing_address.street_address2+' ' : ""}${communityModel.billing_address.city} ${communityModel.billing_address.pincode}", style: TextStyle(fontSize: 14)),
-
-                  Text("${communityModel.billing_address.state} ${communityModel.billing_address.country}", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.billing_address.companyname},",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.street_address1 != "" ? communityModel.billing_address.street_address1 : ""}",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.street_address2 != "" ? communityModel.billing_address.street_address2 + ' ' : ""}${communityModel.billing_address.city} ${communityModel.billing_address.pincode}",
+                      style: TextStyle(fontSize: 14)),
+                  Text(
+                      "${communityModel.billing_address.state} ${communityModel.billing_address.country}",
+                      style: TextStyle(fontSize: 14)),
                 ],
               ),
               Spacer(),
@@ -204,12 +214,15 @@ class ReportPdf {
                   SizedBox(height: 12),
                   _rowText("SUB TOTAL", "\$ ${totalAmount}"),
                   SizedBox(height: 8),
-                  _rowText("INITIAL PAYMENT PER YEAR", "\$ ${myPlan['initial_transactions_amount']}"),
-                  SizedBox(height: 8),
-                  _rowText("FREE LIMIT PER MONTH (FOR ${myPlan['name'].toUpperCase()})", "\$ ${freeLimitAmount}"),
+                  _rowText("INITIAL PAYMENT PER YEAR",
+                      "\$ ${myPlan['initial_transactions_amount']}"),
                   SizedBox(height: 8),
                   _rowText(
-                      "GRAND TOTAL", "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
+                      "FREE LIMIT PER MONTH (FOR ${myPlan['name'].toUpperCase()})",
+                      "\$ ${freeLimitAmount}"),
+                  SizedBox(height: 8),
+                  _rowText("GRAND TOTAL",
+                      "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
                   SizedBox(height: 12),
                 ],
               ),
@@ -225,7 +238,7 @@ class ReportPdf {
 //    final String dir = (await getExternalStorageDirectory()).path;
     final String path = '$dir/report.pdf';
 //    final String path = 'C://report.pdf';
-    log("path to pdf file is "+path);
+    log("path to pdf file is " + path);
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
     material.Navigator.of(context).push(

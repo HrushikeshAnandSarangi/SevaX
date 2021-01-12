@@ -10,6 +10,7 @@ class NewsModel extends DataModel {
   String email;
   String fullName;
   String sevaUserId;
+  String communityId;
   String newsImageUrl;
   String newsDocumentUrl;
   String newsDocumentName;
@@ -39,6 +40,7 @@ class NewsModel extends DataModel {
     this.email,
     this.fullName,
     this.sevaUserId,
+    this.communityId,
     this.newsImageUrl,
     this.photoCredits,
     this.postTimestamp,
@@ -59,14 +61,14 @@ class NewsModel extends DataModel {
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
 
-    if (this.title != null && this.title.isNotEmpty) {
+    if (this.title != null) {
       map['title'] = this.title;
     }
     if (this.softDelete != null) {
       map['softDelete'] = this.softDelete;
     }
 
-    if (this.description != null && this.description.isNotEmpty) {
+    if (this.description != null) {
       map['description'] = this.description;
     }
 
@@ -109,8 +111,14 @@ class NewsModel extends DataModel {
     if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
       map['sevauserid'] = this.sevaUserId;
     }
+
+    if (this.communityId != null && this.communityId.isNotEmpty) {
+      map['communityId'] = this.communityId;
+    }
     if (this.newsImageUrl != null && this.newsImageUrl.isNotEmpty) {
       map['newsimageurl'] = this.newsImageUrl;
+    } else {
+      map['newsimageurl'] = null;
     }
     if (this.photoCredits != null && this.photoCredits.isNotEmpty) {
       map['photocredits'] = this.photoCredits;
@@ -150,9 +158,13 @@ class NewsModel extends DataModel {
     }
     if (this.newsDocumentName != null && this.newsDocumentName.isNotEmpty) {
       map['newsDocumentName'] = this.newsDocumentName;
+    } else {
+      map['newsDocumentName'] = null;
     }
     if (this.newsDocumentUrl != null && this.newsDocumentUrl.isNotEmpty) {
       map['newsDocumentUrl'] = this.newsDocumentUrl;
+    } else {
+      map['newsDocumentUrl'] = null;
     }
     return map;
   }
@@ -209,6 +221,9 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
+    }
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];
@@ -326,6 +341,10 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
+    }
+
+    if (map.containsKey('communityId')) {
+      this.sevaUserId = map['communityId'];
     }
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];

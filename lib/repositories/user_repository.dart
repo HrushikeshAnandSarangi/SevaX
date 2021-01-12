@@ -97,43 +97,28 @@ class UserRepository {
       isAdmin = isAccessAvailable(timebankModel, userId);
     }
 
-//      timebankModel.admins.forEach((sevauserid) async {
-//        QuerySnapshot querySnapshot = await ref
-//            .where("sevauserid", isEqualTo: sevauserid)
-//            .orderBy("fullname")
-//            .getDocuments();
-//
-//        querySnapshot.documents.forEach((DocumentSnapshot document) {
-//          members.add(ParticipantInfo(
-//            id: document.data["sevauserid"],
-//            name: document.data["fullname"],
-//            photoUrl: document.data["photourl"],
-//          ));
-//        });
-//      });
-//
-//      return members;
-//
-//    } else {
     QuerySnapshot querySnapshot = await ref
         .where("communities", arrayContains: communityId)
         .orderBy("fullname")
         .getDocuments();
 
     querySnapshot.documents.forEach((DocumentSnapshot document) {
-      if (timebankModel != null && !isAdmin) {
-        if (isAccessAvailable(timebankModel, document.data["sevauserid"]))
+      var user = UserModel.fromMap(document.data, 'user chat repo');
+      if (!isMemberBlocked(user, userId)) {
+        if (timebankModel != null && !isAdmin) {
+          if (isAccessAvailable(timebankModel, document.data["sevauserid"]))
+            members.add(ParticipantInfo(
+              id: document.data["sevauserid"],
+              name: document.data["fullname"],
+              photoUrl: document.data["photourl"],
+            ));
+        } else {
           members.add(ParticipantInfo(
             id: document.data["sevauserid"],
             name: document.data["fullname"],
             photoUrl: document.data["photourl"],
           ));
-      } else {
-        members.add(ParticipantInfo(
-          id: document.data["sevauserid"],
-          name: document.data["fullname"],
-          photoUrl: document.data["photourl"],
-        ));
+        }
       }
     });
 

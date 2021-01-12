@@ -119,6 +119,7 @@ Map<String, UserRole> _claimedByMap = {
   "Organizer": UserRole.Organizer,
   "Creator": UserRole.Creator,
   "TimebankCreator": UserRole.TimebankCreator,
+  "Member": UserRole.Member,
 };
 
 class UserDetails {
