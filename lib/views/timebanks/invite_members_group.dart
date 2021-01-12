@@ -284,8 +284,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Europa')),
-                  subtitle:
-                      Text(user.email, style: TextStyle(fontFamily: 'Europa')),
+                  //subtitle: Text(user.email, style: TextStyle(fontFamily: 'Europa')),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -348,9 +347,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Europa')),
-                  subtitle: groupInviteStatus == GroupInviteStatus.INVITE
-                      ? Text(user.email, style: TextStyle(fontFamily: 'Europa'))
-                      : invitationStatusText(
+                  subtitle: invitationStatusText(
                           status, groupInviteUserModel, groupInviteStatus),
                 ),
                 Row(

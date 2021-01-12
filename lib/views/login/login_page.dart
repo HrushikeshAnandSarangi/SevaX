@@ -120,42 +120,6 @@ class _LoginPageState extends State<LoginPage> {
       return exceed;
     }
 
-    List<Widget> resetPasswordAndCancelButton = [
-      FlatButton(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-        color: Theme.of(context).accentColor,
-        textColor: FlavorConfig.values.buttonTextColor,
-        child: Text(
-          S.of(context).reset_password,
-          style: TextStyle(
-            fontSize: 15,
-          ),
-        ),
-        onPressed: () {
-          if (!_formKeyDialog.currentState.validate()) {
-            return;
-          }
-          Navigator.of(context).pop({
-            "sendResetLink": true,
-            "userEmail": _textFieldControllerResetEmail.trim()
-          });
-        },
-      ),
-      FlatButton(
-        child: Text(
-          S.of(context).cancel,
-          style: TextStyle(
-            fontSize: 15,
-            color: Colors.red,
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).pop(
-            {"sendResetLink": false, "userEmail": null},
-          );
-        },
-      ),
-    ];
     List<Widget> signUpAndForgotPassword = <Widget>[
       Row(
         children: <Widget>[
@@ -208,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: () {
                   showDialog(
                       context: context,
-                      builder: (context) {
+                      builder: (_context) {
                         return AlertDialog(
                           title: Text(
                             S.of(context).enter_email,
@@ -244,28 +208,74 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 15,
                                 ),
-                                LayoutBuilder(
-                                  builder: (context, size) {
-                                    TextSpan span = TextSpan(
-                                      text: S.of(context).reset_password +
-                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
-                                          S.of(context).cancel,
-                                    );
-                                    return textLengthCalculator(span, size) ==
-                                            true
-                                        ? Wrap(
-                                            alignment: WrapAlignment.center,
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children:
-                                                resetPasswordAndCancelButton,
-                                          )
-                                        : Row(
-                                            children:
-                                                resetPasswordAndCancelButton,
-                                          );
-                                  },
+                                Row(
+                                  children: [
+                                    FlatButton(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                      color: Theme.of(context).accentColor,
+                                      textColor:
+                                          FlavorConfig.values.buttonTextColor,
+                                      child: Text(
+                                        S.of(context).reset_password,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (!_formKeyDialog.currentState
+                                            .validate()) {
+                                          return;
+                                        }
+                                        Navigator.of(_context).pop({
+                                          "sendResetLink": true,
+                                          "userEmail":
+                                              _textFieldControllerResetEmail
+                                                  .trim()
+                                        });
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        S.of(context).cancel,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(_context).pop(
+                                          {
+                                            "sendResetLink": false,
+                                            "userEmail": null
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
+//                                LayoutBuilder(
+//                                  builder: (context, size) {
+//                                    TextSpan span = TextSpan(
+//                                      text: S.of(context).reset_password +
+//                                          '${Padding(padding: const EdgeInsets.only(left: 20))}' +
+//                                          S.of(context).cancel,
+//                                    );
+//                                    return textLengthCalculator(span, size) ==
+//                                            true
+//                                        ? Wrap(
+//                                            alignment: WrapAlignment.center,
+//                                            crossAxisAlignment:
+//                                                WrapCrossAlignment.center,
+//                                            children:
+//                                                resetPasswordAndCancelButton,
+//                                          )
+//                                        : Row(
+//                                            children:
+//                                                resetPasswordAndCancelButton,
+//                                          );
+//                                  },
+//                                ),
                               ],
                             ),
                           ),
@@ -671,6 +681,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
+    'umesha@uipep.com',
     'adi007footballer@gmail.com',
     'adityatestacc123@gmail.com',
     'adityazzz@yopmail.com',

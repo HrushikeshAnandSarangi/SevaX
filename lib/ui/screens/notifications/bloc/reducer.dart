@@ -810,9 +810,7 @@ class PersonalNotificationsRedcerForDonations {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
-              notificationId: notification.id,
-              model: donationModel,
-            ),
+                notificationId: notification.id, model: donationModel,),
           ),
         );
       },
