@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class LocationConfimationCard extends StatelessWidget {
   final LocationDataModel locationDataModel;
@@ -67,8 +68,17 @@ class LocationConfimationCard extends StatelessWidget {
                     S.of(context).confirm_location.toUpperCase(),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     LocationDataModel locData = locationDataModel;
+
+                    if (locData.lat == null || locData.lng == null) {
+                      await CustomDialogs.generalDialogWithCloseButton(
+                        context,
+                        'Please select a valid location.',
+                      );
+                      return;
+                    }
+                    
                     if (locData.location.contains("*")) {
                       locData.location =
                           locationDataModel.location.split('*')[1];
