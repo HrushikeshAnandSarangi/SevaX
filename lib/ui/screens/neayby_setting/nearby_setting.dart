@@ -54,6 +54,13 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   void initState() {
     super.initState();
     log("nearby settings im getting here ${widget.loggedInUser.nearBySettings}");
+    if(widget.loggedInUser.nearBySettings==null){
+      widget.loggedInUser.nearBySettings = NearBySettings()
+        ..isMiles = true
+        ..radius = 10;
+    }
+    log("nearby settings im getting here after setting ${widget.loggedInUser.nearBySettings}");
+
     selectedRadio =
         NearbySettingsWidget.isInMiles(widget.loggedInUser.nearBySettings);
     rating = NearbySettingBloc.valueForSeekBar(
@@ -105,17 +112,30 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               thumbColor: Theme.of(context).primaryColor,
               activeColor: Theme.of(context).primaryColor,
               value: rating,
-              onChanged: (newRating) {
+              onChanged: (newRating) => {
                 _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
-                      email: widget.loggedInUser.email,
-                      radius: newRating.toInt(),
-                    ));
-                rating = newRating;
-                widget.loggedInUser.nearBySettings.radius = rating.toInt();
-                setState(() {});
+                  email: widget.loggedInUser.email,
+                  radius: newRating.toInt(),
+                    selectedRadioVal: selectedRadio
+                )),
+                setState(() {
+                    rating = newRating;
+                    widget.loggedInUser.nearBySettings.radius = rating.toInt();
+                }),
               },
             ),
-          ),
+              // onChanged: (newRating) {
+              //   _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
+              //         email: widget.loggedInUser.email,
+              //         radius: newRating.toInt(),
+              //         selectedRadioVal: selectedRadio
+//       ));
+              //   rating = newRating;
+              //   widget.loggedInUser.nearBySettings.radius = rating.toInt();
+              //   setState(() {});
+              // },
+            ),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

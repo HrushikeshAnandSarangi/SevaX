@@ -115,10 +115,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //                         )
 //                         .then((value) => setState(() {}));
 
-                    await Navigator.of(context).push(
+                    Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context1) => NearByFiltersView(
                               SevaCore.of(context).loggedInUser,
+                              // widget.loggedInUser,
                             ),
                           ),
                         )
