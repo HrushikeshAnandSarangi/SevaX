@@ -312,7 +312,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           } else {
             if (snapshot.data.length != 0) {
