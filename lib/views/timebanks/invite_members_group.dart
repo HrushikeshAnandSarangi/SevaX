@@ -378,6 +378,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteUserModel groupInviteUserModel,
       GroupInviteStatus groupInviteStatus) {
     String statusText = getGroupUserStatusTitle(groupInviteStatus);
+    if(groupInviteStatus == GroupInviteStatus.INVITE){
+      return Offstage();
+    }
+
     String date = DateFormat(
       'dd MMM yyyy',
     ).format(
