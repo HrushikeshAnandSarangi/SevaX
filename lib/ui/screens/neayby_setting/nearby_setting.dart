@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class NearbySettingsWidget extends StatefulWidget {
   final UserModel loggedInUser;
@@ -50,6 +53,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   @override
   void initState() {
     super.initState();
+    log("nearby settings im getting here ${widget.loggedInUser.nearBySettings}");
     selectedRadio =
         NearbySettingsWidget.isInMiles(widget.loggedInUser.nearBySettings);
     rating = NearbySettingBloc.valueForSeekBar(
@@ -59,7 +63,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // log(rating.toString() + "<<<<<<<<<<<<<<<<<");
+    log(rating.toString() + "<<<<<<<<<<<<<<<<<");
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Column(
@@ -101,12 +105,14 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               thumbColor: Theme.of(context).primaryColor,
               activeColor: Theme.of(context).primaryColor,
               value: rating,
-              onChanged: (newRating) => {
+              onChanged: (newRating) {
                 _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
                       email: widget.loggedInUser.email,
                       radius: newRating.toInt(),
-                    )),
-                setState(() => rating = newRating),
+                    ));
+                rating = newRating;
+                widget.loggedInUser.nearBySettings.radius = rating.toInt();
+                setState(() {});
               },
             ),
           ),
@@ -120,6 +126,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                   groupValue: selectedRadio,
                   onChanged: (val) async {
                     setSelectedRadio(val);
+                    widget.loggedInUser.nearBySettings.isMiles = true;
                     await NearbySettingBloc.isMiles(
                       email: widget.loggedInUser.email,
                       val: true,
@@ -137,6 +144,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                   groupValue: selectedRadio,
                   onChanged: (val) async {
                     setSelectedRadio(val);
+                    widget.loggedInUser.nearBySettings.isMiles = false;
                     await NearbySettingBloc.isMiles(
                       email: widget.loggedInUser.email,
                       val: false,
@@ -196,15 +204,24 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   void setSelectedRadio(int value) {
     if (value == NearbySettingBloc.MILES_SELECTION) {
       rating = rating / 1.6;
+      // rating = rating >= minMi && rating <= maxMi ? rating : minMi;
+      rating = rating >= minMi && rating <= maxMi ? rating :
+      rating < minMi ? minMi : maxMi;
     } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {
       rating = rating * 1.6;
+      // rating = rating >= minKM && rating <= maxKM ? rating : minKM;
+      rating = rating >= minKM && rating <= maxKM ? rating :
+      rating < minKM ? minKM : maxKM;
     }
     NearbySettingBloc.udpateNearbyRadius(
       email: widget.loggedInUser.email,
       radius: rating.toInt(),
+      selectedRadioVal: selectedRadio
+      // radius: rating.c,
     );
 
     setState(() {
+      widget.loggedInUser.nearBySettings.radius = rating.toInt();
       selectedRadio = value;
     });
   }
@@ -240,9 +257,11 @@ class NearbySettingBloc {
   static udpateNearbyRadius({
     String email,
     int radius,
+    int selectedRadioVal
   }) async {
     await Firestore.instance.collection('users').document(email).updateData({
       'nearbySettings.radius': radius,
+      'nearbySettings.isMiles': selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,
     });
   }
 }

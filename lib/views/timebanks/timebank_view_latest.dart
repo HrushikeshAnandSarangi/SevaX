@@ -13,8 +13,10 @@ import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -163,18 +165,22 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             )
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: AddManualTimeButton(
-                      typeId: widget.timebankModel.id,
-                      timebankId: widget.timebankModel.parentTimebankId ==
-                              FlavorConfig.values.timebankId
-                          ? widget.timebankModel.id
-                          : widget.timebankModel.parentTimebankId,
-                      timeFor: ManualTimeType.Timebank,
-                      userType: getLoggedInUserRole(
-                        widget.timebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID,
+                    child: TransactionsMatrixCheck(
+                      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
+                      transaction_matrix_type: "add_manual_time",
+                      child: AddManualTimeButton(
+                        typeId: widget.timebankModel.id,
+                        timebankId: widget.timebankModel.parentTimebankId ==
+                                FlavorConfig.values.timebankId
+                            ? widget.timebankModel.id
+                            : widget.timebankModel.parentTimebankId,
+                        timeFor: ManualTimeType.Timebank,
+                        userType: getLoggedInUserRole(
+                          widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID,
+                        ),
+                        communityName: widget.timebankModel.name,
                       ),
-                      communityName: widget.timebankModel.name,
                     ),
                   )
                 : Container(),
