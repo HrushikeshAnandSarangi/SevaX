@@ -21,5 +21,5 @@ void registerPlugins(Registrar registrar) {
   FlutterKeyboardVisibilityPlugin.registerWith(registrar);
   GoogleSignInPlugin.registerWith(registrar);
   LocationWebPlugin.registerWith(registrar);
-  registrar.registerMessageHandler();
+  // registrar.registerMessageHandler();
 }
