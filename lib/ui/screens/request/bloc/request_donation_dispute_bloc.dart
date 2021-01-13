@@ -18,7 +18,8 @@ class RequestDonationDisputeBloc {
 
   Stream<String> get cashAmount => _cashAmount.stream;
   Stream<Map<String, String>> get goodsRecieved => _goodsRecieved.stream;
-
+  String get cashAmoutVal => _cashAmount.value;
+  Map<String, String> get goodsRecievedVal => _goodsRecieved.value;
   Function(String) get onAmountChanged => _cashAmount.sink.add;
   getgoodsRecieved() {
     return _goodsRecieved.value;
