@@ -52,6 +52,8 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -189,9 +191,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     caseSensitive: false,
     multiLine: false,
   );
+
+  CommunityModel communityModel;
+
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
     requestModel = RequestModel(
@@ -214,14 +220,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
-
     fetchRemoteConfig();
-    if ((FlavorConfig.appFlavor == Flavor.APP ||
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-      // _fetchCurrentlocation;
-    }
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
+    // if ((FlavorConfig.appFlavor == Flavor.APP ||
+    //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    // _fetchCurrentlocation;
+    // }
   }
 
   @override
@@ -1703,6 +1708,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       String timestampString = timestamp.toString();
       requestModel.id = '${requestModel.email}*$timestampString';
@@ -1711,6 +1717,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
       } else {
         requestModel.parent_request_id = null;
       }
+      communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
+
+      requestModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
       requestModel.softDelete = false;
       requestModel.postTimestamp = timestamp;
       requestModel.accepted = false;
@@ -1725,13 +1736,19 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
-        List<String> acceptorList = widget.isOfferRequest
-            ? widget.offer.creatorAllowedCalender == null ||
-                    widget.offer.creatorAllowedCalender == false
-                ? [requestModel.email]
-                : [widget.offer.email, requestModel.email]
-            : [requestModel.email];
-        requestModel.allowedCalenderUsers = acceptorList.toList();
+        if (communityModel.payment['planId'] !=
+            SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
+          List<String> acceptorList = widget.isOfferRequest
+              ? widget.offer.creatorAllowedCalender == null ||
+              widget.offer.creatorAllowedCalender == false
+              ? [requestModel.email]
+              : [widget.offer.email, requestModel.email]
+              : [requestModel.email];
+          requestModel.allowedCalenderUsers = acceptorList.toList();
+        } else {
+          requestModel.allowedCalenderUsers = [];
+        }
+
         await continueCreateRequest(confirmationDialogContext: null);
       } else {
         linearProgressForCreatingRequest();

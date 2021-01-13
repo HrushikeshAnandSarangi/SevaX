@@ -99,27 +99,33 @@ class _RequestDonationDisputePageState
   }
 
   void actionExecute(_key) async {
-    // print('Inside action Execute');
+
     var handleCallBackDisputeCash = ((value) {
       // print('Inside CallBackDisputeCash');
-      // print(value);
-      hideProgress();
+      progressDialog.hide();
+      // hideProgress();
       if (value) {
         Navigator.of(context).pop();
       } else {
         _key.currentState.hideCurrentSnackBar();
         _key.currentState.showSnackBar(
-          SnackBar(
-            content: Text(
-              S.of(context).general_stream_error +
-                  ' ' +
-                  S.of(context).try_later +
-                  '.',
-            ),
-          ),
+          SnackBar(content: Text("${S.of(context).general_stream_error}."),),
         );
       }
     });
+
+    ProgressDialog progressDialogNew = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialogNew.style(
+      progressWidget: Container(
+        padding: EdgeInsets.all(8.0),
+        child: CircularProgressIndicator(),
+      ),
+      message: S.of(context).please_wait,
+    );
 
     var amount = widget.model.cashDetails.pledgedAmount == null
         ? AMOUNT_NOT_DEFINED
@@ -135,30 +141,53 @@ class _RequestDonationDisputePageState
 //          id = widget.notificationId;
           amount = 0;
         }
+
         if (widget.model.cashDetails.pledgedAmount != null) {
-          _bloc
-              .validateAmount(
-                  minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount)
-              .then((value) {
-            if (value) {
-              FocusScope.of(context).unfocus();
-              showProgress(S.of(context).please_wait);
-              _bloc
-                  .disputeCash(
-                    pledgedAmount:
-                        widget.model.cashDetails.pledgedAmount.toDouble(),
-                    operationMode: operatingMode,
-                    donationId: widget.model.id,
-                    donationModel: widget.model,
-                    notificationId: id,
-                    requestMode: widget.model.donatedToTimebank
-                        ? RequestMode.TIMEBANK_REQUEST
-                        : RequestMode.PERSONAL_REQUEST,
-                  )
-                  .then(handleCallBackDisputeCash);
+          bool validatorRes = await _bloc
+              .validateAmount(minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
+
+          if (validatorRes) {
+            logger.i("$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+
+            FocusScope.of(context).unfocus();
+            if(widget.model.minimumAmount != null &&
+                int.parse(_bloc.cashAmoutVal) >= widget.model.minimumAmount){
+              progressDialogNew.show();
             }
-          });
-        } else {
+            // showProgress(S.of(context).please_wait);
+            bool disputeRes = await _bloc.disputeCash(
+              pledgedAmount:
+              widget.model.cashDetails.pledgedAmount.toDouble(),
+              operationMode: operatingMode,
+              donationId: widget.model.id,
+              donationModel: widget.model,
+              notificationId: id,
+              requestMode: widget.model.donatedToTimebank
+                  ? RequestMode.TIMEBANK_REQUEST
+                  : RequestMode.PERSONAL_REQUEST,
+            );
+            logger.i("$disputeRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+            progressDialogNew.hide();
+            if (disputeRes) {
+              Navigator.of(context).pop();
+            } else {
+              progressDialogNew.hide();
+              logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
+              _key.currentState.hideCurrentSnackBar();
+              if(widget.model.minimumAmount != null &&
+                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount){
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
+                );
+              }else{
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("${S.of(context).general_stream_error}.")),
+                );
+              }
+            }
+          }
+        }
+        else {
           log("Inside Else part =================================");
           // offers flow initial requested flow and pledged later its works same as requests.
           _bloc
