@@ -1281,7 +1281,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         "ADMIN_DONATE_TOUSER",
         null,
         model.id,
-        associatedCommunity: model.communityId,
+        communityId: model.communityId,
       );
       await showDialog<double>(
         context: context,

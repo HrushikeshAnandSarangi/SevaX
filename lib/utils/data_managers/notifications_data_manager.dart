@@ -287,7 +287,7 @@ Future<void> processLoans({
   String userId,
   String to,
   num credits,
-  @required String associatedCommunity,
+  @required String communityId,
 }) async {
   // get all previous loans of this user with in the timebank;
   var loans = await Firestore.instance
@@ -346,7 +346,7 @@ Future<void> processLoans({
       "USER_PAYLOAN_TOTIMEBANK",
       null,
       timebankId,
-      associatedCommunity: associatedCommunity,
+      communityId: communityId,
     );
   }
 }

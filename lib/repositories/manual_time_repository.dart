@@ -267,7 +267,7 @@ class ManualTimeRepository {
     ManualTimeModel model,
   ) {
     return TransactionModel(
-      associatedCommunity: model.communityId,
+      communityId: model.communityId,
       credits: model.claimedTime / 60,
       from: model.timebankId,
       isApproved: true,
@@ -287,7 +287,7 @@ class ManualTimeRepository {
     ManualTimeModel model,
   ) {
     return TransactionModel(
-      associatedCommunity: model.communityId,
+      communityId: model.communityId,
       credits: model.claimedTime / 60,
       from: model.timebankId,
       isApproved: true,

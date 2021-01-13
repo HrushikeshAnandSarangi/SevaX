@@ -4,6 +4,7 @@ UpgradePlanBannerModel upgradePlanBannerModelFromJson(String str) =>
     UpgradePlanBannerModel.fromJson(json.decode(str));
 
 class UpgradePlanBannerModel {
+
   UpgradePlanBannerModel({
     this.pin_feeds,
     this.multi_lang,
@@ -31,6 +32,7 @@ class UpgradePlanBannerModel {
     this.goods_request,
     this.multiple_super_admins,
     this.sponsored_groups,
+    this.add_manual_time,
   });
   BannerDetails pin_feeds;
   BannerDetails multi_lang;
@@ -58,6 +60,7 @@ class UpgradePlanBannerModel {
   BannerDetails goods_request;
   BannerDetails multiple_super_admins;
   BannerDetails sponsored_groups;
+  BannerDetails add_manual_time;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -140,6 +143,9 @@ class UpgradePlanBannerModel {
             : null,
         multiple_super_admins: json.containsKey("multiple_super_admins")
             ? BannerDetails.fromJson(json["multiple_super_admins"])
+            : null,
+        add_manual_time: json.containsKey("add_manual_time")
+            ? BannerDetails.fromJson(json["add_manual_time"])
             : null,
       );
 }

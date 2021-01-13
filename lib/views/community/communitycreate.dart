@@ -236,6 +236,7 @@ class CreateEditCommunityViewFormState
         negativeCreditsThreshold = onValue.negativeCreditsThreshold;
         searchTextController.text = communityModel.name;
         descriptionTextController.text = communityModel.about;
+        setState((){});
       });
     });
 

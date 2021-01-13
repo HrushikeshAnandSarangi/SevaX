@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -213,29 +214,33 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   }
 
   Widget get addManualTime {
-    return GestureDetector(
-      onTap: () => AddManualTimeButton.onPressed(
-        context: context,
-        timeFor: ManualTimeType.Project,
-        typeId: projectModel.id,
-        communityName: widget.timebankModel.name,
-        userType: getLoggedInUserRole(
-          widget.timebankModel,
-          SevaCore.of(context).loggedInUser.sevaUserID,
+    return TransactionsMatrixCheck(
+      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
+      transaction_matrix_type: "add_manual_time",
+      child: GestureDetector(
+        onTap: () => AddManualTimeButton.onPressed(
+          context: context,
+          timeFor: ManualTimeType.Project,
+          typeId: projectModel.id,
+          communityName: widget.timebankModel.name,
+          userType: getLoggedInUserRole(
+            widget.timebankModel,
+            SevaCore.of(context).loggedInUser.sevaUserID,
+          ),
+          timebankId: widget.timebankModel.parentTimebankId ==
+                  FlavorConfig.values.timebankId
+              ? widget.timebankModel.id
+              : widget.timebankModel.parentTimebankId,
         ),
-        timebankId: widget.timebankModel.parentTimebankId ==
-                FlavorConfig.values.timebankId
-            ? widget.timebankModel.id
-            : widget.timebankModel.parentTimebankId,
-      ),
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Text(
-          'Add manual time',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
+        child: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Add manual time',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         ),
       ),
