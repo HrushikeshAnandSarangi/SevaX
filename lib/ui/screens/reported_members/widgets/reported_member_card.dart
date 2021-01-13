@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -25,6 +26,9 @@ class ReportedMemberCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    bool canRemove =
+        !(isPrimaryTimebank(parentTimebankId: timebankModel.parentTimebankId) &&
+            timebankModel.creatorId == model.reportedId);
     int userCount = reportedByCount(model, isFromTimebank);
     return InkWell(
       onTap: () {
@@ -35,6 +39,7 @@ class ReportedMemberCard extends StatelessWidget {
             removeMember: () => isFromTimebank
                 ? removeMemberTimebankFn(context)
                 : removeMemberGroupFn(context),
+            canRemove: canRemove,
             messageMember: () => messageMember(
               context: context,
               timebankModel: timebankModel,
@@ -120,24 +125,27 @@ class ReportedMemberCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16),
-              GestureDetector(
-                child: Image.asset(
-                  removeUserIcon,
-                  width: 22,
-                  height: 22,
-                ),
-                onTap: () {
-                  progressDialog = ProgressDialog(
-                    context,
-                    type: ProgressDialogType.Normal,
-                    isDismissible: false,
-                  );
-                  progressDialog.show();
+              Visibility(
+                visible: canRemove,
+                child: GestureDetector(
+                  child: Image.asset(
+                    removeUserIcon,
+                    width: 22,
+                    height: 22,
+                  ),
+                  onTap: () {
+                    progressDialog = ProgressDialog(
+                      context,
+                      type: ProgressDialogType.Normal,
+                      isDismissible: false,
+                    );
+                    progressDialog.show();
 
-                  isFromTimebank
-                      ? removeMemberTimebankFn(context)
-                      : removeMemberGroupFn(context);
-                },
+                    isFromTimebank
+                        ? removeMemberTimebankFn(context)
+                        : removeMemberGroupFn(context);
+                  },
+                ),
               ),
             ],
           ),
