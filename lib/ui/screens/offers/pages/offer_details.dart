@@ -491,9 +491,10 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          bool isAccepted =
-                              getOfferParticipants(offerDataModel: offerModel)
-                                  .contains(userId);
+                          // bool isAccepted =
+                          //     getOfferParticipants(offerDataModel: offerModel)
+                          //         .contains(userId);
+                          bool isAccepted = false;
 
                           if (offerModel.type == RequestType.CASH ||
                               offerModel.type == RequestType.GOODS &&
@@ -524,6 +525,21 @@ class OfferDetails extends StatelessWidget {
   }
 
   void navigateToDonations(context, OfferModel offerModel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
+        ),
+      ),
+    );
+  }
+
+  @Deprecated('Now navigating to donations')
+  void navigateToCreateRequestFromOffer(context, OfferModel offerModel) {
     Navigator.push(
       context,
       MaterialPageRoute(

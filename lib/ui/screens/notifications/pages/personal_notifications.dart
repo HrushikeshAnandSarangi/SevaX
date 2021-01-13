@@ -313,12 +313,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         title:
-                            '${S.of(context).notifications_demoted_title.replaceAll('Admin', S.of(context).owner)}',
+                            '${S.of(context).notifications_demoted_title.replaceAll(S.of(context).admin, S.of(context).owner)}',
                         subTitle: S
                             .of(context)
                             .owner_demoted_to_admin
                             .replaceAll('associatedName', associatedName)
-                            .replaceAll('groupName', timebankTitle),
+                            .replaceAll('groupName', timebankTitle)
+                            .replaceAll(
+                                S.of(context).organizer, S.of(context).owner),
                         entityName: S.of(context).demoted,
                         onDismissed: () {
                           // Dismiss notification
@@ -357,13 +359,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                       return NotificationCard(
                         timestamp: notification.timestamp,
-                        title: '${S.of(context).notifications_promoted_title}',
+                        title:
+                            '${S.of(context).notifications_promoted_title.replaceAll(S.of(context).admin, S.of(context).owner)}',
                         subTitle: S
-                                .of(context)
-                                .owner_demoted_to_admin
-                                .replaceAll('associatedName', associatedName)
-                                .replaceAll('groupName', timebankTitle) +
-                            '$associatedName has promoted you to be the Owner for the ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} ',
+                            .of(context)
+                            .admin_promoted_to_owner
+                            .replaceAll('creator_name', associatedName)
+                            .replaceAll('community_name', timebankTitle),
                         entityName: S.of(context).promoted,
                         onDismissed: () {
                           // Dismiss notification

@@ -109,14 +109,7 @@ class _RequestDonationDisputePageState
       } else {
         _key.currentState.hideCurrentSnackBar();
         _key.currentState.showSnackBar(
-          SnackBar(
-            content: Text(
-              S.of(context).general_stream_error +
-                  ' ' +
-                  S.of(context).try_later +
-                  '.',
-            ),
-          ),
+          SnackBar(content: Text("${S.of(context).general_stream_error}."),),
         );
       }
     });
@@ -181,17 +174,16 @@ class _RequestDonationDisputePageState
               progressDialogNew.hide();
               logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
               _key.currentState.hideCurrentSnackBar();
-              _key.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    S.of(context).general_stream_error +
-                        ' '
-                        +
-                        // S.of(context).try_later +
-                        '.',
-                  ),
-                ),
-              );
+              if(widget.model.minimumAmount != null &&
+                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount){
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
+                );
+              }else{
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("${S.of(context).general_stream_error}.")),
+                );
+              }
             }
           }
         }
@@ -546,74 +538,73 @@ class _CashFlow extends StatelessWidget {
   final OperatingMode operatingMode;
   final scaffoldKey;
 
-  @override
-  Widget build(BuildContext context) {
-    Widget getACHDetails(data) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "${S.of(context).account_no} : " + data.achdetails.account_number,
-          ),
-          Text(
-            "${S.of(context).bank_address} : " + data.achdetails.bank_address,
-          ),
-          Text(
-            "${S.of(context).bank_name} : " + data.achdetails.bank_name,
-          ),
-          Text(
-            "${S.of(context).routing_number} : " +
-                data.achdetails.routing_number,
-          ),
-        ],
-      );
-    }
+  Widget getACHDetails(BuildContext context, data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          "${S.of(context).account_no} : " + data.achdetails.account_number,
+        ),
+        Text(
+          "${S.of(context).bank_address} : " + data.achdetails.bank_address,
+        ),
+        Text(
+          "${S.of(context).bank_name} : " + data.achdetails.bank_name,
+        ),
+        Text(
+          "${S.of(context).routing_number} : " + data.achdetails.routing_number,
+        ),
+      ],
+    );
+  }
 
-    String modeOfPayment() {
-      if (model != null &&
-          model.cashDetails != null &&
-          model.cashDetails.cashDetails != null &&
-          model.donationType == RequestType.CASH) {
-        switch (model.cashDetails.cashDetails.paymentType) {
-          case RequestPaymentType.ACH:
-            return S.of(context).request_paymenttype_ach;
-          case RequestPaymentType.ZELLEPAY:
-            return S.of(context).request_paymenttype_zellepay;
-          case RequestPaymentType.PAYPAL:
-            return S.of(context).request_paymenttype_paypal;
-          case RequestPaymentType.VENMO:
-            return S.of(context).request_paymenttype_venmo;
-          default:
-            return "";
-        }
-        return "";
-      }
-    }
-
-    getDonationLink() {
-      if (model != null &&
-          model.cashDetails != null &&
-          model.cashDetails.cashDetails != null &&
-          model.donationType == RequestType.CASH) {
-        switch (model.cashDetails.cashDetails.paymentType) {
-          case RequestPaymentType.ACH:
-            return getACHDetails(model.cashDetails.cashDetails);
-            break;
-          case RequestPaymentType.ZELLEPAY:
-            return model.cashDetails.cashDetails.zelleId;
-          case RequestPaymentType.PAYPAL:
-            return model.cashDetails.cashDetails.paypalId ?? '';
-          case RequestPaymentType.VENMO:
-            return model.cashDetails.cashDetails.venmoId ?? '';
-
-          default:
-            return "Link not registered!";
-        }
+  String modeOfPayment(BuildContext context) {
+    if (model != null &&
+        model.cashDetails != null &&
+        model.cashDetails.cashDetails != null &&
+        model.donationType == RequestType.CASH) {
+      switch (model.cashDetails.cashDetails.paymentType) {
+        case RequestPaymentType.ACH:
+          return S.of(context).request_paymenttype_ach;
+        case RequestPaymentType.ZELLEPAY:
+          return S.of(context).request_paymenttype_zellepay;
+        case RequestPaymentType.PAYPAL:
+          return S.of(context).request_paymenttype_paypal;
+        case RequestPaymentType.VENMO:
+          return S.of(context).request_paymenttype_venmo;
+        default:
+          return "";
       }
       return "";
     }
+  }
 
+  getDonationLink(BuildContext context) {
+    if (model != null &&
+        model.cashDetails != null &&
+        model.cashDetails.cashDetails != null &&
+        model.donationType == RequestType.CASH) {
+      switch (model.cashDetails.cashDetails.paymentType) {
+        case RequestPaymentType.ACH:
+          return getACHDetails(context, model.cashDetails.cashDetails);
+          break;
+        case RequestPaymentType.ZELLEPAY:
+          return model.cashDetails.cashDetails.zelleId;
+        case RequestPaymentType.PAYPAL:
+          return model.cashDetails.cashDetails.paypalId ?? '';
+        case RequestPaymentType.VENMO:
+          return model.cashDetails.cashDetails.venmoId ?? '';
+
+        default:
+          return "Link not registered!";
+      }
+    }
+    return "";
+  }
+
+  @override
+  Widget build(BuildContext context) {
     void showScaffold(context, String message) {
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -654,14 +645,14 @@ class _CashFlow extends StatelessWidget {
             Text(
               S.of(context).request_payment_description +
                   ': ' +
-                  modeOfPayment(),
+                  modeOfPayment(context),
               style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
             model.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH
-                ? getDonationLink()
+                ? getDonationLink(context)
                 : InkWell(
                     onLongPress: () {
                       Clipboard.setData(
@@ -669,7 +660,7 @@ class _CashFlow extends StatelessWidget {
                       showScaffold(context, S.of(context).copied_to_clipboard);
                     },
                     onTap: () async {
-                      String link = getDonationLink();
+                      String link = getDonationLink(context);
                       if (await canLaunch(link)) {
                         await launch(link);
                       } else {
@@ -677,7 +668,7 @@ class _CashFlow extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      getDonationLink(),
+                      getDonationLink(context),
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),

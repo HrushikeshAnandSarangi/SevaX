@@ -236,7 +236,7 @@ class CreateEditCommunityViewFormState
         negativeCreditsThreshold = onValue.negativeCreditsThreshold;
         searchTextController.text = communityModel.name;
         descriptionTextController.text = communityModel.about;
-        setState((){});
+        setState(() {});
       });
     });
 
@@ -1262,9 +1262,16 @@ class CreateEditCommunityViewFormState
   void _billingBottomsheet(BuildContext mcontext) {
     showModalBottomSheet(
       context: mcontext,
-      builder: (BuildContext bc) {
-        return Container(
-          child: _scrollingList(mcontext, focusNodes),
+      // isScrollControlled: true,
+      builder: (builder) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              child: _scrollingList(mcontext, focusNodes),
+            ),
+          ),
         );
       },
     );
@@ -1719,6 +1726,7 @@ class CreateEditCommunityViewFormState
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView(
+                shrinkWrap: true,
                 controller: scollContainer,
                 children: <Widget>[
                   _billingDetailsTitle,
