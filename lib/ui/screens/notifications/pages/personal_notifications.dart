@@ -318,7 +318,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             .of(context)
                             .owner_demoted_to_admin
                             .replaceAll('associatedName', associatedName)
-                            .replaceAll('groupName', timebankTitle),
+                            .replaceAll('groupName', timebankTitle)
+                            .replaceAll(
+                                S.of(context).organizer, S.of(context).owner),
                         entityName: S.of(context).demoted,
                         onDismissed: () {
                           // Dismiss notification
