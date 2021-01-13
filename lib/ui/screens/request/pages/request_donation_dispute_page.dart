@@ -109,14 +109,7 @@ class _RequestDonationDisputePageState
       } else {
         _key.currentState.hideCurrentSnackBar();
         _key.currentState.showSnackBar(
-          SnackBar(
-            content: Text(
-              S.of(context).general_stream_error +
-                  ' ' +
-                  S.of(context).try_later +
-                  '.',
-            ),
-          ),
+          SnackBar(content: Text("${S.of(context).general_stream_error}."),),
         );
       }
     });
@@ -181,17 +174,16 @@ class _RequestDonationDisputePageState
               progressDialogNew.hide();
               logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
               _key.currentState.hideCurrentSnackBar();
-              _key.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    S.of(context).general_stream_error +
-                        ' '
-                        +
-                        // S.of(context).try_later +
-                        '.',
-                  ),
-                ),
-              );
+              if(widget.model.minimumAmount != null &&
+                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount){
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
+                );
+              }else{
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("${S.of(context).general_stream_error}.")),
+                );
+              }
             }
           }
         }
