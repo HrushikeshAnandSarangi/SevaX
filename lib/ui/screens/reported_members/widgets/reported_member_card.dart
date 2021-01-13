@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
@@ -12,6 +13,7 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -124,9 +126,18 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap: () => isFromTimebank
-                    ? removeMemberTimebankFn(context)
-                    : removeMemberGroupFn(context),
+                onTap: () {
+                  progressDialog = ProgressDialog(
+                    context,
+                    type: ProgressDialogType.Normal,
+                    isDismissible: false,
+                  );
+                  progressDialog.show();
+
+                  isFromTimebank
+                      ? removeMemberTimebankFn(context)
+                      : removeMemberGroupFn(context);
+                },
               ),
             ],
           ),
@@ -182,6 +193,7 @@ class ReportedMemberCard extends StatelessWidget {
     log("remove member");
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: model.reportedId, groupId: timebankModel.id);
+    progressDialog.hide();
 
     if (responseData['deletable'] == true) {
       showDialog(
@@ -262,6 +274,7 @@ class ReportedMemberCard extends StatelessWidget {
   void removeMemberTimebankFn(BuildContext context) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
+    progressDialog.hide();
 
     if (responseData['deletable'] == true) {
       showDialog(
