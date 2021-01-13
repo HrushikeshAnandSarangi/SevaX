@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
@@ -223,10 +224,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
         await loadAdmins();
 
-        if ((FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-          await loadCoordinators();
-        }
         await loadNextMembers();
         setState(() {});
       }
@@ -519,11 +516,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       _avtars.addAll(_organizersWidgets);
 
       _avtars.addAll(_adminsWidgets);
-
-      if ((FlavorConfig.appFlavor == Flavor.APP ||
-          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-        _avtars.addAll(_coordinatorsWidgets);
-      }
       _avtars.addAll(_requestsWidgets);
       _avtars.addAll(_membersWidgets);
       return _avtars;
@@ -574,6 +566,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   Future loadAdmins() async {
     Set<String> adminsList;
+    bool canPromoteAdmin = false;
+    canPromoteAdmin =
+        isOwner(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
     if (timebankModel.admins == null) {
       timebankModel.admins = List<String>();
     }
@@ -597,8 +592,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       // _adminsWidgets.add(reportedMemberBuilder(
       //     SevaCore.of(context).loggedInUser.currentCommunity));
       if (widget.isUserAdmin ||
-          SevaCore.of(context).loggedInUser.sevaUserID ==
-              timebankModel.creatorId) {
+          utils.isAccessAvailable(
+              timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
         _adminsWidgets.add(ReportedMemberNavigatorWidget(
           isTimebankReport: !widget.isFromGroup,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
@@ -613,7 +608,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         String email = user.email.toString().trim();
         _adminEmails.add(email);
         _adminsWidgets.add(getUserWidget(
-            user, context, timebankModel, true, false, true, false));
+            user, context, timebankModel, true, false, canPromoteAdmin, false));
       });
     }
   }
@@ -1296,101 +1291,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
   }
 
-  // Future _addUserToCommunityAndUpdateUserCommunityList({
-  //   TimebankModel model,
-  //   List<UserModel> members,
-  //   String currentCommunity,
-  // }) async {
-  //   if (model == null || members == null || members.length == 0) {
-  //     return;
-  //   }
-  //   if (model.members == null) {
-  //     model.members = List<String>();
-  //   }
-  //   var communityModel =
-  //       await getCommunityDetailsByCommunityId(communityId: currentCommunity);
-  //   members.forEach((user) async {
-  //     //Update community members inside community collection
-  //     var communityMembers = List<String>();
-  //     if (!communityModel.members.contains(user)) {
-  //       communityMembers.addAll(communityModel.members);
-  //     }
-  //     communityMembers.add(user.sevaUserID);
-  //     communityModel.members = communityMembers;
-
-  //     //Update community inside user collections
-  //     var communities = List<String>();
-  //     if (user.communities.length > 0) {
-  //       communities.addAll(user.communities);
-  //     }
-  //     if (user.communities != null &&
-  //         !user.communities.contains(currentCommunity)) {
-  //       communities.add(currentCommunity);
-  //     }
-  //     user.communities = communities;
-  //     if (user.currentCommunity == '') {
-  //       user.currentCommunity =
-  //           SevaCore.of(context).loggedInUser.currentCommunity;
-  //     }
-  //     var insertMembers = model.members.contains(user.sevaUserID);
-  //
-  //     var memberList = List<String>();
-  //     memberList.addAll(model.members);
-  //     if (!model.members.contains(user.sevaUserID)) {
-  //       memberList.add(user.sevaUserID);
-  //     }
-  //     model.members = memberList;
-  //
-  //         "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
-  //     await updateUser(user: user);
-  //   });
-  //   await updateCommunity(communityModel: communityModel);
-  //   await FirestoreManager.updateTimebank(timebankModel: model);
-  //   resetAndLoad();
-  // }
-
-  // Future _removeUserFromCommunityAndUpdateUserCommunityList({
-  //   TimebankModel model,
-  //   List<String> members,
-  //   String userId,
-  // }) async {
-  //   if (model == null || members == null || members.length == 0) {
-  //     return;
-  //   }
-  //   UserModel user = await getUserForId(sevaUserId: userId);
-  //   var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
-  //
-  //   var communities = List<String>();
-  //   if (user.communities != null && user.communities.length > 0) {
-  //     communities.addAll(user.communities);
-  //     communities.remove(currentCommunity);
-  //   }
-  //   user.communities = communities.length > 0 ? communities : null;
-
-  //   if (user.communities == null) {
-  //     user.currentCommunity = '';
-  //   } else if (user.communities.contains(currentCommunity)) {
-  //     user.currentCommunity =
-  //         user.communities.length > 0 ? user.communities[0] : '';
-  //   }
-  //   var communityModel =
-  //       await getCommunityDetailsByCommunityId(communityId: currentCommunity);
-  //   if (communityModel.members.contains(user.sevaUserID)) {
-  //     var newMembers = List<String>();
-  //     for (var i = 0; i < communityModel.members.length; i++) {
-  //       if (communityModel.members[i] != user.sevaUserID) {
-  //         newMembers.remove(communityModel.members[i]);
-  //       }
-  //     }
-  //     communityModel.members = newMembers;
-  //   }
-  //   model.members = members;
-  //   await updateUser(user: user);
-  //   await updateCommunity(communityModel: communityModel);
-  //   await FirestoreManager.updateTimebank(timebankModel: model);
-  //   resetAndLoad();
-  // }
-
   Future sendNotificationToAdmin({
     UserModel user,
     TimebankModel timebank,
@@ -1417,32 +1317,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         .collection("notifications")
         .document(notification.id)
         .setData((notification..isTimebankNotification = true).toMap());
-  }
-
-  Future loadCoordinators() async {
-    if (timebankModel.coordinators == null) {
-      timebankModel.coordinators = List<String>();
-    }
-    if (timebankModel.coordinators.length != 0) {
-      bool isCoordinator = timebankModel.coordinators.contains(
-        SevaCore.of(context).loggedInUser.sevaUserID,
-      );
-
-      var onValue = await FirestoreManager.getUserForUserModels(
-          admins: timebankModel.admins);
-      _adminsWidgets = [];
-      _adminEmails = [];
-      _adminsWidgets.add(getSectionTitle(context, S.of(context).co_ordinators));
-      SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
-          .forEach((key, user) {
-        _adminEmails.add(user.email);
-        if (isCoordinator) {
-          _coordinatorsWidgets.add(getUserWidget(
-              user, context, timebankModel, true, false, false, false));
-        }
-      });
-      setState(() {});
-    }
   }
 
   Future<Map> showAdvisory({String dialogTitle, String confirmationTitle}) {
@@ -1612,75 +1486,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       }
     }
   }
-
-//  Widget getCoordinationList(BuildContext context, TimebankModel model) {
-//    if (model.coordinators == null || model.coordinators.isEmpty)
-//      return Container();
-//
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      mainAxisSize: MainAxisSize.min,
-//      children: <Widget>[
-//        getSectionTitle(context, S.of(context).co_ordinators),
-//        ...model.coordinators.map((coordinator) {
-//          return FutureBuilder<UserModel>(
-//            future: FirestoreManager.getUserForId(sevaUserId: coordinator),
-//            builder: (context, snapshot) {
-//              if (snapshot == null || !snapshot.hasData) return Offstage();
-//              if (snapshot.hasError) return Text(snapshot.error.toString());
-//              if (snapshot.connectionState == ConnectionState.waiting) {
-//                return shimmerWidget;
-//              }
-//              UserModel user = snapshot.data;
-//              return getUserWidget(user, context, model, true, false,false);
-//            },
-//          );
-//        }).toList(),
-//      ],
-//    );
-//  }
-
-//  void removeAsAdmin(TimebankModel model, UserModel user) {
-//    List<String> admins = model.admins.map((s) => s).toList();
-//    List<String> coordinators = model.coordinators.map((s) => s).toList();
-//    coordinators.add(user.sevaUserID);
-//    admins.remove(user.sevaUserID);
-//    _updateTimebank(
-//      model,
-//      coordinators: coordinators,
-//      admins: admins,
-//    );
-//  }
-
-//  void removeFromTimebank(
-//    TimebankModel model,
-//    UserModel user,
-//  ) {
-//    List<String> admins = model.admins.map((s) => s).toList();
-//    List<String> coordinators = model.coordinators.map((s) => s).toList();
-//    List<String> members = model.members.map((s) => s).toList();
-//    admins.remove(user.sevaUserID);
-//    coordinators.remove(user.sevaUserID);
-//    members.remove(user.sevaUserID);
-//    _updateTimebank(
-//      model,
-//      members: members,
-//      admins: admins,
-//      coordinators: coordinators,
-//    );
-//  }
-
-  // void addToAdmin(TimebankModel model, UserModel user) {
-  //   List<String> admins = model.admins.map((s) => s).toList();
-  //   List<String> coordinators = model.coordinators.map((s) => s).toList();
-  //   admins.add(user.sevaUserID);
-  //   coordinators.remove(user.sevaUserID);
-  //   _updateTimebank(
-  //     model,
-  //     admins: admins,
-  //     coordinators: coordinators,
-  //   );
-  // }
 
   Widget getSectionTitle(BuildContext context, String title) {
     return Container(

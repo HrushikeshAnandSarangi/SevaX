@@ -41,7 +41,7 @@ class DonationParticipantPage extends StatelessWidget {
           itemCount: snapshot.data.length,
           itemBuilder: (_, index) {
             DonationModel model = snapshot.data[index];
-            // DonationButtonActionModel buttonStatus =
+            // DonationButtonActionModel buttonStatus =i
             //     buttonActionModel(context, model);
             // return RequestParticipantCard(
             //   name: model.donorDetails.name,
@@ -178,7 +178,6 @@ class DonationParticipantPage extends StatelessWidget {
       default:
         Crashlytics.instance.log(
             'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
-        log('UnImplemented DonationStatus case ${model.donationStatus.toString()}');
         return DonationButtonActionModel(
           buttonColor: Colors.grey,
           buttonText: 'UN-IMPLEMENTED',

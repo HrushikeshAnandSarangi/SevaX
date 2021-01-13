@@ -41,6 +41,14 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
   }
 }
 
+bool isOwner(TimebankModel timebank, String userId) {
+  if (timebank.creatorId == userId || timebank.organizers.contains(userId)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool isMemberBlocked(UserModel user, String idToCheck) {
   return user.blockedBy.contains(idToCheck) ||
       user.blockedMembers.contains(idToCheck);

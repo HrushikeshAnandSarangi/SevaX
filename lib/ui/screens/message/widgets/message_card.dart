@@ -32,13 +32,13 @@ class MessageCard extends StatelessWidget {
       isAdminMessage ? timebankId : userId,
       model.participantInfo,
     );
-    
-      var chatType =  model.isGroupMessage ? ChatType.TYPE_MULTI_USER_MESSAGING : info?.type;
+    var chatType =  model.isGroupMessage ? ChatType.TYPE_MULTI_USER_MESSAGING : info?.type;
 
     int unreadCount =
         model.unreadStatus.containsKey(isAdminMessage ? senderId : userId)
             ? model.unreadStatus[isAdminMessage ? senderId : userId]
             : 0;
+
     String photoUrl =
         model.isGroupMessage ? model.groupDetails.imageUrl : info.photoUrl;
     String name = model.isGroupMessage ? model.groupDetails.name : info.name;

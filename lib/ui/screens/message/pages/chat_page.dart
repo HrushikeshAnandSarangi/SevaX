@@ -76,7 +76,7 @@ class _ChatPageState extends State<ChatPage> {
         textcontroller.text = '${S.of(context).reject_task_completion} ';
     });
 
-    if (!chatModel.isGroupMessage) {
+     if (!chatModel.isGroupMessage) {
       recieverId = chatModel.participants[0] != widget.senderId
           ? chatModel.participants[0]
           : chatModel.participants[1];

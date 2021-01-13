@@ -168,7 +168,7 @@ class DonationsRepository {
                   FieldValue.increment(donationModel.cashDetails.pledgedAmount),
             },
           );
-        }
+      }
         //send acknowledgement reciept
         await MailDonationReciept.sendReciept(donationModel);
       }
@@ -227,14 +227,15 @@ class DonationsRepository {
               .document(donationModel.requestId.split('*')[0])
               .collection(DBCollection.notifications);
         }
+
+        batch.setData(
+          notificationReferenceForDonor.document(
+              acknowledgementNotification.id),
+          acknowledgementNotification.toMap(),
+        );
+
+        await batch.commit();
       }
-
-      batch.setData(
-        notificationReferenceForDonor.document(acknowledgementNotification.id),
-        acknowledgementNotification.toMap(),
-      );
-
-      await batch.commit();
     } on Exception catch (e) {
       logger.e(e);
     }
