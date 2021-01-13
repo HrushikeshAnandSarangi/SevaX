@@ -366,10 +366,10 @@ class TransactionBloc {
     type,
     typeid,
     timebankid, {
-    @required String associatedCommunity,
+    @required String communityId,
   }) async {
     TransactionModel transactionModel = TransactionModel(
-        associatedCommunity: associatedCommunity,
+        communityId: communityId,
         from: from,
         to: to,
         timestamp: timestamp,
@@ -397,7 +397,7 @@ class TransactionBloc {
     typeid,
     timebankid,
     id, {
-    @required String associatedCommunity,
+    @required String communityId,
   }) async {
     TransactionModel prevtransactionModel;
     TransactionModel transactionModel = TransactionModel(
@@ -410,7 +410,7 @@ class TransactionBloc {
       typeid: typeid,
       timebankid: timebankid,
       transactionbetween: [from, to],
-      associatedCommunity: associatedCommunity,
+      communityId: communityId,
     );
     if (id) {
       var document = await Firestore.instance

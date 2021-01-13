@@ -15,8 +15,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
     @required this.child,
     this.transaction_matrix_type,
     @required this.upgradeDetails,
-      @required
-      this.comingFrom,
+    this.comingFrom,
     // this.paymentStatusMap,
     // this.allowTransaction,
   });

@@ -103,11 +103,23 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 IconButton(
                   icon: Icon(Icons.filter_list),
                   onPressed: () async {
-                    await Navigator.of(context)
-                        .push(
+//                     await Navigator.of(context).push(
+//                           MaterialPageRoute(
+//                             builder: (context) => SevaCore(
+//                               loggedInUser: SevaCore.of(context).loggedInUser,
+//                               child: NearByFiltersView(
+//                                 SevaCore.of(context).loggedInUser,
+//                               ),
+//                             ),
+//                           ),
+//                         )
+//                         .then((value) => setState(() {}));
+
+                    Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => NearByFiltersView(
-                              widget.loggedInUser,
+                            builder: (context1) => NearByFiltersView(
+                              SevaCore.of(context).loggedInUser,
+                              // widget.loggedInUser,
                             ),
                           ),
                         )
@@ -312,7 +324,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           } else {
             if (snapshot.data.length != 0) {

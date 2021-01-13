@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -22,6 +24,9 @@ class VerifyEmail extends StatefulWidget {
 }
 
 class _VerifyEmailState extends State<VerifyEmail> {
+  GlobalKey<ScaffoldState> _key = GlobalKey();
+  ProgressDialog progressDialog;
+
   @override
   void initState() {
     if (!widget.emailSent) {
@@ -41,9 +46,23 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.initState();
   }
 
+  void sendVerificationEmail(FirebaseUser user, {VoidCallback onSuccess}) {
+    user?.sendEmailVerification()?.then((onValue) {
+      onSuccess?.call();
+    })?.catchError((onError) {
+      logger.e(onError);
+      final snackBar = SnackBar(content: Text(onError.message));
+      _key.currentState.hideCurrentSnackBar();
+      _key.currentState.showSnackBar(snackBar);
+      // ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       body: Stack(
         fit: StackFit.expand,
         // crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,11 +135,27 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   child: FlatButton(
                     child: Text(S.of(context).resend_email),
                     onPressed: () {
+                      progressDialog = ProgressDialog(
+                        context,
+                        customBody: Container(
+                          height: 100,
+                          width: 100,
+                          child: LoadingIndicator(),
+                        ),
+                        isDismissible: false,
+                      );
+                      progressDialog.show();
                       widget.firebaseUser
                           .sendEmailVerification()
                           .then((onValue) {
+                        progressDialog.hide();
                         showVerificationEmailDialog();
                       }).catchError((onError) {
+                        progressDialog.hide();
+                        final snackBar =
+                            SnackBar(content: Text(onError.message));
+                        _key.currentState.hideCurrentSnackBar();
+                        _key.currentState.showSnackBar(snackBar);
                         logger.e(onError);
                       });
                     },

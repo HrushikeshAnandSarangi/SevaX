@@ -36,7 +36,6 @@ class OfferDetails extends StatelessWidget {
     color: Colors.grey,
   );
 
-
   OfferDetails({Key key, this.offerModel, this.comingFrom}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -75,11 +74,8 @@ class OfferDetails extends StatelessWidget {
                       DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            offerModel?.groupOfferDataModel
-                                ?.startDate !=
-                                null
-                                ? offerModel
-                                ?.groupOfferDataModel?.startDate
+                            offerModel?.groupOfferDataModel?.startDate != null
+                                ? offerModel?.groupOfferDataModel?.startDate
                                 : offerModel.timestamp,
                           ),
                           timezoneAbb:
@@ -411,7 +407,9 @@ class OfferDetails extends StatelessWidget {
                           : TextSpan(
                               text: isCreator
                                   ? S.of(context).you_created_offer
-                                  : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied : S.of(context).bookmarked)} ${S.of(context).this_offer}.',
+                                  : isAccepted
+                                      ? "You have accepted this offer."
+                                      : "Would you like to accept this offer?",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -511,7 +509,8 @@ class OfferDetails extends StatelessWidget {
                                 offerModel,
                               );
                             } else {
-                              offerActions(context, offerModel, ComingFrom.Offers)
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }
                           }
@@ -603,8 +602,11 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel, ComingFrom.Offers,)
-                                  .then((_) => Navigator.of(context).pop());
+                              offerActions(
+                                context,
+                                offerModel,
+                                ComingFrom.Offers,
+                              ).then((_) => Navigator.of(context).pop());
                             }),
                       ),
                       TransactionsMatrixCheck(
@@ -629,7 +631,8 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel, ComingFrom.Offers)
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       ),
@@ -654,7 +657,8 @@ class OfferDetails extends StatelessWidget {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                              offerActions(context, offerModel, ComingFrom.Offers)
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
                                   .then((_) => Navigator.of(context).pop());
                             }),
                       )

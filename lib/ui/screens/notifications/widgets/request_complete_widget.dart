@@ -65,7 +65,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   email: SevaCore.of(context).loggedInUser.email,
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  associatedCommunity:
+                      communityId:
                       SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 

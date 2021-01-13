@@ -378,6 +378,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteUserModel groupInviteUserModel,
       GroupInviteStatus groupInviteStatus) {
     String statusText = getGroupUserStatusTitle(groupInviteStatus);
+    if(groupInviteStatus == GroupInviteStatus.INVITE){
+      return Offstage();
+    }
+
     String date = DateFormat(
       'dd MMM yyyy',
     ).format(
@@ -512,6 +516,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     UserModel userModel,
   }) async {
     String notificationId = utils.Utils.getUuid();
+    String invitationId = utils.Utils.getUuid();
     GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.parenttimebankid,
@@ -523,6 +528,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         invitedUserId: userModel.sevaUserID,
         declined: false,
         declinedTimestamp: 0,
+        invitationId: invitationId,
         adminId: SevaCore.of(context).loggedInUser.sevaUserID,
         notificationId: notificationId);
 

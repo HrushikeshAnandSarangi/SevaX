@@ -553,6 +553,8 @@ class _DonationViewState extends State<DonationView> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return S.of(context).validation_error_general_text;
+                  } else if (int.parse(value) < 1) {
+                    return "Please enter a valid amount";
                   } else if (!value.isEmpty) {
                     if (int.parse(value) > offerModel.cashModel.targetAmount) {
                       return "Requested amount cannot be greater than offered amount!";
@@ -950,7 +952,6 @@ class _DonationViewState extends State<DonationView> {
                     } else {
                       // showProgress();
                       log("IMPORTANT ==== ${widget.notificationId}============");
-                      return;
                       donationBloc
                           .donateOfferGoods(
                               notificationId: widget.notificationId,
