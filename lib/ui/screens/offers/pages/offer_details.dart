@@ -491,10 +491,13 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          // bool isAccepted =
-                          //     getOfferParticipants(offerDataModel: offerModel)
-                          //         .contains(userId);
-                          bool isAccepted = false;
+                          bool isAccepted =
+                              getOfferParticipants(offerDataModel: offerModel)
+                                  .contains(userId);
+
+                          if (isAccepted) {
+                            return;
+                          }
 
                           if (offerModel.type == RequestType.CASH ||
                               offerModel.type == RequestType.GOODS &&
