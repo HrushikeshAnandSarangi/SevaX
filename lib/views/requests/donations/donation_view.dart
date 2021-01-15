@@ -1072,7 +1072,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                buttonTitle: S.of(context).send_request,
+                buttonTitle: S.of(context).next,
                 buttonColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   donationBloc
@@ -1113,7 +1113,7 @@ class _DonationViewState extends State<DonationView> {
               height: 10,
             ),
             Text(
-              '${S.of(context).donation_description_one + widget.timabankName + ' ${S.of(context).donation_description_two} ' + amountEntered.toString() + S.of(context).donation_description_three}',
+              "${S.of(context).donation_description_one} ${widget.timabankName} an amount of ${amountEntered.toString()}${S.of(context).donation_description_three}",
               style: TextStyle(
                 fontSize: 11,
                 color: Colors.black,
@@ -1254,9 +1254,9 @@ class _DonationViewState extends State<DonationView> {
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
-      isDismissible: false,
+      isDismissible: true,
     );
-    // progressDialog.show();
+    progressDialog.show();
     // progressDialog.style(
     //   progressWidget: Container(
     //     width: 400,

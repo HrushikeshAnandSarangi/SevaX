@@ -504,7 +504,8 @@ class OfferDetails extends StatelessWidget {
                                   !isAccepted) {
                             navigateToDonations(context, offerModel);
                           } else {
-                            if (SevaCore.of(context).loggedInUser.calendarId ==
+                            if (offerModel.offerType == OfferType.GROUP_OFFER &&
+                                SevaCore.of(context).loggedInUser.calendarId ==
                                     null &&
                                 !isAccepted) {
                               _settingModalBottomSheet(
@@ -527,8 +528,8 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
-  void navigateToDonations(context, OfferModel offerModel) {
-    Navigator.push(
+  Future<void> navigateToDonations(context, OfferModel offerModel) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => DonationView(
@@ -538,7 +539,7 @@ class OfferDetails extends StatelessWidget {
           notificationId: null,
         ),
       ),
-    );
+    ).then((value) => Navigator.pop(context));
   }
 
   @Deprecated('Now navigating to donations')
