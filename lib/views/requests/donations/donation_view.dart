@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
@@ -660,7 +659,7 @@ class _DonationViewState extends State<DonationView> {
                         showScaffold(S.of(context).check_internet);
                         return;
                       }
-                      log("tapped on Submit ${widget.notificationId} --");
+
                       showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateOfferGoods(
@@ -1233,8 +1232,25 @@ class _DonationViewState extends State<DonationView> {
     );
   }
 
+//  void showProgressDialog(String message) {
+//    showDialog(
+//        barrierDismissible: false,
+//        context: context,
+//        builder: (createDialogContext) {
+//          dialogContext = createDialogContext;
+//          return WillPopScope(
+//            onWillPop: () async {
+//              return false;
+//            },
+//            child: AlertDialog(
+//              title: Text(message),
+//              content: LinearProgressIndicator(),
+//            ),
+//          );
+//        });
+//  }
+
   void showProgress(String message) {
-    logger.i("===========================HHHHH==============================");
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
@@ -1249,7 +1265,6 @@ class _DonationViewState extends State<DonationView> {
     //   ),
     //   message: message,
     // );
-    progressDialog.show();
   }
 
   void hideProgress() {
