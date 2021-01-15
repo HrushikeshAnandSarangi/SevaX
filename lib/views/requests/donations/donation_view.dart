@@ -1237,7 +1237,7 @@ class _DonationViewState extends State<DonationView> {
     //   ),
     //   message: message,
     // );
-    progressDialog.show();
+    // progressDialog.show();
   }
 
   void hideProgress() {
