@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class UserRepository {
@@ -129,7 +134,88 @@ class UserRepository {
     return ref.where("blockedBy", arrayContains: userId).snapshots();
   }
 
-  static Stream<QuerySnapshot> getMembersOfCommunity(String communityId) {
-    return ref.where("communities", arrayContains: communityId).snapshots();
+  static Stream<List<UserModel>> getMembersOfCommunity(
+      String communityId) async* {
+    var data = ref.where("communities", arrayContains: communityId).snapshots();
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<UserModel>>.fromHandlers(
+        handleData: (data, sink) {
+          List<UserModel> _users = [];
+          data.documents.forEach((element) {
+            try {
+              _users.add(UserModel.fromMap(element.data, 'User Repository'));
+            } catch (e) {
+              logger.e(e);
+              sink.addError('Something went wrong ${e.toString()}');
+            }
+          });
+          sink.add(_users);
+        },
+      ),
+    );
+  }
+
+  static Future<UserModel> fetchUserByEmail(String email) async {
+    DocumentSnapshot doc = await ref.document(email).get();
+    if (doc?.data != null) {
+      throw Exception("No user Found");
+    }
+    return UserModel.fromMap(doc.data, 'user_api');
+  }
+
+  static Future<void> changeUserCommunity(
+      String email, String communityId, String timebankId) async {
+    await ref.document(email).setData(
+      {'currentCommunity': communityId, 'currentTimebank': timebankId},
+      merge: true,
+    );
+  }
+
+  static Future<void> promoteOrDemoteUser(
+    String userId,
+    String communityId,
+    String timebankId,
+    bool isPromote,
+  ) async {
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankReference = timebankRef.document(timebankId);
+    var communityRef =
+        Firestore.instance.collection("communities").document(communityId);
+
+    batch.updateData(
+      timebankReference,
+      {
+        'admins': isPromote
+            ? FieldValue.arrayUnion([userId])
+            : FieldValue.arrayRemove([userId]),
+      },
+    );
+
+    batch.updateData(
+      communityRef,
+      {
+        'admins': isPromote
+            ? FieldValue.arrayUnion([userId])
+            : FieldValue.arrayRemove([userId]),
+      },
+    );
+
+    await batch.commit();
+  }
+
+  static Future<Map<String, dynamic>> removeMember(
+    String userId,
+    String timebankId,
+    bool isTimebank,
+  ) async {
+    String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+        (isTimebank
+            ? "/removeMemberFromTimebank?sevauserid=$userId&timebankId=$timebankId"
+            : "/removeMemberFromGroup?sevauserid=$userId&groupId=$timebankId");
+
+    var res = await http
+        .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+    var data = json.decode(res.body);
+    return data;
   }
 }
