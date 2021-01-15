@@ -99,7 +99,6 @@ class _RequestDonationDisputePageState
   }
 
   void actionExecute(_key) async {
-
     var handleCallBackDisputeCash = ((value) {
       // print('Inside CallBackDisputeCash');
       progressDialog.hide();
@@ -109,7 +108,9 @@ class _RequestDonationDisputePageState
       } else {
         _key.currentState.hideCurrentSnackBar();
         _key.currentState.showSnackBar(
-          SnackBar(content: Text("${S.of(context).general_stream_error}."),),
+          SnackBar(
+            content: Text("${S.of(context).general_stream_error}."),
+          ),
         );
       }
     });
@@ -135,7 +136,6 @@ class _RequestDonationDisputePageState
         // print('Inside, switch');
         // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
         // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
-        var id = widget.model.notificationId;
         if (widget.model.requestIdType == 'offer' &&
             widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
@@ -143,51 +143,55 @@ class _RequestDonationDisputePageState
         }
 
         if (widget.model.cashDetails.pledgedAmount != null) {
-          bool validatorRes = await _bloc
-              .validateAmount(minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
+          bool validatorRes = await _bloc.validateAmount(
+              minmumAmount: amount == AMOUNT_NOT_DEFINED ? 0 : amount);
 
           if (validatorRes) {
-            logger.i("$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+            logger.i(
+                "$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
 
             FocusScope.of(context).unfocus();
-            if(widget.model.minimumAmount != null &&
-                int.parse(_bloc.cashAmoutVal) >= widget.model.minimumAmount){
+            if (widget.model.minimumAmount != null &&
+                int.parse(_bloc.cashAmoutVal) >= widget.model.minimumAmount) {
               progressDialogNew.show();
             }
             // showProgress(S.of(context).please_wait);
             bool disputeRes = await _bloc.disputeCash(
-              pledgedAmount:
-              widget.model.cashDetails.pledgedAmount.toDouble(),
+              pledgedAmount: widget.model.cashDetails.pledgedAmount.toDouble(),
               operationMode: operatingMode,
               donationId: widget.model.id,
               donationModel: widget.model,
-              notificationId: id,
+              notificationId: widget.model.notificationId,
               requestMode: widget.model.donatedToTimebank
                   ? RequestMode.TIMEBANK_REQUEST
                   : RequestMode.PERSONAL_REQUEST,
             );
-            logger.i("$disputeRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
+            logger.i(
+                "$disputeRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
             progressDialogNew.hide();
             if (disputeRes) {
               Navigator.of(context).pop();
             } else {
               progressDialogNew.hide();
-              logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
+              logger.i(
+                  "inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
               _key.currentState.hideCurrentSnackBar();
-              if(widget.model.minimumAmount != null &&
-                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount){
+              if (widget.model.minimumAmount != null &&
+                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount) {
                 _key.currentState.showSnackBar(
-                  SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
+                  SnackBar(
+                      content: Text(
+                          "Entered amount is less than minimum donation amount.")),
                 );
-              }else{
+              } else {
                 _key.currentState.showSnackBar(
-                  SnackBar(content: Text("${S.of(context).general_stream_error}.")),
+                  SnackBar(
+                      content: Text("${S.of(context).general_stream_error}.")),
                 );
               }
             }
           }
-        }
-        else {
+        } else {
           log("Inside Else part =================================");
           // offers flow initial requested flow and pledged later its works same as requests.
           _bloc
