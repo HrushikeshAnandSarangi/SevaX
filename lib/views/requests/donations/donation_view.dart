@@ -120,77 +120,83 @@ class _DonationViewState extends State<DonationView> {
         centerTitle: true,
       ),
       body: Container(
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
-              0, MediaQuery.of(context).size.width * 0.03, 0),
-          child: Card(
-              margin: EdgeInsets.only(bottom: 10, top: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
-              elevation: 2,
-              child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                      child: SizedBox(
-                          height: MediaQuery.of(context)
-                              .size
-                              .height, // or something simular :)
-                          child: new Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                // horizontal: 20,
-                                                // vertical: 10,
-                                                ),
-                                            child: Text(
-                                              S.of(context).donations,
-                                              // textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const Spacer(),
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
+            0, MediaQuery.of(context).size.width * 0.03, 0),
+        child: Card(
+          margin: EdgeInsets.only(bottom: 10, top: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context)
+                    .size
+                    .height, // or something simular :)
+                child: new Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    // horizontal: 20,
+                                    // vertical: 10,
+                                    ),
+                                child: Text(
+                                  S.of(context).donations,
+                                  // textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
 //                                          close(
 //                                            onTap: () {
 //                                              ExtendedNavigator.of(context)
 //                                                  .pop();
 //                                            },
 //                                          ),
-                                        ],
-                                      ),
-                                    ]),
-                                new Expanded(
-                                  child: PageView(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    controller: pageController,
-                                    scrollDirection: Axis.horizontal,
-                                    pageSnapping: true,
-                                    onPageChanged: (number) {},
-                                    children: [
-                                      donatedItems(),
-                                      amountWidget(),
-                                      donationDetails(),
-                                      donationOfferAt(),
-                                      SingleChildScrollView(
-                                        child: RequestPaymentDescriptionData(
-                                          widget.offerModel,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ])))))),
+                            ],
+                          ),
+                        ]),
+                    new Expanded(
+                      child: PageView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        scrollDirection: Axis.horizontal,
+                        pageSnapping: true,
+                        onPageChanged: (number) {},
+                        children: [
+                          donatedItems(),
+                          amountWidget(),
+                          donationDetails(),
+                          donationOfferAt(),
+                          SingleChildScrollView(
+                            // physics: NeverScrollableScrollPhysics(),
+                            child: RequestPaymentDescriptionData(
+                              widget.offerModel,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -526,7 +532,7 @@ class _DonationViewState extends State<DonationView> {
         ),
         child: Container(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 1.5,
+            minHeight: MediaQuery.of(context).size.height * 1.8,
             minWidth: double.infinity,
           ),
           child:
