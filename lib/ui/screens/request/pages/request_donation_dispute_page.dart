@@ -174,16 +174,16 @@ class _RequestDonationDisputePageState
             } else {
               progressDialogNew.hide();
               _key.currentState.hideCurrentSnackBar();
-              // if (widget.model.minimumAmount != null &&
-              //     int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount) {
-              //   _key.currentState.showSnackBar(
-              //     SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
-              //   );
-              // } else {
+              if (widget.model.minimumAmount != null &&
+                  int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount) {
+                _key.currentState.showSnackBar(
+                  SnackBar(content: Text("Entered amount is less than minimum donation amount.")),
+                );
+              } else {
                 _key.currentState.showSnackBar(
                   SnackBar(content: Text("${S.of(context).general_stream_error}.")),
                 );
-              // }
+              }
             }
           }
         } else {
