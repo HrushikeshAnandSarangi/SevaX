@@ -151,10 +151,10 @@ class _RequestDonationDisputePageState
                 "$validatorRes inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk");
 
             FocusScope.of(context).unfocus();
-            if (widget.model.minimumAmount != null &&
-                int.parse(_bloc.cashAmoutVal) >= widget.model.minimumAmount) {
+            // if (widget.model.minimumAmount != null &&
+            //     int.parse(_bloc.cashAmoutVal) >= widget.model.minimumAmount) {
               progressDialogNew.show();
-            }
+            // }
             // showProgress(S.of(context).please_wait);
             bool disputeRes = await _bloc.disputeCash(
               pledgedAmount: widget.model.cashDetails.pledgedAmount.toDouble(),
@@ -173,11 +173,11 @@ class _RequestDonationDisputePageState
               Navigator.of(context).pop();
             } else {
               progressDialogNew.hide();
-              logger.i(
-                  "inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
+              logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner");
               _key.currentState.hideCurrentSnackBar();
               if (widget.model.minimumAmount != null &&
                   int.parse(_bloc.cashAmoutVal) < widget.model.minimumAmount) {
+                logger.i("inside acknowledege if blockkkkkkkkkkkkkkkkkkkkk else inner amount less then min");
                 _key.currentState.showSnackBar(
                   SnackBar(
                       content: Text(
