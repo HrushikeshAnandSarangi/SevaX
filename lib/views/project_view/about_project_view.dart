@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -15,6 +14,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import 'create_edit_project.dart';
@@ -161,20 +161,13 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                     SizedBox(height: 10),
                     Row(
                       children: <Widget>[
-                        Container(
+                        UserProfileImage(
+                          photoUrl: user.photoURL,
+                          email: user.email,
+                          userId: user.sevaUserID,
                           height: 60,
                           width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(user
-                                            .photoURL !=
-                                        null
-                                    ? user.photoURL ??
-                                        'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'
-                                    : defaultUserImageURL)),
-                          ),
+                          timebankModel: widget.timebankModel,
                         ),
                         SizedBox(width: 10),
                         Text(user.fullname ?? ""),

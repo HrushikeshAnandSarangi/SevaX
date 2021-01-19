@@ -144,6 +144,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                               child: Text(
                                 snapshot.data[index].name,
                                 style: TextStyle(fontSize: 18),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),

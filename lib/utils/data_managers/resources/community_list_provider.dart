@@ -104,8 +104,9 @@ class RequestApiProvider {
             (documentSnapshot) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
-              if (model.approvedUsers.length <= model.numberOfApprovals &&
-                  model.requestEnd > DateTime.now().millisecondsSinceEpoch) {
+              if (model.approvedUsers.length <= model.numberOfApprovals
+                  // && model.requestEnd > DateTime.now().millisecondsSinceEpoch
+              ) {
                 requestList.add(model);
               }
             },
