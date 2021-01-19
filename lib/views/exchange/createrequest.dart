@@ -270,8 +270,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(
-        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
+        requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
@@ -279,14 +279,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
-      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      this.requestModel.requestType = RequestType.TIME;
-      return ProjectSelection(
-        requestModel: requestModel,
-        projectModelList: projectModelList,
-        selectedProject: null,
-        admin: false,
-      );
+      return Container();
+      // this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      // this.requestModel.requestType = RequestType.TIME;
+      // return ProjectSelection(
+      //   requestModel: requestModel,
+      //   projectModelList: projectModelList,
+      //   selectedProject: null,
+      //   admin: false,
+      // );
     }
   }
 
@@ -2134,10 +2135,6 @@ class ProjectSelectionState extends State<ProjectSelection> {
     );
   }
 
-//  void _onFormSaved() {
-//    final FormState form = _formKey.currentState;
-//    form.save();
-//  }
 }
 
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);

@@ -368,7 +368,7 @@ class _SelectionModalState extends State<SelectionModal> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              requestSwitch(),
+              // requestSwitch(),
               TextField(
                 controller: _controller,
                 keyboardAppearance: Brightness.light,
