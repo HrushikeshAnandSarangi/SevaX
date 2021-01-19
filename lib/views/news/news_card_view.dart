@@ -11,8 +11,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -24,8 +26,13 @@ import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
+  final TimebankModel timebankModel;
   final bool isFocused;
-  NewsCardView({Key key, @required this.newsModel, this.isFocused = false})
+  NewsCardView(
+      {Key key,
+      @required this.newsModel,
+      this.isFocused = false,
+      this.timebankModel})
       : super(key: key);
 
   @override
@@ -128,6 +135,7 @@ class NewsCardViewState extends State<NewsCardView> {
                     newsModel: widget.newsModel,
                     userId: SevaCore.of(context).loggedInUser.email,
                     isFromHome: false,
+                    timebankModel: widget.timebankModel,
                   ),
 
                   //============================//
@@ -509,14 +517,25 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 5, 15),
-            height: 40,
-            width: 40,
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  widget.newsModel.userPhotoURL ?? defaultUserImageURL),
-              minRadius: 40.0,
+          InkWell(
+            onTap: () {
+              openUserProfilePage(
+                  context: context,
+                  timebankName: widget.timebankModel.name,
+                  isFromTimebank: isPrimaryTimebank(
+                      parentTimebankId: widget.timebankModel.parentTimebankId),
+                  timbankid: widget.timebankModel.id,
+                  userEmail: widget.newsModel.email);
+            },
+            child: Container(
+              margin: EdgeInsets.fromLTRB(0, 5, 5, 15),
+              height: 40,
+              width: 40,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    widget.newsModel.userPhotoURL ?? defaultUserImageURL),
+                minRadius: 40.0,
+              ),
             ),
           ),
           Column(
@@ -778,10 +797,21 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CircleAvatar(
-            backgroundImage:
-                NetworkImage(commentsList.userPhotoURL ?? defaultUserImageURL),
-            radius: 25,
+          InkWell(
+            onTap: () {
+              openUserProfilePage(
+                  context: context,
+                  timebankName: widget.timebankModel.name,
+                  isFromTimebank: isPrimaryTimebank(
+                      parentTimebankId: widget.timebankModel.parentTimebankId),
+                  timbankid: widget.timebankModel.id,
+                  userEmail: widget.newsModel.email);
+            },
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  commentsList.userPhotoURL ?? defaultUserImageURL),
+              radius: 25,
+            ),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
@@ -885,7 +915,10 @@ class NewsCardViewState extends State<NewsCardView> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => RepliesView(
-                                      commentsList, widget.newsModel, index)));
+                                      commentsList,
+                                      widget.newsModel,
+                                      index,
+                                      widget.timebankModel)));
                             },
                             child: Text('Reply',
                                 style: TextStyle(
@@ -902,7 +935,10 @@ class NewsCardViewState extends State<NewsCardView> {
                       if (commentsList.comments.length > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => RepliesView(
-                                commentsList, widget.newsModel, index)));
+                                commentsList,
+                                widget.newsModel,
+                                index,
+                                widget.timebankModel)));
                       }
                     },
                     child: Text(
@@ -927,11 +963,13 @@ class NewsCardViewState extends State<NewsCardView> {
 
 class DetailDescription extends StatefulWidget {
   NewsModel data = NewsModel();
+  TimebankModel timebankModel;
   UserModel userModel = UserModel();
   List<String> moreList = List<String>();
   String userId;
   final bool isFocused;
-  DetailDescription(this.data, {this.isFocused = false, this.userModel});
+  DetailDescription(this.data,
+      {this.isFocused = false, this.userModel, this.timebankModel});
   @override
   _DetailDescriptionState createState() => _DetailDescriptionState();
 }
@@ -1090,6 +1128,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                           newsModel: data,
                           isFromHome: false,
                           userId: SevaCore.of(context).loggedInUser.email,
+                          timebankModel: widget.timebankModel,
                         ),
                         Container(
                           height: MediaQuery.of(context).size.width / 0.9,
@@ -1359,8 +1398,11 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      RepliesView(commentsList, data, index)));
+                                  builder: (context) => RepliesView(
+                                      commentsList,
+                                      data,
+                                      index,
+                                      widget.timebankModel)));
                             },
                             child: Text('Reply',
                                 style: TextStyle(
@@ -1376,8 +1418,8 @@ class _DetailDescriptionState extends State<DetailDescription> {
                     onTap: () {
                       if (commentsList.comments.length > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                RepliesView(commentsList, data, index)));
+                            builder: (context) => RepliesView(commentsList,
+                                data, index, widget.timebankModel)));
                       }
                     },
                     child: Text(
@@ -1543,9 +1585,11 @@ class _Annotator {
 
 class LikeComment extends StatefulWidget {
   final NewsModel newsModel;
+  final TimebankModel timebankModel;
   final bool isFromHome;
   final String userId;
-  LikeComment({this.newsModel, this.isFromHome, this.userId});
+  LikeComment(
+      {this.newsModel, this.isFromHome, this.userId, this.timebankModel});
   @override
   _LikeCommentState createState() => _LikeCommentState();
 }
@@ -1628,6 +1672,7 @@ class _LikeCommentState extends State<LikeComment> {
                       builder: (context) => DetailDescription(
                             widget.newsModel,
                             isFocused: true,
+                            timebankModel: widget.timebankModel,
                           )))
               : null;
         },
@@ -1793,9 +1838,10 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
 class RepliesView extends StatefulWidget {
   Comments comment;
   NewsModel feed;
+  TimebankModel timebankModel;
   int index;
 
-  RepliesView(this.comment, this.feed, this.index);
+  RepliesView(this.comment, this.feed, this.index, this.timebankModel);
 
   @override
   _RepliesViewState createState() => _RepliesViewState();
@@ -2058,16 +2104,27 @@ class _RepliesViewState extends State<RepliesView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          CircleAvatar(
-            child: ClipOval(
-              child: commentsList.userPhotoURL == null
-                  ? Container(color: Colors.grey)
-                  : Image.network(
-                      commentsList.userPhotoURL ?? defaultUserImageURL,
-                      fit: BoxFit.cover,
-                    ),
+          InkWell(
+            onTap: () {
+              openUserProfilePage(
+                  context: context,
+                  timebankName: widget.timebankModel.name,
+                  isFromTimebank: isPrimaryTimebank(
+                      parentTimebankId: widget.timebankModel.parentTimebankId),
+                  timbankid: widget.timebankModel.id,
+                  userEmail: widget.feed.email);
+            },
+            child: CircleAvatar(
+              child: ClipOval(
+                child: commentsList.userPhotoURL == null
+                    ? Container(color: Colors.grey)
+                    : Image.network(
+                        commentsList.userPhotoURL ?? defaultUserImageURL,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              radius: size,
             ),
-            radius: size,
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),

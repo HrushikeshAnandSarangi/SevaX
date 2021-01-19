@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -690,6 +691,7 @@ class DiscussionListState extends State<DiscussionList> {
               return NewsCardView(
                 newsModel: news,
                 isFocused: false,
+
               );
             },
           ),
@@ -824,11 +826,25 @@ class DiscussionListState extends State<DiscussionList> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      backgroundImage: NetworkImage(
-                          news.userPhotoURL ?? defaultUserImageURL),
+                    InkWell(
+                      onTap: (){
+                        openUserProfilePage(
+                            context: context,
+                            timebankName:
+                            widget.timebankModel.name,
+                            isFromTimebank: isPrimaryTimebank(
+                                parentTimebankId: widget
+                                    .timebankModel
+                                    .parentTimebankId),
+                            timbankid: widget.timebankModel.id,
+                            userEmail: news.email);
+                      },
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundImage: NetworkImage(
+                            news.userPhotoURL ?? defaultUserImageURL),
+                      ),
                     ),
                     SizedBox(width: 12),
                     Expanded(

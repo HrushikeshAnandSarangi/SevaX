@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -161,19 +162,31 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                     SizedBox(height: 10),
                     Row(
                       children: <Widget>[
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(user
-                                            .photoURL !=
-                                        null
-                                    ? user.photoURL ??
-                                        'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'
-                                    : defaultUserImageURL)),
+                        InkWell(
+                          onTap: () {
+                            openUserProfilePage(
+                                context: context,
+                                timebankName: widget.timebankModel.name,
+                                isFromTimebank: isPrimaryTimebank(
+                                    parentTimebankId:
+                                        widget.timebankModel.parentTimebankId),
+                                timbankid: widget.timebankModel.id,
+                                userEmail: user.email);
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: CachedNetworkImageProvider(user
+                                              .photoURL !=
+                                          null
+                                      ? user.photoURL ??
+                                          'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'
+                                      : defaultUserImageURL)),
+                            ),
                           ),
                         ),
                         SizedBox(width: 10),

@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as FirestoreRequestManager;
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -19,8 +20,9 @@ import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
   RequestModel requestModel;
+  final TimebankModel timebankModel;
 
-  RequestParticipantsView({@required this.requestModel});
+  RequestParticipantsView({@required this.requestModel, this.timebankModel});
 
   @override
   _RequestParticipantsViewState createState() =>
@@ -129,20 +131,31 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
         child: Stack(children: <Widget>[
           getUserCard(userModel, context: context, statusType: status),
-          getUserThumbnail(userModel.photoURL),
+          getUserThumbnail(userModel.photoURL, userModel.email),
         ]));
   }
 
-  Widget getUserThumbnail(String photoURL) {
-    return Container(
-      margin: EdgeInsets.only(top: 20, right: 15),
-      width: 60.0,
-      height: 60.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: NetworkImage(photoURL ?? defaultUserImageURL),
+  Widget getUserThumbnail(String photoURL, String email) {
+    return InkWell(
+      onTap: () {
+        openUserProfilePage(
+            context: context,
+            timebankName: widget.timebankModel.name,
+            isFromTimebank: isPrimaryTimebank(
+                parentTimebankId: widget.timebankModel.parentTimebankId),
+            timbankid: widget.timebankModel.id,
+            userEmail: email);
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20, right: 15),
+        width: 60.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: NetworkImage(photoURL ?? defaultUserImageURL),
+          ),
         ),
       ),
     );

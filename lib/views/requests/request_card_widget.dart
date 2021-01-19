@@ -7,8 +7,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 
 import '../../flavor_config.dart';
 
@@ -46,23 +48,34 @@ class RequestCardWidget extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           getUserCard(context),
-          getUserThumbnail(),
+          getUserThumbnail(context),
         ],
       ),
     );
   }
 
-  Widget getUserThumbnail() {
-    return Container(
-      margin: EdgeInsets.only(top: 20, right: 15),
-      width: 60.0,
-      height: 60.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: CachedNetworkImageProvider(
-            userModel.photoURL ?? defaultUserImageURL,
+  Widget getUserThumbnail(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        openUserProfilePage(
+            context: context,
+            timebankName: timebankModel.name,
+            isFromTimebank: isPrimaryTimebank(
+                parentTimebankId: timebankModel.parentTimebankId),
+            timbankid: timebankModel.id,
+            userEmail: userModel.email);
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20, right: 15),
+        width: 60.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: CachedNetworkImageProvider(
+              userModel.photoURL ?? defaultUserImageURL,
+            ),
           ),
         ),
       ),
@@ -253,8 +266,10 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> addToFavoriteList(
-      {String email, String loggedInUserId, String timebankId,
-        RequestMode requestMode}) async {
+      {String email,
+      String loggedInUserId,
+      String timebankId,
+      RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayUnion(
@@ -264,7 +279,10 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> removeFromFavoriteList(
-      {String email, String timeBankId, String loggedInUserId, RequestMode requestMode}) async {
+      {String email,
+      String timeBankId,
+      String loggedInUserId,
+      RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(

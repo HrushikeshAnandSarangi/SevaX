@@ -154,9 +154,21 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 backgroundImage: NetworkImage(defaultUserImageURL),
               );
             }
-            return CircleAvatar(
-              backgroundImage:
-                  NetworkImage(user.photoURL ?? defaultUserImageURL),
+            return InkWell(
+              onTap: () {
+                openUserProfilePage(
+                    context: context,
+                    timebankName: widget.timebankModel.name,
+                    isFromTimebank: isPrimaryTimebank(
+                        parentTimebankId:
+                            widget.timebankModel.parentTimebankId),
+                    timbankid: widget.timebankModel.id,
+                    userEmail: user.email);
+              },
+              child: CircleAvatar(
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
+              ),
             );
           },
         ),
@@ -439,7 +451,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         email: SevaCore.of(context).loggedInUser.email,
                         credits: transactionModel.credits,
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                            communityId:
+                        communityId:
                             SevaCore.of(context).loggedInUser.currentCommunity,
                       );
                       // Navigator.pop(linearProgressForBalanceCheck);
