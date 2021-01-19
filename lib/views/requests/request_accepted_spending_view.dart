@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -154,22 +155,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 backgroundImage: NetworkImage(defaultUserImageURL),
               );
             }
-            return InkWell(
-              onTap: () {
-                openUserProfilePage(
-                    context: context,
-                    timebankName: widget.timebankModel.name,
-                    isFromTimebank: isPrimaryTimebank(
-                        parentTimebankId:
-                            widget.timebankModel.parentTimebankId),
-                    timbankid: widget.timebankModel.id,
-                    userEmail: user.email);
-              },
-              child: CircleAvatar(
-                backgroundImage:
-                    NetworkImage(user.photoURL ?? defaultUserImageURL),
-              ),
-            );
+            return
+              UserProfileImage(photoUrl: user.photoURL,email:  user.email,userId:  user.sevaUserID,height: 60,width:60 ,timebankModel: widget.timebankModel,);
+
+
           },
         ),
         trailing: () {

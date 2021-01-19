@@ -2,18 +2,17 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as FirestoreRequestManager;
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
@@ -131,33 +130,19 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
         child: Stack(children: <Widget>[
           getUserCard(userModel, context: context, statusType: status),
-          getUserThumbnail(userModel.photoURL, userModel.email),
+          getUserThumbnail(
+              userModel.photoURL, userModel.email, userModel.sevaUserID),
         ]));
   }
 
-  Widget getUserThumbnail(String photoURL, String email) {
-    return InkWell(
-      onTap: () {
-        openUserProfilePage(
-            context: context,
-            timebankName: widget.timebankModel.name,
-            isFromTimebank: isPrimaryTimebank(
-                parentTimebankId: widget.timebankModel.parentTimebankId),
-            timbankid: widget.timebankModel.id,
-            userEmail: email);
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20, right: 15),
-        width: 60.0,
-        height: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: NetworkImage(photoURL ?? defaultUserImageURL),
-          ),
-        ),
-      ),
+  Widget getUserThumbnail(String photoURL, String email, String sevaUserID) {
+    return UserProfileImage(
+      photoUrl: photoURL,
+      email: email,
+      userId: sevaUserID,
+      height: 60,
+      width: 60,
+      timebankModel: widget.timebankModel,
     );
   }
 

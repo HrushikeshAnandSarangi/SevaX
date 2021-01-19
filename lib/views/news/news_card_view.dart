@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -517,27 +518,10 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          InkWell(
-            onTap: () {
-              openUserProfilePage(
-                  context: context,
-                  timebankName: widget.timebankModel.name,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: widget.timebankModel.parentTimebankId),
-                  timbankid: widget.timebankModel.id,
-                  userEmail: widget.newsModel.email);
-            },
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 5, 15),
-              height: 40,
-              width: 40,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    widget.newsModel.userPhotoURL ?? defaultUserImageURL),
-                minRadius: 40.0,
-              ),
-            ),
-          ),
+          UserProfileImage(timebankModel:
+          widget.timebankModel,
+          width: 40,height: 40,userId: widget.newsModel.sevaUserId,email: widget.newsModel.email,photoUrl: widget.newsModel.userPhotoURL,),
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -797,22 +781,8 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          InkWell(
-            onTap: () {
-              openUserProfilePage(
-                  context: context,
-                  timebankName: widget.timebankModel.name,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: widget.timebankModel.parentTimebankId),
-                  timbankid: widget.timebankModel.id,
-                  userEmail: widget.newsModel.email);
-            },
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  commentsList.userPhotoURL ?? defaultUserImageURL),
-              radius: 25,
-            ),
-          ),
+          UserProfileImage(photoUrl: commentsList.userPhotoURL,email: widget.newsModel.email,userId: widget.newsModel.sevaUserId,height: 30,width:30 ,timebankModel: widget.timebankModel,),
+
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
             child: Column(
@@ -2104,28 +2074,7 @@ class _RepliesViewState extends State<RepliesView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          InkWell(
-            onTap: () {
-              openUserProfilePage(
-                  context: context,
-                  timebankName: widget.timebankModel.name,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: widget.timebankModel.parentTimebankId),
-                  timbankid: widget.timebankModel.id,
-                  userEmail: widget.feed.email);
-            },
-            child: CircleAvatar(
-              child: ClipOval(
-                child: commentsList.userPhotoURL == null
-                    ? Container(color: Colors.grey)
-                    : Image.network(
-                        commentsList.userPhotoURL ?? defaultUserImageURL,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              radius: size,
-            ),
-          ),
+          UserProfileImage(photoUrl: commentsList.userPhotoURL,email: widget.feed.email,userId: widget.feed.sevaUserId,height: 30,width:30 ,timebankModel: widget.timebankModel,),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
             child: Column(

@@ -1,16 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 import '../../flavor_config.dart';
 
@@ -55,30 +52,13 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Widget getUserThumbnail(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        openUserProfilePage(
-            context: context,
-            timebankName: timebankModel.name,
-            isFromTimebank: isPrimaryTimebank(
-                parentTimebankId: timebankModel.parentTimebankId),
-            timbankid: timebankModel.id,
-            userEmail: userModel.email);
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20, right: 15),
-        width: 60.0,
-        height: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: CachedNetworkImageProvider(
-              userModel.photoURL ?? defaultUserImageURL,
-            ),
-          ),
-        ),
-      ),
+    return UserProfileImage(
+      photoUrl: userModel.photoURL,
+      email: userModel.email,
+      userId: userModel.sevaUserID,
+      height: 60,
+      width: 60,
+      timebankModel: timebankModel,
     );
   }
 

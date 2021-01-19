@@ -9,7 +9,6 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../flavor_config.dart';
@@ -40,22 +39,6 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
   } else {
     return false;
   }
-}
-
-void openUserProfilePage(
-    {String timbankid,
-    BuildContext context,
-    String timebankName,
-    String userEmail,
-    bool isFromTimebank}) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-    return ProfileViewer(
-      timebankId: timbankid,
-      entityName: timebankName,
-      isFromTimebank: true,
-      userEmail: userEmail,
-    );
-  }));
 }
 
 bool isOwner(TimebankModel timebank, String userId) {
