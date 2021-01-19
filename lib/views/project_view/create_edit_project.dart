@@ -246,7 +246,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              widget.isCreateProject ? projectSwitch : Container(),
+              // widget.isCreateProject ? projectSwitch : Container(),
               Center(
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
