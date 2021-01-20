@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TimebankRepository {
   static final CollectionReference _ref =
@@ -51,6 +54,24 @@ class TimebankRepository {
 
         return _timebanks;
       },
+    );
+  }
+
+  static Stream<TimebankModel> getTimebankStream(String timebankId) async* {
+    var data = _ref.document(timebankId).snapshots();
+
+    yield* data.transform(
+      StreamTransformer.fromHandlers(
+        handleData: (document, sink) {
+          try {
+            sink.add(TimebankModel.fromMap(document.data));
+          } catch (e) {
+            logger.e(e);
+            sink.addError(e);
+          }
+          ;
+        },
+      ),
     );
   }
 

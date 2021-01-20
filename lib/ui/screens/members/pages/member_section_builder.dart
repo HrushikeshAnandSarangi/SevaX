@@ -1,24 +1,28 @@
-import 'dart:developer';
-
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/dialogs/exit_confirmation_dialog.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/timebanks/member_level.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
@@ -43,13 +47,6 @@ class MemberSectionBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('role ${type.toString()}');
-    log('section ${section.toString()}');
-    final user = SevaCore.of(context).loggedInUser;
-    final bloc = Provider.of<MembersBloc>(
-      context,
-      listen: false,
-    );
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -66,116 +63,11 @@ class MemberSectionBuilder extends StatelessWidget {
               ),
             );
           },
-          child: Row(
-            children: [
-              ShortProfileCard(
-                model: member,
-              ),
-              Spacer(),
-              //hide actions for creator
-              creatorId != member.sevaUserID
-                  ? Container(
-                      child: section == UsersSection.OWNERS
-                          ? Row(
-                              children: [
-                                type == MemberType.OWNER ||
-                                        type == MemberType.CREATOR
-                                    ? demote(
-                                        context: context,
-                                        user: user,
-                                        bloc: bloc,
-                                        member: member,
-                                        timebankModel: timebank)
-                                    : Container(),
-                                donate(
-                                    context: context,
-                                    user: user,
-                                    timebankModel: timebank,
-                                    member: member),
-                                type == MemberType.OWNER ||
-                                        type == MemberType.CREATOR
-                                    ? remove(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member)
-                                    : Container(),
-                              ],
-                            )
-                          : section == UsersSection.ADMINS
-                              ? Row(
-                                  children: [
-                                    type == MemberType.OWNER ||
-                                            type == MemberType.CREATOR
-                                        ? promote(
-                                            context: context,
-                                            user: user,
-                                            bloc: bloc,
-                                            member: member,
-                                            timebankModel: timebank)
-                                        : Container(),
-                                    demote(
-                                        context: context,
-                                        user: user,
-                                        bloc: bloc,
-                                        member: member,
-                                        timebankModel: timebank),
-                                    donate(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member),
-                                    remove(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member),
-                                  ],
-                                )
-                              : Row(
-                                  children: [
-                                    promote(
-                                        context: context,
-                                        user: user,
-                                        bloc: bloc,
-                                        member: member,
-                                        timebankModel: timebank),
-                                    donate(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member),
-                                    remove(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member),
-                                    exit(
-                                        context: context,
-                                        user: user,
-                                        timebankModel: timebank,
-                                        member: member),
-                                  ],
-                                ),
-                    )
-
-//              Row(
-//                      children: [
-//                        section == UsersSection.OWNERS ||
-//                                section == UsersSection.ADMINS
-//                            ?demote(context: context,user: user,bloc: bloc,member: member)
-//                            : section == UsersSection.ADMINS ||
-//                                    section == UsersSection.MEMBERS
-//                                ? promote(context: context,user: user,bloc: bloc,member: member)
-//                                : Container(),
-//                        donate(context: context,user: user,timebankModel: timebank,member: member),
-//                        remove(context: context,user: user,timebankModel: timebank,member: member),
-//                        exit(context: context,user: user,timebankModel: timebank,member: member),
-//                        //only a member can exit timebank
-//                      ],
-//                    )
-                  : Container(),
-            ],
+          child: ShortProfileCard(
+            model: member,
+            actionButton: member.sevaUserID == creatorId
+                ? null // no actions on creator
+                : actionBuilder(context, member, section, type),
           ),
         );
       },
@@ -187,231 +79,206 @@ class MemberSectionBuilder extends StatelessWidget {
     );
   }
 
-  Widget demote({
-    BuildContext context,
-    UserModel member,
-    UserModel user,
-    MembersBloc bloc,
-    TimebankModel timebankModel,
-  }) {
-    return _hideUnAuthorizedWidgetFromUser(
-      child: FlatButton.icon(
-        textColor: Colors.black,
-        icon: customImageAsset(
-          '',
-          // SevaWebAssetIcons.userIcon,
-          color: Color(0xFFFE86C60),
+  Widget actionBuilder(BuildContext context, UserModel member,
+      UsersSection section, MemberType type) {
+    logger.i(type, section);
+    List<PopupMenuItem<ActionType>> items = [];
+
+    if (member.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID &&
+        [MemberType.ADMIN, MemberType.OWNER, MemberType.CREATOR]
+            .contains(type)) {
+      items.add(
+        PopupMenuItem(
+          child: Text(S.of(context).donate),
+          value: ActionType.DONATE,
         ),
-        label: Text(S.of(context).demote),
-        onPressed: () async {
-          if (section == UsersSection.ADMINS) {
-            bloc.demoteMember(
-              member.sevaUserID,
-              user.currentCommunity,
-              timebank.id,
+      );
+    }
+    if (member.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID) {
+      switch (section) {
+        case UsersSection.OWNERS:
+          if ([MemberType.OWNER, MemberType.CREATOR].contains(type)) {
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).demote),
+                value: ActionType.DEMOTE,
+              ),
             );
-          } else if (section == UsersSection.OWNERS) {
-            await MembershipManager.updateOrganizerStatus(
-              associatedName: SevaCore.of(context).loggedInUser.fullname,
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-              timebankId: timebankModel.id,
-              notificationType: NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
-              parentTimebankId: timebankModel.parentTimebankId,
-              targetUserId: member.sevaUserID,
-              timebankName: timebankModel.name,
-              userEmail: member.email,
-            );
-          }
-        },
-      ),
-      actionType: ActionType.DEMOTE,
-      additionalCondition: member.sevaUserID != user.sevaUserID,
-    );
-  }
-
-  Widget promote({
-    BuildContext context,
-    UserModel member,
-    UserModel user,
-    MembersBloc bloc,
-    TimebankModel timebankModel,
-  }) {
-    return _hideUnAuthorizedWidgetFromUser(
-      child: FlatButton.icon(
-        textColor: Colors.black,
-        icon: customImageAsset('SevaWebAssetIcons.userIcon',
-            color: Theme.of(context).primaryColor),
-        label: Text(section == UsersSection.MEMBERS
-            ? S.of(context).promote
-            : S.of(context).make_owner),
-        onPressed: () async {
-          if (section == UsersSection.MEMBERS) {
-            bloc.promoteMember(
-              member.sevaUserID,
-              user.currentCommunity,
-              timebank.id,
-            );
-          } else if (section == UsersSection.ADMINS) {
-            await MembershipManager.updateOrganizerStatus(
-              associatedName: SevaCore.of(context).loggedInUser.fullname,
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-              timebankId: timebank.id,
-              notificationType: NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
-              parentTimebankId: timebankModel.parentTimebankId,
-              targetUserId: member.sevaUserID,
-              timebankName: timebankModel.name,
-              userEmail: member.email,
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).remove),
+                value: ActionType.REMOVE,
+              ),
             );
           }
-        },
-      ),
-      actionType: ActionType.PROMOTE,
-      //can't promote or demote ourself
-      additionalCondition: member.sevaUserID != user.sevaUserID,
-    );
-  }
-
-  Widget donate({
-    BuildContext context,
-    UserModel member,
-    UserModel user,
-    TimebankModel timebankModel,
-  }) {
-    return _hideUnAuthorizedWidgetFromUser(
-      child: FlatButton.icon(
-        textColor: Colors.black,
-        icon: customImageAsset('SevaWebAssetIcons.donate',
-            color: Theme.of(context).primaryColor),
-        label: Text(S.of(context).donate),
-        onPressed: () async {
-          await showFontSizePickerDialog(context, timebankModel, member);
-        },
-      ),
-      actionType: ActionType.DONATE,
-      //donation can't be made to self
-      additionalCondition: member.sevaUserID != user.sevaUserID,
-    );
-  }
-
-  Widget remove({
-    BuildContext context,
-    UserModel member,
-    UserModel user,
-    TimebankModel timebankModel,
-  }) {
-    return _hideUnAuthorizedWidgetFromUser(
-      child: FlatButton.icon(
-        textColor: Colors.black,
-        icon: customImageAsset('SevaWebAssetIcons.delete'),
-        label: Text(S.of(context).remove),
-        onPressed: () async {
-          if (await CustomDialogs.generalConfirmationDialogWithMessage(
-            context,
-            "${S.of(context).member_removal_confirmation} ${member.fullname}?",
-          )) {
-            progress.show();
-            await removeMember(
-              context: context,
-              isFromExit: false,
-              model: timebankModel,
-              member: member,
+          break;
+        case UsersSection.ADMINS:
+          if ([MemberType.OWNER, MemberType.CREATOR].contains(type)) {
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).promote),
+                value: ActionType.PROMOTE,
+              ),
             );
           }
-        },
-      ),
-      actionType: ActionType.REMOVE,
-      additionalCondition: member.sevaUserID != user.sevaUserID,
-    );
-  }
+          if ([MemberType.ADMIN, MemberType.OWNER, MemberType.CREATOR]
+              .contains(type)) {
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).demote),
+                value: ActionType.DEMOTE,
+              ),
+            );
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).remove),
+                value: ActionType.REMOVE,
+              ),
+            );
+          }
 
-  Widget exit({
-    BuildContext context,
-    UserModel member,
-    UserModel user,
-    TimebankModel timebankModel,
-  }) {
-    return _hideUnAuthorizedWidgetFromUser(
-      child: FlatButton.icon(
-        textColor: Colors.black,
-        icon: Icon(Icons.exit_to_app, color: Color(0xFFE86C60)),
-        label: Text(S.of(context).exit),
-        onPressed: () async {
-          await exitFromTimebank(
-            context: context,
-            model: timebankModel,
-            member: member,
-          );
-        },
-      ),
-      actionType: ActionType.EXIT,
-      additionalCondition: member.sevaUserID == user.sevaUserID,
-    );
-  }
-
-  void showFontSizePickerDialog(
-      BuildContext context, TimebankModel timebankModel, UserModel user) async {
-    ProgressDialog progressDialog = ProgressDialog(
-      context,
-      customBody: Container(
-        height: 100,
-        width: 100,
-        child: LoadingIndicator(),
-      ),
-      isDismissible: false,
-    );
-
-    if (timebankModel.balance <= 0) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(S.of(context).insufficient_credits_to_donate),
-          action: SnackBarAction(
-            label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          break;
+        case UsersSection.MEMBERS:
+          if ([MemberType.ADMIN, MemberType.OWNER, MemberType.CREATOR]
+              .contains(type)) {
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).promote),
+                value: ActionType.PROMOTE,
+              ),
+            );
+            items.add(
+              PopupMenuItem(
+                child: Text(S.of(context).remove),
+                value: ActionType.REMOVE,
+              ),
+            );
+            break;
+          }
+      }
+    } else {
+      if (section == UsersSection.MEMBERS) {
+        items.add(
+          PopupMenuItem(
+            child: Text(S.of(context).exit),
+            value: ActionType.EXIT,
           ),
-        ),
-      );
-      return;
+        );
+      }
     }
 
-    // <-- note the async keyword here
-    double donateAmount = 0;
-//     this will contain the result from Navigator.pop(context, result)
-    final donateAmount_Received = await showDialog<double>(
-      context: context,
-      builder: (context) => InputDonateDialog(
-        donateAmount: donateAmount,
-        maxAmount: timebankModel.balance.toDouble(),
-      ),
-    );
+    return items.isNotEmpty
+        ? PopupMenuButton<ActionType>(
+            itemBuilder: (_) => items,
+            onSelected: (value) async {
+              switch (value) {
+                case ActionType.PROMOTE:
+                  if (section == UsersSection.ADMINS) {
+                    if (TransactionsMatrixCheck.checkAllowedTransaction(
+                        'multiple_super_admins')) {
+                      await MembershipManager.updateOrganizerStatus(
+                        associatedName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                        timebankId: timebank.id,
+                        notificationType:
+                            NotificationType.ADMIN_PROMOTED_AS_ORGANIZER,
+                        parentTimebankId: timebank.parentTimebankId,
+                        targetUserId: member.sevaUserID,
+                        timebankName: timebank.name,
+                        userEmail: member.email,
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => UpgradePlanBanner(
+                            activePlanName:
+                                AppConfig.paymentStatusMap['planId'],
+                            details: AppConfig
+                                .upgradePlanBannerModel.multiple_super_admins,
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    await MembershipManager.updateMembershipStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
+                      timebankId: timebank.id,
+                      notificationType:
+                          NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+                      parentTimebankId: timebank.parentTimebankId,
+                      targetUserId: member.sevaUserID,
+                      timebankName: timebank.name,
+                      userEmail: member.email,
+                    );
+                  }
+                  break;
+                case ActionType.DEMOTE:
+                  if (section == UsersSection.OWNERS) {
+                    await MembershipManager.updateOrganizerStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
+                      timebankId: timebank.id,
+                      notificationType:
+                          NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER,
+                      parentTimebankId: timebank.parentTimebankId,
+                      targetUserId: member.sevaUserID,
+                      timebankName: timebank.name,
+                      userEmail: member.email,
+                    );
+                  } else {
+                    await MembershipManager.updateMembershipStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
+                      communityId:
+                          SevaCore.of(context).loggedInUser.currentCommunity,
+                      timebankId: timebank.id,
+                      notificationType:
+                          NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
+                      parentTimebankId: timebank.parentTimebankId,
+                      targetUserId: member.sevaUserID,
+                      timebankName: timebank.name,
+                      userEmail: member.email,
+                    );
+                  }
+                  break;
+                case ActionType.DONATE:
+                  _showFontSizePickerDialog(context, member, timebank);
+                  break;
+                case ActionType.REMOVE:
+                  if (await CustomDialogs.generalConfirmationDialogWithMessage(
+                    context,
+                    "${S.of(context).member_removal_confirmation} ${member.fullname}?",
+                  )) {
+                    progress.show();
+                    await removeMember(
+                      context: context,
+                      isFromExit: false,
+                      model: timebank,
+                      member: member,
+                    );
+                  }
 
-    // execution of this code continues when the dialog was closed (popped)
+                  break;
+                case ActionType.EXIT:
+                  await exitFromTimebank(
+                    context: context,
+                    model: timebank,
+                    member: member,
+                  );
 
-    // note that the result can also be null, so check it
-    // (back button or pressed outside of the dialog)
-    if (donateAmount_Received != null) {
-      progressDialog.show();
-      donateAmount = donateAmount_Received;
-      timebankModel.balance = timebankModel.balance - donateAmount_Received;
-
-      //from, to, timestamp, credits, isApproved, type, typeid, timebankid
-      await TransactionBloc().createNewTransaction(
-        timebankModel.id,
-        user.sevaUserID,
-        DateTime.now().millisecondsSinceEpoch,
-        donateAmount,
-        true,
-        "ADMIN_DONATE_TOUSER",
-        null,
-        timebankModel.id,
-        associatedCommunity: timebankModel.communityId,
-      );
-      progressDialog.hide();
-      await showDialog<double>(
-        context: context,
-        builder: (context) => InputDonateSuccessDialog(
-            onComplete: () => {Navigator.pop(context)}),
-      );
-    }
+                  break;
+              }
+            },
+          )
+        : null;
   }
 
   Future<void> exitFromTimebank({
@@ -419,7 +286,8 @@ class MemberSectionBuilder extends StatelessWidget {
     TimebankModel model,
     UserModel member,
   }) async {
-    bool isTimebank = model.parentTimebankId == FlavorConfig.values.timebankId;
+    bool isTimebank =
+        isPrimaryTimebank(parentTimebankId: model.parentTimebankId);
 
     String reason = await exitTimebankOrGroup(
       context: context,
@@ -446,7 +314,8 @@ class MemberSectionBuilder extends StatelessWidget {
     String reason,
     bool isFromExit,
   }) async {
-    bool isTimebank = model.parentTimebankId == FlavorConfig.values.timebankId;
+    bool isTimebank =
+        isPrimaryTimebank(parentTimebankId: model.parentTimebankId);
     Map<String, dynamic> responseData =
         await Provider.of<MembersBloc>(context, listen: false).removeMember(
       member.sevaUserID,
@@ -456,7 +325,7 @@ class MemberSectionBuilder extends StatelessWidget {
 
     progress.hide();
 
-    if (timebank.parentTimebankId == FlavorConfig.values.timebankId) {
+    if (isTimebank) {
       await removeMemberTimebankFn(
         context: context,
         responseData: responseData,
@@ -477,20 +346,6 @@ class MemberSectionBuilder extends StatelessWidget {
     }
   }
 
-  Widget customImageAsset(String image, {Color color}) {
-    return Image.asset(image, color: color, height: 22, width: 22);
-  }
-
-  Widget _hideUnAuthorizedWidgetFromUser({
-    bool additionalCondition = true,
-    ActionType actionType,
-    Widget child,
-  }) {
-    return actionPermission[type].contains(actionType) && additionalCondition
-        ? child
-        : Container();
-  }
-
   void removeMemberTimebankFn({
     BuildContext context,
     UserModel userModel,
@@ -507,6 +362,10 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
+        logger.e("user exited");
+        Future.delayed(Duration.zero, () {
+          Phoenix.rebirth(context);
+        });
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
@@ -538,13 +397,17 @@ class MemberSectionBuilder extends StatelessWidget {
         );
       } else if (responseData['softDeleteCheck'] == true &&
           responseData['groupOwnershipCheck'] == false) {
-        ExtendedNavigator.ofRouter<MembersRouter>().pushTransferOwnerShipView(
-          timebankId: timebankModel.id,
-          responseData: responseData,
-          isComingFromExit: isFromExit ? true : false,
-          memberSevaUserId: userModel.sevaUserID,
-          memberName: userModel.fullname,
-          memberPhotUrl: userModel.photoURL,
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TransferOwnerShipView(
+              timebankId: timebankModel.id,
+              responseData: responseData,
+              isComingFromExit: isFromExit ? true : false,
+              memberSevaUserId: userModel.sevaUserID,
+              memberName: userModel.fullname,
+              memberPhotUrl: userModel.photoURL,
+            ),
+          ),
         );
       }
     }
@@ -565,8 +428,7 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
-
-        ExtendedNavigator.ofRouter<HomePageRouter>().pop();
+        Navigator.of(context).pop();
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
@@ -617,6 +479,72 @@ class MemberSectionBuilder extends StatelessWidget {
           },
         );
       }
+    }
+  }
+
+  void _showFontSizePickerDialog(
+      BuildContext context, UserModel user, TimebankModel model) async {
+    var connResult = await Connectivity().checkConnectivity();
+    if (connResult == ConnectivityResult.none) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).check_internet),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (timebank.balance <= 0) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).insufficient_credits_to_donate),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // <-- note the async keyword here
+    double donateAmount = 0;
+//     this will contain the result from Navigator.pop(context, result)
+    final donateAmount_Received = await showDialog<double>(
+      context: context,
+      builder: (context) => InputDonateDialog(
+          donateAmount: donateAmount, maxAmount: timebank.balance.toDouble()),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (donateAmount_Received != null) {
+      donateAmount = donateAmount_Received;
+      timebank.balance = timebank.balance - donateAmount_Received;
+
+      //from, to, timestamp, credits, isApproved, type, typeid, timebankid
+      await TransactionBloc().createNewTransaction(
+        model.id,
+        user.sevaUserID,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        communityId: model.communityId,
+      );
+      await showDialog<double>(
+        context: context,
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
+      );
     }
   }
 }

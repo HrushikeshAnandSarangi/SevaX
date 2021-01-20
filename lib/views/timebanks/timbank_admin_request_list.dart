@@ -1392,10 +1392,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       context,
                       MaterialPageRoute(
                         builder: (context) => InviteAddMembers(
-                            timebankModel.id,
-                            timebankModel.communityId,
-                            timebankModel,
-                            Theme.of(context).platform),
+                          timebankModel,
+                        ),
                       ),
                     );
                   },

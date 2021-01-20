@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -9,6 +8,7 @@ import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
+import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/message_page_router.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
@@ -27,7 +27,8 @@ import 'home_dashboard.dart';
 class HomePageRouter extends StatefulWidget {
   // final UserModel userModel;
 
-  const HomePageRouter({Key key,
+  const HomePageRouter({
+    Key key,
     // @required this.userModel
   }) : super(key: key);
 
@@ -56,12 +57,14 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
 
     Future.delayed(
       Duration.zero,
-          () {
+      () {
         _userBloc.getData(
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
         _userBloc.userStream.listen((UserModel user) {
+          Provider.of<MembersBloc>(context, listen: false)
+              .init(user.currentCommunity);
           _messageBloc.fetchAllMessage(
             user.currentCommunity,
             user,
@@ -87,109 +90,112 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppLanguage>(
-      create: (_) => appLanguage,
-      child: Consumer<AppLanguage>(
-        builder: (context, model, child) {
-          return MaterialApp(
-            builder: (context, child) {
-              return GestureDetector(
-                child: child,
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-              );
-            },
-            locale: model.appLocal,
-            supportedLocales: S.delegate.supportedLocales,
-            localizationsDelegates: [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            title: AppConfig.appName,
-            debugShowCheckedModeBanner: false,
-            theme: FlavorConfig.values.theme,
-            home: BlocProvider<UserDataBloc>(
-              bloc: _userBloc,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: StreamBuilder(
-                  stream: CombineLatestStream.combine2(_userBloc.userStream,
-                      _userBloc.comunityStream, (u, c) => true),
-                  builder: (context, AsyncSnapshot<bool> snapshot) {
-                    if (snapshot.hasData && snapshot.data != null) {
-                      UserModel loggedInUser = _userBloc.user;
-                      loggedInUser.currentTimebank =
-                          _userBloc.community.primary_timebank;
-                      loggedInUser.associatedWithTimebanks =
-                          _userBloc.user.communities.length;
+    return Phoenix(
+      child: ChangeNotifierProvider<AppLanguage>(
+        create: (_) => appLanguage,
+        child: Consumer<AppLanguage>(
+          builder: (context, model, child) {
+            return MaterialApp(
+              builder: (context, child) {
+                return GestureDetector(
+                  child: child,
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                );
+              },
+              locale: model.appLocal,
+              supportedLocales: S.delegate.supportedLocales,
+              localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              title: AppConfig.appName,
+              debugShowCheckedModeBanner: false,
+              theme: FlavorConfig.values.theme,
+              home: BlocProvider<UserDataBloc>(
+                bloc: _userBloc,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  body: StreamBuilder(
+                    stream: CombineLatestStream.combine2(_userBloc.userStream,
+                        _userBloc.comunityStream, (u, c) => true),
+                    builder: (context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        UserModel loggedInUser = _userBloc.user;
+                        loggedInUser.currentTimebank =
+                            _userBloc.community.primary_timebank;
+                        loggedInUser.associatedWithTimebanks =
+                            _userBloc.user.communities.length;
 
-                      SevaCore.of(context).loggedInUser = loggedInUser;
+                        SevaCore.of(context).loggedInUser = loggedInUser;
 
-                      if (_userBloc.user.communities == null ||
-                          _userBloc.user.communities.isEmpty) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => SplashView()),
-                              ((Route<dynamic> route) => false));
-                        });
-                      }
-                      return Stack(
-                        children: <Widget>[
-                          BlocProvider<NotificationsBloc>(
-                            bloc: _notificationsBloc,
-                            child: BlocProvider<MessageBloc>(
-                              bloc: _messageBloc,
-                              child: Container(
-                                height: MediaQuery.of(context).size.height - 65,
-                                child: pages[selected],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey[300],
-                                    blurRadius: 100.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: BlocProvider(
+                        if (_userBloc.user.communities == null ||
+                            _userBloc.user.communities.isEmpty) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => SplashView()),
+                                ((Route<dynamic> route) => false));
+                          });
+                        }
+                        return Stack(
+                          children: <Widget>[
+                            BlocProvider<NotificationsBloc>(
                               bloc: _notificationsBloc,
                               child: BlocProvider<MessageBloc>(
                                 bloc: _messageBloc,
-                                child: CustomBottomNavigationBar(
-                                  selected: selected,
-                                  onChanged: (index) {
-                                    selected = index;
-                                    setState(() {});
-                                  },
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height - 65,
+                                  child: pages[selected],
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return LoadingIndicator();
-                    }
-                  },
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[300],
+                                      blurRadius: 100.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: BlocProvider(
+                                bloc: _notificationsBloc,
+                                child: BlocProvider<MessageBloc>(
+                                  bloc: _messageBloc,
+                                  child: CustomBottomNavigationBar(
+                                    selected: selected,
+                                    onChanged: (index) {
+                                      selected = index;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return LoadingIndicator();
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

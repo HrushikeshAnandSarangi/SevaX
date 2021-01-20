@@ -20,7 +20,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 40,
+        horizontal: 10,
       ),
       child: StreamBuilder<List<JoinRequestModel>>(
         stream: joinRequestBloc.joinRequests,
@@ -56,10 +56,11 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                       var user = userSnapshot.data;
                       return Row(
                         children: [
-                          ShortProfileCard(
-                            model: userSnapshot.data,
+                          Expanded(
+                            child: ShortProfileCard(
+                              model: userSnapshot.data,
+                            ),
                           ),
-                          Spacer(),
                           RaisedButton(
                             child: Text('Approve'),
                             shape: RoundedRectangleBorder(

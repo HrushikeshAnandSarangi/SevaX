@@ -18,11 +18,11 @@ class ShortProfileCard extends StatelessWidget {
         model.photoURL != null
             ? CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(model.photoURL),
-                radius: 30,
+                radius: 22,
               )
             : CustomAvatar(
                 name: model.fullname,
-                radius: 30,
+                radius: 22,
               ),
         SizedBox(width: 4),
         Expanded(
@@ -31,7 +31,7 @@ class ShortProfileCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        actionButton,
+        actionButton ?? Container(),
       ],
     );
   }
