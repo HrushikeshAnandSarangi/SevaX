@@ -11,6 +11,7 @@ class CustomNetworkImage extends StatelessWidget {
   final double size;
   final bool clipOval;
   final String entityName;
+  final VoidCallback onTap;
 
   const CustomNetworkImage(
     this.imageUrl, {
@@ -21,25 +22,29 @@ class CustomNetworkImage extends StatelessWidget {
     this.size = 45,
     this.clipOval = true,
     this.entityName,
+    this.onTap,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final child = SizedBox(
       height: size,
       width: size,
-      child: CachedNetworkImage(
-        imageUrl: imageUrl ?? (entityName != null ? '' : defaultUserImageURL),
-        fit: fit ?? BoxFit.fitWidth,
-        placeholder: (context, url) => Center(
-          child: placeholder ?? CircularProgressIndicator(),
+      child: InkWell(
+        onTap: onTap,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl ?? (entityName != null ? '' : defaultUserImageURL),
+          fit: fit ?? BoxFit.fitWidth,
+          placeholder: (context, url) => Center(
+            child: placeholder ?? CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => entityName != null
+              ? CustomAvatar(
+                  name: entityName,
+                )
+              : Center(
+                  child: Icon(Icons.error),
+                ),
         ),
-        errorWidget: (context, url, error) => entityName != null
-            ? CustomAvatar(
-                name: entityName,
-              )
-            : Center(
-                child: Icon(Icons.error),
-              ),
       ),
     );
     return clipOval ? ClipOval(child: child) : child;

@@ -379,7 +379,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => BlockedMembersPage(),
+                                builder: (context) => BlockedMembersPage(
+                                  timebankId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentTimebank,
+                                ),
                               ),
                             );
                           },

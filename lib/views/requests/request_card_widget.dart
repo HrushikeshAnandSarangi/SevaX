@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -9,6 +7,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 import '../../flavor_config.dart';
 
@@ -46,26 +45,20 @@ class RequestCardWidget extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           getUserCard(context),
-          getUserThumbnail(),
+          getUserThumbnail(context),
         ],
       ),
     );
   }
 
-  Widget getUserThumbnail() {
-    return Container(
-      margin: EdgeInsets.only(top: 20, right: 15),
-      width: 60.0,
-      height: 60.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: CachedNetworkImageProvider(
-            userModel.photoURL ?? defaultUserImageURL,
-          ),
-        ),
-      ),
+  Widget getUserThumbnail(BuildContext context) {
+    return UserProfileImage(
+      photoUrl: userModel.photoURL,
+      email: userModel.email,
+      userId: userModel.sevaUserID,
+      height: 60,
+      width: 60,
+      timebankModel: timebankModel,
     );
   }
 
@@ -253,8 +246,10 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> addToFavoriteList(
-      {String email, String loggedInUserId, String timebankId,
-        RequestMode requestMode}) async {
+      {String email,
+      String loggedInUserId,
+      String timebankId,
+      RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayUnion(
@@ -264,7 +259,10 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> removeFromFavoriteList(
-      {String email, String timeBankId, String loggedInUserId, RequestMode requestMode}) async {
+      {String email,
+      String timeBankId,
+      String loggedInUserId,
+      RequestMode requestMode}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(

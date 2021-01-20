@@ -9,14 +9,16 @@ import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 
 ParticipantInfo getUserInfo(
     String userId, List<ParticipantInfo> participantInfo) {
-  return participantInfo.firstWhere((element) => element.id == userId,orElse: ()=>null);
+  return participantInfo.firstWhere((element) => element.id == userId,
+      orElse: () => null);
 }
 
 ParticipantInfo getSenderInfo(
   String userId,
   List<ParticipantInfo> participantInfo,
 ) {
-  return participantInfo.firstWhere((element) => element.id != userId,orElse: ()=>null);
+  return participantInfo.firstWhere((element) => element.id != userId,
+      orElse: () => null);
 }
 
 Future<void> createAndOpenChat({
@@ -61,6 +63,7 @@ Future<void> createAndOpenChat({
         senderId: sender.id,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
+        timebankId: timebankId,
       ),
     ),
   );
