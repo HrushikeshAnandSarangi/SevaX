@@ -1,27 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/bloc/blocked_members_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class BlockedMembersPage extends StatefulWidget {
+  final String timebankId;
+
+  BlockedMembersPage({@required this.timebankId});
+
   @override
   _BlockedMembersPageState createState() => _BlockedMembersPageState();
 }
 
 class _BlockedMembersPageState extends State<BlockedMembersPage> {
   BlockedMembersBloc _bloc = BlockedMembersBloc();
+  TimebankModel timebankModel;
 
   @override
   void initState() {
+    getTimebank();
+
     Future.delayed(
       Duration.zero,
       () => _bloc.init(SevaCore.of(context).loggedInUser.sevaUserID),
     );
+
     super.initState();
+  }
+
+  Future<void> getTimebank() async {
+    timebankModel =
+        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    setState(() {});
   }
 
   @override
@@ -76,8 +94,44 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                     child: Row(
                       children: [
                         blockedUser.photoURL != null
-                            ? CustomNetworkImage(blockedUser.photoURL)
-                            : CustomAvatar(name: blockedUser.fullname),
+                            ? CustomNetworkImage(
+                                blockedUser.photoURL,
+                                onTap: () {
+                                  if (timebankModel != null) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileViewer(
+                                        timebankId: timebankModel.id,
+                                        entityName: timebankModel.name,
+                                        isFromTimebank: isPrimaryTimebank(
+                                            parentTimebankId:
+                                                timebankModel.parentTimebankId),
+                                        userId: blockedUser.sevaUserID,
+                                        userEmail: blockedUser.email,
+                                      );
+                                    }));
+                                  }
+                                },
+                              )
+                            : CustomAvatar(
+                                name: blockedUser.fullname,
+                                onTap: () {
+                                  if (timebankModel != null) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileViewer(
+                                        timebankId: timebankModel.id,
+                                        entityName: timebankModel.name,
+                                        isFromTimebank: isPrimaryTimebank(
+                                            parentTimebankId:
+                                                timebankModel.parentTimebankId),
+                                        userId: blockedUser.sevaUserID,
+                                        userEmail: blockedUser.email,
+                                      );
+                                    }));
+                                  }
+                                },
+                              ),
                         SizedBox(width: 8),
                         Expanded(
                           child: Text("${blockedUser.fullname}"),

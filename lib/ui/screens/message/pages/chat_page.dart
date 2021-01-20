@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -20,9 +21,12 @@ import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/message_bub
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
@@ -32,6 +36,7 @@ class ChatPage extends StatefulWidget {
   final bool isFromRejectCompletion;
   final bool isFromShare;
   final String feedId;
+  final String timebankId;
   final String senderId;
   final bool showAppBar;
   final ChatViewContext chatViewContext;
@@ -46,6 +51,7 @@ class ChatPage extends StatefulWidget {
     this.isAdminMessage,
     this.showAppBar = true,
     this.chatViewContext = ChatViewContext.UNDEFINED,
+    @required this.timebankId,
   }) : super(key: key);
 
   @override
@@ -67,16 +73,18 @@ class _ChatPageState extends State<ChatPage> {
   bool isProfane = false;
   String errorText = '';
   String timebankId;
+  TimebankModel timebankModel;
   @override
   void initState() {
     chatModel = widget.chatModel;
+    getTimebank();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isFromRejectCompletion)
         textcontroller.text = '${S.of(context).reject_task_completion} ';
     });
 
-     if (!chatModel.isGroupMessage) {
+    if (!chatModel.isGroupMessage) {
       recieverId = chatModel.participants[0] != widget.senderId
           ? chatModel.participants[0]
           : chatModel.participants[1];
@@ -96,7 +104,6 @@ class _ChatPageState extends State<ChatPage> {
       participantsInfoById[info.id] = info
         ..color = colorGeneratorFromName(info.name);
     });
-
     _bloc.getAllMessages(chatModel.id, widget.senderId);
     _scrollController = ScrollController();
 
@@ -139,10 +146,17 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
   }
 
+  Future<void> getTimebank() async {
+    log('time id ${widget.timebankId} ');
+    timebankModel =
+        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     ParticipantInfo recieverInfo = getUserInfo(
-      recieverId??'',
+      recieverId ?? '',
       chatModel.participantInfo,
     );
 
@@ -185,6 +199,21 @@ class _ChatPageState extends State<ChatPage> {
               isBlockEnabled:
                   chatModel.isTimebankMessage || chatModel.isGroupMessage,
               openGroupInfo: isGroupMessage ? openGroupInfo : null,
+              onProfileImageTap: () {
+                if (timebankModel != null) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ProfileViewer(
+                      timebankId: timebankModel.id,
+                      entityName: timebankModel.name,
+                      isFromTimebank: isPrimaryTimebank(
+                          parentTimebankId: timebankModel.parentTimebankId),
+                      userId: recieverInfo.id,
+                      userEmail: null,
+                    );
+                  }));
+                }
+              },
             )
           : null,
       body: Column(

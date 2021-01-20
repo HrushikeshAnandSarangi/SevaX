@@ -59,6 +59,7 @@ class MemberCard extends StatelessWidget {
                   senderId: SevaCore.of(context).loggedInUser.sevaUserID,
                   isAdminMessage: false,
                   chatViewContext: ChatViewContext.MEMBER_CHAT_LIST,
+                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),
               ),
             );

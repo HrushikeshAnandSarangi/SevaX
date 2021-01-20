@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class NewChatPage extends StatefulWidget {
@@ -99,6 +100,9 @@ class _NewChatPageState extends State<NewChatPage> {
                                       builder: (context) => ChatPage(
                                         chatModel: model,
                                         senderId: model.groupDetails.admins[0],
+                                        timebankId: SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentTimebank,
                                       ),
                                     ),
                                   );
