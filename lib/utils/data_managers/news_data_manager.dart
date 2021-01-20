@@ -44,6 +44,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       // })
       .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
+      // .orderBy('posttimestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
