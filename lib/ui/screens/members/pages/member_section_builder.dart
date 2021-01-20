@@ -19,7 +19,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/profile/profile.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/member_level.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
@@ -57,8 +57,12 @@ class MemberSectionBuilder extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ProfilePage(
-                  userModel: member,
+                builder: (context) => ProfileViewer(
+                  userEmail: member.email,
+                  timebankId: timebank.id,
+                  isFromTimebank: isPrimaryTimebank(
+                      parentTimebankId: timebank.parentTimebankId),
+                  entityName: timebank.name,
                 ),
               ),
             );
