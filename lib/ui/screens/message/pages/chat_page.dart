@@ -200,7 +200,7 @@ class _ChatPageState extends State<ChatPage> {
                   chatModel.isTimebankMessage || chatModel.isGroupMessage,
               openGroupInfo: isGroupMessage ? openGroupInfo : null,
               onProfileImageTap: () {
-                if (timebankModel != null) {
+                if (timebankModel != null && !isGroupMessage) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) {
                     return ProfileViewer(
