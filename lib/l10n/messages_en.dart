@@ -501,7 +501,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invitation_email_body" : MessageLookupByLibrary.simpleMessage("<p>You are invited to download the SevaX app and join the Seva Community ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"###;&nbsp;\">link</a> to join.</p>"),
     "invitation_sent1" : MessageLookupByLibrary.simpleMessage("We have sent your transfer of ownership invitation. You will remain to be the owner of Seva Community "),
     "invitation_sent2" : MessageLookupByLibrary.simpleMessage(" until "),
-    "invitation_sent3" : MessageLookupByLibrary.simpleMessage("accepts the invitation and provides their new account information."),
+    "invitation_sent3" : MessageLookupByLibrary.simpleMessage(" accepts the invitation and provides their new account information."),
     "invite" : MessageLookupByLibrary.simpleMessage("Invite"),
     "invite_members" : MessageLookupByLibrary.simpleMessage("Invite Members"),
     "invite_message" : MessageLookupByLibrary.simpleMessage("Seva Communities allow you to volunteer and receive Seva credits that can be used by you for getting the community to help you with getting things done for you. Use the code"),
