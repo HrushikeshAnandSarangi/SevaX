@@ -12,11 +12,9 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -31,7 +29,6 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -208,54 +205,54 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
     fetchRemoteConfig();
 
-    if ((FlavorConfig.appFlavor == Flavor.APP ||
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-      // _fetchCurrentlocation;
-    }
+    // if ((FlavorConfig.appFlavor == Flavor.APP ||
+    //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    //   // _fetchCurrentlocation;
+    // }
   }
 
-  void get _fetchCurrentlocation async {
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
+  // void get _fetchCurrentlocation async {
+  //   try {
+  //     Location templocation = Location();
+  //     bool _serviceEnabled;
+  //     PermissionStatus _permissionGranted;
 
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        if (!_serviceEnabled) {
-          return;
-        }
-      }
+  //     _serviceEnabled = await templocation.serviceEnabled();
+  //     if (!_serviceEnabled) {
+  //       _serviceEnabled = await templocation.requestService();
+  //       if (!_serviceEnabled) {
+  //         return;
+  //       }
+  //     }
 
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        }
-      }
-      Location().getLocation().then((onValue) {
-        location = GeoFirePoint(onValue.latitude, onValue.longitude);
-        LocationUtility()
-            .getFormattedAddress(
-          location.latitude,
-          location.longitude,
-        )
-            .then((address) {
-          setState(() {
-            this.selectedAddress = address;
-          });
-        });
-      });
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        //error = e.message;
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        //error = e.message;
-      }
-    }
-  }
+  //     _permissionGranted = await templocation.hasPermission();
+  //     if (_permissionGranted == PermissionStatus.denied) {
+  //       _permissionGranted = await templocation.requestPermission();
+  //       if (_permissionGranted != PermissionStatus.granted) {
+  //         return;
+  //       }
+  //     }
+  //     Location().getLocation().then((onValue) {
+  //       location = GeoFirePoint(onValue.latitude, onValue.longitude);
+  //       LocationUtility()
+  //           .getFormattedAddress(
+  //         location.latitude,
+  //         location.longitude,
+  //       )
+  //           .then((address) {
+  //         setState(() {
+  //           this.selectedAddress = address;
+  //         });
+  //       });
+  //     });
+  //   } on PlatformException catch (e) {
+  //     if (e.code == 'PERMISSION_DENIED') {
+  //       //error = e.message;
+  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
+  //       //error = e.message;
+  //     }
+  //   }
+  // }
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -1768,16 +1765,16 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
 
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
     DateTime eventStartDate =

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -15,7 +14,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -621,17 +619,17 @@ class EditGroupFormState extends State<EditGroupForm> {
   //   );
   // }
 
-  Future _getLocation() async {
-    if (location == null) return;
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    log('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  // Future _getLocation() async {
+  //   if (location == null) return;
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
+  //   log('_getLocation: $address');
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   void showDialogForSuccess({String dialogTitle}) {
     showDialog(

@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
@@ -26,7 +25,6 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -155,9 +153,9 @@ class CreateEditCommunityViewFormState
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
 
-    if (widget.isCreateTimebank) {
-      _fetchCurrentlocation;
-    }
+    // if (widget.isCreateTimebank) {
+    //   _fetchCurrentlocation;
+    // }
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -190,40 +188,40 @@ class CreateEditCommunityViewFormState
     });
   }
 
-  void get _fetchCurrentlocation async {
-    Location templocation = Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+  // void get _fetchCurrentlocation async {
+  //   Location templocation = Location();
+  //   bool _serviceEnabled;
+  //   PermissionStatus _permissionGranted;
 
-    _serviceEnabled = await templocation.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await templocation.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+  //   _serviceEnabled = await templocation.serviceEnabled();
+  //   if (!_serviceEnabled) {
+  //     _serviceEnabled = await templocation.requestService();
+  //     if (!_serviceEnabled) {
+  //       return;
+  //     }
+  //   }
 
-    _permissionGranted = await templocation.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await templocation.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    Location().getLocation().then((onValue) {
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
-  }
+  //   _permissionGranted = await templocation.hasPermission();
+  //   if (_permissionGranted == PermissionStatus.denied) {
+  //     _permissionGranted = await templocation.requestPermission();
+  //     if (_permissionGranted != PermissionStatus.granted) {
+  //       return;
+  //     }
+  //   }
+  //   Location().getLocation().then((onValue) {
+  //     location = GeoFirePoint(onValue.latitude, onValue.longitude);
+  //     LocationUtility()
+  //         .getFormattedAddress(
+  //       location.latitude,
+  //       location.longitude,
+  //     )
+  //         .then((address) {
+  //       setState(() {
+  //         this.selectedAddress = address;
+  //       });
+  //     });
+  //   });
+  // }
 
   void getModelData() async {
     Future.delayed(Duration.zero, () {
@@ -1277,17 +1275,17 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future _setLocation(data, LocationDataModel dataModel) async {
-    setState(() {
-      this.selectedAddress = dataModel.location;
-    });
-//    timebank.updateValueByKey('locationAddress', address);
-    timebankModel.address = dataModel.location;
-    communityModel.location = location;
-    data.timebank.updateValueByKey('address', dataModel.location);
-    data.community.updateValueByKey('location', location);
-    createEditCommunityBloc.onChange(data);
-  }
+//   Future _setLocation(data, LocationDataModel dataModel) async {
+//     setState(() {
+//       this.selectedAddress = dataModel.location;
+//     });
+// //    timebank.updateValueByKey('locationAddress', address);
+//     timebankModel.address = dataModel.location;
+//     communityModel.location = location;
+//     data.timebank.updateValueByKey('address', dataModel.location);
+//     data.community.updateValueByKey('location', location);
+//     createEditCommunityBloc.onChange(data);
+//   }
 
 //   Future _getLocation(data) async {
 //     String address = await LocationUtility().getFormattedAddress(
@@ -1305,21 +1303,21 @@ class CreateEditCommunityViewFormState
 //     createEditCommunityBloc.onChange(data);
 //   }
 
-  void fetchCurrentlocation() {
-    Location().getLocation().then((onValue) {
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
-  }
+  // void fetchCurrentlocation() {
+  //   Location().getLocation().then((onValue) {
+  //     location = GeoFirePoint(onValue.latitude, onValue.longitude);
+  //     LocationUtility()
+  //         .getFormattedAddress(
+  //       location.latitude,
+  //       location.longitude,
+  //     )
+  //         .then((address) {
+  //       setState(() {
+  //         this.selectedAddress = address;
+  //       });
+  //     });
+  //   });
+  // }
 
   InputDecoration getData(String fieldValue) {
     return InputDecoration(

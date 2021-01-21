@@ -5,12 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -201,7 +199,7 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void initState() {
-    if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
+    // if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
 
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -238,7 +236,7 @@ class NewsImageState extends State<NewsImage>
     parentContext = context;
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus( FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
         imagePicker.showDialog(context);
       },
       child: Column(
@@ -392,55 +390,55 @@ class NewsImageState extends State<NewsImage>
     );
   }
 
-  void get _fetchCurrentlocation async {
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
+  // void get _fetchCurrentlocation async {
+  //   try {
+  //     Location templocation = Location();
+  //     bool _serviceEnabled;
+  //     PermissionStatus _permissionGranted;
 
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        if (!_serviceEnabled) {
-          return;
-        }
-      }
+  //     _serviceEnabled = await templocation.serviceEnabled();
+  //     if (!_serviceEnabled) {
+  //       _serviceEnabled = await templocation.requestService();
+  //       if (!_serviceEnabled) {
+  //         return;
+  //       }
+  //     }
 
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        }
-      }
-      Location().getLocation().then((onValue) {
-        GeoFirePoint location =
-            GeoFirePoint(onValue.latitude, onValue.longitude);
+  //     _permissionGranted = await templocation.hasPermission();
+  //     if (_permissionGranted == PermissionStatus.denied) {
+  //       _permissionGranted = await templocation.requestPermission();
+  //       if (_permissionGranted != PermissionStatus.granted) {
+  //         return;
+  //       }
+  //     }
+  //     Location().getLocation().then((onValue) {
+  //       GeoFirePoint location =
+  //           GeoFirePoint(onValue.latitude, onValue.longitude);
 
-        LocationUtility()
-            .getFormattedAddress(
-          location.latitude,
-          location.longitude,
-        )
-            .then((address) {
-          widget.onLocationDataModelUpdate(LocationDataModel(
-            address,
-            location.latitude,
-            location.longitude,
-          ));
-          setState(() {
-            this.selectedAddress = address;
-          });
-        });
-      });
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        //error = e.message;
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        //error = e.message;
-      }
-    }
-  }
+  //       LocationUtility()
+  //           .getFormattedAddress(
+  //         location.latitude,
+  //         location.longitude,
+  //       )
+  //           .then((address) {
+  //         widget.onLocationDataModelUpdate(LocationDataModel(
+  //           address,
+  //           location.latitude,
+  //           location.longitude,
+  //         ));
+  //         setState(() {
+  //           this.selectedAddress = address;
+  //         });
+  //       });
+  //     });
+  //   } on PlatformException catch (e) {
+  //     if (e.code == 'PERMISSION_DENIED') {
+  //       //error = e.message;
+  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
+  //       //error = e.message;
+  //     }
+  //   }
+  // }
 
   @override
   addWebImageUrl() {
