@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -21,6 +20,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -166,7 +166,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TransactionsMatrixCheck(
-                      upgradeDetails: AppConfig.upgradePlanBannerModel.add_manual_time,
+                      upgradeDetails:
+                          AppConfig.upgradePlanBannerModel.add_manual_time,
                       transaction_matrix_type: "add_manual_time",
                       child: AddManualTimeButton(
                         typeId: widget.timebankModel.id,
@@ -257,17 +258,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                               );
                             }
 
-                            List<String> memberPhotoUrlList = [];
+                            List<UserModel> memberPhotoUrlList = [];
                             for (var i = 0;
                                 i < widget.timebankModel.members.length;
                                 i++) {
                               UserModel userModel = snapshot.data[i];
                               if (userModel != null) {
                                 // userModel.photoURL != null
-                                memberPhotoUrlList.add(
-                                    userModel.photoURL == null
-                                        ? defaultUserImageURL
-                                        : userModel.photoURL);
+                                memberPhotoUrlList.add(userModel);
                               }
                             }
 
@@ -275,27 +273,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                               padding: EdgeInsets.only(left: 15),
                               scrollDirection: Axis.horizontal,
                               children: <Widget>[
-                                ...memberPhotoUrlList.map((photoUrl) {
+                                ...memberPhotoUrlList.map((user) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.5),
-                                    child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: CircleAvatar(
-                                        child: ClipOval(
-                                          child: FadeInImage.assetNetwork(
-                                            height: 40,
-                                            width: 40,
-                                            placeholder:
-                                                'lib/assets/images/noimagefound.png',
-                                            image:
-                                                photoUrl ?? defaultUserImageURL,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 2.5),
+                                      child: UserProfileImage(
+                                        photoUrl: user.photoURL,
+                                        email: user.email,
+                                        userId: user.sevaUserID,
+                                        height: 40,
+                                        width: 40,
+                                        timebankModel: widget.timebankModel,
+                                      ));
                                 }).toList()
                               ],
                             );
@@ -506,29 +495,22 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   ),
                   Spacer(),
                   isAdminLoaded
-                      ? Container(
+                      ? UserProfileImage(
+                          photoUrl: user.photoURL,
+                          email: user.email,
+                          userId: user.sevaUserID,
                           height: 60,
                           width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(user
-                                        .photoURL ??
-                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
-                          ),
+                          timebankModel: widget.timebankModel,
                         )
-                      : Container(
+                      : UserProfileImage(
+                          photoUrl: user.photoURL,
+                          email: user.email,
+                          userId: user.sevaUserID,
                           height: 60,
                           width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(
-                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
-                          ),
-                        ),
+                          timebankModel: widget.timebankModel,
+                        )
                 ],
               ),
             )
