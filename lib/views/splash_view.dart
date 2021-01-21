@@ -28,7 +28,6 @@ import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'onboarding/interests_view.dart';
@@ -617,6 +616,7 @@ class _SplashViewState extends State<SplashView> {
             loadingMessage =
                 S.of(context).skipping + ' ' + S.of(context).skills;
           },
+          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
         ),
       ),
     );
@@ -649,6 +649,7 @@ class _SplashViewState extends State<SplashView> {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
             _navigateToSkillsView(loggedInUser);
           },
+          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
         ),
       ),
     );

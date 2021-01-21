@@ -23,6 +23,7 @@ class SkillViewNew extends StatefulWidget {
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
   final bool isFromProfile;
+  final String languageCode;
 
   SkillViewNew({
     @required this.onSelectedSkills,
@@ -30,6 +31,7 @@ class SkillViewNew extends StatefulWidget {
     this.userModel,
     this.automaticallyImplyLeading = true,
     this.isFromProfile,
+    @required this.languageCode,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -56,7 +58,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.documentID);
-        skills[data.documentID] = data['name'];
+        skills[data.documentID] = data[widget.languageCode] != null
+            ? data[widget.languageCode]
+            : data['name'];
 
         // ids[data['name']] = data.documentID;
       });
@@ -169,7 +173,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                         SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
                       await SpellCheckManager.evaluateSpellingFor(pattern,
-                          language: 'en');
+                          language: widget.languageCode);
                   if (spellCheckResult.hasErros) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -215,7 +219,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: 'en',
+                      language: widget.languageCode,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: true,
                     );
@@ -231,7 +235,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: 'en',
+                      language: widget.languageCode,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: false,
                     );
@@ -244,7 +248,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               noItemsFoundBuilder: (context) {
                 return searchUserDefinedEntity(
                   keyword: _textEditingController.text,
-                  language: 'en',
+                  language: widget.languageCode,
                   showLoader: false,
                 );
               },
@@ -259,7 +263,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     var skillId = Uuid().generateV4();
                     SkillsAndInterestBloc.addSkillToDb(
                         skillId: skillId,
-                        skillLanguage: 'en',
+                        skillLanguage: widget.languageCode,
                         skillTitle: suggestion.suggesttionTitle);
                     skills[skillId] = suggestion.suggesttionTitle;
                     break;
@@ -268,7 +272,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     var skillId = Uuid().generateV4();
                     SkillsAndInterestBloc.addSkillToDb(
                       skillId: skillId,
-                      skillLanguage: 'en',
+                      skillLanguage: widget.languageCode,
                       skillTitle: suggestion.suggesttionTitle,
                     );
                     skills[skillId] = suggestion.suggesttionTitle;

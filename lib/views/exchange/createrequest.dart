@@ -2245,7 +2245,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     .contains(SuggestedItem()..suggesttionTitle = pattern)) {
               var spellCheckResult =
                   await SpellCheckManager.evaluateSpellingFor(pattern,
-                      language: 'en');
+                      language: SevaCore.of(context).loggedInUser.language??'en');
               if (spellCheckResult.hasErros) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED

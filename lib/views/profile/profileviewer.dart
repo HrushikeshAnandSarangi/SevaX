@@ -1000,7 +1000,9 @@ class SkillAndInterestBuilder extends StatelessWidget {
     //altered code
     return FutureBuilder(
         future: FirestoreManager.getUserSkillsInterests(
-            skillsIdList: this.skills, interestsIdList: this.interests),
+            skillsIdList: this.skills,
+            interestsIdList: this.interests,
+            languageCode: SevaCore.of(context).loggedInUser.language),
         builder: (context, snapshot) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

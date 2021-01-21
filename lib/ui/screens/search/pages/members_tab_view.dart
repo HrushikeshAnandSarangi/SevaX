@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -8,6 +6,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -22,7 +21,7 @@ class _MembersTabViewState extends State<MembersTabView> {
 
   @override
   void initState() {
-    getAllSkillsInterests();
+    //  getAllSkillsInterests();
     super.initState();
   }
 
@@ -48,8 +47,9 @@ class _MembersTabViewState extends State<MembersTabView> {
               queryString: search.data,
               loggedInUser: _bloc.user,
               currentCommunityOfUser: _bloc.community,
-              skillsListSnap: skillsListSnap,
-              interestsListSnap: interestsListSnap,
+              //skillsListSnap: skillsListSnap,
+              //interestsListSnap: interestsListSnap,
+              languageCode: SevaCore.of(context).loggedInUser.language,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,7 +68,6 @@ class _MembersTabViewState extends State<MembersTabView> {
                   final user = snapshot.data[index];
                   return InkWell(
                     onTap: () {
-                      log("timebankiD == > ${_bloc.timebank.id}");
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ProfileViewer(
