@@ -466,6 +466,64 @@ class SearchManager {
     return skillList;
   }
 
+  static Future<List<String>> getSkills({
+    @required List<String> skillsList,
+    @required String languageCode,
+  }) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/skills/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "terms": {"id.keyword": skillsList}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<String> skillList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      log('data ${sourceMap}');
+      skillList.add(sourceMap[languageCode]);
+    });
+    return skillList;
+  }
+
+  static Future<List<String>> getInterests({
+    @required List<String> interestList,
+    @required String languageCode,
+  }) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/interests/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "terms": {"id.keyword": interestList}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<String> interestsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      log('data ${sourceMap}');
+      interestsList.add(sourceMap[languageCode]);
+    });
+    return interestsList;
+  }
+
   static Future<List<String>> searchInterest({
     @required String queryString,
     @required String language,
