@@ -616,7 +616,7 @@ class _SplashViewState extends State<SplashView> {
             loadingMessage =
                 S.of(context).skipping + ' ' + S.of(context).skills;
           },
-          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+          languageCode: loggedInUser.language ?? 'en',
         ),
       ),
     );
@@ -649,7 +649,7 @@ class _SplashViewState extends State<SplashView> {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
             _navigateToSkillsView(loggedInUser);
           },
-          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+          languageCode: loggedInUser.language ?? 'en',
         ),
       ),
     );
