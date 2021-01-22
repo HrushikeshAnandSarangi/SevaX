@@ -65,11 +65,10 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
   if (skillsIdList != null && skillsIdList.length != 0) {
     queryData1 = await Firestore.instance
         .collection('skills')
-        .where(languageCode, isNull: false)
         .getDocuments();
     queryData1.documents.forEach((docsnapshot) {
       if (skillsIdList.contains(docsnapshot.documentID)) {
-        if (docsnapshot.data != null) skillsarr.add(docsnapshot.data["name"]);
+        if (docsnapshot.data != null) skillsarr.add(docsnapshot.data[languageCode] != null ?docsnapshot.data[languageCode]:docsnapshot.data["name"]);
       }
     });
 
@@ -79,11 +78,10 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
   if (interestsIdList != null && interestsIdList.length != 0) {
     queryData2 = await Firestore.instance
         .collection('interests')
-        .where(languageCode, isNull: false)
         .getDocuments();
     queryData2.documents.forEach((docsnapshot) {
       if (interestsIdList.contains(docsnapshot.documentID)) {
-        interestsarr.add(docsnapshot.data["name"]);
+        interestsarr.add(docsnapshot.data[languageCode] != null ?docsnapshot.data[languageCode]:docsnapshot.data["name"]) ;
       }
     });
     resultMap["interests"] = interestsarr;
