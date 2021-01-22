@@ -367,7 +367,7 @@ class S {
       );
 
   String get bio_hint => Intl.message(
-        'What makes me unique is',
+        'Ex: What makes me unique is',
         name: 'bio_hint',
       );
 
@@ -1247,7 +1247,7 @@ class S {
       );
 
   String get email_hint => Intl.message(
-        'example@example.com',
+        'Ex: example@example.com',
         name: 'email_hint',
       );
 
@@ -1307,7 +1307,7 @@ class S {
       );
 
   String get template_hint => Intl.message(
-        'Template Name',
+        'Ex: Template Name',
         name: 'template_hint',
       );
 
@@ -1967,7 +1967,7 @@ class S {
       );
 
   String get offer_description_hint => Intl.message(
-        'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #babysitting or #mathhelp',
+        'Ex: Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #babysitting or #mathhelp',
         name: 'offer_description_hint',
       );
 
@@ -2377,7 +2377,7 @@ class S {
       );
 
   String get timebank_location_hint => Intl.message(
-        'List the place or address where your community meets (such as a cafe, library, or church.).',
+        'Ex: List the place or address where your community meets (such as a cafe, library, or church.).',
         name: 'timebank_location_hint',
       );
 
@@ -2487,7 +2487,7 @@ class S {
       );
 
   String get private_timebank_alert_hint => Intl.message(
-        'Please be informed that Private Seva Communities do not have a free option. You will need to provide your account details to continue to create this Seva Community',
+        'Please be informed that Private Seva Communities do not have a free option. You will need to provide your billing details to continue to create this Seva Community',
         name: 'private_timebank_alert_hint',
       );
 
@@ -2647,7 +2647,7 @@ class S {
       );
 
   String get create_feed_hint => Intl.message(
-        'Text, URL and Hashtags ',
+        'Ex: Text, URL and Hashtags',
         name: 'create_feed_hint',
       );
 
@@ -3062,7 +3062,7 @@ class S {
       );
 
   String get invitation_sent3 => Intl.message(
-        ' accepts the invitation and provides their new billing information.',
+        'accepts the invitation and provides their new account information.',
         name: 'invitation_sent3',
       );
 
@@ -4388,7 +4388,7 @@ class S {
       );
 
   String get request_goods_address_hint => Intl.message(
-        'Donors will use the address below to ship the Goods/Supplies.',
+        'Ex: Donors will use the address below to ship the Goods/Supplies.',
         name: 'request_goods_address_hint',
       );
 
@@ -4818,7 +4818,7 @@ class S {
       );
 
   String get request_payment_descriptionZelle_inputhint => Intl.message(
-        'Zellepay ID (phone or email)',
+        'Ex: Zellepay ID (phone or email)',
         name: 'request_payment_descriptionZelle_inputhint',
       );
 
@@ -5098,7 +5098,7 @@ class S {
       );
 
   String get venmo_hint => Intl.message(
-        'Provide your Venmo username',
+        'Ex: Provide your Venmo username',
         name: 'venmo_hint',
       );
 
@@ -5223,7 +5223,7 @@ class S {
       );
 
   String get timebank_about_hint => Intl.message(
-        'Our Community is made up of local residents primarily from...',
+        'Ex: Our Community is made up of local residents primarily from...',
         name: 'timebank_about_hint',
       );
 
@@ -5573,7 +5573,7 @@ class S {
       );
 
   String get near_by_timebank_search_hint => Intl.message(
-        'Type in the name of your Seva Community here.',
+        'Ex: Type in the name of your Seva Community here.',
         name: 'near_by_timebank_search_hint',
       );
 
@@ -5938,7 +5938,7 @@ class S {
       );
 
   String get timebank_about_hint_example => Intl.message(
-        'Our Community is made up of local residents primarily from...',
+        'Ex: Our Community is made up of local residents primarily from...',
         name: 'timebank_about_hint_example',
       );
 
@@ -5980,6 +5980,11 @@ class S {
   String get validation_error_bio_max_characters => Intl.message(
         '* max 250 characters',
         name: 'validation_error_bio_max_characters',
+      );
+
+  String get request_payment_description_hint_new => Intl.message(
+        'SevaX does not process the payment. Please select from among  ACH, PayPal, Venmo, or ZellePay in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.',
+        name: 'request_payment_description_hint_new',
       );
 }
 
