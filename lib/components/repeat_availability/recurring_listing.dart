@@ -8,9 +8,11 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -305,7 +307,8 @@ class _RecurringListState extends State<RecurringList> {
                                           _settingModalBottomSheet(context,
                                               widget.offerModel[index]);
                                         } else {
-                                          offerActions(context,
+                                          offerActions(
+                                              context,
                                               widget.offerModel[index],
                                               ComingFrom.Offers);
                                         }
@@ -331,7 +334,11 @@ class _RecurringListState extends State<RecurringList> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Offers),
+        builder: (_context) => BlocProvider(
+          bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+          child: OfferDetailsRouter(
+              offerModel: model, comingFrom: ComingFrom.Offers),
+        ),
       ),
     );
   }
@@ -405,8 +412,11 @@ class _RecurringListState extends State<RecurringList> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RequestTabHolder(
-            isAdmin: true,
+          builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            child: RequestTabHolder(
+              isAdmin: true,
+            ),
           ),
         ),
       );
@@ -414,10 +424,13 @@ class _RecurringListState extends State<RecurringList> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RequestDetailsAboutPage(
-            requestItem: model,
-            timebankModel: timebankModel,
-            isAdmin: false,
+          builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            child: RequestDetailsAboutPage(
+              requestItem: model,
+              timebankModel: timebankModel,
+              isAdmin: false,
+            ),
           ),
         ),
       );

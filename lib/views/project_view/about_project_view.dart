@@ -6,11 +6,13 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
-import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -188,16 +190,26 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         )
                       ],
                     ),
-                    projectModel.creatorId ==
-                            SevaCore.of(context).loggedInUser.sevaUserID
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              addManualTime,
-                              deleteProject,
-                            ],
-                          )
-                        : Container(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        projectModel.creatorId ==
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                            ? addManualTime
+                            : Container(),
+                        utils.isDeletable(
+                                contentCreatorId: projectModel.creatorId,
+                                context: context,
+                                communityCreatorId:
+                                    BlocProvider.of<HomeDashBoardBloc>(context)
+                                        .communityModel
+                                        .created_by,
+                                timebankCreatorId:
+                                    widget.timebankModel.creatorId)
+                            ? deleteProject
+                            : Container(),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -216,7 +228,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
           timeFor: ManualTimeType.Project,
           typeId: projectModel.id,
           communityName: widget.timebankModel.name,
-          userType: getLoggedInUserRole(
+          userType: utils.getLoggedInUserRole(
             widget.timebankModel,
             SevaCore.of(context).loggedInUser.sevaUserID,
           ),

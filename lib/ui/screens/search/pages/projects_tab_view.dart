@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
@@ -80,11 +81,14 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProjectRequests(
-          ComingFrom.Projects,
-          timebankId: timebank.id,
-          projectModel: project,
-          timebankModel: timebank,
+        builder: (_context) => BlocProvider(
+          bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+          child: ProjectRequests(
+            ComingFrom.Projects,
+            timebankId: timebank.id,
+            projectModel: project,
+            timebankModel: timebank,
+          ),
         ),
       ),
     );

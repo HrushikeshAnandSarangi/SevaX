@@ -13,9 +13,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -696,10 +698,14 @@ class DiscussionListState extends State<DiscussionList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return NewsCardView(
-                newsModel: news,
-                isFocused: false,
+            builder: (_context) {
+              return BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: NewsCardView(
+                  newsModel: news,
+                  isFocused: false,
+                  timebankModel: widget.timebankModel,
+                ),
               );
             },
           ),
@@ -1099,9 +1105,16 @@ class DiscussionListState extends State<DiscussionList> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => NewsCardView(
-                                                  newsModel: news,
-                                                  isFocused: false,
+                                            builder: (_context) => BlocProvider(
+                                                  bloc: BlocProvider.of<
+                                                          HomeDashBoardBloc>(
+                                                      context),
+                                                  child: NewsCardView(
+                                                    newsModel: news,
+                                                    isFocused: false,
+                                                    timebankModel:
+                                                        widget.timebankModel,
+                                                  ),
                                                 )));
                                   },
                                   child: Padding(
@@ -1145,10 +1158,14 @@ class DiscussionListState extends State<DiscussionList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return NewsCardView(
-                newsModel: news,
-                isFocused: false,
+            builder: (_context) {
+              return BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: NewsCardView(
+                  newsModel: news,
+                  isFocused: false,
+                  timebankModel: widget.timebankModel,
+                ),
               );
             },
           ),

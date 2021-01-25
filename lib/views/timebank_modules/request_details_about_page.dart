@@ -11,9 +11,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -27,6 +29,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -462,19 +465,41 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottombarForCreator {
+
     if (widget.requestItem.requestType == RequestType.TIME) {
-      canDeleteRequest = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID &&
+      canDeleteRequest = utils.isDeletable(
+          contentCreatorId: widget.requestItem.sevaUserId,
+          context: context,
+          communityCreatorId:
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .communityModel
+              .created_by,
+          timebankCreatorId:
+          widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
           widget.requestItem.invitedUsers.length == 0;
     } else if (widget.requestItem.requestType == RequestType.GOODS) {
-      canDeleteRequest = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID &&
+      canDeleteRequest = utils.isDeletable(
+          contentCreatorId: widget.requestItem.sevaUserId,
+          context: context,
+          communityCreatorId:
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .communityModel
+              .created_by,
+          timebankCreatorId:
+          widget.timebankModel.creatorId) &&
           widget.requestItem.goodsDonationDetails.donors == null;
     } else {
-      canDeleteRequest = widget.requestItem.sevaUserId ==
-              SevaCore.of(context).loggedInUser.sevaUserID &&
+      canDeleteRequest = utils.isDeletable(
+          contentCreatorId: widget.requestItem.sevaUserId,
+          context: context,
+          communityCreatorId:
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .communityModel
+              .created_by,
+          timebankCreatorId:
+          widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }
     return Row(

@@ -8,13 +8,15 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
@@ -26,6 +28,7 @@ import 'one_to_many_offer.dart';
 
 class OfferDetails extends StatelessWidget {
   final OfferModel offerModel;
+  final TimebankModel timebankModel;
   final ComingFrom comingFrom;
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
@@ -36,7 +39,12 @@ class OfferDetails extends StatelessWidget {
     color: Colors.grey,
   );
 
-  OfferDetails({Key key, this.offerModel, this.comingFrom}) : super(key: key);
+  OfferDetails({
+    Key key,
+    this.offerModel,
+    this.comingFrom,
+    this.timebankModel,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -375,7 +383,13 @@ class OfferDetails extends StatelessWidget {
       userId,
     );
 
-    bool isCreator = offerModel.sevaUserId == userId;
+    bool isCreator = utils.isDeletable(
+        contentCreatorId: offerModel.sevaUserId,
+        context: context,
+        communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+            .communityModel
+            .created_by,
+        timebankCreatorId: timebankModel.creatorId);
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;

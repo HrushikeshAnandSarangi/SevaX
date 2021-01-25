@@ -13,10 +13,13 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
@@ -46,6 +49,7 @@ class NewsCardViewState extends State<NewsCardView> {
   TextEditingController _textEditingController = TextEditingController();
   bool isShowSticker;
   final profanityDetector = ProfanityDetector();
+  TimebankModel timebankModel = TimebankModel({});
 
   bool isProfane = false;
   String errorText = '';
@@ -53,11 +57,20 @@ class NewsCardViewState extends State<NewsCardView> {
   void initState() {
     super.initState();
     isShowSticker = false;
+    if (widget.timebankModel == null) {
+      getTimebank();
+    }
     if (this.widget.isFocused) {
       setState(() {
         SystemChannels.textInput.invokeMethod('TextInput.show');
       });
     }
+  }
+
+  Future<void> getTimebank() async {
+    timebankModel = await FirestoreManager.getTimeBankForId(
+        timebankId: widget.newsModel.entity.entityId);
+    setState(() {});
   }
   // assert(newsModel.title != null, 'News title cannot be null');
   // assert(newsModel.description != null, 'News description cannot be null');
@@ -79,8 +92,14 @@ class NewsCardViewState extends State<NewsCardView> {
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
-          widget.newsModel.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
+          utils.isDeletable(
+            timebankCreatorId: widget.timebankModel.creatorId,
+            context: context,
+            contentCreatorId: widget.newsModel.sevaUserId,
+            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                .communityModel
+                .created_by,
+          )
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -518,10 +537,14 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UserProfileImage(timebankModel:
-          widget.timebankModel,
-          width: 40,height: 40,userId: widget.newsModel.sevaUserId,email: widget.newsModel.email,photoUrl: widget.newsModel.userPhotoURL,),
-
+          UserProfileImage(
+            timebankModel: widget.timebankModel,
+            width: 40,
+            height: 40,
+            userId: widget.newsModel.sevaUserId,
+            email: widget.newsModel.email,
+            photoUrl: widget.newsModel.userPhotoURL,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -781,8 +804,14 @@ class NewsCardViewState extends State<NewsCardView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UserProfileImage(photoUrl: commentsList.userPhotoURL,email: widget.newsModel.email,userId: widget.newsModel.sevaUserId,height: 30,width:30 ,timebankModel: widget.timebankModel,),
-
+          UserProfileImage(
+            photoUrl: commentsList.userPhotoURL,
+            email: widget.newsModel.email,
+            userId: widget.newsModel.sevaUserId,
+            height: 30,
+            width: 30,
+            timebankModel: widget.timebankModel,
+          ),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
             child: Column(
@@ -2074,7 +2103,14 @@ class _RepliesViewState extends State<RepliesView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          UserProfileImage(photoUrl: commentsList.userPhotoURL,email: widget.feed.email,userId: widget.feed.sevaUserId,height: 30,width:30 ,timebankModel: widget.timebankModel,),
+          UserProfileImage(
+            photoUrl: commentsList.userPhotoURL,
+            email: widget.feed.email,
+            userId: widget.feed.sevaUserId,
+            height: 30,
+            width: 30,
+            timebankModel: widget.timebankModel,
+          ),
           Padding(
             padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
             child: Column(
