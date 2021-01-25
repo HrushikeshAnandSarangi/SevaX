@@ -38,12 +38,9 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InviteAddMembers extends StatefulWidget {
-  final String communityId;
-  final String timebankId;
   final TimebankModel timebankModel;
-  final TargetPlatform platform;
-  InviteAddMembers(
-      this.timebankId, this.communityId, this.timebankModel, this.platform);
+
+  InviteAddMembers(this.timebankModel);
 
   @override
   State<StatefulWidget> createState() => InviteAddMembersState();
@@ -89,7 +86,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   void getMembersList() {
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.timebankId,
+      timebankId: widget.timebankModel.id,
     ).then((onValue) {
       setState(() {
         validItems = onValue.listOfElement;
@@ -126,7 +123,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   void _setTimebankModel() async {
     timebankModel = await getTimebankDetailsbyFuture(
-      timebankId: widget.timebankId,
+      timebankId: widget.timebankModel.id,
     );
   }
 
@@ -461,7 +458,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     } else {
                       showProgressDialog(S.of(context).uploading_csv);
 
-                      csvFileModel.timebankId = widget.timebankId;
+                      csvFileModel.timebankId = widget.timebankModel.id;
                       csvFileModel.communityId =
                           SevaCore.of(context).loggedInUser.currentCommunity;
                       csvFileModel.timestamp =
@@ -932,7 +929,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Widget get getTimebankCodesWidget {
     return StreamBuilder<List<TimebankCodeModel>>(
-        stream: getTimebankCodes(timebankId: widget.timebankId),
+        stream: getTimebankCodes(timebankId: widget.timebankModel.id),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -1088,9 +1085,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     today.add(Duration(days: 30)).millisecondsSinceEpoch;
                 registerTimebankCode(
                   timebankCode: timebankCode,
-                  timebankId: widget.timebankId,
+                  timebankId: widget.timebankModel.id,
                   validUpto: oneDayFromToday,
-                  communityId: widget.communityId,
+                  communityId: widget.timebankModel.communityId,
                 );
                 Navigator.of(context).pop("completed");
               },

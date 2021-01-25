@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -19,7 +20,6 @@ import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -254,20 +254,23 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           email: SevaCore.of(context).loggedInUser.email,
                           userId: SevaCore.of(context).loggedInUser.sevaUserID,
                         ),
-                        TimebankRequestAdminPage(
-                          isUserAdmin: isAccessAvailable(
-                                  primaryTimebank,
-                                  SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID) ||
-                              primaryTimebank.organizers.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID,
-                              ),
+                        MembersPage(
                           timebankId: primaryTimebank.id,
-                          userEmail: SevaCore.of(context).loggedInUser.email,
-                          isCommunity: true,
-                          isFromGroup: false,
                         ),
+                        // TimebankRequestAdminPage(
+                        //   isUserAdmin: isAccessAvailable(
+                        //           primaryTimebank,
+                        //           SevaCore.of(context)
+                        //               .loggedInUser
+                        //               .sevaUserID) ||
+                        //       primaryTimebank.organizers.contains(
+                        //         SevaCore.of(context).loggedInUser.sevaUserID,
+                        //       ),
+                        //   timebankId: primaryTimebank.id,
+                        //   userEmail: SevaCore.of(context).loggedInUser.email,
+                        //   isCommunity: true,
+                        //   isFromGroup: false,
+                        // ),
                         ...isAdmin
                             ? [
                                 ManageTimebankSeva.of(

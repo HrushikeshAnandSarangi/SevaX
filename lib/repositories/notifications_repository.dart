@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class NotificationsRepository {
   static String _notificationCollection = "notifications";
@@ -89,6 +93,39 @@ class NotificationsRepository {
   //       .orderBy("timestamp", descending: true)
   //       .snapshots();
   // }
+
+  static Future sendUserExitNotificationToAdmin({
+    UserModel user,
+    TimebankModel timebank,
+    String communityId,
+    String reason,
+  }) async {
+    UserExitModel userExitModel = UserExitModel(
+      userPhotoUrl: user.photoURL,
+      timebank: timebank.name,
+      reason: reason,
+      userName: user.fullname,
+    );
+
+    NotificationsModel notification = NotificationsModel(
+      id: Utils.getUuid(),
+      timebankId: timebank.id,
+      data: userExitModel.toMap(),
+      isRead: false,
+      type: NotificationType.TypeMemberExitTimebank,
+      communityId: communityId,
+      senderUserId: user.sevaUserID,
+      targetUserId: timebank.creatorId,
+    );
+    await Firestore.instance
+        .collection(_timebankCollection)
+        .document(timebank.id)
+        .collection(_notificationCollection)
+        .document(notification.id)
+        .setData(
+          (notification..isTimebankNotification = true).toMap(),
+        );
+  }
 
   static Future<void> readUserNotification(
     String notificationId,
