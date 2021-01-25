@@ -6,10 +6,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
 import '../app_config.dart';
 import '../location_utility.dart';
@@ -34,6 +32,7 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
+  bool isFiltered = false;
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
@@ -57,6 +56,11 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       modelList.add(newsModel);
     });
 
+    if (!isFiltered) {
+      isFiltered = true;
+      modelList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
+    }
+
 //    //await process goes here
 //    for (int i = 0; i < modelList.length; i += 1) {
 //      UserModel userModel = await getUserForId(
@@ -66,16 +70,15 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 //      timeBankModelList.add(timeBankModel);
 //    }
     // await Future.wait(futures).then((onValue) async {
-    for (var i = 0; i < modelList.length; i++) {
-      //  modelList[i].userPhotoURL = onValue[i]['photourl'];
-      UserModel userModel = await getUserForId(
-        sevaUserId: modelList[i].sevaUserId,
-      );
-      modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
-    }
+    // for (var i = 0; i < modelList.length; i++) {
+    //   //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+    //   UserModel userModel = await getUserForId(
+    //     sevaUserId: modelList[i].sevaUserId,
+    //   );
+    //   modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
+    // }
 
     newsSink.add(modelList);
-    // });
   }));
 }
 
