@@ -133,12 +133,6 @@ class MemberSectionBuilder extends StatelessWidget {
                 value: ActionType.DEMOTE,
               ),
             );
-            items.add(
-              PopupMenuItem(
-                child: Text(S.of(context).remove),
-                value: ActionType.REMOVE,
-              ),
-            );
           }
 
           break;
