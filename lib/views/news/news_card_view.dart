@@ -96,9 +96,10 @@ class NewsCardViewState extends State<NewsCardView> {
             timebankCreatorId: widget.timebankModel.creatorId,
             context: context,
             contentCreatorId: widget.newsModel.sevaUserId,
-            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .selectedCommunityModel
-                .created_by,
+            communityCreatorId: widget.timebankModel.managedCreatorIds?.first ??
+                BlocProvider.of<HomeDashBoardBloc>(context)
+                    .selectedCommunityModel
+                    .created_by,
           )
               ? IconButton(
                   icon: Icon(Icons.delete),

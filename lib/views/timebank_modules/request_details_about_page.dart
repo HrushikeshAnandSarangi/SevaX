@@ -601,9 +601,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .selectedCommunityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds?.first ??
+                      BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -612,18 +614,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .selectedCommunityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds?.first ??
+                      BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.goodsDonationDetails.donors == null;
     } else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .selectedCommunityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds?.first ??
+                      BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }

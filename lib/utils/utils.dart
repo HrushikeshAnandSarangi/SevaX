@@ -38,12 +38,19 @@ bool isAccessAvailable(TimebankModel timebank, String userId) =>
     timebank.organizers.contains(userId) ||
     timebank.managedCreatorIds.contains(userId);
 
-bool isDeletable(
-    {String communityCreatorId,
-    String timebankCreatorId,
-    String contentCreatorId,
-    BuildContext context}) => contentCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || communityCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || timebankCreatorId == SevaCore.of(context).loggedInUser.sevaUserID;
-
+bool isDeletable({
+  BuildContext context,
+  String communityCreatorId,
+  String timebankCreatorId,
+  String contentCreatorId,
+}) =>
+    [
+      contentCreatorId,
+      communityCreatorId,
+      timebankCreatorId,
+    ].contains(
+      SevaCore.of(context).loggedInUser.sevaUserID,
+    );
 
 bool isOwner(TimebankModel timebank, String userId) {
   if (timebank.creatorId == userId || timebank.organizers.contains(userId)) {
