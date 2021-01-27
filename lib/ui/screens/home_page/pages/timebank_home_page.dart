@@ -280,18 +280,18 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           ),
                         ),
                         Spacer(),
-                        Container(
-                          height: 40,
-                          width: 40,
-                          child: IconButton(
-                            icon: Image.asset(
-                              'lib/assets/images/help.png',
-                            ),
-                            color: FlavorConfig.values.theme.primaryColor,
-                            //iconSize: 16,
-                            onPressed: showGroupsWebPage,
-                          ),
-                        ),
+                        // Container(
+                        //   height: 40,
+                        //   width: 40,
+                        //   child: IconButton(
+                        //     icon: Image.asset(
+                        //       'lib/assets/images/help.png',
+                        //     ),
+                        //     color: FlavorConfig.values.theme.primaryColor,
+                        //     //iconSize: 16,
+                        //     onPressed: showGroupsWebPage,
+                        //   ),
+                        // ),
                       ],
                     ),
                     Container(

@@ -169,18 +169,18 @@ class RequestsState extends State<RequestsModule> {
                 ),
               ),
               Spacer(),
-              Container(
-                height: 40,
-                width: 40,
-                child: IconButton(
-                  icon: Image.asset(
-                    'lib/assets/images/help.png',
-                  ),
-                  color: FlavorConfig.values.theme.primaryColor,
-                  //iconSize: 16,
-                  onPressed: showRequestsWebPage,
-                ),
-              ),
+              // Container(
+              //   height: 40,
+              //   width: 40,
+              //   child: IconButton(
+              //     icon: Image.asset(
+              //       'lib/assets/images/help.png',
+              //     ),
+              //     color: FlavorConfig.values.theme.primaryColor,
+              //     //iconSize: 16,
+              //     onPressed: showRequestsWebPage,
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
