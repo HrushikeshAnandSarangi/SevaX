@@ -202,7 +202,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                 context: context,
                                 communityCreatorId:
                                     BlocProvider.of<HomeDashBoardBloc>(context)
-                                        .communityModel
+                                        .selectedCommunityModel
                                         .created_by,
                                 timebankCreatorId:
                                     widget.timebankModel.creatorId)

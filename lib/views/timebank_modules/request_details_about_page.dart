@@ -106,7 +106,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
             communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .communityModel
+                .selectedCommunityModel
                 .created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
@@ -602,7 +602,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
+                  .selectedCommunityModel
                   .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
@@ -613,7 +613,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
+                  .selectedCommunityModel
                   .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.goodsDonationDetails.donors == null;
@@ -622,7 +622,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
+                  .selectedCommunityModel
                   .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;

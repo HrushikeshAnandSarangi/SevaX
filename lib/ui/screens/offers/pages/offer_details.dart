@@ -387,7 +387,7 @@ class OfferDetails extends StatelessWidget {
         contentCreatorId: offerModel.sevaUserId,
         context: context,
         communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-            .communityModel
+            .selectedCommunityModel
             .created_by,
         timebankCreatorId: timebankModel.creatorId);
     canDeleteOffer = isCreator &&

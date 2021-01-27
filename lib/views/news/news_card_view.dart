@@ -97,7 +97,7 @@ class NewsCardViewState extends State<NewsCardView> {
             context: context,
             contentCreatorId: widget.newsModel.sevaUserId,
             communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .communityModel
+                .selectedCommunityModel
                 .created_by,
           )
               ? IconButton(
