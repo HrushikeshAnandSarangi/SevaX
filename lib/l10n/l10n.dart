@@ -3062,7 +3062,7 @@ class S {
       );
 
   String get invitation_sent3 => Intl.message(
-        'accepts the invitation and provides their new account information.',
+        ' accepts the invitation and provides their new account information.',
         name: 'invitation_sent3',
       );
 

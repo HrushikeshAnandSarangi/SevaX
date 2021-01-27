@@ -53,6 +53,7 @@ Future<List<String>> getInterestsForTimebank({
 Future<Map<String, dynamic>> getUserSkillsInterests({
   List<dynamic> skillsIdList,
   List<dynamic> interestsIdList,
+  String languageCode,
 }) async {
   List<String> skillsarr, interestsarr;
 
@@ -62,10 +63,12 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
   Map<String, dynamic> resultMap = HashMap();
 
   if (skillsIdList != null && skillsIdList.length != 0) {
-    queryData1 = await Firestore.instance.collection('skills').getDocuments();
+    queryData1 = await Firestore.instance
+        .collection('skills')
+        .getDocuments();
     queryData1.documents.forEach((docsnapshot) {
       if (skillsIdList.contains(docsnapshot.documentID)) {
-        if (docsnapshot.data != null) skillsarr.add(docsnapshot.data["name"]);
+        if (docsnapshot.data != null) skillsarr.add(docsnapshot.data[languageCode] != null ?docsnapshot.data[languageCode]:docsnapshot.data["name"]);
       }
     });
 
@@ -73,11 +76,12 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
   }
 
   if (interestsIdList != null && interestsIdList.length != 0) {
-    queryData2 =
-        await Firestore.instance.collection('interests').getDocuments();
+    queryData2 = await Firestore.instance
+        .collection('interests')
+        .getDocuments();
     queryData2.documents.forEach((docsnapshot) {
       if (interestsIdList.contains(docsnapshot.documentID)) {
-        interestsarr.add(docsnapshot.data["name"]);
+        interestsarr.add(docsnapshot.data[languageCode] != null ?docsnapshot.data[languageCode]:docsnapshot.data["name"]) ;
       }
     });
     resultMap["interests"] = interestsarr;

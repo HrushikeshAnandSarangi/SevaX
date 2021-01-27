@@ -24,6 +24,7 @@ class InterestViewNew extends StatefulWidget {
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
   final bool isFromProfile;
+  final String languageCode;
 
   InterestViewNew(
       {@required this.onSelectedInterests,
@@ -32,7 +33,8 @@ class InterestViewNew extends StatefulWidget {
       this.userModel,
       this.automaticallyImplyLeading,
       this.isFromProfile,
-      this.onPrevious});
+      this.onPrevious,
+      @required this.languageCode});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
@@ -56,7 +58,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
-        interests[data.documentID] = data['name'];
+        interests[data.documentID] = data[widget.languageCode] != null
+            ? data[widget.languageCode]
+            : data['name'];
       });
 
       if (widget.userModel.interests != null &&
@@ -174,7 +178,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                         SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
                       await SpellCheckManager.evaluateSpellingFor(pattern,
-                          language: 'en');
+                          language: widget.languageCode);
                   if (spellCheckResult.hasErros) {
                     dataCopy.add(SuggestedItem()
                       ..suggestionMode = SuggestionMode.USER_DEFINED
@@ -220,7 +224,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: 'en',
+                      language: widget.languageCode,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: true,
                     );
@@ -237,7 +241,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
-                      language: 'en',
+                      language: widget.languageCode,
                       suggestionMode: suggestedItem.suggestionMode,
                       showLoader: false,
                     );
@@ -249,7 +253,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
               noItemsFoundBuilder: (context) {
                 return searchUserDefinedEntity(
                   keyword: _textEditingController.text,
-                  language: 'en',
+                  language: widget.languageCode,
                   showLoader: false,
                 );
               },
@@ -264,7 +268,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     var interestId = Uuid().generateV4();
                     SkillsAndInterestBloc.addInterestToDb(
                       interestId: interestId,
-                      interestLanguage: 'en',
+                      interestLanguage: widget.languageCode,
                       interestTitle: suggestion.suggesttionTitle,
                     );
                     interests[interestId] = suggestion.suggesttionTitle;
@@ -274,7 +278,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     var interestId = Uuid().generateV4();
                     SkillsAndInterestBloc.addInterestToDb(
                         interestId: interestId,
-                        interestLanguage: 'en',
+                        interestLanguage: widget.languageCode,
                         interestTitle: suggestion.suggesttionTitle);
                     interests[interestId] = suggestion.suggesttionTitle;
                     break;
@@ -485,7 +489,12 @@ class SkillsAndInterestBloc {
         .collection('interests')
         .document(interestId)
         .setData(
-      {'name': interestTitle?.firstWordUpperCase(), 'lang': interestLanguage},
+      {
+        'name': interestTitle?.firstWordUpperCase(),
+        'lang': interestLanguage,
+        interestLanguage: interestTitle?.firstWordUpperCase(),
+        'id': interestId
+      },
     );
   }
 
@@ -495,7 +504,12 @@ class SkillsAndInterestBloc {
     String skillLanguage,
   }) async {
     await Firestore.instance.collection('skills').document(skillId).setData(
-      {'name': skillTitle?.firstWordUpperCase(), 'lang': skillLanguage},
+      {
+        'name': skillTitle?.firstWordUpperCase(),
+        'lang': skillLanguage,
+        skillLanguage: skillTitle?.firstWordUpperCase(),
+        'id': skillId
+      },
     );
   }
 }

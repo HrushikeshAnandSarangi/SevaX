@@ -443,6 +443,52 @@ class SearchManager {
     return userList;
   }
 
+  static Future<List<String>> searchSkills({
+    @required String queryString,
+    @required String language,
+  }) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/skills/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {language: queryString}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<String> skillList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      log('data ${sourceMap}');
+      skillList.add(sourceMap['id']);
+    });
+    return skillList;
+  }
+
+  static Future<List<String>> searchInterest({
+    @required String queryString,
+    @required String language,
+  }) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/interests/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {language: queryString}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<String> interestsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      log('data sowurce inter${sourceMap}');
+      interestsList.add(sourceMap['id']);
+    });
+    return interestsList;
+  }
+
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {

@@ -374,11 +374,6 @@
 //       ),
 //       suggestionsBoxController: controller,
 //       suggestionsCallback: (pattern) async {
-// //        List<String> dataCopy = [];
-// //        // interests.forEach((k, v) => dataCopy.add(v));
-// //        dataCopy.retainWhere(
-// //            (s) => s.toLowerCase().contains(pattern.toLowerCase()));
-// //        //  return await Future.value(dataCopy);
 
 //         return await SearchManager.searchForUserWithTimebankIdFuture(
 //             queryString: pattern, validItems: groupMembersList);
@@ -411,14 +406,6 @@
 //           selectedNewOwner = suggestion;
 //         });
 //         _textEditingController.clear();
-
-// //        if (!_selectedInterests.containsValue(suggestion)) {
-// //          controller.close();
-// //          String id = interests.keys
-// //              .firstWhere((k) => interests[k] == suggestion);
-// //          _selectedInterests[id] = suggestion;
-// //          setState(() {});
-// //        }
 //       },
 //     );
 //   }
