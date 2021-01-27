@@ -135,6 +135,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
+          userId: widget.loggedInUserModel.sevaUserID,
           communityId: widget.loggedInUserModel.currentCommunity,
           primaryTimebankId: widget.communityPrimaryTimebankId,
         ),
@@ -176,14 +177,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                   itemBuilder: (context, index) {
                     CompareToTimeBank status;
                     String userStatus = S.of(context).join;
-//ytrtrvtfffddxxszwawqewc bunyinuyuty tfgftftf ttftftftftb ftyhbyytbtytuknt  kmiolll908786756 53423saqaqaaxesecsrsescsrsevdvvfdvtfhby byu kmn tbvrtrtrtrvrrrtrvrtvty
                     TimebankModel timebank = timebankList.elementAt(index);
-                    if (isAccessAvailable(
-                            timebank, widget.loggedInUserModel.sevaUserID) ||
-                        timebank.coordinators
-                            .contains(widget.loggedInUserModel.sevaUserID) ||
-                        timebank.members
-                            .contains(widget.loggedInUserModel.sevaUserID)) {
+                    String userId = widget.loggedInUserModel.sevaUserID;
+                    if (timebank.members.contains(userId) &&
+                            isAccessAvailable(timebank, userId) ||
+                        timebank.coordinators.contains(userId) ||
+                        timebank.members.contains(userId)) {
                       status = CompareToTimeBank.JOINED;
                       userStatus = S.of(context).joined;
                       //    setState(() {});
@@ -512,7 +511,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 }
 
 Future<List<TimebankModel>> getTimebanksForCommunity(
-    {String communityId, String primaryTimebankId}) async {
+    {String userId, String communityId, String primaryTimebankId}) async {
 //  DocumentSnapshot documentSnapshot = await Firestore.instance.collection('communities').document(communityId).get();
 //  Map<String, dynamic> dataMap = documentSnapshot.data;
 //  CommunityModel communityModel = CommunityModel(dataMap);
@@ -526,7 +525,8 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       var model = TimebankModel.fromMap(timebank.data);
       if (model.id != primaryTimebankId &&
           !model.softDelete &&
-          model.private == false) {
+          (model.private == false ||
+              model.managedCreatorIds.contains(userId))) {
         timebankList.add(model);
       }
     });

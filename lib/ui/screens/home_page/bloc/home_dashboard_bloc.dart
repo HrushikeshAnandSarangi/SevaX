@@ -29,6 +29,8 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<CommunityModel> get selectedCommunityStream =>
       _selectedCommunity.stream;
 
+  CommunityModel get selectedCommunityModel => _selectedCommunity.value;
+
   Stream<List<CommunityModel>> get communities => _communities.stream;
 
   void getAllCommunities(UserModel user) async {
