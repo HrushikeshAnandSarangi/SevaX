@@ -15,6 +15,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -80,6 +81,7 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
+
   @override
   Widget build(BuildContext context) {
     return ExitWithConfirmation(
@@ -91,6 +93,9 @@ class _CreateRequestState extends State<CreateRequest> {
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
+          actions: [
+            CommonHelpIconWidget,
+          ],
         ),
         body: StreamBuilder<UserModelController>(
           stream: userBloc.getLoggedInUser,
@@ -197,6 +202,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
   @override
   void initState() {
     super.initState();
+
+    AppConfig.helpIconContext = HelpIconContextClass.TIME_REQUESTS;
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
@@ -948,6 +955,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     groupvalue: requestModel.requestType,
                     onChanged: (value) {
                       requestModel.requestType = value;
+                      AppConfig.helpIconContext = HelpIconContextClass.TIME_REQUESTS;
                       setState(() => {});
                     },
                   ),
@@ -963,6 +971,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
+                        AppConfig.helpIconContext = HelpIconContextClass.MONEY_REQUESTS;
                         setState(() => {});
                       },
                     ),
@@ -979,6 +988,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
+                        AppConfig.helpIconContext = HelpIconContextClass.GOODS_REQUESTS;
                         setState(() => {});
                       },
                     ),

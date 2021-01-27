@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -56,6 +57,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   @override
   void initState() {
     timebankModel = widget.timebankModel;
+    AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
     super.initState();
   }
 
@@ -133,12 +135,22 @@ Widget createAdminTabBar(
 ) {
   return Scaffold(
     appBar: AppBar(
+      leading: BackButton(
+        color: Colors.black,
+        onPressed: () {
+          AppConfig.helpIconContext = HelpIconContextClass.COMMUNITY_DEFAULT;
+          Navigator.pop(context);
+        },
+      ),
       elevation: 0.5,
       centerTitle: true,
       title: Text(
         timebankModel.name,
         style: TextStyle(fontSize: 18),
       ),
+      actions: [
+        CommonHelpIconWidget,
+      ],
     ),
     body: Column(
       children: <Widget>[
@@ -146,6 +158,24 @@ Widget createAdminTabBar(
         Stack(
           children: <Widget>[
             TabBar(
+              onTap: (int index){
+                switch(index){
+                  case 1:
+                    AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
+                    break;
+                  case 2:
+                    AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
+                    break;
+                  case 3:
+                    AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
+                    break;
+                  default:
+                    AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+                    break;
+                }
+                logger.i("tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
+
+              },
               controller: controller,
               labelPadding: EdgeInsets.symmetric(horizontal: 10),
               labelColor: Theme.of(context).primaryColor,

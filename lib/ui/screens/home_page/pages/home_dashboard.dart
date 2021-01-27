@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -10,10 +11,12 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -23,6 +26,8 @@ import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -155,6 +160,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
             },
           ),
           actions: <Widget>[
+            CommonHelpIconWidget,
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -212,6 +218,24 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                 children: <Widget>[
                   // ShowLimitBadge(),
                   TabBar(
+                    onTap: (int index){
+                      switch(index){
+                        case 2:
+                          AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
+                          break;
+                        case 3:
+                          AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
+                          break;
+                        case 4:
+                          AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
+                          break;
+                        default:
+                          AppConfig.helpIconContext = HelpIconContextClass.COMMUNITY_DEFAULT;
+                          break;
+                      }
+                      logger.i("tabbar index tapped is $index with ${AppConfig.helpIconContext}");
+
+                    },
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,
                     indicatorColor: Theme.of(context).primaryColor,

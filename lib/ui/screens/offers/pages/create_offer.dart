@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
@@ -31,6 +32,9 @@ class _CreateOfferState extends State<CreateOffer> {
             S.of(context).create_offer,
             style: TextStyle(fontSize: 18),
           ),
+          actions: [
+            CommonHelpIconWidget,
+          ],
         ),
         body: Column(
           children: <Widget>[
@@ -88,6 +92,8 @@ class _CreateOfferState extends State<CreateOffer> {
         groupValue: currentPage,
         onValueChanged: (int val) {
           if (val != currentPage) {
+            AppConfig.helpIconContext = val==0 ?
+            HelpIconContextClass.TIME_OFFERS : HelpIconContextClass.ONE_TO_MANY_OFFERS;
             setState(() {
               currentPage = val;
             });
