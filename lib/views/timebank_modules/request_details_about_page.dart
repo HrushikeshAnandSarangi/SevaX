@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -29,7 +30,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -59,6 +59,7 @@ enum UserMode {
   REQUEST_CREATOR,
   NOT_YET_SIGNED_UP,
   TIMEBANK_ADMIN,
+  TIMEBANK_CREATOR,
   AWAITING_FOR_APPROVAL_FROM_CREATOR,
   AWAITING_FOR_CREDIT_APPROVAL,
 }
@@ -101,7 +102,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     switch (widget.requestItem.requestMode) {
       case RequestMode.PERSONAL_REQUEST:
-        if (widget.requestItem.sevaUserId == loggedInUser)
+        if (utils.isDeletable(
+            contentCreatorId: widget.requestItem.sevaUserId,
+            context: context,
+            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                .communityModel
+                .created_by,
+            timebankCreatorId: widget.timebankModel.creatorId))
+          return UserMode.TIMEBANK_CREATOR;
+        else if (widget.requestItem.sevaUserId == loggedInUser)
           return UserMode.REQUEST_CREATOR;
         else if (widget.requestItem.acceptors.contains(loggedInUser) &&
             !(widget.requestItem.approvedUsers.contains(loggedInUser)))
@@ -289,7 +298,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForGoodRequest {
-    if (widget.requestItem.sevaUserId ==
+    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+      return getBottombarForTimebankCreator;
+    } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
       return getBottombarForCreator;
     } else {
@@ -306,7 +317,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForCashRequest {
-    if (widget.requestItem.sevaUserId ==
+    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+      return getBottombarForTimebankCreator;
+    } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
       return getBottombarForCreator;
     } else {
@@ -342,38 +355,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(right: 5),
-          width: 100,
-          height: 32,
-          child: FlatButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: EdgeInsets.all(0),
-            color: isApplied ? Theme.of(context).accentColor : Colors.green,
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 1),
-                Spacer(),
-                Text(
-                  S.of(context).donate,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-              ],
-            ),
-            onPressed: () {
-              navigateToDonations();
-            },
-          ),
-        ),
+        cashRequestActionForPartcipant,
       ],
+    );
+  }
+
+  Widget get cashRequestActionForPartcipant {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      width: 100,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: isApplied ? Theme.of(context).accentColor : Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              S.of(context).donate,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          navigateToDonations();
+        },
+      ),
     );
   }
 
@@ -398,38 +415,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(right: 5),
-          width: 100,
-          height: 32,
-          child: FlatButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: EdgeInsets.all(0),
-            color: isApplied ? Theme.of(context).accentColor : Colors.green,
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 1),
-                Spacer(),
-                Text(
-                  S.of(context).donate,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-              ],
-            ),
-            onPressed: () {
-              navigateToDonations();
-            },
-          ),
-        )
+        goodsRequestActionButtonForParticipant,
       ],
+    );
+  }
+
+  Widget get goodsRequestActionButtonForParticipant {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      width: 100,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              S.of(context).donate,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          navigateToDonations();
+        },
+      ),
     );
   }
 
@@ -448,6 +469,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottomFrameForTimeRequest {
     switch (userMode) {
+      case UserMode.TIMEBANK_CREATOR:
+        return getBottombarForTimebankCreator;
+
       case UserMode.REQUEST_CREATOR:
         return getBottombarForCreator;
 
@@ -464,42 +488,143 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  Widget get getBottombarForCreator {
+  Widget get getBottombarForTimebankCreator {
+    String textLabel = '';
+    Widget actionWidget;
+    var canDelete = false;
+    if (widget.requestItem.requestType == RequestType.TIME) {
+      canDelete = widget.requestItem.acceptors.length == 0 &&
+          widget.requestItem.approvedUsers.length == 0 &&
+          widget.requestItem.invitedUsers.length == 0;
 
+      textLabel = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? S.of(context).creator_of_request_message
+          : isApplied
+              ? S.of(context).applied_for_request
+              : S.of(context).particpate_in_request_question;
+
+      actionWidget = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? Container()
+          : timeRequestActionWidgetForParticipant;
+    } else if (widget.requestItem.requestType == RequestType.GOODS) {
+      canDelete = widget.requestItem.goodsDonationDetails.donors == null;
+
+      textLabel = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? S.of(context).creator_of_request_message
+          : S.of(context).would_like_to_donate;
+
+      actionWidget = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? Container()
+          : goodsRequestActionButtonForParticipant;
+    } else {
+      canDelete = widget.requestItem.cashModel.amountRaised == 0;
+      textLabel = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? S.of(context).creator_of_request_message
+          : S.of(context).would_like_to_donate;
+      actionWidget = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? Container()
+          : cashRequestActionForPartcipant;
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: textLabel,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        canDelete
+            ? Column(
+                children: [
+                  actionWidget,
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 5),
+                    width: 100,
+                    height: 32,
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      color: Colors.red,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 1),
+                          Spacer(),
+                          Text(
+                            S.of(context).delete,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        deleteRequestDialog();
+                      },
+                    ),
+                  ),
+                ],
+              )
+            : actionWidget,
+      ],
+    );
+  }
+
+  Widget get getBottombarForCreator {
     if (widget.requestItem.requestType == RequestType.TIME) {
       canDeleteRequest = utils.isDeletable(
-          contentCreatorId: widget.requestItem.sevaUserId,
-          context: context,
-          communityCreatorId:
-          BlocProvider.of<HomeDashBoardBloc>(context)
-              .communityModel
-              .created_by,
-          timebankCreatorId:
-          widget.timebankModel.creatorId) &&
+              contentCreatorId: widget.requestItem.sevaUserId,
+              context: context,
+              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                  .communityModel
+                  .created_by,
+              timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
           widget.requestItem.invitedUsers.length == 0;
     } else if (widget.requestItem.requestType == RequestType.GOODS) {
       canDeleteRequest = utils.isDeletable(
-          contentCreatorId: widget.requestItem.sevaUserId,
-          context: context,
-          communityCreatorId:
-          BlocProvider.of<HomeDashBoardBloc>(context)
-              .communityModel
-              .created_by,
-          timebankCreatorId:
-          widget.timebankModel.creatorId) &&
+              contentCreatorId: widget.requestItem.sevaUserId,
+              context: context,
+              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                  .communityModel
+                  .created_by,
+              timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.goodsDonationDetails.donors == null;
     } else {
       canDeleteRequest = utils.isDeletable(
-          contentCreatorId: widget.requestItem.sevaUserId,
-          context: context,
-          communityCreatorId:
-          BlocProvider.of<HomeDashBoardBloc>(context)
-              .communityModel
-              .created_by,
-          timebankCreatorId:
-          widget.timebankModel.creatorId) &&
+              contentCreatorId: widget.requestItem.sevaUserId,
+              context: context,
+              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                  .communityModel
+                  .created_by,
+              timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }
     return Row(
@@ -511,7 +636,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: S.of(context).creator_of_request_message,
+                  text: canDeleteRequest &&
+                          widget.requestItem.sevaUserId !=
+                              SevaCore.of(context).loggedInUser.sevaUserID
+                      ? 'You are the creator of this seva community'
+                      : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
@@ -533,7 +662,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               padding: EdgeInsets.all(0),
-              color: Colors.green,
+              color: Colors.red,
               child: Row(
                 children: <Widget>[
                   SizedBox(width: 1),
@@ -583,38 +712,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(right: 5),
-          width: 100,
-          height: 32,
-          child: FlatButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: EdgeInsets.all(0),
-            color: isApplied ? Theme.of(context).accentColor : Colors.green,
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 1),
-                Spacer(),
-                Text(
-                  isApplied ? S.of(context).withdraw : S.of(context).apply,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-              ],
-            ),
-            onPressed: () {
-              applyAction();
-            },
-          ),
-        )
+        timeRequestActionWidgetForParticipant,
       ],
+    );
+  }
+
+  Widget get timeRequestActionWidgetForParticipant {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      width: 100,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: isApplied ? Theme.of(context).accentColor : Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              isApplied ? S.of(context).withdraw : S.of(context).apply,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          applyAction();
+        },
+      ),
     );
   }
 
