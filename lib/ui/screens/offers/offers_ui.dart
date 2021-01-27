@@ -367,6 +367,7 @@ class OfferCardViewState extends State<OfferCardView> {
         getOfferParticipants(offerDataModel: widget.offerModel).contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(

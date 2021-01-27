@@ -59,6 +59,7 @@ class TabarView extends StatelessWidget {
             children: [
               RequestParticipantsView(
                 requestModel: requestItem,
+                timebankModel: timebankModel,
               ),
               RequestAcceptedSpendingView(
                 requestModel: requestItem,

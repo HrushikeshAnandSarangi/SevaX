@@ -3,8 +3,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -69,8 +71,9 @@ class FeedBubble extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return NewsCardView(newsModel: news, isFocused: false);
+            builder: (_context) {
+              return BlocProvider(
+                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),child: NewsCardView(newsModel: news, isFocused: false));
             },
           ),
         );

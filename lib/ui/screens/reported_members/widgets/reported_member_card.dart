@@ -10,10 +10,12 @@ import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -25,6 +27,9 @@ class ReportedMemberCard extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    bool canRemove =
+        !(isPrimaryTimebank(parentTimebankId: timebankModel.parentTimebankId) &&
+            timebankModel.creatorId == model.reportedId);
     int userCount = reportedByCount(model, isFromTimebank);
     return InkWell(
       onTap: () {
@@ -35,6 +40,7 @@ class ReportedMemberCard extends StatelessWidget {
             removeMember: () => isFromTimebank
                 ? removeMemberTimebankFn(context)
                 : removeMemberGroupFn(context),
+            canRemove: canRemove,
             messageMember: () => messageMember(
               context: context,
               timebankModel: timebankModel,
@@ -54,24 +60,40 @@ class ReportedMemberCard extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 30,
-                  child: Offstage(
-                    offstage: model.reportedUserImage != null,
-                    child: CustomAvatar(
-                      radius: 30,
-                      name: model.reportedUserName,
+              InkWell(
+                onTap: () {
+                  if (timebankModel != null) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return ProfileViewer(
+                        timebankId: timebankModel.id,
+                        entityName: timebankModel.name,
+                        isFromTimebank: isPrimaryTimebank(
+                            parentTimebankId: timebankModel.parentTimebankId),
+                        userEmail: model.reportedUserEmail,
+                      );
+                    }));
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
                     ),
+                    shape: BoxShape.circle,
                   ),
-                  backgroundImage:
-                      CachedNetworkImageProvider(model.reportedUserImage ?? ''),
+                  child: CircleAvatar(
+                    radius: 30,
+                    child: Offstage(
+                      offstage: model.reportedUserImage != null,
+                      child: CustomAvatar(
+                          radius: 30,
+                          name: model.reportedUserName,
+                          onTap: () {}),
+                    ),
+                    backgroundImage: CachedNetworkImageProvider(
+                        model.reportedUserImage ?? ''),
+                  ),
                 ),
               ),
               SizedBox(width: 12),
@@ -120,24 +142,27 @@ class ReportedMemberCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16),
-              GestureDetector(
-                child: Image.asset(
-                  removeUserIcon,
-                  width: 22,
-                  height: 22,
-                ),
-                onTap: () {
-                  progressDialog = ProgressDialog(
-                    context,
-                    type: ProgressDialogType.Normal,
-                    isDismissible: false,
-                  );
-                  progressDialog.show();
+              Visibility(
+                visible: canRemove,
+                child: GestureDetector(
+                  child: Image.asset(
+                    removeUserIcon,
+                    width: 22,
+                    height: 22,
+                  ),
+                  onTap: () {
+                    progressDialog = ProgressDialog(
+                      context,
+                      type: ProgressDialogType.Normal,
+                      isDismissible: false,
+                    );
+                    progressDialog.show();
 
-                  isFromTimebank
-                      ? removeMemberTimebankFn(context)
-                      : removeMemberGroupFn(context);
-                },
+                    isFromTimebank
+                        ? removeMemberTimebankFn(context)
+                        : removeMemberGroupFn(context);
+                  },
+                ),
               ),
             ],
           ),

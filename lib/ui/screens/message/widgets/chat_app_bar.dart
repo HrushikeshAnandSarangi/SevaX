@@ -21,6 +21,7 @@ class ChatAppBar extends PreferredSize {
   final VoidCallback blockUser;
   final VoidCallback exitGroup;
   final VoidCallback openGroupInfo;
+  final VoidCallback onProfileImageTap;
 
   final bool isBlockEnabled;
 
@@ -33,6 +34,7 @@ class ChatAppBar extends PreferredSize {
     this.clearChat,
     this.blockUser,
     this.isBlockEnabled,
+    this.onProfileImageTap,
   });
 
   @override
@@ -55,12 +57,14 @@ class ChatAppBar extends PreferredSize {
                 ? CustomNetworkImage(
                     photoUrl,
                     size: 36,
+                    onTap: onProfileImageTap,
                   )
                 : CustomAvatar(
                     name: name,
                     radius: 18,
                     color: Colors.white,
                     foregroundColor: Colors.black,
+                    onTap: onProfileImageTap,
                   ),
             SizedBox(width: 10),
             Expanded(

@@ -13,8 +13,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -27,10 +30,10 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/umeshify.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -204,13 +207,16 @@ Widget createAdminTabBar(
                 email: SevaCore.of(context).loggedInUser.email,
                 userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
-              TimebankRequestAdminPage(
-                isUserAdmin: isAccessAvailable(timebankModel,
-                    SevaCore.of(context).loggedInUser.sevaUserID),
+              MembersPage(
                 timebankId: timebankModel.id,
-                userEmail: SevaCore.of(context).loggedInUser.email,
-                isFromGroup: true,
               ),
+              // TimebankRequestAdminPage(
+              //   isUserAdmin: isAccessAvailable(timebankModel,
+              //       SevaCore.of(context).loggedInUser.sevaUserID),
+              //   timebankId: timebankModel.id,
+              //   userEmail: SevaCore.of(context).loggedInUser.email,
+              //   isFromGroup: true,
+              // ),
               ManageGroupView.of(
                 timebankModel: timebankModel,
               ),
@@ -334,16 +340,19 @@ Widget createJoinedUserTabBar(
               //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
               //   timebankId: timebankModel.id,
               // ),
-              TimebankRequestAdminPage(
-                isUserAdmin: isAccessAvailable(timebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID) ||
-                    timebankModel.organizers.contains(
-                      SevaCore.of(context).loggedInUser.sevaUserID,
-                    ),
+              MembersPage(
                 timebankId: timebankModel.id,
-                userEmail: SevaCore.of(context).loggedInUser.email,
-                isFromGroup: true,
               ),
+              // TimebankRequestAdminPage(
+              //   isUserAdmin: isAccessAvailable(timebankModel,
+              //           SevaCore.of(context).loggedInUser.sevaUserID) ||
+              //       timebankModel.organizers.contains(
+              //         SevaCore.of(context).loggedInUser.sevaUserID,
+              //       ),
+              //   timebankId: timebankModel.id,
+              //   userEmail: SevaCore.of(context).loggedInUser.email,
+              //   isFromGroup: true,
+              // ),
             ],
           ),
         ),
@@ -394,12 +403,15 @@ Widget createNormalUserTabBar(
                   email: SevaCore.of(context).loggedInUser.email,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 ),
-                TimebankRequestAdminPage(
-                  isUserAdmin: false,
+                MembersPage(
                   timebankId: timebankModel.id,
-                  userEmail: SevaCore.of(context).loggedInUser.email,
-                  isFromGroup: true,
                 ),
+                // TimebankRequestAdminPage(
+                //   isUserAdmin: false,
+                //   timebankId: timebankModel.id,
+                //   userEmail: SevaCore.of(context).loggedInUser.email,
+                //   isFromGroup: true,
+                // ),
               ],
             ),
           ),
@@ -686,10 +698,14 @@ class DiscussionListState extends State<DiscussionList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return NewsCardView(
-                newsModel: news,
-                isFocused: false,
+            builder: (_context) {
+              return BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: NewsCardView(
+                  newsModel: news,
+                  isFocused: false,
+                  timebankModel: widget.timebankModel,
+                ),
               );
             },
           ),
@@ -824,11 +840,13 @@ class DiscussionListState extends State<DiscussionList> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      backgroundImage: NetworkImage(
-                          news.userPhotoURL ?? defaultUserImageURL),
+                    UserProfileImage(
+                      photoUrl: news.userPhotoURL,
+                      email: news.email,
+                      userId: news.sevaUserId,
+                      height: 40,
+                      width: 40,
+                      timebankModel: widget.timebankModel,
                     ),
                     SizedBox(width: 12),
                     Expanded(
@@ -1087,9 +1105,16 @@ class DiscussionListState extends State<DiscussionList> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => NewsCardView(
-                                                  newsModel: news,
-                                                  isFocused: false,
+                                            builder: (_context) => BlocProvider(
+                                                  bloc: BlocProvider.of<
+                                                          HomeDashBoardBloc>(
+                                                      context),
+                                                  child: NewsCardView(
+                                                    newsModel: news,
+                                                    isFocused: false,
+                                                    timebankModel:
+                                                        widget.timebankModel,
+                                                  ),
                                                 )));
                                   },
                                   child: Padding(
@@ -1133,10 +1158,14 @@ class DiscussionListState extends State<DiscussionList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return NewsCardView(
-                newsModel: news,
-                isFocused: false,
+            builder: (_context) {
+              return BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: NewsCardView(
+                  newsModel: news,
+                  isFocused: false,
+                  timebankModel: widget.timebankModel,
+                ),
               );
             },
           ),

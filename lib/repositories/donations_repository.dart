@@ -99,7 +99,6 @@ class DonationsRepository {
               .collection(DBCollection.notifications);
         }
       }
-      log("=========STG 3  $associatedId");
 
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),
@@ -227,6 +226,7 @@ class DonationsRepository {
               .document(donationModel.requestId.split('*')[0])
               .collection(DBCollection.notifications);
         }
+      }
 
         batch.setData(
           notificationReferenceForDonor.document(
@@ -235,7 +235,6 @@ class DonationsRepository {
         );
 
         await batch.commit();
-      }
     } on Exception catch (e) {
       logger.e(e);
     }

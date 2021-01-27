@@ -15,7 +15,7 @@ Map<String, String> languageNames = {
   'es': 'Spanish',
   'af': 'Afrikaans',
   'sw': 'Swahili',
-  'sn': 'Shona',
+  //'sn': 'Shona',
   'zh_CN': 'Chinese Simplified',
   'zh_TW': 'Chinese Traditional',
 };

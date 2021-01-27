@@ -6,6 +6,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -241,7 +242,12 @@ class _OffersTabViewState extends State<OffersTabView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Elasticsearch,),
+        builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            child: OfferDetailsRouter(
+              offerModel: model,
+              comingFrom: ComingFrom.Elasticsearch,
+            )),
       ),
     );
   }

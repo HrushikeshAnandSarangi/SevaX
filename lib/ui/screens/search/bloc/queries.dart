@@ -8,8 +8,8 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
 
 class Searches {
   static Future<http.Response> makePostRequest({
@@ -63,7 +63,8 @@ class Searches {
     // });
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(
     //     currentCommunityOfUser.timebanks, timebanksIdArr);
-   List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
+        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/newsfeed/_doc/_search';
     dynamic body = json.encode(
@@ -78,11 +79,7 @@ class Searches {
               {
                 "multi_match": {
                   "query": queryString,
-                  "fields": [
-                    "description",
-                    "email",
-                    "subheading"
-                  ],
+                  "fields": ["description", "email", "subheading"],
                   "type": "phrase_prefix"
                 }
               }
@@ -434,14 +431,17 @@ class Searches {
 
   static Stream<List<UserModel>> searchMembersOfTimebank({
     @required queryString,
+    @required String languageCode,
     @required UserModel loggedInUser,
     @required CommunityModel currentCommunityOfUser,
-    QuerySnapshot skillsListSnap,
-    QuerySnapshot interestsListSnap,
+    // QuerySnapshot skillsListSnap,
+    //QuerySnapshot interestsListSnap,
   }) async* {
     Map<String, List<String>> allSkillsInterestsConsolidated =
-        getSkillsInterestsIdsOfUser(
-            skillsListSnap, interestsListSnap, queryString.toLowerCase());
+        await getSkillsInterestsIdsOfUser(
+            //skillsListSnap, interestsListSnap,
+            queryString.toLowerCase(),
+            languageCode);
 
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/sevaxusers/sevaxuser/_search';
@@ -532,24 +532,37 @@ class Searches {
     return timebankarr;
   }
 
-  static Map<String, List<String>> getSkillsInterestsIdsOfUser(
-      QuerySnapshot allSkills, QuerySnapshot allInterests, String queryString) {
+  static Future<Map<String, List<String>>> getSkillsInterestsIdsOfUser(
+      //  QuerySnapshot allSkills,
+      ///QuerySnapshot allInterests,
+      String queryString,
+      String language) async {
     Map<String, List<String>> skillsInterestsConsolidated = {};
+
     List<String> skillsarr = List();
     List<String> interestsarr = List();
     String temp = "";
-    allSkills.documents.forEach((skillDoc) {
-      temp = skillDoc.data['name'].toLowerCase();
-      if (temp.contains(queryString.toLowerCase())) {
-        skillsarr.add(skillDoc.documentID);
-      }
-    });
-    allInterests.documents.forEach((interestDoc) {
-      temp = interestDoc.data['name'].toLowerCase();
-      if (temp.contains(queryString)) {
-        interestsarr.add(interestDoc.documentID);
-      }
-    });
+
+    skillsarr = await SearchManager.searchSkills(
+        queryString: queryString, language: language);
+
+    interestsarr = await SearchManager.searchInterest(
+        queryString: queryString, language: language);
+    log('data skilll ${skillsarr}');
+    log('data inter ${interestsarr}');
+
+//    allSkills.documents.forEach((skillDoc) {
+//      temp = skillDoc.data['name'].toLowerCase();
+//      if (temp.contains(queryString.toLowerCase())) {
+//        skillsarr.add(skillDoc.documentID);
+//      }
+//    });
+//    allInterests.documents.forEach((interestDoc) {
+//      temp = interestDoc.data['name'].toLowerCase();
+//      if (temp.contains(queryString)) {
+//        interestsarr.add(interestDoc.documentID);
+//      }
+//    });
 
     skillsInterestsConsolidated['skills'] = skillsarr;
     skillsInterestsConsolidated['interests'] = interestsarr;

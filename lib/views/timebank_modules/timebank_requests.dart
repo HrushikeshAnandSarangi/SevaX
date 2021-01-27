@@ -11,9 +11,11 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -807,8 +809,11 @@ class RequestListItemsState extends State<RequestListItems> {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(
-          builder: (context) => RequestTabHolder(
-            isAdmin: true,
+          builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            child: RequestTabHolder(
+              isAdmin: true,
+            ),
           ),
         ),
       );
@@ -816,10 +821,13 @@ class RequestListItemsState extends State<RequestListItems> {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(
-          builder: (context) => RequestDetailsAboutPage(
-            requestItem: model,
-            timebankModel: widget.timebankModel,
-            isAdmin: false,
+          builder: (_context) =>  BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+            child: RequestDetailsAboutPage(
+              requestItem: model,
+              timebankModel: widget.timebankModel,
+              isAdmin: false,
+            ),
           ),
         ),
       );

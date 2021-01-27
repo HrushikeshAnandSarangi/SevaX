@@ -983,20 +983,28 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   Future<void> getCategoriesFromApi(String query) async {
     try {
-      const url =
-          'https://run.mocky.io/v3/91c859ce-13c7-425a-b177-76629a83ca02';
-      var response = await http.get(url);
+      var response = await http.post(
+        "https://proxy.sevaexchange.com/" +
+            "http://ai.api.sevaxapp.com/request_categories",
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "description": query,
+        }),
+      );
+
       if (response.statusCode == 200) {
         Map<String, dynamic> bodyMap = json.decode(response.body);
         List<String> categoriesList = bodyMap.containsKey('string_vec')
             ? List.castFrom(bodyMap['string_vec'])
             : [];
-        getCategoryModels(categoriesList, S.of(context).suggested_categories);
+        if (categoriesList != null && categoriesList.length > 0) {
+          getCategoryModels(categoriesList, S.of(context).suggested_categories);
+        }
       } else {
         return null;
       }
     } catch (exception) {
-      log(exception);
+      log(exception.toString());
       return null;
     }
   }
@@ -1619,7 +1627,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * recurrences
                 : widget.requestModel.numberOfHours.toDouble(),
-                communityId: SevaCore.of(context).loggedInUser.sevaUserID,
+            communityId: SevaCore.of(context).loggedInUser.sevaUserID,
           );
           // .hasSufficientCreditsIncludingRecurring(
           //   credits: widget.requestModel.numberOfHours.toDouble(),
@@ -1635,8 +1643,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * 0
                 : widget.requestModel.numberOfHours.toDouble(),
-                communityId:
-                SevaCore.of(context).loggedInUser.currentCommunity,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           );
 
           // .hasSufficientCreditsIncludingRecurring(
@@ -2184,7 +2191,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                           SuggestedItem()..suggesttionTitle = pattern)) {
                     var spellCheckResult =
                         await SpellCheckManager.evaluateSpellingFor(pattern,
-                            language: 'en');
+                            language: SevaCore.of(context).loggedInUser.language??'en');
                     if (spellCheckResult.hasErros) {
                       dataCopy.add(SuggestedItem()
                         ..suggestionMode = SuggestionMode.USER_DEFINED

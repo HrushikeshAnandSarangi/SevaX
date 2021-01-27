@@ -3,6 +3,7 @@ import 'package:sevaexchange/components/repeat_availability/recurring_listing.da
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
@@ -97,11 +98,10 @@ class RequestsTabView extends StatelessWidget {
         context,
         MaterialPageRoute(
           builder: (context) => RecurringListing(
-            requestModel: requestModel,
-            offerModel: null,
-            timebankModel: timebankModel,
-            comingFrom: ComingFrom.Requests
-          ),
+              requestModel: requestModel,
+              offerModel: null,
+              timebankModel: timebankModel,
+              comingFrom: ComingFrom.Requests),
         ),
       );
     } else {
@@ -115,8 +115,11 @@ class RequestsTabView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RequestTabHolder(
-              isAdmin: true,
+            builder: (_context) => BlocProvider(
+              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+              child: RequestTabHolder(
+                isAdmin: true,
+              ),
             ),
           ),
         );
@@ -124,11 +127,14 @@ class RequestsTabView extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RequestDetailsAboutPage(
-              requestItem: requestModel,
-              timebankModel: timebankModel,
-              isAdmin: false,
-              //  project_id: '',
+            builder: (_context) => BlocProvider(
+              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+              child: RequestDetailsAboutPage(
+                requestItem: requestModel,
+                timebankModel: timebankModel,
+                isAdmin: false,
+                //  project_id: '',
+              ),
             ),
           ),
         );

@@ -507,6 +507,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             loggedInUser.interests = interests.length > 0 ? interests : [];
             await updateUserData(loggedInUser);
           },
+          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
           onSkipped: () {
             Navigator.pop(context);
 //            loggedInUser.interests = [];
@@ -646,6 +647,7 @@ class _EditProfilePageState extends State<EditProfilePage>
 //            loggedInUser.skills = [];
 //            updateUserData(loggedInUser);
           },
+          languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
         ),
       ),
     );

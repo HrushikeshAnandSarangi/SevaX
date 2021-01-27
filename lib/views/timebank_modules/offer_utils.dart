@@ -5,12 +5,13 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 
@@ -177,7 +178,8 @@ bool isParticipant(BuildContext context, OfferModel model) {
       .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 }
 
-Future<bool> offerActions(BuildContext context, OfferModel model, ComingFrom comingFromVar) async {
+Future<bool> offerActions(
+    BuildContext context, OfferModel model, ComingFrom comingFromVar) async {
   var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
   bool _isParticipant = getOfferParticipants(offerDataModel: model)
       .contains(SevaCore.of(context).loggedInUser.sevaUserID);
@@ -189,7 +191,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model, ComingFrom com
       email: SevaCore.of(context).loggedInUser.email,
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
       userId: _userId,
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
 
     if (hasSufficientCredits) {
@@ -273,9 +275,12 @@ Future<bool> offerActions(BuildContext context, OfferModel model, ComingFrom com
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(
-          offerModel: model,
-          comingFrom: comingFromVar,
+        builder: (_context) => BlocProvider(
+          bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+          child: OfferDetailsRouter(
+            offerModel: model,
+            comingFrom: comingFromVar,
+          ),
         ),
       ),
     );

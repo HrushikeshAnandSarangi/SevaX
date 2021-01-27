@@ -16,8 +16,8 @@ Geoflutterfire geoflutterfire = Geoflutterfire();
 
 Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
   logger.i("offer list request started");
-  Stopwatch sw = Stopwatch();
-  sw.start();
+  // Stopwatch sw = Stopwatch();
+  // sw.start();
   var query = Firestore.instance
       .collection('offers')
       .where('timebankId', isEqualTo: timebankId)
@@ -30,7 +30,7 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
   Coordinates currentCoords;
   try {
     currentCoords = await findcurrentLocation();
-    logger.i('offer location loading time ${sw.elapsedMilliseconds}');
+    // logger.i('offer location loading time ${sw.elapsedMilliseconds}');
   } catch (e) {
     logger.e(e);
   }
@@ -58,11 +58,11 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
         });
 
         offerSink.add(offerList);
-        logger.i('offer loading time ${sw.elapsedMilliseconds}');
+        // logger.i('offer loading time ${sw.elapsedMilliseconds}');
       },
     ),
   );
-  sw.stop();
+  // sw.stop();
 }
 
 Future<void> createOffer({@required OfferModel offerModel}) async {

@@ -24,6 +24,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
+  final String userId;
   final String timebankId;
   final String entityName;
   final bool isFromTimebank;
@@ -36,7 +37,9 @@ class ProfileViewer extends StatefulWidget {
     this.timebankId,
     this.isFromTimebank,
     this.entityName,
-  })  : assert(userEmail != null),
+    this.userId,
+  }) :
+        //assert(userEmail != null),
 //        assert(entityName != null),
         assert(timebankId != null);
 
@@ -151,19 +154,18 @@ class ProfileViewerState extends State<ProfileViewer> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance
-            .collection('users')
-            .document(widget.userEmail)
-            .snapshots(),
-        builder: (BuildContext firebasecontext,
-            AsyncSnapshot<DocumentSnapshot> snapshot) {
+      body: StreamBuilder<UserModel>(
+        stream: widget.userEmail == null
+            ? getUserForIdStream(sevaUserId: widget.userId)
+            : getUserForEmailStream(widget.userEmail),
+        builder:
+            (BuildContext firebasecontext, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return LoadingIndicator();
             default:
-              user = UserModel.fromMap(snapshot.data.data, 'profile_viewer');
+              user = snapshot.data;
 
               if (user == null) {
                 Navigator.pop(context);
@@ -195,15 +197,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           ProfileImage(
-                            image: snapshot.data['photourl'],
-                            tag: widget.userEmail,
+                            image: snapshot.data.photoURL,
+                            tag: widget.userEmail ?? widget.userId,
                             radius: 50,
                           ),
                           SizedBox(width: 20),
                           ProfileHeader(
                             rating: '4.5',
-                            name: snapshot.data['fullname'],
-                            email: snapshot.data['email'],
+                            name: user.fullname,
+                            email: user.email,
                             isBlocked: isBlocked,
                             message: widget.userEmail == loggedInEmail ||
                                     isBlocked
@@ -235,14 +237,14 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title: S.of(context).about +
-                            ' ${snapshot.data['fullname']}',
-                        details: snapshot.data['bio'] ?? '',
+                        title:
+                            S.of(context).about + ' ${snapshot.data.fullname}',
+                        details: snapshot.data.bio ?? '',
                       ),
                     ),
                     SkillAndInterestBuilder(
-                      skills: snapshot.data['skills'],
-                      interests: snapshot.data['interests'],
+                      skills: snapshot.data.skills,
+                      interests: snapshot.data.interests,
                     ),
                     Padding(
                         padding:
@@ -998,7 +1000,9 @@ class SkillAndInterestBuilder extends StatelessWidget {
     //altered code
     return FutureBuilder(
         future: FirestoreManager.getUserSkillsInterests(
-            skillsIdList: this.skills, interestsIdList: this.interests),
+            skillsIdList: this.skills,
+            interestsIdList: this.interests,
+            languageCode: SevaCore.of(context).loggedInUser.language),
         builder: (context, snapshot) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
