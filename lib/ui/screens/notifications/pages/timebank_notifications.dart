@@ -83,10 +83,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: userAddedModel.adminName,
                   isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      SevaCore.of(context).loggedInUser.email,
+                  onDismissed: () async {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
                     );
                   },
                   onPressed: null,
