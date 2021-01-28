@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
@@ -555,7 +556,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   //here is the thing
 
                   await onBoardMember(
-                    commmunityId: widget.communityModel.id,
+                    communityId: widget.communityModel.id,
                     onBaordingMemberSevaId: widget.user.sevaUserID,
                     onBoardingMemberEmail: widget.user.email,
                   ).commit();
@@ -599,7 +600,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   WriteBatch onBoardMember({
     String onBoardingMemberEmail,
-    String commmunityId,
+    String communityId,
     String onBaordingMemberSevaId,
   }) {
     var batchUpdate = Firestore.instance.batch();
@@ -608,11 +609,35 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         Firestore.instance.collection("users").document(onBoardingMemberEmail);
 
     var communityMembersRef =
-        Firestore.instance.collection("communities").document(commmunityId);
+        Firestore.instance.collection("communities").document(communityId);
+
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        addedMemberName: SevaCore.of(context).loggedInUser.fullname,
+        adminName: "");
+
+    NotificationsModel notificationModel = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: timebankModel.id,
+        data: userAddedModel.toMap(),
+        isRead: false,
+        type: NotificationType.TypeMemberJoinViaCode,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: timebankModel.id,
+        isTimebankNotification: true);
+
+    var notificationRef =
+    Firestore.instance.collection("timebanknew").document(timebankModel.id)
+        .collection("notifications").document(notificationModel.id);
+
+    batchUpdate.setData(notificationRef, notificationModel.toMap());
 
     batchUpdate.updateData(userUpdateRef, {
-      'communities': FieldValue.arrayUnion([commmunityId]),
-      'currentCommunity': commmunityId
+      'communities': FieldValue.arrayUnion([communityId]),
+      'currentCommunity': communityId,
+      'currentTimebank': timebankModel.id
     });
 
     batchUpdate.updateData(communityMembersRef, {
