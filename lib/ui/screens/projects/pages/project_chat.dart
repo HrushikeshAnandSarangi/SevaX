@@ -44,6 +44,7 @@ class _ProjectChatViewState extends State<ProjectChatView> {
               showAppBar: false,
               senderId: SevaCore.of(context).loggedInUser.sevaUserID,
               chatViewContext: ChatViewContext.PROJECT,
+              timebankId: user.currentTimebank,
             ),
             isMember
                 ? Container()

@@ -8,9 +8,11 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -143,7 +145,12 @@ class OfferListItems extends StatelessWidget {
     Navigator.push(
       parentContext,
       MaterialPageRoute(
-        builder: (context) => OfferDetailsRouter(offerModel: model, comingFrom: ComingFrom.Offers,),
+        builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<HomeDashBoardBloc>(parentContext),
+            child: OfferDetailsRouter(
+              offerModel: model,
+              comingFrom: ComingFrom.Offers,
+            )),
       ),
     );
   }
@@ -175,7 +182,8 @@ class OfferListItems extends StatelessWidget {
                   : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
         // if goods/cash and not the creator and not a admin trying accept donation show dialog
-        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
+        if (model.type != RequestType.TIME &&
+            model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);
@@ -201,7 +209,8 @@ class OfferListItems extends StatelessWidget {
         bool isAccepted = getOfferParticipants(offerDataModel: model)
             .contains(model.sevaUserId);
         // if goods/cash and not the creator and not a admin trying accept donation show dialog
-        if (model.type != RequestType.TIME && model.email != SevaCore.of(context).loggedInUser.email &&
+        if (model.type != RequestType.TIME &&
+            model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
                 timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
           adminCheckToAcceptOfferDialog(context);

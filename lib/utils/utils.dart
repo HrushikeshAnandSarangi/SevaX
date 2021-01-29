@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -40,6 +41,13 @@ bool isAccessAvailable(TimebankModel timebank, String userId) {
     return false;
   }
 }
+
+bool isDeletable(
+    {String communityCreatorId,
+    String timebankCreatorId,
+    String contentCreatorId,
+    BuildContext context}) => contentCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || communityCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || timebankCreatorId == SevaCore.of(context).loggedInUser.sevaUserID;
+
 
 bool isOwner(TimebankModel timebank, String userId) {
   if (timebank.creatorId == userId || timebank.organizers.contains(userId)) {

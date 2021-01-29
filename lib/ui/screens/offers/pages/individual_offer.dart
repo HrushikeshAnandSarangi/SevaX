@@ -303,7 +303,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 20),
-                        RequestTypeWidget(),
+                        widget.offerModel == null
+                            ? RequestTypeWidget()
+                            : Container(),
                         StreamBuilder<String>(
                           stream: _bloc.title,
                           builder: (context, snapshot) {

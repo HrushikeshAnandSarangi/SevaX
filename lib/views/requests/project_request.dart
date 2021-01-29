@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/projects/bloc/project_description_bloc.dart';
 import 'package:sevaexchange/ui/screens/projects/pages/project_chat.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -41,8 +42,7 @@ class ProjectRequests extends StatefulWidget {
   String timebankId;
   final TimebankModel timebankModel;
   final ProjectModel projectModel;
-  ProjectRequests(
-      @required this.comingFrom,
+  ProjectRequests(@required this.comingFrom,
       {@required this.timebankId,
       @required this.projectModel,
       @required this.timebankModel});
@@ -706,8 +706,11 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (mContext) => RequestTabHolder(
-                      isAdmin: true,
+                    builder: (mContext) => BlocProvider(
+                      bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                      child: RequestTabHolder(
+                        isAdmin: true,
+                      ),
                     ),
                   ),
                 );
@@ -716,11 +719,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (mContext) => RequestDetailsAboutPage(
-                    requestItem: model,
-                    //   applied: isAdmin ? false : true,
-                    timebankModel: widget.timebankModel,
-                    isAdmin: isAdmin,
+                  builder: (mContext) => BlocProvider(
+                    bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                    child: RequestDetailsAboutPage(
+                      requestItem: model,
+                      //   applied: isAdmin ? false : true,
+                      timebankModel: widget.timebankModel,
+                      isAdmin: isAdmin,
+                    ),
                   ),
                 ),
               );

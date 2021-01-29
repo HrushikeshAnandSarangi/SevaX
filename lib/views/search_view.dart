@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
@@ -321,10 +323,13 @@ class _ResultViewState extends State<ResultView> {
                     Navigator.of(context, rootNavigator: true).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) {
-                          return NewsCardView(
-                            newsModel: news,
-                            isFocused: false,
+                        builder: (_context) {
+                          return BlocProvider(
+                            bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                            child: NewsCardView(
+                              newsModel: news,
+                              isFocused: false,
+                            ),
                           );
                         },
                       ),

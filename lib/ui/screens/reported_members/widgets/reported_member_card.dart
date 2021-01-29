@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -59,24 +60,40 @@ class ReportedMemberCard extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 30,
-                  child: Offstage(
-                    offstage: model.reportedUserImage != null,
-                    child: CustomAvatar(
-                      radius: 30,
-                      name: model.reportedUserName,
+              InkWell(
+                onTap: () {
+                  if (timebankModel != null) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return ProfileViewer(
+                        timebankId: timebankModel.id,
+                        entityName: timebankModel.name,
+                        isFromTimebank: isPrimaryTimebank(
+                            parentTimebankId: timebankModel.parentTimebankId),
+                        userEmail: model.reportedUserEmail,
+                      );
+                    }));
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
                     ),
+                    shape: BoxShape.circle,
                   ),
-                  backgroundImage:
-                      CachedNetworkImageProvider(model.reportedUserImage ?? ''),
+                  child: CircleAvatar(
+                    radius: 30,
+                    child: Offstage(
+                      offstage: model.reportedUserImage != null,
+                      child: CustomAvatar(
+                          radius: 30,
+                          name: model.reportedUserName,
+                          onTap: () {}),
+                    ),
+                    backgroundImage: CachedNetworkImageProvider(
+                        model.reportedUserImage ?? ''),
+                  ),
                 ),
               ),
               SizedBox(width: 12),

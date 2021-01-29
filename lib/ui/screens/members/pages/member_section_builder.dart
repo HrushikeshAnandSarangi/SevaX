@@ -108,12 +108,6 @@ class MemberSectionBuilder extends StatelessWidget {
                 value: ActionType.DEMOTE,
               ),
             );
-            items.add(
-              PopupMenuItem(
-                child: Text(S.of(context).remove),
-                value: ActionType.REMOVE,
-              ),
-            );
           }
           break;
         case UsersSection.ADMINS:
@@ -131,12 +125,6 @@ class MemberSectionBuilder extends StatelessWidget {
               PopupMenuItem(
                 child: Text(S.of(context).demote),
                 value: ActionType.DEMOTE,
-              ),
-            );
-            items.add(
-              PopupMenuItem(
-                child: Text(S.of(context).remove),
-                value: ActionType.REMOVE,
               ),
             );
           }

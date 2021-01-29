@@ -193,7 +193,7 @@ class SpellCheckManager {
       "Ocp-Apim-Subscription-Key": _getOcpApimKey()
     };
     dynamic body = jsonEncode({
-      "language": "en",
+      "language": language,
       "content": "$keyword",
       "settings": {'parses': true}
     });

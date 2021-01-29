@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/news_card.dart';
@@ -63,10 +64,13 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) {
-                            return NewsCardView(
-                              newsModel: news,
-                              isFocused: false,
+                          builder: (_context) {
+                            return BlocProvider(
+                              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                              child: NewsCardView(
+                                newsModel: news,
+                                isFocused: false,
+                              ),
                             );
                           },
                         ),

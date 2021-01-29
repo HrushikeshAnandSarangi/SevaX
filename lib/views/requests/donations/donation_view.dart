@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
@@ -121,72 +120,83 @@ class _DonationViewState extends State<DonationView> {
         centerTitle: true,
       ),
       body: Container(
-          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
-              0, MediaQuery.of(context).size.width * 0.03, 0),
-          child: Card(
-              margin: EdgeInsets.only(bottom: 10, top: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
-              elevation: 2,
-              child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                      child: SizedBox(
-                          height: MediaQuery.of(context)
-                              .size
-                              .height, // or something simular :)
-                          child: new Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                // horizontal: 20,
-                                                // vertical: 10,
-                                                ),
-                                            child: Text(
-                                              S.of(context).donations,
-                                              // textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const Spacer(),
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
+            0, MediaQuery.of(context).size.width * 0.03, 0),
+        child: Card(
+          margin: EdgeInsets.only(bottom: 10, top: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context)
+                    .size
+                    .height, // or something simular :)
+                child: new Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    // horizontal: 20,
+                                    // vertical: 10,
+                                    ),
+                                child: Text(
+                                  S.of(context).donations,
+                                  // textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
 //                                          close(
 //                                            onTap: () {
 //                                              ExtendedNavigator.of(context)
 //                                                  .pop();
 //                                            },
 //                                          ),
-                                        ],
-                                      ),
-                                    ]),
-                                new Expanded(
-                                    child: PageView(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        controller: pageController,
-                                        scrollDirection: Axis.horizontal,
-                                        pageSnapping: true,
-                                        onPageChanged: (number) {},
-                                        children: [
-                                      donatedItems(),
-                                      amountWidget(),
-                                      donationDetails(),
-                                      donationOfferAt(),
-                                      RequestPaymentDescriptionData(
-                                          widget.offerModel),
-                                    ]))
-                              ])))))),
+                            ],
+                          ),
+                        ]),
+                    new Expanded(
+                      child: PageView(
+                        physics: NeverScrollableScrollPhysics(),
+                        controller: pageController,
+                        scrollDirection: Axis.horizontal,
+                        pageSnapping: true,
+                        onPageChanged: (number) {},
+                        children: [
+                          donatedItems(),
+                          amountWidget(),
+                          donationDetails(),
+                          donationOfferAt(),
+                          SingleChildScrollView(
+                            // physics: NeverScrollableScrollPhysics(),
+                            child: RequestPaymentDescriptionData(
+                              widget.offerModel,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -251,8 +261,11 @@ class _DonationViewState extends State<DonationView> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading:
-          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+      leading: Radio(
+        value: value,
+        groupValue: groupvalue,
+        onChanged: onChanged,
+      ),
     );
   }
 
@@ -512,183 +525,186 @@ class _DonationViewState extends State<DonationView> {
   }
 
   Widget RequestPaymentDescriptionData(OfferModel offerModel) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(
-                height: 10,
+    return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 0,
+        ),
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 1.8,
+            minWidth: double.infinity,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              S.of(context).donations_cash_request,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
               ),
-              Text(
-                S.of(context).donations_cash_request,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.black,
-                ),
+            ),
+            Text(
+              S.of(context).donations_cash_request_hint,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                fontFamily: 'Europa',
+                color: Colors.grey,
               ),
-              Text(
-                S.of(context).donations_cash_request_hint,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Europa',
-                  color: Colors.grey,
-                ),
-              ),
-              TextFormField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                ],
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                focusNode: focusNodes[1],
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(focusNodes[1]);
-                },
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return S.of(context).validation_error_general_text;
-                  } else if (int.parse(value) < 1) {
-                    return "Please enter a valid amount";
-                  } else if (!value.isEmpty) {
-                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                      return "Requested amount cannot be greater than offered amount!";
-                    }
-                    if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                      return "Requested amount cannot be greater than offered amount!";
-                    }
-                    donationsModel.cashDetails.cashDetails.amountRaised =
-                        int.parse(value);
-                  } else {
-                    return S.of(context).enter_valid_amount;
+            ),
+            TextFormField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+              ],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              focusNode: focusNodes[1],
+              onFieldSubmitted: (v) {
+                FocusScope.of(context).requestFocus(focusNodes[1]);
+              },
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return S.of(context).validation_error_general_text;
+                } else if (int.parse(value) < 1) {
+                  return "Please enter a valid amount";
+                } else if (!value.isEmpty) {
+                  if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                    return "Requested amount cannot be greater than offered amount!";
                   }
-                  return null;
-                },
+                  if (int.parse(value) > offerModel.cashModel.targetAmount) {
+                    return "Requested amount cannot be greater than offered amount!";
+                  }
+                  donationsModel.cashDetails.cashDetails.amountRaised =
+                      int.parse(value);
+                } else {
+                  return S.of(context).enter_valid_amount;
+                }
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              S.of(context).request_payment_description,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
               ),
-              SizedBox(
-                height: 10,
+            ),
+            Text(
+              S.of(context).request_payment_description_hint,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
               ),
-              Text(
-                S.of(context).request_payment_description,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                S.of(context).request_payment_description_hint,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ),
-              _optionRadioButton(
-                title: S.of(context).request_paymenttype_ach,
-                value: RequestPaymentType.ACH,
+            ),
+            _optionRadioButton(
+              title: S.of(context).request_paymenttype_ach,
+              value: RequestPaymentType.ACH,
+              groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+              onChanged: (value) {
+                donationsModel.cashDetails.cashDetails.paymentType = value;
+                setState(() => {});
+              },
+            ),
+            _optionRadioButton(
+                title: S.of(context).request_paymenttype_paypal,
+                value: RequestPaymentType.PAYPAL,
                 groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
                 onChanged: (value) {
                   donationsModel.cashDetails.cashDetails.paymentType = value;
                   setState(() => {});
-                },
-              ),
-              _optionRadioButton(
-                  title: S.of(context).request_paymenttype_paypal,
-                  value: RequestPaymentType.PAYPAL,
-                  groupvalue:
-                      donationsModel.cashDetails.cashDetails.paymentType,
-                  onChanged: (value) {
-                    donationsModel.cashDetails.cashDetails.paymentType = value;
-                    setState(() => {});
-                  }),
-              _optionRadioButton(
-                  title: 'Venmo',
-                  value: RequestPaymentType.VENMO,
-                  groupvalue:
-                      donationsModel.cashDetails.cashDetails.paymentType,
-                  onChanged: (value) {
-                    donationsModel.cashDetails.cashDetails.paymentType = value;
-                    setState(() => {});
-                  }),
-              _optionRadioButton(
-                  title: S.of(context).request_paymenttype_zellepay,
-                  value: RequestPaymentType.ZELLEPAY,
-                  groupvalue:
-                      donationsModel.cashDetails.cashDetails.paymentType,
-                  onChanged: (value) {
-                    donationsModel.cashDetails.cashDetails.paymentType = value;
-                    setState(() => {});
-                  }),
-              donationsModel.cashDetails.cashDetails.paymentType ==
-                      RequestPaymentType.ACH
-                  ? RequestPaymentACH(widget.offerModel)
-                  : donationsModel.cashDetails.cashDetails.paymentType ==
-                          RequestPaymentType.PAYPAL
-                      ? RequestPaymentPaypal(widget.offerModel)
-                      : donationsModel.cashDetails.cashDetails.paymentType ==
-                              RequestPaymentType.VENMO
-                          ? RequestPaymentVenmo(widget.offerModel)
-                          : RequestPaymentZellePay(widget.offerModel),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  actionButton(
-                      buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
-                      textColor: Colors.white,
-                      buttonTitle: S.of(context).submit,
-                      onPressed: () async {
-                        var connResult =
-                            await Connectivity().checkConnectivity();
-                        if (connResult == ConnectivityResult.none) {
-                          showScaffold(S.of(context).check_internet);
-                          return;
+                }),
+            _optionRadioButton(
+                title: 'Venmo',
+                value: RequestPaymentType.VENMO,
+                groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+                onChanged: (value) {
+                  donationsModel.cashDetails.cashDetails.paymentType = value;
+                  setState(() => {});
+                }),
+            _optionRadioButton(
+                title: S.of(context).request_paymenttype_zellepay,
+                value: RequestPaymentType.ZELLEPAY,
+                groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+                onChanged: (value) {
+                  donationsModel.cashDetails.cashDetails.paymentType = value;
+                  setState(() => {});
+                }),
+            donationsModel.cashDetails.cashDetails.paymentType ==
+                    RequestPaymentType.ACH
+                ? RequestPaymentACH(widget.offerModel)
+                : donationsModel.cashDetails.cashDetails.paymentType ==
+                        RequestPaymentType.PAYPAL
+                    ? RequestPaymentPaypal(widget.offerModel)
+                    : donationsModel.cashDetails.cashDetails.paymentType ==
+                            RequestPaymentType.VENMO
+                        ? RequestPaymentVenmo(widget.offerModel)
+                        : RequestPaymentZellePay(widget.offerModel),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                actionButton(
+                    buttonColor: Color.fromRGBO(246, 147, 72, 1.0),
+                    textColor: Colors.white,
+                    buttonTitle: S.of(context).submit,
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if (connResult == ConnectivityResult.none) {
+                        showScaffold(S.of(context).check_internet);
+                        return;
+                      }
+
+                      showProgress(S.of(context).please_wait);
+                      donationBloc
+                          .donateOfferGoods(
+                              notificationId: widget.notificationId,
+                              donationModel: donationsModel,
+                              offerModel: widget.offerModel,
+                              notify: UserModel(
+                                  email: donationsModel.donorDetails.email,
+                                  fullname: donationsModel.donorDetails.name,
+                                  photoURL:
+                                      donationsModel.donorDetails.photoUrl,
+                                  sevaUserID: donationsModel.donorSevaUserId))
+                          .then((value) {
+                        if (value) {
+                          hideProgress();
+                          getSuccessDialog(S
+                                  .of(context)
+                                  .donations_requested
+                                  .toLowerCase())
+                              .then(
+                            //to pop the screen
+                            (_) => Navigator.of(context).pop(),
+                          );
                         }
-                        log("tapped on Submit ${widget.notificationId} --");
-                        showProgress(S.of(context).please_wait);
-                        donationBloc
-                            .donateOfferGoods(
-                                notificationId: widget.notificationId,
-                                donationModel: donationsModel,
-                                offerModel: widget.offerModel,
-                                notify: UserModel(
-                                    email: donationsModel.donorDetails.email,
-                                    fullname: donationsModel.donorDetails.name,
-                                    photoURL:
-                                        donationsModel.donorDetails.photoUrl,
-                                    sevaUserID: donationsModel.donorSevaUserId))
-                            .then((value) {
-                          if (value) {
-                            hideProgress();
-                            getSuccessDialog(S
-                                    .of(context)
-                                    .donations_requested
-                                    .toLowerCase())
-                                .then(
-                              //to pop the screen
-                              (_) => Navigator.of(context).pop(),
-                            );
-                          }
-                        });
-                      }),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  actionButton(
-                      buttonColor: Colors.grey,
-                      buttonTitle: S.of(context).do_it_later,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ],
-              )
-            ])));
+                      });
+                    }),
+                SizedBox(
+                  width: 20,
+                ),
+                actionButton(
+                    buttonColor: Colors.grey,
+                    buttonTitle: S.of(context).do_it_later,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            )
+          ]),
+        ));
   }
 
   Widget donatedItems() {
@@ -1062,7 +1078,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                buttonTitle: S.of(context).send_request,
+                buttonTitle: S.of(context).next,
                 buttonColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   donationBloc
@@ -1103,11 +1119,12 @@ class _DonationViewState extends State<DonationView> {
               height: 10,
             ),
             Text(
-              '${S.of(context).donation_description_one + widget.timabankName + ' ${S.of(context).donation_description_two} ' + amountEntered.toString() + S.of(context).donation_description_three}',
+              "${S.of(context).donation_description_one} ${widget.timabankName} an amount of ${amountEntered.toString()}${S.of(context).donation_description_three}",
               style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+                fontSize: 11,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(
               height: 10,
@@ -1221,12 +1238,29 @@ class _DonationViewState extends State<DonationView> {
     );
   }
 
+//  void showProgressDialog(String message) {
+//    showDialog(
+//        barrierDismissible: false,
+//        context: context,
+//        builder: (createDialogContext) {
+//          dialogContext = createDialogContext;
+//          return WillPopScope(
+//            onWillPop: () async {
+//              return false;
+//            },
+//            child: AlertDialog(
+//              title: Text(message),
+//              content: LinearProgressIndicator(),
+//            ),
+//          );
+//        });
+//  }
+
   void showProgress(String message) {
-    logger.i("===========================HHHHH==============================");
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
-      isDismissible: false,
+      isDismissible: true,
     );
     progressDialog.show();
     // progressDialog.style(
@@ -1237,7 +1271,6 @@ class _DonationViewState extends State<DonationView> {
     //   ),
     //   message: message,
     // );
-    progressDialog.show();
   }
 
   void hideProgress() {

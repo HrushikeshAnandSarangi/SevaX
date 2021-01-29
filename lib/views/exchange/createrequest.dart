@@ -819,7 +819,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
         ),
         Text(
-          "SevaX does not process the payment. Please select from among  ACH, PayPal, Venmo, or ZellePay in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.",
+          S.of(context).request_payment_description_hint_new,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey,
@@ -2245,7 +2245,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     .contains(SuggestedItem()..suggesttionTitle = pattern)) {
               var spellCheckResult =
                   await SpellCheckManager.evaluateSpellingFor(pattern,
-                      language: 'en');
+                      language: SevaCore.of(context).loggedInUser.language??'en');
               if (spellCheckResult.hasErros) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED
