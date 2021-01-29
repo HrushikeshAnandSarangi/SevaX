@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -84,6 +85,9 @@ class _EditRequestState extends State<EditRequest> {
               style: TextStyle(fontSize: 18),
             ),
             centerTitle: false,
+            actions: [
+              CommonHelpIconWidget,
+            ],
           ),
           body: StreamBuilder<UserModelController>(
               stream: userBloc.getLoggedInUser,

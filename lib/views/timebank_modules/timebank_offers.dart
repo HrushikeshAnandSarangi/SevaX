@@ -111,18 +111,18 @@ class OffersState extends State<OffersModule> {
               ),
             ),
             Spacer(),
-            Container(
-              height: 40,
-              width: 40,
-              child: IconButton(
-                icon: Image.asset(
-                  'lib/assets/images/help.png',
-                ),
-                color: FlavorConfig.values.theme.primaryColor,
-                //iconSize: 16,
-                onPressed: showOffersWebPage,
-              ),
-            ),
+            // Container(
+            //   height: 40,
+            //   width: 40,
+            //   child: IconButton(
+            //     icon: Image.asset(
+            //       'lib/assets/images/help.png',
+            //     ),
+            //     color: FlavorConfig.values.theme.primaryColor,
+            //     //iconSize: 16,
+            //     onPressed: showOffersWebPage,
+            //   ),
+            // ),
             SizedBox(width: 5),
           ],
         ),

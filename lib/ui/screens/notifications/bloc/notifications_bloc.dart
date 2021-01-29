@@ -27,6 +27,7 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.AcceptedOffer,
   NotificationType.TypeMemberExitTimebank,
   NotificationType.TypeMemberAdded,
+  NotificationType.TypeMemberJoinViaCode,
   NotificationType.TYPE_DEBIT_FROM_OFFER,
   NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,
   NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED,

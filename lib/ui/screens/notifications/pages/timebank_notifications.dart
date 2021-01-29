@@ -11,7 +11,9 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -75,6 +77,25 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
+              case NotificationType.TypeMemberJoinViaCode:
+                UserAddedModel userAddedModel = UserAddedModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: userAddedModel.adminName,
+                  isDissmissible: true,
+                  onDismissed: () async {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: null,
+                  photoUrl: userAddedModel.timebankImage,
+                  title: S.of(context).notification_timebank_join,
+                  subTitle:
+                  '${userAddedModel.addedMemberName} joined the community',
+                );
+                break;
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return TimebankRequestWidget(

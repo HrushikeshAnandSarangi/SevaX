@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
@@ -79,6 +80,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
               ),
+              actions:[
+                CommonHelpIconWidget
+              ]
             )
           : null,
       body: Builder(builder: (context) {

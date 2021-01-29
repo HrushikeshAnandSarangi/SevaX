@@ -4,13 +4,14 @@ class UserAddedModel extends DataModel {
   String adminName;
   String timebankName;
   String timebankImage;
-  // String reason;
+  String addedMemberName;
 
-  UserAddedModel(
-      {this.adminName,
-      this.timebankName,
-      //    this.reason,
-      this.timebankImage}); //  String userName;
+  UserAddedModel({
+    this.adminName,
+    this.timebankName,
+    this.timebankImage,
+    this.addedMemberName
+  }); //  String userName;
 
   @override
   Map<String, dynamic> toMap() {
@@ -20,18 +21,15 @@ class UserAddedModel extends DataModel {
     if (this.adminName != null && this.adminName.isNotEmpty) {
       object['adminName'] = this.adminName;
     }
-
-//    if (this.reason != null && this.reason.isNotEmpty) {
-//      object['reason'] = this.reason;
-//    }
-
+    if (this.addedMemberName != null && this.addedMemberName.isNotEmpty) {
+      object['addedMemberName'] = this.addedMemberName;
+    }
     if (this.timebankName != null && this.timebankName.isNotEmpty) {
       object['timebankName'] = this.timebankName;
     }
     if (this.timebankImage != null && this.timebankImage.isNotEmpty) {
       object['timebankImage'] = this.timebankImage;
     }
-
     return object;
   }
 
@@ -40,13 +38,13 @@ class UserAddedModel extends DataModel {
       this.adminName = map['adminName'];
     }
 
+    if (map.containsKey('addedMemberName')) {
+      this.addedMemberName = map['addedMemberName'];
+    }
+
     if (map.containsKey('timebankName')) {
       this.timebankName = map['timebankName'];
     }
-
-//    if (map.containsKey('reason')) {
-//      this.timebankName = map['reason'];
-//    }
 
     if (map.containsKey('timebankImage')) {
       this.timebankImage = map['timebankImage'];

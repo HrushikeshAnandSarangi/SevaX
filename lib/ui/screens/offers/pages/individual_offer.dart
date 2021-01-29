@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -40,11 +41,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
   var focusNodes = List.generate(8, (_) => FocusNode());
   @override
   void initState() {
+    AppConfig.helpIconContext = HelpIconContextClass.TIME_OFFERS;
+
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
       title = widget.offerModel.individualOfferDataModel.title;
+      AppConfig.helpIconContext = widget.offerModel.type==RequestType.TIME ? HelpIconContextClass.TIME_OFFERS :
+      widget.offerModel.type==RequestType.CASH ? HelpIconContextClass.MONEY_OFFERS : HelpIconContextClass.GOODS_OFFERS;
     }
     super.initState();
+
     _bloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
@@ -117,7 +123,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             groupvalue: snapshot.data != null
                                 ? snapshot.data
                                 : RequestType.TIME,
-                            onChanged: _bloc.onTypeChanged,
+                            onChanged: (data){
+                              AppConfig.helpIconContext = HelpIconContextClass.TIME_OFFERS;
+                              _bloc.onTypeChanged(data);
+                              setState(() {});
+                            },
                           ),
                           _optionRadioButton(
                               title: S.of(context).request_type_cash,
@@ -125,15 +135,23 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               groupvalue: snapshot.data != null
                                   ? snapshot.data
                                   : RequestType.TIME,
-                              onChanged: (data) =>
-                                  {_bloc.onTypeChanged(data), setState(() {})}),
+                              onChanged: (data) {
+                                AppConfig.helpIconContext = HelpIconContextClass.MONEY_OFFERS;
+                                _bloc.onTypeChanged(data);
+                                setState(() {});
+                              }),
                           _optionRadioButton(
                               title: S.of(context).request_type_goods,
                               value: RequestType.GOODS,
                               groupvalue: snapshot.data != null
                                   ? snapshot.data
                                   : RequestType.TIME,
-                              onChanged: _bloc.onTypeChanged)
+                              onChanged: (data){
+                                AppConfig.helpIconContext = HelpIconContextClass.GOODS_OFFERS;
+                                _bloc.onTypeChanged(data);
+                                setState(() {});
+                              }
+                          )
                         ],
                       ),
                     )
@@ -252,6 +270,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
               ),
+              actions:[
+               CommonHelpIconWidget
+              ]
             )
           : null,
       body: SafeArea(
@@ -295,6 +316,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 },
               );
             }
+
             return SingleChildScrollView(
               child: Column(
                 children: <Widget>[
