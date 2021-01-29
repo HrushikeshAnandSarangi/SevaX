@@ -42,15 +42,16 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
+
   Future<void> googleCalanderIntegration() async {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
-      //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
-      "createType": widget.requestModel != null ? "REQUEST" : "OFFER"
+      "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
+      "offerCreationOrListing": true
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     String redirectUrl =
@@ -72,7 +73,8 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    } else {
+    }
+    else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -94,11 +96,11 @@ class AddToCalendarState extends State<AddToCalendar> {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
-      //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
-      "createType": widget.requestModel != null ? "REQUEST" : "OFFER"
+      "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
+    "offerCreationOrListing": true
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     String redirectUrl =
@@ -119,7 +121,8 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    } else {
+    }
+    else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -141,11 +144,11 @@ class AddToCalendarState extends State<AddToCalendar> {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
-      //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
-      "createType": widget.requestModel != null ? "REQUEST" : "OFFER"
+      "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
+      "offerCreationOrListing": true
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
 
@@ -167,7 +170,8 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    } else {
+    }
+    else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "creatorAllowedCalender": true,
         "allowedCalenderUsers": [widget.offer.email]

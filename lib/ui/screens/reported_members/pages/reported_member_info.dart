@@ -11,15 +11,18 @@ class ReportedMemberInfo extends StatelessWidget {
   final bool isFromTimebank;
   final VoidCallback removeMember;
   final VoidCallback messageMember;
+  final bool canRemove;
 
-  const ReportedMemberInfo(
-      {Key key,
-      this.model,
-      this.isFromTimebank,
-      this.removeMember,
-      this.messageMember})
-      : assert(isFromTimebank != null),
+  const ReportedMemberInfo({
+    Key key,
+    this.model,
+    this.isFromTimebank,
+    this.removeMember,
+    this.messageMember,
+    this.canRemove,
+  })  : assert(isFromTimebank != null),
         assert(model != null),
+        assert(canRemove != null),
         super(key: key);
 
   static Route<dynamic> route({
@@ -27,13 +30,16 @@ class ReportedMemberInfo extends StatelessWidget {
     bool isFromTimebank,
     VoidCallback removeMember,
     VoidCallback messageMember,
+    bool canRemove,
   }) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMemberInfo(
-          model: model,
-          isFromTimebank: isFromTimebank,
-          removeMember: removeMember,
-          messageMember: messageMember),
+        model: model,
+        isFromTimebank: isFromTimebank,
+        removeMember: removeMember,
+        messageMember: messageMember,
+        canRemove: canRemove,
+      ),
     );
   }
 
@@ -50,26 +56,31 @@ class ReportedMemberInfo extends StatelessWidget {
         ),
         centerTitle: true,
         actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (value) {
-              if (value == ACTIONS.MESSAGE) {
-                messageMember();
-              } else {
-                removeMember();
-                Navigator.of(context).pop();
-              }
-            },
-            itemBuilder: (context) => <PopupMenuItem>[
+          PopupMenuButton(onSelected: (value) {
+            if (value == ACTIONS.MESSAGE) {
+              messageMember();
+            } else {
+              removeMember();
+              Navigator.of(context).pop();
+            }
+          }, itemBuilder: (context) {
+            List<PopupMenuItem> items = [
               PopupMenuItem(
                 child: Text(S.of(context).message),
                 value: ACTIONS.MESSAGE,
-              ),
-              PopupMenuItem(
-                child: Text(S.of(context).remove),
-                value: ACTIONS.REMOVE,
-              ),
-            ],
-          ),
+              )
+            ];
+
+            if (canRemove) {
+              items.add(
+                PopupMenuItem(
+                  child: Text(S.of(context).remove),
+                  value: ACTIONS.REMOVE,
+                ),
+              );
+            }
+            return items;
+          }),
         ],
       ),
       body: SingleChildScrollView(
