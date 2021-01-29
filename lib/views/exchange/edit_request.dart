@@ -293,8 +293,8 @@ class RequestEditFormState extends State<RequestEditForm> {
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(
-        snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
+      widget.requestModel.requestMode==RequestMode.TIMEBANK_REQUEST && isFromRequest()) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
@@ -304,12 +304,12 @@ class RequestEditFormState extends State<RequestEditForm> {
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
-      return ProjectSelection(
-        requestModel: requestModel,
-        projectModelList: projectModelList,
-        selectedProject: null,
-        admin: false,
-      );
+      // return ProjectSelection(
+      //   requestModel: requestModel,
+      //   projectModelList: projectModelList,
+      //   selectedProject: null,
+      //   admin: false,
+      // );
     }
   }
 

@@ -35,6 +35,8 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+  bool isAdminOrOwner = false;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   Widget build(BuildContext context) {
+    isAdminOrOwner = widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+        widget.timebankModel.organizers
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -103,22 +109,25 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 SizedBox(
                   width: 5,
                 ),
-                TransactionLimitCheck(
-                  comingFrom: ComingFrom.Projects,
-                  timebankId: widget.timebankId,
-                  isSoftDeleteRequested:
-                      widget.timebankModel.requestedSoftDelete,
-                  child: GestureDetector(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 0),
-                      child: Icon(
-                        Icons.add_circle,
-                        color: FlavorConfig.values.theme.primaryColor,
+                Visibility(
+                  visible: isAdminOrOwner,
+                  child: TransactionLimitCheck(
+                    comingFrom: ComingFrom.Projects,
+                    timebankId: widget.timebankId,
+                    isSoftDeleteRequested:
+                        widget.timebankModel.requestedSoftDelete,
+                    child: GestureDetector(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 0),
+                        child: Icon(
+                          Icons.add_circle,
+                          color: FlavorConfig.values.theme.primaryColor,
+                        ),
                       ),
+                      onTap: () {
+                        navigateToCreateProject();
+                      },
                     ),
-                    onTap: () {
-                      navigateToCreateProject();
-                    },
                   ),
                 ),
                 Spacer(),
