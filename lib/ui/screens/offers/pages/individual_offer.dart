@@ -147,9 +147,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               onChanged: (data) {
                                 AppConfig.helpIconContext =
                                     HelpIconContextClass.MONEY_OFFERS;
-                                title_hint = 'Ex: \$50 for community center';
+                                title_hint =
+                                    S.of(context).cash_offer_title_hint;
                                 description_hint =
-                                    'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #fundraiser #community';
+                                    S.of(context).cash_offer_desc_hint;
                                 setState(() {});
                               }),
                           _optionRadioButton(
@@ -162,9 +163,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 AppConfig.helpIconContext =
                                     HelpIconContextClass.GOODS_OFFERS;
                                 title_hint =
-                                    'Ex: winter coats for homeless shelter';
+                                    S.of(context).goods_offer_title_hint;
                                 description_hint =
-                                    'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive';
+                                    S.of(context).goods_offer_desc_hint;
                                 _bloc.onTypeChanged(data);
                                 setState(() {});
                               })
