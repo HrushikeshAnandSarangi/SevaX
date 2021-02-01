@@ -407,7 +407,7 @@ class S {
       );
 
   String get find_timebank_help_text => Intl.message(
-        'Type your Seva Community name. Ex: Alaska (min 1 char)',
+        'Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.',
         name: 'find_timebank_help_text',
       );
 
@@ -827,7 +827,7 @@ class S {
       );
 
   String get notifications_event_modification => Intl.message(
-        '. The Event Owner has modified this event. Make sure the changes made are right for you and apply again',
+        '. The Event Organizer has modified this event. Make sure the changes made are right for you and apply again',
         name: 'notifications_event_modification',
       );
 
@@ -3067,7 +3067,7 @@ class S {
       );
 
   String get by_accepting_owner_timebank => Intl.message(
-        'By accepting, you will become owner of the seva community',
+        'You have been designated the new owner of the ________ Seva Community. In order to complete the process, please select the Accept button to continue to the confirmation process.',
         name: 'by_accepting_owner_timebank',
       );
 
@@ -3427,7 +3427,7 @@ class S {
       );
 
   String get admins_organizers => Intl.message(
-        'Admins & Owners',
+        'Admins & Super-admins',
         name: 'admins_organizers',
       );
 
@@ -4123,7 +4123,7 @@ class S {
       );
 
   String get donation_description_one => Intl.message(
-        'Great, you have choose to donate for',
+        'Great! You have chosen to donate to',
         name: 'donation_description_one',
       );
 
@@ -5293,7 +5293,7 @@ class S {
       );
 
   String get what_is_community => Intl.message(
-        'What is Seva Community',
+        'What is a Seva Community',
         name: 'what_is_community',
       );
 
@@ -5573,12 +5573,12 @@ class S {
       );
 
   String get near_by_timebank_search_hint => Intl.message(
-        'Ex: Type in the name of your Seva Community here.',
+        'Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.',
         name: 'near_by_timebank_search_hint',
       );
 
   String get near_by_timebank_subtitle => Intl.message(
-        'Search here if you know the name of your existing Seva Community.',
+        'Find a Seva Community near you. Don\'t see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.',
         name: 'near_by_timebank_subtitle',
       );
 
@@ -5608,12 +5608,12 @@ class S {
       );
 
   String get owners => Intl.message(
-        'Owners',
+        'Super-admins',
         name: 'owners',
       );
 
   String get make_owner => Intl.message(
-        'Make Owner',
+        'Make Super-admin',
         name: 'make_owner',
       );
 
@@ -5638,12 +5638,12 @@ class S {
       );
 
   String get admin_promoted_to_owner => Intl.message(
-        'creator_name the creator of Community community_name has made you a Super-admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things',
+        'creator_name the creator of Community community_name has made you a Super-admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things,',
         name: 'admin_promoted_to_owner',
       );
 
   String get owner_demoted_to_admin => Intl.message(
-        'associatedName has demoted you from being an Organizer for the groupName',
+        'associatedName has demoted you from being a Super-admin for the groupName',
         name: 'owner_demoted_to_admin',
       );
 
@@ -5985,6 +5985,36 @@ class S {
   String get request_payment_description_hint_new => Intl.message(
         'SevaX does not process the payment. Please select from among  ACH, PayPal, Venmo, or ZellePay in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.',
         name: 'request_payment_description_hint_new',
+      );
+
+  String get super_admin => Intl.message(
+        'Super-admin',
+        name: 'super_admin',
+      );
+
+  String get what_is_restricted_seva_community => Intl.message(
+        'What is a Restricted Seva Community? ',
+        name: 'what_is_restricted_seva_community',
+      );
+
+  String get cash_offer_title_hint => Intl.message(
+        'Ex: \$50 for community center',
+        name: 'cash_offer_title_hint',
+      );
+
+  String get cash_offer_desc_hint => Intl.message(
+        'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #fundraiser #community',
+        name: 'cash_offer_desc_hint',
+      );
+
+  String get goods_offer_title_hint => Intl.message(
+        'Ex: winter coats for homeless shelter',
+        name: 'goods_offer_title_hint',
+      );
+
+  String get goods_offer_desc_hint => Intl.message(
+        'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive',
+        name: 'goods_offer_desc_hint',
       );
 }
 
