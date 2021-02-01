@@ -5638,7 +5638,7 @@ class S {
       );
 
   String get admin_promoted_to_owner => Intl.message(
-        'creator_name the creator of Community community_name has made you an admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things',
+        'creator_name the creator of Community community_name has made you a Super-admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things',
         name: 'admin_promoted_to_owner',
       );
 
