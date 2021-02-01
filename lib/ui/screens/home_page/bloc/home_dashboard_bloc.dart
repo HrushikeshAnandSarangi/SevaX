@@ -29,7 +29,7 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<CommunityModel> get selectedCommunityStream =>
       _selectedCommunity.stream;
 
-  CommunityModel get communityModel => _selectedCommunity.value;
+  CommunityModel get selectedCommunityModel => _selectedCommunity.value;
 
   Stream<List<CommunityModel>> get communities => _communities.stream;
 

@@ -384,12 +384,14 @@ class OfferDetails extends StatelessWidget {
     );
 
     bool isCreator = utils.isDeletable(
-        contentCreatorId: offerModel.sevaUserId,
-        context: context,
-        communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-            .communityModel
-            .created_by,
-        timebankCreatorId: timebankModel.creatorId);
+      contentCreatorId: offerModel.sevaUserId,
+      context: context,
+      communityCreatorId: timebankModel.managedCreatorIds?.first ??
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .selectedCommunityModel
+              .created_by,
+      timebankCreatorId: timebankModel.creatorId,
+    );
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;

@@ -35,7 +35,8 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
-  TimebankCreate({@required this.timebankId});
+  final String communityCreatorId;
+  TimebankCreate({@required this.timebankId, this.communityCreatorId});
   @override
   Widget build(BuildContext context) {
     return ExitWithConfirmation(
@@ -54,6 +55,7 @@ class TimebankCreate extends StatelessWidget {
         ),
         body: TimebankCreateForm(
           timebankId: timebankId,
+          communityCreatorId: communityCreatorId,
         ),
       ),
     );
@@ -63,7 +65,8 @@ class TimebankCreate extends StatelessWidget {
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
   final String timebankId;
-  TimebankCreateForm({@required this.timebankId});
+  final String communityCreatorId;
+  TimebankCreateForm({@required this.timebankId, this.communityCreatorId});
   @override
   TimebankCreateFormState createState() {
     return TimebankCreateFormState();
@@ -161,6 +164,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.id = id;
     timebankModel.communityId =
         SevaCore.of(context).loggedInUser.currentCommunity;
+    timebankModel.managedCreatorIds = [
+      widget.communityCreatorId,
+    ];
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
