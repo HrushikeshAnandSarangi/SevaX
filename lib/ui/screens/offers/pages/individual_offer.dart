@@ -34,6 +34,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
   CustomLocation customLocation;
 
   String title = '';
+  String title_hint = '';
+  String description_hint = '';
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
@@ -46,8 +48,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
       title = widget.offerModel.individualOfferDataModel.title;
-      AppConfig.helpIconContext = widget.offerModel.type==RequestType.TIME ? HelpIconContextClass.TIME_OFFERS :
-      widget.offerModel.type==RequestType.CASH ? HelpIconContextClass.MONEY_OFFERS : HelpIconContextClass.GOODS_OFFERS;
+      AppConfig.helpIconContext = widget.offerModel.type == RequestType.TIME
+          ? HelpIconContextClass.TIME_OFFERS
+          : widget.offerModel.type == RequestType.CASH
+              ? HelpIconContextClass.MONEY_OFFERS
+              : HelpIconContextClass.GOODS_OFFERS;
     }
     super.initState();
 
@@ -123,9 +128,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             groupvalue: snapshot.data != null
                                 ? snapshot.data
                                 : RequestType.TIME,
-                            onChanged: (data){
-                              AppConfig.helpIconContext = HelpIconContextClass.TIME_OFFERS;
+                            onChanged: (data) {
+                              AppConfig.helpIconContext =
+                                  HelpIconContextClass.TIME_OFFERS;
                               _bloc.onTypeChanged(data);
+                              title_hint = S.of(context).offer_title_hint;
+                              description_hint =
+                                  S.of(context).offer_description_hint;
                               setState(() {});
                             },
                           ),
@@ -136,8 +145,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? snapshot.data
                                   : RequestType.TIME,
                               onChanged: (data) {
-                                AppConfig.helpIconContext = HelpIconContextClass.MONEY_OFFERS;
-                                _bloc.onTypeChanged(data);
+                                AppConfig.helpIconContext =
+                                    HelpIconContextClass.MONEY_OFFERS;
+                                title_hint = 'Ex: \$50 for community center';
+                                description_hint =
+                                    'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #fundraiser #community';
                                 setState(() {});
                               }),
                           _optionRadioButton(
@@ -146,12 +158,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               groupvalue: snapshot.data != null
                                   ? snapshot.data
                                   : RequestType.TIME,
-                              onChanged: (data){
-                                AppConfig.helpIconContext = HelpIconContextClass.GOODS_OFFERS;
+                              onChanged: (data) {
+                                AppConfig.helpIconContext =
+                                    HelpIconContextClass.GOODS_OFFERS;
+                                title_hint =
+                                    'Ex: winter coats for homeless shelter';
+                                description_hint =
+                                    'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive';
                                 _bloc.onTypeChanged(data);
                                 setState(() {});
-                              }
-                          )
+                              })
                         ],
                       ),
                     )
@@ -270,10 +286,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
               ),
-              actions:[
-               CommonHelpIconWidget
-              ]
-            )
+              actions: [CommonHelpIconWidget])
           : null,
       body: SafeArea(
         child: StreamBuilder<Status>(
@@ -340,7 +353,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 _bloc.onTitleChanged(value);
                                 title = value;
                               },
-                              hint: "${S.of(context).offer_title_hint}..",
+                              hint: title_hint,
                               maxLength: null,
                               error:
                                   getValidationError(context, snapshot.error),
@@ -357,7 +370,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               value: snapshot.data,
                               heading: "${S.of(context).offer_description}*",
                               onChanged: _bloc.onOfferDescriptionChanged,
-                              hint: S.of(context).offer_description_hint,
+                              hint: description_hint,
                               maxLength: 500,
                               error:
                                   getValidationError(context, snapshot.error),

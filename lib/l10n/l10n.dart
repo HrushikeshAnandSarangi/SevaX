@@ -4128,7 +4128,7 @@ class S {
       );
 
   String get donation_description_two => Intl.message(
-        'a minimum donations is',
+        'a donation of no less than',
         name: 'donation_description_two',
       );
 

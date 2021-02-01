@@ -1119,7 +1119,7 @@ class _DonationViewState extends State<DonationView> {
               height: 10,
             ),
             Text(
-              "${S.of(context).donation_description_one} ${widget.timabankName} an amount of ${amountEntered.toString()}${S.of(context).donation_description_three}",
+              "${S.of(context).donation_description_one}  ${widget.timabankName}  ${S.of(context).donation_description_two}  ${amountEntered.toString()}${S.of(context).donation_description_three}",
               style: TextStyle(
                 fontSize: 11,
                 color: Colors.black,
