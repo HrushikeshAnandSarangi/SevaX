@@ -58,9 +58,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
-        interests[data.documentID] = data[widget.languageCode] != null
-            ? data[widget.languageCode]
-            : data['name'];
+        if (data[widget.languageCode] != null) {
+          interests[data.documentID] = data[widget.languageCode];
+        }
       });
 
       if (widget.userModel.interests != null &&

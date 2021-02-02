@@ -218,7 +218,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                S.of(context).cancel,
+                S.of(context).ok,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
