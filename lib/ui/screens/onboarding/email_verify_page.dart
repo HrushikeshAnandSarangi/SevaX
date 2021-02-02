@@ -219,6 +219,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             FlatButton(
               child: Text(
                 S.of(context).ok,
+                //
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
