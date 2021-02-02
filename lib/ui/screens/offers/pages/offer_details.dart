@@ -386,8 +386,9 @@ class OfferDetails extends StatelessWidget {
     bool isCreator = utils.isDeletable(
       contentCreatorId: offerModel.sevaUserId,
       context: context,
-      communityCreatorId: timebankModel.managedCreatorIds?.first ??
-          BlocProvider.of<HomeDashBoardBloc>(context)
+      communityCreatorId: timebankModel.managedCreatorIds.isNotEmpty
+          ? timebankModel.managedCreatorIds.elementAt(0)
+          : BlocProvider.of<HomeDashBoardBloc>(context)
               .selectedCommunityModel
               .created_by,
       timebankCreatorId: timebankModel.creatorId,

@@ -3,16 +3,21 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/member_card_with_single_action.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/seva_coin_star.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferEarnings extends StatelessWidget {
   final OfferModel offerModel;
+  final TimebankModel timebankModel;
 
-  const OfferEarnings({Key key, this.offerModel}) : super(key: key);
+  const OfferEarnings({Key key, this.offerModel, this.timebankModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +95,20 @@ class OfferEarnings extends StatelessWidget {
                             snapshot.data[index].timestamp,
                           ),
                         ),
+                        onImageTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return ProfileViewer(
+                              timebankId: timebankModel.id,
+                              entityName: timebankModel.name,
+                              isFromTimebank: isPrimaryTimebank(
+                                  parentTimebankId:
+                                      timebankModel.parentTimebankId),
+                              userEmail:
+                                  snapshot.data[index].participantDetails.email,
+                            );
+                          }));
+                        },
                         onMessagePressed: () {},
                         action: () {
                           // print(_endTime.toString());
@@ -158,10 +177,13 @@ class OfferEarnings extends StatelessWidget {
   //   }
   // }
 }
+
 class OfferDonationRequest extends StatelessWidget {
   final OfferModel offerModel;
+  final TimebankModel timebankModel;
 
-  const OfferDonationRequest({Key key, this.offerModel}) : super(key: key);
+  const OfferDonationRequest({Key key, this.offerModel, this.timebankModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,20 +218,20 @@ class OfferDonationRequest extends StatelessWidget {
                       title: S.of(context).your_earnings,
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.numberOfClassHours +
-                          offerModel.groupOfferDataModel
-                              .numberOfPreperationHours)
-                          .toString()
+                                  offerModel.groupOfferDataModel
+                                      .numberOfPreperationHours)
+                              .toString()
                           : '0',
                     ),
                     SevaCoinStarWidget(
                       title: S.of(context).timebank_earnings,
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.creditsApproved -
-                          (offerModel.groupOfferDataModel
-                              .numberOfClassHours +
-                              offerModel.groupOfferDataModel
-                                  .numberOfPreperationHours))
-                          .toString()
+                                  (offerModel.groupOfferDataModel
+                                          .numberOfClassHours +
+                                      offerModel.groupOfferDataModel
+                                          .numberOfPreperationHours))
+                              .toString()
                           : '0',
                     ),
                   ],
@@ -222,9 +244,9 @@ class OfferDonationRequest extends StatelessWidget {
                     itemBuilder: (context, index) {
                       ParticipantStatus status = ParticipantStatus.values
                           .firstWhere((v) =>
-                      v.toString() ==
-                          'ParticipantStatus.' +
-                              snapshot.data[index].status);
+                              v.toString() ==
+                              'ParticipantStatus.' +
+                                  snapshot.data[index].status);
 
                       if (_isOfferOver == true &&
                           status ==
@@ -239,6 +261,20 @@ class OfferDonationRequest extends StatelessWidget {
                             snapshot.data[index].timestamp,
                           ),
                         ),
+                        onImageTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return ProfileViewer(
+                              timebankId: timebankModel.id,
+                              entityName: timebankModel.name,
+                              isFromTimebank: isPrimaryTimebank(
+                                  parentTimebankId:
+                                      timebankModel.parentTimebankId),
+                              userEmail:
+                                  snapshot.data[index].participantDetails.email,
+                            );
+                          }));
+                        },
                         onMessagePressed: () {},
                         action: () {
                           // print(_endTime.toString());
@@ -255,7 +291,7 @@ class OfferDonationRequest extends StatelessWidget {
                         status: getParticipantStatus(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                         photoUrl:
-                        snapshot.data[index].participantDetails.photourl,
+                            snapshot.data[index].participantDetails.photourl,
                         buttonColor: getStatusColor(ParticipantStatus
                             .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                       );

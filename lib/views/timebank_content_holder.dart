@@ -27,7 +27,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
@@ -160,8 +159,8 @@ Widget createAdminTabBar(
         Stack(
           children: <Widget>[
             TabBar(
-              onTap: (int index){
-                switch(index){
+              onTap: (int index) {
+                switch (index) {
                   case 1:
                     AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
                     break;
@@ -172,11 +171,12 @@ Widget createAdminTabBar(
                     AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
                     break;
                   default:
-                    AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+                    AppConfig.helpIconContext =
+                        HelpIconContextClass.GROUP_DEFAULT;
                     break;
                 }
-                logger.i("tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
-
+                logger.i(
+                    "tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
               },
               controller: controller,
               labelPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -1181,454 +1181,454 @@ class DiscussionListState extends State<DiscussionList> {
     );
   }
 
-  Widget getNewsCard(NewsModel news, bool isFromMessage) {
-    String loggedinemail = SevaCore.of(context).loggedInUser.email;
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_context) {
-              return BlocProvider(
-                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
-                child: NewsCardView(
-                  newsModel: news,
-                  isFocused: false,
-                  timebankModel: widget.timebankModel,
-                ),
-              );
-            },
-          ),
-        );
-      },
-      child: Container(
-          margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
-          child: Stack(children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                news.newsImageUrl == null
-                    ? news.imageScraped == null || news.imageScraped == "NoData"
-                        ? Offstage()
-                        : getImageView(news.id, news.imageScraped)
-                    : getImageView(news.id, news.newsImageUrl),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12.0, top: 15, bottom: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    news.title != null && news.title != "NoData"
-                                        ? news.title.trim()
-                                        : news.subheading.trim(),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 7,
-                                    style: TextStyle(fontSize: 16.0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          isAccessAvailable(widget.timebankModel,
-                                  SevaCore.of(context).loggedInUser.sevaUserID)
-                              ? getOptionButtons(
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: Image.asset(
-                                        'lib/assets/images/pin.png',
-                                        color: news.isPinned
-                                            ? Colors.green
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  () {
-                                    news.isPinned
-                                        ? unPinFeed(newsModel: news)
-                                        : pinNews(
-                                            newsModel: news,
-                                          );
-                                    setState(() {});
-                                  },
-                                )
-                              : Offstage(),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: getOptionButtons(
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[],
-                            ),
-                            () {
-                              String emailId = news.email;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfileViewer(
-                                    userEmail: emailId,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            ClipOval(
-                              child: SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: FadeInImage.assetNetwork(
-                                  fit: BoxFit.cover,
-                                  placeholder: defaultUserImageURL,
-                                  //  placeholder: 'lib/assets/images/profile.png',
-                                  image: news.userPhotoURL == null
-                                      ? defaultUserImageURL
-                                      : news.userPhotoURL,
-                                ),
-                              ),
-                            ),
-//                            Container(
-//                              margin: EdgeInsets.all(5),
-//                              height: 40,
-//                              width: 40,
-//                              child: CircleAvatar(
-//                                backgroundImage: NetworkImage(
-//                                  news.userPhotoURL == null
+//  Widget getNewsCard(NewsModel news, bool isFromMessage) {
+//    String loggedinemail = SevaCore.of(context).loggedInUser.email;
+//    return GestureDetector(
+//      onTap: () {
+//        Navigator.push(
+//          context,
+//          MaterialPageRoute(
+//            builder: (_context) {
+//              return BlocProvider(
+//                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+//                child: NewsCardView(
+//                  newsModel: news,
+//                  isFocused: false,
+//                  timebankModel: widget.timebankModel,
+//                ),
+//              );
+//            },
+//          ),
+//        );
+//      },
+//      child: Container(
+//          margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+//          child: Stack(children: <Widget>[
+//            Column(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              mainAxisAlignment: MainAxisAlignment.start,
+//              children: <Widget>[
+//                news.newsImageUrl == null
+//                    ? news.imageScraped == null || news.imageScraped == "NoData"
+//                        ? Offstage()
+//                        : getImageView(news.id, news.imageScraped)
+//                    : getImageView(news.id, news.newsImageUrl),
+//                Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    Padding(
+//                      padding: const EdgeInsets.only(
+//                          left: 12.0, top: 15, bottom: 15),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: <Widget>[
+//                          Expanded(
+//                            child: Column(
+//                              crossAxisAlignment: CrossAxisAlignment.start,
+//                              children: <Widget>[
+//                                Container(
+//                                  margin: EdgeInsets.only(top: 5),
+//                                  child: Text(
+//                                    news.title != null && news.title != "NoData"
+//                                        ? news.title.trim()
+//                                        : news.subheading.trim(),
+//                                    overflow: TextOverflow.ellipsis,
+//                                    maxLines: 7,
+//                                    style: TextStyle(fontSize: 16.0),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                          ),
+//                          isAccessAvailable(widget.timebankModel,
+//                                  SevaCore.of(context).loggedInUser.sevaUserID)
+//                              ? getOptionButtons(
+//                                  Padding(
+//                                    padding: EdgeInsets.symmetric(
+//                                        horizontal: 6, vertical: 2),
+//                                    child: Container(
+//                                      height: 20,
+//                                      width: 20,
+//                                      child: Image.asset(
+//                                        'lib/assets/images/pin.png',
+//                                        color: news.isPinned
+//                                            ? Colors.green
+//                                            : Colors.black,
+//                                      ),
+//                                    ),
+//                                  ),
+//                                  () {
+//                                    news.isPinned
+//                                        ? unPinFeed(newsModel: news)
+//                                        : pinNews(
+//                                            newsModel: news,
+//                                          );
+//                                    setState(() {});
+//                                  },
+//                                )
+//                              : Offstage(),
+//                        ],
+//                      ),
+//                    ),
+//                    Row(
+//                      children: <Widget>[
+//                        Expanded(
+//                          child: getOptionButtons(
+//                            Row(
+//                              mainAxisAlignment: MainAxisAlignment.start,
+//                              children: <Widget>[],
+//                            ),
+//                            () {
+//                              String emailId = news.email;
+//                              Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => ProfileViewer(
+//                                    userEmail: emailId,
+//                                  ),
+//                                ),
+//                              );
+//                            },
+//                          ),
+//                        ),
+//                        Row(
+//                          children: <Widget>[
+//                            ClipOval(
+//                              child: SizedBox(
+//                                height: 45,
+//                                width: 45,
+//                                child: FadeInImage.assetNetwork(
+//                                  fit: BoxFit.cover,
+//                                  placeholder: defaultUserImageURL,
+//                                  //  placeholder: 'lib/assets/images/profile.png',
+//                                  image: news.userPhotoURL == null
 //                                      ? defaultUserImageURL
 //                                      : news.userPhotoURL,
 //                                ),
-//                                minRadius: 40.0,
 //                              ),
 //                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(left: 5),
-                                  child: Text(
-                                    news.fullName?.trim() ?? '',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 5),
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Text(
-                                          timeAgo.format(
-                                              DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                news.postTimestamp,
-                                              ),
-                                              locale: Locale(AppConfig.prefs
-                                                      .getString(
-                                                          'language_code'))
-                                                  .toLanguageTag()),
-                                          style: TextStyle(fontSize: 12)),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 125,
-                                  margin: EdgeInsets.only(left: 5, right: 40),
-                                  child: Text(
-                                    news.placeAddress == null
-                                        ? ""
-                                        : news.placeAddress.trim(),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(fontSize: 12.0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0, top: 4),
-                      child: !isFromMessage
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: news.sevaUserId !=
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID
-                                      ? getOptionButtons(
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 6, vertical: 2),
-                                            child: Icon(
-                                              Icons.flag,
-                                              color: news.reports.contains(
-                                                      SevaCore.of(context)
-                                                          .loggedInUser
-                                                          .sevaUserID)
-                                                  ? Colors.red
-                                                  : Colors.black,
-                                              size: 20,
-                                            ),
-                                          ),
-                                          () {
-                                            if (news.reports.contains(
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID)) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                    viewContextS) {
-                                                  return AlertDialog(
-                                                    title: Text(S
-                                                        .of(context)
-                                                        .already_reported),
-                                                    content: Text(S
-                                                        .of(context)
-                                                        .feed_reported),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        child: Text(
-                                                          S.of(context).ok,
-                                                          style: TextStyle(
-                                                            fontSize:
-                                                                dialogButtonSize,
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContextS)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext viewContext) {
-                                                  return AlertDialog(
-                                                    title: Text(S
-                                                        .of(context)
-                                                        .report_feed),
-                                                    content: Text(S
-                                                        .of(context)
-                                                        .report_feed_confirmation_message),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        padding:
-                                                            EdgeInsets.fromLTRB(
-                                                                20, 5, 20, 5),
-                                                        color: Theme.of(context)
-                                                            .accentColor,
-                                                        textColor: FlavorConfig
-                                                            .values
-                                                            .buttonTextColor,
-                                                        child: Text(
-                                                          S
-                                                              .of(context)
-                                                              .report_feed,
-                                                          style: TextStyle(
-                                                            fontSize:
-                                                                dialogButtonSize,
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (news.reports
-                                                              .contains(SevaCore
-                                                                      .of(context)
-                                                                  .loggedInUser
-                                                                  .sevaUserID)) {
-                                                          } else {
-                                                            if (news.reports
-                                                                .isEmpty) {
-                                                              news.reports =
-                                                                  List<
-                                                                      String>();
-                                                            }
-                                                            news.reports.add(
-                                                                SevaCore.of(
-                                                                        context)
-                                                                    .loggedInUser
-                                                                    .sevaUserID);
-                                                            Firestore.instance
-                                                                .collection(
-                                                                    'news')
-                                                                .document(
-                                                                    news.id)
-                                                                .updateData({
-                                                              'reports':
-                                                                  news.reports
-                                                            });
-                                                          }
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                      FlatButton(
-                                                        child: Text(
-                                                          S.of(context).cancel,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        )
-                                      : Offstage(),
-                                ),
-                                getOptionButtons(
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Icon(
-                                      Icons.share,
-                                      color: Colors.black,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  () {
-                                    if (SevaCore.of(context)
-                                            .loggedInUser
-                                            .associatedWithTimebanks >
-                                        1) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelectTimeBankNewsShare(
-                                                  news,
-                                                )),
-                                      );
-                                    } else {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectMembersFromTimebank(
-                                            timebankId: SevaCore.of(context)
-                                                .loggedInUser
-                                                .currentTimebank,
-                                            newsModel: NewsModel(),
-                                            isFromShare: false,
-                                            selectionMode:
-                                                MEMBER_SELECTION_MODE.NEW_CHAT,
-                                            userSelected: HashMap(),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                                news.newsDocumentUrl != null
-                                    ? getOptionButtons(
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
-                                          child: Icon(
-                                            Icons.attach_file,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        () {
-                                          openPdfViewer(news.newsDocumentUrl,
-                                              news.newsDocumentName);
-                                        },
-                                      )
-                                    : Offstage(),
-                                getOptionButtons(
-                                  Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Center(
-                                          child: news.likes != null &&
-                                                  news.likes
-                                                      .contains(loggedinemail)
-                                              ? Icon(
-                                                  Icons.favorite,
-                                                  size: 24,
-                                                  color: Colors.red[900],
-                                                )
-                                              : Icon(
-                                                  Icons.favorite_border,
-                                                  size: 24,
-                                                  color: Colors.red[900],
-                                                ),
-                                        ),
-                                      ),
-                                      Text('${news.likes.length}',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          )),
-                                    ],
-                                  ),
-                                  () {
-                                    Set<String> likesList =
-                                        Set.from(news.likes);
-                                    news.likes != null &&
-                                            news.likes.contains(loggedinemail)
-                                        ? likesList.remove(loggedinemail)
-                                        : likesList.add(loggedinemail);
-                                    news.likes = likesList.toList();
-                                    FirestoreManager.updateNews(
-                                        newsObject: news);
-                                  },
-                                ),
-                              ],
-                            )
-                          : Center(),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.black38),
-              ],
-            )
-          ])),
-    );
-  }
+////                            Container(
+////                              margin: EdgeInsets.all(5),
+////                              height: 40,
+////                              width: 40,
+////                              child: CircleAvatar(
+////                                backgroundImage: NetworkImage(
+////                                  news.userPhotoURL == null
+////                                      ? defaultUserImageURL
+////                                      : news.userPhotoURL,
+////                                ),
+////                                minRadius: 40.0,
+////                              ),
+////                            ),
+//                            Column(
+//                              crossAxisAlignment: CrossAxisAlignment.start,
+//                              children: <Widget>[
+//                                Container(
+//                                  margin: EdgeInsets.only(left: 5),
+//                                  child: Text(
+//                                    news.fullName?.trim() ?? '',
+//                                    style:
+//                                        TextStyle(fontWeight: FontWeight.bold),
+//                                    overflow: TextOverflow.ellipsis,
+//                                  ),
+//                                ),
+//                                Container(
+//                                  padding: EdgeInsets.only(left: 5),
+//                                  alignment: Alignment.centerLeft,
+//                                  child: Column(
+//                                    mainAxisAlignment: MainAxisAlignment.start,
+//                                    children: <Widget>[
+//                                      Text(
+//                                          timeAgo.format(
+//                                              DateTime
+//                                                  .fromMillisecondsSinceEpoch(
+//                                                news.postTimestamp,
+//                                              ),
+//                                              locale: Locale(AppConfig.prefs
+//                                                      .getString(
+//                                                          'language_code'))
+//                                                  .toLanguageTag()),
+//                                          style: TextStyle(fontSize: 12)),
+//                                    ],
+//                                  ),
+//                                ),
+//                                Container(
+//                                  width:
+//                                      MediaQuery.of(context).size.width - 125,
+//                                  margin: EdgeInsets.only(left: 5, right: 40),
+//                                  child: Text(
+//                                    news.placeAddress == null
+//                                        ? ""
+//                                        : news.placeAddress.trim(),
+//                                    overflow: TextOverflow.ellipsis,
+//                                    maxLines: 1,
+//                                    style: TextStyle(fontSize: 12.0),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                          ],
+//                        ),
+//                      ],
+//                    ),
+//                    Padding(
+//                      padding: const EdgeInsets.only(bottom: 8.0, top: 4),
+//                      child: !isFromMessage
+//                          ? Row(
+//                              mainAxisAlignment: MainAxisAlignment.start,
+//                              children: <Widget>[
+//                                Container(
+//                                  child: news.sevaUserId !=
+//                                          SevaCore.of(context)
+//                                              .loggedInUser
+//                                              .sevaUserID
+//                                      ? getOptionButtons(
+//                                          Padding(
+//                                            padding: EdgeInsets.symmetric(
+//                                                horizontal: 6, vertical: 2),
+//                                            child: Icon(
+//                                              Icons.flag,
+//                                              color: news.reports.contains(
+//                                                      SevaCore.of(context)
+//                                                          .loggedInUser
+//                                                          .sevaUserID)
+//                                                  ? Colors.red
+//                                                  : Colors.black,
+//                                              size: 20,
+//                                            ),
+//                                          ),
+//                                          () {
+//                                            if (news.reports.contains(
+//                                                SevaCore.of(context)
+//                                                    .loggedInUser
+//                                                    .sevaUserID)) {
+//                                              showDialog(
+//                                                context: context,
+//                                                builder: (BuildContext
+//                                                    viewContextS) {
+//                                                  return AlertDialog(
+//                                                    title: Text(S
+//                                                        .of(context)
+//                                                        .already_reported),
+//                                                    content: Text(S
+//                                                        .of(context)
+//                                                        .feed_reported),
+//                                                    actions: <Widget>[
+//                                                      FlatButton(
+//                                                        child: Text(
+//                                                          S.of(context).ok,
+//                                                          style: TextStyle(
+//                                                            fontSize:
+//                                                                dialogButtonSize,
+//                                                          ),
+//                                                        ),
+//                                                        onPressed: () {
+//                                                          Navigator.of(
+//                                                                  viewContextS)
+//                                                              .pop();
+//                                                        },
+//                                                      ),
+//                                                    ],
+//                                                  );
+//                                                },
+//                                              );
+//                                            } else {
+//                                              showDialog(
+//                                                context: context,
+//                                                builder:
+//                                                    (BuildContext viewContext) {
+//                                                  return AlertDialog(
+//                                                    title: Text(S
+//                                                        .of(context)
+//                                                        .report_feed),
+//                                                    content: Text(S
+//                                                        .of(context)
+//                                                        .report_feed_confirmation_message),
+//                                                    actions: <Widget>[
+//                                                      FlatButton(
+//                                                        padding:
+//                                                            EdgeInsets.fromLTRB(
+//                                                                20, 5, 20, 5),
+//                                                        color: Theme.of(context)
+//                                                            .accentColor,
+//                                                        textColor: FlavorConfig
+//                                                            .values
+//                                                            .buttonTextColor,
+//                                                        child: Text(
+//                                                          S
+//                                                              .of(context)
+//                                                              .report_feed,
+//                                                          style: TextStyle(
+//                                                            fontSize:
+//                                                                dialogButtonSize,
+//                                                          ),
+//                                                        ),
+//                                                        onPressed: () {
+//                                                          if (news.reports
+//                                                              .contains(SevaCore
+//                                                                      .of(context)
+//                                                                  .loggedInUser
+//                                                                  .sevaUserID)) {
+//                                                          } else {
+//                                                            if (news.reports
+//                                                                .isEmpty) {
+//                                                              news.reports =
+//                                                                  List<
+//                                                                      String>();
+//                                                            }
+//                                                            news.reports.add(
+//                                                                SevaCore.of(
+//                                                                        context)
+//                                                                    .loggedInUser
+//                                                                    .sevaUserID);
+//                                                            Firestore.instance
+//                                                                .collection(
+//                                                                    'news')
+//                                                                .document(
+//                                                                    news.id)
+//                                                                .updateData({
+//                                                              'reports':
+//                                                                  news.reports
+//                                                            });
+//                                                          }
+//                                                          Navigator.of(
+//                                                                  viewContext)
+//                                                              .pop();
+//                                                        },
+//                                                      ),
+//                                                      FlatButton(
+//                                                        child: Text(
+//                                                          S.of(context).cancel,
+//                                                          style: TextStyle(
+//                                                              color:
+//                                                                  Colors.red),
+//                                                        ),
+//                                                        onPressed: () {
+//                                                          Navigator.of(
+//                                                                  viewContext)
+//                                                              .pop();
+//                                                        },
+//                                                      ),
+//                                                    ],
+//                                                  );
+//                                                },
+//                                              );
+//                                            }
+//                                          },
+//                                        )
+//                                      : Offstage(),
+//                                ),
+//                                getOptionButtons(
+//                                  Padding(
+//                                    padding: EdgeInsets.symmetric(
+//                                        horizontal: 6, vertical: 2),
+//                                    child: Icon(
+//                                      Icons.share,
+//                                      color: Colors.black,
+//                                      size: 20,
+//                                    ),
+//                                  ),
+//                                  () {
+//                                    if (SevaCore.of(context)
+//                                            .loggedInUser
+//                                            .associatedWithTimebanks >
+//                                        1) {
+//                                      Navigator.push(
+//                                        context,
+//                                        MaterialPageRoute(
+//                                            builder: (context) =>
+//                                                SelectTimeBankNewsShare(
+//                                                  news,
+//                                                )),
+//                                      );
+//                                    } else {
+//                                      Navigator.push(
+//                                        context,
+//                                        MaterialPageRoute(
+//                                          builder: (context) =>
+//                                              SelectMembersFromTimebank(
+//                                            timebankId: SevaCore.of(context)
+//                                                .loggedInUser
+//                                                .currentTimebank,
+//                                            newsModel: NewsModel(),
+//                                            isFromShare: false,
+//                                            selectionMode:
+//                                                MEMBER_SELECTION_MODE.NEW_CHAT,
+//                                            userSelected: HashMap(),
+//                                          ),
+//                                        ),
+//                                      );
+//                                    }
+//                                  },
+//                                ),
+//                                news.newsDocumentUrl != null
+//                                    ? getOptionButtons(
+//                                        Padding(
+//                                          padding: EdgeInsets.symmetric(
+//                                              horizontal: 6, vertical: 2),
+//                                          child: Icon(
+//                                            Icons.attach_file,
+//                                            color: Colors.black,
+//                                            size: 20,
+//                                          ),
+//                                        ),
+//                                        () {
+//                                          openPdfViewer(news.newsDocumentUrl,
+//                                              news.newsDocumentName);
+//                                        },
+//                                      )
+//                                    : Offstage(),
+//                                getOptionButtons(
+//                                  Row(
+//                                    children: <Widget>[
+//                                      Padding(
+//                                        padding: const EdgeInsets.all(4.0),
+//                                        child: Center(
+//                                          child: news.likes != null &&
+//                                                  news.likes
+//                                                      .contains(loggedinemail)
+//                                              ? Icon(
+//                                                  Icons.favorite,
+//                                                  size: 24,
+//                                                  color: Colors.red[900],
+//                                                )
+//                                              : Icon(
+//                                                  Icons.favorite_border,
+//                                                  size: 24,
+//                                                  color: Colors.red[900],
+//                                                ),
+//                                        ),
+//                                      ),
+//                                      Text('${news.likes.length}',
+//                                          style: TextStyle(
+//                                            fontSize: 14,
+//                                          )),
+//                                    ],
+//                                  ),
+//                                  () {
+//                                    Set<String> likesList =
+//                                        Set.from(news.likes);
+//                                    news.likes != null &&
+//                                            news.likes.contains(loggedinemail)
+//                                        ? likesList.remove(loggedinemail)
+//                                        : likesList.add(loggedinemail);
+//                                    news.likes = likesList.toList();
+//                                    FirestoreManager.updateNews(
+//                                        newsObject: news);
+//                                  },
+//                                ),
+//                              ],
+//                            )
+//                          : Center(),
+//                    ),
+//                  ],
+//                ),
+//                Divider(color: Colors.black38),
+//              ],
+//            )
+//          ])),
+//    );
+//  }
 
   Widget getImageView(String newsId, String urlToLoad) {
     return Container(

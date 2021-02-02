@@ -135,7 +135,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             }),
           ),
           TransactionsMatrixCheck(
-              comingFrom: ComingFrom.Projects,
+            comingFrom: ComingFrom.Projects,
             upgradeDetails: AppConfig.upgradePlanBannerModel.project_templates,
             transaction_matrix_type: "project_templates",
             child: searchFieldWidget(),
@@ -163,8 +163,8 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: SizedBox(
-                height: 48,
-                width: 48,
+                height: 25,
+                width: 25,
                 child: CircularProgressIndicator(),
               ),
             );

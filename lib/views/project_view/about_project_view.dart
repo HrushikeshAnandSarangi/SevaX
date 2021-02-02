@@ -201,8 +201,10 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           contentCreatorId: projectModel.creatorId,
                           context: context,
                           communityCreatorId:
-                              widget.timebankModel.managedCreatorIds?.first ??
-                                  BlocProvider.of<HomeDashBoardBloc>(context)
+                              widget.timebankModel.managedCreatorIds.isNotEmpty
+                                  ? widget.timebankModel.managedCreatorIds
+                                      .elementAt(0)
+                                  : BlocProvider.of<HomeDashBoardBloc>(context)
                                       .selectedCommunityModel
                                       .created_by,
                           timebankCreatorId: widget.timebankModel.creatorId,

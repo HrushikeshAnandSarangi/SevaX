@@ -174,6 +174,9 @@ class TimebankModel extends DataModel {
     if (key == 'members') {
       this.members = value;
     }
+    if (key == 'managedCreatorIds') {
+      this.managedCreatorIds = value;
+    }
     if (key == 'protected') {
       this.protected = value;
     }

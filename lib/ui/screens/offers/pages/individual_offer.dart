@@ -34,8 +34,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
   CustomLocation customLocation;
 
   String title = '';
-  String title_hint = '';
-  String description_hint = '';
+  String title_hint;
+  String description_hint;
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
@@ -147,6 +147,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               onChanged: (data) {
                                 AppConfig.helpIconContext =
                                     HelpIconContextClass.MONEY_OFFERS;
+                                _bloc.onTypeChanged(data);
                                 title_hint =
                                     S.of(context).cash_offer_title_hint;
                                 description_hint =
@@ -354,7 +355,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 _bloc.onTitleChanged(value);
                                 title = value;
                               },
-                              hint: title_hint,
+                              hint: title_hint != null
+                                  ? title_hint
+                                  : S.of(context).offer_title_hint,
                               maxLength: null,
                               error:
                                   getValidationError(context, snapshot.error),
@@ -371,7 +374,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               value: snapshot.data,
                               heading: "${S.of(context).offer_description}*",
                               onChanged: _bloc.onOfferDescriptionChanged,
-                              hint: description_hint,
+                              hint: description_hint != null
+                                  ? description_hint
+                                  : S.of(context).offer_description_hint,
                               maxLength: 500,
                               error:
                                   getValidationError(context, snapshot.error),

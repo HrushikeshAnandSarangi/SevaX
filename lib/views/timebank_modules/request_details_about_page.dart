@@ -602,8 +602,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId:
-                  widget.timebankModel.managedCreatorIds?.first ??
-                      BlocProvider.of<HomeDashBoardBloc>(context)
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
                           .selectedCommunityModel
                           .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
@@ -615,19 +616,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId:
-                  widget.timebankModel.managedCreatorIds?.first ??
-                      BlocProvider.of<HomeDashBoardBloc>(context)
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
                           .selectedCommunityModel
                           .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
-          widget.requestItem.goodsDonationDetails.donors == null;
+          (widget.requestItem.goodsDonationDetails.donors == null ||
+              widget.requestItem.goodsDonationDetails.donors.length < 1);
     } else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
               communityCreatorId:
-                  widget.timebankModel.managedCreatorIds?.first ??
-                      BlocProvider.of<HomeDashBoardBloc>(context)
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
                           .selectedCommunityModel
                           .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
