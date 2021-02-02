@@ -12,12 +12,11 @@ import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart'
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -26,8 +25,6 @@ import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/flavor_config.dart';
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -162,7 +159,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
           actions: <Widget>[
             CommonHelpIconWidget,
             IconButton(
-              icon: Icon(Icons.search),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -218,23 +215,27 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                 children: <Widget>[
                   // ShowLimitBadge(),
                   TabBar(
-                    onTap: (int index){
-                      switch(index){
+                    onTap: (int index) {
+                      switch (index) {
                         case 2:
-                          AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
+                          AppConfig.helpIconContext =
+                              HelpIconContextClass.EVENTS;
                           break;
                         case 3:
-                          AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
+                          AppConfig.helpIconContext =
+                              HelpIconContextClass.REQUESTS;
                           break;
                         case 4:
-                          AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
+                          AppConfig.helpIconContext =
+                              HelpIconContextClass.OFFERS;
                           break;
                         default:
-                          AppConfig.helpIconContext = HelpIconContextClass.COMMUNITY_DEFAULT;
+                          AppConfig.helpIconContext =
+                              HelpIconContextClass.COMMUNITY_DEFAULT;
                           break;
                       }
-                      logger.i("tabbar index tapped is $index with ${AppConfig.helpIconContext}");
-
+                      logger.i(
+                          "tabbar index tapped is $index with ${AppConfig.helpIconContext}");
                     },
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,
@@ -257,7 +258,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           primaryTimebankModel: primaryTimebank,
                         ),
                         DiscussionList(
-                          timebankId: primaryTimebank.id,
+                          timebankId: primaryTimebank?.id,
                           timebankModel: primaryTimebank,
                         ),
                         TimeBankProjectsView(
