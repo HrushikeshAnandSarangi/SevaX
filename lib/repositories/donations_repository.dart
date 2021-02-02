@@ -191,6 +191,8 @@ class DonationsRepository {
             .collection(DBCollection.users)
             .document(donationModel.donorDetails.email)
             .collection(DBCollection.notifications);
+        acknowledgementNotification.isTimebankNotification = false;
+        acknowledgementNotification.isRead = false;
         //donor member reference
       } else {
         if (operatoreMode == OperatingMode.CREATOR &&
@@ -199,6 +201,9 @@ class DonationsRepository {
               .collection(DBCollection.users)
               .document(donationModel.donorDetails.email)
               .collection(DBCollection.notifications);
+          acknowledgementNotification.isTimebankNotification = false;
+          acknowledgementNotification.isRead = false;
+
           // direct towards timebank
         } else if (operatoreMode != OperatingMode.CREATOR &&
             donationModel.donatedToTimebank &&
@@ -214,17 +219,23 @@ class DonationsRepository {
               .collection(DBCollection.users)
               .document(donationModel.receiverDetails.email)
               .collection(DBCollection.notifications);
+          acknowledgementNotification.isTimebankNotification = false;
+          acknowledgementNotification.isRead = false;
         } else if (operatoreMode == OperatingMode.CREATOR &&
             donationModel.requestIdType == 'offer') {
           notificationReferenceForDonor = Firestore.instance
               .collection(DBCollection.users)
               .document(donationModel.donorDetails.email)
               .collection(DBCollection.notifications);
+          acknowledgementNotification.isTimebankNotification = false;
+          acknowledgementNotification.isRead = false;
         } else {
           notificationReferenceForDonor = Firestore.instance
               .collection(DBCollection.users)
               .document(donationModel.requestId.split('*')[0])
               .collection(DBCollection.notifications);
+          acknowledgementNotification.isTimebankNotification = false;
+          acknowledgementNotification.isRead = false;
         }
       }
 
