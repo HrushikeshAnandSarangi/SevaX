@@ -29,7 +29,7 @@ dependencies:
   async: null
   badges: ^1.1.1
   cached_network_image: ^2.0.0
-  camera: null
+  camera: ^0.7.0
   cloud_firestore: ^0.12.5
   connectivity: ^0.4.8+6
   curved_navigation_bar: ^0.3.2
