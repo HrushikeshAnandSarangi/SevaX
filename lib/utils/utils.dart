@@ -32,22 +32,25 @@ bool isSameDay(DateTime d1, DateTime d2) {
   return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
 }
 
-bool isAccessAvailable(TimebankModel timebank, String userId) {
-  if (timebank.creatorId == userId ||
-      timebank.admins.contains(userId) ||
-      timebank.organizers.contains(userId)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+bool isAccessAvailable(TimebankModel timebank, String userId) =>
+    timebank.creatorId == userId ||
+    timebank.admins.contains(userId) ||
+    timebank.organizers.contains(userId) ||
+    timebank.managedCreatorIds.contains(userId);
 
-bool isDeletable(
-    {String communityCreatorId,
-    String timebankCreatorId,
-    String contentCreatorId,
-    BuildContext context}) => contentCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || communityCreatorId == SevaCore.of(context).loggedInUser.sevaUserID || timebankCreatorId == SevaCore.of(context).loggedInUser.sevaUserID;
-
+bool isDeletable({
+  BuildContext context,
+  String communityCreatorId,
+  String timebankCreatorId,
+  String contentCreatorId,
+}) =>
+    [
+      contentCreatorId,
+      communityCreatorId,
+      timebankCreatorId,
+    ].contains(
+      SevaCore.of(context).loggedInUser.sevaUserID,
+    );
 
 bool isOwner(TimebankModel timebank, String userId) {
   if (timebank.creatorId == userId || timebank.organizers.contains(userId)) {

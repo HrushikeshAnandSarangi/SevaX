@@ -82,6 +82,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         MaterialPageRoute(
           builder: (context) => TimebankCreate(
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+            communityCreatorId:
+                _homeDashBoardBloc.selectedCommunityModel.created_by,
           ),
         ),
       );
@@ -263,8 +265,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                         TransactionLimitCheck(
                           comingFrom: ComingFrom.Home,
                           timebankId: widget.primaryTimebankModel.id,
-                         isSoftDeleteRequested:
-                             widget.primaryTimebankModel.requestedSoftDelete,
+                          isSoftDeleteRequested:
+                              widget.primaryTimebankModel.requestedSoftDelete,
                           child: IconButton(
                             icon: Icon(Icons.add_circle),
                             color: FlavorConfig.values.theme.primaryColor,

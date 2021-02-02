@@ -1,16 +1,16 @@
 import 'dart:developer';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/pages/donation_accepted_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import 'offer_accepted_admin_router.dart';
 import 'offer_details.dart';
@@ -19,9 +19,11 @@ class OfferDetailsRouter extends StatefulWidget {
   final OfferModel offerModel;
   final ComingFrom comingFrom;
 
-  const OfferDetailsRouter(
-      {Key key, this.offerModel, @required this.comingFrom, })
-      : super(key: key);
+  const OfferDetailsRouter({
+    Key key,
+    this.offerModel,
+    @required this.comingFrom,
+  }) : super(key: key);
 
   @override
   _OfferDetailsRouterState createState() => _OfferDetailsRouterState();
@@ -29,7 +31,7 @@ class OfferDetailsRouter extends StatefulWidget {
 
 class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
   final OfferBloc _bloc = OfferBloc();
-  TimebankModel timebankModel=TimebankModel({});
+  TimebankModel timebankModel = TimebankModel({});
 
   @override
   void initState() {
@@ -39,12 +41,11 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
     _bloc.init();
     super.initState();
   }
-  Future<void>getTimebank()async{
-    timebankModel =
-    await FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId);
-    setState(() {
 
-    });
+  Future<void> getTimebank() async {
+    timebankModel = await FirestoreManager.getTimeBankForId(
+        timebankId: widget.offerModel.timebankId);
+    setState(() {});
   }
 
   @override
@@ -185,6 +186,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                               widget.offerModel.type == RequestType.TIME
                                   ? OfferAcceptedAdminRouter(
                                       offerModel: widget.offerModel,
+                                      timebankModel: timebankModel,
                                     )
                                   : DonationAcceptedPage(
                                       offermodel: widget.offerModel,
@@ -195,7 +197,6 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                                 offerModel: widget.offerModel,
                                 comingFrom: widget.comingFrom,
                                 timebankModel: timebankModel,
-
                               ),
                             ],
                     ),

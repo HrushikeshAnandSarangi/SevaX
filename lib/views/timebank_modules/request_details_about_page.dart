@@ -106,7 +106,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
             communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .communityModel
+                .selectedCommunityModel
                 .created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
@@ -601,9 +601,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -612,18 +615,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
-          widget.requestItem.goodsDonationDetails.donors == null;
+          (widget.requestItem.goodsDonationDetails.donors == null ||
+              widget.requestItem.goodsDonationDetails.donors.length < 1);
     } else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
-              communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                  .communityModel
-                  .created_by,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      : BlocProvider.of<HomeDashBoardBloc>(context)
+                          .selectedCommunityModel
+                          .created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }

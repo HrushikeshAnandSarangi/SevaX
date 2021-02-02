@@ -198,14 +198,17 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             ? addManualTime
                             : Container(),
                         utils.isDeletable(
-                                contentCreatorId: projectModel.creatorId,
-                                context: context,
-                                communityCreatorId:
-                                    BlocProvider.of<HomeDashBoardBloc>(context)
-                                        .communityModel
-                                        .created_by,
-                                timebankCreatorId:
-                                    widget.timebankModel.creatorId)
+                          contentCreatorId: projectModel.creatorId,
+                          context: context,
+                          communityCreatorId:
+                              widget.timebankModel.managedCreatorIds.isNotEmpty
+                                  ? widget.timebankModel.managedCreatorIds
+                                      .elementAt(0)
+                                  : BlocProvider.of<HomeDashBoardBloc>(context)
+                                      .selectedCommunityModel
+                                      .created_by,
+                          timebankCreatorId: widget.timebankModel.creatorId,
+                        )
                             ? deleteProject
                             : Container(),
                       ],

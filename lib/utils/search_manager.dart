@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
+import 'package:sevaexchange/utils/search_via_zipcode.dart';
 
 class SearchManager {
   static Future<http.Response> makeGetRequest({
@@ -91,10 +93,18 @@ class SearchManager {
         "name.keyword": {"order": "asc"}
       }
     });
+
+    List<CommunityModel> communityList = [];
+    try {
+      communityList =
+      await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
+    } on NoNearByCommunitesFoundException catch (e) {
+      Crashlytics.instance.log('NoNearByCommunitesViaZIPFoundException');
+    }
+
+
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    List<CommunityModel> communityList = [];
-
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
@@ -102,8 +112,6 @@ class SearchManager {
         communityList.add(community);
       }
 
-      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
-      //communityList.add(communityModel);
     });
     yield communityList;
   }

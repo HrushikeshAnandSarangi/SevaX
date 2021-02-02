@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -58,23 +59,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             sevaUserId: widget.timebankModel.admins[0])
         .then((onValue) {
       user = onValue;
-      if (this.mounted)
-        setState(() {
-          isAdminLoaded = true;
-        });
+      setState(() {
+        isAdminLoaded = true;
+      });
     });
     var templist = [
       ...widget.timebankModel.members,
+      ...widget.timebankModel.organizers,
       ...widget.timebankModel.admins,
       ...widget.timebankModel.coordinators
     ];
     isUserJoined = templist.contains(widget.userId) ? true : false;
-    if (widget.timebankModel.members.contains(widget.userId)) {
-      userModels = await FirestoreManager
-          .getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
-              widget.timebankModel.id, 1, widget.email);
-      isDataLoaded = true;
-    }
+    isDataLoaded = true;
   }
 
   @override
@@ -424,7 +420,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                S.of(context).organizer,
+                S.of(context).owner,
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 22,
@@ -496,21 +492,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                   Spacer(),
                   isAdminLoaded
                       ? UserProfileImage(
-                          photoUrl: user.photoURL,
+                          photoUrl: user.photoURL ?? defaultUserImageURL,
                           email: user.email,
                           userId: user.sevaUserID,
                           height: 60,
                           width: 60,
                           timebankModel: widget.timebankModel,
                         )
-                      : UserProfileImage(
-                          photoUrl: user.photoURL,
-                          email: user.email,
-                          userId: user.sevaUserID,
-                          height: 60,
-                          width: 60,
-                          timebankModel: widget.timebankModel,
-                        )
+                      : CircleAvatar()
                 ],
               ),
             )

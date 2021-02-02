@@ -132,6 +132,8 @@ class CommunityCreateEditController {
         .timebank
         .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
     this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
+    this.timebank.updateValueByKey(
+        'managedCreatorIds', [user.sevaUserID].cast<String>());
     this
         .timebank
         .updateValueByKey('organizers', [user.sevaUserID].cast<String>());

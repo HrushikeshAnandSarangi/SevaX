@@ -1,0 +1,114 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:geocode/geocode.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:http/http.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/zip_code_model.dart';
+
+import 'log_printer/log_printer.dart';
+
+class SearchCommunityViaZIPCode {
+  static Future<List<CommunityModel>> getCommunitiesViaZIPCode(
+      String searchTerm,
+      ) async {
+    return await _searchViaGeoCode(searchTerm)
+        .then((location) => _getNearCommunitiesListStream(location))
+        .then((nearbyCommunitiesList) => nearbyCommunitiesList)
+        .catchError((onError) {
+      throw onError;
+    }).whenComplete(() {
+      logger.i("Completed Search for $searchTerm.");
+    });
+  }
+
+  static Future<Location> _searchViaGeoCode(searchTerm) async {
+    GeoCode geoCode = GeoCode();
+    try {
+      var coordinates = await geoCode.forwardGeocoding(address: searchTerm);
+      return Location(
+        lat: coordinates.latitude,
+        lng: coordinates.longitude,
+      );
+    } catch (e) {
+      return Future.error(NoNearByCommunitesFoundException());
+    }
+  }
+
+  @Deprecated('Using Internal Library')
+  static Future<Location> _searchViaZipCodeAPI(
+      String zipCode,
+      ) async {
+    Response response =
+    await SearchManager.makeGetRequest(url: _getZipCodeURL(zipCode));
+    var latLngFromZip = latLngFromZipCodeFromJson(response.body);
+
+    if (response.statusCode != 200 || latLngFromZip == null) {
+      Crashlytics.instance.log('Quota Exausted');
+      return Future.error(NoNearByCommunitesFoundException());
+    }
+    if (latLngFromZip.results != null &&
+        latLngFromZip.results.length > 0 &&
+        latLngFromZip.results.first.geometry != null &&
+        latLngFromZip.results.first.geometry.location != null) {
+      logger.i("Location found successfully");
+      return Future.value(latLngFromZip.results.first.geometry.location);
+    }
+    return Future.error(NoNearByCommunitesFoundException());
+  }
+
+  static Future<List<CommunityModel>> _getNearCommunitiesListStream(
+      Location location,
+      ) async {
+    Geoflutterfire geo = Geoflutterfire();
+    var radius = 60;
+    GeoFirePoint center = geo.point(
+      latitude: location.lat,
+      longitude: location.lng,
+    );
+
+    var query = Firestore.instance.collection('communities');
+    return await geo
+        .collection(collectionRef: query)
+        .within(
+      center: center,
+      radius: radius.toDouble(),
+      field: 'location',
+      strictMode: true,
+    )
+        .first
+        .then((_) => _addToList(_))
+        .catchError((onError) {
+      logger.i("Error in GeoFetch");
+      Future.error(NoNearByCommunitesFoundException());
+    });
+  }
+
+  static List<CommunityModel> _addToList(
+      List<DocumentSnapshot> communitiesMatched,
+      ) {
+    List<CommunityModel> communityList = [];
+
+    logger.i(communitiesMatched.length.toString() + "  Matched");
+
+    communitiesMatched.forEach(
+          (documentSnapshot) {
+        CommunityModel model = CommunityModel(documentSnapshot.data);
+        if (!model.softDelete || !model.private) communityList.add(model);
+      },
+    );
+    return communityList;
+  }
+
+  static String _getZipCodeURL(String zipCode) {
+    return "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU&components=postal_code:" +
+        zipCode;
+  }
+}
+
+class NoNearByCommunitesFoundException implements Exception {
+  String message;
+  NoNearByCommunitesFoundException(
+      {this.message = "No Nearby communities found with ZIP."});
+}

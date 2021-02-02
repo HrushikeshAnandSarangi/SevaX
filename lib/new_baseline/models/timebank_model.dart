@@ -33,6 +33,7 @@ class TimebankModel extends DataModel {
   bool softDelete;
   bool preventAccedentalDelete;
   bool requestedSoftDelete;
+  List<String> managedCreatorIds;
 
   int unreadMessageCount;
   DateTime lastMessageTimestamp;
@@ -105,6 +106,10 @@ class TimebankModel extends DataModel {
     temp.forEach((key, value) {
       notificationSetting[key] = NotificationSetting.fromMap(value);
     });
+
+    this.managedCreatorIds = map.containsKey('managedCreatorIds')
+        ? List<String>.from(map['managedCreatorIds'])
+        : [];
   }
 
   GeoFirePoint getLocation(map) {
@@ -168,6 +173,9 @@ class TimebankModel extends DataModel {
     }
     if (key == 'members') {
       this.members = value;
+    }
+    if (key == 'managedCreatorIds') {
+      this.managedCreatorIds = value;
     }
     if (key == 'protected') {
       this.protected = value;
@@ -298,6 +306,10 @@ class TimebankModel extends DataModel {
       map['requestedSoftDelete'] = this.requestedSoftDelete;
     } else {
       map['requestedSoftDelete'] = false;
+    }
+
+    if (managedCreatorIds != null) {
+      map['managedCreatorIds'] = managedCreatorIds;
     }
 
     return map;

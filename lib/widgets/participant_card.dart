@@ -15,6 +15,7 @@ class ParticipantCard extends StatelessWidget {
   final double rating;
   final Function onMessageTapped;
   final Function onTap;
+  final Function onImageTap;
 
   const ParticipantCard({
     Key key,
@@ -26,6 +27,7 @@ class ParticipantCard extends StatelessWidget {
     this.onMessageTapped,
     this.onTap,
     this.rating,
+    this.onImageTap,
   })  : assert(name != null),
         super(key: key);
   @override
@@ -114,6 +116,7 @@ class ParticipantCard extends StatelessWidget {
                   child: CustomNetworkImage(
                     imageUrl ?? defaultUserImageURL,
                     fit: BoxFit.cover,
+                    onTap: onImageTap,
                   ),
                 ),
               ),

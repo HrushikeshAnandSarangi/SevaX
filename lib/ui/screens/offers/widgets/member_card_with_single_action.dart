@@ -7,6 +7,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
   final String timestamp;
   final String photoUrl;
   final Function onMessagePressed;
+  final Function onImageTap;
   final Function action;
   final String status;
   final Color buttonColor;
@@ -19,6 +20,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
     this.action,
     this.status,
     this.buttonColor,
+    this.onImageTap,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
               child: CustomNetworkImage(
                 photoUrl ?? defaultUserImageURL,
                 fit: BoxFit.cover,
+                onTap: onImageTap,
               ),
             ),
           ),

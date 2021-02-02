@@ -114,7 +114,7 @@ class MemberSectionBuilder extends StatelessWidget {
           if ([MemberType.OWNER, MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
-                child: Text(S.of(context).promote),
+                child: Text(S.of(context).make_owner),
                 value: ActionType.PROMOTE,
               ),
             );
