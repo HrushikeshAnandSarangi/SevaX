@@ -12,6 +12,11 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class TimeBankSevaCoin extends StatefulWidget {
   final UserModel loggedInUser;
@@ -30,6 +35,9 @@ class TimeBankSevaCoin extends StatefulWidget {
 
 class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   double donateAmount = 0;
+
+  TimebankModel timebankModel;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +55,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = snapshot.data['balance'].toDouble();
+          timebankModel = TimebankModel.fromMap(snapshot.data.data);
           return widget.isAdmin
               ? Container(
                   padding: const EdgeInsets.only(left: 10.0),
@@ -69,7 +78,35 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                         SizedBox(
                           height: 5,
                         ),
-                        donateButton(),
+                        Row(
+                          children: [
+                            donateButton(),
+                            isAccessAvailable(
+                              timebankModel,
+                              SevaCore.of(context).loggedInUser.sevaUserID,
+                            ) ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TransactionsMatrixCheck(
+                                upgradeDetails:
+                                AppConfig.upgradePlanBannerModel.add_manual_time,
+                                transaction_matrix_type: "add_manual_time",
+                                child: AddManualTimeButton(
+                                  typeId: timebankModel.id,
+                                  timebankId: timebankModel.parentTimebankId ==
+                                      FlavorConfig.values.timebankId
+                                      ? timebankModel.id
+                                      : timebankModel.parentTimebankId,
+                                  timeFor: ManualTimeType.Timebank,
+                                  userType: getLoggedInUserRole(
+                                    timebankModel,
+                                    SevaCore.of(context).loggedInUser.sevaUserID,
+                                  ),
+                                  communityName: timebankModel.name,
+                                ),
+                              ),
+                            ) : Container()
+                          ],
+                        ),
                       ]),
                 )
               : donateButton();
