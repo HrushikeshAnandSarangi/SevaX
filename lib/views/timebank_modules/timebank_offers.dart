@@ -51,25 +51,31 @@ class OffersState extends State<OffersModule> {
                     buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
                     child: Stack(
                       children: [
-                        FlatButton(
-                          onPressed: () {},
-                          child: Text(
-                            S.of(context).my_offers,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                        Container(
+                          padding: EdgeInsets.only(right: 10),
+                          child: FlatButton(
+                            onPressed: () {},
+                            child: Text(
+                              S.of(context).my_offers,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
                         Positioned(
                           // will be positioned in the top right of the container
-                          top: -10,
-                          right: -10,
-                          child: infoButton(
-                            context: context,
-                            key: GlobalKey(),
-                            type: InfoType.OFFERS,
-                            // text: infoDetails['offersInfo'] ?? description,
+                          top: 0,
+                          right: -20,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 8, right: 10),
+                            child: infoButton(
+                              context: context,
+                              key: GlobalKey(),
+                              type: InfoType.OFFERS,
+                              // text: infoDetails['offersInfo'] ?? description,
+                            ),
                           ),
                         ),
                       ],
@@ -100,7 +106,7 @@ class OffersState extends State<OffersModule> {
                         }
                       },
                       child: Container(
-                          margin: EdgeInsets.only(left: 0),
+                          margin: EdgeInsets.only(left: 3),
                           child: Icon(
                             Icons.add_circle,
                             color: FlavorConfig.values.theme.primaryColor,

@@ -77,27 +77,32 @@ class RequestsState extends State<RequestsModule> {
                 child: Row(
                   children: <Widget>[
                     ButtonTheme(
-                      minWidth: 110.0,
+                      minWidth: 120.0,
                       height: 50.0,
                       buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
                       child: Stack(
                         children: [
-                          FlatButton(
-                            onPressed: () {},
-                            child: Text(
-                              S.of(context).my_requests,
-                              style: (TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                          Container(
+                            padding: EdgeInsets.only(right:10,),
+                            child: FlatButton(
+                              onPressed: () {},
+                              child: Text(
+                                S.of(context).my_requests,
+                                style: (TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                              ),
                             ),
                           ),
                           Positioned(
-                            // will be positioned in the top right of the container
-                            top: -10,
-                            right: -10,
-                            child: infoButton(
-                              context: context,
-                              key: GlobalKey(),
-                              type: InfoType.REQUESTS,
+                            top: 0,
+                            right: -20,
+                            child: Container(
+                              padding: EdgeInsets.only(left:4, right:4),
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.REQUESTS,
+                              ),
                             ),
                           ),
                         ],
@@ -112,7 +117,7 @@ class RequestsState extends State<RequestsModule> {
                      widget.timebankModel.requestedSoftDelete,
                       child: GestureDetector(
                         child: Container(
-                          margin: EdgeInsets.only(left: 0),
+                          margin: EdgeInsets.only(left: 6),
                           child: Icon(
                             Icons.add_circle,
                             color: FlavorConfig.values.theme.primaryColor,
