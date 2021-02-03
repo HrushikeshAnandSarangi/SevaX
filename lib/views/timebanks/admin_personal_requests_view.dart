@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -178,7 +179,10 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(
-                groupKey: (model as GroupTitle).groupTitle),
+                groupKey: (model as GroupTitle).groupTitle,
+                context: context,
+                isGroup: isPrimaryTimebank(
+                    parentTimebankId: timebankModel.parentTimebankId)),
           ),
         );
 
@@ -253,7 +257,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         ),
                         onPressed: () async {
                           await timeBankBloc.updateInvitedUsersForRequest(
-                              model.id, widget.userModel.sevaUserID, widget.userModel.email);
+                              model.id,
+                              widget.userModel.sevaUserID,
+                              widget.userModel.email);
 
                           //showProgressDialog(context);
                           sendNotification(

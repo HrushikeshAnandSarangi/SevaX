@@ -455,7 +455,7 @@ class RequestListItemsState extends State<RequestListItems> {
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(
-                groupKey: (model as GroupTitle).groupTitle),
+                groupKey: (model as GroupTitle).groupTitle,context: context,isGroup: isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)),
           ),
         );
 

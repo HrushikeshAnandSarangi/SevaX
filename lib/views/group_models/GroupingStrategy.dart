@@ -5,8 +5,6 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
-import '../../flavor_config.dart';
-
 abstract class RequestModelList {
   static const int TITLE = 91;
   static const int REQUEST = 12;
@@ -82,19 +80,23 @@ class GroupRequestCommons {
     return hashMap;
   }
 
-  static String getGroupTitle({String groupKey}) {
+  static String getGroupTitle(
+      {String groupKey,
+      @required BuildContext context,
+      @required bool isGroup}) {
     switch (groupKey) {
       case "MyPost":
-        return "My Requests";
+        return S.of(context).my_requests;
 
       case "Others":
-        return (FlavorConfig.appFlavor == Flavor.APP ||
-                FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-            ? "Seva Community Requests"
-            : "Seva Community Requests";
+        return isGroup
+            ? S.of(context).group + ' ' + S.of(context).requests
+            : S.of(context).seva_community_requests;
 
       default:
-        return "Seva Community Requests";
+        return isGroup
+            ? S.of(context).group + ' ' + S.of(context).requests
+            : S.of(context).seva_community_requests;
     }
   }
 }
