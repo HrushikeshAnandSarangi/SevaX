@@ -518,8 +518,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ? Container()
           : timeRequestActionWidgetForParticipant;
     } else if (widget.requestItem.requestType == RequestType.GOODS) {
-      canDelete = widget.requestItem.goodsDonationDetails.donors == null;
-
+      canDelete = widget.requestItem.goodsDonationDetails.donors == null ||
+ widget.requestItem.goodsDonationDetails.donors.length < 1;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
