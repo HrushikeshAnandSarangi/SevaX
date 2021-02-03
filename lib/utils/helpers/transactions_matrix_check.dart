@@ -9,7 +9,6 @@ class TransactionsMatrixCheck extends StatelessWidget {
   final BannerDetails upgradeDetails;
   final ComingFrom comingFrom;
 
-
   TransactionsMatrixCheck({
     Key key,
     @required this.child,
@@ -50,4 +49,17 @@ class TransactionsMatrixCheck extends StatelessWidget {
   }
 }
 
-enum ComingFrom { Requests, Projects, Offers, Chats, Groups, Settings, Members, Profile, Elasticsearch, Billing, Home}
+enum ComingFrom {
+  Requests,
+  Projects,
+  Offers,
+  Chats,
+  Groups,
+  Settings,
+  Members,
+  Profile,
+  Elasticsearch,
+  Billing,
+  Home,
+  Community
+}
