@@ -127,6 +127,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
+      if (utils.isDeletable(
+            contentCreatorId: widget.requestItem.sevaUserId,
+            context: context,
+            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
+                .selectedCommunityModel
+                .created_by,
+            timebankCreatorId: widget.timebankModel.creatorId))
+          return UserMode.TIMEBANK_CREATOR;
+
         if (widget.requestItem.sevaUserId == loggedInUser) {
           return UserMode.REQUEST_CREATOR;
         } else if (isAccessAvailable(widget.timebankModel, loggedInUser)) {
