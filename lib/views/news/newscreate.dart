@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -281,6 +282,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                     ),
 
+                    if(AppConfig.paymentStatusMap['planId'] == 'grande_plan' ||
+                      AppConfig.paymentStatusMap['planId'] =='venti_plan') 
                     Offstage(
                       offstage: !isAccessAvailable(widget.timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
