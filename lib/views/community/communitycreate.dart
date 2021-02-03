@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -233,7 +234,7 @@ class CreateEditCommunityViewFormState
         communityModel = onValue;
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
-        negativeCreditsThreshold = onValue.negativeCreditsThreshold;
+        negativeCreditsThreshold = onValue.negativeCreditsThreshold ?? 0;
         searchTextController.text = communityModel.name;
         descriptionTextController.text = communityModel.about;
         setState(() {});
@@ -734,32 +735,51 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        headingText(S.of(context).timebank_has_parent),
-                        Text(
-                          S.of(context).timebank_location_has_parent_hint_text,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
+
+                        Offstage(
+                            offstage: widget.isCreateTimebank,
+                            child:
+                                headingText(S.of(context).timebank_has_parent)),
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Text(
+                            S
+                                .of(context)
+                                .timebank_location_has_parent_hint_text,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
-                        Center(
-                          child: ParentTimebankPickerWidget(
-                            selectedTimebank: this.selectedTimebank,
-                            onChanged: (CommunityModel selectedTimebank) {
-                              setState(() {
-                                this.selectedTimebank = selectedTimebank.name;
-                              });
-                              snapshot.data.timebank.updateValueByKey(
-                                  'associatedParentTimebankId',
-                                  selectedTimebank.primary_timebank);
-                              timebankModel.associatedParentTimebankId =
-                                  selectedTimebank.primary_timebank;
-                              communityModel.parentTimebankId =
-                                  selectedTimebank.primary_timebank;
-                              snapshot.data.community.updateValueByKey(
-                                  'parentTimebankId',
-                                  selectedTimebank.primary_timebank);
-                            },
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Community,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
+                            transaction_matrix_type: "parent_timebanks",
+                            child: Center(
+                              child: ParentTimebankPickerWidget(
+                                selectedTimebank: this.selectedTimebank,
+                                onChanged: (CommunityModel selectedTimebank) {
+                                  setState(() {
+                                    this.selectedTimebank =
+                                        selectedTimebank.name;
+                                  });
+                                  snapshot.data.timebank.updateValueByKey(
+                                      'associatedParentTimebankId',
+                                      selectedTimebank.primary_timebank);
+                                  timebankModel.associatedParentTimebankId =
+                                      selectedTimebank.primary_timebank;
+                                  communityModel.parentTimebankId =
+                                      selectedTimebank.primary_timebank;
+                                  snapshot.data.community.updateValueByKey(
+                                      'parentTimebankId',
+                                      selectedTimebank.primary_timebank);
+                                },
+                              ),
+                            ),
                           ),
                         ),
                         widget.isCreateTimebank
