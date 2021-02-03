@@ -35,7 +35,6 @@ import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -303,38 +302,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         SizedBox(
           height: 10,
         ),
-        RaisedButton(
-          onPressed: () async {
-            var connResult = await Connectivity().checkConnectivity();
-            if (connResult == ConnectivityResult.none) {
-              _scaffoldKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(S.of(context).check_internet),
-                  action: SnackBarAction(
-                    label: S.of(context).dismiss,
-                    onPressed: () =>
-                        _scaffoldKey.currentState.hideCurrentSnackBar(),
-                  ),
-                ),
-              );
-              return;
-            }
-            if (await canLaunch(sampleCSVLink)) {
-              launch(sampleCSVLink);
-            } else {}
-            // requestPermission();
-          },
-          child: Text(
-            S.of(context).download_sample_csv,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-            ),
-          ),
-          color: FlavorConfig.values.theme.primaryColor,
-          textColor: Colors.white,
-          shape: StadiumBorder(),
-        ),
         SizedBox(
           height: 15,
         ),
@@ -361,8 +328,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                      'lib/assets/images/csv.png',
-                      // color: FlavorConfig.values.theme.primaryColor,
+                      'images/csv_example.png',
+                      width: 200,
                     ),
                     Text(
                       S.of(context).choose_csv,
