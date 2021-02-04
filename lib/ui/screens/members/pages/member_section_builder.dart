@@ -101,7 +101,7 @@ class MemberSectionBuilder extends StatelessWidget {
     if (member.sevaUserID != SevaCore.of(context).loggedInUser.sevaUserID) {
       switch (section) {
         case UsersSection.OWNERS:
-          if ([MemberType.OWNER, MemberType.CREATOR].contains(type)) {
+          if ([MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
                 child: Text(S.of(context).demote),
@@ -119,8 +119,7 @@ class MemberSectionBuilder extends StatelessWidget {
               ),
             );
           }
-          if ([MemberType.ADMIN, MemberType.OWNER, MemberType.CREATOR]
-              .contains(type)) {
+          if ([MemberType.OWNER, MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
                 child: Text(S.of(context).demote),
