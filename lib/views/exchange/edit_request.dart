@@ -303,6 +303,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
+      return Container();
       // return ProjectSelection(
       //   requestModel: requestModel,
       //   projectModelList: projectModelList,
