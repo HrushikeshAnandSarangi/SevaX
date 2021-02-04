@@ -81,7 +81,6 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-
   @override
   Widget build(BuildContext context) {
     return ExitWithConfirmation(
@@ -94,7 +93,7 @@ class _CreateRequestState extends State<CreateRequest> {
           ),
           centerTitle: false,
           actions: [
-            CommonHelpIconWidget,
+            CommonHelpIconWidget(),
           ],
         ),
         body: StreamBuilder<UserModelController>(
@@ -277,7 +276,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
+    if (isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
         requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       return ProjectSelection(
           requestModel: requestModel,
@@ -956,7 +956,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     groupvalue: requestModel.requestType,
                     onChanged: (value) {
                       requestModel.requestType = value;
-                      AppConfig.helpIconContext = HelpIconContextClass.TIME_REQUESTS;
+                      AppConfig.helpIconContext =
+                          HelpIconContextClass.TIME_REQUESTS;
                       setState(() => {});
                     },
                   ),
@@ -972,7 +973,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
-                        AppConfig.helpIconContext = HelpIconContextClass.MONEY_REQUESTS;
+                        AppConfig.helpIconContext =
+                            HelpIconContextClass.MONEY_REQUESTS;
                         setState(() => {});
                       },
                     ),
@@ -989,7 +991,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
-                        AppConfig.helpIconContext = HelpIconContextClass.GOODS_REQUESTS;
+                        AppConfig.helpIconContext =
+                            HelpIconContextClass.GOODS_REQUESTS;
                         setState(() => {});
                       },
                     ),
@@ -2144,7 +2147,6 @@ class ProjectSelectionState extends State<ProjectSelection> {
       cancelButtonColor: Theme.of(context).primaryColorLight,
     );
   }
-
 }
 
 typedef StringMapCallback = void Function(Map<String, dynamic> goods);
@@ -2252,7 +2254,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     .contains(SuggestedItem()..suggesttionTitle = pattern)) {
               var spellCheckResult =
                   await SpellCheckManager.evaluateSpellingFor(pattern,
-                      language: SevaCore.of(context).loggedInUser.language??'en');
+                      language:
+                          SevaCore.of(context).loggedInUser.language ?? 'en');
               if (spellCheckResult.hasErros) {
                 dataCopy.add(SuggestedItem()
                   ..suggestionMode = SuggestionMode.USER_DEFINED

@@ -86,7 +86,7 @@ class _EditRequestState extends State<EditRequest> {
             ),
             centerTitle: false,
             actions: [
-              CommonHelpIconWidget,
+              CommonHelpIconWidget(),
             ],
           ),
           body: StreamBuilder<UserModelController>(
@@ -293,8 +293,10 @@ class RequestEditFormState extends State<RequestEditForm> {
       return Container();
     }
     timebankModel = snapshot.data;
-    if (isAccessAvailable(snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
-      widget.requestModel.requestMode==RequestMode.TIMEBANK_REQUEST && isFromRequest()) {
+    if (isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID) &&
+        widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST &&
+        isFromRequest()) {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
@@ -2195,7 +2197,9 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                           SuggestedItem()..suggesttionTitle = pattern)) {
                     var spellCheckResult =
                         await SpellCheckManager.evaluateSpellingFor(pattern,
-                            language: SevaCore.of(context).loggedInUser.language??'en');
+                            language:
+                                SevaCore.of(context).loggedInUser.language ??
+                                    'en');
                     if (spellCheckResult.hasErros) {
                       dataCopy.add(SuggestedItem()
                         ..suggestionMode = SuggestionMode.USER_DEFINED

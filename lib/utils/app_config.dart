@@ -38,7 +38,7 @@ class AppConfig {
   static String helpIconContext = "seva_community";
 }
 
-class HelpIconContextClass{
+class HelpIconContextClass {
   static String DEFAULT = "seva_community";
   static String COMMUNITY_DEFAULT = "seva_community";
   static String GROUP_DEFAULT = "groups";
@@ -53,7 +53,8 @@ class HelpIconContextClass{
   static String GOODS_OFFERS = "goods_offers";
   static String ONE_TO_MANY_OFFERS = "one_to_many_offers";
 
-  static String helpLinksBaseURL = "http://127.0.0.1:5500/index.html";
+  static String helpLinksBaseURL =
+      "https://sevax-dev-project-for-sevax--video-urhtxovy.web.app";
 
   static Map<String, String> helpContextLinks = {
     "seva_community": "$helpLinksBaseURL#seva_community",
@@ -69,6 +70,4 @@ class HelpIconContextClass{
     "goods_offers": "$helpLinksBaseURL#goods_offers",
     "one_to_many_offers": "$helpLinksBaseURL#one_to_many_offers",
   };
-
 }
-

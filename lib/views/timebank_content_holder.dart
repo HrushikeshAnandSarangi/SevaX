@@ -150,7 +150,7 @@ Widget createAdminTabBar(
         style: TextStyle(fontSize: 18),
       ),
       actions: [
-        CommonHelpIconWidget,
+        CommonHelpIconWidget(),
       ],
     ),
     body: Column(

@@ -288,7 +288,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
               ),
-              actions: [CommonHelpIconWidget])
+              actions: [CommonHelpIconWidget()])
           : null,
       body: SafeArea(
         child: StreamBuilder<Status>(

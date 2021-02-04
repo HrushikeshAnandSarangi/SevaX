@@ -157,7 +157,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
             },
           ),
           actions: <Widget>[
-            CommonHelpIconWidget,
+            CommonHelpIconWidget(),
             IconButton(
               icon: Icon(Icons.search, color: Colors.white),
               onPressed: () {
