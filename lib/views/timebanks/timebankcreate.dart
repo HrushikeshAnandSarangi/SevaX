@@ -7,7 +7,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
@@ -24,7 +23,6 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -103,10 +101,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if ((FlavorConfig.appFlavor == Flavor.APP ||
-        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
-      fetchCurrentlocation();
-    }
+    // if ((FlavorConfig.appFlavor == Flavor.APP ||
+    //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    //   fetchCurrentlocation();
+    // }
     getParentTimebank();
     // ignore: close_sinks
     searchTextController
@@ -585,21 +583,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ));
   }
 
-  void fetchCurrentlocation() {
-    Location().getLocation().then((onValue) {
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
-  }
+  // void fetchCurrentlocation() {
+  //   Location().getLocation().then((onValue) {
+  //     location = GeoFirePoint(onValue.latitude, onValue.longitude);
+  //     LocationUtility()
+  //         .getFormattedAddress(
+  //       location.latitude,
+  //       location.longitude,
+  //     )
+  //         .then((address) {
+  //       setState(() {
+  //         this.selectedAddress = address;
+  //       });
+  //     });
+  //   });
+  // }
 
   void dispose() {
     super.dispose();
