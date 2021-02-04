@@ -57,7 +57,7 @@ class _MembersTabViewState extends State<MembersTabView> {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(S.of(context).no_data),
+                  child: Text('No serach result found'),
                 );
               }
               return ListView.builder(

@@ -233,7 +233,7 @@ class _ResultViewState extends State<ResultView> {
             }
             List<UserModel> userList = snapshot.data;
             if (userList.length == 0) {
-              return getEmptyWidget('Users', 'No user found');
+              return getEmptyWidget('Users', 'No serach result found');
             }
             return ListView.builder(
               itemBuilder: (context, index) {

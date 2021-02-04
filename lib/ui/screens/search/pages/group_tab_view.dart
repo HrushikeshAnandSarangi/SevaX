@@ -55,7 +55,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Text(S.of(context).no_data),
+                    Text('No serach result found'),
                   ],
                 );
               }

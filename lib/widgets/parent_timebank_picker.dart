@@ -67,7 +67,7 @@ void _parentSelectionBottomsheet(
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  S.of(context).select_parent_timebank,
+                  'Select Parent Seva Communities',
                   style: TextStyle(
                     fontSize: 18,
                   ),
