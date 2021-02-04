@@ -33,7 +33,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../core.dart';
 
 class RequestsModule extends StatefulWidget {
@@ -458,6 +458,7 @@ class RequestListItemsState extends State<RequestListItems> {
         if (widget.isProjectRequest) {
           return Container();
         }
+
         return Container(
           height: !isMyContent ? 18 : 0,
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
@@ -465,7 +466,7 @@ class RequestListItemsState extends State<RequestListItems> {
             GroupRequestCommons.getGroupTitle(
                 groupKey: (model as GroupTitle).groupTitle,
                 context: context,
-                isGroup: isPrimaryTimebank(
+                isGroup: !isPrimaryTimebank(
                     parentTimebankId: widget.timebankModel.parentTimebankId)),
           ),
         );
