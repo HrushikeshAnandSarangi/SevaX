@@ -214,49 +214,32 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           child: Stack(
                             fit: StackFit.loose,
                             children: [
-                              FlatButton(
-                                onPressed: () {},
-                                child: Text(
-                                  S.of(context).your_groups,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                              Container(
+                                padding: EdgeInsets.only(right:10,),
+                                child: FlatButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    S.of(context).your_groups,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
                               Positioned(
                                 // will be positioned in the top right of the container
-                                top: -10,
-                                right: -10,
-                                // child: IconButton(
-                                //   icon: Image.asset(
-                                //     'lib/assets/images/info.png',
-                                //     color:
-                                //         FlavorConfig.values.theme.primaryColor,
-                                //     height: 16,
-                                //     width: 16,
-                                //   ),
-                                //   onPressed: () {
-                                //     customInfoDialog(context);
-                                //     // showInfoOfConcept(
-                                //     //     dialogTitle:
-                                //     //         infoDetails['groupsInfo'] != null
-                                //     //             ? infoDetails['groupsInfo'] ??
-                                //     //                 description
-                                //     //             : description,
-                                //     //     mContext: context);
-                                //   },
-                                //   tooltip: infoDetails['groupsInfo'] != null
-                                //       ? infoDetails['groupsInfo'] ??
-                                //           description
-                                //       : description,
-                                // ),
-                                child: infoButton(
-                                  context: context,
-                                  key: GlobalKey(),
-                                  type: InfoType.GROUPS,
-                                  // text:
-                                  //     infoDetails['groupsInfo'] ?? description,
+                                top: 0,
+                                right: -20,
+                                child: Container(
+                                  padding: EdgeInsets.only(left:4, right:4),
+                                  child: infoButton(
+                                    context: context,
+                                    key: GlobalKey(),
+                                    type: InfoType.GROUPS,
+                                    // text:
+                                    //     infoDetails['groupsInfo'] ?? description,
+                                  ),
                                 ),
                               ),
                             ],

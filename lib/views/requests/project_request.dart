@@ -454,22 +454,28 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
             child: Stack(
               children: [
-                FlatButton(
-                  onPressed: () {},
-                  child: Text(
-                    S.of(context).add_requests,
-                    style:
-                        (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                Container(
+                  padding: EdgeInsets.only(right:10,),
+                  child: FlatButton(
+                    onPressed: () {},
+                    child: Text(
+                      S.of(context).add_requests,
+                      style:
+                          (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    ),
                   ),
                 ),
                 Positioned(
                   // will be positioned in the top right of the container
-                  top: -10,
-                  right: -10,
-                  child: infoButton(
-                    context: context,
-                    key: GlobalKey(),
-                    type: InfoType.REQUESTS,
+                  top: 0,
+                  right: -20,
+                  child: Container(
+                    padding: EdgeInsets.only(left:4, right:4),
+                    child: infoButton(
+                      context: context,
+                      key: GlobalKey(),
+                      type: InfoType.REQUESTS,
+                    ),
                   ),
                 ),
               ],

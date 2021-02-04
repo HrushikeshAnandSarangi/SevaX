@@ -20,7 +20,8 @@ class AddManualTimeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      // width: double.infinity,
+      height: 45,
       child: RaisedButton(
         child: Text('Add manual time'),
         onPressed: () => onPressed(

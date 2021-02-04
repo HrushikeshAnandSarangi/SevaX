@@ -111,26 +111,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 10,
             ),
-            // todo:: removed Part of sevax global community
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0, bottom: 10, top: 5),
-            //   child: RichText(
-            //     text:
-            //         TextSpan(style: TextStyle(color: Colors.black), children: [
-            //       TextSpan(
-            //         text: S.of(context).part_of,
-            //         style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
-            //       ),
-            //       TextSpan(
-            //         text: " ${S.of(context).global_timebank}.",
-            //         style: TextStyle(
-            //             fontSize: 16,
-            //             fontWeight: FontWeight.bold,
-            //             fontFamily: 'Europa'),
-            //       )
-            //     ]),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.only(left: 20.0, top: 5),
               child: Text(
@@ -155,32 +135,31 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 15,
             ),
-            isAccessAvailable(
-              widget.timebankModel,
-              SevaCore.of(context).loggedInUser.sevaUserID,
-            )
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TransactionsMatrixCheck(
-                      upgradeDetails:
-                          AppConfig.upgradePlanBannerModel.add_manual_time,
-                      transaction_matrix_type: "add_manual_time",
-                      child: AddManualTimeButton(
-                        typeId: widget.timebankModel.id,
-                        timebankId: widget.timebankModel.parentTimebankId ==
-                                FlavorConfig.values.timebankId
-                            ? widget.timebankModel.id
-                            : widget.timebankModel.parentTimebankId,
-                        timeFor: ManualTimeType.Timebank,
-                        userType: getLoggedInUserRole(
-                          widget.timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID,
-                        ),
-                        communityName: widget.timebankModel.name,
-                      ),
-                    ),
-                  )
-                : Container(),
+            // isAccessAvailable(
+            //   widget.timebankModel,
+            //   SevaCore.of(context).loggedInUser.sevaUserID,
+            // ) ? Padding(
+            //         padding: const EdgeInsets.all(8.0),
+            //         child: TransactionsMatrixCheck(
+            //           upgradeDetails:
+            //               AppConfig.upgradePlanBannerModel.add_manual_time,
+            //           transaction_matrix_type: "add_manual_time",
+            //           child: AddManualTimeButton(
+            //             typeId: widget.timebankModel.id,
+            //             timebankId: widget.timebankModel.parentTimebankId ==
+            //                     FlavorConfig.values.timebankId
+            //                 ? widget.timebankModel.id
+            //                 : widget.timebankModel.parentTimebankId,
+            //             timeFor: ManualTimeType.Timebank,
+            //             userType: getLoggedInUserRole(
+            //               widget.timebankModel,
+            //               SevaCore.of(context).loggedInUser.sevaUserID,
+            //             ),
+            //             communityName: widget.timebankModel.name,
+            //           ),
+            //         ),
+            //       )
+            //     : Container(),
             isAccessAvailable(widget.timebankModel,
                     SevaCore.of(context).loggedInUser.sevaUserID)
                 ? Column(
@@ -288,39 +267,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     ),
                   )
                 : Container(),
-            // isUserJoined && isDataLoaded
-            //     ? Container(
-            //         height: 40,
-            //         child: GestureDetector(
-            //           onTap: () {},
-            //           child: ListView.builder(
-            //             padding: EdgeInsets.only(left: 20),
-            //             scrollDirection: Axis.horizontal,
-            //             itemCount: userModels.userModelList.length,
-            //             itemBuilder: (context, index) {
-            //               return Padding(
-            //                 padding:
-            //                     const EdgeInsets.symmetric(horizontal: 2.5),
-            //                 child: Container(
-            //                   height: 40,
-            //                   width: 40,
-            //                   decoration: BoxDecoration(
-            //                       shape: BoxShape.circle,
-            //                       image: DecorationImage(
-            //                         fit: BoxFit.cover,
-            //                         image: CachedNetworkImageProvider(
-            //                           userModels
-            //                                   .userModelList[index].photoURL ??
-            //                               defaultUserImageURL,
-            //                         ),
-            //                       )),
-            //                 ),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //       )
-            //     : Container(),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
