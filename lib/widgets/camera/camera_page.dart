@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
@@ -93,24 +92,24 @@ class _CameraState extends State<CameraPage> {
     }
   }
 
-  String _timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
+  // String _timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   Future<String> _takePicture() async {
     if (!controller.value.isInitialized || controller.value.isTakingPicture) {
       return null;
     }
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = '${extDir.path}/Pictures/sevax';
-    await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${_timestamp()}.jpg';
+    // final Directory extDir = await getApplicationDocumentsDirectory();
+    // final String dirPath = '${extDir.path}/Pictures/sevax';
+    // await Directory(dirPath).create(recursive: true);
+    // final String filePath = '$dirPath/${_timestamp()}.jpg';
 
     try {
-      await controller.takePicture();
+      var xFile = await controller.takePicture();
+      return xFile.path;
     } on CameraException catch (e) {
       _showCameraException(e);
       return null;
     }
-    return filePath;
   }
 
   void _showCameraException(CameraException e) {
@@ -175,7 +174,7 @@ class _CameraState extends State<CameraPage> {
           child: Center(
             child: controller.value.isInitialized
                 ? AspectRatio(
-                    aspectRatio: controller.value.aspectRatio,
+                    aspectRatio: 1 / controller.value.aspectRatio,
                     child: CameraPreview(controller),
                   )
                 : Text('Loading camera...'),
