@@ -13,7 +13,6 @@ import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
-import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -78,7 +77,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
               case NotificationType.TypeMemberJoinViaCode:
-                UserAddedModel userAddedModel = UserAddedModel.fromMap(notification.data);
+                UserAddedModel userAddedModel =
+                    UserAddedModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: userAddedModel.adminName,
@@ -91,9 +91,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
-                  title: S.of(context).notification_timebank_join,
-                  subTitle:
-                  '${userAddedModel.addedMemberName} joined the community',
+                  title: S
+                      .of(context)
+                      .member_joined_via_code_title
+                      .replaceAll('XXCOMMUNITYXX', userAddedModel.timebankName),
+                  subTitle: S
+                      .of(context)
+                      .member_joined_via_code_subtitle
+                      .replaceAll('XXCOMMUNITYXX', userAddedModel.timebankName)
+                      .replaceAll('XXuserXX', userAddedModel.addedMemberName),
                 );
                 break;
               case NotificationType.RequestAccept:

@@ -80,10 +80,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                 S.of(context).edit,
                 style: TextStyle(fontSize: 18),
               ),
-              actions:[
-                CommonHelpIconWidget
-              ]
-            )
+              actions: [CommonHelpIconWidget()])
           : null,
       body: Builder(builder: (context) {
         return SafeArea(
@@ -256,7 +253,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,
-                                heading: "${S.of(context).offer_class_description} *",
+                                heading:
+                                    "${S.of(context).offer_class_description} *",
                                 onChanged: _bloc.onclassDescriptionChanged,
                                 hint: S.of(context).offer_description_error,
                                 maxLength: 500,
@@ -315,17 +313,23 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         return;
                                       }
                                       FocusScope.of(context).unfocus();
-                                      if (OfferDurationWidgetState.starttimestamp != 0 &&
-                                          OfferDurationWidgetState.endtimestamp != 0) {
+                                      if (OfferDurationWidgetState
+                                                  .starttimestamp !=
+                                              0 &&
+                                          OfferDurationWidgetState
+                                                  .endtimestamp !=
+                                              0) {
                                         _bloc.startTime =
-                                            OfferDurationWidgetState.starttimestamp;
-                                        _bloc.endTime =
-                                            OfferDurationWidgetState.endtimestamp;
-                                        if (_bloc.endTime <=
-                                            _bloc.startTime) {
+                                            OfferDurationWidgetState
+                                                .starttimestamp;
+                                        _bloc.endTime = OfferDurationWidgetState
+                                            .endtimestamp;
+                                        if (_bloc.endTime <= _bloc.startTime) {
                                           errorDialog(
                                             context: context,
-                                            error: S.of(context).validation_error_end_date_greater,
+                                            error: S
+                                                .of(context)
+                                                .validation_error_end_date_greater,
                                           );
                                           return;
                                         }

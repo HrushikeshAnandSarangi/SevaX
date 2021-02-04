@@ -56,7 +56,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
 
   void getData() async {
     await FirestoreManager.getUserForId(
-            sevaUserId: widget.timebankModel.admins[0])
+            sevaUserId: widget.timebankModel.creatorId)
         .then((onValue) {
       user = onValue;
       setState(() {
@@ -384,23 +384,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       isAdminLoaded
-                          ? RichText(
-                              text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
-                                  children: [
-                                    TextSpan(
-                                      text: user.fullname ?? ' ',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Europa'),
-                                    ),
-                                    TextSpan(
-                                      text: '  ${S.of(context).and_others}',
-                                      style: TextStyle(
-                                          fontSize: 16, fontFamily: 'Europa'),
-                                    ),
-                                  ]),
+                          ? Text(
+                              user.fullname ?? ' ',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Europa'),
                             )
                           : Container(
                               child: Text(S.of(context).admin_not_available),

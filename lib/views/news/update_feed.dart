@@ -188,7 +188,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: S.of(context).create_feed_hint,
+                              hintText: S.of(context).create_feed_desc_hint,
                               labelText: S.of(context).create_feed_placeholder,
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(

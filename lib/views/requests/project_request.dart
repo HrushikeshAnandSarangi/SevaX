@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
@@ -577,27 +578,31 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 
             if (requestModelList.length == 0) {
               return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          style: TextStyle(color: Colors.grey, fontSize: 14),
-                          text: S.of(context).no_requests_available + ' ',
-                        ),
-                        TextSpan(
-                            text: S.of(context).creating_one,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = createProjectRequest),
-                      ],
-                    ),
-                  ),
+                child: EmptyWidget(
+                  title: S.of(context).no_requests_title,
+                  sub_title: S.of(context).no_content_common_description,
                 ),
+                // child: Padding(
+                //   padding: const EdgeInsets.all(16.0),
+                //   child: RichText(
+                //     textAlign: TextAlign.center,
+                //     text: TextSpan(
+                //       children: <TextSpan>[
+                //         TextSpan(
+                //           style: TextStyle(color: Colors.grey, fontSize: 14),
+                //           text: S.of(context).no_requests_available + ' ',
+                //         ),
+                //         TextSpan(
+                //             text: S.of(context).creating_one,
+                //             style: TextStyle(
+                //               color: Theme.of(context).primaryColor,
+                //             ),
+                //             recognizer: TapGestureRecognizer()
+                //               ..onTap = createProjectRequest),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               );
             }
 

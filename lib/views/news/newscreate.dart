@@ -214,7 +214,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     errorMaxLines: 2,
                                     labelStyle: TextStyle(color: Colors.grey),
                                     alignLabelWithHint: false,
-                                    hintText: S.of(context).create_feed_hint,
+                                    hintText:
+                                        S.of(context).create_feed_desc_hint,
                                     labelText:
                                         S.of(context).create_feed_placeholder,
                                     focusedBorder: OutlineInputBorder(
@@ -281,56 +282,60 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                     ),
 
-                    Offstage(
-                      offstage: !isAccessAvailable(widget.timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: Center(
-                        child: TransactionsMatrixCheck(
-                          comingFrom: ComingFrom.Home,
-                          upgradeDetails:
-                              AppConfig.upgradePlanBannerModel.parent_timebanks,
-                          transaction_matrix_type: "parent_timebanks",
-                          child: RaisedButton(
-                            textColor: Colors.green,
-                            elevation: 0,
-                            child: Container(
-                              constraints: BoxConstraints.loose(
-                                Size(MediaQuery.of(context).size.width - 200,
-                                    50),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      "Posting to ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
+                    if (AppConfig.paymentStatusMap['planId'] == 'grande_plan' ||
+                        AppConfig.paymentStatusMap['planId'] == 'venti_plan')
+                      Offstage(
+                        offstage: !isAccessAvailable(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID),
+                        child: Center(
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Home,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.parent_timebanks,
+                            transaction_matrix_type: "parent_timebanks",
+                            child: RaisedButton(
+                              textColor: Colors.green,
+                              elevation: 0,
+                              child: Container(
+                                constraints: BoxConstraints.loose(
+                                  Size(MediaQuery.of(context).size.width - 200,
+                                      50),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        "Posting to ${((this.selectedTimebanks.length > 1) ? this.selectedTimebanks.length.toString() + ' Seva Communities' : this.widget.timebankModel.name)}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
                                     ),
-                                  ),
-                                  Icon(Icons.arrow_drop_down)
-                                ],
+                                    Icon(Icons.arrow_drop_down)
+                                  ],
+                                ),
                               ),
+                              color: Colors.grey[200],
+                              onPressed: () async {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                _silblingTimebankSelectionBottomsheet(
+                                  context,
+                                  this.widget.timebankModel,
+                                  selectedTimebanks,
+                                  (selectedTimebanks) => {
+                                    setState(
+                                      () => {
+                                        selectedTimebanks = selectedTimebanks
+                                      },
+                                    )
+                                  },
+                                );
+                              },
                             ),
-                            color: Colors.grey[200],
-                            onPressed: () async {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              _silblingTimebankSelectionBottomsheet(
-                                context,
-                                this.widget.timebankModel,
-                                selectedTimebanks,
-                                (selectedTimebanks) => {
-                                  setState(
-                                    () =>
-                                        {selectedTimebanks = selectedTimebanks},
-                                  )
-                                },
-                              );
-                            },
                           ),
                         ),
                       ),
-                    ),
                     // Text(""),
                     Padding(
                       padding: const EdgeInsets.only(top: 0),

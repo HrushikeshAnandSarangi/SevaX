@@ -39,7 +39,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(S.of(context).no_data),
+                  child: Text('No serach result found'),
                 );
               }
 

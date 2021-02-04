@@ -1212,7 +1212,7 @@ class S {
       );
 
   String get project_logo => Intl.message(
-        'Event Logo',
+        'Event Image',
         name: 'project_logo',
       );
 
@@ -1862,7 +1862,7 @@ class S {
       );
 
   String get change_ownership_invite => Intl.message(
-        'has invited you to be the new owner of the Seva Community',
+        'has invited you to be the new owner of the',
         name: 'change_ownership_invite',
       );
 
@@ -2327,7 +2327,7 @@ class S {
       );
 
   String get timebank_logo => Intl.message(
-        'Seva Community Logo',
+        'Seva Community Image',
         name: 'timebank_logo',
       );
 
@@ -2337,7 +2337,7 @@ class S {
       );
 
   String get timebank_name_hint => Intl.message(
-        'Example: Evergreen Neighborhood, Acme Organization, XYZ Food Bank',
+        'Ex: Evergreen Neighborhood, Acme Organization, XYZ Food Bank',
         name: 'timebank_name_hint',
       );
 
@@ -2392,7 +2392,7 @@ class S {
       );
 
   String get timebank_logo_error => Intl.message(
-        'Seva Community logo is mandatory',
+        'Seva Community image is mandatory',
         name: 'timebank_logo_error',
       );
 
@@ -3097,7 +3097,7 @@ class S {
       );
 
   String get change_ownership_message1 => Intl.message(
-        'You are the new owner of Seva Community ',
+        'You are the new owner of',
         name: 'change_ownership_message1',
       );
 
@@ -3182,7 +3182,7 @@ class S {
       );
 
   String get group_logo => Intl.message(
-        'Group logo',
+        'Group Image',
         name: 'group_logo',
       );
 
@@ -3252,7 +3252,7 @@ class S {
       );
 
   String get csv_message1 => Intl.message(
-        'First download the CSV template. Then, include the users that you would like to add . Finally, upload the updated CSV file',
+        'First, create a .csv file template and add the users that you want to invite to your Seva Community. Please see the format below for the two fields to include in your file. Then, select the Upload button to add the file. Note: do not upload any extra fields nor try to upload other spreadsheet file formats other than the .csv file.',
         name: 'csv_message1',
       );
 
@@ -3272,7 +3272,7 @@ class S {
       );
 
   String get choose_csv => Intl.message(
-        'Choose CSV file to bulk invite Members',
+        'Please upload only CSV file with users full name and email address',
         name: 'choose_csv',
       );
 
@@ -4688,7 +4688,7 @@ class S {
       );
 
   String get select_parent_timebank => Intl.message(
-        'Select Parent Seva Community',
+        'Select Child Seva Communities',
         name: 'select_parent_timebank',
       );
 
@@ -5288,7 +5288,7 @@ class S {
       );
 
   String get seva_logo_info => Intl.message(
-        'Upload a Photo to represent your community',
+        'Upload a Image to represent your community',
         name: 'seva_logo_info',
       );
 
@@ -5478,7 +5478,7 @@ class S {
       );
 
   String get messaging_room_logo => Intl.message(
-        'Messaging Room Logo',
+        'Messaging Room Image',
         name: 'messaging_room_logo',
       );
 
@@ -5633,7 +5633,7 @@ class S {
       );
 
   String get create_feed_desc_hint => Intl.message(
-        'Please share only relevant information to your Group, Project, or Community. Example, you can talk about your latest volunteer exchange and post a photo of you or the person doing the task',
+        'Please share only relevant information to your Group,  Event, or Community. Example, you can talk about your latest volunteer exchange and post a photo of you or the person doing the task',
         name: 'create_feed_desc_hint',
       );
 
@@ -6015,6 +6015,71 @@ class S {
   String get goods_offer_desc_hint => Intl.message(
         'Describe in detail what you are willing to offer. Please use #hashtags so members can easily search for this offer, such as #homeless #clothingdrive',
         name: 'goods_offer_desc_hint',
+      );
+
+  String get default_private_alert => Intl.message(
+        'This plan is for private use only and cannot be made public.',
+        name: 'default_private_alert',
+      );
+
+  String get member_joined_via_code_title => Intl.message(
+        'New member has joined **communityName** via code',
+        name: 'member_joined_via_code_title',
+      );
+
+  String get member_joined_via_code_subtitle => Intl.message(
+        '**fullName** has joined **communityName** via code.',
+        name: 'member_joined_via_code_subtitle',
+      );
+
+  String get no_posts_title => Intl.message(
+        'There are currently no posts.',
+        name: 'no_posts_title',
+      );
+
+  String get no_posts_description => Intl.message(
+        'To create one, select the Create Post button.',
+        name: 'no_posts_description',
+      );
+
+  String get no_requests_title => Intl.message(
+        'There are currently no requests.',
+        name: 'no_requests_title',
+      );
+
+  String get no_offers_title => Intl.message(
+        'There are currently no offers.',
+        name: 'no_offers_title',
+      );
+
+  String get no_events_title => Intl.message(
+        'There are currently no events.',
+        name: 'no_events_title',
+      );
+
+  String get no_content_common_description => Intl.message(
+        'To create one click on the plus icon.',
+        name: 'no_content_common_description',
+      );
+
+  String get feed_hint_back_press => Intl.message(
+        'Clicking on the home button takes you to the Feeds section. Double clicking on home button from the group feed will take you back to the community feed.',
+        name: 'feed_hint_back_press',
+      );
+
+  String get past_time_selected => Intl.message(
+        'The time you selected is invalid because it is in the past.',
+        name: 'past_time_selected',
+      );
+
+  String get invalid_time => Intl.message(
+        'Invalid Time',
+        name: 'invalid_time',
+      );
+
+  String get request_desc_hint_time => Intl.message(
+        'Please describe what you need to have done. \n \nEx: I need help removing weeds from  my small garden.',
+        name: 'request_desc_hint_time',
       );
 }
 
