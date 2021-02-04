@@ -719,9 +719,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
-    } else if (emailPattern.hasMatch(value)) {
-      return null;
-    } else if (regExp.hasMatch(value)) {
+    } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
       return null;
     } else {
       return S.of(context).enter_valid_link;
