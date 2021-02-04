@@ -653,12 +653,15 @@ class RequestListItemsState extends State<RequestListItems> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                RecurringListing(
-                                              comingFrom: ComingFrom.Requests,
-                                              requestModel: model,
-                                              offerModel: null,
-                                              timebankModel: null,
+                                            builder: (_context) => BlocProvider(
+                                              bloc: BlocProvider.of<
+                                                  HomeDashBoardBloc>(context),
+                                              child: RecurringListing(
+                                                comingFrom: ComingFrom.Requests,
+                                                requestModel: model,
+                                                offerModel: null,
+                                                timebankModel: null,
+                                              ),
                                             ),
                                           ),
                                         );
@@ -803,11 +806,14 @@ class RequestListItemsState extends State<RequestListItems> {
       Navigator.push(
           widget.parentContext,
           MaterialPageRoute(
-              builder: (context) => RecurringListing(
-                    comingFrom: ComingFrom.Requests,
-                    requestModel: model,
-                    timebankModel: widget.timebankModel,
-                    offerModel: null,
+              builder: (_context) => BlocProvider(
+                    bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                    child: RecurringListing(
+                      comingFrom: ComingFrom.Requests,
+                      requestModel: model,
+                      timebankModel: widget.timebankModel,
+                      offerModel: null,
+                    ),
                   )));
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||

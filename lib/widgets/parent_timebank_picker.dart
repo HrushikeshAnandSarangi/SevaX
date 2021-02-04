@@ -50,7 +50,8 @@ class ParentTimebankPickerWidget extends StatelessWidget {
   }
 }
 
-void _parentSelectionBottomsheet(BuildContext mcontext, onChanged, String selectedTimebank) {
+void _parentSelectionBottomsheet(
+    BuildContext mcontext, onChanged, String selectedTimebank) {
   showModalBottomSheet(
     context: mcontext,
     isScrollControlled: true,
@@ -66,7 +67,7 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged, String select
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  S.of(context).select_parent_timebank,
+                  'Select Parent Seva Communities',
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -288,7 +289,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + ' ' + snapshot.data.fullname,
+              S.of(context).created_by + snapshot.data.fullname,
             );
           } else {
             return Text(

@@ -162,7 +162,7 @@ class _MembersPageState extends State<MembersPage> {
                                     horizontal: 12,
                                   ),
                                   child: Text(
-                                    S.of(context).owners,
+                                    S.of(context).super_admin,
                                     //   S.of(context).owners,
                                     style: TextStyle(
                                       fontSize: 18,
