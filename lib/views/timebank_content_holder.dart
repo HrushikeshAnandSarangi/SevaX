@@ -32,6 +32,7 @@ import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -605,7 +606,10 @@ class DiscussionListState extends State<DiscussionList> {
               return Padding(
                 padding: const EdgeInsets.all(28.0),
                 child: Center(
-                  child: Text(S.of(context).empty_feed),
+                  child: EmptyWidget(
+                    title: S.of(context).no_feeds_yet,
+                    sub_title: S.of(context).add_new_feed,
+                  ),
                 ),
               );
             }

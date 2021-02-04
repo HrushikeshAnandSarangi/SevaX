@@ -14,6 +14,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
+import 'package:sevaexchange/widgets/empty_widget.dart';
 
 class BookmarkedOffers extends StatelessWidget {
   final String sevaUserId;
@@ -36,8 +37,9 @@ class BookmarkedOffers extends StatelessWidget {
         }
         if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
           return Center(
-            child: Text(
-              S.of(context).no_bookmarked_offers,
+            child: EmptyWidget(
+              title: S.of(context).no_bookmarked_offers,
+              sub_title: "",
             ),
           );
         }

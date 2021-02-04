@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
+import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../core.dart';
@@ -106,67 +107,67 @@ class RequestsState extends State<RequestsModule> {
                     widget.isFromSettings
                         ? Container()
                         : TransactionLimitCheck(
-                      comingFrom: ComingFrom.Requests,
-                      timebankId: timebankId,
-                     isSoftDeleteRequested:
-                     widget.timebankModel.requestedSoftDelete,
-                      child: GestureDetector(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 0),
-                          child: Icon(
-                            Icons.add_circle,
-                            color: FlavorConfig.values.theme.primaryColor,
+                            comingFrom: ComingFrom.Requests,
+                            timebankId: timebankId,
+                            isSoftDeleteRequested:
+                                widget.timebankModel.requestedSoftDelete,
+                            child: GestureDetector(
+                              child: Container(
+                                margin: EdgeInsets.only(left: 0),
+                                child: Icon(
+                                  Icons.add_circle,
+                                  color: FlavorConfig.values.theme.primaryColor,
+                                ),
+                              ),
+                              onTap: () {
+                                if (widget.timebankModel.protected) {
+                                  if (isAccessAvailable(
+                                      widget.timebankModel,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID)) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateRequest(
+                                          comingFrom: ComingFrom.Requests,
+                                          timebankId: timebankId,
+                                          projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  _showProtectedTimebankMessage();
+                                } else {
+                                  if (widget.timebankModel.id ==
+                                          FlavorConfig.values.timebankId &&
+                                      !isAccessAvailable(
+                                          widget.timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID)) {
+                                    showAdminAccessMessage(context: context);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateRequest(
+                                          timebankId: timebankId,
+                                          projectId: '',
+                                          userModel:
+                                              SevaCore.of(context).loggedInUser,
+                                          comingFrom: ComingFrom.Requests,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
                           ),
-                        ),
-                        onTap: () {
-                          if (widget.timebankModel.protected) {
-                            if (isAccessAvailable(
-                                widget.timebankModel,
-                                SevaCore.of(context)
-                                    .loggedInUser
-                                    .sevaUserID)) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateRequest(
-                                    comingFrom: ComingFrom.Requests,
-                                    timebankId: timebankId,
-                                    projectId: '',
-                                    userModel:
-                                    SevaCore.of(context).loggedInUser,
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-                            _showProtectedTimebankMessage();
-                          } else {
-                            if (widget.timebankModel.id ==
-                                FlavorConfig.values.timebankId &&
-                                !isAccessAvailable(
-                                    widget.timebankModel,
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID)) {
-                              showAdminAccessMessage(context: context);
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateRequest(
-                                    timebankId: timebankId,
-                                    projectId: '',
-                                    userModel:
-                                    SevaCore.of(context).loggedInUser,
-                                    comingFrom: ComingFrom.Requests,
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -227,7 +228,7 @@ class RequestsState extends State<RequestsModule> {
         return AlertDialog(
           title: Text(S.of(context).protected_timebank),
           content:
-          Text(S.of(context).protected_timebank_request_creation_error),
+              Text(S.of(context).protected_timebank_request_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
@@ -269,14 +270,14 @@ class RequestListItems extends StatefulWidget {
 
   RequestListItems(
       {Key key,
-        this.timebankId,
-        this.parentContext,
-        this.timebankModel,
-        this.isAdmin,
-        this.isProjectRequest,
-        this.projectId,
-        this.isFromSettings,
-        this.currentCoords});
+      this.timebankId,
+      this.parentContext,
+      this.timebankModel,
+      this.isAdmin,
+      this.isProjectRequest,
+      this.projectId,
+      this.isFromSettings,
+      this.currentCoords});
 
   @override
   State<StatefulWidget> createState() {
@@ -324,15 +325,17 @@ class RequestListItemsState extends State<RequestListItems> {
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
-                      child:
-                      Text(S.of(context).no + ' ' + S.of(context).requests),
+                      child: EmptyWidget(
+                        title: S.of(context).no_requests_title,
+                        sub_title: S.of(context).no_content_common_description,
+                      ),
                     ),
                   );
                 }
                 var consolidatedList =
-                GroupRequestCommons.groupAndConsolidateRequests(
-                    requestModelList,
-                    SevaCore.of(context).loggedInUser.sevaUserID);
+                    GroupRequestCommons.groupAndConsolidateRequests(
+                        requestModelList,
+                        SevaCore.of(context).loggedInUser.sevaUserID);
                 return formatListFrom(
                   consolidatedList: consolidatedList,
                   loggedintimezone: loggedintimezone,
@@ -377,9 +380,9 @@ class RequestListItemsState extends State<RequestListItems> {
                     );
                   }
                   var consolidatedList =
-                  GroupRequestCommons.groupAndConsolidateRequests(
-                      requestModelList,
-                      SevaCore.of(context).loggedInUser.sevaUserID);
+                      GroupRequestCommons.groupAndConsolidateRequests(
+                          requestModelList,
+                          SevaCore.of(context).loggedInUser.sevaUserID);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
                     currentCoords: currentLocation.data,
@@ -399,11 +402,11 @@ class RequestListItemsState extends State<RequestListItems> {
     List<RequestModel> filteredList = [];
 
     requestModelList.forEach(
-          (request) {
+      (request) {
         if (!(SevaCore.of(context)
-            .loggedInUser
-            .blockedMembers
-            .contains(request.sevaUserId) ||
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
             SevaCore.of(context)
                 .loggedInUser
                 .blockedBy
@@ -426,19 +429,19 @@ class RequestListItemsState extends State<RequestListItems> {
     return Expanded(
       child: Container(
           child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: consolidatedList.length + 1,
-            itemBuilder: (context, index) {
-              if (index >= consolidatedList.length) {
-                return Container(
-                  width: double.infinity,
-                  height: 65,
-                );
-              }
-              return getRequestView(consolidatedList[index], loggedintimezone,
-                  userEmail, currentCoords);
-            },
-          )),
+        shrinkWrap: true,
+        itemCount: consolidatedList.length + 1,
+        itemBuilder: (context, index) {
+          if (index >= consolidatedList.length) {
+            return Container(
+              width: double.infinity,
+              height: 65,
+            );
+          }
+          return getRequestView(consolidatedList[index], loggedintimezone,
+              userEmail, currentCoords);
+        },
+      )),
     );
   }
 
@@ -455,7 +458,10 @@ class RequestListItemsState extends State<RequestListItems> {
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(
-                groupKey: (model as GroupTitle).groupTitle,context: context,isGroup: isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)),
+                groupKey: (model as GroupTitle).groupTitle,
+                context: context,
+                isGroup: isPrimaryTimebank(
+                    parentTimebankId: widget.timebankModel.parentTimebankId)),
           ),
         );
 
@@ -494,7 +500,7 @@ class RequestListItemsState extends State<RequestListItems> {
           color: Theme.of(context).primaryColor,
           child: Padding(
             padding:
-            const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
+                const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
             child: Text(
               tagTitle,
               style: TextStyle(
@@ -526,9 +532,9 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getFromNormalRequest(
       {RequestModel model,
-        String loggedintimezone,
-        String userEmail,
-        Coordinates currentCoords}) {
+      String loggedintimezone,
+      String userEmail,
+      Coordinates currentCoords}) {
     var requestLocation = getLocation(model.address);
 
     return Container(
@@ -545,52 +551,52 @@ class RequestListItemsState extends State<RequestListItems> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SevaCore.of(context)
-                    .loggedInUser
-                    .curatedRequestIds
-                    .contains(model.id)
+                        .loggedInUser
+                        .curatedRequestIds
+                        .contains(model.id)
                     ? Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    getTagMainFrame('recommended'),
-                  ],
-                )
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          getTagMainFrame('recommended'),
+                        ],
+                      )
                     : Offstage(),
                 Row(
                   children: <Widget>[
                     requestLocation != null
                         ? Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).primaryColor,
-                    )
+                            Icons.location_on,
+                            color: Theme.of(context).primaryColor,
+                          )
                         : Container(),
                     requestLocation != null
                         ? Expanded(
-                      child: Text(
-                        requestLocation,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
+                            child: Text(
+                              requestLocation,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
                         : Container(),
                     SizedBox(width: 10),
                     model.location != null &&
-                        model.sevaUserId !=
-                            SevaCore.of(context).loggedInUser.sevaUserID
+                            model.sevaUserId !=
+                                SevaCore.of(context).loggedInUser.sevaUserID
                         ? DistanceFromCurrentLocation(
-                      currentLocation: currentCoords,
-                      coordinates: Coordinates(model.location.latitude,
-                          model.location.longitude),
-                      isKm: true,
-                    )
+                            currentLocation: currentCoords,
+                            coordinates: Coordinates(model.location.latitude,
+                                model.location.longitude),
+                            isKm: true,
+                          )
                         : Container(),
                     Spacer(),
                     Text(
                       timeAgo
                           .format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              model.postTimestamp),
-                          locale: Locale(AppConfig.prefs
-                              .getString('language_code'))
-                              .toLanguageTag())
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  model.postTimestamp),
+                              locale: Locale(AppConfig.prefs
+                                      .getString('language_code'))
+                                  .toLanguageTag())
                           .replaceAll('hours ago', 'hr'),
                       style: TextStyle(
                         fontFamily: 'Europa',
@@ -638,7 +644,7 @@ class RequestListItemsState extends State<RequestListItems> {
                               ),
                               Container(
                                 margin:
-                                EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                                    EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                                 child: Center(
                                   child: Visibility(
                                     visible: model.isRecurring,
@@ -649,11 +655,11 @@ class RequestListItemsState extends State<RequestListItems> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 RecurringListing(
-                                                  comingFrom: ComingFrom.Requests,
-                                                  requestModel: model,
-                                                  offerModel: null,
-                                                  timebankModel: null,
-                                                ),
+                                              comingFrom: ComingFrom.Requests,
+                                              requestModel: model,
+                                              offerModel: null,
+                                              timebankModel: null,
+                                            ),
                                           ),
                                         );
                                       },
@@ -724,30 +730,30 @@ class RequestListItemsState extends State<RequestListItems> {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               model.email != userEmail &&
-                                  (model.acceptors.contains(userEmail) ||
-                                      model.approvedUsers
-                                          .contains(userEmail))
+                                      (model.acceptors.contains(userEmail) ||
+                                          model.approvedUsers
+                                              .contains(userEmail))
                                   ? Container(
-                                margin:
-                                EdgeInsets.only(top: 10, bottom: 10),
-                                width: 100,
-                                height: 32,
-                                child: FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                  ),
-                                  padding: EdgeInsets.all(0),
-                                  color: Colors.green,
-                                  child: Text(
-                                    S.of(context).applied,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              )
+                                      margin:
+                                          EdgeInsets.only(top: 10, bottom: 10),
+                                      width: 100,
+                                      height: 32,
+                                      child: FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: EdgeInsets.all(0),
+                                        color: Colors.green,
+                                        child: Text(
+                                          S.of(context).applied,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    )
                                   : Container(),
                             ],
                           ),
@@ -766,9 +772,9 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getRequestListViewHolder(
       {RequestModel model,
-        String loggedintimezone,
-        String userEmail,
-        Coordinates currentCoords}) {
+      String loggedintimezone,
+      String userEmail,
+      Coordinates currentCoords}) {
     if (!widget.isProjectRequest) {
       return getFromNormalRequest(
           model: model,
@@ -783,12 +789,13 @@ class RequestListItemsState extends State<RequestListItems> {
     timeBankBloc.setSelectedRequest(model);
     timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
-      widget.isAdmin = model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-          ? true
-          : false;
+      widget.isAdmin =
+          model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? true
+              : false;
     } else {
-      widget.isAdmin = isAccessAvailable(widget.timebankModel,
-          SevaCore.of(context).loggedInUser.sevaUserID);
+      widget.isAdmin = isAccessAvailable(
+          widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
     }
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
@@ -797,13 +804,13 @@ class RequestListItemsState extends State<RequestListItems> {
           widget.parentContext,
           MaterialPageRoute(
               builder: (context) => RecurringListing(
-                comingFrom: ComingFrom.Requests,
-                requestModel: model,
-                timebankModel: widget.timebankModel,
-                offerModel: null,
-              )));
+                    comingFrom: ComingFrom.Requests,
+                    requestModel: model,
+                    timebankModel: widget.timebankModel,
+                    offerModel: null,
+                  )));
     } else if (model.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID ||
+            SevaCore.of(context).loggedInUser.sevaUserID ||
         isAccessAvailable(widget.timebankModel,
             SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(
@@ -821,7 +828,7 @@ class RequestListItemsState extends State<RequestListItems> {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(
-          builder: (_context) =>  BlocProvider(
+          builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
             child: RequestDetailsAboutPage(
               requestItem: model,
@@ -836,7 +843,7 @@ class RequestListItemsState extends State<RequestListItems> {
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
     DateFormat dateFormat =
-    DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
+        DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);

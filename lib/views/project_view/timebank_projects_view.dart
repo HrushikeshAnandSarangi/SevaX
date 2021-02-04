@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -21,6 +20,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/empty_widget.dart';
 
 import '../requests/project_request.dart';
 
@@ -165,31 +165,36 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
                     if (projectModelList.length == 0) {
                       return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                  text: '${S.of(context).no_projects_message} ',
-                                ),
-                                TextSpan(
-                                  text: S.of(context).creating_one,
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = navigateToCreateProject,
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: EmptyWidget(
+                          title: S.of(context).no_events_title,
+                          sub_title:
+                              S.of(context).no_content_common_description,
                         ),
+                        // child: Padding(
+                        //   padding: const EdgeInsets.all(16.0),
+                        //   child: RichText(
+                        //     textAlign: TextAlign.center,
+                        //     text: TextSpan(
+                        //       children: <TextSpan>[
+                        //         TextSpan(
+                        //           style: TextStyle(
+                        //             color: Colors.grey,
+                        //             fontSize: 14,
+                        //           ),
+                        //           text: '${S.of(context).no_projects_message} ',
+                        //         ),
+                        //         TextSpan(
+                        //           text: S.of(context).creating_one,
+                        //           style: TextStyle(
+                        //             color: Theme.of(context).primaryColor,
+                        //           ),
+                        //           recognizer: TapGestureRecognizer()
+                        //             ..onTap = navigateToCreateProject,
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       );
                     }
                     return ListView.builder(
