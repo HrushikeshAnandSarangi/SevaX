@@ -106,6 +106,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<CommunityModel>(
+                          isExpanded: true,
                           style: TextStyle(color: Colors.white),
                           focusColor: Colors.white,
                           iconEnabledColor: Colors.white,
