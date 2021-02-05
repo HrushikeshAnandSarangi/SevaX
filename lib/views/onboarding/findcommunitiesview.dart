@@ -115,7 +115,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //                         )
 //                         .then((value) => setState(() {}));
 
-                    Navigator.of(context).push(
+                    Navigator.of(context)
+                        .push(
                           MaterialPageRoute(
                             builder: (context1) => NearByFiltersView(
                               SevaCore.of(context).loggedInUser,
@@ -387,7 +388,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + " ${snapshot.data.fullname}",
+              S.of(context).created_by + "${snapshot.data.fullname}",
             );
           } else {
             return Container();

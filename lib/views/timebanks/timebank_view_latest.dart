@@ -3,20 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -271,7 +266,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
                 widget.timebankModel.members.length.toString() +
-                    ' ${S.of(context).volunteers}',
+                    ' ${S.of(context).members}',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 16,

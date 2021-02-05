@@ -381,8 +381,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     ? S.of(context).request_title_hint
                                     : requestModel.requestType ==
                                             RequestType.CASH
-                                        ? "Fundraiser for women’s shelter..."
-                                        : "Non-perishable goods for Food Bank...",
+                                        ? "Ex: Fundraiser for women’s shelter..."
+                                        : "Ex: Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
