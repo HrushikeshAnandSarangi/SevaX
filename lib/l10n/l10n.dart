@@ -592,7 +592,7 @@ class S {
       );
 
   String get members => Intl.message(
-        'Members',
+        'Member(s)',
         name: 'members',
       );
 
@@ -1427,7 +1427,7 @@ class S {
       );
 
   String get find_volunteers => Intl.message(
-        'Find Volunteers',
+        'Find Members',
         name: 'find_volunteers',
       );
 
@@ -1957,7 +1957,7 @@ class S {
       );
 
   String get offer_title_hint => Intl.message(
-        'Ex babysitting, math tutoring',
+        'Ex: babysitting, math tutoring',
         name: 'offer_title_hint',
       );
 
@@ -1982,7 +1982,7 @@ class S {
       );
 
   String get one_to_many_offer_hint => Intl.message(
-        'Ex teaching a python class..',
+        'Ex: teaching a python class..',
         name: 'one_to_many_offer_hint',
       );
 
@@ -3427,7 +3427,7 @@ class S {
       );
 
   String get admins_organizers => Intl.message(
-        'Admins & Super Admins',
+        'Admin(s) & Super Admin(s)',
         name: 'admins_organizers',
       );
 
@@ -3592,7 +3592,7 @@ class S {
       );
 
   String get no_volunteers_yet => Intl.message(
-        'No Volunteers joined yet.',
+        'No Members joined yet',
         name: 'no_volunteers_yet',
       );
 
@@ -3612,7 +3612,7 @@ class S {
       );
 
   String get admin_cannot_create_message => Intl.message(
-        'Admins cannot create message',
+        'Admin(s) cannot create message',
         name: 'admin_cannot_create_message',
       );
 
@@ -3627,7 +3627,7 @@ class S {
       );
 
   String get admins => Intl.message(
-        'Admins',
+        'Admin(s)',
         name: 'admins',
       );
 
@@ -4948,7 +4948,7 @@ class S {
       );
 
   String get cash_offer => Intl.message(
-        'Cash Offer',
+        'Money Offer',
         name: 'cash_offer',
       );
 
@@ -5608,7 +5608,7 @@ class S {
       );
 
   String get owners => Intl.message(
-        'Super Admins',
+        'Super Admin(s)',
         name: 'owners',
       );
 
@@ -6090,6 +6090,11 @@ class S {
   String get select_child_timebank => Intl.message(
         'Select Child Seva Communities',
         name: 'select_child_timebank',
+      );
+
+  String get super_admins => Intl.message(
+        'Super Admin(s)',
+        name: 'super_admins',
       );
 }
 
