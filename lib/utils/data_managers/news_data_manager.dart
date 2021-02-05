@@ -32,7 +32,6 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
-  bool isFiltered = false;
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
@@ -56,11 +55,6 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       //futures.add(getUserInfo(newsModel.email));
       modelList.add(newsModel);
     });
-
-    if (!isFiltered) {
-      isFiltered = true;
-      modelList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
-    }
 
 //    //await process goes here
 //    for (int i = 0; i < modelList.length; i += 1) {
