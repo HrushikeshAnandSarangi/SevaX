@@ -71,7 +71,7 @@ class RequestTabHolder extends StatelessWidget {
                               timebankModel: timebank,
                               isAdmin: true,
                               applied: false,
-                              communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                              communityModel: communityModel,
                             ),
                           ),
                           Container(
