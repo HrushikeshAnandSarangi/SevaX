@@ -383,16 +383,7 @@ class OfferDetails extends StatelessWidget {
       userId,
     );
 
-    bool isCreator = utils.isDeletable(
-      contentCreatorId: offerModel.sevaUserId,
-      context: context,
-      communityCreatorId: timebankModel.managedCreatorIds.isNotEmpty
-          ? timebankModel.managedCreatorIds.elementAt(0)
-          : BlocProvider.of<HomeDashBoardBloc>(context)
-              .selectedCommunityModel
-              .created_by,
-      timebankCreatorId: timebankModel.creatorId,
-    );
+    bool isCreator = offerModel.sevaUserId == userId;
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;
@@ -403,144 +394,171 @@ class OfferDetails extends StatelessWidget {
       child: Padding(
         padding:
             const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(right: 10),
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      canDeleteOffer
-                          ? TextSpan(
-                              text: '${S.of(context).you_created_offer}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : TextSpan(
-                              text: isCreator
-                                  ? S.of(context).you_created_offer
-                                  : isAccepted
-                                      ? "You have accepted this offer."
-                                      : "Would you like to accept this offer?",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          canDeleteOffer
+                              ? TextSpan(
+                                  text: '${S.of(context).you_created_offer}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : TextSpan(
+                                  text: isCreator
+                                      ? S.of(context).you_created_offer
+                                      : isAccepted
+                                          ? "You have accepted this offer."
+                                          : "Would you like to accept this offer?",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-            canDeleteOffer
-                ? Container(
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                canDeleteOffer ||
+                        utils.isDeletable(
+                          context: context,
+                          contentCreatorId: offerModel.sevaUserId,
+                          timebankCreatorId: timebankModel.creatorId,
+                          communityCreatorId:
+                              BlocProvider.of<HomeDashBoardBloc>(context)
+                                  .selectedCommunityModel
+                                  .created_by,
+                        )
+                    ? deleteActionButton(isAccepted, context)
+                    : Container(),
+                Offstage(
+                  offstage: isCreator ||
+                      (isAccepted &&
+                          offerModel.offerType == OfferType.GROUP_OFFER),
+                  child: Container(
                     width: isAccepted ? 150 : 120,
                     height: 32,
                     child: FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.all(0),
-                      color: Colors.green,
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      color: Color.fromRGBO(44, 64, 140, 0.7),
                       child: Row(
                         children: <Widget>[
                           SizedBox(width: 1),
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(44, 64, 140, 1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            ),
+                          ),
                           Spacer(),
                           Text(
-                            '${S.of(context).delete}',
+                            getButtonLabel(context, offerModel, userId),
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           Spacer(
-                            flex: 1,
+                            flex: 2,
                           ),
                         ],
                       ),
                       onPressed: () async {
-                        deleteOffer(context: context, offerId: offerModel.id);
+                        bool isAccepted =
+                            getOfferParticipants(offerDataModel: offerModel)
+                                .contains(userId);
+
+                        if (isAccepted) {
+                          return;
+                        }
+
+                        if (offerModel.type == RequestType.CASH ||
+                            offerModel.type == RequestType.GOODS &&
+                                !isAccepted) {
+                          navigateToDonations(context, offerModel);
+                        } else {
+                          if (offerModel.offerType == OfferType.GROUP_OFFER &&
+                              SevaCore.of(context).loggedInUser.calendarId ==
+                                  null &&
+                              !isAccepted) {
+                            _settingModalBottomSheet(
+                              context,
+                              offerModel,
+                            );
+                          } else {
+                            offerActions(context, offerModel, ComingFrom.Offers)
+                                .then((_) => Navigator.of(context).pop());
+                          }
+                        }
                       },
                     ),
-                  )
-                : Offstage(
-                    offstage: isCreator ||
-                        (isAccepted &&
-                            offerModel.offerType == OfferType.GROUP_OFFER),
-                    child: Container(
-                      width: isAccepted ? 150 : 120,
-                      height: 32,
-                      child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        color: Color.fromRGBO(44, 64, 140, 0.7),
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: 1),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(44, 64, 140, 1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(),
-                            Text(
-                              getButtonLabel(context, offerModel, userId),
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(
-                              flex: 2,
-                            ),
-                          ],
-                        ),
-                        onPressed: () async {
-                          bool isAccepted =
-                              getOfferParticipants(offerDataModel: offerModel)
-                                  .contains(userId);
-
-                          if (isAccepted) {
-                            return;
-                          }
-
-                          if (offerModel.type == RequestType.CASH ||
-                              offerModel.type == RequestType.GOODS &&
-                                  !isAccepted) {
-                            navigateToDonations(context, offerModel);
-                          } else {
-                            if (offerModel.offerType == OfferType.GROUP_OFFER &&
-                                SevaCore.of(context).loggedInUser.calendarId ==
-                                    null &&
-                                !isAccepted) {
-                              _settingModalBottomSheet(
-                                context,
-                                offerModel,
-                              );
-                            } else {
-                              offerActions(
-                                      context, offerModel, ComingFrom.Offers)
-                                  .then((_) => Navigator.of(context).pop());
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                  )
+                  ),
+                )
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget deleteActionButton(bool isAccepted, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(right: 10),
+      width: isAccepted ? 150 : 120,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              '${S.of(context).delete}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () async {
+          deleteOffer(context: context, offerId: offerModel.id);
+        },
       ),
     );
   }

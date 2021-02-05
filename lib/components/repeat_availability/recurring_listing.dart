@@ -21,6 +21,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import '../../flavor_config.dart';
@@ -92,11 +93,12 @@ class _RecurringListingState extends State<RecurringListing> {
             ),
           ),
           body: FutureBuilder<CommunityModel>(
-            future: getCommunityForId(widget.requestModel.communityId),
+            future: getCommunityForId(SevaCore.of(context).loggedInUser.currentCommunity),
             builder: (context, commSnapshot) {
               if(!commSnapshot.hasData){
-                return Container();
+                return LoadingIndicator();
               }
+              communityModel = commSnapshot.data;
               return Container(
                 child: StreamBuilder(
                     stream: RecurringListDataManager.getRecurringRequestListStream(
@@ -124,10 +126,10 @@ class _RecurringListingState extends State<RecurringListing> {
             ),
           ),
           body: FutureBuilder<CommunityModel>(
-              future: getCommunityForId(widget.offerModel.communityId),
+              future: getCommunityForId(SevaCore.of(context).loggedInUser.currentCommunity),
             builder: (context, commSnapshot) {
               if(!commSnapshot.hasData){
-                return Container();
+                return LoadingIndicator();
               }
               communityModel = commSnapshot.data;
               return Container(
@@ -264,7 +266,7 @@ class _RecurringListState extends State<RecurringList> {
                 elevation: 2,
                 child: InkWell(
                   onTap: () async {
-                    _navigateToOfferDetails(widget.offerModel[index]);
+                    _navigateToOfferDetails(widget.offerModel[index], widget.communityModel);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -360,7 +362,7 @@ class _RecurringListState extends State<RecurringList> {
         });
   }
 
-  void _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model, CommunityModel communityModel) {
     Navigator.push(
       context,
       MaterialPageRoute(

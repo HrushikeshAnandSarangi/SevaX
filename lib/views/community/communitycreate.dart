@@ -301,7 +301,6 @@ class CreateEditCommunityViewFormState
                 createEditCommunityBloc.onChange(snapshot.data);
               }
             }
-
             return Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
@@ -687,7 +686,7 @@ class CreateEditCommunityViewFormState
                               Slider(
                                 label:
                                     "${negativeCreditsThreshold.toInt()} ${S.of(context).seva_credits}",
-                                value: negativeCreditsThreshold,
+                                value: negativeCreditsThreshold.abs() * -1,
                                 min: -50,
                                 max: 0,
                                 divisions: 50,
@@ -708,7 +707,7 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    'Selected Value : ${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,
@@ -719,22 +718,6 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        Offstage(
-                          offstage: widget.isCreateTimebank,
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                S.of(context).timebank_current_tax_percentage +
-                                    ' : ${taxPercentage.toInt()}%',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
                         Offstage(
                             offstage: widget.isCreateTimebank,
                             child:

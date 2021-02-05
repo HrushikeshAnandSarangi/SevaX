@@ -57,7 +57,7 @@ class _MembersTabViewState extends State<MembersTabView> {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text('No serach result found'),
+                  child: Text('No search result found'),
                 );
               }
               return ListView.builder(
