@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
@@ -15,16 +16,20 @@ class TimeBankCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _user = BlocProvider.of<UserDataBloc>(context);
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
+            builder: (_context) => BlocProvider(
               bloc: _user,
-              child: TabarView(
-                timebankId: timebank.id,
-                timebankModel: timebank,
+              child: BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: TabarView(
+                  timebankId: timebank.id,
+                  timebankModel: timebank,
+                ),
               ),
             ),
           ),
