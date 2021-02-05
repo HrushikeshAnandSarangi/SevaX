@@ -3427,7 +3427,7 @@ class S {
       );
 
   String get admins_organizers => Intl.message(
-        'Admins & Super-admins',
+        'Admins & Super Admins',
         name: 'admins_organizers',
       );
 
@@ -4688,7 +4688,7 @@ class S {
       );
 
   String get select_parent_timebank => Intl.message(
-        'Select Child Seva Communities',
+        'Select Parent Seva Communities',
         name: 'select_parent_timebank',
       );
 
@@ -4973,7 +4973,7 @@ class S {
       );
 
   String get cash_request => Intl.message(
-        'Cash Request',
+        'Money Request',
         name: 'cash_request',
       );
 
@@ -5608,12 +5608,12 @@ class S {
       );
 
   String get owners => Intl.message(
-        'Super-admins',
+        'Super Admins',
         name: 'owners',
       );
 
   String get make_owner => Intl.message(
-        'Make Super-admin',
+        'Make Super Admin',
         name: 'make_owner',
       );
 
@@ -5638,12 +5638,12 @@ class S {
       );
 
   String get admin_promoted_to_owner => Intl.message(
-        'creator_name the creator of Community community_name has made you a Super-admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things,',
+        'creator_name the creator of Community community_name has made you a Super Admin for this Community. This means that you will receive notifications for approvals within the community and you can create Community Requests, among other things',
         name: 'admin_promoted_to_owner',
       );
 
   String get owner_demoted_to_admin => Intl.message(
-        'associatedName has demoted you from being a Super-admin for the groupName',
+        'associatedName has demoted you from being a Super Admin for the groupName',
         name: 'owner_demoted_to_admin',
       );
 
@@ -5988,7 +5988,7 @@ class S {
       );
 
   String get super_admin => Intl.message(
-        'Super-admin',
+        'Super Admin',
         name: 'super_admin',
       );
 
@@ -6080,6 +6080,16 @@ class S {
   String get request_desc_hint_time => Intl.message(
         'Please describe what you need to have done. \n \nEx: I need help removing weeds from  my small garden.',
         name: 'request_desc_hint_time',
+      );
+
+  String get no_search_result_found => Intl.message(
+        'No serach result found',
+        name: 'no_search_result_found',
+      );
+
+  String get select_child_timebank => Intl.message(
+        'Select Child Seva Communities',
+        name: 'select_child_timebank',
       );
 }
 

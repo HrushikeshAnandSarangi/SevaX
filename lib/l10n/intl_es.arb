@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2021-02-04T08:21:38+00:00",
+    "@@last_modified": "2021-02-05T10:51:34+00:00",
     "check_met": "Comprobando, si nos conocimos antes",
     "we_met": "Nos conocimos antes",
     "hang_on": "Agárrate fuerte",
@@ -928,7 +928,7 @@
     "choose_image": "Elegir imagen",
     "timebank_has_parent": "Seva Community tiene un padre",
     "timebank_location_has_parent_hint_text": "Si su comunidad de Seva está asociada con una comunidad de Seva principal, seleccione del menú desplegable a continuación",
-    "select_parent_timebank": "Seleccionar comunidades de niños Seva",
+    "select_parent_timebank": "Seleccionar comunidades de padres Seva",
     "look_for_existing_siblings": "Su publicación es visible para las siguientes comunidades de Seva:",
     "none": "Ninguna",
     "find_your_parent_timebank": "Encuentra a tu padre Seva Community si eres parte de",
@@ -985,7 +985,7 @@
     "time_offer": "Oferta de tiempo",
     "offered": "Ofrecido",
     "offer_to_sent_at": "Enviar oferta a la dirección",
-    "cash_request": "Solicitud de efectivo",
+    "cash_request": "Solicitud de dinero",
     "goods_request": "Solicitud de bienes",
     "time_request": "Solicitud de tiempo",
     "donations_cash_request": "Cantidad de la solicitud*",
@@ -1118,7 +1118,7 @@
     "add_to_existing_reqest": "Agregar a solicitud existente",
     "save_as_sponsored": "Guardar como respaldado",
     "create_feed_desc_hint": "Comparta solo información relevante para su Grupo, Evento o Comunidad.Por ejemplo, puede hablar sobre su último intercambio de voluntarios y publicar una foto de usted o de la persona que realiza la tarea.",
-    "admin_promoted_to_owner": "creator_name el creador de la comunidad community_name te ha convertido en superadministrador de esta comunidad.Esto significa que recibirá notificaciones de aprobaciones dentro de la comunidad y puede crear Solicitudes de la comunidad, entre otras cosas,",
+    "admin_promoted_to_owner": "creator_name el creador de la comunidad community_name te ha convertido en superadministrador de esta comunidad.Esto significa que recibirá notificaciones de aprobaciones dentro de la comunidad y puede crear Solicitudes de la comunidad, entre otras cosas.",
     "owner_demoted_to_admin": "AssociatedName te ha degradado de ser un superadministrador de groupName",
     "extra_amount_charge": "Hay un costo adicional de $ 15 \/ mes \/ comunidad para crear una comunidad privada",
     "sponsored_groups": "Grupos respaldados",
@@ -1188,7 +1188,7 @@
     "manage_notofications": "Administrar notificaciones",
     "validation_error_bio_max_characters": "* máximo 250 caracteres",
     "request_payment_description_hint_new": "SevaX no procesa el pago.Seleccione entre ACH, PayPal, Venmo o ZellePay en el menú desplegable y proporcione los detalles correspondientes para cada método.El donante completará la donación fuera de la aplicación SevaX.",
-    "super_admin": "Superadministrador",
+    "super_admin": "Super administrador",
     "what_is_restricted_seva_community": "¿Qué es una comunidad Seva restringida?",
     "cash_offer_title_hint": "Ej .: $ 50 para centro comunitario",
     "cash_offer_desc_hint": "Describe en detalle lo que estás dispuesto a ofrecer.Utilice #hashtags para que los miembros puedan buscar fácilmente esta oferta, como #fundraiser #community",
@@ -1206,5 +1206,7 @@
     "feed_hint_back_press": "Al hacer clic en el botón de inicio, accederá a la sección Feeds.Al hacer doble clic en el botón de inicio del feed del grupo, volverá al feed de la comunidad.",
     "past_time_selected": "La hora que seleccionó no es válida porque pertenece al pasado.",
     "invalid_time": "Hora no válida",
-    "request_desc_hint_time": "Describa lo que debe haber hecho.\n \nEj .: Necesito ayuda para quitar las malas hierbas de mi pequeño jardín."
+    "request_desc_hint_time": "Describa lo que debe haber hecho.\n \nEj .: Necesito ayuda para quitar las malas hierbas de mi pequeño jardín.",
+    "no_search_result_found": "No se encontraron resultados de búsqueda",
+    "select_child_timebank": "Seleccionar comunidades de niños Seva"
 }

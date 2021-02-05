@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2021-02-04T08:21:37+00:00",
+    "@@last_modified": "2021-02-05T10:51:34+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -928,7 +928,7 @@
     "choose_image": "Escolha a imagem",
     "timebank_has_parent": "Comunidade Seva tem um pai",
     "timebank_location_has_parent_hint_text": "Se a sua comunidade Seva estiver associada a uma Comunidade Seva pai, selecione na lista suspensa abaixo",
-    "select_parent_timebank": "Selecione Comunidades Seva Infantis",
+    "select_parent_timebank": "Selecione Comunidades Seva de Pais",
     "look_for_existing_siblings": "Sua postagem está visível para as seguintes Comunidades Seva:",
     "none": "Nenhum",
     "find_your_parent_timebank": "Encontre a comunidade Seva de seus pais, se você fizer parte de",
@@ -1118,8 +1118,8 @@
     "add_to_existing_reqest": "Adicionar ao pedido existente",
     "save_as_sponsored": "Salvar como endossado",
     "create_feed_desc_hint": "Compartilhe apenas as informações relevantes para o seu grupo, evento ou comunidade.Por exemplo, você pode falar sobre sua última troca de voluntários e postar uma foto sua ou da pessoa que está realizando a tarefa",
-    "admin_promoted_to_owner": "creator_name o criador da comunidade community_name tornou você um superadministrador para esta comunidade.Isso significa que você receberá notificações para aprovações dentro da comunidade e pode criar solicitações da comunidade, entre outras coisas,",
-    "owner_demoted_to_admin": "associatedName rebaixou você de superadministrador do groupName",
+    "admin_promoted_to_owner": "creator_name o criador da comunidade community_name tornou você um superadministrador para esta comunidade.Isso significa que você receberá notificações de aprovações dentro da comunidade e poderá criar solicitações da comunidade, entre outras coisas",
+    "owner_demoted_to_admin": "associatedName o rebaixou de superadministrador do groupName",
     "extra_amount_charge": "Há um custo adicional de $ 15 \/ mês \/ comunidade para criar uma comunidade privada",
     "sponsored_groups": "Grupos Endossados",
     "endorsed_group_request_title": "Pedido de aprovação de grupo endossado",
@@ -1188,7 +1188,7 @@
     "manage_notofications": "Gerenciar notificações",
     "validation_error_bio_max_characters": "* máximo de 250 caracteres",
     "request_payment_description_hint_new": "SevaX não processa o pagamento.Selecione entre ACH, PayPal, Venmo ou ZellePay no menu suspenso e forneça os detalhes apropriados para cada método.O doador irá concluir a doação fora do aplicativo SevaX.",
-    "super_admin": "Superadministrador",
+    "super_admin": "Super Admin",
     "what_is_restricted_seva_community": "O que é uma comunidade Seva restrita?",
     "cash_offer_title_hint": "Ex: $ 50 para centro comunitário",
     "cash_offer_desc_hint": "Descreva em detalhes o que você está disposto a oferecer.Use #hashtags para que os membros possam pesquisar esta oferta facilmente, como #fundraiser #community",
@@ -1206,5 +1206,7 @@
     "feed_hint_back_press": "Clicar no botão home leva você para a seção Feeds.Clicar duas vezes no botão home do feed do grupo o levará de volta ao feed da comunidade.",
     "past_time_selected": "A hora que você selecionou é inválida porque está no passado.",
     "invalid_time": "Hora inválida",
-    "request_desc_hint_time": "Descreva o que você precisa ter feito.\n \nEx: preciso de ajuda para remover ervas daninhas do meu pequeno jardim."
+    "request_desc_hint_time": "Descreva o que você precisa ter feito.\n \nEx: preciso de ajuda para remover ervas daninhas do meu pequeno jardim.",
+    "no_search_result_found": "Nenhum resultado de pesquisa encontrado",
+    "select_child_timebank": "Selecione Comunidades Seva Infantis"
 }
