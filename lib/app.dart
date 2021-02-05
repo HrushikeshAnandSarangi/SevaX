@@ -20,8 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: Duration.zero);
-  AppConfig.remoteConfig.activateFetched();
+  await AppConfig.remoteConfig.fetch(expiration: Duration.zero);
+  await AppConfig.remoteConfig.activateFetched();
 }
 
 Future<void> initApp(Flavor flavor) async {
