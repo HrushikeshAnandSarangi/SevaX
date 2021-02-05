@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -39,12 +40,15 @@ class RequestDetailsAboutPage extends StatefulWidget {
   final TimebankModel timebankModel;
   final bool applied;
   final bool isAdmin;
+  final CommunityModel communityModel;
+
   RequestDetailsAboutPage({
     Key key,
     this.applied = false,
     this.requestItem,
     this.timebankModel,
     this.isAdmin,
+    @required this.communityModel,
   }) : super(key: key);
 
   @override
@@ -79,6 +83,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   UserMode userMode;
   GoodStatus goodsStatus;
   CashStatus cashStatus;
+  var recurringRequestsDocs;
+  bool deletingParent = false;
 
   String location = 'Location';
   TextStyle titleStyle = TextStyle(
@@ -105,9 +111,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         if (utils.isDeletable(
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
-            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .selectedCommunityModel
-                .created_by,
+            communityCreatorId:
+            // BlocProvider.of<HomeDashBoardBloc>(context)
+            //     .selectedCommunityModel.created_by
+            widget.communityModel.created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
         else if (widget.requestItem.sevaUserId == loggedInUser)
@@ -127,12 +134,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
-      if (utils.isDeletable(
+        if (utils.isDeletable(
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
-            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .selectedCommunityModel
-                .created_by,
+            communityCreatorId:
+            // BlocProvider.of<HomeDashBoardBloc>(context)
+            //     .selectedCommunityModel
+            //     .created_by
+          widget.communityModel.created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
 
@@ -519,7 +528,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           : timeRequestActionWidgetForParticipant;
     } else if (widget.requestItem.requestType == RequestType.GOODS) {
       canDelete = widget.requestItem.goodsDonationDetails.donors == null ||
- widget.requestItem.goodsDonationDetails.donors.length < 1;
+          widget.requestItem.goodsDonationDetails.donors.length < 1;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
@@ -594,7 +603,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         ],
                       ),
                       onPressed: () {
-                        deleteRequestDialog();
+                        deleteRequestDialog(widget.requestItem);
                       },
                     ),
                   ),
@@ -613,9 +622,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -627,9 +637,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           (widget.requestItem.goodsDonationDetails.donors == null ||
               widget.requestItem.goodsDonationDetails.donors.length < 1);
@@ -640,9 +651,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }
@@ -699,7 +711,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 ],
               ),
               onPressed: () {
-                deleteRequestDialog();
+                deleteRequestDialog(widget.requestItem);
               },
             ),
           ),
@@ -1366,7 +1378,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 //    );
 //  }
 
-  void deleteRequestDialog() {
+  void deleteRequestDialog(RequestModel requestItem) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -1391,9 +1403,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               onPressed: () async {
-                await deleteRequest().commit();
-                Navigator.of(dialogContext).pop();
-                Navigator.of(context).pop();
+                if (requestItem.parent_request_id == requestItem.id) {
+                  LinearProgressIndicator();
+                  await fetchRecurringRequestsDocs(requestItem);
+                  deleteParentRequest(requestItem).commit();
+                  Navigator.of(dialogContext).pop();
+                  Navigator.of(context).pop();
+                } else {
+                  await deleteRequest().commit();
+                  Navigator.of(dialogContext).pop();
+                  Navigator.of(context).pop();
+                }
+                ;
               },
               child: Text(
                 S.of(context).delete,
@@ -1413,6 +1434,50 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         color: Colors.white,
       ),
     );
+  }
+
+  Future fetchRecurringRequestsDocs(RequestModel requestItem) async {
+    recurringRequestsDocs = await Firestore.instance
+        .collection('requests')
+        .where('parent_request_id', isEqualTo: requestItem.parent_request_id)
+        //.where('autoGenerated', isEqualTo: true)
+        .getDocuments();
+  }
+
+  WriteBatch deleteParentRequest(RequestModel requestItem) {
+    WriteBatch batch = Firestore.instance.batch();
+    var docs = recurringRequestsDocs.documents;
+
+//below if condition for, if only one request is remaining in the recurring request list.
+//To avoid index error.
+    if (docs.length <= 1) {
+      var delete1 =
+          Firestore.instance.collection('requests').document(requestItem.id);
+      batch.delete(delete1);
+    } else if (docs.length > 1) {
+      Map<String, dynamic> subsequentDocMap = docs[1].data;
+      String subsequentDocID = docs[1].documentID;
+
+      var update1 = Firestore.instance
+          .collection('requests')
+          .document(requestItem.parent_request_id);
+
+      var update2 = Firestore.instance
+          .collection('requests')
+          .document(requestItem.parent_request_id);
+
+      var delete2 =
+          Firestore.instance.collection('requests').document(subsequentDocID);
+
+      batch.updateData(update1, subsequentDocMap);
+      batch.updateData(update2, {
+        'id': requestItem.parent_request_id,
+        'isRecurring': true,
+        'autoGenerated': false,
+      });
+      batch.delete(delete2);
+    }
+    return batch;
   }
 
   WriteBatch deleteRequest() {

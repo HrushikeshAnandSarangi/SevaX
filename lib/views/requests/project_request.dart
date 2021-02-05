@@ -721,6 +721,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       bloc: BlocProvider.of<HomeDashBoardBloc>(context),
                       child: RequestTabHolder(
                         isAdmin: true,
+                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                       ),
                     ),
                   ),
@@ -737,6 +738,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       //   applied: isAdmin ? false : true,
                       timebankModel: widget.timebankModel,
                       isAdmin: isAdmin,
+                      communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                     ),
                   ),
                 ),

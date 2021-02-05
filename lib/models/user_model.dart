@@ -377,6 +377,10 @@ class UserModel extends DataModel {
     this.communities = List.castFrom(user['communities']);
   }
 
+  bool operator ==(o) => o is UserModel && o.sevaUserID == sevaUserID;
+
+  int get hashCode => sevaUserID.hashCode;
+
   UserModel setBlockedMembers(List<String> blockedMembers) {
     var tempOutput = List<String>.from(blockedMembers);
     this.blockedMembers = tempOutput;

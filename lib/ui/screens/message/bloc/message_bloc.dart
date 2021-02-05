@@ -26,8 +26,11 @@ class MessageBloc extends BlocBase {
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
 
-  Future<void> fetchAllMessage(String communityId, UserModel userModel) async {
-    log("$communityId");
+  Future<void> fetchAllMessage(
+    String communityId,
+    UserModel userModel,
+    List<UserModel> membersInCommunity,
+  ) async {
     ChatModelSync chatModelSync = ChatModelSync();
     Firestore.instance
         .collection("chatsnew")
@@ -39,6 +42,7 @@ class MessageBloc extends BlocBase {
       List<FrequentContactsModel> frequentContacts = [];
       int unreadCount = 0;
       log(querySnapshot.documents.length.toString());
+
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
         chat.id = snapshot.documentID;
@@ -48,7 +52,8 @@ class MessageBloc extends BlocBase {
           orElse: () => null,
         );
         log("===> sender id :$senderId");
-         if (senderId != null || chat.isGroupMessage) {
+        if (membersInCommunity.contains(UserModel(sevaUserID: senderId)) &&
+            (senderId != null || chat.isGroupMessage)) {
           if (isMemberBlocked(userModel, senderId) ||
               (chat.deletedBy.containsKey(userModel.sevaUserID) &&
                   chat.deletedBy[userModel.sevaUserID] >
@@ -74,10 +79,11 @@ class MessageBloc extends BlocBase {
                 fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
               } else {
                 fc = FrequentContactsModel(
-                    null,
-                    chat.participantInfo.firstWhere(
-                        (ParticipantInfo info) => info.id == senderId),
-                    chat.isGroupMessage);
+                  null,
+                  chat.participantInfo.firstWhere(
+                      (ParticipantInfo info) => info.id == senderId),
+                  chat.isGroupMessage,
+                );
               }
               frequentContacts.add(fc);
             }
