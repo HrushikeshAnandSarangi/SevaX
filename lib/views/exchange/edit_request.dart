@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:collection/equality.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -160,6 +161,13 @@ class RequestEditFormState extends State<RequestEditForm> {
   GeoFirePoint location;
   final _debouncer = Debouncer(milliseconds: 500);
 
+  String initialRequestTitle = '';
+  String initialRequestDescription = '';
+  var startDate;
+  var endDate;
+  int tempCredits = 0;
+  int tempNoOfVolunteers = 0;
+
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
 
@@ -303,6 +311,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
+      return Container();
       // return ProjectSelection(
       //   requestModel: requestModel,
       //   projectModelList: projectModelList,
@@ -319,15 +328,19 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   @override
   Widget build(BuildContext context) {
+    initialRequestTitle = widget.requestModel.title;
+    initialRequestDescription = widget.requestModel.description;
+    tempCredits = widget.requestModel.maxCredits;
+    tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
     TextStyle textStyle = Theme.of(context).textTheme.title;
-    var startDate = getUpdatedDateTimeAccToUserTimezone(
-        timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestStart));
-    var endDate = getUpdatedDateTimeAccToUserTimezone(
-        timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime: DateTime.fromMillisecondsSinceEpoch(
-            widget.requestModel.requestEnd));
+    startDate = getUpdatedDateTimeAccToUserTimezone(
+      timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+      dateTime: DateTime.fromMillisecondsSinceEpoch(
+          widget.requestModel.requestStart));
+    endDate = getUpdatedDateTimeAccToUserTimezone(
+      timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+      dateTime: DateTime.fromMillisecondsSinceEpoch(
+          widget.requestModel.requestEnd));
     hoursMessage = S.of(context).set_duration;
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
@@ -383,6 +396,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                               onChanged: (value) {
                                 updateExitWithConfirmationValue(
                                     context, 1, value);
+                                setState(() {
+                                    initialRequestTitle = value;                                 
+                                });
                               },
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
@@ -408,7 +424,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 if (profanityDetector.isProfaneString(value)) {
                                   return S.of(context).profanity_text_alert;
                                 }
-                                widget.requestModel.title = value;
+                                //widget.requestModel.title = value;
+                                    initialRequestTitle = value;
                               },
                             ),
                             SizedBox(height: 30),
@@ -709,11 +726,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     RegExp regExp = RegExp(mobilePattern);
     if (value.isEmpty) {
       return S.of(context).validation_error_general_text;
-    } else if (emailPattern.hasMatch(value)) {
-      widget.requestModel.cashModel.zelleId = value;
-
-      return null;
-    } else if (regExp.hasMatch(value)) {
+    } else if (emailPattern.hasMatch(value) || regExp.hasMatch(value)) {
       widget.requestModel.cashModel.zelleId = value;
 
       return null;
@@ -898,6 +911,10 @@ class RequestEditFormState extends State<RequestEditForm> {
               });
             }
             updateExitWithConfirmationValue(context, 9, value);
+
+            setState(() {
+              initialRequestDescription  = value;
+            });
           },
           focusNode: focusNodes[0],
           onFieldSubmitted: (v) {
@@ -920,7 +937,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             if (profanityDetector.isProfaneString(value)) {
               return S.of(context).profanity_text_alert;
             }
-            widget.requestModel.description = value;
+            //widget.requestModel.description = value;
+            initialRequestDescription = value;
           },
         ),
       ],
@@ -1169,7 +1187,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   onChanged: (v) {
                     updateExitWithConfirmationValue(context, 10, v);
                     if (v.isNotEmpty && int.parse(v) >= 0) {
-                      widget.requestModel.maxCredits = int.parse(v);
+                      //widget.requestModel.maxCredits = int.parse(v);
+                      tempCredits = int.parse(v);
                       setState(() {});
                     }
                   },
@@ -1188,7 +1207,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                     } else if (int.parse(value) == 0) {
                       return S.of(context).enter_max_credits;
                     } else {
-                      requestModel.maxCredits = int.parse(value);
+                      //requestModel.maxCredits = int.parse(value);
+                      tempCredits = int.parse(value);
                       setState(() {});
                       return null;
                     }
@@ -1221,7 +1241,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             onChanged: (v) {
               updateExitWithConfirmationValue(context, 11, v);
               if (v.isNotEmpty && int.parse(v) >= 0) {
-                widget.requestModel.numberOfApprovals = int.parse(v);
+                //widget.requestModel.numberOfApprovals = int.parse(v);
+                tempNoOfVolunteers = int.parse(v);
                 setState(() {});
               }
             },
@@ -1239,7 +1260,8 @@ class RequestEditFormState extends State<RequestEditForm> {
               } else if (int.parse(value) == 0) {
                 return S.of(context).validation_error_volunteer_count_zero;
               } else {
-                widget.requestModel.numberOfApprovals = int.parse(value);
+                //widget.requestModel.numberOfApprovals = int.parse(value);
+                tempNoOfVolunteers = int.parse(value);
                 setState(() {});
                 return null;
               }
@@ -1600,16 +1622,16 @@ class RequestEditFormState extends State<RequestEditForm> {
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {
-        widget.requestModel.recurringDays =
+        EditRepeatWidgetState.recurringDays =
             EditRepeatWidgetState.getRecurringdays();
-        end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
-        end.on = end.endType == "on"
-            ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
-            : null;
-        end.after = (end.endType == "after"
-            ? int.parse(EditRepeatWidgetState.after)
-            : 1);
-        widget.requestModel.end = end;
+        // end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
+        // end.on = end.endType == "on"
+        //     ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
+        //     : null;
+        // end.after = (end.endType == "after"
+        //     ? int.parse(EditRepeatWidgetState.after)
+        //     : 1);
+        // widget.requestModel.end = end;
       }
 
       if (widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
@@ -1682,16 +1704,42 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
 
-      // if (location != null) {
-      widget.requestModel.requestStart =
-          OfferDurationWidgetState.starttimestamp;
-      widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
-      widget.requestModel.location = location;
-      widget.requestModel.address = selectedAddress;
-      widget.requestModel.categories = selectedCategoryIds.toList();
-      if (widget.requestModel.isRecurring == true ||
-          widget.requestModel.autoGenerated == true) {
-        showDialog(
+     //comparing the recurring days List
+
+        Function eq = const ListEquality().equals;
+        bool recurrinDaysListsMatch = eq(widget.requestModel.recurringDays, EditRepeatWidgetState.recurringDays);
+        log('Days Match:  ' + recurrinDaysListsMatch.toString());
+      String tempSelectedEndType = EditRepeatWidgetState.endType == 0 ? 'on' : 'after';
+
+      if (widget.requestModel.isRecurring == true || widget.requestModel.autoGenerated == true) {
+
+        if(widget.requestModel.title != initialRequestTitle || 
+           startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp ||
+           endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp ||
+           widget.requestModel.description != initialRequestDescription ||
+           tempCredits != widget.requestModel.maxCredits ||
+           tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
+           location != widget.requestModel.location) {
+
+
+          //setState(() {
+            widget.requestModel.title = initialRequestTitle;
+            widget.requestModel.description = initialRequestDescription;
+            widget.requestModel.location = location;
+            widget.requestModel.address = selectedAddress;
+            widget.requestModel.categories = selectedCategoryIds.toList();
+
+            widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
+            widget.requestModel.maxCredits = tempCredits;
+
+            startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp ? 
+            widget.requestModel.requestStart = OfferDurationWidgetState.starttimestamp : null;
+
+            endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp ?
+            widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp : null;      
+          //});
+        
+        return showDialog(
           barrierDismissible: false,
           context: context,
           builder: (BuildContext viewContext) {
@@ -1704,9 +1752,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                     child: Text(
                       S.of(context).edit_this_event,
                       style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontFamily: 'Europa'),
+                        fontSize: 14,
+                        color: Colors.red,
+                      ),
                     ),
                     onPressed: () async {
                       Navigator.pop(viewContext);
@@ -1720,9 +1768,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                     child: Text(
                       S.of(context).edit_subsequent_event,
                       style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.red,
-                          fontFamily: 'Europa'),
+                        fontSize: 14,
+                        color: Colors.red,
+                      ),
                     ),
                     onPressed: () async {
                       Navigator.pop(viewContext);
@@ -1730,10 +1778,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                       await updateRequest(requestModel: widget.requestModel);
                       await RequestManager.updateRecurrenceRequestsFrontEnd(
                         updatedRequestModel: widget.requestModel,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId:
-                            SevaCore.of(context).loggedInUser.currentTimebank,
+                        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                       );
 
                       Navigator.pop(dialogContext);
@@ -1746,25 +1792,79 @@ class RequestEditFormState extends State<RequestEditForm> {
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.red,
-                        fontFamily: 'Europa',
                       ),
                     ),
                     onPressed: () async {
                       Navigator.pop(viewContext);
                     },
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      } else {
-        linearProgressForCreatingRequest();
+                 ],
+                ),
+              );
+            },
+          );
+         }
 
-        await updateRequest(requestModel: widget.requestModel);
+          if (tempSelectedEndType != widget.requestModel.end.endType || 
+              widget.requestModel.end.after != int.parse(EditRepeatWidgetState.after) ||
+              widget.requestModel.end.on != EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch ||
+              recurrinDaysListsMatch == false) {  
+            
+          //setState(() {
+            widget.requestModel.title = initialRequestTitle;
+            widget.requestModel.description = initialRequestDescription;
+            widget.requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
+            widget.requestModel.end.after = int.parse(EditRepeatWidgetState.after);
+            widget.requestModel.end.endType = tempSelectedEndType;
+            widget.requestModel.recurringDays = EditRepeatWidgetState.recurringDays;
+            widget.requestModel.end.on = EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch ;
+          //});
 
-        Navigator.pop(dialogContext);
-        Navigator.pop(context);
+          linearProgressForCreatingRequest();
+          await updateRequest(requestModel: widget.requestModel);
+          await RequestManager.updateRecurrenceRequestsFrontEnd(
+            updatedRequestModel: widget.requestModel,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          );
+          Navigator.pop(dialogContext);
+          Navigator.pop(context);
+          
+          } else {
+              Navigator.of(context).pop();
+          }
+
+        } else  if(widget.requestModel.isRecurring == false && widget.requestModel.autoGenerated == false) {
+
+          if(widget.requestModel.title != initialRequestTitle || 
+              startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp ||
+              endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp ||
+              widget.requestModel.description != initialRequestDescription ||
+              tempCredits != widget.requestModel.maxCredits ||
+              tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
+              location != widget.requestModel.location){
+
+              widget.requestModel.title = initialRequestTitle;
+              widget.requestModel.description = initialRequestDescription;
+              widget.requestModel.location = location;
+              widget.requestModel.address = selectedAddress;
+              widget.requestModel.categories = selectedCategoryIds.toList();
+              startDate.millisecondsSinceEpoch != OfferDurationWidgetState.starttimestamp ? 
+              widget.requestModel.requestStart = OfferDurationWidgetState.starttimestamp : null;
+              endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp ?
+              widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp : null; 
+              widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
+              widget.requestModel.maxCredits = tempCredits;
+
+              linearProgressForCreatingRequest();
+              await updateRequest(requestModel: widget.requestModel);
+              Navigator.pop(context);
+              Navigator.pop(dialogContext);
+
+          } else {
+              Navigator.of(context).pop();
+          }
+
       }
     }
   }
