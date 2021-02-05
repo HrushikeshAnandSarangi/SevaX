@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -39,12 +40,15 @@ class RequestDetailsAboutPage extends StatefulWidget {
   final TimebankModel timebankModel;
   final bool applied;
   final bool isAdmin;
+  final CommunityModel communityModel;
+
   RequestDetailsAboutPage({
     Key key,
     this.applied = false,
     this.requestItem,
     this.timebankModel,
     this.isAdmin,
+    @required this.communityModel,
   }) : super(key: key);
 
   @override
@@ -105,9 +109,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         if (utils.isDeletable(
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
-            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .selectedCommunityModel
-                .created_by,
+            communityCreatorId:
+            // BlocProvider.of<HomeDashBoardBloc>(context)
+            //     .selectedCommunityModel.created_by
+            widget.communityModel.created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
         else if (widget.requestItem.sevaUserId == loggedInUser)
@@ -130,9 +135,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       if (utils.isDeletable(
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
-            communityCreatorId: BlocProvider.of<HomeDashBoardBloc>(context)
-                .selectedCommunityModel
-                .created_by,
+            communityCreatorId:
+            // BlocProvider.of<HomeDashBoardBloc>(context)
+            //     .selectedCommunityModel
+            //     .created_by
+          widget.communityModel.created_by,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
 
@@ -613,9 +620,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -627,9 +635,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           (widget.requestItem.goodsDonationDetails.donors == null ||
               widget.requestItem.goodsDonationDetails.donors.length < 1);
@@ -640,9 +649,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               communityCreatorId:
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      : BlocProvider.of<HomeDashBoardBloc>(context)
-                          .selectedCommunityModel
-                          .created_by,
+                      :
+                  // BlocProvider.of<HomeDashBoardBloc>(context)
+                  //         .selectedCommunityModel.created_by
+          widget.communityModel.created_by,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }

@@ -15,8 +15,14 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+//import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class RequestsTabView extends StatelessWidget {
+  final CommunityModel communityModel;
+
+  const RequestsTabView({Key key, @required this.communityModel}) : super(key: key);
+
   @override
   Widget build(BuildContext mcontext) {
     final _bloc = BlocProvider.of<SearchBloc>(mcontext);
@@ -119,6 +125,7 @@ class RequestsTabView extends StatelessWidget {
               bloc: BlocProvider.of<HomeDashBoardBloc>(context),
               child: RequestTabHolder(
                 isAdmin: true,
+                communityModel: communityModel,
               ),
             ),
           ),
@@ -133,6 +140,7 @@ class RequestsTabView extends StatelessWidget {
                 requestItem: requestModel,
                 timebankModel: timebankModel,
                 isAdmin: false,
+                communityModel: communityModel,
                 //  project_id: '',
               ),
             ),

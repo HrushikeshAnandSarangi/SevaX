@@ -1139,9 +1139,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             onTap: () => moveToCategory(),
           ),
           SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
+          isFromRequest(projectId: widget.projectId,)
               ? addToProjectContainer(
                   snapshot,
                   projectModelList,
