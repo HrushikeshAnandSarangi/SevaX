@@ -17,10 +17,14 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import '../../../../flavor_config.dart';
 
 class FeedsTabView extends StatefulWidget {
+  CommunityModel communityModel;
+  FeedsTabView({this.communityModel});
+
   @override
   _FeedsTabViewState createState() => _FeedsTabViewState();
 }
@@ -70,6 +74,8 @@ class _FeedsTabViewState extends State<FeedsTabView>
                               child: NewsCardView(
                                 newsModel: news,
                                 isFocused: false,
+                                timebankModel: _bloc.timebank,
+                                communityModel: widget.communityModel,
                               ),
                             );
                           },

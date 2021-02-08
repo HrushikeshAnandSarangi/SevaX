@@ -685,6 +685,7 @@ class _LoginPageState extends State<LoginPage> {
     'robert@yopmail.com',
     'howard@yopmail.com',
     'chaman@yopmail.com',
+    'adi007footballer@gmail.com',
   ];
   Widget get directDevLogin {
     return Padding(

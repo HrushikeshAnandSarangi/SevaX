@@ -139,6 +139,8 @@ class CreateEditCommunityViewFormState
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
 
+  bool disableCreateButton = false;
+
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
@@ -171,15 +173,20 @@ class CreateEditCommunityViewFormState
         });
       } else {
         if (communitynName != s) {
+          setState(() {
+            disableCreateButton = true;
+          });
           SearchManager.searchCommunityForDuplicate(queryString: s.trim())
               .then((commFound) {
             if (commFound) {
               setState(() {
+                disableCreateButton = false;
                 communityFound = true;
                 errTxt = 'Seva Community name already exists';
               });
             } else {
               setState(() {
+                disableCreateButton = false;
                 communityFound = false;
                 errTxt = null;
               });
@@ -189,41 +196,6 @@ class CreateEditCommunityViewFormState
       }
     });
   }
-
-  // void get _fetchCurrentlocation async {
-  //   Location templocation = Location();
-  //   bool _serviceEnabled;
-  //   PermissionStatus _permissionGranted;
-
-  //   _serviceEnabled = await templocation.serviceEnabled();
-  //   if (!_serviceEnabled) {
-  //     _serviceEnabled = await templocation.requestService();
-  //     if (!_serviceEnabled) {
-  //       return;
-  //     }
-  //   }
-
-  //   _permissionGranted = await templocation.hasPermission();
-  //   if (_permissionGranted == PermissionStatus.denied) {
-  //     _permissionGranted = await templocation.requestPermission();
-  //     if (_permissionGranted != PermissionStatus.granted) {
-  //       return;
-  //     }
-  //   }
-  //   Location().getLocation().then((onValue) {
-  //     location = GeoFirePoint(onValue.latitude, onValue.longitude);
-  //     LocationUtility()
-  //         .getFormattedAddress(
-  //       location.latitude,
-  //       location.longitude,
-  //     )
-  //         .then((address) {
-  //       setState(() {
-  //         this.selectedAddress = address;
-  //       });
-  //     });
-  //   });
-  // }
 
   void getModelData() async {
     Future.delayed(Duration.zero, () {
@@ -851,6 +823,9 @@ class CreateEditCommunityViewFormState
                                   );
                                   return;
                                 }
+                                if(disableCreateButton){
+                                  return;
+                                }
                                 if (errTxt != null) {
                                   showDialogForSuccess(
                                     dialogTitle:
@@ -861,15 +836,6 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-//                                  if (!hasRegisteredLocation()) {
-//                                    showDialogForSuccess(
-//                                        dialogTitle: S
-//                                            .of(context)
-//                                            .timebank_location_error,
-//                                        err: true);
-//                                    return;
-//                                  }
-
                                   if (_formKey.currentState.validate()) {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
