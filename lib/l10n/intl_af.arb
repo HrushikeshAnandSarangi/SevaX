@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-02-05T12:48:40+00:00",
+    "@@last_modified": "2021-02-08T16:55:20+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -76,8 +76,8 @@
     "joined": "Aangesluit",
     "timebanks_near_you": "Seva Gemeenskappe naby jou",
     "find_your_timebank": "Vind u Seva-gemeenskap",
-    "looking_existing_timebank": "Op soek na 'n bestaande Seva-gemeenskap om aan te sluit",
-    "find_timebank_help_text": "Voer asseblief u pos- of poskode in die veld in of tik u stad, staat en land in om 'n Seva-gemeenskap naby u te vind.",
+    "looking_existing_timebank": "Op soek na 'n bestaande Seva-gemeenskap om aan te sluit?\nVoer poskode of stad, staat, land in",
+    "find_timebank_help_text": "Voer die naam of ligging van u gemeenskap in.",
     "no_timebanks_found": "Geen Seva-gemeenskappe gevind nie",
     "timebank": "Seva Gemeenskap",
     "created_by": "Gemaak deur",
@@ -460,7 +460,7 @@
     "send_feedback": "Stuur terugvoering",
     "enter_feedback": "Voer asseblief u terugvoer in",
     "feedback_messagae": "Laat weet ons asseblief van u waardevolle terugvoer",
-    "create_timebank_description": "'N Seva-gemeenskap is 'n tydbankgemeenskap waar vrywilligers mekaar en die groter gemeenskap deur tyd, geld of goedere help en ontvang.",
+    "create_timebank_description": "'N Seva-gemeenskap is 'n gemeenskap waar lede mekaar en die groter gemeenskap deur tyd, geld of goedere help en ontvang.",
     "timebank_logo": "Gemeenskapsbeeld van Seva",
     "timebank_name": "Benoem jou Seva-gemeenskap",
     "timebank_name_hint": "Eks: Immergroen omgewing, Acme-organisasie, XYZ Voedselbank",
@@ -1106,7 +1106,7 @@
     "people": "mense",
     "replies": "Antwoorde",
     "near_by_timebank_search_hint": "Voer asseblief u pos- of poskode in die veld in of tik u stad, staat en land in om 'n Seva-gemeenskap naby u te vind.",
-    "near_by_timebank_subtitle": "Vind 'n Seva-gemeenskap naby u.Sien u nie naby u nie?U kan altyd u eie Seva-gemeenskap gratis skep en die mense wat u ken, uitnooi.Seva-gemeenskappe is 'n veilige en veilige manier om met u vriende en familie te kommunikeer.",
+    "near_by_timebank_subtitle": "Vind 'n Seva-gemeenskap naby u.Sien u nie naby u nie?U kan altyd u eie Seva-gemeenskap gratis skep en die mense wat u ken, uitnooi.Seva-gemeenskappe is 'n veilige en veilige manier om met u vriende en familie te kommunikeer.\nTik u pos- of poskode in die veld of tik u stad, staat en land in om 'n Seva-gemeenskap naby u te vind.",
     "near_by_timebank_title": "Vind 'n Seva-gemeenskap naby u.",
     "timebank_about_title": "Vertel ons van u Seva-gemeenskap",
     "who_can_see_feed": "Wie kan jou stroom sien?",
@@ -1209,5 +1209,6 @@
     "request_desc_hint_time": "Beskryf asseblief wat u moet doen.\n \nVoorbeeld: Ek het hulp nodig om onkruid uit my tuintjie te verwyder.",
     "no_search_result_found": "Geen soekresultaat gevind nie",
     "select_child_timebank": "Kies Child Seva Communities",
-    "super_admins": "Superadministrateur (s)"
+    "super_admins": "Superadministrateur (s)",
+    "gps_disabled_error": "Kan nie nabygeleë gemeenskappe haal nie omdat u GPS nie geaktiveer is nie."
 }

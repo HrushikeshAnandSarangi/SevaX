@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2021-02-05T12:48:39+00:00",
+    "@@last_modified": "2021-02-08T16:55:20+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -76,8 +76,8 @@
     "joined": "Alijiunga",
     "timebanks_near_you": "Jamii za Seva karibu na wewe",
     "find_your_timebank": "Pata Jumuiya yako ya Seva",
-    "looking_existing_timebank": "Kutafuta Jamii iliyopo ya Seva kujiunga",
-    "find_timebank_help_text": "Tafadhali andika ZIP yako au msimbo wa posta uwanjani au chapa katika jiji lako, jimbo, na nchi yako kupata Jumuiya ya Seva karibu na wewe.",
+    "looking_existing_timebank": "Unatafuta Jumuiya ya Seva iliyopo kujiunga?\nIngiza ZIP \/ Posta au jiji, jimbo, nchi",
+    "find_timebank_help_text": "Ingiza jina au eneo la jamii yako.",
     "no_timebanks_found": "Hakuna Jamii za Seva zilizopatikana",
     "timebank": "Jamii ya Seva",
     "created_by": "Imetengenezwa na",
@@ -460,7 +460,7 @@
     "send_feedback": "Tuma maoni",
     "enter_feedback": "Tafadhali ingiza maoni yako",
     "feedback_messagae": "Tafadhali tujulishe kuhusu maoni yako muhimu",
-    "create_timebank_description": "Jumuiya ya Seva ni jamii ya kutunza wakati ambapo wajitolea wanapeana na kupokea msaada kwa kila mmoja na jamii kubwa kupitia wakati, pesa au bidhaa.",
+    "create_timebank_description": "Jumuiya ya Seva ni jamii ambayo wanachama wanapeana na kupokea msaada kwa kila mmoja na jamii kubwa kupitia wakati, pesa au bidhaa.",
     "timebank_logo": "Picha ya Jamii ya Seva",
     "timebank_name": "Ipe Jamii yako ya Seva jina",
     "timebank_name_hint": "Ex: Jirani ya kijani kibichi kila wakati, Shirika la Acme, Benki ya Chakula ya XYZ",
@@ -1106,7 +1106,7 @@
     "people": "watu",
     "replies": "Majibu",
     "near_by_timebank_search_hint": "Tafadhali andika ZIP yako au msimbo wa posta uwanjani au chapa katika jiji lako, jimbo, na nchi yako kupata Jumuiya ya Seva karibu na wewe.",
-    "near_by_timebank_subtitle": "Pata Jamii ya Seva karibu nawe.Je! Huoni yeyote karibu nawe?Unaweza daima kuunda Jumuiya yako ya Seva bure na uwaalike watu unaowajua.Jamii za Seva ni njia salama na salama ya kuwasiliana na marafiki na familia yako.",
+    "near_by_timebank_subtitle": "Pata Jamii ya Seva karibu nawe.Je! Huoni yeyote karibu nawe?Unaweza daima kuunda Jumuiya yako ya Seva bure na uwaalike watu unaowajua.Jamii za Seva ni njia salama na salama ya kuwasiliana na marafiki na familia yako.\nTafadhali andika ZIP yako au msimbo wa posta uwanjani au andika katika jiji, jimbo, na nchi yako kupata Jumuiya ya Seva karibu na wewe.",
     "near_by_timebank_title": "Pata Jamii ya Seva karibu nawe.",
     "timebank_about_title": "Tuambie Kuhusu Jumuiya yako ya Seva",
     "who_can_see_feed": "Ni nani anayeweza kuona Malisho yako?",
@@ -1209,5 +1209,6 @@
     "request_desc_hint_time": "Tafadhali eleza kile unahitaji kuwa umefanya.\n \nEx: Ninahitaji msaada wa kuondoa magugu kwenye bustani yangu ndogo.",
     "no_search_result_found": "Hakuna matokeo ya utafutaji yaliyopatikana",
     "select_child_timebank": "Chagua Jamii za Seva za Mtoto",
-    "super_admins": "Wasimamizi Wakuu"
+    "super_admins": "Wasimamizi Wakuu",
+    "gps_disabled_error": "Imeshindwa kuleta jamii zilizo karibu kwa sababu GPS yako haijawashwa."
 }

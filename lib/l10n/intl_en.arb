@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2021-02-05T12:48:40+00:00",
+    "@@last_modified": "2021-02-08T16:55:20+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -76,8 +76,8 @@
     "joined": "Joined",
     "timebanks_near_you": "Seva Communities near you",
     "find_your_timebank": "Find your Seva Community",
-    "looking_existing_timebank": "Looking for an existing Seva Community to join",
-    "find_timebank_help_text": "Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.",
+    "looking_existing_timebank": "Looking for an existing Seva Community to join?\nEnter ZIP\/ Postal Code or city, state, country",
+    "find_timebank_help_text": "Enter the name or location of your community.",
     "no_timebanks_found": "No Seva Communities found",
     "timebank": "Seva Community",
     "created_by": "Created by ",
@@ -460,7 +460,7 @@
     "send_feedback": "Send Feedback",
     "enter_feedback": "Please enter your feedback",
     "feedback_messagae": "Please let us know about your valuable feedback",
-    "create_timebank_description": "A Seva Community is timebanking community where volunteers give and receive help to each other and the greater community through time, money or goods.",
+    "create_timebank_description": "A Seva Community is a community where members give and receive help to each other and the greater community through time, money or goods.",
     "timebank_logo": "Seva Community Image",
     "timebank_name": "Name your Seva Community",
     "timebank_name_hint": "Ex: Evergreen Neighborhood, Acme Organization, XYZ Food Bank",
@@ -1106,7 +1106,7 @@
     "people": "people",
     "replies": "Replies",
     "near_by_timebank_search_hint": "Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.",
-    "near_by_timebank_subtitle": "Find a Seva Community near you. Don't see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.",
+    "near_by_timebank_subtitle": "Find a Seva Community near you. Don't see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.\nPlease type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.",
     "near_by_timebank_title": "Find a Seva Community near you.",
     "timebank_about_title": "Tell Us About your Seva Community",
     "who_can_see_feed": "Who can see your Feed?",
@@ -1209,5 +1209,6 @@
     "request_desc_hint_time": "Please describe what you need to have done. \n \nEx: I need help removing weeds from  my small garden.",
     "no_search_result_found": "No serach result found",
     "select_child_timebank": "Select Child Seva Communities",
-    "super_admins": "Super Admin(s)"
+    "super_admins": "Super Admin(s)",
+    "gps_disabled_error": "Unable to fetch nearby communities because your GPS is not enabled."
 }
