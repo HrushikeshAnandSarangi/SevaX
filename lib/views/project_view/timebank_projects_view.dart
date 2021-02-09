@@ -63,7 +63,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   child: Stack(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(right: 0,),
+                        padding: EdgeInsets.only(
+                          right: 0,
+                        ),
                         child: FlatButton(
                           onPressed: () {},
                           child: Text(
@@ -80,7 +82,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                         top: 0,
                         right: -20,
                         child: Container(
-                          padding: EdgeInsets.only(left:4, right:4),
+                          padding: EdgeInsets.only(left: 4, right: 4),
                           child: infoButton(
                             context: context,
                             key: GlobalKey(),
@@ -153,8 +155,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       return Center(
                         child: EmptyWidget(
                           title: S.of(context).no_events_title,
-                          sub_title:
-                              S.of(context).no_content_common_description,
+                          sub_title: isAdminOrOwner
+                              ? S.of(context).no_content_common_description
+                              : 'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
                         ),
                         // child: Padding(
                         //   padding: const EdgeInsets.all(16.0),
