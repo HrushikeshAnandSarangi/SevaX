@@ -110,7 +110,7 @@ class _SearchPageState extends State<SearchPage>
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  FeedsTabView(),
+                  FeedsTabView(communityModel: widget.community,),
                   RequestsTabView(communityModel: widget.community,),
                   OffersTabView(),
                   ProjectsTabView(),

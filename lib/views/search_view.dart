@@ -355,50 +355,6 @@ class _ResultViewState extends State<ResultView> {
                     ),
                   ),
                 );
-//                Card(
-//                  child: ListTile(
-//                    onTap: () async {
-//                      showDialog(
-//                          barrierDismissible: false,
-//                          context: context,
-//                          builder: (context) {
-//                            return AlertDialog(
-//                              title: Text('Loading'),
-//                              content: LinearProgressIndicator(),
-//                            );
-//                          });
-//                      NewsModel newsModel = await FirestoreManager.getNewsForId(
-//                        news.id,
-//                      );
-//                      Navigator.of(context, rootNavigator: true).pop();
-//                      if (newsModel == null) return;
-//                      Navigator.of(context).push(
-//                        MaterialPageRoute(
-//                          builder: (context) {
-//                            return NewsCardView(
-//                              newsModel: newsModel,
-//                            );
-//                          },
-//                        ),
-//                      );
-//                    },
-//                    title: Text(news.title),
-//                    subtitle: Text(news.description),
-//                    leading: Hero(
-//                      tag: news.id,
-//                      child: CircleAvatar(
-//                        child: ClipOval(
-//                          child: FadeInImage.assetNetwork(
-//                            height: 70,
-//                            width: 70,
-//                            placeholder: 'lib/assets/images/noimagefound.png',
-//                            image: news.newsImageUrl,
-//                          ),
-//                        ),
-//                      ),
-//                    ),
-//                  ),
-//                );
               },
               itemCount: newsList.length + 1,
             );

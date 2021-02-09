@@ -463,33 +463,25 @@ class Searches {
                     },
                     {
                       "terms": {
-                        "skills.keyword":
-                            allSkillsInterestsConsolidated['skills']
-//                        "skills.keyword": ['0kSCbykooGckE3yJV3RF']
+                        "skills.keyword":[]
+                            // allSkillsInterestsConsolidated['skills']
                       }
                     },
                     {
                       "terms": {
-                        "interests.keyword":
-                            allSkillsInterestsConsolidated['interests']
-//                        "interests.keyword": []
+                        "interests.keyword":[]
+                        // allSkillsInterestsConsolidated['interests']
                       }
                     }
                   ]
                 }
               }
-//              {
-//                "multi_match": {
-//                  "query": queryString,
-//                  "fields": ["email", "fullname", "bio"],
-//                  "type": "phrase_prefix"
-//                }
-//              },
             ]
           }
         }
       },
     );
+
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<UserModel> usersList = [];
@@ -497,16 +489,12 @@ class Searches {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if (loggedInUser.blockedBy.length == 0) {
-        if (
-//        sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
-            loggedInUser.sevaUserID != sourceMap['sevauserid']) {
+        if (loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
         }
       } else {
-        if (
-//        sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
-            !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
+        if (!loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
                 loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
