@@ -198,7 +198,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                       {
                         "creator_id": tbmodel.creatorId,
                         "email_id": tbmodel.emailId,
-                        "admins": FieldValue.arrayUnion([tbmodel.creatorId]),
+                        "organizers": FieldValue.arrayUnion([tbmodel.creatorId]),
                         "members": FieldValue.arrayUnion([tbmodel.creatorId]),
                       },
                     ),
