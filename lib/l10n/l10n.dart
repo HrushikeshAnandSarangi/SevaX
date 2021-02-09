@@ -1887,7 +1887,7 @@ class S {
       );
 
   String get no_comments => Intl.message(
-        'No comments',
+        'No Comments',
         name: 'no_comments',
       );
 
@@ -6100,6 +6100,41 @@ class S {
   String get gps_disabled_error => Intl.message(
         'Unable to fetch nearby communities because your GPS is not enabled.',
         name: 'gps_disabled_error',
+      );
+
+  String get no_options_available => Intl.message(
+        'No Options Available',
+        name: 'no_options_available',
+      );
+
+  String get select_timeline => Intl.message(
+        'Select Timeline',
+        name: 'select_timeline',
+      );
+
+  String get request_money_title_hint => Intl.message(
+        'Ex: Fundraiser for women’s shelter...',
+        name: 'request_money_title_hint',
+      );
+
+  String get request_money_desc_hint => Intl.message(
+        'Ex: Fundraiser to expand women’s shelter...',
+        name: 'request_money_desc_hint',
+      );
+
+  String get request_goods_title_hint => Intl.message(
+        'Ex: Non-perishable goods for Food Bank...',
+        name: 'request_goods_title_hint',
+      );
+
+  String get request_goods_desc_hint => Intl.message(
+        'Ex: Local Food Bank has a shortage...',
+        name: 'request_goods_desc_hint',
+      );
+
+  String get cannot_create_project => Intl.message(
+        'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
+        name: 'cannot_create_project',
       );
 }
 

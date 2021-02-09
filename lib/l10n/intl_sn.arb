@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2021-02-08T16:55:20+00:00",
+    "@@last_modified": "2021-02-09T06:08:39+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -373,7 +373,7 @@
     "completed_task_in": "wapedza basa mukati",
     "by_approving_you_accept": "Nekutendera, unobvuma izvozvo",
     "reject": "Kuramba",
-    "no_comments": "Hapana mhinduro",
+    "no_comments": "No Comments",
     "reason_to_join": "Chikonzero chekubatana",
     "reason_not_mentioned": "Chikonzero chisina kutaurwa",
     "allow": "Bvumidza",
@@ -1210,5 +1210,12 @@
     "no_search_result_found": "Hapana mhinduro yawanikwa",
     "select_child_timebank": "Sarudza Mwana Seva Nharaunda",
     "super_admins": "Super Admin (s)",
-    "gps_disabled_error": "Kutadza kutora nharaunda dziri pedyo nekuti yako GPS haina kubvumidzwa"
+    "gps_disabled_error": "Kutadza kutora nharaunda dziri pedyo nekuti yako GPS haina kubvumidzwa",
+    "no_options_available": "Hapana Sarudzo Dzinowanikwa",
+    "select_timeline": "Sarudza Nguva",
+    "request_money_title_hint": "Ex: Fundraiser yekugara kwevakadzi ...",
+    "request_money_desc_hint": "Ex: Fundraiser yekuwedzera dzimba dzevakadzi ...",
+    "request_goods_title_hint": "Ex: Zvisingaperi zvinhu zveFood Bank ...",
+    "request_goods_desc_hint": "Ex: Yemunharaunda Chikafu Bhangi ine kushomeka ...",
+    "cannot_create_project": "Zviitiko zvinogona kugadzirwa chete ne admin.Kana iwe uchida kugadzira chiitiko, ndokumbira utumire meseji kune admin yako."
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2021-02-08T16:55:20+00:00",
+    "@@last_modified": "2021-02-09T06:08:38+00:00",
     "check_met": "Comprobando, si nos conocimos antes",
     "we_met": "Nos conocimos antes",
     "hang_on": "Agárrate fuerte",
@@ -1210,5 +1210,12 @@
     "no_search_result_found": "No se encontraron resultados de búsqueda",
     "select_child_timebank": "Seleccionar comunidades de niños Seva",
     "super_admins": "Superadministradores",
-    "gps_disabled_error": "No se pueden recuperar las comunidades cercanas porque su GPS no está habilitado."
+    "gps_disabled_error": "No se pueden recuperar las comunidades cercanas porque su GPS no está habilitado.",
+    "no_options_available": "No hay opciones disponibles",
+    "select_timeline": "Seleccionar línea de tiempo",
+    "request_money_title_hint": "Ej: Recaudación de fondos para el refugio de mujeres ...",
+    "request_money_desc_hint": "Ej .: Recaudación de fondos para ampliar el refugio de mujeres ...",
+    "request_goods_title_hint": "Ej .: Bienes no perecederos para Banco de Alimentos ...",
+    "request_goods_desc_hint": "Ej: El banco de alimentos local tiene escasez ...",
+    "cannot_create_project": "Los eventos solo pueden ser creados por un administrador.Si desea crear un evento, envíe un mensaje a su administrador."
 }

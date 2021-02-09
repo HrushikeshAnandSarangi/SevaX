@@ -195,19 +195,18 @@ class OfferListItems extends StatelessWidget {
         }
         if (model.isRecurring) {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_context) => BlocProvider(
-                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
-                child: RecurringListing(
-                  offerModel: model,
-                  timebankModel: timebankModel,
-                  requestModel: null,
-                  comingFrom: ComingFrom.Offers,
+              context,
+              MaterialPageRoute(
+                builder: (_context) => BlocProvider(
+                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                  child: RecurringListing(
+                    offerModel: model,
+                    timebankModel: timebankModel,
+                    requestModel: null,
+                    comingFrom: ComingFrom.Offers,
+                  ),
                 ),
-              ),
-            )
-          );
+              ));
           // Navigator.push(
           //   parentContext,
           //   MaterialPageRoute(
