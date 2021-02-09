@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-02-08T16:55:20+00:00",
+    "@@last_modified": "2021-02-09T06:08:38+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -373,7 +373,7 @@
     "completed_task_in": "completed the task in",
     "by_approving_you_accept": "By approving, you accept that",
     "reject": "Reject",
-    "no_comments": "No Comments",
+    "no_comments": "Geen kommentaar",
     "reason_to_join": "Reason to join",
     "reason_not_mentioned": "Rede nie genoem nie",
     "allow": "Allow",
@@ -1210,5 +1210,12 @@
     "no_search_result_found": "Geen soekresultaat gevind nie",
     "select_child_timebank": "Kies Child Seva Communities",
     "super_admins": "Superadministrateur (s)",
-    "gps_disabled_error": "Kan nie nabygeleë gemeenskappe haal nie omdat u GPS nie geaktiveer is nie."
+    "gps_disabled_error": "Kan nie nabygeleë gemeenskappe haal nie omdat u GPS nie geaktiveer is nie.",
+    "no_options_available": "Geen opsies beskikbaar nie",
+    "select_timeline": "Kies Tydlyn",
+    "request_money_title_hint": "Eks: Fondsinsameling vir vroueskuiling ...",
+    "request_money_desc_hint": "Byvoorbeeld: fondsinsameling om vroueskuiling uit te brei ...",
+    "request_goods_title_hint": "Byvoorbeeld: Nie-bederfbare goedere vir voedselbank ...",
+    "request_goods_desc_hint": "Byvoorbeeld: die plaaslike voedselbank het 'n tekort ...",
+    "cannot_create_project": "Gebeurtenisse kan slegs deur 'n admin geskep word.Stuur 'n boodskap aan u admin as u 'n geleentheid wil skep."
 }

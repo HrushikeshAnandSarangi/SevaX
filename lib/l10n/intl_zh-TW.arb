@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2021-02-08T16:55:20+00:00",
+    "@@last_modified": "2021-02-09T06:08:39+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -373,7 +373,7 @@
     "completed_task_in": "完成任務於",
     "by_approving_you_accept": "通過批准，你接受",
     "reject": "拒絕",
-    "no_comments": "沒意見",
+    "no_comments": "沒有評論",
     "reason_to_join": "加入的理由",
     "reason_not_mentioned": "未提及原因",
     "allow": "允許",
@@ -1210,5 +1210,12 @@
     "no_search_result_found": "找不到搜索結果",
     "select_child_timebank": "選擇兒童塞瓦社區",
     "super_admins": "超級管理員",
-    "gps_disabled_error": "由於您的GPS未啟用，因此無法獲取附近的社區。"
+    "gps_disabled_error": "由於您的GPS未啟用，因此無法獲取附近的社區。",
+    "no_options_available": "沒有可用的選項",
+    "select_timeline": "選擇時間軸",
+    "request_money_title_hint": "例如：女性庇護所的籌款活動...",
+    "request_money_desc_hint": "例如：籌款活動擴大了婦女的庇護所...",
+    "request_goods_title_hint": "例如：食品銀行的不易腐爛物品...",
+    "request_goods_desc_hint": "例如：當地食品銀行短缺...",
+    "cannot_create_project": "活動只能由管理員創建。如果您想創建活動，請向管理員發送消息。"
 }

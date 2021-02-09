@@ -157,7 +157,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           title: S.of(context).no_events_title,
                           sub_title: isAdminOrOwner
                               ? S.of(context).no_content_common_description
-                              : 'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
+                              : S.of(context).cannot_create_project,
                         ),
                         // child: Padding(
                         //   padding: const EdgeInsets.all(16.0),

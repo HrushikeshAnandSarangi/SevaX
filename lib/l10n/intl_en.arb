@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2021-02-08T16:55:20+00:00",
+    "@@last_modified": "2021-02-09T06:08:38+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -373,7 +373,7 @@
     "completed_task_in": "completed the task in",
     "by_approving_you_accept": "By approving, you accept that",
     "reject": "Reject",
-    "no_comments": "No comments",
+    "no_comments": "No Comments",
     "reason_to_join": "Reason to join",
     "reason_not_mentioned": "Reason not mentioned",
     "allow": "Allow",
@@ -1210,5 +1210,12 @@
     "no_search_result_found": "No serach result found",
     "select_child_timebank": "Select Child Seva Communities",
     "super_admins": "Super Admin(s)",
-    "gps_disabled_error": "Unable to fetch nearby communities because your GPS is not enabled."
+    "gps_disabled_error": "Unable to fetch nearby communities because your GPS is not enabled.",
+    "no_options_available": "No Options Available",
+    "select_timeline": "Select Timeline",
+    "request_money_title_hint": "Ex: Fundraiser for women’s shelter...",
+    "request_money_desc_hint": "Ex: Fundraiser to expand women’s shelter...",
+    "request_goods_title_hint": "Ex: Non-perishable goods for Food Bank...",
+    "request_goods_desc_hint": "Ex: Local Food Bank has a shortage...",
+    "cannot_create_project": "Events can only be created by an admin. If you wish to create an event, please send a message to your admin."
 }
