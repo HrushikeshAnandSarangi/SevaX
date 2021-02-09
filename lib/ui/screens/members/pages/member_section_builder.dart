@@ -53,27 +53,29 @@ class MemberSectionBuilder extends StatelessWidget {
       itemCount: members.length > 100 ? 200 : members.length,
       itemBuilder: (context, index) {
         UserModel member = members[index];
-        return InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ProfileViewer(
-                  userEmail: member.email,
-                  timebankId: timebank.id,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: timebank.parentTimebankId),
-                  entityName: timebank.name,
+        return member != null
+            ? InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfileViewer(
+                        userEmail: member.email,
+                        timebankId: timebank.id,
+                        isFromTimebank: isPrimaryTimebank(
+                            parentTimebankId: timebank.parentTimebankId),
+                        entityName: timebank.name,
+                      ),
+                    ),
+                  );
+                },
+                child: ShortProfileCard(
+                  model: member,
+                  actionButton: member.sevaUserID == creatorId
+                      ? null // no actions on creator
+                      : actionBuilder(context, member, section, type),
                 ),
-              ),
-            );
-          },
-          child: ShortProfileCard(
-            model: member,
-            actionButton: member.sevaUserID == creatorId
-                ? null // no actions on creator
-                : actionBuilder(context, member, section, type),
-          ),
-        );
+              )
+            : Container();
       },
       separatorBuilder: (_, __) {
         return Divider(
