@@ -23,6 +23,7 @@ import '../../../../flavor_config.dart';
 
 enum _AckType { CASH, GOODS }
 enum OperatingMode { CREATOR, USER }
+String enteredReceivedAmount = '';
 
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
@@ -48,6 +49,7 @@ class _RequestDonationDisputePageState
   ChatModeForDispute chatModeForDispute;
   TimebankModel timebankModel;
   ProgressDialog progressDialog;
+
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
     color: Colors.grey,
@@ -99,6 +101,33 @@ class _RequestDonationDisputePageState
   }
 
   void actionExecute(_key) async {
+
+    if(int.parse(enteredReceivedAmount) <= 0) {
+
+      showDialog(
+      context: context,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+          title: Text('Please enter a valid donation amount'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                S.of(context).ok,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(viewContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    } else {
+
     var handleCallBackDisputeCash = ((value) {
       // print('Inside CallBackDisputeCash');
       progressDialog.hide();
@@ -242,6 +271,8 @@ class _RequestDonationDisputePageState
         }).catchError((onError) => logger.i(onError));
         break;
     }
+    
+    } 
   }
 
   @override
@@ -725,17 +756,33 @@ class _CashFlow extends StatelessWidget {
         StreamBuilder<String>(
             stream: _bloc.cashAmount,
             builder: (context, snapshot) {
-              return TextField(
-                onChanged: _bloc.onAmountChanged,
+              return TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                ],
+                onChanged: (val) {
+                  _bloc.onAmountChanged(val);
+                  enteredReceivedAmount = val;                  
+                },
                 decoration: InputDecoration(
                   errorText: snapshot.error == 'min'
                       ? S.of(context).minmum_amount + ' ' + minAmount
                       : snapshot.error == 'amount1'
                           ? S.of(context).enter_valid_amount
-                          : null,
+                      : null,
                   hintText: S.of(context).amount,
                   hintStyle: TextStyle(fontSize: 12),
                 ),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value){
+                    if (value.isEmpty) {
+                      return S.of(context).add_amount_donate_empty;
+                    } else if (int.parse(value) <= 0) {
+                     return S.of(context).minmum_amount + ' \$1';
+                    } else {
+                      return null;
+                    }
+                  }
               );
             }),
         SizedBox(height: 30),
