@@ -150,6 +150,7 @@ class ImagePickerDialog extends StatelessWidget {
                       ),
                     ).then((value) {
                       refresh();
+                      // dismissDialog();
                     });
                   },
                   child: roundedButton(
