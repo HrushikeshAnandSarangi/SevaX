@@ -212,9 +212,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     );
     getProjectsByFuture =
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
-    if (widget.requestModel.categories != null) {
-      getCategoryModels(widget.requestModel.categories, '');
-    }
     fetchRemoteConfig();
 
     // if ((FlavorConfig.appFlavor == Flavor.APP ||
