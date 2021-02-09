@@ -372,7 +372,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${isFromExit ? "You" : "User"} ${isFromExit ? S.of(context).cant_exit_timebank : "cannot be removed from this seva community"}"),
               content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
-                  "${responseData['PendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n"
                   "${S.of(context).clear_transaction}"),
               actions: <Widget>[
