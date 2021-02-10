@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,8 +39,6 @@ class _DonationViewState extends State<DonationView> {
   List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
-  bool _checked = false;
-  bool _selected = false;
   Color _checkColor = Colors.black;
   PageController pageController;
   DonationModel donationsModel = DonationModel(
@@ -119,78 +115,81 @@ class _DonationViewState extends State<DonationView> {
         ),
         centerTitle: true,
       ),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
-            0, MediaQuery.of(context).size.width * 0.03, 0),
-        child: Card(
-          margin: EdgeInsets.only(bottom: 10, top: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
-          elevation: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: MediaQuery.of(context)
-                    .size
-                    .height, // or something simular :)
-                child: new Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    // horizontal: 20,
-                                    // vertical: 10,
+      body: Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.03,
+              0, MediaQuery.of(context).size.width * 0.03, 0),
+          child: Card(
+            margin: EdgeInsets.only(bottom: 10, top: 20),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            shadowColor: Color.fromRGBO(0, 0, 0, 0.4),
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  height: MediaQuery.of(context)
+                      .size
+                      .height, // or something simular :)
+                  child: new Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      // horizontal: 20,
+                                      // vertical: 10,
+                                      ),
+                                  child: Text(
+                                    S.of(context).donations,
+                                    // textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                child: Text(
-                                  S.of(context).donations,
-                                  // textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                              const Spacer(),
+                                const Spacer(),
 //                                          close(
 //                                            onTap: () {
 //                                              ExtendedNavigator.of(context)
 //                                                  .pop();
 //                                            },
 //                                          ),
-                            ],
-                          ),
-                        ]),
-                    new Expanded(
-                      child: PageView(
-                        physics: NeverScrollableScrollPhysics(),
-                        controller: pageController,
-                        scrollDirection: Axis.horizontal,
-                        pageSnapping: true,
-                        onPageChanged: (number) {},
-                        children: [
-                          donatedItems(),
-                          amountWidget(),
-                          donationDetails(),
-                          donationOfferAt(),
-                          SingleChildScrollView(
-                            // physics: NeverScrollableScrollPhysics(),
-                            child: RequestPaymentDescriptionData(
-                              widget.offerModel,
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                          ]),
+                      new Expanded(
+                        child: PageView(
+                          physics: NeverScrollableScrollPhysics(),
+                          controller: pageController,
+                          scrollDirection: Axis.horizontal,
+                          pageSnapping: true,
+                          onPageChanged: (number) {},
+                          children: [
+                            donatedItems(),
+                            amountWidget(),
+                            donationDetails(),
+                            donationOfferAt(),
+                            SingleChildScrollView(
+                              // physics: NeverScrollableScrollPhysics(),
+                              child: RequestPaymentDescriptionData(
+                                widget.offerModel,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -660,37 +659,41 @@ class _DonationViewState extends State<DonationView> {
                     textColor: Colors.white,
                     buttonTitle: S.of(context).submit,
                     onPressed: () async {
-                      var connResult = await Connectivity().checkConnectivity();
-                      if (connResult == ConnectivityResult.none) {
-                        showScaffold(S.of(context).check_internet);
-                        return;
-                      }
-
-                      showProgress(S.of(context).please_wait);
-                      donationBloc
-                          .donateOfferGoods(
-                              notificationId: widget.notificationId,
-                              donationModel: donationsModel,
-                              offerModel: widget.offerModel,
-                              notify: UserModel(
-                                  email: donationsModel.donorDetails.email,
-                                  fullname: donationsModel.donorDetails.name,
-                                  photoURL:
-                                      donationsModel.donorDetails.photoUrl,
-                                  sevaUserID: donationsModel.donorSevaUserId))
-                          .then((value) {
-                        if (value) {
-                          hideProgress();
-                          getSuccessDialog(S
-                                  .of(context)
-                                  .donations_requested
-                                  .toLowerCase())
-                              .then(
-                            //to pop the screen
-                            (_) => Navigator.of(context).pop(),
-                          );
+                      //check validation here
+                      if (_formKey.currentState.validate()) {
+                        var connResult =
+                            await Connectivity().checkConnectivity();
+                        if (connResult == ConnectivityResult.none) {
+                          showScaffold(S.of(context).check_internet);
+                          return;
                         }
-                      });
+
+                        showProgress(S.of(context).please_wait);
+                        donationBloc
+                            .donateOfferGoods(
+                                notificationId: widget.notificationId,
+                                donationModel: donationsModel,
+                                offerModel: widget.offerModel,
+                                notify: UserModel(
+                                    email: donationsModel.donorDetails.email,
+                                    fullname: donationsModel.donorDetails.name,
+                                    photoURL:
+                                        donationsModel.donorDetails.photoUrl,
+                                    sevaUserID: donationsModel.donorSevaUserId))
+                            .then((value) {
+                          if (value) {
+                            hideProgress();
+                            getSuccessDialog(S
+                                    .of(context)
+                                    .donations_requested
+                                    .toLowerCase())
+                                .then(
+                              //to pop the screen
+                              (_) => Navigator.of(context).pop(),
+                            );
+                          }
+                        });
+                      }
                     }),
                 SizedBox(
                   width: 20,
@@ -963,39 +966,52 @@ class _DonationViewState extends State<DonationView> {
                   textColor: Colors.white,
                   buttonTitle: S.of(context).submit,
                   onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      showScaffold(S.of(context).check_internet);
-                      return;
-                    }
-                    if (donationBloc.selectedList == null) {
-                      showScaffold(S.of(context).select_goods_category);
-                    } else {
-                      // showProgress();
-                      log("IMPORTANT ==== ${widget.notificationId}============");
-                      donationBloc
-                          .donateOfferGoods(
-                              notificationId: widget.notificationId,
-                              donationModel: donationsModel,
-                              offerModel: widget.offerModel,
-                              notify: UserModel(
-                                  email: widget.offerModel.email,
-                                  fullname: widget.offerModel.fullName,
-                                  photoURL: widget.offerModel.photoUrlImage,
-                                  sevaUserID: widget.offerModel.sevaUserId))
-                          .then((value) {
-                        if (value) {
-                          // hideProgress();
-                          getSuccessDialog(S
-                                  .of(context)
-                                  .donations_requested
-                                  .toLowerCase())
-                              .then(
-                            //to pop the screen
-                            (_) => Navigator.of(context).pop(),
-                          );
+                    if (_formKey.currentState.validate()) {
+                      if (donationBloc.isSelectedListEmpty) {
+                        _scaffoldKey.currentState.hideCurrentSnackBar();
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Please select the goods that you want to receive',
+                            ),
+                          ),
+                        );
+                        return;
+                      } else {
+                        var connResult =
+                            await Connectivity().checkConnectivity();
+                        if (connResult == ConnectivityResult.none) {
+                          showScaffold(S.of(context).check_internet);
+                          return;
                         }
-                      });
+                        if (donationBloc.selectedList == null) {
+                          showScaffold(S.of(context).select_goods_category);
+                        } else {
+                          donationBloc
+                              .donateOfferGoods(
+                                  notificationId: widget.notificationId,
+                                  donationModel: donationsModel,
+                                  offerModel: widget.offerModel,
+                                  notify: UserModel(
+                                      email: widget.offerModel.email,
+                                      fullname: widget.offerModel.fullName,
+                                      photoURL: widget.offerModel.photoUrlImage,
+                                      sevaUserID: widget.offerModel.sevaUserId))
+                              .then((value) {
+                            if (value) {
+                              // hideProgress();
+                              getSuccessDialog(S
+                                      .of(context)
+                                      .donations_requested
+                                      .toLowerCase())
+                                  .then(
+                                //to pop the screen
+                                (_) => Navigator.of(context).pop(),
+                              );
+                            }
+                          });
+                        }
+                      }
                     }
                   }),
               SizedBox(

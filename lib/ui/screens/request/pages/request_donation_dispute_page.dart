@@ -374,7 +374,7 @@ class _RequestDonationDisputePageState
                         maxLines: 1,
                       ),
                       subtitle: Text(
-                        widget.model.goodsDetails.toAddress,
+                        widget.model.goodsDetails.toAddress ?? '',
                         style: subTitleStyle,
                         maxLines: 1,
                       ),
