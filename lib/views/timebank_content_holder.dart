@@ -44,10 +44,11 @@ import 'core.dart';
 enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 
 class TabarView extends StatefulWidget {
-  final String timebankId;
+  final UserModel userModel;
+
   final TimebankModel timebankModel;
 
-  TabarView({this.timebankId, this.timebankModel});
+  TabarView({this.timebankModel, this.userModel});
 
   @override
   _TabarViewState createState() => _TabarViewState();
@@ -55,11 +56,29 @@ class TabarView extends StatefulWidget {
 
 class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   TimebankModel timebankModel;
+  TabController controller;
 
   @override
   void initState() {
     timebankModel = widget.timebankModel;
     AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+    var tempRole = determineUserRoleInAbout(
+      sevaUserId: widget.userModel.sevaUserID,
+      timeBankModel: timebankModel,
+    );
+    switch (tempRole) {
+      case AboutUserRole.ADMIN:
+        controller = TabController(vsync: this, length: 7);
+        break;
+      case AboutUserRole.JOINED_USER:
+        controller = TabController(vsync: this, length: 6);
+        break;
+      case AboutUserRole.NORMAL_USER:
+        controller = TabController(vsync: this, length: 2);
+        break;
+      default:
+        controller = TabController(vsync: this, length: 2);
+    }
     super.initState();
   }
 
@@ -77,55 +96,51 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
       ),
       context,
       timebankModel,
-      widget.timebankId,
+      widget.timebankModel.id,
       this,
     );
   }
-}
 
-Widget getUserRole(
-  AboutUserRole role,
-  BuildContext context,
-  TimebankModel timebankModel,
-  String timebankId,
-  TickerProvider vsync,
-) {
-  switch (role) {
-    case AboutUserRole.ADMIN:
-      TabController controller = TabController(vsync: vsync, length: 7);
-      return createAdminTabBar(
-        context,
-        timebankModel,
-        timebankId,
-        controller,
-      );
+  Widget getUserRole(
+    AboutUserRole role,
+    BuildContext context,
+    TimebankModel timebankModel,
+    String timebankId,
+    TickerProvider vsync,
+  ) {
+    switch (role) {
+      case AboutUserRole.ADMIN:
+        return createAdminTabBar(
+          context,
+          timebankModel,
+          timebankId,
+          controller,
+        );
 
-    case AboutUserRole.JOINED_USER:
-      TabController controller = TabController(vsync: vsync, length: 6);
-      return createJoinedUserTabBar(
-        context,
-        timebankModel,
-        timebankId,
-        controller,
-      );
+      case AboutUserRole.JOINED_USER:
+        return createJoinedUserTabBar(
+          context,
+          timebankModel,
+          timebankId,
+          controller,
+        );
 
-    case AboutUserRole.NORMAL_USER:
-      TabController controller = TabController(vsync: vsync, length: 2);
-      return createNormalUserTabBar(
-        context,
-        timebankModel,
-        timebankId,
-        controller,
-      );
+      case AboutUserRole.NORMAL_USER:
+        return createNormalUserTabBar(
+          context,
+          timebankModel,
+          timebankId,
+          controller,
+        );
 
-    default:
-      TabController controller = TabController(vsync: vsync, length: 2);
-      return createNormalUserTabBar(
-        context,
-        timebankModel,
-        timebankId,
-        controller,
-      );
+      default:
+        return createNormalUserTabBar(
+          context,
+          timebankModel,
+          timebankId,
+          controller,
+        );
+    }
   }
 }
 
@@ -157,58 +172,53 @@ Widget createAdminTabBar(
     body: Column(
       children: <Widget>[
         // ShowLimitBadge(),
-        Stack(
-          children: <Widget>[
-            TabBar(
-              onTap: (int index) {
-                switch (index) {
-                  case 1:
-                    AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
-                    break;
-                  case 2:
-                    AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
-                    break;
-                  case 3:
-                    AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
-                    break;
-                  default:
-                    AppConfig.helpIconContext =
-                        HelpIconContextClass.GROUP_DEFAULT;
-                    break;
-                }
-                logger.i(
-                    "tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
-              },
-              controller: controller,
-              labelPadding: EdgeInsets.symmetric(horizontal: 10),
-              labelColor: Theme.of(context).primaryColor,
-              indicatorColor: Theme.of(context).primaryColor,
-              indicatorSize: TabBarIndicatorSize.label,
-              unselectedLabelColor: Colors.black,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  text: S.of(context).feeds,
-                ),
-                Tab(
-                  text: S.of(context).projects,
-                ),
-                Tab(
-                  text: S.of(context).requests,
-                ),
-                Tab(
-                  text: S.of(context).offers,
-                ),
-                Tab(
-                  text: S.of(context).about,
-                ),
-                Tab(
-                  text: S.of(context).members,
-                ),
-                Tab(
-                  text: S.of(context).manage,
-                ),
-              ],
+        TabBar(
+          onTap: (int index) {
+            switch (index) {
+              case 1:
+                AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
+                break;
+              case 2:
+                AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
+                break;
+              case 3:
+                AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
+                break;
+              default:
+                AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+                break;
+            }
+            logger.i(
+                "tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
+          },
+          controller: controller,
+          labelPadding: EdgeInsets.symmetric(horizontal: 10),
+          labelColor: Theme.of(context).primaryColor,
+          indicatorColor: Theme.of(context).primaryColor,
+          indicatorSize: TabBarIndicatorSize.label,
+          unselectedLabelColor: Colors.black,
+          isScrollable: true,
+          tabs: [
+            Tab(
+              text: S.of(context).feeds,
+            ),
+            Tab(
+              text: S.of(context).projects,
+            ),
+            Tab(
+              text: S.of(context).requests,
+            ),
+            Tab(
+              text: S.of(context).offers,
+            ),
+            Tab(
+              text: S.of(context).about,
+            ),
+            Tab(
+              text: S.of(context).members,
+            ),
+            Tab(
+              text: S.of(context).manage,
             ),
           ],
         ),
@@ -241,13 +251,6 @@ Widget createAdminTabBar(
               MembersPage(
                 timebankId: timebankModel.id,
               ),
-              // TimebankRequestAdminPage(
-              //   isUserAdmin: isAccessAvailable(timebankModel,
-              //       SevaCore.of(context).loggedInUser.sevaUserID),
-              //   timebankId: timebankModel.id,
-              //   userEmail: SevaCore.of(context).loggedInUser.email,
-              //   isFromGroup: true,
-              // ),
               ManageGroupView.of(
                 timebankModel: timebankModel,
               ),

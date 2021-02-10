@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../timebank_content_holder.dart';
@@ -262,7 +263,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             builder: (context) => BlocProvider<UserDataBloc>(
               bloc: bloc,
               child: TabarView(
-                timebankId: timebank.id,
+                userModel: SevaCore.of(context).loggedInUser,
                 timebankModel: timebank,
               ),
             ),
