@@ -495,7 +495,6 @@ class OfferDetails extends StatelessWidget {
                         bool isAccepted =
                             getOfferParticipants(offerDataModel: offerModel)
                                 .contains(userId);
-
                         if (isAccepted) {
                           return;
                         }
