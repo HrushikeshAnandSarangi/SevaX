@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -87,7 +88,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           child: StreamBuilder<Status>(
             stream: _bloc.status,
             builder: (_, status) {
-              if (status.data == Status.COMPLETE && closePage) {
+              if (status.data == Status.COMPLETE && closePage && SevaCore.of(context).loggedInUser.calendarId!=null) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (Navigator.of(mcontext).canPop())
@@ -425,7 +426,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                             ),
                                                           ]));
                                                 });
-                                          } else {
+                                          }
+                                          else {
                                             updateOneToManyOfferFunc(2);
                                           }
                                         }
@@ -518,8 +520,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
           timebankId: widget.timebankId);
-
+      log("creation statusss - ${_bloc.offerCreatedBool}");
       if (_bloc.offerCreatedBool) {
+        log("inside if with ${_bloc.offerCreatedBool}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -532,7 +535,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                   eventsIdsArr: _bloc.offerIds);
             },
           ),
-        );
+        ).then((_){
+          logger.i("came back from cal page");
+        });
       }
     }
   }

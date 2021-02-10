@@ -402,12 +402,12 @@ class S {
       );
 
   String get looking_existing_timebank => Intl.message(
-        'Looking for an existing Seva Community to join',
+        'Looking for an existing Seva Community to join?\nEnter ZIP/ Postal Code or city, state, country',
         name: 'looking_existing_timebank',
       );
 
   String get find_timebank_help_text => Intl.message(
-        'Please type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.',
+        'Enter the name or location of your community.',
         name: 'find_timebank_help_text',
       );
 
@@ -1887,7 +1887,7 @@ class S {
       );
 
   String get no_comments => Intl.message(
-        'No comments',
+        'No Comments',
         name: 'no_comments',
       );
 
@@ -2322,7 +2322,7 @@ class S {
       );
 
   String get create_timebank_description => Intl.message(
-        'A Seva Community is timebanking community where volunteers give and receive help to each other and the greater community through time, money or goods.',
+        'A Seva Community is a community where members give and receive help to each other and the greater community through time, money or goods.',
         name: 'create_timebank_description',
       );
 
@@ -5578,7 +5578,7 @@ class S {
       );
 
   String get near_by_timebank_subtitle => Intl.message(
-        'Find a Seva Community near you. Don\'t see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.',
+        'Find a Seva Community near you. Don\'t see any near you? You can always create your own Seva Community for free and invite the people you know. Seva Communities are a safe and secure way to communicate with your friends and family.\nPlease type in your ZIP or postal code in the field or type in your city, state, and country to find a Seva Community near you.',
         name: 'near_by_timebank_subtitle',
       );
 
@@ -6095,6 +6095,46 @@ class S {
   String get super_admins => Intl.message(
         'Super Admin(s)',
         name: 'super_admins',
+      );
+
+  String get gps_disabled_error => Intl.message(
+        'Unable to fetch nearby communities because your GPS is not enabled.',
+        name: 'gps_disabled_error',
+      );
+
+  String get no_options_available => Intl.message(
+        'No Options Available',
+        name: 'no_options_available',
+      );
+
+  String get select_timeline => Intl.message(
+        'Select Timeline',
+        name: 'select_timeline',
+      );
+
+  String get request_money_title_hint => Intl.message(
+        'Ex: Fundraiser for women’s shelter...',
+        name: 'request_money_title_hint',
+      );
+
+  String get request_money_desc_hint => Intl.message(
+        'Ex: Fundraiser to expand women’s shelter...',
+        name: 'request_money_desc_hint',
+      );
+
+  String get request_goods_title_hint => Intl.message(
+        'Ex: Non-perishable goods for Food Bank...',
+        name: 'request_goods_title_hint',
+      );
+
+  String get request_goods_desc_hint => Intl.message(
+        'Ex: Local Food Bank has a shortage...',
+        name: 'request_goods_desc_hint',
+      );
+
+  String get cannot_create_project => Intl.message(
+        'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
+        name: 'cannot_create_project',
       );
 }
 

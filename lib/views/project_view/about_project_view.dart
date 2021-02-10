@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -204,9 +205,10 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                               widget.timebankModel.managedCreatorIds.isNotEmpty
                                   ? widget.timebankModel.managedCreatorIds
                                       .elementAt(0)
-                                  : BlocProvider.of<HomeDashBoardBloc>(context)
-                                      .selectedCommunityModel
-                                      .created_by,
+                                  : isPrimaryTimebank(
+                                    parentTimebankId: widget.timebankModel.parentTimebankId)
+                                    ? widget.timebankModel.creatorId
+                                    : widget.timebankModel.managedCreatorIds.first,
                           timebankCreatorId: widget.timebankModel.creatorId,
                         )
                             ? deleteProject

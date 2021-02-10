@@ -2,6 +2,7 @@ library intro_slider;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class IntroSlider extends StatefulWidget {
   // final List<Widget> data;
@@ -19,24 +20,24 @@ class _IntroSliderState extends State<IntroSlider> {
 
   @override
   void initState() {
-    if (widget.data.length > 1) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (timeStamp) {
-          _timer = Timer.periodic(
-            Duration(milliseconds: 4500),
-            (timer) async {
-              await _controller.nextPage(
-                duration: Duration(milliseconds: 1600),
-                curve: Curves.easeInOut,
-              );
-              _pageIndicator.add(
-                _controller.page.toInt() % widget.data.length,
-              );
-            },
-          );
-        },
-      );
-    }
+    // if (widget.data.length > 1) {
+    //   WidgetsBinding.instance.addPostFrameCallback(
+    //     (timeStamp) {
+    //       _timer = Timer.periodic(
+    //         Duration(milliseconds: 4000),
+    //         (timer) async {
+    //           await _controller.nextPage(
+    //             duration: Duration(milliseconds: 1500),
+    //             curve: Curves.easeInOut,
+    //           );
+    //           _pageIndicator.add(
+    //             _controller.page.toInt() % widget.data.length,
+    //           );
+    //         },
+    //       );
+    //     },
+    //   );
+    // }
     super.initState();
   }
 
@@ -57,22 +58,37 @@ class _IntroSliderState extends State<IntroSlider> {
           PageView.builder(
             controller: _controller,
             itemBuilder: (context, index) {
-              return Image.network(
-                widget.data[index % widget.data.length],
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent loadingProgress) {
-                  if (loadingProgress == null) return child;
+              return CachedNetworkImage(
+                // imageBuilder: ,
+                imageUrl: widget.data[index % widget.data.length],
+                placeholder: (BuildContext context, String url) {
+
                   return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes
-                          : null,
-                    ),
+                    child: Container(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator()),
                   );
                 },
-                fit: BoxFit.fill,
+                errorWidget: (BuildContext context, String url, error) =>
+                    Icon(Icons.error),
               );
+              // return Image.network(
+              //   widget.data[index % widget.data.length],
+              //   loadingBuilder: (BuildContext context, Widget child,
+              //       ImageChunkEvent loadingProgress) {
+              //     if (loadingProgress == null) return child;
+              //     return Center(
+              //       child: CircularProgressIndicator(
+              //         value: loadingProgress.expectedTotalBytes != null
+              //             ? loadingProgress.cumulativeBytesLoaded /
+              //                 loadingProgress.expectedTotalBytes
+              //             : null,
+              //       ),
+              //     );
+              //   },
+              //   fit: BoxFit.fill,
+              // );
               // return widget.data[index % widget.data.length];
             },
           ),

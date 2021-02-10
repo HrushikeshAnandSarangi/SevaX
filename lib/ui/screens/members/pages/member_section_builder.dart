@@ -53,27 +53,29 @@ class MemberSectionBuilder extends StatelessWidget {
       itemCount: members.length > 100 ? 200 : members.length,
       itemBuilder: (context, index) {
         UserModel member = members[index];
-        return InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ProfileViewer(
-                  userEmail: member.email,
-                  timebankId: timebank.id,
-                  isFromTimebank: isPrimaryTimebank(
-                      parentTimebankId: timebank.parentTimebankId),
-                  entityName: timebank.name,
+        return member != null
+            ? InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfileViewer(
+                        userEmail: member.email,
+                        timebankId: timebank.id,
+                        isFromTimebank: isPrimaryTimebank(
+                            parentTimebankId: timebank.parentTimebankId),
+                        entityName: timebank.name,
+                      ),
+                    ),
+                  );
+                },
+                child: ShortProfileCard(
+                  model: member,
+                  actionButton: member.sevaUserID == creatorId
+                      ? null // no actions on creator
+                      : actionBuilder(context, member, section, type),
                 ),
-              ),
-            );
-          },
-          child: ShortProfileCard(
-            model: member,
-            actionButton: member.sevaUserID == creatorId
-                ? null // no actions on creator
-                : actionBuilder(context, member, section, type),
-          ),
-        );
+              )
+            : Container();
       },
       separatorBuilder: (_, __) {
         return Divider(
@@ -370,7 +372,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${isFromExit ? "You" : "User"} ${isFromExit ? S.of(context).cant_exit_timebank : "cannot be removed from this seva community"}"),
               content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
-                  "${responseData['PendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n"
                   "${S.of(context).clear_transaction}"),
               actions: <Widget>[

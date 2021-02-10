@@ -92,6 +92,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   final aboutNode = FocusNode();
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
+  String duplicateGroupCheck = 'not_done';
   void initState() {
     super.initState();
     timebankModel.preventAccedentalDelete = true;
@@ -118,6 +119,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           _searchText = "";
         });
       } else {
+        duplicateGroupCheck = 'not_done';
         SearchManager.searchGroupForDuplicate(
                 queryString: s.trim(),
                 communityId: SevaCore.of(context).loggedInUser.currentCommunity)
@@ -132,6 +134,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               errTxt = null;
             });
           }
+        }).whenComplete(() {
+          setState(() {
+            duplicateGroupCheck = 'done';
+          });
         });
       }
     });
@@ -420,12 +426,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 return RaisedButton(
                   // color: Colors.blue,
                   onPressed: () {
-                    if (errTxt != null || errTxt != "") {}
+                    if (errTxt != null || errTxt != "" ||
+                        duplicateGroupCheck == 'not_done') {}
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
                     //if (location != null) {
                     if (_formKey.currentState.validate() &&
-                        (errTxt == null || errTxt == "")) {
+                        (errTxt == null || errTxt == "") && 
+                        duplicateGroupCheck == 'done') {
 //
 //                            // If the form is valid, we want to show a Snackbar
                       _writeToDB();

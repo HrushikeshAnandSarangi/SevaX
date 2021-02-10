@@ -38,9 +38,18 @@ class _GroupInfoState extends State<GroupInfoPage> {
   void initState() {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
-    _bloc.addParticipants(chatModel.participantInfo.where((p)=> chatModel.participants.contains(p.id),).toList(),);
-    _bloc.onImageChanged(MessageRoomImageModel(
-        stockImageUrl: chatModel.groupDetails.imageUrl ?? ''));
+    _bloc.addParticipants(
+      chatModel.participantInfo
+          .where(
+            (p) => chatModel.participants.contains(p.id),
+          )
+          .toList(),
+    );
+    _bloc.onImageChanged(
+      MessageRoomImageModel(
+        stockImageUrl: chatModel.groupDetails.imageUrl,
+      ),
+    );
     super.initState();
   }
 
@@ -128,10 +137,14 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                           ? snapshot.data.stockImageUrl != null
                                               ? Image.network(
                                                   snapshot.data.stockImageUrl)
-                                              : Image.file(
-                                                  snapshot.data.selectedImage,
-                                                  fit: BoxFit.cover,
-                                                )
+                                              : snapshot.data.selectedImage !=
+                                                      null
+                                                  ? Image.file(
+                                                      snapshot
+                                                          .data.selectedImage,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : CameraIcon(radius: 35)
                                           : CustomNetworkImage(
                                               chatModel.groupDetails.imageUrl,
                                               fit: BoxFit.cover,

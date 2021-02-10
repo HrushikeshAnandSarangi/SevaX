@@ -62,8 +62,8 @@ class OfferListItems extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Center(
               child: EmptyWidget(
-                title: S.of(context).no_posts_title,
-                sub_title: S.of(context).no_posts_description,
+                title: S.of(context).no_offers_title,
+                sub_title: S.of(context).no_content_common_description,
               ),
             ),
           );
@@ -195,19 +195,18 @@ class OfferListItems extends StatelessWidget {
         }
         if (model.isRecurring) {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_context) => BlocProvider(
-                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
-                child: RecurringListing(
-                  offerModel: model,
-                  timebankModel: timebankModel,
-                  requestModel: null,
-                  comingFrom: ComingFrom.Offers,
+              context,
+              MaterialPageRoute(
+                builder: (_context) => BlocProvider(
+                  bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                  child: RecurringListing(
+                    offerModel: model,
+                    timebankModel: timebankModel,
+                    requestModel: null,
+                    comingFrom: ComingFrom.Offers,
+                  ),
                 ),
-              ),
-            )
-          );
+              ));
           // Navigator.push(
           //   parentContext,
           //   MaterialPageRoute(

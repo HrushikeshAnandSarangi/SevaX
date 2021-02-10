@@ -25,18 +25,21 @@ import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
   final TimebankModel timebankModel;
   final bool isFocused;
+  CommunityModel communityModel;
+
   NewsCardView(
       {Key key,
       @required this.newsModel,
       this.isFocused = false,
-      this.timebankModel})
+      this.timebankModel,
+      this.communityModel})
       : super(key: key);
 
   @override
@@ -72,12 +75,6 @@ class NewsCardViewState extends State<NewsCardView> {
         timebankId: widget.newsModel.entity.entityId);
     setState(() {});
   }
-  // assert(newsModel.title != null, 'News title cannot be null');
-  // assert(newsModel.description != null, 'News description cannot be null');
-  // assert(newsModel.fullName != null, 'Full name cannot be null');
-  // final NewsModel newsModel;
-
-  // NewsCardViewState({this.newsModel});
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +96,10 @@ class NewsCardViewState extends State<NewsCardView> {
             communityCreatorId:
                 widget.timebankModel.managedCreatorIds.isNotEmpty
                     ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                    : BlocProvider.of<HomeDashBoardBloc>(context)
-                        .selectedCommunityModel
-                        .created_by,
+                    :
+                BlocProvider.of<HomeDashBoardBloc>(context)
+                    ?.selectedCommunityModel?.created_by
+                    ??widget.communityModel.created_by
           )
               ? IconButton(
                   icon: Icon(Icons.delete),

@@ -15,7 +15,7 @@ class RequestTabHolder extends StatelessWidget {
   final bool isAdmin;
   final CommunityModel communityModel;
 
-  RequestTabHolder({this.isAdmin, @required this.communityModel});
+  RequestTabHolder({this.isAdmin, this.communityModel});
   @override
   Widget build(BuildContext context) {
     List<String> titles = [

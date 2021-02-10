@@ -831,8 +831,8 @@ class RequestListItemsState extends State<RequestListItems> {
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
             child: RequestTabHolder(
+              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
               isAdmin: true,
-              communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
             ),
           ),
         ),
@@ -847,7 +847,7 @@ class RequestListItemsState extends State<RequestListItems> {
               requestItem: model,
               timebankModel: widget.timebankModel,
               isAdmin: false,
-              communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
             ),
           ),
         ),

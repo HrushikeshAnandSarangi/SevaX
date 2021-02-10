@@ -150,17 +150,15 @@ class ImagePickerDialog extends StatelessWidget {
                       ),
                     ).then((value) {
                       refresh();
+                      // dismissDialog();
                     });
+
                   },
                   child: roundedButton(
                     S.of(context).add_image_url,
                     EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                     const Color(0xFF673AB7),
                     const Color(0xFFFFFFFF),
-//                      Icon(
-//                        Icons.language,
-//                        color: Colors.white,
-//                      ),
                   ),
                 ),
                 const SizedBox(height: 15.0),

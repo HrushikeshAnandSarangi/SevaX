@@ -91,15 +91,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
-                  title: S
-                      .of(context)
-                      .member_joined_via_code_title
-                      .replaceAll('XXCOMMUNITYXX', userAddedModel.timebankName),
+                  title: S.of(context).member_joined_via_code_title.replaceAll(
+                      '**communityName**', userAddedModel.timebankName),
                   subTitle: S
                       .of(context)
                       .member_joined_via_code_subtitle
-                      .replaceAll('XXCOMMUNITYXX', userAddedModel.timebankName)
-                      .replaceAll('XXuserXX', userAddedModel.addedMemberName),
+                      .replaceAll(
+                          '**communityName**', userAddedModel.timebankName)
+                      .replaceAll(
+                          '**fullName**', userAddedModel.addedMemberName),
                 );
                 break;
               case NotificationType.RequestAccept:
