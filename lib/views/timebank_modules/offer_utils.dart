@@ -202,37 +202,17 @@ Future<bool> offerActions(
         context: context,
         title:
             "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
-        onConfirmed: () {
+        onConfirmed: () async {
           if (SevaCore.of(context).loggedInUser.calendarId != null) {
-            showDialog(
-              context: context,
-              builder: (_context) {
-                return CalenderEventConfirmationDialog(
-                  title: model.groupOfferDataModel.classTitle,
-                  isrequest: false,
-                  cancelled: () async {
-                    updateOffer(
-                        offerId: model.id,
-                        userId: myUserID,
-                        userEmail: email,
-                        allowCalenderEvent: false);
+            await updateOffer(
+                offerId: model.id,
+                userId: myUserID,
+                userEmail: email,
+                allowCalenderEvent: true);
+            // Navigator.of(context).pop();
 
-                    Navigator.of(_context).pop();
-                  },
-                  addToCalender: () async {
-                    updateOffer(
-                        offerId: model.id,
-                        userId: myUserID,
-                        userEmail: email,
-                        allowCalenderEvent: true);
-
-                    Navigator.of(_context).pop();
-                  },
-                );
-              },
-            );
           } else {
-            updateOffer(
+            await updateOffer(
                 offerId: model.id,
                 userId: myUserID,
                 userEmail: email,
