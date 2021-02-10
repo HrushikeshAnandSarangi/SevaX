@@ -1,8 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -24,6 +22,8 @@ class DonationBloc {
   Stream<String> get errorMessage => _errorMessage.stream;
   Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
 
+  bool get isSelectedListEmpty => _selectedList.value?.isEmpty ?? true;
+
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
@@ -38,11 +38,12 @@ class DonationBloc {
     _selectedList.add(localMap);
   }
 
-  Future<bool> donateOfferGoods(
-      {DonationModel donationModel,
-      OfferModel offerModel,
-      String notificationId,
-      UserModel notify,}) async {
+  Future<bool> donateOfferGoods({
+    DonationModel donationModel,
+    OfferModel offerModel,
+    String notificationId,
+    UserModel notify,
+  }) async {
 //      donationModel.goodsDetails.donatedGoods = _selectedList.value;
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
