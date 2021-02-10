@@ -221,6 +221,7 @@ class _RequestDonationDisputePageState
           } else {
             log("Inside Else part =================================");
             // offers flow initial requested flow and pledged later its works same as requests.
+
             _bloc
                 .validateAmount(
                     minmumAmount:
@@ -251,6 +252,7 @@ class _RequestDonationDisputePageState
           }
           break;
         case _AckType.GOODS:
+          progressDialogNew.show();
           if (widget.model.donationStatus == DonationStatus.REQUESTED &&
               widget.model.requestIdType == 'offer') {
             // for the offers.
@@ -269,9 +271,13 @@ class _RequestDonationDisputePageState
           )
               .then((value) {
             if (value) {
+              progressDialogNew.hide();
               Navigator.of(context).pop();
             }
-          }).catchError((onError) => logger.i(onError));
+          }).catchError((onError) {
+            progressDialogNew.hide();
+            logger.i(onError);
+          });
           break;
       }
     }
