@@ -700,7 +700,7 @@ class _CashFlow extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      getDonationLink(context),
+                      getDonationLink(context) ?? '',
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
