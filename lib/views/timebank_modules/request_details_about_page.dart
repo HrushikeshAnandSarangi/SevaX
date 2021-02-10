@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -48,7 +49,7 @@ class RequestDetailsAboutPage extends StatefulWidget {
     this.requestItem,
     this.timebankModel,
     this.isAdmin,
-    @required this.communityModel,
+    this.communityModel,
   }) : super(key: key);
 
   @override
@@ -112,9 +113,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
             communityCreatorId:
-            // BlocProvider.of<HomeDashBoardBloc>(context)
-            //     .selectedCommunityModel.created_by
-            widget.communityModel.created_by,
+                // BlocProvider.of<HomeDashBoardBloc>(context)
+                //     .selectedCommunityModel.created_by
+              isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)
+                  ? widget.timebankModel.creatorId
+                  : widget.timebankModel.managedCreatorIds.first,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
         else if (widget.requestItem.sevaUserId == loggedInUser)
@@ -138,10 +141,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             contentCreatorId: widget.requestItem.sevaUserId,
             context: context,
             communityCreatorId:
-            // BlocProvider.of<HomeDashBoardBloc>(context)
-            //     .selectedCommunityModel
-            //     .created_by
-          widget.communityModel.created_by,
+                // BlocProvider.of<HomeDashBoardBloc>(context)
+                //     .selectedCommunityModel
+                //     .created_by
+                isPrimaryTimebank(
+                        parentTimebankId: widget.timebankModel.parentTimebankId)
+                    ? widget.timebankModel.creatorId
+                    : widget.timebankModel.managedCreatorIds.first,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
 
@@ -623,9 +629,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
                       :
-                  // BlocProvider.of<HomeDashBoardBloc>(context)
-                  //         .selectedCommunityModel.created_by
-          widget.communityModel.created_by,
+                      // BlocProvider.of<HomeDashBoardBloc>(context)
+                      //         .selectedCommunityModel.created_by
+                      isPrimaryTimebank(
+                              parentTimebankId:
+                                  widget.timebankModel.parentTimebankId)
+                          ? widget.timebankModel.creatorId
+                          : widget.timebankModel.managedCreatorIds.first,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.acceptors.length == 0 &&
           widget.requestItem.approvedUsers.length == 0 &&
@@ -638,9 +648,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
                       :
-                  // BlocProvider.of<HomeDashBoardBloc>(context)
-                  //         .selectedCommunityModel.created_by
-          widget.communityModel.created_by,
+                      // BlocProvider.of<HomeDashBoardBloc>(context)
+                      //         .selectedCommunityModel.created_by
+                      isPrimaryTimebank(
+                              parentTimebankId:
+                                  widget.timebankModel.parentTimebankId)
+                          ? widget.timebankModel.creatorId
+                          : widget.timebankModel.managedCreatorIds.first,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           (widget.requestItem.goodsDonationDetails.donors == null ||
               widget.requestItem.goodsDonationDetails.donors.length < 1);
@@ -652,9 +666,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.timebankModel.managedCreatorIds.isNotEmpty
                       ? widget.timebankModel.managedCreatorIds.elementAt(0)
                       :
-                  // BlocProvider.of<HomeDashBoardBloc>(context)
-                  //         .selectedCommunityModel.created_by
-          widget.communityModel.created_by,
+                      // BlocProvider.of<HomeDashBoardBloc>(context)
+                      //         .selectedCommunityModel.created_by
+                      isPrimaryTimebank(
+                              parentTimebankId:
+                                  widget.timebankModel.parentTimebankId)
+                          ? widget.timebankModel.creatorId
+                          : widget.timebankModel.managedCreatorIds.first,
               timebankCreatorId: widget.timebankModel.creatorId) &&
           widget.requestItem.cashModel.amountRaised == 0;
     }
