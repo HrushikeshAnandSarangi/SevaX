@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -445,9 +446,13 @@ class OfferDetails extends StatelessWidget {
                           contentCreatorId: offerModel.sevaUserId,
                           timebankCreatorId: timebankModel.creatorId,
                           communityCreatorId:
-                              BlocProvider.of<HomeDashBoardBloc>(context)
-                                  .selectedCommunityModel
-                                  .created_by,
+                          timebankModel == null ?
+                              isPrimaryTimebank(
+                                  parentTimebankId: timebankModel.parentTimebankId)
+                                  ? timebankModel.creatorId
+                                  : timebankModel.managedCreatorIds.first
+                          :
+                          '',
                         )
                     ? deleteActionButton(isAccepted, context)
                     : Container(),
