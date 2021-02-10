@@ -46,6 +46,7 @@ class _CameraState extends State<CameraPage> {
 
     try {
       await controller.initialize();
+      await controller.setFlashMode(FlashMode.off);
     } on CameraException catch (e) {
       _showCameraException(e);
     }
