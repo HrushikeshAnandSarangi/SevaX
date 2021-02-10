@@ -62,7 +62,6 @@ class _IntroSliderState extends State<IntroSlider> {
                 // imageBuilder: ,
                 imageUrl: widget.data[index % widget.data.length],
                 placeholder: (BuildContext context, String url) {
-
                   return Center(
                     child: Container(
                         width: 60,
