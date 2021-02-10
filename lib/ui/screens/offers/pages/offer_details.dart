@@ -445,14 +445,13 @@ class OfferDetails extends StatelessWidget {
                           context: context,
                           contentCreatorId: offerModel.sevaUserId,
                           timebankCreatorId: timebankModel.creatorId,
-                          communityCreatorId:
-                          timebankModel == null ?
-                              isPrimaryTimebank(
-                                  parentTimebankId: timebankModel.parentTimebankId)
+                          communityCreatorId: timebankModel == null
+                              ? isPrimaryTimebank(
+                                      parentTimebankId:
+                                          timebankModel.parentTimebankId)
                                   ? timebankModel.creatorId
                                   : timebankModel.managedCreatorIds.first
-                          :
-                          '',
+                              : '',
                         )
                     ? deleteActionButton(isAccepted, context)
                     : Container(),
@@ -500,7 +499,6 @@ class OfferDetails extends StatelessWidget {
                         bool isAccepted =
                             getOfferParticipants(offerDataModel: offerModel)
                                 .contains(userId);
-
                         if (isAccepted) {
                           return;
                         }
@@ -511,7 +509,9 @@ class OfferDetails extends StatelessWidget {
                           navigateToDonations(context, offerModel);
                         } else {
                           if (offerModel.offerType == OfferType.GROUP_OFFER &&
-                              SevaCore.of(context).loggedInUser.calendarId == null && !isAccepted) {
+                              SevaCore.of(context).loggedInUser.calendarId ==
+                                  null &&
+                              !isAccepted) {
                             _settingModalBottomSheet(
                               context,
                               offerModel,
