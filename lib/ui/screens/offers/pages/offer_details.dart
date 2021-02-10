@@ -511,9 +511,7 @@ class OfferDetails extends StatelessWidget {
                           navigateToDonations(context, offerModel);
                         } else {
                           if (offerModel.offerType == OfferType.GROUP_OFFER &&
-                              SevaCore.of(context).loggedInUser.calendarId ==
-                                  null &&
-                              !isAccepted) {
+                              SevaCore.of(context).loggedInUser.calendarId == null && !isAccepted) {
                             _settingModalBottomSheet(
                               context,
                               offerModel,

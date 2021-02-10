@@ -54,7 +54,7 @@ class OneToManyOfferBloc extends BlocBase {
   void createOneToManyOffer({
     UserModel user,
     String timebankId,
-  }) {
+  }) async {
     if (!errorCheck()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
@@ -100,7 +100,7 @@ class OneToManyOfferBloc extends BlocBase {
           offerModel.parent_offer_id = parent_offer_id;
         }
 
-        createOffer(offerModel: offerModel).then((_) {
+        await createOffer(offerModel: offerModel).then((_) {
           offerIds.add(offerModel.id);
           if (offerModel.isRecurring) {
             return createRecurringEventsOffer(offerModel: offerModel);
