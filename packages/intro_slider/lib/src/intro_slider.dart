@@ -1,8 +1,8 @@
 library intro_slider;
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class IntroSlider extends StatefulWidget {
   // final List<Widget> data;
@@ -17,27 +17,31 @@ class _IntroSliderState extends State<IntroSlider> {
   Timer _timer;
   final PageController _controller = PageController(initialPage: 0);
   final _pageIndicator = StreamController<int>.broadcast();
+  bool shouldSwitchNext = false;
 
   @override
   void initState() {
-    // if (widget.data.length > 1) {
-    //   WidgetsBinding.instance.addPostFrameCallback(
-    //     (timeStamp) {
-    //       _timer = Timer.periodic(
-    //         Duration(milliseconds: 4000),
-    //         (timer) async {
-    //           await _controller.nextPage(
-    //             duration: Duration(milliseconds: 1500),
-    //             curve: Curves.easeInOut,
-    //           );
-    //           _pageIndicator.add(
-    //             _controller.page.toInt() % widget.data.length,
-    //           );
-    //         },
-    //       );
-    //     },
-    //   );
-    // }
+    if (widget.data.length > 1) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          _timer = Timer.periodic(
+            Duration(seconds: 4),
+            (timer) async {
+              if (shouldSwitchNext) {
+                await _controller.nextPage(
+                  duration: Duration(milliseconds: 1500),
+                  curve: Curves.easeInOut,
+                );
+                _pageIndicator.add(
+                  _controller.page.toInt() % widget.data.length,
+                );
+                shouldSwitchNext = false;
+              }
+            },
+          );
+        },
+      );
+    }
     super.initState();
   }
 
@@ -58,36 +62,39 @@ class _IntroSliderState extends State<IntroSlider> {
           PageView.builder(
             controller: _controller,
             itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                // imageBuilder: ,
-                imageUrl: widget.data[index % widget.data.length],
-                placeholder: (BuildContext context, String url) {
-                  return Center(
-                    child: Container(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator()),
-                  );
-                },
-                errorWidget: (BuildContext context, String url, error) =>
-                    Icon(Icons.error),
-              );
-              // return Image.network(
-              //   widget.data[index % widget.data.length],
-              //   loadingBuilder: (BuildContext context, Widget child,
-              //       ImageChunkEvent loadingProgress) {
-              //     if (loadingProgress == null) return child;
+              // return CachedNetworkImage(
+              //   imageUrl: widget.data[index % widget.data.length],
+              //   placeholder: (BuildContext context, String url) {
               //     return Center(
-              //       child: CircularProgressIndicator(
-              //         value: loadingProgress.expectedTotalBytes != null
-              //             ? loadingProgress.cumulativeBytesLoaded /
-              //                 loadingProgress.expectedTotalBytes
-              //             : null,
-              //       ),
+              //       child: Container(
+              //           width: 60,
+              //           height: 60,
+              //           child: CircularProgressIndicator()),
               //     );
               //   },
-              //   fit: BoxFit.fill,
+              //   errorWidget: (BuildContext context, String url, error) =>
+              //       Icon(Icons.error),
               // );
+              return Image.network(
+                widget.data[index % widget.data.length],
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent loadingProgress) {
+                  if (loadingProgress == null) {
+                    shouldSwitchNext = true;
+                    return child;
+                  }
+                  shouldSwitchNext = false;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes
+                          : null,
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              );
               // return widget.data[index % widget.data.length];
             },
           ),
