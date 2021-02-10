@@ -11,7 +11,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../../../flavor_config.dart';
 
 class AddToCalendar extends StatefulWidget {
@@ -44,6 +44,7 @@ enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 class AddToCalendarState extends State<AddToCalendar> {
 
   Future<void> googleCalanderIntegration() async {
+    logger.i("inside google callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
@@ -93,6 +94,7 @@ class AddToCalendarState extends State<AddToCalendar> {
   }
 
   Future<void> outlookCalanderIntegration() async {
+    logger.i("inside outlook callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
@@ -141,6 +143,7 @@ class AddToCalendarState extends State<AddToCalendar> {
   }
 
   Future<void> iCalIntegration() async {
+    logger.i("inside ical callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
@@ -188,6 +191,12 @@ class AddToCalendarState extends State<AddToCalendar> {
       Navigator.pop(context);
     }
   }
+
+  void initState(){
+    super.initState();
+    logger.i("inside the page integrating cals");
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +295,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           children: [
             icon,
             FlatButton(
-              onPressed: onPressed,
+              onPressed: ()=>onPressed(),
               child: Text(
                 title,
                 style: TextStyle(
