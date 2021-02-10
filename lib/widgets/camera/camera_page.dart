@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
 
 class CameraPage extends StatefulWidget {
@@ -38,6 +39,7 @@ class _CameraState extends State<CameraPage> {
     controller.addListener(() {
       if (mounted) setState(() {});
       if (controller.value.hasError) {
+        logger.e(controller.value.errorDescription);
         _showInSnackBar('Camera error ${controller.value.errorDescription}');
       }
     });
