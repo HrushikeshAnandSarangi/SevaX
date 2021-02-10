@@ -1696,6 +1696,7 @@ class CreateEditCommunityViewFormState
               return ListView(
                 shrinkWrap: true,
                 controller: scollContainer,
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 children: <Widget>[
                   _billingDetailsTitle,
                   _cityWidget(snapshot.data),

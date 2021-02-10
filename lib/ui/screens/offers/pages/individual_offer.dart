@@ -236,7 +236,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context).request_goods_offer,
+            S.of(context).request_goods_offer.replaceAll("  ", " "),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

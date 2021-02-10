@@ -841,7 +841,7 @@ class _GoodsFlow extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           status == DonationStatus.REQUESTED
-              ? S.of(context).request_goods_offer
+              ? S.of(context).request_goods_offer.replaceAll("  ", " ")
               : operatingMode == OperatingMode.CREATOR
                   ? S.of(context).acknowledge_received
                   : S.of(context).acknowledge_donated,
