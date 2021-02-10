@@ -88,7 +88,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           child: StreamBuilder<Status>(
             stream: _bloc.status,
             builder: (_, status) {
-              if (status.data == Status.COMPLETE && closePage) {
+              if (status.data == Status.COMPLETE && closePage && SevaCore.of(context).loggedInUser.calendarId!=null) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (Navigator.of(mcontext).canPop())
