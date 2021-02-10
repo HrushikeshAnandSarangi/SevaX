@@ -324,47 +324,45 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         queryString: searchTextController.text,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          } else {
-            if (snapshot.data.length != 0) {
-              List<CommunityModel> communityList = snapshot.data;
-//
-
-              return Padding(
-                  padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-                  child: ListView.builder(
-                      padding: EdgeInsets.only(
-                        bottom: 180,
-                      ),
-                      itemCount: communityList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        CompareUserStatus status;
-
-                        status = _compareUserStatus(communityList[index],
-                            widget.loggedInUser.sevaUserID);
-
-                        return timeBankWidget(
-                            communityModel: communityList[index],
-                            context: context,
-                            status: status);
-                      }));
-            } else {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
-                child: Center(
-                  child: Text(S.of(context).no_timebanks_found,
-                      style: TextStyle(fontFamily: "Europa", fontSize: 14)),
-                ),
-              );
-            }
-          }
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text(S.of(context).try_later);
         }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
 
-        return Text("");
+        if (snapshot.data == null || snapshot.data.isEmpty) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
+            child: Center(
+              child: Text(S.of(context).no_timebanks_found,
+                  style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+            ),
+          );
+        }
+
+        List<CommunityModel> communityList = snapshot.data;
+
+        return Padding(
+          padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+          child: ListView.builder(
+            padding: EdgeInsets.only(
+              bottom: 180,
+            ),
+            itemCount: communityList.length,
+            itemBuilder: (BuildContext context, int index) {
+              CompareUserStatus status;
+
+              status = _compareUserStatus(
+                  communityList[index], widget.loggedInUser.sevaUserID);
+
+              return timeBankWidget(
+                  communityModel: communityList[index],
+                  context: context,
+                  status: status);
+            },
+          ),
+        );
       },
     );
   }
