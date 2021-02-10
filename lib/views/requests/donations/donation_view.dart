@@ -805,9 +805,14 @@ class _DonationViewState extends State<DonationView> {
                       showScaffold(S.of(context).check_internet);
                       return;
                     }
-                    if (donationBloc.selectedList == null) {
+                    if (donationBloc.selectedListVal == null) {
+                      logger.i("no donation items");
+                      showScaffold(S.of(context).select_goods_category);
+                    } else if(donationBloc.selectedListVal.length==0) {
+                      logger.i("no donation items");
                       showScaffold(S.of(context).select_goods_category);
                     } else {
+                      logger.i("donation items selectedddddddd");
                       showProgress(S.of(context).please_wait);
                       donationBloc
                           .donateGoods(
@@ -1238,24 +1243,6 @@ class _DonationViewState extends State<DonationView> {
     );
   }
 
-//  void showProgressDialog(String message) {
-//    showDialog(
-//        barrierDismissible: false,
-//        context: context,
-//        builder: (createDialogContext) {
-//          dialogContext = createDialogContext;
-//          return WillPopScope(
-//            onWillPop: () async {
-//              return false;
-//            },
-//            child: AlertDialog(
-//              title: Text(message),
-//              content: LinearProgressIndicator(),
-//            ),
-//          );
-//        });
-//  }
-
   void showProgress(String message) {
     progressDialog = ProgressDialog(
       context,
@@ -1263,14 +1250,6 @@ class _DonationViewState extends State<DonationView> {
       isDismissible: true,
     );
     progressDialog.show();
-    // progressDialog.style(
-    //   progressWidget: Container(
-    //     width: 400,
-    //     padding: EdgeInsets.all(8.0),
-    //     child: CircularProgressIndicator(),
-    //   ),
-    //   message: message,
-    // );
   }
 
   void hideProgress() {

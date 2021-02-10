@@ -24,6 +24,8 @@ class DonationBloc {
   Stream<String> get errorMessage => _errorMessage.stream;
   Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
 
+  Map<dynamic, dynamic> get selectedListVal => _selectedList.value;
+
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
