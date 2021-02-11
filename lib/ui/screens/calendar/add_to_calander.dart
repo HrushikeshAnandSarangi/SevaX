@@ -86,11 +86,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       await launch(authorizationUrl.toString());
     }
 
-    if (widget.isOfferRequest && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.of(context).pop();
   }
 
   Future<void> outlookCalanderIntegration() async {
@@ -135,11 +131,8 @@ class AddToCalendarState extends State<AddToCalendar> {
       await launch(authorizationUrl.toString());
     }
 
-    if (widget.isOfferRequest && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.of(context).pop();
+
   }
 
   Future<void> iCalIntegration() async {
@@ -185,11 +178,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       await launch(authorizationUrl.toString());
     }
 
-    if (widget.isOfferRequest && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.of(context).pop();
   }
 
   void initState(){

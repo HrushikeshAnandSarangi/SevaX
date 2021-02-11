@@ -24,6 +24,7 @@ class DonationBloc {
   bool get isSelectedListEmpty => _selectedList.value?.isEmpty ?? true;
 
   Map<dynamic, dynamic> get selectedListVal => _selectedList.value;
+  String get commentEnteredVal => _comment.value;
 
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
