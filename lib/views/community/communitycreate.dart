@@ -140,6 +140,7 @@ class CreateEditCommunityViewFormState
   final profanityDetector = ProfanityDetector();
 
   bool disableCreateButton = false;
+  String duplicateGroupCheck = 'not_done';
 
   void initState() {
     if (widget.isCreateTimebank == false) {
@@ -172,6 +173,7 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
+        duplicateGroupCheck = 'not_done';
         if (communitynName != s) {
           setState(() {
             disableCreateButton = true;
@@ -191,6 +193,10 @@ class CreateEditCommunityViewFormState
                 errTxt = null;
               });
             }
+          }).whenComplete(() {
+            setState(() {
+              duplicateGroupCheck = 'done';
+            });
           });
         }
       }
@@ -351,7 +357,7 @@ class CreateEditCommunityViewFormState
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value.trim().isEmpty || value == '') {
                               return S.of(context).timebank_name_error;
                             } else if (communityFound) {
                               return S.of(context).timebank_name_exists_error;
@@ -823,10 +829,10 @@ class CreateEditCommunityViewFormState
                                   );
                                   return;
                                 }
-                                if(disableCreateButton){
+                                if (disableCreateButton || duplicateGroupCheck == 'not_done') {
                                   return;
                                 }
-                                if (errTxt != null) {
+                                if (errTxt != null || duplicateGroupCheck == 'not_done' || !disableCreateButton) {
                                   showDialogForSuccess(
                                     dialogTitle:
                                         S.of(context).timebank_name_exists,
@@ -836,7 +842,7 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (_formKey.currentState.validate()) {
+                                  if (_formKey.currentState.validate() && duplicateGroupCheck == 'done') {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
@@ -1696,7 +1702,8 @@ class CreateEditCommunityViewFormState
               return ListView(
                 shrinkWrap: true,
                 controller: scollContainer,
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
                 children: <Widget>[
                   _billingDetailsTitle,
                   _cityWidget(snapshot.data),
