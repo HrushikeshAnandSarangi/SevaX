@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String title;
@@ -11,16 +12,17 @@ class EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.i(MediaQuery.of(context).size);
     return Center(
       child: Column(
         children: [
           SizedBox(
-            height: 100,
+            height: MediaQuery.of(context).size.height * 0.1,
           ),
           Image.asset(
             'images/icons/empty_widget.png',
-            height: 160,
-            width: 214,
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: MediaQuery.of(context).size.width * 0.5,
           ),
           SizedBox(
             height: 20,
