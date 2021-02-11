@@ -302,7 +302,7 @@ class _RequestDonationDisputePageState
           }
           _bloc
               .disputeGoods(
-            donatedGoods: widget.model.goodsDetails.requiredGoods,
+            donatedGoods: widget.model.goodsDetails.donatedGoods,
             donationId: widget.model.id,
             donationModel: widget.model,
             notificationId: widget.model.notificationId,
