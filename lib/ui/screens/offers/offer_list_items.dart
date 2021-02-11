@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
@@ -131,8 +132,12 @@ class OfferListItems extends StatelessWidget {
               : EdgeInsets.fromLTRB(5, 12, 12, 18),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
-                groupKey: (offerModelList as OfferTitle).groupTitle,
-                context: context),
+              groupKey: (offerModelList as OfferTitle).groupTitle,
+              context: context,
+              isGroup: !isPrimaryTimebank(
+                parentTimebankId: timebankModel.parentTimebankId,
+              ),
+            ),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,

@@ -184,14 +184,20 @@ class GroupOfferCommons {
     return hashMap;
   }
 
-  static String getGroupTitleForOffer({String groupKey, BuildContext context}) {
+  static String getGroupTitleForOffer({
+    String groupKey,
+    bool isGroup = false,
+    BuildContext context,
+  }) {
     switch (groupKey) {
       case "MyOffers":
         return "";
 
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
-        return S.of(context).timebank_offers;
+        return isGroup
+            ? S.of(context).group + ' ' + S.of(context).offers
+            : S.of(context).timebank_offers;
       default:
         return S.of(context).other(3);
     }

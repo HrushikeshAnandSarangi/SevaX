@@ -102,7 +102,7 @@ class _RequestDonationDisputePageState
 
   void actionExecute(_key) async {
     if (widget.model.donationType == RequestType.CASH &&
-        int.tryParse(enteredReceivedAmount) <= 0) {
+        (int.tryParse(enteredReceivedAmount) ?? 0) <= 0) {
       showDialog(
         context: context,
         builder: (BuildContext viewContext) {
