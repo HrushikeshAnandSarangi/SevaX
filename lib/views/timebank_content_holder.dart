@@ -610,8 +610,8 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: const EdgeInsets.all(28.0),
                 child: Center(
                   child: EmptyWidget(
-                    title: S.of(context).no_feeds_yet,
-                    sub_title: S.of(context).add_new_feed,
+                    title: S.of(context).no_posts_title,
+                    sub_title: S.of(context).no_posts_description,
                   ),
                 ),
               );
