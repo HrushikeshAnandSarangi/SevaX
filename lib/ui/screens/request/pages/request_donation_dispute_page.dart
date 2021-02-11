@@ -909,6 +909,7 @@ class _GoodsFlow extends StatelessWidget {
           stream: _bloc.goodsRecieved,
           builder: (context, snapshot) {
             return ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: requiredGoods.length,
               itemBuilder: (context, index) {

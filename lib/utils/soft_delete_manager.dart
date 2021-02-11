@@ -113,7 +113,7 @@ Future<void> showAdvisoryBeforeDeletion({
                     textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 17.0),
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(50),
+                      // LengthLimitingTextInputFormatter(50),
                     ],
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
