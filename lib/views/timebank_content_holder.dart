@@ -1023,15 +1023,16 @@ class DiscussionListState extends State<DiscussionList> {
                                                         news.reports =
                                                             List<String>();
                                                       }
-                                                      news.reports.add(
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID);
                                                       Firestore.instance
                                                           .collection('news')
                                                           .document(news.id)
                                                           .updateData({
-                                                        'reports': news.reports
+                                                        'reports': FieldValue
+                                                            .arrayUnion([
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID
+                                                        ])
                                                       });
                                                     }
                                                     Navigator.of(viewContext)
