@@ -33,7 +33,9 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
   logger.i("fetched data");
   Coordinates currentCoords;
   try {
-    currentCoords = await findcurrentLocation();
+    currentCoords = await findcurrentLocation().timeout(
+      Duration(seconds: 1),
+    );
     // logger.i('offer location loading time ${sw.elapsedMilliseconds}');
   } catch (e) {
     logger.e(e);
