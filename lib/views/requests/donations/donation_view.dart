@@ -814,6 +814,10 @@ class _DonationViewState extends State<DonationView> {
                     } else if(donationBloc.selectedListVal.length==0) {
                       logger.i("no donation items");
                       showScaffold(S.of(context).select_goods_category);
+                    }else if(donationBloc.commentEnteredVal == null){
+                      showScaffold("Description cannot be empty");
+                    }else if(donationBloc.commentEnteredVal.isEmpty){
+                      showScaffold("Description cannot be empty");
                     } else {
                       logger.i("donation items selectedddddddd");
                       showProgress(S.of(context).please_wait);
@@ -984,7 +988,7 @@ class _DonationViewState extends State<DonationView> {
                           showScaffold(S.of(context).check_internet);
                           return;
                         }
-                        if (donationBloc.selectedList == null) {
+                        if (donationBloc.selectedListVal == null) {
                           showScaffold(S.of(context).select_goods_category);
                         } else {
                           donationBloc
