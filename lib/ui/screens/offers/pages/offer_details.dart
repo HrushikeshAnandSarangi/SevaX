@@ -233,6 +233,9 @@ class OfferDetails extends StatelessWidget {
   }
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
+    List<String> keys =
+        List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
+
     if (offerModel.type == RequestType.GOODS) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -248,11 +251,10 @@ class OfferDetails extends StatelessWidget {
             ),
           ),
           ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
             itemBuilder: (context, index) {
-              List<String> keys =
-                  List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
               return Row(
                 children: [
                   Checkbox(
