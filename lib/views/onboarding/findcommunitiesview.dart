@@ -53,7 +53,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   String nearTimebankText;
   var radius;
   final profanityDetector = ProfanityDetector();
-
+  BuildContext parentContext;
   String errorText = '';
   @override
   void initState() {
@@ -88,6 +88,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     JOIN = S.of(context).join;
     JOINED = S.of(context).joined;
     nearTimebankText = S.of(context).timebanks_near_you;
@@ -612,10 +613,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     createEditCommunityBloc
                         .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
-                      context,
+                      parentContext,
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
-                          loggedInUser: SevaCore.of(context).loggedInUser,
+                          loggedInUser: SevaCore.of(parentContext).loggedInUser,
                           child: CreateEditCommunityView(
                             isCreateTimebank: true,
                             timebankId: FlavorConfig.values.timebankId,

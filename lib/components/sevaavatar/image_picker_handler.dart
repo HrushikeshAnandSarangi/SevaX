@@ -30,31 +30,31 @@ class ImagePickerHandler {
     cropImage(image.path);
   }
 
-  void openStockImages(context) async {
-    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
-
-    FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.of(context)
-        .push(
-      MaterialPageRoute(
-        builder: (context) => SearchStockImages(
-          // keepOnBackPress: false,
-          // showBackBtn: false,
-          // isFromHome: false,
-          onChanged: (image) {
-            _listener.userImage(image, 'stock_image');
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    )
-        .then((value) {
-      globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
-    });
-  }
+//  void openStockImages(context) async {
+//    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+//
+//    FocusScope.of(context).requestFocus(FocusNode());
+//    Navigator.of(context)
+//        .push(
+//      MaterialPageRoute(
+//        builder: (context) => SearchStockImages(
+//          // keepOnBackPress: false,
+//          // showBackBtn: false,
+//          // isFromHome: false,
+//          onChanged: (image) {
+//            _listener.userImage(image, 'stock_image');
+//            Navigator.pop(context);
+//          },
+//        ),
+//      ),
+//    )
+//        .then((value) {
+//      globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+//    });
+//  }
 
   addImageUrl() async {
-    globals.isFromOnBoarding ? imagePicker.dismissDialog() : null;
+    imagePicker.dismissDialog();
     _listener.addWebImageUrl();
   }
 

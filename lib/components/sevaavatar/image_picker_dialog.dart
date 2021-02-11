@@ -41,7 +41,7 @@ class ImagePickerDialog extends StatelessWidget {
     _controller.forward();
     showDialog(
       context: context,
-      builder: (BuildContext context) => SlideTransition(
+      builder: (context) => SlideTransition(
         position: _drawerDetailsPosition,
         child: FadeTransition(
           opacity: ReverseAnimation(_drawerContentsOpacity),
@@ -110,10 +110,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (!globals.isFromOnBoarding) {
-                      dismissDialog();
-                    }
-                    Navigator.of(context)
+                    Navigator.of(_context)
                         .push(
                       MaterialPageRoute(
                         builder: (context) => SearchStockImages(
@@ -128,7 +125,9 @@ class ImagePickerDialog extends StatelessWidget {
                       ),
                     )
                         .then((value) {
-                      dismissDialog();
+                      if (globals.isFromOnBoarding) {
+                        dismissDialog();
+                      }
                     });
                   },
                   child: roundedButton(
@@ -139,10 +138,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (!globals.isFromOnBoarding) {
-                      dismissDialog();
-                    }
-                    Navigator.of(context).push(
+                    Navigator.of(_context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return ImageUrlView();
@@ -152,7 +148,6 @@ class ImagePickerDialog extends StatelessWidget {
                       refresh();
                       // dismissDialog();
                     });
-
                   },
                   child: roundedButton(
                     S.of(context).add_image_url,

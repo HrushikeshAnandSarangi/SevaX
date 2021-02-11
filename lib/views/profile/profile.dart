@@ -285,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SevaCore(
+                                      builder: (context1) => SevaCore(
                                         loggedInUser:
                                             SevaCore.of(context).loggedInUser,
                                         child: CreateEditCommunityView(
