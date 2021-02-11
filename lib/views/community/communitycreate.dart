@@ -832,7 +832,7 @@ class CreateEditCommunityViewFormState
                                 if (disableCreateButton || duplicateGroupCheck == 'not_done') {
                                   return;
                                 }
-                                if (errTxt != null || duplicateGroupCheck == 'not_done' || !disableCreateButton) {
+                                if (errTxt != null || duplicateGroupCheck == 'not_done') {
                                   showDialogForSuccess(
                                     dialogTitle:
                                         S.of(context).timebank_name_exists,
