@@ -1703,7 +1703,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       }
 
-      if (requestModel.isRecurring) {
+      if (requestModel.isRecurring &&
+          requestModel.requestType == RequestType.TIME) {
         if (requestModel.recurringDays.length == 0) {
           showDialogForTitle(
               dialogTitle: S.of(context).validation_error_empty_recurring_days);
