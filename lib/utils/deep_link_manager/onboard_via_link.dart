@@ -67,6 +67,7 @@ Future<bool> handleLinkData(
         loggedInUser: localUser,
         invitedMemberEmail: invitedMemberEmail,
         primaryTimebankId: primaryTimebankId,
+        adminCredentials: firebaseUserCred,
       ).then((onValue) => true).catchError((onError) => false);
     }
   }
@@ -103,6 +104,7 @@ Future<bool> registerloggedInUserToCommunity({
   String communityId,
   String invitedMemberEmail,
   String primaryTimebankId,
+  var adminCredentials,
 }) async {
   if (loggedInUser.email != invitedMemberEmail) {
     return false;
@@ -117,6 +119,7 @@ Future<bool> registerloggedInUserToCommunity({
       memberJoiningSevaUserId: loggedInUser.sevaUserID,
       newMemberJoinedEmail: loggedInUser.email,
       primaryTimebankId: primaryTimebankId,
+      adminCredentials: adminCredentials,
     ).then((onValue) => true).catchError((onError) => false);
   }
 }
@@ -126,12 +129,14 @@ Future<bool> initRegisterationMemberToCommunity({
   @required String primaryTimebankId,
   @required String memberJoiningSevaUserId,
   @required String newMemberJoinedEmail,
+  @required var adminCredentials,
 }) async {
   return await InvitationManager.registerMemberToCommunity(
     communityId: communityId,
     memberJoiningSevaUserId: memberJoiningSevaUserId,
     newMemberJoinedEmail: newMemberJoinedEmail,
     primaryTimebankId: primaryTimebankId,
+    adminCredentials: adminCredentials,
   ).then((onValue) => true).catchError((onError) => false);
 }
 

@@ -22,6 +22,7 @@ enum JoinMode {
   ADDED_MANUALLY_BY_ADMIN,
   APPROVED_BY_ADMIN,
   JOIN_VIA_CODE,
+  REJECTED_BY_ADMIN,
 }
 
 extension JoinModeLabel on JoinMode {
@@ -31,6 +32,8 @@ extension JoinModeLabel on JoinMode {
         return 'ADDED_MANUALLY_BY_ADMIN';
       case JoinMode.APPROVED_BY_ADMIN:
         return 'APPROVED_BY_ADMIN';
+      case JoinMode.REJECTED_BY_ADMIN:
+        return 'REJECTED_BY_ADMIN';
       case JoinMode.JOIN_VIA_CODE:
         return 'JOIN_VIA_CODE';
       default:

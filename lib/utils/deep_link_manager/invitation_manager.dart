@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
@@ -150,12 +151,14 @@ class InvitationManager {
     @required String primaryTimebankId,
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
+    @required var adminCredentials,
   }) async {
     return await _addMemberToTimebank(
       communityId: communityId,
       primaryTimebankId: primaryTimebankId,
       memberJoiningSevaUserId: memberJoiningSevaUserId,
       newMemberJoinedEmail: newMemberJoinedEmail,
+      adminCredentials: adminCredentials,
     ).commit().then((onValue) => true).catchError((onError) => false);
   }
 
@@ -164,6 +167,7 @@ class InvitationManager {
     @required String primaryTimebankId,
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
+    @required var adminCredentials,
   }) {
     //add to timebank members
 
@@ -188,6 +192,35 @@ class InvitationManager {
         Firestore.instance.collection('communities').document(communityId);
     batch.updateData(addToCommunityRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    var entryExitLogReference = Firestore.instance
+        .collection('communities')
+        .document(communityId)
+        .collection('entryExitLogs')
+        .document();
+
+    batch.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.JOIN_VIA_CODE.readable,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'memberDetails': {
+        'email': newMemberJoinedEmail,
+        'id': memberJoiningSevaUserId,
+        //'fullName': user.fullname,
+       // 'photoUrl': user.photoURL,
+      },
+      'adminDetails': {
+        'email': adminCredentials.email,
+        'id': adminCredentials.uid,
+        'fullName': adminCredentials.displayName,
+        'photoUrl': adminCredentials.photoUrl,
+      },
+      // 'associatedTimebankDetails': {
+      //   'timebankId': timebankId,
+      //   'timebankTitle': timebankTitle,
+      // },
     });
 
     return batch;

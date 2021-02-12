@@ -1160,8 +1160,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'communities': FieldValue.arrayUnion([communityId]),
     });
 
-    //join || Exit
-    //
     batch.setData(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable, 
@@ -1176,7 +1174,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'adminDetails': {
         'email': SevaCore.of(context).loggedInUser.email,
         'id': SevaCore.of(context).loggedInUser.sevaUserID,
-        'fullName': SevaCore.of(context).loggedInUser.sevaUserID,
+        'fullName': SevaCore.of(context).loggedInUser.fullname,
         'photoUrl': SevaCore.of(context).loggedInUser.photoURL,
       },
       'associatedTimebankDetails': {
