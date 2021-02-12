@@ -1015,11 +1015,18 @@ class RequestCreateFormState extends State<RequestCreateForm>
       var response = await http.post(
         "https://proxy.sevaexchange.com/" +
             "http://ai.api.sevaxapp.com/request_categories",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control": "Allow-Headers",
+          "x-requested-with": "x-requested-by"
+        },
         body: jsonEncode({
           "description": query,
         }),
       );
+      log('respinse ${response.body}');
+      log('respinse ${response.statusCode}');
+
       if (response.statusCode == 200) {
         Map<String, dynamic> bodyMap = json.decode(response.body);
         List<String> categoriesList = bodyMap.containsKey('string_vec')
@@ -1032,7 +1039,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return null;
       }
     } catch (exception) {
-      log(exception);
+      log(exception.toString());
       return null;
     }
   }
