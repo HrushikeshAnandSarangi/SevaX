@@ -810,7 +810,9 @@ class PersonalNotificationsRedcerForDonations {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
-                notificationId: notification.id, model: donationModel,),
+              notificationId: notification.id,
+              model: donationModel,
+            ),
           ),
         );
       },
@@ -828,7 +830,8 @@ class PersonalNotificationsRedcerForDonations {
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
     var amount;
-    if(donationModel.requestIdType == 'offer' && donationModel.donationStatus == DonationStatus.REQUESTED) {
+    if (donationModel.requestIdType == 'offer' &&
+        donationModel.donationStatus == DonationStatus.REQUESTED) {
       amount = donationModel.cashDetails.cashDetails.amountRaised;
     } else {
       amount = donationModel.cashDetails.pledgedAmount;
@@ -866,19 +869,30 @@ class PersonalNotificationsRedcerForDonations {
     NotificationsModel notificationsModel,
   }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
-
+    bool invertGoodsLabel = false;
+    if (holder.donationType == RequestType.GOODS &&
+        holder.requestIdType == 'offer' &&
+        holder.donorDetails.email != SevaCore.of(context).loggedInUser.email) {
+      invertGoodsLabel = true;
+    }
     return NotificationCard(
       isDissmissible: false,
       photoUrl: holder.donorDetails.photoUrl ?? defaultUserImageURL,
       entityName: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
-          : S.of(context).goods_modified_by_donor,
+          : invertGoodsLabel
+              ? holder.donorDetails.name + ' has pledge to donate good/supplies'
+              : S.of(context).goods_modified_by_donor,
       title: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
-          : S.of(context).goods_modified_by_donor,
+          : invertGoodsLabel
+              ? 'Acknowledge donation'
+              : S.of(context).goods_modified_by_donor,
       subTitle: holder.donationType == RequestType.CASH
           ? S.of(context).amount_modified_by_donor_desc
-          : S.of(context).goods_modified_by_donor_desc,
+          : invertGoodsLabel
+              ? holder.donorDetails.name + ' has pledge to donate good/supplies'
+              : S.of(context).goods_modified_by_donor_desc,
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(

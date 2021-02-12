@@ -207,7 +207,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
           StreamBuilder<CashModel>(
             stream: _bloc.cashModel,
             builder: (context, snapshot) {
-              return TextField(
+              return TextFormField(
                 focusNode: _availability,
                 onChanged: (data) => {
                   snapshot.data.targetAmount = int.parse(data),
@@ -220,7 +220,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   errorText: getValidationError(context, snapshot.error),
                 ),
                 keyboardType: TextInputType.number,
-                onSubmitted: (v) {
+                initialValue: widget.offerModel != null
+                    ? widget.offerModel.cashModel.targetAmount.toString()
+                    : '',
+                onFieldSubmitted: (v) {
                   _availability.unfocus();
                   snapshot.data.targetAmount = int.parse(v);
                   _bloc.onCashModelChanged(snapshot.data);
