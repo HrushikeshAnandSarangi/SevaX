@@ -45,11 +45,17 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
 
   @override
   void initState() {
+    getTimebank();
+    //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
+  }
+
+  Future<void> getTimebank() async {
     FirestoreManager.getTimeBankForId(timebankId: widget.timebankId)
         .then((onValue) {
-      timebankModel = onValue;
+      setState(() {
+        timebankModel = onValue;
+      });
     });
-    //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   @override
@@ -63,50 +69,56 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
               ),
             )
           : null,
-      body: FutureBuilder<Object>(
-          future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text('Somthing went wrong!');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return LoadingIndicator();
-            }
-            return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getPersonalRequestListStream(
-                  sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return Text('Error: ${requestListSnapshot.error}');
+      body: timebankModel != null
+          ? FutureBuilder<Object>(
+              future: FirestoreManager.getUserForId(
+                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Somthing went wrong!');
                 }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return LoadingIndicator();
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
-                    requestModelList = filterRequests(
-                        context: context, requestModelList: requestModelList);
-                    requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
-
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text(S.of(context).no_requests)),
-                      );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return LoadingIndicator();
+                }
+                return StreamBuilder<List<RequestModel>>(
+                  stream: FirestoreManager.getPersonalRequestListStream(
+                      sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                    if (requestListSnapshot.hasError) {
+                      return Text('Error: ${requestListSnapshot.error}');
                     }
-                    var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
-                    return formatListFrom(consolidatedList: consolidatedList);
-                }
-              },
-            );
-          }),
+                    switch (requestListSnapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return LoadingIndicator();
+                      default:
+                        List<RequestModel> requestModelList =
+                            requestListSnapshot.data;
+                        requestModelList = filterRequests(
+                            context: context,
+                            requestModelList: requestModelList);
+                        requestModelList = filterBlockedRequestsContent(
+                            context: context,
+                            requestModelList: requestModelList);
+
+                        if (requestModelList.length == 0) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child:
+                                Center(child: Text(S.of(context).no_requests)),
+                          );
+                        }
+                        var consolidatedList =
+                            GroupRequestCommons.groupAndConsolidateRequests(
+                                requestModelList,
+                                SevaCore.of(context).loggedInUser.sevaUserID);
+                        return formatListFrom(
+                            consolidatedList: consolidatedList);
+                    }
+                  },
+                );
+              })
+          : LoadingIndicator(),
     );
   }
 

@@ -500,7 +500,9 @@ class TaskCardViewState extends State<TaskCardView> {
                                           .of(context)
                                           .validation_error_invalid_hours;
                                     }
+
                                     selectedMinuteValue = value;
+                                    return null;
                                   },
                                   items: minuteList.map((value) {
                                     return DropdownMenuItem(
