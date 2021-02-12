@@ -132,7 +132,7 @@ class _MembersPageState extends State<MembersPage> {
 
               List<String> memberIds = List<String>.from(
                 snapshot.data.timebank.members.where(
-                  (id) => !isAccessAvailable(snapshot.data.timebank, id),
+                  (id) => !isMemberAnAdmin(snapshot.data.timebank, id),
                 ),
               );
 

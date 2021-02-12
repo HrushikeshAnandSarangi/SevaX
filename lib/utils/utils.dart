@@ -32,6 +32,11 @@ bool isSameDay(DateTime d1, DateTime d2) {
   return (d1.year == d2.year && d1.month == d2.month && d1.day == d2.day);
 }
 
+bool isMemberAnAdmin(TimebankModel timebank, String userId) =>
+    timebank.creatorId == userId ||
+    timebank.admins.contains(userId) ||
+    timebank.organizers.contains(userId);
+
 bool isAccessAvailable(TimebankModel timebank, String userId) =>
     timebank.creatorId == userId ||
     timebank.admins.contains(userId) ||
