@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -115,9 +116,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             communityCreatorId:
                 // BlocProvider.of<HomeDashBoardBloc>(context)
                 //     .selectedCommunityModel.created_by
-              isPrimaryTimebank(parentTimebankId: widget.timebankModel.parentTimebankId)
-                  ? widget.timebankModel.creatorId
-                  : widget.timebankModel.managedCreatorIds.first,
+                isPrimaryTimebank(
+                        parentTimebankId: widget.timebankModel.parentTimebankId)
+                    ? widget.timebankModel.creatorId
+                    : widget.timebankModel.managedCreatorIds.first,
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
         else if (widget.requestItem.sevaUserId == loggedInUser)
@@ -1428,7 +1430,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   Navigator.of(dialogContext).pop();
                   Navigator.of(context).pop();
                 } else {
-                  await deleteRequest().commit();
+                  try {
+                    await deleteRequest();
+                  } on Exception catch (e) {
+                    logger.i("Exception caught");
+                  }
                   Navigator.of(dialogContext).pop();
                   Navigator.of(context).pop();
                 }
@@ -1498,26 +1504,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return batch;
   }
 
-  WriteBatch deleteRequest() {
-    //add to timebank members
-
-    WriteBatch batch = Firestore.instance.batch();
-    var requestRef = Firestore.instance
+  Future<void> deleteRequest() async {
+    await Firestore.instance
         .collection('requests')
-        .document(widget.requestItem.id);
+        .document(widget.requestItem.id)
+        .delete();
 
-    if (widget.requestItem.projectId != null) {
-      var projectsRef = Firestore.instance
-          .collection('projects')
-          .document(widget.requestItem.projectId);
-      batch.updateData(projectsRef, {
-        'pendingRequests': FieldValue.arrayRemove([widget.requestItem.id])
-      });
+    if (widget.requestItem.projectId != null &&
+        widget.requestItem.projectId.isNotEmpty) {
+      try {
+        Firestore.instance
+            .collection('projects')
+            .document(widget.requestItem.projectId)
+            .updateData({
+          'pendingRequests': FieldValue.arrayRemove([widget.requestItem.id])
+        });
+      } on Exception catch (e) {
+        logger.e("Couldn't update the pending task for associated event.");
+      }
     }
-
-    batch.delete(requestRef);
-
-    return batch;
   }
 
   void _showProtectedTimebankMessage() {
