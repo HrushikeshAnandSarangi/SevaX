@@ -101,59 +101,29 @@ class _RequestDonationDisputePageState
   }
 
   void actionExecute(_key) async {
-    if (widget.model.donationType == RequestType.CASH) {
-      if (enteredReceivedAmount == null || enteredReceivedAmount.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (BuildContext viewContext) {
-            return AlertDialog(
-              title: Text('Please enter a valid donation amount'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    S.of(context).ok,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+    if (widget.model.donationType == RequestType.CASH &&
+        (int.tryParse(enteredReceivedAmount) ?? 0) <= 0) {
+      showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text('Please enter a valid donation amount'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  S.of(context).ok,
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
-                  onPressed: () {
-                    Navigator.of(viewContext).pop();
-                  },
                 ),
-              ],
-            );
-          },
-        );
-      } else if (int.tryParse(enteredReceivedAmount) <= 0) {
-        showDialog(
-          context: context,
-          builder: (BuildContext viewContext) {
-            return AlertDialog(
-              title: Text('Please enter a valid donation amount'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    S.of(context).ok,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(viewContext).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        _key.currentState.hideCurrentSnackBar();
-        _key.currentState.showSnackBar(
-          SnackBar(
-            content: Text("${S.of(context).general_stream_error}."),
-          ),
-        );
-      }
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       var handleCallBackDisputeCash = ((value) {
         // print('Inside CallBackDisputeCash');
