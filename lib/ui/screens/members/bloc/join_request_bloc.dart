@@ -80,8 +80,7 @@ class JoinRequestBloc {
       });
     }
 
-    batch.updateData(
-        joinRequestReference, {'operation_taken': true, 'accepted': true});
+    batch.updateData(joinRequestReference, {'operation_taken': true, 'accepted': true});
 
     batch.updateData(timebankNotificationReference, {'isRead': true});
 
