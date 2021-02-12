@@ -11,6 +11,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -25,7 +26,7 @@ import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
+
 import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
@@ -89,18 +90,18 @@ class NewsCardViewState extends State<NewsCardView> {
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
-          utils.isDeletable(
-            timebankCreatorId: widget.timebankModel.creatorId,
-            context: context,
-            contentCreatorId: widget.newsModel.sevaUserId,
-            communityCreatorId:
-                widget.timebankModel.managedCreatorIds.isNotEmpty
-                    ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                    :
-                BlocProvider.of<HomeDashBoardBloc>(context)
-                    ?.selectedCommunityModel?.created_by
-                    ??widget.communityModel.created_by
-          )
+          widget.timebankModel != null &&
+                  utils.isDeletable(
+                      timebankCreatorId: widget.timebankModel.creatorId,
+                      context: context,
+                      contentCreatorId: widget.newsModel.sevaUserId,
+                      communityCreatorId: widget
+                              .timebankModel.managedCreatorIds.isNotEmpty
+                          ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                          : BlocProvider.of<HomeDashBoardBloc>(context)
+                                  ?.selectedCommunityModel
+                                  ?.created_by ??
+                              widget.communityModel.created_by)
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
