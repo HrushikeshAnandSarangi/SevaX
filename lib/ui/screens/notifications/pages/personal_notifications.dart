@@ -283,7 +283,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
                     case NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM:
                       var data = notification.data;
-                      log('data  ${data}');
                       Map<String, dynamic> map =
                           Map<String, dynamic>.from(data['creatorDetails']);
                       ParticipantInfo creatorDetails =
@@ -324,7 +323,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         onPressed: null,
                         photoUrl: creatorDetails.photoUrl,
-                        title: S.of(context).notification_timebank_join,
+                        title: 'Message room remove',
                         subTitle:
                             '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
                       );

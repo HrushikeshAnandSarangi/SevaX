@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -38,6 +39,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
   void initState() {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
+    _bloc.addCurrentParticipants(
+        List<String>.from(chatModel.participants.map((x) => x)));
     _bloc.addParticipants(
       chatModel.participantInfo
           .where(
@@ -50,6 +53,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
         stockImageUrl: chatModel.groupDetails.imageUrl,
       ),
     );
+
+    log('memberslenth  ${_bloc.currentParticipantsList.length}');
     super.initState();
   }
 
@@ -87,7 +92,10 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     );
                   },
                 );
-                _bloc.editGroupDetails(widget.chatModel.id).then(
+                _bloc
+                    .editGroupDetails(widget.chatModel.id, context,
+                        SevaCore.of(context).loggedInUser)
+                    .then(
                   (value) {
                     if (value) {
                       Navigator.of(context).pop();
@@ -244,7 +252,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     )
                         .then(
                       (List<ParticipantInfo> participantInfo) {
-                        if (participantInfo != null)
+                        if (participantInfo != null) {
                           _bloc.addParticipants(
                             participantInfo
                               ..add(
@@ -258,9 +266,11 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                   photoUrl: SevaCore.of(context)
                                       .loggedInUser
                                       .photoURL,
+                                  type: ChatType.TYPE_MULTI_USER_MESSAGING,
                                 ),
                               ),
                           );
+                        }
                       },
                     );
                   },
