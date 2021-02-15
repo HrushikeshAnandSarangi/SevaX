@@ -1,7 +1,15 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+
+enum ParticipantMode { ADDED, REMOVED }
 
 class MessageRoomManager {
   static Future<void> addRemoveParticipant({
@@ -9,14 +17,14 @@ class MessageRoomManager {
     String timebankId,
     NotificationType notificationType,
     String messageRoomName,
-    String imageUrl,
+    String messageRoomImageUrl,
     String participantId,
     ParticipantInfo creatorDetails,
+    BuildContext context,
   }) async {
-    var batch = Firestore.instance.batch();
-    NotificationsModel notification = new NotificationsModel(
+    NotificationsModel notification = NotificationsModel(
       communityId: communityId,
-      id: Uuid().generateV4(),
+      id: utils.Utils.getUuid(),
       isRead: false,
       isTimebankNotification: false,
       senderUserId: creatorDetails.id,
@@ -24,10 +32,25 @@ class MessageRoomManager {
       type: notificationType,
       timebankId: timebankId,
       data: {
-        'creatorDetails': creatorDetails,
+        'creatorDetails': creatorDetails.toMap(),
         'messageRoomName': messageRoomName,
-        'messageRoomUrl': imageUrl,
+        'messageRoomUrl': messageRoomImageUrl,
       },
     );
+    UserModel user = await Provider.of<MembersBloc>(
+      context,
+      listen: false,
+    ).getMemberFromLocalData(userId: participantId);
+    log('email ${user.email}');
+    return await Firestore.instance
+        .collection('users')
+        .document(user.email)
+        .collection('notifications')
+        .document(notification.id)
+        .setData(notification.toMap())
+        .then((value) => true)
+        .catchError((onError) {
+      return false;
+    });
   }
 }

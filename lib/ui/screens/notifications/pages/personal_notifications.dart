@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
@@ -280,7 +281,54 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank} ',
                       );
                       break;
-
+                    case NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM:
+                      var data = notification.data;
+                      log('data  ${data}');
+                      Map<String, dynamic> map =
+                          Map<String, dynamic>.from(data['creatorDetails']);
+                      ParticipantInfo creatorDetails =
+                          ParticipantInfo.fromMap(map);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: creatorDetails.name,
+                        isDissmissible: true,
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                        onPressed: null,
+                        photoUrl:
+                            creatorDetails.photoUrl ?? defaultUserImageURL,
+                        title: 'Message room join',
+                        subTitle:
+                            '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.',
+                      );
+                      break;
+                    case NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM:
+                      var data = notification.data;
+                      Map<String, dynamic> map =
+                          Map<String, dynamic>.from(data['creatorDetails']);
+                      ParticipantInfo creatorDetails =
+                          ParticipantInfo.fromMap(map);
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: creatorDetails.name,
+                        isDissmissible: true,
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                        onPressed: null,
+                        photoUrl: creatorDetails.photoUrl,
+                        title: S.of(context).notification_timebank_join,
+                        subTitle:
+                            '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
+                      );
+                      break;
                     case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
                       bool isGroup = false;
                       String associatedName =
