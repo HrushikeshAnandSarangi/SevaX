@@ -118,6 +118,8 @@ Future<bool> registerloggedInUserToCommunity({
       communityId: communityId,
       memberJoiningSevaUserId: loggedInUser.sevaUserID,
       newMemberJoinedEmail: loggedInUser.email,
+      newMemberFullName: loggedInUser.fullname,
+      newMemberPhotoUrl: loggedInUser.photoURL,
       primaryTimebankId: primaryTimebankId,
       adminCredentials: adminCredentials,
     ).then((onValue) => true).catchError((onError) => false);
@@ -130,6 +132,8 @@ Future<bool> initRegisterationMemberToCommunity({
   @required String memberJoiningSevaUserId,
   @required String newMemberJoinedEmail,
   @required var adminCredentials,
+  @required String newMemberFullName,
+  @required String newMemberPhotoUrl,
 }) async {
   return await InvitationManager.registerMemberToCommunity(
     communityId: communityId,
@@ -137,6 +141,8 @@ Future<bool> initRegisterationMemberToCommunity({
     newMemberJoinedEmail: newMemberJoinedEmail,
     primaryTimebankId: primaryTimebankId,
     adminCredentials: adminCredentials,
+    newMemberFullName: newMemberFullName,
+    newMemberPhotoUrl: newMemberPhotoUrl,
   ).then((onValue) => true).catchError((onError) => false);
 }
 

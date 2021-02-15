@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -153,6 +154,8 @@ class InvitationManager {
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
     @required var adminCredentials,
+    @required String newMemberFullName,
+    @required String newMemberPhotoUrl,
   }) async {
     return await _addMemberToTimebank(
       communityId: communityId,
@@ -160,6 +163,8 @@ class InvitationManager {
       memberJoiningSevaUserId: memberJoiningSevaUserId,
       newMemberJoinedEmail: newMemberJoinedEmail,
       adminCredentials: adminCredentials,
+      newMemberFullName: newMemberFullName,
+      newMemberPhotoUrl: newMemberPhotoUrl,
     ).commit().then((onValue) => true).catchError((onError) => false);
   }
 
@@ -169,6 +174,8 @@ class InvitationManager {
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
     @required var adminCredentials,
+    @required String newMemberFullName,
+    @required String newMemberPhotoUrl,
     TimebankModel timebankModel,
   }) {
     //add to timebank members
@@ -206,14 +213,14 @@ class InvitationManager {
 
     batch.setData(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
-      'modeType': JoinMode.JOINED_VIA_LINK.readable,  //check if this is Through Link
+      'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
-        //'fullName': user.fullname,
-       // 'photoUrl': user.photoURL,
+        'fullName': newMemberFullName,
+        'photoUrl': newMemberPhotoUrl,
       },
       'adminDetails': {
         'email': adminCredentials.email,
@@ -221,10 +228,10 @@ class InvitationManager {
         'fullName': adminCredentials.displayName,
         'photoUrl': adminCredentials.photoUrl,
       },
-      // 'associatedTimebankDetails': {
-      //   'timebankId': timebankId,
-      //   'timebankTitle': timebankTitle,
-      // },
+      'associatedTimebankDetails': {        //Need to check if timebankModel data is correct or null
+        'timebankId': timebankModel.id,   
+        'timebankTitle': timebankModel.name,
+      },
     });
 
     return batch;
