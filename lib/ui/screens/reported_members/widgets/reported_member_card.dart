@@ -45,7 +45,8 @@ class ReportedMemberCard extends StatelessWidget {
                     SevaCore.of(context).loggedInUser.email,
                     SevaCore.of(context).loggedInUser.sevaUserID,
                     SevaCore.of(context).loggedInUser.fullname,
-                    SevaCore.of(context).loggedInUser.photoURL)
+                    SevaCore.of(context).loggedInUser.photoURL,
+                    timebankModel.name)
                 : removeMemberGroupFn(context),
             canRemove: canRemove,
             messageMember: () => messageMember(
@@ -171,7 +172,8 @@ class ReportedMemberCard extends StatelessWidget {
                             SevaCore.of(context).loggedInUser.email,
                             SevaCore.of(context).loggedInUser.sevaUserID,
                             SevaCore.of(context).loggedInUser.fullname,
-                            SevaCore.of(context).loggedInUser.photoURL)
+                            SevaCore.of(context).loggedInUser.photoURL,
+                            timebankModel.name)
                         : removeMemberGroupFn(context);
                   },
                 ),
@@ -309,7 +311,7 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context, String adminEmail,
-      String adminId, String adminName, String adminPhoto) async {
+      String adminId, String adminName, String adminPhoto, String timebankTitle) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
     progressDialog.hide();
@@ -355,7 +357,7 @@ class ReportedMemberCard extends StatelessWidget {
                     },
                     'associatedTimebankDetails': {
                       'timebankId': model.communityId,
-                      'timebankTitle': '', //model.name,
+                      'timebankTitle': timebankTitle, //model.name,
                     },
                   });
 

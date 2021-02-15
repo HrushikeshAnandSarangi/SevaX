@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/repositories/join_request_repository.dart';
 
@@ -19,7 +22,20 @@ class JoinRequestBloc {
     String timebankId,
     String joinRequestId,
     String notificaitonId,
+    String communityId,
+    String memberFullName,
+    String memberPhotoUrl,
+    String adminEmail,
+    String adminId,
+    String adminFullName,
+    String adminPhotoUrl,
+    String timebankTitle,
+    String memberEmail,
+    String memberId
   }) {
+
+    log('REJECT COMES HERE!');
+
     WriteBatch batch = Firestore.instance.batch();
     var joinRequestReference =
         Firestore.instance.collection('join_requests').document(joinRequestId);
@@ -30,10 +46,41 @@ class JoinRequestBloc {
         .collection("notifications")
         .document(notificaitonId);
 
+    var entryExitLogReference = Firestore.instance
+        .collection('communities')
+        .document(communityId)
+        .collection('entryExitLogs')
+        .document();
+
     batch.updateData(
         joinRequestReference, {'operation_taken': true, 'accepted': false});
 
     batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    batch.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'memberDetails': {
+        'email': memberEmail,
+        'id': memberId,
+        'fullName': memberFullName,
+        'photoUrl': memberPhotoUrl,
+      },
+      'adminDetails': {
+        'email': adminEmail,
+        'id': adminId,
+        'fullName': adminFullName,
+        'photoUrl': adminPhotoUrl,
+      },
+      'associatedTimebankDetails': {
+        'timebankId': timebankId,
+        'timebankTitle': timebankTitle,
+      },
+    });
+
+    log('REJECT ENDS HERE!');
 
     return batch.commit();
   }
@@ -47,6 +94,13 @@ class JoinRequestBloc {
     String newMemberJoinedEmail,
     String notificaitonId,
     bool isFromGroup,
+    String memberFullName,
+    String memberPhotoUrl,
+    String adminEmail,
+    String adminId,
+    String adminFullName,
+    String adminPhotoUrl,
+    String timebankTitle,
   }) {
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef =
@@ -62,6 +116,12 @@ class JoinRequestBloc {
         .document(timebankId)
         .collection("notifications")
         .document(notificaitonId);
+
+    var entryExitLogReference = Firestore.instance
+        .collection('communities')
+        .document(communityId)
+        .collection('entryExitLogs')
+        .document();
 
     batch.updateData(timebankRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
@@ -80,9 +140,33 @@ class JoinRequestBloc {
       });
     }
 
-    batch.updateData(joinRequestReference, {'operation_taken': true, 'accepted': true});
+    batch.updateData(
+        joinRequestReference, {'operation_taken': true, 'accepted': true});
 
     batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    batch.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'memberDetails': {
+        'email': newMemberJoinedEmail,
+        'id': memberJoiningSevaUserId,
+        'fullName': memberFullName,
+        'photoUrl': memberPhotoUrl,
+      },
+      'adminDetails': {
+        'email': adminEmail,
+        'id': adminId,
+        'fullName': adminFullName,
+        'photoUrl': adminPhotoUrl,
+      },
+      'associatedTimebankDetails': {
+        'timebankId': timebankId,
+        'timebankTitle': timebankTitle,
+      },
+    });
 
     return batch.commit();
   }

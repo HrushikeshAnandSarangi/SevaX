@@ -29,9 +29,9 @@ extension JoinModeLabel on JoinMode {
   String get readable {
     switch (this) {
       case JoinMode.ADDED_MANUALLY_BY_ADMIN:
-        return 'ADDED_MANUALLY_BY_ADMIN';
+        return 'ADDED_MANUALLY_BY_ADMIN';  //done
       case JoinMode.APPROVED_BY_ADMIN:
-        return 'APPROVED_BY_ADMIN';
+        return 'APPROVED_BY_ADMIN';        
       case JoinMode.REJECTED_BY_ADMIN:
         return 'REJECTED_BY_ADMIN';
       case JoinMode.JOIN_VIA_CODE:
