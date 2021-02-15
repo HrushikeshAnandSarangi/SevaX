@@ -990,9 +990,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   String shareText(TimebankCodeModel timebankCode) {
-    var text =
-        "${SevaCore.of(context).loggedInUser.fullname} ${S.of(context).notifications_invited_to_join} \"${timebankModel.name}\" ${S.of(context).community.toLowerCase()}. ${S.of(context).invite_message} \"${timebankCode.timebankCode}\" ${S.of(context).invite_prompt}";
-    return text;
+    return '''${SevaCore.of(context).loggedInUser.fullname} has invited you to join their "${timebankModel.name}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. https://youtu.be/xe56UJyQ9ws \n\nHere is what you'll need to know: \nFirst, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main https://www.sevaxapp.com web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you can explore Seva Communities near you. Type in the "${timebankModel.name}" and enter code "${timebankCode.timebankCode}" when prompted.\n\nClick to Join ${SevaCore.of(context).loggedInUser.fullname} and their Seva Community via this dynamic link at https://sevaexchange.page.link/sevaxapp.\n\nThank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com if you have any questions or issues joining with the link given.
+    ''';
   }
 
   Stream<List<TimebankCodeModel>> getTimebankCodes({
