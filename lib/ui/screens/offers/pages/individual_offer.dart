@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
+import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
@@ -43,16 +44,17 @@ class _IndividualOfferState extends State<IndividualOffer> {
   var focusNodes = List.generate(8, (_) => FocusNode());
   @override
   void initState() {
-    AppConfig.helpIconContext = HelpIconContextClass.TIME_OFFERS;
+    AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
 
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
       title = widget.offerModel.individualOfferDataModel.title;
-      AppConfig.helpIconContext = widget.offerModel.type == RequestType.TIME
-          ? HelpIconContextClass.TIME_OFFERS
-          : widget.offerModel.type == RequestType.CASH
-              ? HelpIconContextClass.MONEY_OFFERS
-              : HelpIconContextClass.GOODS_OFFERS;
+      AppConfig.helpIconContextMember =
+          widget.offerModel.type == RequestType.TIME
+              ? HelpContextMemberType.time_offers
+              : widget.offerModel.type == RequestType.CASH
+                  ? HelpContextMemberType.money_offers
+                  : HelpContextMemberType.goods_offers;
     }
     super.initState();
 
@@ -129,8 +131,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 ? snapshot.data
                                 : RequestType.TIME,
                             onChanged: (data) {
-                              AppConfig.helpIconContext =
-                                  HelpIconContextClass.TIME_OFFERS;
+                              AppConfig.helpIconContextMember =
+                                  HelpContextMemberType.time_offers;
                               _bloc.onTypeChanged(data);
                               title_hint = S.of(context).offer_title_hint;
                               description_hint =
@@ -145,8 +147,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? snapshot.data
                                   : RequestType.TIME,
                               onChanged: (data) {
-                                AppConfig.helpIconContext =
-                                    HelpIconContextClass.MONEY_OFFERS;
+                                AppConfig.helpIconContextMember =
+                                    HelpContextMemberType.money_offers;
                                 _bloc.onTypeChanged(data);
                                 title_hint =
                                     S.of(context).cash_offer_title_hint;
@@ -161,8 +163,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? snapshot.data
                                   : RequestType.TIME,
                               onChanged: (data) {
-                                AppConfig.helpIconContext =
-                                    HelpIconContextClass.GOODS_OFFERS;
+                                AppConfig.helpIconContextMember =
+                                    HelpContextMemberType.goods_offers;
                                 title_hint =
                                     S.of(context).goods_offer_title_hint;
                                 description_hint =

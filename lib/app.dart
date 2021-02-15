@@ -50,6 +50,7 @@ Future<void> initApp(Flavor flavor) async {
   final AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
   await fetchRemoteConfig();
+
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
       return null;
@@ -94,8 +95,9 @@ class MainApplication extends StatelessWidget {
         )
       ],
       child: ChangeNotifierProvider<AppLanguage>(
-          create: (_) => appLanguage,
-          child: Consumer<AppLanguage>(builder: (context, model, child) {
+        create: (_) => appLanguage,
+        child: Consumer<AppLanguage>(
+          builder: (context, model, child) {
             return AuthProvider(
               auth: Auth(),
               child: MaterialApp(
@@ -123,7 +125,9 @@ class MainApplication extends StatelessWidget {
                 ),
               ),
             );
-          })),
+          },
+        ),
+      ),
     );
   }
 }
