@@ -676,12 +676,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         'fullName': userModel.fullname,
         'photoUrl': userModel.photoURL,
       },
-      'adminDetails': {
-        'email': adminEmail,
-        'id': adminId,
-        'fullName': adminFullName,
-        'photoUrl': adminPhotoUrl,
-      },
+      // 'adminDetails': {
+      //   'email': adminEmail,
+      //   'id': adminId,
+      //   'fullName': adminFullName,
+      //   'photoUrl': adminPhotoUrl,
+      // },
       'associatedTimebankDetails': {
         'timebankId': timebankId,
         'timebankTitle': timebankTitle,
