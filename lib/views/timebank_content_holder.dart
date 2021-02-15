@@ -310,12 +310,23 @@ Widget createJoinedUserTabBar(
 ) {
   return Scaffold(
     appBar: AppBar(
+      leading: BackButton(
+        color: Colors.black,
+        onPressed: () {
+          AppConfig.helpIconContextMember =
+              HelpContextMemberType.seva_community;
+          Navigator.pop(context);
+        },
+      ),
       elevation: 0.5,
       // backgroundColor: Colors.white,
       title: Text(
         timebankModel.name,
         style: TextStyle(fontSize: 18),
       ),
+      actions: [
+        CommonHelpIconWidget(),
+      ],
     ),
     body: Column(
       children: <Widget>[
@@ -326,6 +337,25 @@ Widget createJoinedUserTabBar(
           indicatorColor: Color(0xFFF766FE0),
           indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
+          onTap: (index) {
+            switch (index) {
+              case 1:
+                AppConfig.helpIconContextMember = HelpContextMemberType.events;
+                break;
+              case 2:
+                AppConfig.helpIconContextMember =
+                    HelpContextMemberType.requests;
+                break;
+              case 3:
+                AppConfig.helpIconContextMember = HelpContextMemberType.offers;
+                break;
+              default:
+                AppConfig.helpIconContextMember = HelpContextMemberType.groups;
+                break;
+            }
+            logger.i(
+                "tabbar index group scope tapped is $index with ${AppConfig.helpIconContextMember}");
+          },
           tabs: [
             Tab(
               text: S.of(context).feeds,
@@ -407,11 +437,20 @@ Widget createNormalUserTabBar(
   return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          onPressed: () => Navigator.of(context).pop(),
+          color: Colors.black,
+          onPressed: () {
+            AppConfig.helpIconContextMember =
+                HelpContextMemberType.seva_community;
+            Navigator.pop(context);
+          },
         ),
         elevation: 0.5,
+
         //  backgroundColor: Colors.white,
         title: Text(timebankModel.name),
+        actions: [
+          CommonHelpIconWidget(),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -443,12 +482,6 @@ Widget createNormalUserTabBar(
                 MembersPage(
                   timebankId: timebankModel.id,
                 ),
-                // TimebankRequestAdminPage(
-                //   isUserAdmin: false,
-                //   timebankId: timebankModel.id,
-                //   userEmail: SevaCore.of(context).loggedInUser.email,
-                //   isFromGroup: true,
-                // ),
               ],
             ),
           ),

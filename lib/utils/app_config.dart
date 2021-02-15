@@ -2,6 +2,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:sevaexchange/models/billing_plan_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppConfig {
@@ -63,8 +64,9 @@ class HelpIconContextClass {
   // };
 
   static String linkBuilder({bool isAdmin = false}) {
+    logger.i("is admin $isAdmin");
     return isAdmin
-        ? "${AppConfig.remoteConfig.getString('help_videos_admin')}#${AppConfig.helpIconContextAdmin.getValue()}"
+        ? "${AppConfig.remoteConfig.getString('help_videos_admin')}#${AppConfig.helpIconContextMember.getValue()}"
         : "${AppConfig.remoteConfig.getString('help_videos_member')}#${AppConfig.helpIconContextMember.getValue()}";
   }
 }

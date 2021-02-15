@@ -12,6 +12,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -92,7 +93,11 @@ class MainApplication extends StatelessWidget {
         Provider(
           create: (context) => MembersBloc(),
           dispose: (_, b) => b.dispose(),
-        )
+        ),
+        Provider(
+          create: (context) => HomePageBloc(),
+          dispose: (_, b) => b.dispose(),
+        ),
       ],
       child: ChangeNotifierProvider<AppLanguage>(
         create: (_) => appLanguage,
