@@ -37,16 +37,18 @@ class RepeatWidgetState extends State<RepeatWidget> {
 
   static List<bool> _selected;
   static List<int> recurringDays = [];
-
+  static bool isRecurring = false;
+  
   @override
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
 //    _selected[1] = true;
 //    recurringDays =  List(7);
+    isRecurring = false;
   }
 
-  static bool isRecurring = false;
+  
   bool viewVisible = false;
   bool titleCheck = true;
   static int endType = 0;
