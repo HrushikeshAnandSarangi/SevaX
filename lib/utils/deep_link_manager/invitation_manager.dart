@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -168,8 +169,11 @@ class InvitationManager {
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
     @required var adminCredentials,
+    TimebankModel timebankModel,
   }) {
     //add to timebank members
+
+    log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
 
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef = Firestore.instance

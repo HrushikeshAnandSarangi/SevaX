@@ -349,7 +349,9 @@ class MemberSectionBuilder extends StatelessWidget {
           'timebankTitle': model.name,
         },
       });
-    } else {
+    }
+
+    if (!isFromExit && responseData['deletable'] == true) {
       await Firestore.instance
           .collection('communities')
           .document(member.currentCommunity)
