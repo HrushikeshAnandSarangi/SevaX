@@ -56,7 +56,7 @@ android {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
         storeFile file('Keystore')
-        //storeFile file(keystoreProperties['storeFile'])
+        storeFile file(keystoreProperties['storeFile'])
         //storeFile file('Keystore')
         storePassword keystoreProperties['storePassword']
         }
