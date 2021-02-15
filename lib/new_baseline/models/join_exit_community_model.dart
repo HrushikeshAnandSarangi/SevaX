@@ -21,7 +21,8 @@ extension ExitJoinLabel on ExitJoinType {
 enum JoinMode {
   ADDED_MANUALLY_BY_ADMIN,
   APPROVED_BY_ADMIN,
-  JOIN_VIA_CODE,
+  JOINED_VIA_CODE,
+  JOINED_VIA_LINK,
   REJECTED_BY_ADMIN,
 }
 
@@ -34,8 +35,10 @@ extension JoinModeLabel on JoinMode {
         return 'APPROVED_BY_ADMIN';        
       case JoinMode.REJECTED_BY_ADMIN:
         return 'REJECTED_BY_ADMIN';
-      case JoinMode.JOIN_VIA_CODE:
-        return 'JOIN_VIA_CODE';
+      case JoinMode.JOINED_VIA_CODE:
+        return 'JOINED_VIA_CODE';
+      case JoinMode.JOINED_VIA_LINK:
+        return 'JOINED_VIA_LINK';
       default:
         return 'DEFAULT_CASE_JOIN_MODE';
     }

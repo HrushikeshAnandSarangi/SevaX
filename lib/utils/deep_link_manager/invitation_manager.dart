@@ -202,7 +202,7 @@ class InvitationManager {
 
     batch.setData(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
-      'modeType': JoinMode.JOIN_VIA_CODE.readable,
+      'modeType': JoinMode.JOINED_VIA_LINK.readable,  //check if this is Through Link
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
       'memberDetails': {
