@@ -7,6 +7,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
@@ -15,6 +16,7 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
@@ -38,7 +40,12 @@ class ReportedMemberCard extends StatelessWidget {
             model: model,
             isFromTimebank: isFromTimebank,
             removeMember: () => isFromTimebank
-                ? removeMemberTimebankFn(context)
+                ? removeMemberTimebankFn(
+                    context,
+                    SevaCore.of(context).loggedInUser.email,
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    SevaCore.of(context).loggedInUser.fullname,
+                    SevaCore.of(context).loggedInUser.photoURL)
                 : removeMemberGroupFn(context),
             canRemove: canRemove,
             messageMember: () => messageMember(
@@ -159,7 +166,12 @@ class ReportedMemberCard extends StatelessWidget {
                     progressDialog.show();
 
                     isFromTimebank
-                        ? removeMemberTimebankFn(context)
+                        ? removeMemberTimebankFn(
+                            context,
+                            SevaCore.of(context).loggedInUser.email,
+                            SevaCore.of(context).loggedInUser.sevaUserID,
+                            SevaCore.of(context).loggedInUser.fullname,
+                            SevaCore.of(context).loggedInUser.photoURL)
                         : removeMemberGroupFn(context);
                   },
                 ),
@@ -296,7 +308,8 @@ class ReportedMemberCard extends StatelessWidget {
     }
   }
 
-  void removeMemberTimebankFn(BuildContext context) async {
+  void removeMemberTimebankFn(BuildContext context, String adminEmail,
+      String adminId, String adminName, String adminPhoto) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
     progressDialog.hide();
@@ -317,6 +330,34 @@ class ReportedMemberCard extends StatelessWidget {
                       .collection('reported_users_list')
                       .document(model.reportedId + "*" + model.communityId)
                       .delete();
+
+                  await Firestore.instance
+                      .collection('communities')
+                      .document(model.communityId)
+                      .collection('entryExitLogs')
+                      .document()
+                      .setData({
+                    'mode': ExitJoinType.EXIT.readable,
+                    'modeType': ExitMode.REPORTED_IN_COMMUNITY.readable,
+                    'timestamp': DateTime.now().millisecondsSinceEpoch,
+                    'communityId': model.communityId,
+                    'memberDetails': {
+                      'email': model.reportedUserEmail,
+                      'id': model.reportedId,
+                      'fullName': model.reportedUserName,
+                      'photoUrl': model.reportedUserImage,
+                    },
+                    'adminDetails': {
+                      'email': adminEmail,
+                      'id': adminId,
+                      'fullName': adminName,
+                      'photoUrl': adminPhoto,
+                    },
+                    'associatedTimebankDetails': {
+                      'timebankId': model.communityId,
+                      'timebankTitle': '', //model.name,
+                    },
+                  });
 
                   Navigator.of(context).pop();
                 },
