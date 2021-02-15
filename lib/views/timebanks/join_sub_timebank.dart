@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
@@ -12,6 +13,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -257,6 +259,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       {String userStatus}) {
     return InkWell(
       onTap: () {
+        try {
+          Provider.of<HomePageBloc>(context, listen: false)
+              .changeTimebank(timebank);
+        } on Exception catch (e) {
+          logger.e(e);
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -268,7 +276,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               ),
             ),
           ),
-        );
+        ).then((_) {
+          try {
+            Provider.of<HomePageBloc>(context, listen: false)
+                .switchToPreviousTimebank();
+          } on Exception catch (e) {
+            logger.e(e);
+          }
+        });
       },
       child: Padding(
           padding: const EdgeInsets.all(6.0),
