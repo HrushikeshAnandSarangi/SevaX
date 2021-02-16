@@ -36,7 +36,6 @@ import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -1069,8 +1068,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               )),
     );
     updateInformation(category);
-    logger.i(
-        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
   }
 
   //building list of selectedSubCategories
@@ -1079,8 +1076,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     subCategories = categories[1];
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
-
-    logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
