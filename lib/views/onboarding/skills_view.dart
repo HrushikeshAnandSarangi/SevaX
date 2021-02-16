@@ -16,6 +16,8 @@ import '../spell_check_manager.dart';
 import 'interests_view.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
+typedef MapListCallback = void Function(
+    Map<String, dynamic> _selectedSkillsMap);
 
 class SkillViewNew extends StatefulWidget {
   final bool automaticallyImplyLeading;
@@ -24,7 +26,9 @@ class SkillViewNew extends StatefulWidget {
   final StringListCallback onSelectedSkills;
   final bool isFromProfile;
   final String languageCode;
-
+  final bool isFromRequests;
+  final MapListCallback onSelectedSkillsMap;
+  final Map<String, dynamic> selectedSkills;
   SkillViewNew({
     @required this.onSelectedSkills,
     @required this.onSkipped,
@@ -32,6 +36,9 @@ class SkillViewNew extends StatefulWidget {
     this.automaticallyImplyLeading = true,
     this.isFromProfile,
     @required this.languageCode,
+    this.onSelectedSkillsMap,
+    this.selectedSkills,
+    this.isFromRequests = false,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -64,13 +71,19 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
         // ids[data['name']] = data.documentID;
       });
-      if (widget.userModel.skills != null &&
-          widget.userModel.skills.length > 0) {
-        widget.userModel.skills.forEach((id) {
-          _selectedSkills[id] = skills[id];
-          // selectedChips.add(buildChip(id: id, value: skills[id]));
-        });
+      if (!widget.isFromRequests) {
+        if (widget.userModel.skills != null &&
+            widget.userModel.skills.length > 0) {
+          widget.userModel.skills.forEach(
+            (id) {
+              _selectedSkills[id] = skills[id];
+            },
+          );
+        }
+      } else {
+        _selectedSkills = widget.selectedSkills;
       }
+
       setState(() {
         isDataLoaded = true;
       });
@@ -344,15 +357,21 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
                     return;
                   }
-                  List<String> selectedID = [];
-                  _selectedSkills.forEach((id, _) => selectedID.add(id));
+                  if (widget.isFromRequests) {
+                    widget.onSelectedSkillsMap(_selectedSkills);
+                  } else {
+                    List<String> selectedID = [];
+                    _selectedSkills.forEach((id, _) => selectedID.add(id));
 
-                  widget.onSelectedSkills(selectedID);
+                    widget.onSelectedSkills(selectedID);
+                  }
                 },
                 child: Text(
-                  widget.isFromProfile
-                      ? S.of(context).update
-                      : S.of(context).next,
+                  widget.isFromRequests
+                      ? S.of(context).done
+                      : widget.isFromProfile
+                          ? S.of(context).update
+                          : S.of(context).next,
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

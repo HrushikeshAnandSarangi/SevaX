@@ -194,6 +194,7 @@ class RequestModel extends DataModel {
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
+  Map<String, dynamic> skills;
   RequestModel({
     this.id,
     this.title,
@@ -235,6 +236,7 @@ class RequestModel extends DataModel {
     this.recommendedMemberIdsForRequest,
     this.categories,
     @required this.communityId,
+    this.skills,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -432,6 +434,9 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey("skills")) {
+      this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
+    }
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -457,6 +462,9 @@ class RequestModel extends DataModel {
       this.categories = categories;
     } else {
       this.categories = List();
+    }
+    if (map.containsKey("skills")) {
+      this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
     }
 
     if (map.containsKey('requestMode')) {
@@ -786,12 +794,16 @@ class RequestModel extends DataModel {
     if (this.goodsDonationDetails != null) {
       object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
     }
+    if (this.skills != null) {
+      object['skills'] = this.skills;
+    }
+
     return object;
   }
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, skills: $skills, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 
