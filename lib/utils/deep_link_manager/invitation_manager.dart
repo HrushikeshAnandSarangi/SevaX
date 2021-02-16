@@ -228,10 +228,10 @@ class InvitationManager {
         'fullName': adminCredentials.displayName,
         'photoUrl': adminCredentials.photoUrl,
       },
-      'associatedTimebankDetails': {        //Need to check if timebankModel data is correct or null
-        'timebankId': timebankModel.id,   
-        'timebankTitle': timebankModel.name,
-      },
+      // 'associatedTimebankDetails': {        //Need to check if timebankModel data is correct or null
+      //   'timebankId': timebankModel.id,
+      //   'timebankTitle': timebankModel.name,
+      // },
     });
 
     return batch;

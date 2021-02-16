@@ -20,7 +20,7 @@ Future<void> fetchLinkData() async {
   FirebaseDynamicLinks.instance.onLink(
       onError: (_) async {},
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        log(">>>>>>>>>>link is  ${dynamicLink.link.toString()}");
+        log(">>>>>>>>>>LINK IS  ${dynamicLink.link.toString()}");
         log("coming after syncing calendar");
 
         return handleLinkData(

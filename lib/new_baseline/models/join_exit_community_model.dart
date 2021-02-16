@@ -30,15 +30,15 @@ extension JoinModeLabel on JoinMode {
   String get readable {
     switch (this) {
       case JoinMode.ADDED_MANUALLY_BY_ADMIN:
-        return 'ADDED_MANUALLY_BY_ADMIN';  //done
+        return 'ADDED_MANUALLY_BY_ADMIN';    //tested (Members Page / Search Bar)
       case JoinMode.APPROVED_BY_ADMIN:
-        return 'APPROVED_BY_ADMIN';        
+        return 'APPROVED_BY_ADMIN';          //tested (Through Notifications & Members Page)
       case JoinMode.REJECTED_BY_ADMIN:
-        return 'REJECTED_BY_ADMIN';
+        return 'REJECTED_BY_ADMIN';          //tested (Through Notifications & Members Page)
       case JoinMode.JOINED_VIA_CODE:
-        return 'JOINED_VIA_CODE';
+        return 'JOINED_VIA_CODE';            //tested (will not have adminDetails map)
       case JoinMode.JOINED_VIA_LINK:
-        return 'JOINED_VIA_LINK';
+        return 'JOINED_VIA_LINK';            //
       default:
         return 'DEFAULT_CASE_JOIN_MODE';
     }
@@ -56,11 +56,11 @@ extension ExitModeLabel on ExitMode {
   String get readable {
     switch (this) {
       case ExitMode.REMOVED_BY_ADMIN:
-        return 'REMOVED_BY_ADMIN';
+        return 'REMOVED_BY_ADMIN';            //tested
       case ExitMode.LEFT_THE_COMMUNITY:
-        return 'LEFT_THE_COMMUNITY';
+        return 'LEFT_THE_COMMUNITY';          //tested
       case ExitMode.REPORTED_IN_COMMUNITY:
-        return 'REPORTED_IN_COMMUNITY';
+        return 'REPORTED_IN_COMMUNITY';       //tested
       default:
         return 'DEFAULT_CASE_EXIT_MODE';
     }

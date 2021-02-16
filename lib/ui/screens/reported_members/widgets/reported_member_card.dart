@@ -46,7 +46,8 @@ class ReportedMemberCard extends StatelessWidget {
                     SevaCore.of(context).loggedInUser.sevaUserID,
                     SevaCore.of(context).loggedInUser.fullname,
                     SevaCore.of(context).loggedInUser.photoURL,
-                    timebankModel.name)
+                    timebankModel.name,
+                    timebankModel.id)
                 : removeMemberGroupFn(context),
             canRemove: canRemove,
             messageMember: () => messageMember(
@@ -173,7 +174,8 @@ class ReportedMemberCard extends StatelessWidget {
                             SevaCore.of(context).loggedInUser.sevaUserID,
                             SevaCore.of(context).loggedInUser.fullname,
                             SevaCore.of(context).loggedInUser.photoURL,
-                            timebankModel.name)
+                            timebankModel.name,
+                            timebankModel.id)
                         : removeMemberGroupFn(context);
                   },
                 ),
@@ -311,13 +313,16 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context, String adminEmail,
-      String adminId, String adminName, String adminPhoto, String timebankTitle) async {
+      String adminId, String adminName, String adminPhoto, String timebankTitle,
+      String timebankId) async {
+
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
     progressDialog.hide();
 
     if (responseData['deletable'] == true) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           // return object of type Dialog
@@ -356,8 +361,8 @@ class ReportedMemberCard extends StatelessWidget {
                       'photoUrl': adminPhoto,
                     },
                     'associatedTimebankDetails': {
-                      'timebankId': model.communityId,
-                      'timebankTitle': timebankTitle, //model.name,
+                      'timebankId': timebankId,
+                      'timebankTitle': timebankTitle,
                     },
                   });
 
