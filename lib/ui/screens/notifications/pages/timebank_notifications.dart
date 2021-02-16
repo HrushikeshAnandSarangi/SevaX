@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent_credits_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 
 class TimebankNotifications extends StatefulWidget {
@@ -83,9 +84,22 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   title: "${userExitModel.userName}" " Has Insufficient Credits To Create Requests",
-                  subTitle: "Credits Needed: " "${creditsNeeded}",
+                  subTitle: "Credits Needed: " "${creditsNeeded} \n${S.of(context).tap_to_view_details}",
                   photoUrl: userExitModel.userPhotoUrl,
                   entityName: userExitModel.userName,
+                  onPressed: (){
+                      showDialog(
+                      context: context,
+                      builder: (_context) {
+                        return TimebankUserInsufficientCreditsDialog(
+                          userExitModel: userExitModel,
+                          timeBankId: notification.timebankId,
+                          notificationId: notification.id,
+                          userModel: SevaCore.of(context).loggedInUser,
+                        );
+                      },
+                    );
+                  },
                   onDismissed: () {
                     dismissTimebankNotification(
                       notificationId: notification.id,
