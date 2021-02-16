@@ -92,29 +92,35 @@ class SevaCreditLimitManager {
     @required String communityId,
   }) async {
     var currentGlobalBalance = await getCurrentBalance(email: email);
+    
     if (currentGlobalBalance >= credits) {
+
       return true;
+    
     } else {
-      var associatedBalanceWithinThisCommunity =
-          await getMemberBalancePerTimebank(
-        userSevaId: userId,
-            communityId: communityId,
-      );
 
-      var communityThreshold =
-          await getNegativeThresholdForCommunity(communityId);
+        var associatedBalanceWithinThisCommunity =
+            await getMemberBalancePerTimebank(
+          userSevaId: userId,
+              communityId: communityId,
+        );
 
-      if (associatedBalanceWithinThisCommunity > communityThreshold) {
-        return (currentGlobalBalance > 0
-                    ? currentGlobalBalance -
-                        associatedBalanceWithinThisCommunity
-                    : 0) +
-                (communityThreshold.abs() +
-                    associatedBalanceWithinThisCommunity) >=
-            credits;
-      } else {
-        return false;
-      }
+        var communityThreshold = await getNegativeThresholdForCommunity(communityId);
+
+          if (associatedBalanceWithinThisCommunity > communityThreshold) {
+            return (currentGlobalBalance > 0
+                        ? currentGlobalBalance -
+                            associatedBalanceWithinThisCommunity
+                        : 0) +
+                    (communityThreshold.abs() +
+                        associatedBalanceWithinThisCommunity) >=
+                credits;
+          
+          } else {
+        
+            return false;
+        
+          }
     }
   }
 

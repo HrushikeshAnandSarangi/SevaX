@@ -26,6 +26,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -55,6 +56,8 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -1719,6 +1722,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
+            await sendInsufficentNotificationToAdmin();
             return;
           }
           break;
@@ -2071,6 +2075,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           );
         });
+  }
+
+
+  void sendInsufficentNotificationToAdmin({
+    String communityId,
+  }) async {
+    UserExitModel userExitModel = UserExitModel(
+        userPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+        timebank: timebankModel.name,
+        reason: globals.userExitReason ?? "",   //check this in DB
+        userName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: timebankModel.id,
+        data: userExitModel.toMap(),
+        isRead: false,
+        type: NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
+        communityId: timebankModel.communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: timebankModel.creatorId);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(timebankModel.id)
+        .collection("notifications")
+        .document(notification.id)
+        .setData((notification..isTimebankNotification = true).toMap());
+        
+    log('writtent to DB');
   }
 }
 

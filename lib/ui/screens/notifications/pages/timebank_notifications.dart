@@ -74,8 +74,26 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           shrinkWrap: true,
           itemCount: notifications.length,
           itemBuilder: (context, index) {
+            double creditsNeeded = 10;
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
+              case NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS:
+                UserExitModel userExitModel =
+                    UserExitModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  title: "${userExitModel.userName}" " Has Insufficient Credits To Create Requests",
+                  subTitle: "Credits Needed: " "${creditsNeeded}",
+                  photoUrl: userExitModel.userPhotoUrl,
+                  entityName: userExitModel.userName,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+                break;
               case NotificationType.TypeMemberJoinViaCode:
                 UserAddedModel userAddedModel =
                     UserAddedModel.fromMap(notification.data);
