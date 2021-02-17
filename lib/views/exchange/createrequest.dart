@@ -27,6 +27,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -2077,20 +2078,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
         });
   }
 
-
   void sendInsufficentNotificationToAdmin({
     String communityId,
   }) async {
-    UserExitModel userExitModel = UserExitModel(
-        userPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-        timebank: timebankModel.name,
-        reason: globals.userExitReason ?? "",   //check this in DB
-        userName: SevaCore.of(context).loggedInUser.fullname);
+
+    UserInsufficentCreditsModel userInsufficientModel = UserInsufficentCreditsModel(
+      senderName: SevaCore.of(context).loggedInUser.fullname,
+      senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+      senderPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+      timebankId: timebankModel.id,
+      timebankName: timebankModel.name,
+    );
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
         timebankId: timebankModel.id,
-        data: userExitModel.toMap(),
+        data: userInsufficientModel.toMap(),
         isRead: false,
         type: NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
         communityId: timebankModel.communityId,
@@ -2103,7 +2106,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         .collection("notifications")
         .document(notification.id)
         .setData((notification..isTimebankNotification = true).toMap());
-        
+
     log('writtent to DB');
   }
 }

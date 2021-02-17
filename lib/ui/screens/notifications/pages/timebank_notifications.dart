@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -13,6 +14,7 @@ import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -23,6 +25,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_requ
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -79,23 +82,61 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
               case NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS:
-                UserExitModel userExitModel =
-                    UserExitModel.fromMap(notification.data);
+                UserInsufficentCreditsModel userInsufficientModel =
+                    UserInsufficentCreditsModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
-                  title: "${userExitModel.userName}" " Has Insufficient Credits To Create Requests",
-                  subTitle: "Credits Needed: " "${creditsNeeded} \n${S.of(context).tap_to_view_details}",
-                  photoUrl: userExitModel.userPhotoUrl,
-                  entityName: userExitModel.userName,
-                  onPressed: (){
-                      showDialog(
+                  title: "${userInsufficientModel.senderName}"
+                      " Has Insufficient Credits To Create Requests",
+                  subTitle: "Credits Needed: "
+                      "${creditsNeeded} \n${S.of(context).tap_to_view_details}",
+                  photoUrl: userInsufficientModel.senderPhotoUrl,
+                  entityName: userInsufficientModel.senderName,
+                  onPressed: () {
+                    showDialog(
                       context: context,
                       builder: (_context) {
+
                         return TimebankUserInsufficientCreditsDialog(
-                          userExitModel: userExitModel,
-                          timeBankId: notification.timebankId,
+                          userInsufficientModel: userInsufficientModel,
+                          timeBankId: userInsufficientModel.timebankId,
                           notificationId: notification.id,
                           userModel: SevaCore.of(context).loggedInUser,
+                          timebankModel: widget.timebankModel,
+                          onMessageClick: () {
+                            
+                            ParticipantInfo sender = ParticipantInfo(
+                              id: SevaCore.of(context).loggedInUser.sevaUserID,
+                              name: SevaCore.of(context).loggedInUser.fullname,
+                              photoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                              type: ChatType.TYPE_TIMEBANK,
+                            );
+
+                            ParticipantInfo reciever = ParticipantInfo(
+                              id: notification.senderUserId,
+                              name: userInsufficientModel.senderName,
+                              photoUrl: userInsufficientModel.senderPhotoUrl,
+                              type: ChatType.TYPE_PERSONAL,
+                            );
+
+                            createAndOpenChat(
+                              isTimebankMessage: true,
+                              context: context,
+                              timebankId: userInsufficientModel.timebankId,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              sender: sender,
+                              reciever: reciever,
+                              isFromRejectCompletion: false,
+                              // onChatCreate: () {
+                              //   Navigator.of(context).pop();
+                              // },
+                            );
+
+                            Navigator.pop(_context);
+
+                          },
                         );
                       },
                     );

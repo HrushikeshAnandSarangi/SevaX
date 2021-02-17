@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
+import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
-  final UserExitModel userExitModel;
+  final UserInsufficentCreditsModel userInsufficientModel;
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
+  final String memberId;
+  final TimebankModel timebankModel;
+  final VoidCallback onMessageClick;
 
   TimebankUserInsufficientCreditsDialog(
-      {this.userExitModel,
+      {this.userInsufficientModel,
       this.timeBankId,
       this.notificationId,
-      this.userModel});
+      this.userModel,
+      this.memberId,
+      this.timebankModel,
+      this.onMessageClick});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +41,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
+                backgroundImage: NetworkImage(userInsufficientModel.senderPhotoUrl),
               ),
             ),
             Padding(
@@ -39,7 +50,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                userExitModel.userName,
+                userInsufficientModel.senderName,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -49,7 +60,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userExitModel.timebank ?? "Seva Community name not updated",
+                userInsufficientModel.timebankName ?? "Seva Community name not updated",
               ),
             ),
             // Padding(
@@ -73,9 +84,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: onMessageClick,
                   ),
                 ),
                 Container(
@@ -88,7 +97,8 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+
+                      
                     },
                   ),
                 ),
