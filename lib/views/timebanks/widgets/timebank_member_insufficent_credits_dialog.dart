@@ -8,6 +8,8 @@ import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../timbank_admin_request_list.dart';
+
 class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
   final UserInsufficentCreditsModel userInsufficientModel;
   final String timeBankId;
@@ -16,6 +18,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
   final String memberId;
   final TimebankModel timebankModel;
   final VoidCallback onMessageClick;
+  final VoidCallback onDonateClick;
 
   TimebankUserInsufficientCreditsDialog(
       {this.userInsufficientModel,
@@ -24,7 +27,8 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
       this.userModel,
       this.memberId,
       this.timebankModel,
-      this.onMessageClick});
+      this.onMessageClick,
+      this.onDonateClick});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,8 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userInsufficientModel.senderPhotoUrl),
+                backgroundImage:
+                    NetworkImage(userInsufficientModel.senderPhotoUrl),
               ),
             ),
             Padding(
@@ -60,7 +65,8 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userInsufficientModel.timebankName ?? "Seva Community name not updated",
+                userInsufficientModel.timebankName ??
+                    "Seva Community name not updated",
               ),
             ),
             // Padding(
@@ -96,10 +102,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
-                    onPressed: () {
-
-                      
-                    },
+                    onPressed: onDonateClick,
                   ),
                 ),
               ],

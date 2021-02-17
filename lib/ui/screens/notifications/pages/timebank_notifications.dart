@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -32,6 +33,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
+import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent_credits_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
@@ -96,7 +98,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     showDialog(
                       context: context,
                       builder: (_context) {
-
                         return TimebankUserInsufficientCreditsDialog(
                           userInsufficientModel: userInsufficientModel,
                           timeBankId: userInsufficientModel.timebankId,
@@ -104,11 +105,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           userModel: SevaCore.of(context).loggedInUser,
                           timebankModel: widget.timebankModel,
                           onMessageClick: () {
-                            
                             ParticipantInfo sender = ParticipantInfo(
                               id: SevaCore.of(context).loggedInUser.sevaUserID,
                               name: SevaCore.of(context).loggedInUser.fullname,
-                              photoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                              photoUrl:
+                                  SevaCore.of(context).loggedInUser.photoURL,
                               type: ChatType.TYPE_TIMEBANK,
                             );
 
@@ -135,7 +136,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             );
 
                             Navigator.pop(_context);
-
+                          },
+                          onDonateClick: () async {
+                            UserModel user = SevaCore.of(context).loggedInUser;
+                            _showFontSizePickerDialog(context, user, widget.timebankModel);
+                            Navigator.pop(_context);
                           },
                         );
                       },
@@ -486,5 +491,24 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         );
       },
     );
+    
   }
+
+   void _showFontSizePickerDialog(
+      BuildContext context, UserModel user, TimebankModel model) async {
+    var connResult = await Connectivity().checkConnectivity();
+    if (connResult == ConnectivityResult.none) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).check_internet),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+  }
+
 }
