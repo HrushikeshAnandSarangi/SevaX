@@ -381,9 +381,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 widget.onSkipped();
               },
               child: Text(
-                AppConfig.prefs.getBool(AppConfig.skip_skill) == null
-                    ? S.of(context).skip
-                    : S.of(context).cancel,
+                widget.isFromRequests
+                    ? S.of(context).cancel
+                    : AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+                        ? S.of(context).skip
+                        : S.of(context).cancel,
                 style: TextStyle(
                   color: Theme.of(context).accentColor,
                 ),
