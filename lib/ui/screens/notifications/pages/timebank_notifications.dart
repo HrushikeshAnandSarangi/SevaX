@@ -29,6 +29,7 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -41,8 +42,9 @@ import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.d
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
   final ScrollPhysics physics;
+  final UserModel userModel;
 
-  const TimebankNotifications({Key key, this.timebankModel, this.physics})
+  const TimebankNotifications({Key key, this.timebankModel, this.physics, this.userModel})
       : super(key: key);
   @override
   _TimebankNotificationsState createState() => _TimebankNotificationsState();
@@ -138,9 +140,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             Navigator.pop(_context);
                           },
                           onDonateClick: () async {
-                            UserModel user = SevaCore.of(context).loggedInUser;
-                            _showFontSizePickerDialog(context, user, widget.timebankModel);
                             Navigator.pop(_context);
+                            await _showFontSizePickerDialog(context, notification.senderUserId, widget.timebankModel);
                           },
                         );
                       },
@@ -495,7 +496,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
    void _showFontSizePickerDialog(
-      BuildContext context, UserModel user, TimebankModel model) async {
+      BuildContext context, String userId, TimebankModel model) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -509,6 +510,56 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       );
       return;
     }
+
+    if (widget.timebankModel.balance <= 0) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).insufficient_credits_to_donate),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // <-- note the async keyword here
+    double donateAmount = 0;
+//     this will contain the result from Navigator.pop(context, result)
+    final donateAmount_Received = await showDialog<double>(
+      context: context,
+      builder: (context) => InputDonateDialog(
+          donateAmount: donateAmount, maxAmount: widget.timebankModel.balance.toDouble()),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (donateAmount_Received != null) {
+      donateAmount = donateAmount_Received;
+      widget.timebankModel.balance = widget.timebankModel.balance - donateAmount_Received;
+
+      //from, to, timestamp, credits, isApproved, type, typeid, timebankid
+      await TransactionBloc().createNewTransaction(
+        model.id,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        communityId: model.communityId,
+      );
+      await showDialog<double>(
+        context: context,
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
+      );
+    }
   }
+
 
 }
