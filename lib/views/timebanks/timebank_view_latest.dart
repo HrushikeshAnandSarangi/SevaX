@@ -434,7 +434,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ],
               ),
             ),
-            SponsorsWidget(),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: SponsorsWidget(
+                sponsorsMode: SponsorsMode.ABOUT,
+                timebankModel: widget.timebankModel,
+              ),
+            ),
           ],
         ),
       ),

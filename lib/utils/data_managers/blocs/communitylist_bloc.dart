@@ -123,7 +123,7 @@ class CommunityCreateEditController {
     this.community.isCreatedFromWeb = false;
   }
 
-  UpdateTimebankDetails(user, timebankimageurl, widget) {
+  UpdateTimebankDetails(user, timebankimageurl) {
     this.timebank.updateValueByKey('id', Utils.getUuid());
     this.timebank.updateValueByKey('name', this.community.name);
     this.timebank.updateValueByKey('creatorId', user.sevaUserID);
@@ -143,6 +143,7 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('balance', 0.0);
     this.timebank.updateValueByKey('protected', this.timebank.protected);
     this.timebank.updateValueByKey('private', this.timebank.private);
+    this.timebank.updateValueByKey('sponsors', this.timebank.sponsors);
     this.timebank.updateValueByKey('emailId', user.email);
     this
         .timebank

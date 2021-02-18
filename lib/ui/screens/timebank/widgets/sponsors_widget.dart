@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -61,141 +60,117 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget editWidget() {
-    return StreamBuilder<TimebankModel>(
-        initialData: widget.timebankModel,
-        stream: FirestoreManager.getTimebankModelStream(
-            timebankId: widget.timebankModel.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          }
-          if (snapshot.hasError) {
-            return Text(S.of(context).general_stream_error);
-          }
-          if (snapshot.data == null) {
-            return Text(S.of(context).no_data);
-          }
-          TimebankModel timebankModel = snapshot.data;
+    return Column(
+      children: [
+        Row(
+          children: [
+            titleWidget(),
+            SizedBox(
+              width: 30,
+            ),
+            Offstage(
+              offstage: widget.timebankModel.sponsors.length >= 5 ||
+                  !isOwnerCreator(widget.timebankModel,
+                      SevaCore.of(context).loggedInUser.sevaUserID),
+              child: addIconWidget(widget.timebankModel),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Offstage(
+          offstage: widget.timebankModel.sponsors == null ||
+              widget.timebankModel.sponsors.length < 1,
+          child: Row(
+            children: List.generate(
+              widget.timebankModel.sponsors.length > 5
+                  ? 5
+                  : widget.timebankModel.sponsors.length,
+              (index) => Container(
+                margin: EdgeInsets.only(right: 10),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: isOwnerCreator(widget.timebankModel,
+                              SevaCore.of(context).loggedInUser.sevaUserID)
+                          ? () {
+                              return showDialog(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  content: Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.12,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          onTap: () async {
+                                            PickedFile image =
+                                                await ImagePicker().getImage(
+                                                    source:
+                                                        ImageSource.gallery);
+                                            indexPosition = index;
 
-          return Column(
-            children: [
-              Row(
-                children: [
-                  titleWidget(),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  Offstage(
-                    offstage: timebankModel.sponsors.length >= 5 ||
-                        !isOwnerCreator(timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID),
-                    child: addIconWidget(timebankModel),
-                  ),
-                ],
-              ),
-              Offstage(
-                offstage: timebankModel.sponsors == null ||
-                    timebankModel.sponsors.length < 1,
-                child: Row(
-                  children: List.generate(
-                    timebankModel.sponsors.length > 5
-                        ? 5
-                        : timebankModel.sponsors.length,
-                    (index) => Container(
-                      margin: EdgeInsets.only(right: 10),
-                      child: Column(
-                        children: [
-                          InkWell(
-                            onTap: isOwnerCreator(
-                                    widget.timebankModel,
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID)
-                                ? () {
-                                    return showDialog(
-                                      context: context,
-                                      builder: (dialogContext) => AlertDialog(
-                                        content: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.12,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              ListTile(
-                                                onTap: () async {
-                                                  PickedFile image =
-                                                      await ImagePicker()
-                                                          .getImage(
-                                                              source:
-                                                                  ImageSource
-                                                                      .gallery);
-                                                  indexPosition = index;
-
-                                                  cropImage(image.path,
-                                                      timebankModel);
-                                                  Navigator.of(dialogContext)
-                                                      .pop();
-                                                },
-                                                title: Text(S.of(context).edit),
-                                                trailing: Icon(Icons.edit),
-                                              ),
-                                              ListTile(
-                                                onTap: () async {
-                                                  timebankModel.sponsors
-                                                      .removeAt(index);
-                                                  widget
-                                                      .onRemoved(timebankModel);
-                                                  Navigator.of(dialogContext)
-                                                      .pop();
-                                                },
-                                                title:
-                                                    Text(S.of(context).delete),
-                                                trailing: Icon(Icons.delete),
-                                              ),
-                                            ],
-                                          ),
+                                            cropImage(image.path,
+                                                widget.timebankModel);
+                                            Navigator.of(dialogContext).pop();
+                                          },
+                                          title: Text(S.of(context).edit),
+                                          trailing: Icon(Icons.edit),
                                         ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            onPressed: () {
-                                              Navigator.of(dialogContext).pop();
-                                            },
-                                            child: Text(S.of(context).cancel),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                : null,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              padding: const EdgeInsets.all(2),
-                              child: Container(
-                                child: CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: NetworkImage(
-                                    timebankModel.sponsors[index].logo ??
-                                        defaultUserImageURL,
+                                        ListTile(
+                                          onTap: () async {
+                                            widget.timebankModel.sponsors
+                                                .removeAt(index);
+                                            widget.onRemoved(
+                                                widget.timebankModel);
+                                            Navigator.of(dialogContext).pop();
+                                          },
+                                          title: Text(S.of(context).delete),
+                                          trailing: Icon(Icons.delete),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(dialogContext).pop();
+                                      },
+                                      child: Text(S.of(context).cancel),
+                                    ),
+                                  ],
                                 ),
-                              ),
+                              );
+                            }
+                          : null,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(2),
+                        child: Container(
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(
+                              widget.timebankModel.sponsors[index].logo ??
+                                  defaultUserImageURL,
                             ),
                           ),
-                          Text(timebankModel.sponsors[index].name)
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                    Text(widget.timebankModel.sponsors[index].name)
+                  ],
                 ),
               ),
-            ],
-          );
-        });
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget defaultWidget() {
@@ -206,6 +181,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleWidget(),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             children: List.generate(
               widget.timebankModel.sponsors.length > 5
@@ -255,6 +233,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                 offstage: widget.timebankModel.sponsors.length >= 5,
                 child: addIconWidget(widget.timebankModel)),
           ],
+        ),
+        SizedBox(
+          height: 10,
         ),
         Offstage(
           offstage: widget.timebankModel.sponsors == null ||
@@ -473,6 +454,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     String name;
     return showDialog<String>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext viewContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(

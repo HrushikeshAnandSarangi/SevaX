@@ -21,13 +21,12 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -232,7 +231,6 @@ class CreateEditCommunityViewFormState
       selectedTimebank = parentTimebank.name;
     }
 
-    logger.i('location', selectedAddress + location.toString());
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
     setState(() {});
@@ -582,6 +580,24 @@ class CreateEditCommunityViewFormState
                             ),
                           ],
                         ),
+                        SponsorsWidget(
+                          sponsorsMode: widget.isCreateTimebank
+                              ? SponsorsMode.CREATE
+                              : SponsorsMode.EDIT,
+                          timebankModel: timebankModel,
+                          onCreated: (TimebankModel timebank) {
+                            snapshot.data.timebank.updateValueByKey(
+                              'sponsors',
+                              timebank.sponsors,
+                            );
+                            timebankModel = timebank;
+                            setState(() {});
+                          },
+                          onRemoved: (TimebankModel timebank) {
+                            timebankModel = timebank;
+                            setState(() {});
+                          },
+                        ),
                         widget.isCreateTimebank
                             ? Container()
                             : SizedBox(height: 10),
@@ -829,10 +845,12 @@ class CreateEditCommunityViewFormState
                                   );
                                   return;
                                 }
-                                if (disableCreateButton || duplicateGroupCheck == 'not_done') {
+                                if (disableCreateButton ||
+                                    duplicateGroupCheck == 'not_done') {
                                   return;
                                 }
-                                if (errTxt != null || duplicateGroupCheck == 'not_done') {
+                                if (errTxt != null ||
+                                    duplicateGroupCheck == 'not_done') {
                                   showDialogForSuccess(
                                     dialogTitle:
                                         S.of(context).timebank_name_exists,
@@ -842,7 +860,8 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (_formKey.currentState.validate() && duplicateGroupCheck == 'done') {
+                                  if (_formKey.currentState.validate() &&
+                                      duplicateGroupCheck == 'done') {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
@@ -872,7 +891,6 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.UpdateTimebankDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
-                                          widget,
                                         );
                                         // updating the community with default timebank id
                                         snapshot.data.community.timebanks = [

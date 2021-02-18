@@ -471,7 +471,7 @@ Future<ProfanityImageModel> checkProfanityForImage(
     {String imageUrl, String storagePath}) async {
   var result = await http.post(
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
-    headers: {"Content-Type": "application/json"},
+    //headers: {"Content-Type": "application/json"},
     body: {
       "imageURL": imageUrl,
       "firebaseURL": storagePath,

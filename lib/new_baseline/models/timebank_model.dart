@@ -215,10 +215,8 @@ class TimebankModel extends DataModel {
     if (key == 'preventAccedentalDelete') {
       this.preventAccedentalDelete = value;
     }
-    if (key == 'sponsors' &&
-        this.sponsors != null &&
-        this.sponsors.isNotEmpty) {
-      this.sponsors = List<dynamic>.from(sponsors.map((x) => x.toMap()));
+    if (key == 'sponsors') {
+      this.sponsors = value;
     }
   }
 
@@ -323,8 +321,10 @@ class TimebankModel extends DataModel {
       map['managedCreatorIds'] = managedCreatorIds;
     }
 
-    if (sponsors != null && sponsors.isNotEmpty) {
+    if (this.sponsors != null && this.sponsors.isNotEmpty) {
       map['sponsors'] = List<dynamic>.from(sponsors.map((x) => x.toMap()));
+    } else {
+      map['sponsors'] = [];
     }
 
     return map;
@@ -400,7 +400,7 @@ class SponsorDataModel {
         createdBy: createdBy ?? this.createdBy,
       );
 
-  factory SponsorDataModel.fromMap(Map<String, dynamic> json) =>
+  factory SponsorDataModel.fromMap(Map<dynamic, dynamic> json) =>
       SponsorDataModel(
         logo: json["logo"],
         name: json["name"],
