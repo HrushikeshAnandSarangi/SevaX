@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -138,9 +137,6 @@ class CreateEditCommunityViewFormState
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
 
-  bool disableCreateButton = false;
-  String duplicateGroupCheck = 'not_done';
-
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
@@ -172,30 +168,21 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
-        duplicateGroupCheck = 'not_done';
         if (communitynName != s) {
-          setState(() {
-            disableCreateButton = true;
-          });
+          setState(() {});
           SearchManager.searchCommunityForDuplicate(queryString: s.trim())
               .then((commFound) {
             if (commFound) {
               setState(() {
-                disableCreateButton = false;
                 communityFound = true;
                 errTxt = 'Seva Community name already exists';
               });
             } else {
               setState(() {
-                disableCreateButton = false;
                 communityFound = false;
                 errTxt = null;
               });
             }
-          }).whenComplete(() {
-            setState(() {
-              duplicateGroupCheck = 'done';
-            });
           });
         }
       }
@@ -845,12 +832,8 @@ class CreateEditCommunityViewFormState
                                   );
                                   return;
                                 }
-                                if (disableCreateButton ||
-                                    duplicateGroupCheck == 'not_done') {
-                                  return;
-                                }
-                                if (errTxt != null ||
-                                    duplicateGroupCheck == 'not_done') {
+
+                                if (errTxt != null) {
                                   showDialogForSuccess(
                                     dialogTitle:
                                         S.of(context).timebank_name_exists,
@@ -860,8 +843,7 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (_formKey.currentState.validate() &&
-                                      duplicateGroupCheck == 'done') {
+                                  if (_formKey.currentState.validate()) {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
@@ -1032,20 +1014,6 @@ class CreateEditCommunityViewFormState
                                     timebankModel.location = location;
 
                                     timebankModel.address = selectedAddress;
-
-                                    if (widget.isCreateTimebank) {
-                                      var taxDefaultVal = (json.decode(
-                                              AppConfig.remoteConfig.getString(
-                                                  'defaultTaxPercentValue')))
-                                          .toDouble();
-                                      snapshot.data.community.updateValueByKey(
-                                          'taxPercentage', taxDefaultVal / 100);
-                                      communityModel.taxPercentage =
-                                          taxDefaultVal / 100;
-                                    }
-
-                                    // creation of community;
-
                                     // updating timebank with latest values
                                     await FirestoreManager.updateTimebank(
                                       timebankModel: timebankModel,
