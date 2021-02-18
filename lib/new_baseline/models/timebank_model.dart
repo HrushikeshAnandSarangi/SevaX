@@ -34,6 +34,7 @@ class TimebankModel extends DataModel {
   bool preventAccedentalDelete;
   bool requestedSoftDelete;
   List<String> managedCreatorIds;
+  List<SponsorDataModel> sponsors;
 
   int unreadMessageCount;
   DateTime lastMessageTimestamp;
@@ -109,6 +110,11 @@ class TimebankModel extends DataModel {
 
     this.managedCreatorIds = map.containsKey('managedCreatorIds')
         ? List<String>.from(map['managedCreatorIds'])
+        : [];
+
+    this.sponsors = map.containsKey("sponsors")
+        ? List<SponsorDataModel>.from(
+            map["sponsors"].map((x) => SponsorDataModel.fromMap(x)))
         : [];
   }
 
@@ -208,6 +214,11 @@ class TimebankModel extends DataModel {
     }
     if (key == 'preventAccedentalDelete') {
       this.preventAccedentalDelete = value;
+    }
+    if (key == 'sponsors' &&
+        this.sponsors != null &&
+        this.sponsors.isNotEmpty) {
+      this.sponsors = List<dynamic>.from(sponsors.map((x) => x.toMap()));
     }
   }
 
@@ -312,6 +323,10 @@ class TimebankModel extends DataModel {
       map['managedCreatorIds'] = managedCreatorIds;
     }
 
+    if (sponsors != null && sponsors.isNotEmpty) {
+      map['sponsors'] = List<dynamic>.from(sponsors.map((x) => x.toMap()));
+    }
+
     return map;
   }
 
@@ -357,4 +372,46 @@ class Member extends DataModel {
 
     return object;
   }
+}
+
+class SponsorDataModel {
+  SponsorDataModel({
+    this.logo,
+    this.name,
+    this.createdAt,
+    this.createdBy,
+  });
+
+  final String logo;
+  final String name;
+  final int createdAt;
+  final String createdBy;
+
+  SponsorDataModel copyWith({
+    String logo,
+    String name,
+    int createdAt,
+    String createdBy,
+  }) =>
+      SponsorDataModel(
+        logo: logo ?? this.logo,
+        name: name ?? this.name,
+        createdAt: createdAt ?? this.createdAt,
+        createdBy: createdBy ?? this.createdBy,
+      );
+
+  factory SponsorDataModel.fromMap(Map<String, dynamic> json) =>
+      SponsorDataModel(
+        logo: json["logo"],
+        name: json["name"],
+        createdAt: json["created_at"],
+        createdBy: json["created_by"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "logo": logo,
+        "name": name,
+        "created_at": createdAt,
+        "created_by": createdBy,
+      };
 }

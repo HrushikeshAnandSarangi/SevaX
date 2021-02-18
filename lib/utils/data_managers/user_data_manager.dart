@@ -467,10 +467,15 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
   return data;
 }
 
-Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
+Future<ProfanityImageModel> checkProfanityForImage(
+    {String imageUrl, String storagePath}) async {
   var result = await http.post(
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
-    body: {"imageURL": imageUrl},
+    headers: {"Content-Type": "application/json"},
+    body: {
+      "imageURL": imageUrl,
+      "firebaseURL": storagePath,
+    },
   );
 
   ProfanityImageModel profanityImageModel;

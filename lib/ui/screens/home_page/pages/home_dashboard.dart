@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -194,6 +195,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                   if (data.id ==
                       snapshot.data.currentCommunity.primary_timebank) {
                     primaryTimebank = data;
+
                     timeBankModelSingleton.model = primaryTimebank;
                   }
                 },
@@ -219,24 +221,24 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                     onTap: (int index) {
                       switch (index) {
                         case 2:
-                          AppConfig.helpIconContext =
-                              HelpIconContextClass.EVENTS;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.events;
                           break;
                         case 3:
-                          AppConfig.helpIconContext =
-                              HelpIconContextClass.REQUESTS;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.requests;
                           break;
                         case 4:
-                          AppConfig.helpIconContext =
-                              HelpIconContextClass.OFFERS;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.offers;
                           break;
                         default:
-                          AppConfig.helpIconContext =
-                              HelpIconContextClass.COMMUNITY_DEFAULT;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.seva_community;
                           break;
                       }
                       logger.i(
-                          "tabbar index tapped is $index with ${AppConfig.helpIconContext}");
+                          "tabbar index tapped is $index with ${AppConfig.helpIconContextMember}");
                     },
                     labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     // controller: _timebankController,

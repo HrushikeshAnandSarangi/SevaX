@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
@@ -59,6 +61,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       }
     });
     _homeDashBoardBloc = BlocProvider.of<HomeDashBoardBloc>(context);
+    Provider.of<HomePageBloc>(context, listen: false)
+        .changeTimebank(widget.primaryTimebankModel);
     super.initState();
   }
 
@@ -132,78 +136,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 background: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // covidcheck['show']
-                    //     ? Container(
-                    //         alignment: Alignment.center,
-                    //         height: 90.0,
-                    //         margin: const EdgeInsets.symmetric(
-                    //             horizontal: 0.0, vertical: 5),
-                    //         padding: const EdgeInsets.symmetric(
-                    //             horizontal: 20.0, vertical: 10.0),
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(0.0),
-                    //           gradient: LinearGradient(
-                    //             colors: [Colors.white12, Colors.white12],
-                    //           ),
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.grey[200],
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         child: InkWell(
-                    //             onTap: () {
-                    //               Navigator.of(context).push(MaterialPageRoute(
-                    //                   builder: (context) => MyThreeOptions()));
-                    //             },
-                    //             child: Column(
-                    //               children: <Widget>[
-                    //                 Row(
-                    //                   children: <Widget>[
-                    //                     Expanded(
-                    //                       child: Text(
-                    //                         AppLocalizations.of(context)
-                    //                             .translate('covid', 'title'),
-                    //                         maxLines: 2,
-                    //                         overflow: TextOverflow.clip,
-                    //                         style: Theme.of(context)
-                    //                             .textTheme
-                    //                             .title
-                    //                             .apply(
-                    //                                 fontWeightDelta: 2,
-                    //                                 color: Colors.black54),
-                    //                       ),
-                    //                     ),
-                    //                     SizedBox(width: 15.0),
-                    //                     GestureDetector(
-                    //                       child: Icon(
-                    //                         Icons.keyboard_arrow_right,
-                    //                         color: Colors.black54,
-                    //                       ),
-                    //                       onTap: () {},
-                    //                     )
-                    //                   ],
-                    //                 ),
-                    //                 SizedBox(height: 5.0),
-                    //                 Row(
-                    //                   children: <Widget>[
-                    //                     Expanded(
-                    //                       child: Text(
-                    //                         AppLocalizations.of(context)
-                    //                             .translate('covid', 'desc'),
-                    //                         textAlign: TextAlign.left,
-                    //                         maxLines: 2,
-                    //                         style: Theme.of(context)
-                    //                             .textTheme
-                    //                             .subtitle
-                    //                             .apply(color: Colors.black54),
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //               ],
-                    //             )))
-                    //     : Container(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -215,7 +147,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                             fit: StackFit.loose,
                             children: [
                               Container(
-                                padding: EdgeInsets.only(right:10,),
+                                padding: EdgeInsets.only(
+                                  right: 10,
+                                ),
                                 child: FlatButton(
                                   onPressed: () {},
                                   child: Text(
@@ -232,7 +166,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                 top: 0,
                                 right: -20,
                                 child: Container(
-                                  padding: EdgeInsets.only(left:4, right:4),
+                                  padding: EdgeInsets.only(left: 4, right: 4),
                                   child: infoButton(
                                     context: context,
                                     key: GlobalKey(),
@@ -265,18 +199,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           ),
                         ),
                         Spacer(),
-                        // Container(
-                        //   height: 40,
-                        //   width: 40,
-                        //   child: IconButton(
-                        //     icon: Image.asset(
-                        //       'lib/assets/images/help.png',
-                        //     ),
-                        //     color: FlavorConfig.values.theme.primaryColor,
-                        //     //iconSize: 16,
-                        //     onPressed: showGroupsWebPage,
-                        //   ),
-                        // ),
                       ],
                     ),
                     Container(

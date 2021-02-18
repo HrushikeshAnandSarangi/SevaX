@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -20,6 +22,8 @@ class TimeBankCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        Provider.of<HomePageBloc>(context, listen: false)
+            .changeTimebank(timebank);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -34,7 +38,10 @@ class TimeBankCard extends StatelessWidget {
               ),
             ),
           ),
-        );
+        ).then((value) {
+          Provider.of<HomePageBloc>(context, listen: false)
+              .switchToPreviousTimebank();
+        });
       },
       child: AspectRatio(
         aspectRatio: 3 / 4,
