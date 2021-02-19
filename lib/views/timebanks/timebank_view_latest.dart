@@ -361,6 +361,19 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
+              child: SponsorsWidget(
+                sponsorsMode: SponsorsMode.ABOUT,
+                timebankModel: widget.timebankModel,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Divider(
+                color: Colors.black12,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
               child: Text(
                 S.of(context).owner,
                 style: TextStyle(
@@ -432,13 +445,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         )
                       : CircleAvatar()
                 ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: SponsorsWidget(
-                sponsorsMode: SponsorsMode.ABOUT,
-                timebankModel: widget.timebankModel,
               ),
             ),
           ],

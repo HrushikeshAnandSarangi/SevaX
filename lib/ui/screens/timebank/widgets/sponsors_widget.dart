@@ -77,19 +77,19 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           ],
         ),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         Offstage(
           offstage: widget.timebankModel.sponsors == null ||
               widget.timebankModel.sponsors.length < 1,
-          child: Row(
+          child: Column(
             children: List.generate(
               widget.timebankModel.sponsors.length > 5
                   ? 5
                   : widget.timebankModel.sponsors.length,
               (index) => Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Column(
+                child: Row(
                   children: [
                     InkWell(
                       onTap: isOwnerCreator(widget.timebankModel,
@@ -162,6 +162,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(widget.timebankModel.sponsors[index].name)
                   ],
                 ),
@@ -182,16 +185,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         children: [
           titleWidget(),
           SizedBox(
-            height: 10,
+            height: 20,
           ),
-          Row(
+          Column(
             children: List.generate(
               widget.timebankModel.sponsors.length > 5
                   ? 5
                   : widget.timebankModel.sponsors.length,
               (index) => Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Column(
+                child: Row(
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -208,6 +211,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     Text(widget.timebankModel.sponsors[index].name)
                   ],
@@ -240,14 +246,14 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         Offstage(
           offstage: widget.timebankModel.sponsors == null ||
               widget.timebankModel.sponsors.length < 1,
-          child: Row(
+          child: Column(
             children: List.generate(
               widget.timebankModel.sponsors.length > 5
                   ? 5
                   : widget.timebankModel.sponsors.length,
               (index) => Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Column(
+                child: Row(
                   children: [
                     InkWell(
                       onTap: () {
@@ -312,6 +318,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     Text(widget.timebankModel.sponsors[index].name)
                   ],
