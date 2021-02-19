@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -15,6 +17,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -295,6 +298,21 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           ? results['comment']
           : S.of(context).no_comments)
     });
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+      log('inside credit');
+      await TransactionBloc().createNewTransaction(
+        requestModel.timebankId,
+        requestModel.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        requestModel.numberOfHours ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        requestModel.id,
+        requestModel.timebankId,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
+      log('success');
+    }
     await sendMessageToMember(
         context: context,
         loggedInUser: sevaCore.loggedInUser,
