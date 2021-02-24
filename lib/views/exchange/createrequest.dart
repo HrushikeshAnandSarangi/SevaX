@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -36,6 +38,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
@@ -43,8 +46,11 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
+import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
+import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -182,6 +188,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
   String _selectedTimebankId;
 
+  final TextEditingController searchTextController = TextEditingController();
+  final searchOnChange = BehaviorSubject<String>();
+  final _textUpdates = StreamController<String>();
+  var validItems = List<String>();
+  bool isAdmin = false;
+  List<UserModel> users = [];
+
   Future<TimebankModel> getTimebankAdminStatus;
   Future<List<ProjectModel>> getProjectsByFuture;
   TimebankModel timebankModel;
@@ -198,6 +211,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
   @override
   void initState() {
     super.initState();
+
+    String _searchText = "";
 
     AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
 
@@ -226,6 +241,39 @@ class RequestCreateFormState extends State<RequestCreateForm>
     fetchRemoteConfig();
     getProjectsByFuture =
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FirestoreManager.getAllTimebankIdStream(
+        timebankId: widget.timebankId,
+      ).then((onValue) {
+        setState(() {
+          validItems = onValue.listOfElement;
+          timebankModel = onValue.timebankModel;
+        });
+        if (isAccessAvailable(timebankModel, widget.loggedInUser.sevaUserID)) {
+          isAdmin = true;
+        }
+      });
+      // executes after build
+    });
+
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        volunteerUsersBloc.fetchUsers(s);
+        setState(() {
+          _searchText = s;
+        });
+      }
+    });
 
     // if ((FlavorConfig.appFlavor == Flavor.APP ||
     //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
@@ -328,6 +376,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     log("=========>>>>>>>  FROM CREATE STATE ${this.requestModel.communityId} ");
 
     log('REQUEST TYPE:  ' + requestModel.requestType.toString());
+    log('ID timebank ' + requestModel.timebankId.toString());
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -1134,225 +1183,383 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          RepeatWidget(),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      RepeatWidget(),
 
-          SizedBox(height: 20),
+      SizedBox(height: 20),
 
-          RequestDescriptionData(S.of(context).request_description_hint),
-          SizedBox(height: 20),
-          // Choose Category and Sub Category
-          InkWell(
-            child: Column(
+      RequestDescriptionData(S.of(context).request_description_hint),
+      SizedBox(height: 20),
+      // Choose Category and Sub Category
+      InkWell(
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
+                categories == null
+                    ? Text(
+                        S.of(context).choose_category,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
                       )
-                    : Container(),
+                    : Text(
+                        "${categories[0]}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  size: 16,
+                ),
+                // Container(
+                //   height: 25,
+                //   width: 25,
+                //   decoration: BoxDecoration(
+                //       color: Theme.of(context).primaryColor,
+                //       borderRadius: BorderRadius.circular(100)),
+                //   child: Icon(
+                //     Icons.arrow_drop_down_outlined,
+                //     color: Colors.white,
+                //   ),
+                // ),
               ],
             ),
-            onTap: () => moveToCategory(),
-          ),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  requestModel,
-                )
-              : Container(),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).max_credits,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  focusNode: focusNodes[1],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[2]);
-                  },
-                  onChanged: (v) {
-                    updateExitWithConfirmationValue(context, 10, v);
-                    if (v.isNotEmpty && int.parse(v) >= 0) {
-                      requestModel.maxCredits = int.parse(v);
-                      setState(() {});
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: S.of(context).max_credit_hint,
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) < 0) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) == 0) {
-                      return S.of(context).enter_max_credits;
-                    } else {
-                      requestModel.maxCredits = int.parse(value);
-                      setState(() {});
-                      return null;
-                    }
-                  },
-                ),
+            SizedBox(height: 20),
+            categories != null
+                ? Wrap(
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    children: _buildselectedSubCategories(categories),
+                  )
+                : Container(),
+          ],
+        ),
+        onTap: () => moveToCategory(),
+      ),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              requestModel,
+            )
+          : Container(),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).max_credits,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: TextFormField(
+              focusNode: focusNodes[1],
+              onFieldSubmitted: (v) {
+                FocusScope.of(context).requestFocus(focusNodes[2]);
+              },
+              onChanged: (v) {
+                updateExitWithConfirmationValue(context, 10, v);
+                if (v.isNotEmpty && int.parse(v) >= 0) {
+                  requestModel.maxCredits = int.parse(v);
+                  setState(() {});
+                }
+              },
+              decoration: InputDecoration(
+                hintText: S.of(context).max_credit_hint,
+                hintStyle: hintTextStyle,
+                // labelText: 'No. of volunteers',
               ),
-              infoButton(
-                context: context,
-                key: GlobalKey(),
-                type: InfoType.MAX_CREDITS,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[2],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 11, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                requestModel.numberOfApprovals = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: S.of(context).number_of_volunteers,
-              hintStyle: hintTextStyle,
-              // labelText: 'No. of volunteers',
-            ),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_volunteer_count;
-              } else if (int.parse(value) < 0) {
-                return S.of(context).validation_error_volunteer_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S.of(context).validation_error_volunteer_count_zero;
-              } else {
-                requestModel.numberOfApprovals = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
-          ),
-
-          //Instructor to be assigned to One to many requests widget Here
-          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    Text(
-                      "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-                    InstructorDynamicSelection(                 //CODE TO BE CHANGED TO SHOW MEMBERS TO BE ASSIGNED
-                      selectedGoods:                            // Using Elastic Search Mostly instead of this dynamic selection widget
-                          requestModel.goodsDonationDetails.requiredGoods,
-                      onSelectedGoods: (goods) => {
-                        requestModel.goodsDonationDetails.requiredGoods = goods
-                      },
-                    ),
-                  ],
-                )
-              : Container(),
-
-          CommonUtils.TotalCredits(
-            context: context,
-            requestModel: requestModel,
-            requestCreditsMode: TotalCreditseMode.CREATE_MODE,
-          ),
-          SizedBox(height: 10),
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return S.of(context).enter_max_credits;
+                } else if (int.parse(value) < 0) {
+                  return S.of(context).enter_max_credits;
+                } else if (int.parse(value) == 0) {
+                  return S.of(context).enter_max_credits;
+                } else {
+                  requestModel.maxCredits = int.parse(value);
+                  setState(() {});
+                  return null;
+                }
               },
             ),
-          )
-        ]);
+          ),
+          infoButton(
+            context: context,
+            key: GlobalKey(),
+            type: InfoType.MAX_CREDITS,
+          ),
+        ],
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).number_of_volunteers,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        focusNode: focusNodes[2],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).unfocus();
+        },
+        onChanged: (v) {
+          updateExitWithConfirmationValue(context, 11, v);
+          if (v.isNotEmpty && int.parse(v) >= 0) {
+            requestModel.numberOfApprovals = int.parse(v);
+            setState(() {});
+          }
+        },
+        decoration: InputDecoration(
+          hintText: S.of(context).number_of_volunteers,
+          hintStyle: hintTextStyle,
+          // labelText: 'No. of volunteers',
+        ),
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_volunteer_count;
+          } else if (int.parse(value) < 0) {
+            return S.of(context).validation_error_volunteer_count_negative;
+          } else if (int.parse(value) == 0) {
+            return S.of(context).validation_error_volunteer_count_zero;
+          } else {
+            requestModel.numberOfApprovals = int.parse(value);
+            setState(() {});
+            return null;
+          }
+        },
+      ),
+
+      //Instructor to be assigned to One to many requests widget Here
+      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(height: 20),
+              Text(
+                "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                style: TextStyle(color: Colors.black),
+                controller: searchTextController,
+                onChanged: _search,
+                autocorrect: true,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () {
+                        searchTextController.clear();
+                      }),
+                  hasFloatingPlaceholder: false,
+                  alignLabelWithHint: true,
+                  isDense: true,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(15.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(15.7)),
+                  hintText: S.of(context).type_team_member_name,
+                  hintStyle: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+               Container(
+                    child: Column(children: [
+                      StreamBuilder<List<UserModel>>(
+                        stream: SearchManager.searchForUserWithTimebankId(
+                          queryString: searchTextController.text,
+                          validItems: validItems,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Text(snapshot.error.toString());
+                          }
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: SizedBox(
+                                height: 48,
+                                width: 48,
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+
+                          List<UserModel> userList = snapshot.data;
+                          userList.removeWhere((user) =>
+                              user.sevaUserID ==
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID ||
+                              user.sevaUserID == requestModel.sevaUserId);
+
+                          if (userList.length == 0) {
+                            return Column(
+                              children: [
+                                SizedBox(height: 15),
+                                getEmptyWidget(
+                                    'Sample text', S.of(context).no_user_found),
+                              ],
+                            );
+                          }
+
+                          if (searchTextController.text.trim().length < 3) {
+                            return Column(
+                              children: [
+                                SizedBox(height: 15),
+                                getEmptyWidget(
+                                    'title',
+                                    S
+                                        .of(context)
+                                        .validation_error_search_min_characters),
+                              ],
+                            );
+                          } else {
+                            return Scrollbar(
+                              child: Center(
+                                child: LimitedBox(
+                                  maxHeight: 285,
+                                  maxWidth: 100,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      //physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.all(10),
+                                      itemCount: userList.length,
+                                      itemBuilder: (context, index) {
+                                        UserModel user = userList[index];
+
+                                        List<String> timeBankIds = snapshot
+                                                .data[index].favoriteByTimeBank ??
+                                            [];
+                                        List<String> memberId =
+                                            user.favoriteByMember ?? [];
+
+                                        return RequestCardWidget(
+                                          userModel: user,
+                                          requestModel: requestModel,
+                                          timebankModel: timebankModel,
+                                          isAdmin: isAdmin,
+                                          //refresh: refresh,
+                                          currentCommunity: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentCommunity,
+                                          loggedUserId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID,
+                                          isFavorite: isAdmin
+                                              ? timeBankIds
+                                                  .contains(requestModel.timebankId)
+                                              : memberId.contains(
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID), //member id?
+                                          reqStatus: S.of(context).invite,
+                                        );
+                                      }),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ])),
+              
+            ])
+          : Container(height: 0, width: 0),
+
+      SizedBox(height: 5),
+
+      CommonUtils.TotalCredits(
+        context: context,
+        requestModel: requestModel,
+        requestCreditsMode: TotalCreditseMode.CREATE_MODE,
+      ),
+      SizedBox(height: 10),
+      Center(
+        child: LocationPickerWidget(
+          selectedAddress: selectedAddress,
+          location: location,
+          onChanged: (LocationDataModel dataModel) {
+            log("received data model");
+            setState(() {
+              location = dataModel.geoPoint;
+              this.selectedAddress = dataModel.location;
+            });
+          },
+        ),
+      )
+    ]);
   }
+
+  void _search(String queryString) {
+    if (queryString.length == 3) {
+      setState(() {
+        searchOnChange.add(queryString);
+      });
+    } else {
+      searchOnChange.add(queryString);
+    }
+  }
+
+  //  void refresh() {
+  //   _firestore
+  //       .collection('requests')
+  //       .document(widget.requestModelId)
+  //       .snapshots()
+  //       .listen((reqModel) {
+  //     requestModel = RequestModel.fromMap(reqModel.data);
+  //     try {
+  //       setState(() {
+  //         buildWidget();
+  //       });
+  //     } on Exception catch (error) {
+  //       logger.e(error);
+  //     }
+  //   });
+  // }
 
   Widget CashRequest(snapshot, projectModelList) {
     return Column(
@@ -1768,7 +1975,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       if (requestModel.isRecurring &&
-          requestModel.requestType == RequestType.TIME) {
+          (requestModel.requestType == RequestType.TIME ||
+              requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
         if (requestModel.recurringDays.length == 0) {
           showDialogForTitle(
               dialogTitle: S.of(context).validation_error_empty_recurring_days);

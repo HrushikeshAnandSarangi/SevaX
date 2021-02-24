@@ -194,6 +194,7 @@ class RequestModel extends DataModel {
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
+  Map<String, String> selectedInstructor;
   RequestModel({
     this.id,
     this.title,
@@ -234,6 +235,7 @@ class RequestModel extends DataModel {
     this.allowedCalenderUsers,
     this.recommendedMemberIdsForRequest,
     this.categories,
+    this.selectedInstructor,
     @required this.communityId,
   }) {
     log("===========Constructir called $communityId =======");
@@ -408,6 +410,10 @@ class RequestModel extends DataModel {
     if (map.containsKey('recurringDays')) {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
+    }
+    if (map.containsKey('selectedInstructor')) {
+      Map<String, String> selectedInstructorMap = map['selectedInstructor'];
+      this.selectedInstructor = selectedInstructorMap;
     }
     if (map.containsKey('occurenceCount')) {
       this.occurenceCount = map['occurenceCount'];
@@ -590,6 +596,10 @@ class RequestModel extends DataModel {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
     }
+    if (map.containsKey('selectedInstructor')) {
+      Map<String, String> selectedInstructorMap = map['selectedInstructor'];
+      this.selectedInstructor = selectedInstructorMap;
+    }
 
     if (map.containsKey('occurenceCount')) {
       this.occurenceCount = map['occurenceCount'];
@@ -767,6 +777,9 @@ class RequestModel extends DataModel {
     }
     if (this.recurringDays != null) {
       object['recurringDays'] = this.recurringDays;
+    }
+    if (this.selectedInstructor != null) {
+      object['selectedInstructor'] = this.selectedInstructor;
     }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;
