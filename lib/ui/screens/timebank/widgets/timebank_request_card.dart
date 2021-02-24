@@ -61,7 +61,10 @@ class TimebankRequestCard extends StatelessWidget {
                           title,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: TextStyle(fontSize:16, fontWeight:FontWeight.w500, color:Colors.black87),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87),
                         ),
                         Visibility(
                           visible: isRecurring,
@@ -88,16 +91,24 @@ class TimebankRequestCard extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: <Widget>[
                           Text(
-                            getTimeFormattedString(startTime, S.of(context).localeName),
-                            style: TextStyle(fontSize:14, fontWeight:FontWeight.w500, color: Colors.black54)
-                          ),
+                              getTimeFormattedString(
+                                  startTime, S.of(context).localeName),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54)),
                           SizedBox(width: 2),
                           Icon(Icons.arrow_forward, size: 14),
                           SizedBox(width: 4),
                           Text(
-                            getTimeFormattedString(endTime, S.of(context).localeName,),
-                            style: TextStyle(fontSize:14, fontWeight:FontWeight.w500, color: Colors.black54)
-                          ),
+                              getTimeFormattedString(
+                                endTime,
+                                S.of(context).localeName,
+                              ),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black54)),
                         ],
                       ),
                     ),
@@ -163,6 +174,9 @@ class TimebankRequestCard extends StatelessWidget {
 
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request, context);
+
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return getTagMainFrame('One To Many Request', context);        // Label to be created
 
       default:
         return Container();

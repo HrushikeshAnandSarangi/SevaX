@@ -1287,7 +1287,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if (!isCompletedByUser && model.requestType == RequestType.TIME) {
+          if (!isCompletedByUser && (model.requestType == RequestType.TIME || model.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
             // model.timebankId/
             requestModelList.add(model);
           }

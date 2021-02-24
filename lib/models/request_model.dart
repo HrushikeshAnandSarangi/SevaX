@@ -302,6 +302,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.CASH;
       } else if (map['requestType'] == "GOODS") {
         this.requestType = RequestType.GOODS;
+      } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
+        this.requestType = RequestType.ONE_TO_MANY_REQUEST;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -481,6 +483,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.CASH;
       } else if (map['requestMode'] == "GOODS") {
         this.requestType = RequestType.GOODS;
+      } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
+        this.requestType = RequestType.ONE_TO_MANY_REQUEST;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -652,6 +656,10 @@ class RequestModel extends DataModel {
 
         case RequestType.GOODS:
           object['requestType'] = "GOODS";
+          break;
+
+        case RequestType.ONE_TO_MANY_REQUEST:
+          object['requestType'] = "ONE_TO_MANY_REQUEST";
           break;
 
         case RequestType.TIME:

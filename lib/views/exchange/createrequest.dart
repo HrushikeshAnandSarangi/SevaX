@@ -47,6 +47,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
+import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
@@ -58,6 +59,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -194,6 +196,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
   var validItems = List<String>();
   bool isAdmin = false;
   List<UserModel> users = [];
+
+  bool instructorAdded = false;
 
   Future<TimebankModel> getTimebankAdminStatus;
   Future<List<ProjectModel>> getProjectsByFuture;
@@ -1312,15 +1316,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ],
       ),
       SizedBox(height: 20),
-      Text(
-        S.of(context).number_of_volunteers,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
+      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          ? Text(
+              'Total No. of Participants*', //LABEL TO BE MADE
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            )
+          : Text(
+              S.of(context).number_of_volunteers,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
       TextFormField(
         focusNode: focusNodes[2],
         onFieldSubmitted: (v) {
@@ -1334,7 +1348,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
           }
         },
         decoration: InputDecoration(
-          hintText: S.of(context).number_of_volunteers,
+          hintText: requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? 'No. of Participants'
+              : S.of(context).number_of_volunteers,
           hintStyle: hintTextStyle,
           // labelText: 'No. of volunteers',
         ),
@@ -1354,114 +1370,242 @@ class RequestCreateFormState extends State<RequestCreateForm>
         },
       ),
 
+      SizedBox(height: 10),
+
+      CommonUtils.TotalCredits(
+        context: context,
+        requestModel: requestModel,
+        requestCreditsMode: TotalCreditseMode.CREATE_MODE,
+      ),
+
       //Instructor to be assigned to One to many requests widget Here
-      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 20),
-              Text(
-                "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.black,
+
+      instructorAdded
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                style: TextStyle(color: Colors.black),
-                controller: searchTextController,
-                onChanged: _search,
-                autocorrect: true,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black54,
+                SizedBox(height: 10),
+                Container(
+                  height: 80,
+                  width: 290,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10.0,
+                        offset: Offset(0.0, 10.0),
                       ),
-                      onPressed: () {
-                        searchTextController.clear();
-                      }),
-                  hasFloatingPlaceholder: false,
-                  alignLabelWithHint: true,
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
+                    ],
                   ),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(15.7)),
-                  hintText: S.of(context).type_team_member_name,
-                  hintStyle: TextStyle(
-                    color: Colors.black45,
-                    fontSize: 14,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // SizedBox(
+                        //   height: 15,
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            UserProfileImage(
+                              photoUrl:
+                                  requestModel.selectedInstructor['photoURL'],
+                              email: requestModel.selectedInstructor['email'],
+                              userId:
+                                  requestModel.selectedInstructor['sevaUserID'],
+                              height: 50,
+                              width: 50,
+                              timebankModel: timebankModel,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Expanded(
+                              child: Text(
+                                requestModel.selectedInstructor['fullname'] ??
+                                    S.of(context).name_not_available,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Container(
+                              height: 37,
+                              padding: EdgeInsets.only(bottom: 0),
+                              child: RaisedButton(
+                                shape: StadiumBorder(),
+                                disabledColor: Theme.of(context).primaryColor,
+                                elevation: 4,
+                                onPressed: null,
+                                child: Text(
+                                  'Added',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-               Container(
-                    child: Column(children: [
-                      StreamBuilder<List<UserModel>>(
-                        stream: SearchManager.searchForUserWithTimebankId(
-                          queryString: searchTextController.text,
-                          validItems: validItems,
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            Text(snapshot.error.toString());
-                          }
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: SizedBox(
-                                height: 48,
-                                width: 48,
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: 35,
+                  padding: EdgeInsets.only(bottom: 0),
+                  child: RaisedButton(
+                    shape: StadiumBorder(),
+                    color: Theme.of(context).accentColor,
+                    textColor: Colors.white,
+                    elevation: 5,
+                    onPressed: () {
+                      setState(() {
+                        instructorAdded = false;
+                        requestModel.selectedInstructor.clear();
+                      });
+                    },
+                    child: Text(
+                      'Remove',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? Column(
+                 crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SizedBox(height: 20),
+                  Text(
+                    "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Europa',
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    style: TextStyle(color: Colors.black),
+                    controller: searchTextController,
+                    onChanged: _search,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () {
+                            searchTextController.clear();
+                          }),
+                      hasFloatingPlaceholder: false,
+                      alignLabelWithHint: true,
+                      isDense: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
+                      contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15.7)),
+                      hintText: S.of(context).type_team_member_name,
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                      child: Column(children: [
+                    StreamBuilder<List<UserModel>>(
+                      stream: SearchManager.searchForUserWithTimebankId(
+                        queryString: searchTextController.text,
+                        validItems: validItems,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          Text(snapshot.error.toString());
+                        }
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              height: 48,
+                              width: 48,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
 
-                          List<UserModel> userList = snapshot.data;
-                          userList.removeWhere((user) =>
-                              user.sevaUserID ==
-                                  SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID ||
-                              user.sevaUserID == requestModel.sevaUserId);
+                        List<UserModel> userList = snapshot.data;
+                        userList.removeWhere((user) =>
+                            user.sevaUserID ==
+                                SevaCore.of(context).loggedInUser.sevaUserID ||
+                            user.sevaUserID == requestModel.sevaUserId);
 
-                          if (userList.length == 0) {
-                            return Column(
-                              children: [
-                                SizedBox(height: 15),
-                                getEmptyWidget(
-                                    'Sample text', S.of(context).no_user_found),
-                              ],
-                            );
-                          }
+                        if (userList.length == 0) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 15),
+                              getEmptyWidget(
+                                  'Sample text', S.of(context).no_user_found),
+                            ],
+                          );
+                        }
 
-                          if (searchTextController.text.trim().length < 3) {
-                            return Column(
-                              children: [
-                                SizedBox(height: 15),
-                                getEmptyWidget(
-                                    'title',
-                                    S
-                                        .of(context)
-                                        .validation_error_search_min_characters),
-                              ],
-                            );
-                          } else {
-                            return Scrollbar(
-                              child: Center(
+                        if (searchTextController.text.trim().length < 3) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 15),
+                              getEmptyWidget(
+                                  'title',
+                                  S
+                                      .of(context)
+                                      .validation_error_search_min_characters),
+                            ],
+                          );
+                        } else {
+                          return Scrollbar(
+                            child: Center(
+                              child: Card(
+                                elevation: 0.4,
                                 child: LimitedBox(
-                                  maxHeight: 285,
-                                  maxWidth: 100,
+                                  maxHeight: 270,
+                                  maxWidth: 90,
                                   child: ListView.builder(
                                       primary: false,
                                       //physics: NeverScrollableScrollPhysics(),
@@ -1472,14 +1616,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         UserModel user = userList[index];
 
                                         List<String> timeBankIds = snapshot
-                                                .data[index].favoriteByTimeBank ??
+                                                .data[index]
+                                                .favoriteByTimeBank ??
                                             [];
                                         List<String> memberId =
                                             user.favoriteByMember ?? [];
 
-                                        return RequestCardWidget(
+                                        return OneToManyInstructorCard(
                                           userModel: user,
-                                          requestModel: requestModel,
                                           timebankModel: timebankModel,
                                           isAdmin: isAdmin,
                                           //refresh: refresh,
@@ -1490,34 +1634,41 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               .loggedInUser
                                               .sevaUserID,
                                           isFavorite: isAdmin
-                                              ? timeBankIds
-                                                  .contains(requestModel.timebankId)
+                                              ? timeBankIds.contains(
+                                                  requestModel.timebankId)
                                               : memberId.contains(
                                                   SevaCore.of(context)
                                                       .loggedInUser
-                                                      .sevaUserID), //member id?
-                                          reqStatus: S.of(context).invite,
+                                                      .sevaUserID),
+                                          addStatus: S.of(context).add,
+                                          onAddClick: () {
+                                            setState(() {
+                                              instructorAdded = true;
+                                              requestModel.selectedInstructor =
+                                                  {
+                                                'fullname': user.fullname,
+                                                'email': user.email,
+                                                'sevaUserID': user.sevaUserID,
+                                                'photoURL': user.photoURL
+                                              };
+                                            });
+                                          },
                                         );
                                       }),
                                 ),
                               ),
-                            );
-                          }
-                        },
-                      ),
-                    ])),
-              
-            ])
-          : Container(height: 0, width: 0),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ])),
+                ])
+              : Container(height: 0, width: 0),
 
-      SizedBox(height: 5),
+      
+      SizedBox(height: 20),
 
-      CommonUtils.TotalCredits(
-        context: context,
-        requestModel: requestModel,
-        requestCreditsMode: TotalCreditseMode.CREATE_MODE,
-      ),
-      SizedBox(height: 10),
       Center(
         child: LocationPickerWidget(
           selectedAddress: selectedAddress,
@@ -1911,7 +2062,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
       return;
     }
-
+    
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
     requestModel.autoGenerated = false;
