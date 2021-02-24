@@ -17,6 +17,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_createRequest.dart';
+import 'package:sevaexchange/components/instructor_dynamic_selection_createOneToManyRequest.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -1306,13 +1307,37 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
 
           //Instructor to be assigned to One to many requests widget Here
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Text(
+                      "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+                    InstructorDynamicSelection(                 //CODE TO BE CHANGED TO SHOW MEMBERS TO BE ASSIGNED
+                      selectedGoods:                            // Using Elastic Search Mostly instead of this dynamic selection widget
+                          requestModel.goodsDonationDetails.requiredGoods,
+                      onSelectedGoods: (goods) => {
+                        requestModel.goodsDonationDetails.requiredGoods = goods
+                      },
+                    ),
+                  ],
+                )
+              : Container(),
 
           CommonUtils.TotalCredits(
             context: context,
             requestModel: requestModel,
             requestCreditsMode: TotalCreditseMode.CREATE_MODE,
           ),
-          SizedBox(height: 40),
+          SizedBox(height: 10),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
