@@ -831,6 +831,7 @@ enum RequestType {
   CASH,
   TIME,
   GOODS,
+  ONE_TO_MANY_REQUEST,
 }
 enum RequestPaymentType {
   ACH,
@@ -845,6 +846,7 @@ Map<String, RequestType> requestTypeMapper = {
   "CASH": RequestType.CASH,
   "TIME": RequestType.TIME,
   "GOODS": RequestType.GOODS,
+  "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "ACH": RequestPaymentType.ACH,

@@ -33,6 +33,7 @@ class UpgradePlanBannerModel {
     this.multiple_super_admins,
     this.sponsored_groups,
     this.add_manual_time,
+    this.one_to_many_request,
   });
   BannerDetails pin_feeds;
   BannerDetails multi_lang;
@@ -61,6 +62,7 @@ class UpgradePlanBannerModel {
   BannerDetails multiple_super_admins;
   BannerDetails sponsored_groups;
   BannerDetails add_manual_time;
+  BannerDetails one_to_many_request;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -146,6 +148,9 @@ class UpgradePlanBannerModel {
             : null,
         add_manual_time: json.containsKey("add_manual_time")
             ? BannerDetails.fromJson(json["add_manual_time"])
+            : null,
+        one_to_many_request: json.containsKey("one_to_many_request")
+            ? BannerDetails.fromJson(json["one_to_many_request"])
             : null,
       );
 }
