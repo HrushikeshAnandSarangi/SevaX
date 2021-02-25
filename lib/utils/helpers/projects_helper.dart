@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import 'projects_helper_util.dart';
 
@@ -135,6 +138,17 @@ class ProjectMessagingRoomHelper {
     ).commit().then((value) => true).catchError((onError) => false);
   }
 
+  static Future<bool> createProjectWithMessagingOneToManyRequest({
+    @required Map<dynamic, dynamic> projectModel,
+    @required Map<dynamic, dynamic> projectCreator,
+  }) async {
+    log('------THIS DATA 1-----' + projectModel['id'] + '*' + projectModel['timebankId'] + '----');
+    return await _createProjectWithMessagingRoomBatchOneToManyRequest(
+      projectCreator: projectCreator,
+      projectModel: projectModel,
+    ).commit().then((value) => true).catchError((onError) => false);
+  }
+
   ///==============================PRIVTAE FUNCTIONS===========================================
 
   static WriteBatch _createProjectWithMessagingRoomBatch({
@@ -187,6 +201,61 @@ class ProjectMessagingRoomHelper {
 
     return batch;
   }
+
+
+  static WriteBatch _createProjectWithMessagingRoomBatchOneToManyRequest({
+    Map<dynamic, dynamic> projectModel,
+    Map<dynamic, dynamic> projectCreator,
+  }) {
+    var batch = DBHelper.batch;
+
+    log('------THIS DATA 2-----' + projectModel['id'] + '*' + projectModel['timebankId'] + '----');
+
+    ChatModel chatModel = ChatModel();
+    chatModel
+      ..timestamp = DateTime.now().millisecondsSinceEpoch
+      ..communityId = projectModel['communityId']
+      ..groupDetails = MultiUserMessagingModel(
+        admins: [projectModel['creatorId']],
+        imageUrl: projectModel['photoUrl'],
+        name: projectModel['name'],
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      )
+      ..isTimebankMessage = projectModel['mode'] == ProjectMode.TIMEBANK_PROJECT
+      ..id = projectModel['id'] + '*' + projectModel['timebankId']
+      ..lastMessage = DBHelper.NO_MESSAGE
+      ..participantInfo = [
+        ParticipantInfo(
+          id: projectCreator['sevaUserID'],
+          name: projectCreator['fullname'],
+          photoUrl: projectCreator['photoURL'],
+          type: ChatType.TYPE_MULTI_USER_MESSAGING,
+        )
+      ]
+      ..isGroupMessage = true
+      ..timestamp = DateTime.now().millisecondsSinceEpoch
+      ..participants = [projectCreator['sevaUserID']]
+      ..unreadStatus = {
+        projectCreator['sevaUserID']: 0,
+      }
+      ..chatContext = ChatContext(
+        chatContext: 'Project',
+        contextId: projectModel['id'],
+      );
+    projectModel['associatedMessaginfRoomId'] = chatModel.id;
+
+    batch.setData(
+      DBHelper.projectsRef.document(projectModel['id']),
+      projectModel,
+    );
+    batch.setData(
+      DBHelper.chatsRef.document(chatModel.id),
+      chatModel.shareMessage(),
+    );
+
+    return batch;
+  }
+
 
   static WriteBatch _addMemberToAssociatedMessagingRoomBatch({
     String associatedMessagingRoomId,

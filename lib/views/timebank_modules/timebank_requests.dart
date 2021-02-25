@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +84,9 @@ class RequestsState extends State<RequestsModule> {
                       child: Stack(
                         children: [
                           Container(
-                            padding: EdgeInsets.only(right:10,),
+                            padding: EdgeInsets.only(
+                              right: 10,
+                            ),
                             child: FlatButton(
                               onPressed: () {},
                               child: Text(
@@ -99,7 +100,7 @@ class RequestsState extends State<RequestsModule> {
                             top: 0,
                             right: -20,
                             child: Container(
-                              padding: EdgeInsets.only(left:4, right:4),
+                              padding: EdgeInsets.only(left: 4, right: 4),
                               child: infoButton(
                                 context: context,
                                 key: GlobalKey(),
@@ -491,7 +492,7 @@ class RequestListItemsState extends State<RequestListItems> {
       case RequestType.GOODS:
         return getTagMainFrame(S.of(context).goods_request);
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request');     // Label to be created
+        return getTagMainFrame('One To Many Request'); // Label to be created
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 

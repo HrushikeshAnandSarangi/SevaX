@@ -39,6 +39,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
@@ -197,6 +198,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   bool isAdmin = false;
   List<UserModel> users = [];
 
+  bool createEvent = false;
   bool instructorAdded = false;
 
   Future<TimebankModel> getTimebankAdminStatus;
@@ -1017,7 +1019,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     onChanged: (value) {
                       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       instructorAdded = false;
-                        requestModel.selectedInstructor.clear();
+                      requestModel.selectedInstructor.clear();
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
@@ -1173,7 +1175,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
 
-    logger.i('poped selectedSubCategories => ${categories[1]} ');
+    //logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
@@ -1678,6 +1680,27 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       SizedBox(height: 20),
 
+      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          ? Row(
+              children: [
+                Checkbox(
+                  activeColor: Theme.of(context).primaryColor,
+                  checkColor: Colors.white,
+                  value: createEvent,
+                  onChanged: (val) {
+                    setState(() {
+                      createEvent = val;
+                    });
+                  },
+                ),
+                Text(
+                    'Tick to create an event for this request') // Label to be created
+              ],
+            )
+          : Container(height: 0, width: 0),
+
+      SizedBox(height: 15),
+
       Center(
         child: LocationPickerWidget(
           selectedAddress: selectedAddress,
@@ -2145,17 +2168,19 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-        requestModel.approvedUsers
-            .add(requestModel.selectedInstructor['email']);
+        List<String> approvedUsers = [];
+        approvedUsers.add(requestModel.selectedInstructor['email']);
+        requestModel.approvedUsers = approvedUsers;
       }
 
-      // if (requestModel.selectedInstructor.isEmpty ||
-      //     requestModel.selectedInstructor == null || instructorAdded == false){
-      //       print('IN HERE');
-      //    showDialogForTitle(
-      //         dialogTitle: S.of(context).validation_error_empty_recurring_days);
-      //     return;
-      // }
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+          (requestModel.selectedInstructor.isEmpty ||
+              requestModel.selectedInstructor == null ||
+              instructorAdded == false)) {
+        showDialogForTitle(
+            dialogTitle: 'Select an Instructor'); //Label to be created
+        return;
+      }
 
       //Form and date is valid
       switch (requestModel.requestMode) {
@@ -2223,8 +2248,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
           requestModel.allowedCalenderUsers = [];
         }
 
+        await createProjectOneToManyRequest();
+
         await continueCreateRequest(confirmationDialogContext: null);
+        
       } else {
+
+        await createProjectOneToManyRequest();
+
         linearProgressForCreatingRequest();
         eventsIdsArr = await _writeToDB();
         await _updateProjectModel();
@@ -2245,6 +2276,37 @@ class RequestCreateFormState extends State<RequestCreateForm>
         );
         // await _settingModalBottomSheet(context);
       }
+    }
+  }
+
+  Future createProjectOneToManyRequest() async {
+    //Create new Event/Project for ONE TO MANY Request
+    if (widget.projectModel == null &&
+        createEvent &&
+        requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      String newProjectId = Utils.getUuid();
+      requestModel.projectId = newProjectId;
+      List<String> pendingRequests = [requestModel.selectedInstructor['email']];
+
+      ProjectModel newProjectModel = ProjectModel(
+        id: newProjectId,
+        name: requestModel.title,
+        communityId: requestModel.communityId,
+        photoUrl: requestModel.photoUrl,
+        creatorId: requestModel.sevaUserId,
+        mode: ProjectMode.TIMEBANK_PROJECT,
+        timebankId: requestModel.timebankId,
+        associatedMessaginfRoomId: '',
+        requestedSoftDelete: false,
+        softDelete: false,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        pendingRequests: pendingRequests,
+        startTime: requestModel.requestStart,
+        endTime: requestModel.requestEnd,
+        description: requestModel.description,
+      );
+
+      await createProject(projectModel: newProjectModel);
     }
   }
 

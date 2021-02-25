@@ -194,7 +194,7 @@ class RequestModel extends DataModel {
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
-  Map<String, String> selectedInstructor;
+  Map<dynamic, dynamic> selectedInstructor;
   RequestModel({
     this.id,
     this.title,
@@ -414,8 +414,7 @@ class RequestModel extends DataModel {
       this.recurringDays = recurringDaysList;
     }
     if (map.containsKey('selectedInstructor')) {
-      Map<String, String> selectedInstructorMap = map['selectedInstructor'];
-      this.selectedInstructor = selectedInstructorMap;
+      this.selectedInstructor = selectedInstructor;
     }
     if (map.containsKey('occurenceCount')) {
       this.occurenceCount = map['occurenceCount'];
@@ -601,8 +600,7 @@ class RequestModel extends DataModel {
       this.recurringDays = recurringDaysList;
     }
     if (map.containsKey('selectedInstructor')) {
-      Map<String, String> selectedInstructorMap = map['selectedInstructor'];
-      this.selectedInstructor = selectedInstructorMap;
+      this.selectedInstructor = selectedInstructor;
     }
 
     if (map.containsKey('occurenceCount')) {
