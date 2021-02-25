@@ -30,6 +30,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -196,7 +197,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final _textUpdates = StreamController<String>();
   var validItems = List<String>();
   bool isAdmin = false;
-  List<UserModel> users = [];
+  UserModel selectedInstructorModel;
 
   bool createEvent = false;
   bool instructorAdded = false;
@@ -1625,8 +1626,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       padding: EdgeInsets.all(10),
                                       itemCount: userList.length,
                                       itemBuilder: (context, index) {
-                                        UserModel user = userList[index];
 
+                                        UserModel user = userList[index];
+                                        
+                                     
+                                      
                                         List<String> timeBankIds = snapshot
                                                 .data[index]
                                                 .favoriteByTimeBank ??
@@ -1655,6 +1659,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           addStatus: S.of(context).add,
                                           onAddClick: () {
                                             setState(() {
+                                              selectedInstructorModel = user;  
                                               instructorAdded = true;
                                               requestModel.selectedInstructor =
                                                   {
@@ -2250,12 +2255,48 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
         await createProjectOneToManyRequest();
 
+        if(selectedInstructorModel != null && selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
+           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
+             
+              log('<__---___---____________> ' +  selectedInstructorModel.communities.toString());
+              log('<__---___---____________> ' +  requestModel.communityId);
+              log('<__---___---____________> ' +  requestModel.communityId);
+              log('<__---___---____________> ' +  selectedInstructorModel.communities.contains(requestModel.communityId).toString());
+
+              if(selectedInstructorModel.communities.contains(requestModel.communityId)){ 
+              
+              await sendNotificationToMember(
+              communityId: requestModel.communityId,
+              timebankId: requestModel.timebankId,
+              sevaUserId: selectedInstructorModel.sevaUserID,
+              userEmail: selectedInstructorModel.email);
+          }
+        }
+
         await continueCreateRequest(confirmationDialogContext: null);
         
       } else {
 
         await createProjectOneToManyRequest();
 
+        if(selectedInstructorModel != null && selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
+           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
+             
+              log('<__---___---____________> ' +  selectedInstructorModel.communities.toString());
+              log('<__---___---____________> ' +  requestModel.communityId);
+              log('<__---___---____________> ' +  requestModel.communityId);
+              log('<__---___---____________> ' +  selectedInstructorModel.communities.contains(requestModel.communityId).toString());
+
+              if(selectedInstructorModel.communities.contains(requestModel.communityId)){ 
+              
+              await sendNotificationToMember(
+              communityId: requestModel.communityId,
+              timebankId: requestModel.timebankId,
+              sevaUserId: selectedInstructorModel.sevaUserID,
+              userEmail: selectedInstructorModel.email);
+          }
+        }
+        
         linearProgressForCreatingRequest();
         eventsIdsArr = await _writeToDB();
         await _updateProjectModel();
@@ -2307,11 +2348,42 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
 
       await createProject(projectModel: newProjectModel);
+
     }
   }
 
   bool hasRegisteredLocation() {
     return location != null;
+  }
+
+    Future<void> sendNotificationToMember(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) async {
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: requestModel.toMap(),
+        isRead: false,
+        type: NotificationType.OneToManyRequestAccept,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+
+        log('WRITTEN TO DB--------------------->>');
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {

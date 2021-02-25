@@ -239,6 +239,27 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     //     notificationsModel: notification,
                     //   );
                     //   break;
+
+                    case NotificationType.OneToManyRequestAccept:
+                    Map<dynamic,dynamic> oneToManyModel = notification.data;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () {
+                          FirestoreManager.readTimeBankNotification(
+                            notificationId: notification.id,
+                            timebankId: notification.timebankId,
+                          );
+                        },
+                        onPressed: () async {
+                        
+                        },
+                        photoUrl: oneToManyModel['requestorphotourl'],
+                        title: 'Invited to instruct a session',
+                        subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                      );
+                      break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -252,7 +273,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             user.email,
                           );
                         },
-                        onPressed: null,
+                        onPressed: null,   // TO BE MADE
                         photoUrl: model.photoUrl,
                         title: model.title,
                         subTitle:
