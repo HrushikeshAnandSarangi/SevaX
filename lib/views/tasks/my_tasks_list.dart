@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -322,6 +323,12 @@ class TaskCardViewState extends State<TaskCardView> {
   String selectedMinuteValue = "0";
   String selectedHourValue;
 
+//One To Many Request Variables
+  String selectedMinutesPrepTime = "0";
+  String selectedHoursPrepTime;
+  String selectedMinutesDeliveryTime = "0";
+  String selectedHoursDeliveryTime;
+
   RequestModel requestModel;
   final subject = ReplaySubject<int>();
 
@@ -340,6 +347,10 @@ class TaskCardViewState extends State<TaskCardView> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController hoursController = TextEditingController();
+  TextEditingController selectedHoursPrepTimeController =
+      TextEditingController();
+  TextEditingController selectedHoursDeliveryTimeController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -442,86 +453,297 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       child: Text(' '),
                     ),
-                    Form(
-                      key: _formKey,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Expanded(
+                    (requestModel.requestType ==
+                                RequestType.ONE_TO_MANY_REQUEST &&
+                            requestModel.selectedInstructor.sevaUserID ==
+                                SevaCore.of(context).loggedInUser.sevaUserID)
+                        ? Form(
+                            key: _formKey,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: hoursController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    BlacklistingTextInputFormatter(
-                                      RegExp('[\\.|\\,|\\ |\\-]'),
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Enter Prep Time',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                      textAlign: TextAlign.left,
                                     ),
                                   ],
-                                  decoration: InputDecoration(
-                                      contentPadding:
-                                          EdgeInsets.only(bottom: 20)),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return S.of(context).enter_hours;
-                                    }
-                                    if (value.isEmpty) {
-                                      S.of(context).select_hours;
-                                    }
-                                    this.selectedHourValue = value;
-                                  },
                                 ),
-                                Text(S.of(context).hour(3)),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 16,
-                              right: 16,
-                              bottom: 48,
-                            ),
-                            child: Text(
-                              ' : ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                DropdownButtonFormField<String>(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return S
-                                          .of(context)
-                                          .validation_error_invalid_hours;
-                                    }
+                                SizedBox(height: 5),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          TextFormField(
+                                            controller:
+                                                selectedHoursPrepTimeController,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              BlacklistingTextInputFormatter(
+                                                RegExp('[\\.|\\,|\\ |\\-]'),
+                                              ),
+                                            ],
+                                            decoration: InputDecoration(
+                                                contentPadding: EdgeInsets.only(
+                                                    bottom: 20)),
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return S
+                                                    .of(context)
+                                                    .enter_hours;
+                                              }
+                                              if (value.isEmpty) {
+                                                S.of(context).select_hours;
+                                              }
+                                              this.selectedHoursPrepTime =
+                                                  value;
+                                            },
+                                          ),
+                                          Text(S.of(context).hour(3)),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 16,
+                                        right: 16,
+                                        bottom: 48,
+                                      ),
+                                      child: Text(
+                                        ' : ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          DropdownButtonFormField<String>(
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return S
+                                                    .of(context)
+                                                    .validation_error_invalid_hours;
+                                              }
 
-                                    selectedMinuteValue = value;
-                                    return null;
-                                  },
-                                  items: minuteList.map((value) {
-                                    return DropdownMenuItem(
-                                        child: Text(value), value: value);
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedMinuteValue = value;
-                                    });
-                                  },
-                                  value: selectedMinuteValue,
+                                              selectedMinutesPrepTime = value;
+                                              return null;
+                                            },
+                                            items: minuteList.map((value) {
+                                              return DropdownMenuItem(
+                                                  child: Text(value),
+                                                  value: value);
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedMinutesPrepTime = value;
+                                              });
+                                            },
+                                            value: selectedMinutesPrepTime,
+                                          ),
+                                          Text(S.of(context).minutes),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(S.of(context).minutes),
+                                SizedBox(height: 25),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Enter Delivery Time',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          TextFormField(
+                                            controller:
+                                                selectedHoursDeliveryTimeController,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              BlacklistingTextInputFormatter(
+                                                RegExp('[\\.|\\,|\\ |\\-]'),
+                                              ),
+                                            ],
+                                            decoration: InputDecoration(
+                                                contentPadding: EdgeInsets.only(
+                                                    bottom: 20)),
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return S
+                                                    .of(context)
+                                                    .enter_hours;
+                                              }
+                                              if (value.isEmpty) {
+                                                S.of(context).select_hours;
+                                              }
+                                              this.selectedHoursDeliveryTime =
+                                                  value;
+                                            },
+                                          ),
+                                          Text(S.of(context).hour(3)),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 16,
+                                        right: 16,
+                                        bottom: 48,
+                                      ),
+                                      child: Text(
+                                        ' : ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          DropdownButtonFormField<String>(
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return S
+                                                    .of(context)
+                                                    .validation_error_invalid_hours;
+                                              }
+
+                                              selectedMinutesDeliveryTime =
+                                                  value;
+                                              return null;
+                                            },
+                                            items: minuteList.map((value) {
+                                              return DropdownMenuItem(
+                                                  child: Text(value),
+                                                  value: value);
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                selectedMinutesDeliveryTime =
+                                                    value;
+                                              });
+                                            },
+                                            value: selectedMinutesDeliveryTime,
+                                          ),
+                                          Text(S.of(context).minutes),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        : Form(
+                            key: _formKey,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      TextFormField(
+                                        controller: hoursController,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          BlacklistingTextInputFormatter(
+                                            RegExp('[\\.|\\,|\\ |\\-]'),
+                                          ),
+                                        ],
+                                        decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.only(bottom: 20)),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return S.of(context).enter_hours;
+                                          }
+                                          if (value.isEmpty) {
+                                            S.of(context).select_hours;
+                                          }
+                                          this.selectedHourValue = value;
+                                        },
+                                      ),
+                                      Text(S.of(context).hour(3)),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    bottom: 48,
+                                  ),
+                                  child: Text(
+                                    ' : ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      DropdownButtonFormField<String>(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return S
+                                                .of(context)
+                                                .validation_error_invalid_hours;
+                                          }
+
+                                          selectedMinuteValue = value;
+                                          return null;
+                                        },
+                                        items: minuteList.map((value) {
+                                          return DropdownMenuItem(
+                                              child: Text(value), value: value);
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedMinuteValue = value;
+                                          });
+                                        },
+                                        value: selectedMinuteValue,
+                                      ),
+                                      Text(S.of(context).minutes),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                     SizedBox(height: 20),
                     Container(
                       alignment: Alignment.center,
@@ -566,30 +788,65 @@ class TaskCardViewState extends State<TaskCardView> {
   }
 
   void checkForReview() async {
-    if (hoursController.text == null || hoursController.text.length == 0) {
-      return;
-    }
-    int totalMinutes =
-        int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
-    double creditRequest = totalMinutes / 60;
-    //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-    var maxClaim =
-        (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      if (selectedHoursPrepTimeController.text == null ||
+          selectedHoursPrepTimeController.text.length == 0 ||
+          selectedHoursDeliveryTimeController.text == null ||
+          selectedHoursDeliveryTimeController.text.length == 0) {
+        return;
+      }
 
-    if (creditRequest > maxClaim) {
-      showDialogFoInfo(
-        title: S.of(context).limit_exceeded,
-        content:
-            "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
-      );
-      return;
-      //show dialog
-    } else if (creditRequest == 0) {
-      showDialogFoInfo(
-        title: S.of(context).enter_hours,
-        content: S.of(context).validation_error_invalid_hours,
-      );
-      return;
+      int totalMinutes = int.parse(selectedMinutesPrepTime) +
+          int.parse(selectedMinutesDeliveryTime) +
+          (int.parse(selectedHoursPrepTimeController.text) * 60) +
+          (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+      double creditRequest = totalMinutes / 60;
+      //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
+      var maxClaim =
+          (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+
+      if (creditRequest > maxClaim) {
+        showDialogFoInfo(
+          title: S.of(context).limit_exceeded,
+          content:
+              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
+        );
+        return;
+        //show dialog
+      } else if (creditRequest == 0) {
+        showDialogFoInfo(
+          title: S.of(context).enter_hours,
+          content: S.of(context).validation_error_invalid_hours,
+        );
+        return;
+      }
+    } else {
+      if (hoursController.text == null || hoursController.text.length == 0) {
+        return;
+      }
+
+      int totalMinutes = int.parse(selectedMinuteValue) +
+          (int.parse(hoursController.text) * 60);
+      double creditRequest = totalMinutes / 60;
+      //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
+      var maxClaim =
+          (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+
+      if (creditRequest > maxClaim) {
+        showDialogFoInfo(
+          title: S.of(context).limit_exceeded,
+          content:
+              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
+        );
+        return;
+        //show dialog
+      } else if (creditRequest == 0) {
+        showDialogFoInfo(
+          title: S.of(context).enter_hours,
+          content: S.of(context).validation_error_invalid_hours,
+        );
+        return;
+      }
     }
 
     Map results = await Navigator.of(context).push(
@@ -625,6 +882,7 @@ class TaskCardViewState extends State<TaskCardView> {
   Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
     // adds review to firestore
     try {
+      logger.i('here 1');
       await Firestore.instance.collection("reviews").add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": requestModel.email,
@@ -633,10 +891,12 @@ class TaskCardViewState extends State<TaskCardView> {
         "requestId": requestModel.id,
         "comments": (results['didComment'] ? results['comment'] : "No comments")
       });
+      logger.i('here 2');
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
           requestModel: requestModel,
           loggedInUser: loggedInUser);
+      logger.i('here 3');
       startTransaction();
     } on Exception catch (e) {
       // TODO
@@ -702,9 +962,19 @@ class TaskCardViewState extends State<TaskCardView> {
   void startTransaction() async {
     if (_formKey.currentState.validate()) {
       // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-      int totalMinutes =
-          int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
-      // TODO needs flow correction need to be removed when tasks introduced- Eswar
+      int totalMinutes = 0;
+
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        totalMinutes = int.parse(selectedMinutesPrepTime) +
+            int.parse(selectedMinutesDeliveryTime) +
+            (int.parse(selectedHoursPrepTimeController.text) * 60) +
+            (int.parse(selectedHoursDeliveryTimeController.text) * 60);
+      } else {
+        totalMinutes = int.parse(selectedMinuteValue) +
+            (int.parse(selectedHourValue) * 60);
+        // TODO needs flow correction need to be removed when tasks introduced- Eswar
+      }
+
       this.requestModel.durationOfRequest = totalMinutes;
 
       TransactionModel transactionModel = TransactionModel(
