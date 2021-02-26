@@ -2281,6 +2281,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
+          } else{
+            // trigger email notification function
           }
         }
 
