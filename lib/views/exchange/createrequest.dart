@@ -40,9 +40,11 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -1043,8 +1045,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         requestModel.requestType = value;
                         //By default instructor for One To Many Requests is the creator
                         instructorAdded = true;
-                        requestModel.selectedInstructor = 
-                        BasicUserDetails(
+                        requestModel.selectedInstructor = BasicUserDetails(
                           fullname: widget.userModel.fullname,
                           email: widget.userModel.email,
                           photoURL: widget.userModel.photoURL,
@@ -1659,9 +1660,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               selectedInstructorModel = user;
                                               instructorAdded = true;
                                               requestModel.selectedInstructor =
-                                              BasicUserDetails(
+                                                  BasicUserDetails(
                                                 fullname: user.fullname,
-                                                email:user.email,
+                                                email: user.email,
                                                 photoURL: user.photoURL,
                                                 sevaUserID: user.sevaUserID,
                                               );
@@ -2255,7 +2256,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         if (selectedInstructorModel != null &&
             selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-
           if (selectedInstructorModel.communities
               .contains(requestModel.communityId)) {
             await sendNotificationToMember(
@@ -2263,17 +2263,30 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
+          } else {
+            // trigger email for user who is not part of the community for this request
+            await sendMailToInstructor(senderEmail: requestModel.email, 
+                                       receiverEmail: selectedInstructorModel.email,
+                                       communityName: requestModel.fullName,
+                                       requestName: requestModel.title,
+                                       requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                                       receiverName: selectedInstructorModel.fullname,
+                                       startDate: requestModel.requestStart,
+                                       endDate: requestModel.requestEnd);
           }
         }
 
         await continueCreateRequest(confirmationDialogContext: null);
+
       } else {
+
+        linearProgressForCreatingRequest();
+        
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
             selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-
           if (selectedInstructorModel.communities
               .contains(requestModel.communityId)) {
             await sendNotificationToMember(
@@ -2281,12 +2294,19 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
-          } else{
-            // trigger email notification function
+          } else {
+            // trigger email for user who is not part of the community for this request
+            await sendMailToInstructor(senderEmail: requestModel.email, 
+                                       receiverEmail: selectedInstructorModel.email,
+                                       communityName: requestModel.fullName,
+                                       requestName: requestModel.title,
+                                       requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                                       receiverName: selectedInstructorModel.fullname,
+                                       startDate: requestModel.requestStart,
+                                       endDate: requestModel.requestEnd);
           }
         }
 
-        linearProgressForCreatingRequest();
         eventsIdsArr = await _writeToDB();
         await _updateProjectModel();
 
@@ -2373,6 +2393,35 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     log('WRITTEN TO DB--------------------->>');
   }
+
+//Sending only if instructor is not part of the community of the request
+  Future<bool> sendMailToInstructor({
+    String senderEmail,
+    String receiverEmail,
+    String communityName,
+    String requestName,
+    String requestCreatorName,
+    String receiverName,
+    int startDate,
+    int endDate,
+  }) async {
+    return await SevaMailer.createAndSendEmail(
+        mailContent: MailContent.createMail(
+      mailSender: senderEmail,
+      mailReciever: receiverEmail,
+      mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailContent: 'You have been invited to instruct ' + requestName 
+                   + ' from ' + 
+                   DateTime.fromMillisecondsSinceEpoch(startDate).toString().substring(0,11) + 
+                   ' to ' +
+                   DateTime.fromMillisecondsSinceEpoch(endDate).toString().substring(0,11) +
+                   "\n\n"  +
+                    'Thanks,' + 
+                    "\n" + 
+                    'SevaX Team.',
+
+    ));
+  }                       //Label to be given by client for email content
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
     linearProgressForCreatingRequest();
