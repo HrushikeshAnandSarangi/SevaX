@@ -788,7 +788,16 @@ class TaskCardViewState extends State<TaskCardView> {
   }
 
   void checkForReview() async {
-    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+    int totalMinutes = 0;
+    var maxClaim;
+    double creditRequest = 0.0;
+    logger.i('This 1');
+    logger.i('TYPE:  ' + requestModel.requestType.toString());
+
+    if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor.sevaUserID ==
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+
       if (selectedHoursPrepTimeController.text == null ||
           selectedHoursPrepTimeController.text.length == 0 ||
           selectedHoursDeliveryTimeController.text == null ||
@@ -796,57 +805,51 @@ class TaskCardViewState extends State<TaskCardView> {
         return;
       }
 
-      int totalMinutes = int.parse(selectedMinutesPrepTime) +
+      totalMinutes = int.parse(selectedMinutesPrepTime) +
           int.parse(selectedMinutesDeliveryTime) +
           (int.parse(selectedHoursPrepTimeController.text) * 60) +
           (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-      double creditRequest = totalMinutes / 60;
-      //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-      var maxClaim =
-          (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+    } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor.sevaUserID !=
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+      logger.i('This 2');
 
-      if (creditRequest > maxClaim) {
-        showDialogFoInfo(
-          title: S.of(context).limit_exceeded,
-          content:
-              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
-        );
-        return;
-        //show dialog
-      } else if (creditRequest == 0) {
-        showDialogFoInfo(
-          title: S.of(context).enter_hours,
-          content: S.of(context).validation_error_invalid_hours,
-        );
+      if (hoursController.text == null || hoursController.text.length == 0) {
         return;
       }
+
+       totalMinutes = int.parse(selectedMinuteValue) +
+          (int.parse(hoursController.text) * 60);
     } else {
+      logger.i('This 3');
+
       if (hoursController.text == null || hoursController.text.length == 0) {
         return;
       }
 
       int totalMinutes = int.parse(selectedMinuteValue) +
           (int.parse(hoursController.text) * 60);
-      double creditRequest = totalMinutes / 60;
-      //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-      var maxClaim =
-          (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+    }
 
-      if (creditRequest > maxClaim) {
-        showDialogFoInfo(
-          title: S.of(context).limit_exceeded,
-          content:
-              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
-        );
-        return;
-        //show dialog
-      } else if (creditRequest == 0) {
-        showDialogFoInfo(
-          title: S.of(context).enter_hours,
-          content: S.of(context).validation_error_invalid_hours,
-        );
-        return;
-      }
+    creditRequest = totalMinutes / 60;
+    //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
+    maxClaim =
+        (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+
+    if (creditRequest > maxClaim) {
+      showDialogFoInfo(
+        title: S.of(context).limit_exceeded,
+        content:
+            "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
+      );
+      return;
+      //show dialog
+    } else if (creditRequest == 0) {
+      showDialogFoInfo(
+        title: S.of(context).enter_hours,
+        content: S.of(context).validation_error_invalid_hours,
+      );
+      return;
     }
 
     Map results = await Navigator.of(context).push(
@@ -964,7 +967,9 @@ class TaskCardViewState extends State<TaskCardView> {
       // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
       int totalMinutes = 0;
 
-      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        requestModel.selectedInstructor.sevaUserID ==
+            SevaCore.of(context).loggedInUser.sevaUserID) {
         totalMinutes = int.parse(selectedMinutesPrepTime) +
             int.parse(selectedMinutesDeliveryTime) +
             (int.parse(selectedHoursPrepTimeController.text) * 60) +
