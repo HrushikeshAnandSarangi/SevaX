@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
@@ -13,12 +14,14 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -38,6 +41,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
+import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -47,6 +51,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
+import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class EditRequest extends StatefulWidget {
@@ -182,6 +187,16 @@ class RequestEditFormState extends State<RequestEditForm> {
   int oldHours = 0;
   int oldTotalRecurrences = 0;
 
+//One To Many Request new variables
+  bool isAdmin = false;
+  //Map<dynamic,dynamic> selectedInstructorMap;
+  final TextEditingController searchTextController = TextEditingController();
+  final searchOnChange = BehaviorSubject<String>();
+  final _textUpdates = StreamController<String>();
+
+  bool createEvent = false;
+  bool instructorAdded = true;
+
   Future<TimebankModel> getTimebankAdminStatus;
   Future getProjectsByFuture;
   TimebankModel timebankModel;
@@ -219,6 +234,12 @@ class RequestEditFormState extends State<RequestEditForm> {
     initialRequestTitle = widget.requestModel.title;
     initialRequestDescription = widget.requestModel.description;
     tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
+
+//will be true because a One to many request when editing should have an instructor
+    instructorAdded = true;
+
+    log('Instructor Data:  ' + widget.requestModel.selectedInstructor.toString());
+    log('Instructor Data:  ' + widget.requestModel.approvedUsers.toString());
 
     fetchRemoteConfig();
 
@@ -434,12 +455,17 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 title: S.of(context).request_duration,
                                 startTime: startDate,
                                 endTime: endDate),
+
                             widget.requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
+                                : widget.requestModel.requestType ==
+                                        RequestType.ONE_TO_MANY_REQUEST
+                                    ? TimeRequest(snapshot, projectModelList)
                                 : widget.requestModel.requestType ==
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
+
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -967,7 +993,25 @@ class RequestEditFormState extends State<RequestEditForm> {
                     value: RequestType.TIME,
                     groupvalue: widget.requestModel.requestType,
                     onChanged: (value) {
+                      //instructorAdded = false;
+                      //widget.requestModel.selectedInstructor.clear();
                       widget.requestModel.requestType = value;
+                      setState(() => {});
+                    },
+                  ),
+                   _optionRadioButton(
+                    title: S.of(context).one_to_many,
+                    value: RequestType.ONE_TO_MANY_REQUEST,
+                    groupvalue: widget.requestModel.requestType,
+                    onChanged: (value) {
+                      widget.requestModel.requestType = value;
+                      //instructorAdded = true;
+                        // widget.requestModel.selectedInstructor = ({
+                        //   'fullname': widget.userModel.fullname,
+                        //   'email': widget.userModel.email,
+                        //   'photoURL': widget.userModel.photoURL,
+                        //   'sevaUserID': widget.userModel.sevaUserID,
+                        // });
                       setState(() => {});
                     },
                   ),
@@ -1093,211 +1137,527 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Visibility(
-            visible: widget.requestModel.isRecurring == true ||
-                widget.requestModel.autoGenerated == true,
-            child: EditRepeatWidget(
-              requestModel: widget.requestModel,
-              offerModel: null,
-            ),
-          ),
-          SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint),
-          SizedBox(height: 20),
-          InkWell(
-            child: Column(
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      Visibility(
+        visible: widget.requestModel.isRecurring == true ||
+            widget.requestModel.autoGenerated == true,
+        child: EditRepeatWidget(
+          requestModel: widget.requestModel,
+          offerModel: null,
+        ),
+      ),
+      SizedBox(height: 20),
+      RequestDescriptionData(S.of(context).request_description_hint),
+      SizedBox(height: 20),
+      InkWell(
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
+                categories == null
+                    ? Text(
+                        S.of(context).choose_category,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
                       )
-                    : Container(),
+                    : Text(
+                        "${categories[0]}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  size: 16,
+                ),
+                // Container(
+                //   height: 25,
+                //   width: 25,
+                //   decoration: BoxDecoration(
+                //       color: Theme.of(context).primaryColor,
+                //       borderRadius: BorderRadius.circular(100)),
+                //   child: Icon(
+                //     Icons.arrow_drop_down_outlined,
+                //     color: Colors.white,
+                //   ),
+                // ),
               ],
             ),
-            onTap: () => moveToCategory(),
-          ),
-          SizedBox(height: 20),
-          isFromRequest(
-            projectId: widget.projectId,
-          )
-              ? addToProjectContainer(
-                  snapshot,
-                  projectModelList,
-                  requestModel,
-                )
-              : Container(),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).max_credits,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  focusNode: focusNodes[1],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[2]);
-                  },
-                  initialValue: widget.requestModel.maxCredits.toString(),
-                  onChanged: (v) {
-                    logger.i("___________>>> Updating credits to ============");
+            SizedBox(height: 20),
+            categories != null
+                ? Wrap(
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    children: _buildselectedSubCategories(categories),
+                  )
+                : Container(),
+          ],
+        ),
+        onTap: () => moveToCategory(),
+      ),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              requestModel,
+            )
+          : Container(),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).max_credits,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: TextFormField(
+              focusNode: focusNodes[1],
+              onFieldSubmitted: (v) {
+                FocusScope.of(context).requestFocus(focusNodes[2]);
+              },
+              initialValue: widget.requestModel.maxCredits.toString(),
+              onChanged: (v) {
+                logger.i("___________>>> Updating credits to ============");
 
-                    updateExitWithConfirmationValue(context, 10, v);
-                    if (v.isNotEmpty && int.parse(v) >= 0) {
-                      //widget.requestModel.maxCredits = int.parse(v);
-                      logger.i("___________>>> Updating credits to " +
-                          int.parse(v).toString());
+                updateExitWithConfirmationValue(context, 10, v);
+                if (v.isNotEmpty && int.parse(v) >= 0) {
+                  //widget.requestModel.maxCredits = int.parse(v);
+                  logger.i("___________>>> Updating credits to " +
+                      int.parse(v).toString());
 
-                      tempCredits = int.parse(v);
-                      setState(() {});
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: S.of(context).max_credit_hint,
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) < 0) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) == 0) {
-                      return S.of(context).enter_max_credits;
-                    } else {
-                      //requestModel.maxCredits = int.parse(value);
-                      tempCredits = int.parse(value);
-                      setState(() {});
-                      return null;
-                    }
-                  },
-                ),
+                  tempCredits = int.parse(v);
+                  setState(() {});
+                }
+              },
+              decoration: InputDecoration(
+                hintText: S.of(context).max_credit_hint,
+                hintStyle: hintTextStyle,
+                // labelText: 'No. of volunteers',
               ),
-              infoButton(
-                context: context,
-                key: GlobalKey(),
-                type: InfoType.MAX_CREDITS,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[2],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            initialValue: widget.requestModel.numberOfApprovals.toString(),
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 11, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                //widget.requestModel.numberOfApprovals = int.parse(v);
-                tempNoOfVolunteers = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: S.of(context).number_of_volunteers,
-              hintStyle: hintTextStyle,
-              // labelText: 'No. of volunteers',
-            ),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_volunteer_count;
-              } else if (int.parse(value) < 0) {
-                return S.of(context).validation_error_volunteer_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S.of(context).validation_error_volunteer_count_zero;
-              } else {
-                //widget.requestModel.numberOfApprovals = int.parse(value);
-                tempNoOfVolunteers = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
-          ),
-          CommonUtils.TotalCredits(
-            context: context,
-            requestCreditsMode: TotalCreditseMode.EDIT_MODE,
-            requestModel: widget.requestModel,
-          ),
-          SizedBox(height: 40),
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return S.of(context).enter_max_credits;
+                } else if (int.parse(value) < 0) {
+                  return S.of(context).enter_max_credits;
+                } else if (int.parse(value) == 0) {
+                  return S.of(context).enter_max_credits;
+                } else {
+                  //requestModel.maxCredits = int.parse(value);
+                  tempCredits = int.parse(value);
+                  setState(() {});
+                  return null;
+                }
               },
             ),
-          )
-        ]);
+          ),
+          infoButton(
+            context: context,
+            key: GlobalKey(),
+            type: InfoType.MAX_CREDITS,
+          ),
+        ],
+      ),
+      SizedBox(height: 20),
+      Text(
+        S.of(context).number_of_volunteers,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      TextFormField(
+        focusNode: focusNodes[2],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).unfocus();
+        },
+        initialValue: widget.requestModel.numberOfApprovals.toString(),
+        onChanged: (v) {
+          updateExitWithConfirmationValue(context, 11, v);
+          if (v.isNotEmpty && int.parse(v) >= 0) {
+            //widget.requestModel.numberOfApprovals = int.parse(v);
+            tempNoOfVolunteers = int.parse(v);
+            setState(() {});
+          }
+        },
+        decoration: InputDecoration(
+          hintText: S.of(context).number_of_volunteers,
+          hintStyle: hintTextStyle,
+          // labelText: 'No. of volunteers',
+        ),
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_volunteer_count;
+          } else if (int.parse(value) < 0) {
+            return S.of(context).validation_error_volunteer_count_negative;
+          } else if (int.parse(value) == 0) {
+            return S.of(context).validation_error_volunteer_count_zero;
+          } else {
+            //widget.requestModel.numberOfApprovals = int.parse(value);
+            tempNoOfVolunteers = int.parse(value);
+            setState(() {});
+            return null;
+          }
+        },
+      ),
+      CommonUtils.TotalCredits(
+        context: context,
+        requestCreditsMode: TotalCreditseMode.EDIT_MODE,
+        requestModel: widget.requestModel,
+      ),
+      SizedBox(height: 10),
+
+//Instructor to be assigned to One to many requests widget Here
+      instructorAdded
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  height: 80,
+                  width: 290,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10.0,
+                        offset: Offset(0.0, 10.0),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // SizedBox(
+                        //   height: 15,
+                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            UserProfileImage(
+                              photoUrl: widget.requestModel.selectedInstructor.photoURL,
+                              email: widget.requestModel.selectedInstructor.email,
+                              userId: widget.requestModel.selectedInstructor.sevaUserID,
+                              height: 50,
+                              width: 50,
+                              timebankModel: timebankModel,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Expanded(
+                              child: Text(
+                                widget.requestModel.selectedInstructor.fullname ??
+                                    S.of(context).name_not_available,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Container(
+                              height: 37,
+                              padding: EdgeInsets.only(bottom: 0),
+                              child: RaisedButton(
+                                shape: StadiumBorder(),
+                                disabledColor: Theme.of(context).primaryColor,
+                                elevation: 4,
+                                onPressed: null,
+                                child: Text(
+                                  'Added',
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: 35,
+                  padding: EdgeInsets.only(bottom: 0),
+                  child: RaisedButton(
+                    shape: StadiumBorder(),
+                    color: Theme.of(context).accentColor,
+                    textColor: Colors.white,
+                    elevation: 5,
+                    onPressed: () {
+                      setState(() {
+                        instructorAdded = false;
+                        requestModel.selectedInstructor = null;
+                      });
+                    },
+                    child: Text(
+                      'Remove',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SizedBox(height: 20),
+                  Text(
+                    "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Europa',
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextField(
+                    style: TextStyle(color: Colors.black),
+                    controller: searchTextController,
+                    onChanged: _search,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.black54,
+                          ),
+                          onPressed: () {
+                            searchTextController.clear();
+                          }),
+                      hasFloatingPlaceholder: false,
+                      alignLabelWithHint: true,
+                      isDense: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
+                      contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(15.7),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(15.7)),
+                      hintText: S.of(context).type_team_member_name,
+                      hintStyle: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                      child: Column(children: [
+                    StreamBuilder<List<UserModel>>(
+                      stream: SearchManager.searchUserInSevaX(
+                        queryString: searchTextController.text,
+                        //validItems: validItems,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          Text(snapshot.error.toString());
+                        }
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              height: 48,
+                              width: 48,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
+                        List<UserModel> userList = snapshot.data;
+                        userList.removeWhere((user) =>
+                            user.sevaUserID ==
+                                SevaCore.of(context).loggedInUser.sevaUserID ||
+                            user.sevaUserID == widget.requestModel.sevaUserId);
+
+                        if (userList.length == 0) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 15),
+                              getEmptyWidget('', S.of(context).no_user_found),
+                            ],
+                          );
+                        }
+
+                        if (searchTextController.text.trim().length < 3) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 15),
+                              getEmptyWidget(
+                                  '',
+                                  S
+                                      .of(context)
+                                      .validation_error_search_min_characters),
+                            ],
+                          );
+                        } else {
+                          return Scrollbar(
+                            child: Center(
+                              child: Card(
+                                elevation: 0.4,
+                                child: LimitedBox(
+                                  maxHeight: 270,
+                                  maxWidth: 90,
+                                  child: ListView.builder(
+                                      primary: false,
+                                      //physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.all(10),
+                                      itemCount: userList.length,
+                                      itemBuilder: (context, index) {
+                                        UserModel user = userList[index];
+
+                                        List<String> timeBankIds = snapshot
+                                                .data[index]
+                                                .favoriteByTimeBank ??
+                                            [];
+                                        List<String> memberId =
+                                            user.favoriteByMember ?? [];
+
+                                        return OneToManyInstructorCard(
+                                          userModel: user,
+                                          timebankModel: timebankModel,
+                                          isAdmin: isAdmin,
+                                          //refresh: refresh,
+                                          currentCommunity: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentCommunity,
+                                          loggedUserId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID,
+                                          isFavorite: isAdmin
+                                              ? timeBankIds.contains(
+                                                  widget.requestModel.timebankId)
+                                              : memberId.contains(
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID),
+                                          addStatus: S.of(context).add,
+                                          onAddClick: () {
+                                            setState(() {
+                                              instructorAdded = true;
+                                              widget.requestModel.selectedInstructor =
+                                              BasicUserDetails(
+                                                fullname: user.fullname,
+                                                email:user.email,
+                                                photoURL: user.photoURL,
+                                                sevaUserID: user.sevaUserID,
+                                              );
+                                            });
+                                          },
+                                        );
+                                      }),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ])),
+                ])
+              : Container(height: 0, width: 0),
+
+      SizedBox(height: 20),
+
+      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          ? Row(
+              children: [
+                Checkbox(
+                  activeColor: Theme.of(context).primaryColor,
+                  checkColor: Colors.white,
+                  value: createEvent,
+                  onChanged: (val) {
+                    setState(() {
+                      createEvent = val;
+                    });
+                  },
+                ),
+                Text(
+                    'Tick to create an event for this request') // Label to be created
+              ],
+            )
+          : Container(height: 0, width: 0),
+
+      SizedBox(height: 15),
+
+      Center(
+        child: LocationPickerWidget(
+          selectedAddress: selectedAddress,
+          location: location,
+          onChanged: (LocationDataModel dataModel) {
+            setState(() {
+              location = dataModel.geoPoint;
+              this.selectedAddress = dataModel.location;
+            });
+          },
+        ),
+      )
+    ]);
+  }
+
+  void _search(String queryString) {
+    if (queryString.length == 3) {
+      setState(() {
+        searchOnChange.add(queryString);
+      });
+    } else {
+      searchOnChange.add(queryString);
+    }
   }
 
   Widget CashRequest(snapshot, projectModelList) {
@@ -1708,6 +2068,27 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
 
+      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        List<String> approvedUsers = [];
+        approvedUsers.add(widget.requestModel.selectedInstructor.email);
+        widget.requestModel.approvedUsers = approvedUsers;
+      }
+
+      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+          (requestModel.selectedInstructor.toMap().isEmpty ||
+              requestModel.selectedInstructor == null ||
+              instructorAdded == false)) {
+        showDialogForTitle(
+            dialogTitle: 'Select an Instructor'); //Label to be created
+        return;
+      }
+
+      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        List<String> approvedUsers = [];
+        approvedUsers.add(widget.requestModel.selectedInstructor.email);
+        widget.requestModel.approvedUsers = approvedUsers;
+      }
+
       //comparing the recurring days List
 
       Function eq = const ListEquality().equals;
@@ -1866,34 +2247,33 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     tempCredits != widget.requestModel.maxCredits ||
         //     tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
         //     location != widget.requestModel.location) {
-          log('HERE 1');
+        log('HERE 1');
 
-          widget.requestModel.title = initialRequestTitle;
-          widget.requestModel.description = initialRequestDescription;
-          widget.requestModel.location = location;
-          widget.requestModel.address = selectedAddress;
-          widget.requestModel.categories = selectedCategoryIds.toList();
-          startDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.starttimestamp
-              ? widget.requestModel.requestStart =
-                  OfferDurationWidgetState.starttimestamp
-              : null;
-          endDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.endtimestamp
-              ? widget.requestModel.requestEnd =
-                  OfferDurationWidgetState.endtimestamp
-              : null;
-          widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
-          widget.requestModel.maxCredits = tempCredits;
+        widget.requestModel.title = initialRequestTitle;
+        widget.requestModel.description = initialRequestDescription;
+        widget.requestModel.location = location;
+        widget.requestModel.address = selectedAddress;
+        widget.requestModel.categories = selectedCategoryIds.toList();
+        startDate.millisecondsSinceEpoch !=
+                OfferDurationWidgetState.starttimestamp
+            ? widget.requestModel.requestStart =
+                OfferDurationWidgetState.starttimestamp
+            : null;
+        endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
+            ? widget.requestModel.requestEnd =
+                OfferDurationWidgetState.endtimestamp
+            : null;
+        widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
+        widget.requestModel.maxCredits = tempCredits;
 
-          linearProgressForCreatingRequest();
-          await updateRequest(requestModel: widget.requestModel);
-          Navigator.pop(context);
-          Navigator.pop(dialogContext);
-        } else {
-          log('HERE 2');
-          Navigator.of(context).pop();
-        }
+        linearProgressForCreatingRequest();
+        await updateRequest(requestModel: widget.requestModel);
+        Navigator.pop(context);
+        Navigator.pop(dialogContext);
+      } else {
+        log('HERE 2');
+        Navigator.of(context).pop();
+      }
       //}
     }
   }
@@ -2208,7 +2588,5 @@ class ProjectSelectionState extends State<ProjectSelection> {
 //    form.save();
 //  }
 }
-
-
 
 enum TotalCreditseMode { EDIT_MODE, CREATE_MODE }

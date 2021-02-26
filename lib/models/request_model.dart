@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
@@ -194,7 +195,7 @@ class RequestModel extends DataModel {
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
-  Map<dynamic, dynamic> selectedInstructor;
+  BasicUserDetails selectedInstructor = new BasicUserDetails();
   RequestModel({
     this.id,
     this.title,
@@ -413,9 +414,6 @@ class RequestModel extends DataModel {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
     }
-    if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = selectedInstructor;
-    }
     if (map.containsKey('occurenceCount')) {
       this.occurenceCount = map['occurenceCount'];
     }
@@ -432,6 +430,12 @@ class RequestModel extends DataModel {
     if (map.containsKey('goodsDonationDetails')) {
       this.goodsDonationDetails =
           GoodsDonationDetails.fromMap(map['goodsDonationDetails']);
+    }
+
+    if (map.containsKey('selectedInstructor')) {
+      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+    } else {
+      this.selectedInstructor = new BasicUserDetails();
     }
 
     if (map.containsKey('cashModeDetails')) {
@@ -599,8 +603,11 @@ class RequestModel extends DataModel {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
     }
+    
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = selectedInstructor;
+      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+    } else {
+      this.selectedInstructor = new BasicUserDetails();
     }
 
     if (map.containsKey('occurenceCount')) {
@@ -785,7 +792,7 @@ class RequestModel extends DataModel {
       object['recurringDays'] = this.recurringDays;
     }
     if (this.selectedInstructor != null) {
-      object['selectedInstructor'] = this.selectedInstructor;
+      object['selectedInstructor'] = this.selectedInstructor.toMap();
     }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;

@@ -256,7 +256,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         
                         },
                         photoUrl: oneToManyModel['requestorphotourl'],
-                        title: 'Invited to instruct a session',
+                        title: 'Invited to instruct a session',        //Label to be created
                         subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                       );
                       break;

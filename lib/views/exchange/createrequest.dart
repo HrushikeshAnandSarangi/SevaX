@@ -62,6 +62,7 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -1020,7 +1021,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     onChanged: (value) {
                       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       instructorAdded = false;
-                      requestModel.selectedInstructor.clear();
+                      requestModel.selectedInstructor.toMap().clear();
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
@@ -1033,8 +1034,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
-                      title:
-                          'One to Many', //S.of(context).request_type_cash,       //NEED TO CREATE LABEL FOR THIS
+                      title: S.of(context).one_to_many,
                       value: RequestType.ONE_TO_MANY_REQUEST,
                       isEnabled: !widget.isOfferRequest,
                       groupvalue: requestModel.requestType,
@@ -1043,12 +1043,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         requestModel.requestType = value;
                         //By default instructor for One To Many Requests is the creator
                         instructorAdded = true;
-                        requestModel.selectedInstructor = ({
-                          'fullname': widget.userModel.fullname,
-                          'email': widget.userModel.email,
-                          'photoURL': widget.userModel.photoURL,
-                          'sevaUserID': widget.userModel.sevaUserID,
-                        });
+                        requestModel.selectedInstructor = 
+                        BasicUserDetails(
+                          fullname: widget.userModel.fullname,
+                          email: widget.userModel.email,
+                          photoURL: widget.userModel.photoURL,
+                          sevaUserID: widget.userModel.sevaUserID,
+                        );
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.one_to_many_requests;
                         setState(() => {});
@@ -1439,10 +1440,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           children: <Widget>[
                             UserProfileImage(
                               photoUrl:
-                                  requestModel.selectedInstructor['photoURL'],
-                              email: requestModel.selectedInstructor['email'],
+                                  requestModel.selectedInstructor.photoURL,
+                              email: requestModel.selectedInstructor.email,
                               userId:
-                                  requestModel.selectedInstructor['sevaUserID'],
+                                  requestModel.selectedInstructor.sevaUserID,
                               height: 50,
                               width: 50,
                               timebankModel: timebankModel,
@@ -1452,7 +1453,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             ),
                             Expanded(
                               child: Text(
-                                requestModel.selectedInstructor['fullname'] ??
+                                requestModel.selectedInstructor.fullname ??
                                     S.of(context).name_not_available,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -1499,7 +1500,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     onPressed: () {
                       setState(() {
                         instructorAdded = false;
-                        requestModel.selectedInstructor.clear();
+                        requestModel.selectedInstructor.toMap().clear();
                       });
                     },
                     child: Text(
@@ -1594,8 +1595,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           return Column(
                             children: [
                               SizedBox(height: 15),
-                              getEmptyWidget(
-                                  'Sample text', S.of(context).no_user_found),
+                              getEmptyWidget('', S.of(context).no_user_found),
                             ],
                           );
                         }
@@ -1605,7 +1605,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             children: [
                               SizedBox(height: 15),
                               getEmptyWidget(
-                                  'title',
+                                  '',
                                   S
                                       .of(context)
                                       .validation_error_search_min_characters),
@@ -1626,11 +1626,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       padding: EdgeInsets.all(10),
                                       itemCount: userList.length,
                                       itemBuilder: (context, index) {
-
                                         UserModel user = userList[index];
-                                        
-                                     
-                                      
+
                                         List<String> timeBankIds = snapshot
                                                 .data[index]
                                                 .favoriteByTimeBank ??
@@ -1659,15 +1656,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           addStatus: S.of(context).add,
                                           onAddClick: () {
                                             setState(() {
-                                              selectedInstructorModel = user;  
+                                              selectedInstructorModel = user;
                                               instructorAdded = true;
                                               requestModel.selectedInstructor =
-                                                  {
-                                                'fullname': user.fullname,
-                                                'email': user.email,
-                                                'sevaUserID': user.sevaUserID,
-                                                'photoURL': user.photoURL
-                                              };
+                                              BasicUserDetails(
+                                                fullname: user.fullname,
+                                                email:user.email,
+                                                photoURL: user.photoURL,
+                                                sevaUserID: user.sevaUserID,
+                                              );
                                             });
                                           },
                                         );
@@ -2174,12 +2171,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         List<String> approvedUsers = [];
-        approvedUsers.add(requestModel.selectedInstructor['email']);
+        approvedUsers.add(requestModel.selectedInstructor.email);
         requestModel.approvedUsers = approvedUsers;
       }
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          (requestModel.selectedInstructor.isEmpty ||
+          (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
@@ -2255,48 +2252,38 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
         await createProjectOneToManyRequest();
 
-        if(selectedInstructorModel != null && selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
-           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
-             
-              log('<__---___---____________> ' +  selectedInstructorModel.communities.toString());
-              log('<__---___---____________> ' +  requestModel.communityId);
-              log('<__---___---____________> ' +  requestModel.communityId);
-              log('<__---___---____________> ' +  selectedInstructorModel.communities.contains(requestModel.communityId).toString());
+        if (selectedInstructorModel != null &&
+            selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
+            requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
 
-              if(selectedInstructorModel.communities.contains(requestModel.communityId)){ 
-              
-              await sendNotificationToMember(
-              communityId: requestModel.communityId,
-              timebankId: requestModel.timebankId,
-              sevaUserId: selectedInstructorModel.sevaUserID,
-              userEmail: selectedInstructorModel.email);
+          if (selectedInstructorModel.communities
+              .contains(requestModel.communityId)) {
+            await sendNotificationToMember(
+                communityId: requestModel.communityId,
+                timebankId: requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
           }
         }
 
         await continueCreateRequest(confirmationDialogContext: null);
-        
       } else {
-
         await createProjectOneToManyRequest();
 
-        if(selectedInstructorModel != null && selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
-           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
-             
-              log('<__---___---____________> ' +  selectedInstructorModel.communities.toString());
-              log('<__---___---____________> ' +  requestModel.communityId);
-              log('<__---___---____________> ' +  requestModel.communityId);
-              log('<__---___---____________> ' +  selectedInstructorModel.communities.contains(requestModel.communityId).toString());
+        if (selectedInstructorModel != null &&
+            selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
+            requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
 
-              if(selectedInstructorModel.communities.contains(requestModel.communityId)){ 
-              
-              await sendNotificationToMember(
-              communityId: requestModel.communityId,
-              timebankId: requestModel.timebankId,
-              sevaUserId: selectedInstructorModel.sevaUserID,
-              userEmail: selectedInstructorModel.email);
+          if (selectedInstructorModel.communities
+              .contains(requestModel.communityId)) {
+            await sendNotificationToMember(
+                communityId: requestModel.communityId,
+                timebankId: requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
           }
         }
-        
+
         linearProgressForCreatingRequest();
         eventsIdsArr = await _writeToDB();
         await _updateProjectModel();
@@ -2327,7 +2314,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       String newProjectId = Utils.getUuid();
       requestModel.projectId = newProjectId;
-      List<String> pendingRequests = [requestModel.selectedInstructor['email']];
+      List<String> pendingRequests = [requestModel.selectedInstructor.email];
 
       ProjectModel newProjectModel = ProjectModel(
         id: newProjectId,
@@ -2348,7 +2335,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
 
       await createProject(projectModel: newProjectModel);
-
     }
   }
 
@@ -2356,7 +2342,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return location != null;
   }
 
-    Future<void> sendNotificationToMember(
+  Future<void> sendNotificationToMember(
       {String communityId,
       String sevaUserId,
       String timebankId,
@@ -2383,7 +2369,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         .document(notification.id)
         .setData(notification.toMap());
 
-        log('WRITTEN TO DB--------------------->>');
+    log('WRITTEN TO DB--------------------->>');
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
