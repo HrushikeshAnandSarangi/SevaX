@@ -1,4 +1,5 @@
 library flutter_multiselect;
+
 import 'dart:developer';
 
 import 'package:sevaexchange/models/user_model.dart';
@@ -124,10 +125,15 @@ class MultiSelect extends FormField<dynamic> {
 
                 if (values != null) {
                   values.forEach((item) {
-                    var existingItem = dataSource.singleWhere(
-                        (itm) => itm[valueField] == item,
-                        orElse: () => null);
-                        log('ITEM: ' + item);
+                    var existingItem = dataSource.singleWhere((itm) {
+                      log('ITM: ' + itm.toString());
+                       log('ITEM: ' + item.toString());
+                      return itm[valueField] == item;
+                    }, orElse: () => null);
+
+                    log('Existing Item: ' + existingItem.toString());
+                   
+
                     if (existingItem != null) {
                       selectedOptions.add(Chip(
                         label: Text(existingItem[textField],
@@ -135,7 +141,7 @@ class MultiSelect extends FormField<dynamic> {
                       ));
                     }
                   });
-                }
+                } 
                 return selectedOptions;
               }
 

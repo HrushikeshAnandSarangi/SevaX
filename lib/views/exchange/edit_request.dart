@@ -2733,7 +2733,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
     log('Project Id:  '+   widget.requestModel.projectId.toString());
     return MultiSelect(
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [widget.requestModel.projectId],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
