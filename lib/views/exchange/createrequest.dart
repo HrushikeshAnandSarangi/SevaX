@@ -1023,7 +1023,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     onChanged: (value) {
                       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       instructorAdded = false;
-                      requestModel.selectedInstructor.toMap().clear();
+                      requestModel.selectedInstructor = null;
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
