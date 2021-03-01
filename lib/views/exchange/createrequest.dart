@@ -202,8 +202,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
   bool isAdmin = false;
   UserModel selectedInstructorModel;
 
+  //Below variable for One to Many Requests
   bool createEvent = false;
   bool instructorAdded = false;
+
+  //Below variable for Borrow Requests
+  int roomOrTool = 0;
 
   Future<TimebankModel> getTimebankAdminStatus;
   Future<List<ProjectModel>> getProjectsByFuture;
@@ -408,6 +412,55 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             headerContainer(snapshot),
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
+
+                            requestModel.requestType == RequestType.BORROW
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 8),
+                                      CupertinoSegmentedControl<int>(
+                                        selectedColor:
+                                            Theme.of(context).primaryColor,
+                                        children: {
+                                          0: Padding(
+                                            padding: EdgeInsets.only(left: 10, right: 10),
+                                          child: Text('Need A Room',          //Label to be created (client approval)
+                                            style: TextStyle(fontSize: 12.0),
+                                          ),
+                                          ),
+                                          1: Padding(
+                                            padding: EdgeInsets.only(left: 10, right: 10),
+                                          child:
+                                          Text('Need Tool/s',                //Label to be created (client approval)
+                                            style: TextStyle(fontSize: 12.0),
+                                          ),
+                                          ),
+                                        },
+                                        borderColor: Colors.grey,
+                                        padding: EdgeInsets.only(
+                                            left: 0.0, right: 0.0),
+                                        groupValue: roomOrTool,
+                                        onValueChanged: (int val) {
+                                          if (val != roomOrTool) {
+                                            setState(() {
+                                              if (val == 0) {
+                                                roomOrTool = 0;
+                                              } else {
+                                                roomOrTool = 1;
+                                              }
+                                              roomOrTool = val;
+                                            });
+                                            log('Room or Tool: ' + roomOrTool.toString());
+                                          }
+                                        },
+                                        //groupValue: sharedValue,
+                                      ),
+                                       SizedBox(height: 12),
+                                    ],
+                                  )
+                                : Container(),
+
                             Text(
                               "${S.of(context).request_title}",
                               style: TextStyle(
@@ -443,7 +496,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         : requestModel.requestType ==
                                                 RequestType.ONE_TO_MANY_REQUEST
                                             ? "Ex: Offer a webinar or class to members..."
-                                            : "Ex: Non-perishable goods for Food Bank...",
+                                            : requestModel.requestType ==
+                                                    RequestType.BORROW
+                                                ? "Ex: Room needed or Tools Required..." //Label to be created/ask client
+                                                : "Ex: Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -479,8 +535,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             RequestType.CASH
                                         ? CashRequest(
                                             snapshot, projectModelList)
-                                        : GoodsRequest(
-                                            snapshot, projectModelList),
+                                        : requestModel.requestType ==
+                                                RequestType.BORROW
+                                            ? BorrowRequest(
+                                                snapshot, projectModelList)
+                                            : GoodsRequest(
+                                                snapshot, projectModelList),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -946,6 +1006,55 @@ class RequestCreateFormState extends State<RequestCreateForm>
     );
   }
 
+  Widget BorrowToolTitleField(hintTextDesc) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Tool Name*",         //Label to be created (need client approval)
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              // if (value != null && value.length > 5) {
+              //   _debouncer.run(() {
+              //     getCategoriesFromApi(value);
+              //   });
+              // }
+              updateExitWithConfirmationValue(context, 9, value);
+            },
+            focusNode: focusNodes[3],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[3]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: hintTextDesc,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              }
+              requestModel.borrowRequestToolName = value;
+            },
+          ),
+        ]);
+  }
+
   Widget RequestDescriptionData(hintTextDesc) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1051,6 +1160,29 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           photoURL: widget.userModel.photoURL,
                           sevaUserID: widget.userModel.sevaUserID,
                         );
+                        AppConfig.helpIconContextMember =
+                            HelpContextMemberType.one_to_many_requests;
+                        setState(() => {});
+                      },
+                    ),
+                  ),
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.one_to_many_request,
+                    transaction_matrix_type: 'cash_goods_requests',
+                    comingFrom: widget.comingFrom,
+                    child: _optionRadioButton<RequestType>(
+                      title: 'Borrow', //Label to be created
+                      value: RequestType.BORROW,
+                      isEnabled: !widget.isOfferRequest,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        //requestModel.isRecurring = true;
+                        requestModel.requestType = value;
+                        //By default instructor for One To Many Requests is the creator
+                        instructorAdded = true;
+                        instructorAdded = false;
+                        requestModel.selectedInstructor = null;
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.one_to_many_requests;
                         setState(() => {});
@@ -1200,6 +1332,104 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     });
     return selectedSubCategories;
+  }
+
+  Widget BorrowRequest(snapshot, projectModelList) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      RepeatWidget(),
+
+      SizedBox(height: 20),
+
+      roomOrTool == 1 ?
+      BorrowToolTitleField('Ex: Hammer or Chair...') : Container(),   //Label to be created (need client approval)
+
+      SizedBox(height: 15),
+
+      RequestDescriptionData('Please describe what you require'),   //Label to be created (need client approval)
+      SizedBox(height: 20),                                              //Same hint for Room and Tools ?
+      // Choose Category and Sub Category
+      InkWell(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                categories == null
+                    ? Text(
+                        S.of(context).choose_category,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      )
+                    : Text(
+                        "${categories[0]}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Europa',
+                          color: Colors.black,
+                        ),
+                      ),
+                Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios_outlined,
+                  size: 16,
+                ),
+                // Container(
+                //   height: 25,
+                //   width: 25,
+                //   decoration: BoxDecoration(
+                //       color: Theme.of(context).primaryColor,
+                //       borderRadius: BorderRadius.circular(100)),
+                //   child: Icon(
+                //     Icons.arrow_drop_down_outlined,
+                //     color: Colors.white,
+                //   ),
+                // ),
+              ],
+            ),
+            SizedBox(height: 20),
+            categories != null
+                ? Wrap(
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    children: _buildselectedSubCategories(categories),
+                  )
+                : Container(),
+          ],
+        ),
+        onTap: () => moveToCategory(),
+      ),
+      SizedBox(height: 20),
+      isFromRequest(
+        projectId: widget.projectId,
+      )
+          ? addToProjectContainer(
+              snapshot,
+              projectModelList,
+              requestModel,
+            )
+          : Container(),
+
+      SizedBox(height: 15),
+
+      Center(
+        child: LocationPickerWidget(
+          selectedAddress: selectedAddress,
+          location: location,
+          onChanged: (LocationDataModel dataModel) {
+            log("received data model");
+            setState(() {
+              location = dataModel.geoPoint;
+              this.selectedAddress = dataModel.location;
+            });
+          },
+        ),
+      )
+    ]);
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
@@ -2185,29 +2415,39 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
 
-      //Form and date is valid
-      switch (requestModel.requestMode) {
-        case RequestMode.PERSONAL_REQUEST:
-          var myDetails = SevaCore.of(context).loggedInUser;
-          this.requestModel.fullName = myDetails.fullname;
-          this.requestModel.photoUrl = myDetails.photoURL;
-          var onBalanceCheckResult =
-              await SevaCreditLimitManager.hasSufficientCredits(
-            email: SevaCore.of(context).loggedInUser.email,
-            credits: requestModel.numberOfHours.toDouble(),
-            userId: myDetails.sevaUserID,
-            communityId: timebankModel.communityId,
-          );
-          if (!onBalanceCheckResult) {
-            showInsufficientBalance();
-            return;
-          }
-          break;
+//check for tool title/name field is not empty
+      if(requestModel.requestType == RequestType.BORROW && roomOrTool == 1 && 
+         (requestModel.borrowRequestToolName == '' || requestModel.borrowRequestToolName == null)) {
+        showDialogForTitle(
+            dialogTitle: 'Please enter Tool/s name');    //Label to be created
+        return;
+      }
 
-        case RequestMode.TIMEBANK_REQUEST:
-          requestModel.fullName = timebankModel.name;
-          requestModel.photoUrl = timebankModel.photoUrl;
-          break;
+      //Form and date is valid
+      if(requestModel.requestType != RequestType.BORROW) {
+        switch (requestModel.requestMode) {
+          case RequestMode.PERSONAL_REQUEST:
+            var myDetails = SevaCore.of(context).loggedInUser;
+            this.requestModel.fullName = myDetails.fullname;
+            this.requestModel.photoUrl = myDetails.photoURL;
+            var onBalanceCheckResult =
+                await SevaCreditLimitManager.hasSufficientCredits(
+              email: SevaCore.of(context).loggedInUser.email,
+              credits: requestModel.numberOfHours.toDouble(),
+              userId: myDetails.sevaUserID,
+              communityId: timebankModel.communityId,
+            );
+            if (!onBalanceCheckResult) {
+              showInsufficientBalance();
+              return;
+            }
+            break;
+
+          case RequestMode.TIMEBANK_REQUEST:
+            requestModel.fullName = timebankModel.name;
+            requestModel.photoUrl = timebankModel.photoUrl;
+            break;
+        }
       }
 
       int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -2265,23 +2505,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 userEmail: selectedInstructorModel.email);
           } else {
             // trigger email for user who is not part of the community for this request
-            await sendMailToInstructor(senderEmail: requestModel.email, 
-                                       receiverEmail: selectedInstructorModel.email,
-                                       communityName: requestModel.fullName,
-                                       requestName: requestModel.title,
-                                       requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                                       receiverName: selectedInstructorModel.fullname,
-                                       startDate: requestModel.requestStart,
-                                       endDate: requestModel.requestEnd);
+            await sendMailToInstructor(
+                senderEmail: requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: requestModel.fullName,
+                requestName: requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: requestModel.requestStart,
+                endDate: requestModel.requestEnd);
           }
         }
 
         await continueCreateRequest(confirmationDialogContext: null);
-
       } else {
-
         linearProgressForCreatingRequest();
-        
+
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
@@ -2296,14 +2535,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 userEmail: selectedInstructorModel.email);
           } else {
             // trigger email for user who is not part of the community for this request
-            await sendMailToInstructor(senderEmail: requestModel.email, 
-                                       receiverEmail: selectedInstructorModel.email,
-                                       communityName: requestModel.fullName,
-                                       requestName: requestModel.title,
-                                       requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                                       receiverName: selectedInstructorModel.fullname,
-                                       startDate: requestModel.requestStart,
-                                       endDate: requestModel.requestEnd);
+            await sendMailToInstructor(
+                senderEmail: requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: requestModel.fullName,
+                requestName: requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: requestModel.requestStart,
+                endDate: requestModel.requestEnd);
           }
         }
 
@@ -2409,19 +2649,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
         mailContent: MailContent.createMail(
       mailSender: senderEmail,
       mailReciever: receiverEmail,
-      mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
-      mailContent: 'You have been invited to instruct ' + requestName 
-                   + ' from ' + 
-                   DateTime.fromMillisecondsSinceEpoch(startDate).toString().substring(0,11) + 
-                   ' to ' +
-                   DateTime.fromMillisecondsSinceEpoch(endDate).toString().substring(0,11) +
-                   "\n\n"  +
-                    'Thanks,' + 
-                    "\n" + 
-                    'SevaX Team.',
-
+      mailSubject:
+          requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailContent: 'You have been invited to instruct ' +
+          requestName +
+          ' from ' +
+          DateTime.fromMillisecondsSinceEpoch(startDate)
+              .toString()
+              .substring(0, 11) +
+          ' to ' +
+          DateTime.fromMillisecondsSinceEpoch(endDate)
+              .toString()
+              .substring(0, 11) +
+          "\n\n" +
+          'Thanks,' +
+          "\n" +
+          'SevaX Team.',
     ));
-  }                       //Label to be given by client for email content
+  } //Label to be given by client for email content
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
     linearProgressForCreatingRequest();
@@ -2431,7 +2676,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     await _updateProjectModel();
     Navigator.pop(dialogContext);
 
-    if (resVar.length == 0) {
+    if (resVar.length == 0 && requestModel.requestType != RequestType.BORROW) {
       showInsufficientBalance();
     }
     if (confirmationDialogContext != null) {
@@ -2592,17 +2837,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
   Future<List<String>> _writeToDB() async {
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
-    await TransactionBloc().createNewTransaction(
-      requestModel.timebankId,
-      requestModel.timebankId,
-      DateTime.now().millisecondsSinceEpoch,
-      requestModel.numberOfHours ?? 0,
-      true,
-      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-      requestModel.id,
-      requestModel.timebankId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+    if(requestModel.requestType != RequestType.BORROW){
+      log('Comes Here');
+      await TransactionBloc().createNewTransaction(
+        requestModel.timebankId,
+        requestModel.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        requestModel.numberOfHours ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        requestModel.id,
+        requestModel.timebankId,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
+    }
+
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);

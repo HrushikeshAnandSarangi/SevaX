@@ -155,6 +155,7 @@ class RequestModel extends DataModel {
   String id;
   String title;
   String description;
+  String borrowRequestToolName;
   String email;
   String fullName;
   String sevaUserId;
@@ -200,6 +201,7 @@ class RequestModel extends DataModel {
     this.id,
     this.title,
     this.description,
+    this.borrowRequestToolName,
     this.durationOfRequest,
     this.email,
     this.fullName,
@@ -305,6 +307,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.GOODS;
       } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
+      } else if (map['requestType'] == "BORROW") {
+        this.requestType = RequestType.BORROW;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -317,6 +321,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('description')) {
       this.description = map['description'];
+    }
+    if (map.containsKey('borrowRequestToolName')) {
+      this.borrowRequestToolName = map['borrowRequestToolName'];
     }
     if (map.containsKey('email')) {
       this.email = map['email'];
@@ -433,7 +440,8 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor =
+          BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
     }
@@ -488,6 +496,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.GOODS;
       } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
+      } else if (map['requestType'] == "BORROW") {
+        this.requestType = RequestType.BORROW;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -516,6 +526,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('description')) {
       this.description = map['description'];
+    }
+    if (map.containsKey('borrowRequestToolName')) {
+      this.borrowRequestToolName = map['borrowRequestToolName'];
     }
     if (map.containsKey('email')) {
       this.email = map['email'];
@@ -603,9 +616,10 @@ class RequestModel extends DataModel {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
     }
-    
+
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor =
+          BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
     }
@@ -667,6 +681,10 @@ class RequestModel extends DataModel {
           object['requestType'] = "ONE_TO_MANY_REQUEST";
           break;
 
+        case RequestType.BORROW:
+          object['requestType'] = "BORROW";
+          break;
+
         case RequestType.TIME:
           object['requestType'] = "TIME";
           break;
@@ -691,6 +709,9 @@ class RequestModel extends DataModel {
     }
     if (this.description != null && this.description.isNotEmpty) {
       object['description'] = this.description;
+    }
+    if (this.borrowRequestToolName != null && this.borrowRequestToolName.isNotEmpty) {
+      object['borrowRequestToolName'] = this.borrowRequestToolName;
     }
     if (this.email != null && this.email.isNotEmpty) {
       object['email'] = this.email;
@@ -817,7 +838,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, borrowRequestToolName: $borrowRequestToolName, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 
@@ -858,6 +879,7 @@ enum RequestType {
   TIME,
   GOODS,
   ONE_TO_MANY_REQUEST,
+  BORROW,
 }
 enum RequestPaymentType {
   ACH,
@@ -873,6 +895,7 @@ Map<String, RequestType> requestTypeMapper = {
   "TIME": RequestType.TIME,
   "GOODS": RequestType.GOODS,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
+  "BORROW": RequestType.BORROW,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "ACH": RequestPaymentType.ACH,

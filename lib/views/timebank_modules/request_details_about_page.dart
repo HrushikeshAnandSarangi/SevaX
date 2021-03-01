@@ -1133,6 +1133,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.TIME:
         return timeDetailsForTimerequest;
 
+      case RequestType.BORROW:
+        return detailsForBorrowToolsRequest;
+
       default:
         return timeDetailsForTimerequest;
     }
@@ -1143,6 +1146,30 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       widget.requestItem.description,
       style: TextStyle(fontSize: 16),
     );
+  }
+
+  Widget get detailsForBorrowToolsRequest {
+    if (widget.requestItem.borrowRequestToolName != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.requestItem.borrowRequestToolName,
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(height: 8),
+          Text(
+            widget.requestItem.description,
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      );
+    } else {
+      return Text(
+            widget.requestItem.description,
+            style: TextStyle(fontSize: 16),
+          );
+    }
   }
 
   Widget get getCashDetailsForCashDonations {

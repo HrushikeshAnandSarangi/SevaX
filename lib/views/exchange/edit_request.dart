@@ -194,8 +194,11 @@ class RequestEditFormState extends State<RequestEditForm> {
   final searchOnChange = BehaviorSubject<String>();
   final _textUpdates = StreamController<String>();
 
+  //Below variable for Borrow Requests
+  int roomOrTool = 0;
+
   bool createEvent = false;
-  bool instructorAdded = true;
+  bool instructorAdded = false;
 
   Future<TimebankModel> getTimebankAdminStatus;
   Future getProjectsByFuture;
@@ -238,7 +241,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 //will be true because a One to many request when editing should have an instructor
     instructorAdded = true;
 
-    log('Instructor Data:  ' + widget.requestModel.selectedInstructor.toString());
+    log('Instructor Data:  ' +
+        widget.requestModel.selectedInstructor.toString());
     log('Instructor Data:  ' + widget.requestModel.approvedUsers.toString());
 
     fetchRemoteConfig();
@@ -384,6 +388,9 @@ class RequestEditFormState extends State<RequestEditForm> {
       }
     }
 
+log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.requestModel.requestType.toString());
+
+
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
@@ -403,6 +410,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                           children: <Widget>[
                             // headerContainer(snapshot),
                             // RequestTypeWidget(),
+
                             Text(
                               S.of(context).request_title,
                               style: TextStyle(
@@ -461,10 +469,16 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 : widget.requestModel.requestType ==
                                         RequestType.ONE_TO_MANY_REQUEST
                                     ? TimeRequest(snapshot, projectModelList)
-                                : widget.requestModel.requestType ==
-                                        RequestType.CASH
-                                    ? CashRequest(snapshot, projectModelList)
-                                    : GoodsRequest(snapshot, projectModelList),
+                                    : widget.requestModel.requestType ==
+                                            RequestType.CASH
+                                        ? CashRequest(
+                                            snapshot, projectModelList)
+                                        : widget.requestModel.requestType ==
+                                                RequestType.BORROW
+                                            ? BorrowRequest(
+                                                snapshot, projectModelList)
+                                            : GoodsRequest(
+                                                snapshot, projectModelList),
 
                             Padding(
                               padding:
@@ -916,6 +930,55 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
+   Widget BorrowToolTitleField(hintTextDesc) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Tool Name*",         //Label to be created (need client approval)
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              // if (value != null && value.length > 5) {
+              //   _debouncer.run(() {
+              //     getCategoriesFromApi(value);
+              //   });
+              // }
+              updateExitWithConfirmationValue(context, 9, value);
+            },
+            focusNode: focusNodes[3],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[3]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: hintTextDesc,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.requestModel.borrowRequestToolName,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              }
+              if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              }
+              widget.requestModel.borrowRequestToolName = value;
+            },
+          ),
+        ]);
+  }
+
   Widget RequestDescriptionData(hintTextDesc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -999,19 +1062,19 @@ class RequestEditFormState extends State<RequestEditForm> {
                       setState(() => {});
                     },
                   ),
-                   _optionRadioButton(
+                  _optionRadioButton(
                     title: S.of(context).one_to_many,
                     value: RequestType.ONE_TO_MANY_REQUEST,
                     groupvalue: widget.requestModel.requestType,
                     onChanged: (value) {
                       widget.requestModel.requestType = value;
                       //instructorAdded = true;
-                        // widget.requestModel.selectedInstructor = ({
-                        //   'fullname': widget.userModel.fullname,
-                        //   'email': widget.userModel.email,
-                        //   'photoURL': widget.userModel.photoURL,
-                        //   'sevaUserID': widget.userModel.sevaUserID,
-                        // });
+                      // widget.requestModel.selectedInstructor = ({
+                      //   'fullname': widget.userModel.fullname,
+                      //   'email': widget.userModel.email,
+                      //   'photoURL': widget.userModel.photoURL,
+                      //   'sevaUserID': widget.userModel.sevaUserID,
+                      // });
                       setState(() => {});
                     },
                   ),
@@ -1330,7 +1393,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       SizedBox(height: 10),
 
 //Instructor to be assigned to One to many requests widget Here
-      instructorAdded
+      (instructorAdded && widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1374,9 +1437,12 @@ class RequestEditFormState extends State<RequestEditForm> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             UserProfileImage(
-                              photoUrl: widget.requestModel.selectedInstructor.photoURL,
-                              email: widget.requestModel.selectedInstructor.email,
-                              userId: widget.requestModel.selectedInstructor.sevaUserID,
+                              photoUrl: widget
+                                  .requestModel.selectedInstructor.photoURL,
+                              email:
+                                  widget.requestModel.selectedInstructor.email,
+                              userId: widget
+                                  .requestModel.selectedInstructor.sevaUserID,
                               height: 50,
                               width: 50,
                               timebankModel: timebankModel,
@@ -1386,7 +1452,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                             ),
                             Expanded(
                               child: Text(
-                                widget.requestModel.selectedInstructor.fullname ??
+                                widget.requestModel.selectedInstructor
+                                        .fullname ??
                                     S.of(context).name_not_available,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -1580,8 +1647,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                                               .loggedInUser
                                               .sevaUserID,
                                           isFavorite: isAdmin
-                                              ? timeBankIds.contains(
-                                                  widget.requestModel.timebankId)
+                                              ? timeBankIds.contains(widget
+                                                  .requestModel.timebankId)
                                               : memberId.contains(
                                                   SevaCore.of(context)
                                                       .loggedInUser
@@ -1590,10 +1657,11 @@ class RequestEditFormState extends State<RequestEditForm> {
                                           onAddClick: () {
                                             setState(() {
                                               instructorAdded = true;
-                                              widget.requestModel.selectedInstructor =
-                                              BasicUserDetails(
+                                              widget.requestModel
+                                                      .selectedInstructor =
+                                                  BasicUserDetails(
                                                 fullname: user.fullname,
-                                                email:user.email,
+                                                email: user.email,
                                                 photoURL: user.photoURL,
                                                 sevaUserID: user.sevaUserID,
                                               );
@@ -1658,6 +1726,113 @@ class RequestEditFormState extends State<RequestEditForm> {
     } else {
       searchOnChange.add(queryString);
     }
+  }
+
+  Widget BorrowRequest(snapshot, projectModelList) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Visibility(
+            visible: widget.requestModel.isRecurring == true ||
+                widget.requestModel.autoGenerated == true,
+            child: EditRepeatWidget(
+              requestModel: widget.requestModel,
+              offerModel: null,
+            ),
+          ),
+          SizedBox(height: 20),
+
+          widget.requestModel.borrowRequestToolName != null
+          ? BorrowToolTitleField('Ex: Hammer or Chair...')
+              : Container(), //Label to be created (need client approval)
+
+          SizedBox(height: 15),
+
+          RequestDescriptionData(
+              'Please describe what you require'), //Label to be created (need client approval)
+          SizedBox(height: 20), //Same hint for Room and Tools ?
+          // Choose Category and Sub Category
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
+
+          SizedBox(height: 15),
+
+          Center(
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
+            ),
+          )
+        ]);
   }
 
   Widget CashRequest(snapshot, projectModelList) {
@@ -2231,6 +2406,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             communityId: SevaCore.of(context).loggedInUser.currentCommunity,
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
           );
+          
           Navigator.pop(dialogContext);
           Navigator.pop(context);
         } else {
