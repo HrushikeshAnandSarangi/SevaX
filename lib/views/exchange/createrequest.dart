@@ -2533,6 +2533,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
+                log('SENT NOTIF');
           } else {
             // trigger email for user who is not part of the community for this request
             await sendMailToInstructor(

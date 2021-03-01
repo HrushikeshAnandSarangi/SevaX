@@ -126,13 +126,8 @@ class MultiSelect extends FormField<dynamic> {
                 if (values != null) {
                   values.forEach((item) {
                     var existingItem = dataSource.singleWhere((itm) {
-                      log('ITM: ' + itm.toString());
-                       log('ITEM: ' + item.toString());
                       return itm[valueField] == item;
                     }, orElse: () => null);
-
-                    log('Existing Item: ' + existingItem.toString());
-                   
 
                     if (existingItem != null) {
                       selectedOptions.add(Chip(
