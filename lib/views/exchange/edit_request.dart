@@ -388,8 +388,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       }
     }
 
-log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.requestModel.requestType.toString());
-
 
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
@@ -511,6 +509,8 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
               });
         });
   }
+
+  
 
   Widget RequestGoodsDescriptionData() {
     return Column(
@@ -1274,7 +1274,7 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
           ? addToProjectContainer(
               snapshot,
               projectModelList,
-              requestModel,
+              widget.requestModel,
             )
           : Container(),
       SizedBox(height: 20),
@@ -1813,7 +1813,7 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
               ? addToProjectContainer(
                   snapshot,
                   projectModelList,
-                  requestModel,
+                  widget.requestModel,
                 )
               : Container(),
 
@@ -1995,7 +1995,7 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
               ? addToProjectContainer(
                   snapshot,
                   projectModelList,
-                  requestModel,
+                  widget.requestModel,
                 )
               : Container(),
           SizedBox(height: 20),
@@ -2071,7 +2071,7 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
               ? addToProjectContainer(
                   snapshot,
                   projectModelList,
-                  requestModel,
+                  widget.requestModel,
                 )
               : Container(),
           SizedBox(height: 20),
@@ -2150,6 +2150,7 @@ log('Instructor Widget Check:  ' + instructorAdded.toString() + '  ' + widget.re
   BuildContext dialogContext;
 
   void editRequest() async {
+    log('Project ID:  ' + widget.requestModel.projectId.toString());
     // verify f the start and end date time is not same
 
     var connResult = await Connectivity().checkConnectivity();
@@ -2713,6 +2714,7 @@ class ProjectSelection extends StatefulWidget {
 class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
+    
     if (widget.projectModelList == null) {
       return Container();
     }
@@ -2727,6 +2729,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
             widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
+    log('Model List:  '+  list.toString());
+    log('Project Id:  '+   widget.requestModel.projectId.toString());
     return MultiSelect(
       autovalidate: true,
       initialValue: ['None'],

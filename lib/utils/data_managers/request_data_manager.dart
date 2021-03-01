@@ -36,6 +36,12 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
 }
 
 Future<void> updateRequest({@required RequestModel requestModel}) async {
+ 
+  // if (requestModel.projectId != null) {
+  //   await Firestore.instance.updateData(db.collection("projects").document(projectData.id),
+  //       projectData.toMap());
+  // }
+
   return await Firestore.instance
       .collection('requests')
       .document(requestModel.id)
@@ -1287,7 +1293,9 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if (!isCompletedByUser && (model.requestType == RequestType.TIME || model.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
+          if (!isCompletedByUser &&
+              (model.requestType == RequestType.TIME ||
+                  model.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
             // model.timebankId/
             requestModelList.add(model);
           }

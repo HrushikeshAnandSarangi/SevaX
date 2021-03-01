@@ -1,4 +1,6 @@
 library flutter_multiselect;
+import 'dart:developer';
+
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:flutter/material.dart';
@@ -125,6 +127,7 @@ class MultiSelect extends FormField<dynamic> {
                     var existingItem = dataSource.singleWhere(
                         (itm) => itm[valueField] == item,
                         orElse: () => null);
+                        log('ITEM: ' + item);
                     if (existingItem != null) {
                       selectedOptions.add(Chip(
                         label: Text(existingItem[textField],
