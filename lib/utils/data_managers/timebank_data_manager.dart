@@ -427,6 +427,18 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
   return communityModel;
 }
 
+//check test community status by calling this api
+Future<bool> checkTestCommunityStatus({@required String creatorId}) async {
+  return await Firestore.instance
+      .collection('communities')
+      .where('created_by', isEqualTo: creatorId)
+      .where('testCommunity', isEqualTo: true)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    return querySnapshot.documents.length > 0;
+  }).catchError((value) => false);
+}
+
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
@@ -531,7 +543,11 @@ Future<int> changePlan(
   try {
     http.Response result = await http.post(
       FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-      body: json.encode({'communityId': communityId, "newPlanId": planId, 'private': isPrivate}),
+      body: json.encode({
+        'communityId': communityId,
+        "newPlanId": planId,
+        'private': isPrivate
+      }),
       headers: {"Content-type": "application/json"},
     );
     if (result.statusCode == 200) {

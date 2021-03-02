@@ -136,14 +136,18 @@ class CreateEditCommunityViewFormState
 
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
-
+  bool canTestCommunity = false;
+  bool testCommunity = false;
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
       Future.delayed(Duration.zero, () {
         createEditCommunityBloc.getChildTimeBanks(context);
       });
+    } else {
+      checkTestCommunityStatus();
     }
+
     super.initState();
 
     focusNodes = List.generate(8, (_) => FocusNode());
@@ -186,6 +190,18 @@ class CreateEditCommunityViewFormState
           });
         }
       }
+    });
+  }
+
+  Future<void> checkTestCommunityStatus() async {
+    Future.delayed(Duration(milliseconds: 200), () {
+      FirestoreManager.checkTestCommunityStatus(
+              creatorId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .then((onValue) {
+        setState(() {
+          canTestCommunity = onValue;
+        });
+      });
     });
   }
 
@@ -264,6 +280,7 @@ class CreateEditCommunityViewFormState
                 createEditCommunityBloc.onChange(snapshot.data);
               }
             }
+
             return Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
@@ -566,6 +583,49 @@ class CreateEditCommunityViewFormState
                               ],
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Offstage(
+                          offstage: !widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              headingText('Test Community'),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                child: infoButton(
+                                  context: context,
+                                  key: GlobalKey(),
+                                  type: InfoType.TestCommunity,
+                                ),
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Divider(),
+                                  Checkbox(
+                                    value: testCommunity,
+                                    onChanged: (bool value) {
+                                      if (!canTestCommunity) {
+                                        snapshot.data.community
+                                            .updateValueByKey(
+                                          'testCommunity',
+                                          value,
+                                        );
+                                        testCommunity = value;
+                                        setState(() {});
+                                      } else {
+                                        showDialogForSuccess(
+                                            dialogTitle:
+                                                'You already created a test community.',
+                                            err: true);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         SponsorsWidget(
                           sponsorsMode: widget.isCreateTimebank
@@ -892,14 +952,24 @@ class CreateEditCommunityViewFormState
                                               .sevaUserID
                                         ];
 
-                                        //by default every community is on neighbourhood plan
-                                        snapshot.data.community.payment = {
-                                          "planId": "neighbourhood_plan",
-                                          "payment_success": true,
-                                          "message":
-                                              "You are on Neighbourhood plan",
-                                          "status": 200,
-                                        };
+                                        if (testCommunity == true) {
+                                          snapshot.data.community.payment = {
+                                            "planId": "venti_plan",
+                                            "payment_success": true,
+                                            "message":
+                                                "You are on Enterprise Plan",
+                                            "status": 200,
+                                          };
+                                        } else {
+                                          //by default every community is on neighbourhood plan
+                                          snapshot.data.community.payment = {
+                                            "planId": "neighbourhood_plan",
+                                            "payment_success": true,
+                                            "message":
+                                                "You are on Neighbourhood plan",
+                                            "status": 200,
+                                          };
+                                        }
 
                                         snapshot.data.community.billMe = false;
 
