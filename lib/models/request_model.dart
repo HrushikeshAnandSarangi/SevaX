@@ -195,6 +195,8 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   Map<String, dynamic> skills;
+  bool liveMode = false;
+
   RequestModel({
     this.id,
     this.title,
@@ -237,6 +239,7 @@ class RequestModel extends DataModel {
     this.categories,
     @required this.communityId,
     this.skills,
+    this.liveMode,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -361,6 +364,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('accepted')) {
       this.accepted = map['accepted'];
     }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    }
 
     if (map.containsKey('isNotified')) {
       this.isNotified = map['isNotified'];
@@ -436,6 +442,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey("skills")) {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
+    }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
     }
   }
 
@@ -618,6 +627,9 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    }
   }
 
   @override
@@ -796,6 +808,9 @@ class RequestModel extends DataModel {
     }
     if (this.skills != null) {
       object['skills'] = this.skills;
+    }
+    if (this.liveMode != null) {
+      object['liveMode'] = this.liveMode;
     }
 
     return object;

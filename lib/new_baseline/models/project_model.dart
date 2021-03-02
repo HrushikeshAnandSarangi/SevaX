@@ -46,6 +46,7 @@ class ProjectModel extends DataModel {
 
   bool requestedSoftDelete;
   bool softDelete;
+  bool liveMode;
   String associatedMessaginfRoomId;
 
   ProjectModel({
@@ -71,6 +72,7 @@ class ProjectModel extends DataModel {
     this.requestedSoftDelete,
     this.associatedMessaginfRoomId,
     this.associatedmembers,
+    this.liveMode,
   });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => ProjectModel(
@@ -96,6 +98,7 @@ class ProjectModel extends DataModel {
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
+        liveMode: json["liveMode"] == null ? false : json["liveMode"],
         requestedSoftDelete: json["requestedSoftDelete"] == null
             ? false
             : json["requestedSoftDelete"],
@@ -147,6 +150,7 @@ class ProjectModel extends DataModel {
       "start_time": startTime == null ? null : startTime,
       "end_time": endTime == null ? null : endTime,
       "softDelete": softDelete ?? false,
+      "liveMode": liveMode ?? false,
       "requestedSoftDelete": requestedSoftDelete ?? false,
       "members":
           members == null ? null : List<dynamic>.from(members.map((x) => x)),
@@ -164,6 +168,6 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests}';
+    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber,liveMode: $liveMode, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests}';
   }
 }

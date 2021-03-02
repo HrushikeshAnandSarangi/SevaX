@@ -35,6 +35,9 @@ class AppConfig {
   static bool isWeb;
   static bool isMobile;
 
+  //isTest Community
+  static bool isTestCommunity;
+
   //plan check data
   static UpgradePlanBannerModel upgradePlanBannerModel;
   static HelpContextMemberType helpIconContextMember =

@@ -33,6 +33,7 @@ class TimebankModel extends DataModel {
   bool softDelete;
   bool preventAccedentalDelete;
   bool requestedSoftDelete;
+  bool liveMode;
   List<String> managedCreatorIds;
   List<SponsorDataModel> sponsors;
 
@@ -68,6 +69,7 @@ class TimebankModel extends DataModel {
     this.protected = map.containsKey("protected") ? map["protected"] : false;
     this.private = map.containsKey("private") ? map["private"] : false;
     this.sponsored = map.containsKey("sponsored") ? map["sponsored"] : false;
+    this.liveMode = map.containsKey("liveMode") ? map["liveMode"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.associatedParentTimebankId =
@@ -190,6 +192,7 @@ class TimebankModel extends DataModel {
     if (key == 'private') {
       this.private = value;
     }
+
     if (key == 'sponsored') {
       this.sponsored = value;
     }
@@ -217,6 +220,9 @@ class TimebankModel extends DataModel {
     }
     if (key == 'sponsors') {
       this.sponsors = value;
+    }
+    if (key == 'liveMode') {
+      this.liveMode = value;
     }
   }
 
@@ -326,13 +332,17 @@ class TimebankModel extends DataModel {
     } else {
       map['sponsors'] = [];
     }
-
+    if (this.liveMode != null) {
+      map['liveMode'] = this.liveMode;
+    } else {
+      map['liveMode'] = false;
+    }
     return map;
   }
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
   }
 }
 
