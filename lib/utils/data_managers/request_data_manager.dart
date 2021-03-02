@@ -36,7 +36,6 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
 }
 
 Future<void> updateRequest({@required RequestModel requestModel}) async {
- 
   // if (requestModel.projectId != null) {
   //   await Firestore.instance.updateData(db.collection("projects").document(projectData.id),
   //       projectData.toMap());
@@ -1283,6 +1282,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
       handleData: (snapshot, requestSink) {
+        log('REQUESTS LIST:  ' + snapshot.documents.length.toString());
         // TODO needs flow correction to Tasks model need to be corrected
         List<RequestModel> requestModelList = [];
         snapshot.documents.forEach((documentSnapshot) {
@@ -1295,7 +1295,8 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           });
           if (!isCompletedByUser &&
               (model.requestType == RequestType.TIME ||
-                  model.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
+                  model.requestType == RequestType.ONE_TO_MANY_REQUEST ||
+                  model.requestType == RequestType.BORROW)) {
             // model.timebankId/
             requestModelList.add(model);
           }

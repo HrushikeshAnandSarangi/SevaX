@@ -797,7 +797,6 @@ class TaskCardViewState extends State<TaskCardView> {
     if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
         requestModel.selectedInstructor.sevaUserID ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
-
       if (selectedHoursPrepTimeController.text == null ||
           selectedHoursPrepTimeController.text.length == 0 ||
           selectedHoursDeliveryTimeController.text == null ||
@@ -818,7 +817,7 @@ class TaskCardViewState extends State<TaskCardView> {
         return;
       }
 
-       totalMinutes = int.parse(selectedMinuteValue) +
+      totalMinutes = int.parse(selectedMinuteValue) +
           (int.parse(hoursController.text) * 60);
     } else {
       logger.i('This 3');
@@ -844,7 +843,7 @@ class TaskCardViewState extends State<TaskCardView> {
       );
       return;
       //show dialog
-    } else if (creditRequest == 0) {
+    } else if (creditRequest == 0 && requestModel.requestType != RequestType.BORROW) {
       showDialogFoInfo(
         title: S.of(context).enter_hours,
         content: S.of(context).validation_error_invalid_hours,
@@ -856,7 +855,9 @@ class TaskCardViewState extends State<TaskCardView> {
       MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
-            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
+            feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER,
+             //FeedbackType.FOR_REQUEST_CREATOR
+             requestModel: requestModel,
           );
         },
       ),
@@ -968,8 +969,8 @@ class TaskCardViewState extends State<TaskCardView> {
       int totalMinutes = 0;
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+          requestModel.selectedInstructor.sevaUserID ==
+              SevaCore.of(context).loggedInUser.sevaUserID) {
         totalMinutes = int.parse(selectedMinutesPrepTime) +
             int.parse(selectedMinutesDeliveryTime) +
             (int.parse(selectedHoursPrepTimeController.text) * 60) +

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
@@ -16,13 +17,16 @@ enum FeedbackType {
   FOR_REQUEST_VOLUNTEER,
   FOR_REQUEST_CREATOR,
   FOR_ONE_TO_MANY_OFFER,
+  FOR_BORROW_REQUEST_LENDER,
+  FOR_BORROW_REQUEST_BORROWER,
 }
 
 class ReviewFeedback extends StatefulWidget {
   // final bool forVolunteer;
   final FeedbackType feedbackType;
+  final RequestModel requestModel;
 
-  ReviewFeedback({this.feedbackType});
+  ReviewFeedback({this.feedbackType, this.requestModel});
   @override
   State<StatefulWidget> createState() => ReviewFeedbackState();
 }
@@ -125,8 +129,76 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case FeedbackType.FOR_ONE_TO_MANY_OFFER:
         return getFeedbackQuestionForOneToManyOffer(languageCode);
 
+      case FeedbackType.FOR_BORROW_REQUEST_LENDER:
+        return getFeedbackQuestionsForLender(languageCode);
+
+      case FeedbackType.FOR_BORROW_REQUEST_BORROWER:
+        return getFeedbackQuestionsForBorrower(languageCode);
+
       default:
         throw "FEEDBACK TYPE NOT DEFINED";
+    }
+  }
+
+  List<Map<String, Object>> getFeedbackQuestionsForLender(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_LENDER_EN;
+
+      // case 'sn':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
+      // case 'af':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_AF;
+      // case 'sw':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SW;
+
+      // case 'fr':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_FR;
+
+      // case 'pt':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_PT;
+
+      // case 'es':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
+
+      // case 'zh':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
+    }
+  }
+
+  List<Map<String, Object>> getFeedbackQuestionsForBorrower(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_BORROWER_EN;
+
+      // case 'sn':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
+      // case 'af':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_AF;
+      // case 'sw':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SW;
+
+      // case 'fr':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_FR;
+
+      // case 'pt':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_PT;
+
+      // case 'es':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
+
+      // case 'zh':
+      //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
     }
   }
 
@@ -223,7 +295,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   Widget getFeebackQuestions() {
     Widget widgettype;
-    if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER) {
+    if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
       widgettype = StarRating();
     } else {
       widgettype = getQuestionsWidget(widget, questionIndex);
@@ -291,7 +364,11 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       "ratings": ratings,
       "selection": getRating(
               totalScore,
-              widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER
+              (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
+                      widget.feedbackType ==
+                          FeedbackType.FOR_BORROW_REQUEST_LENDER ||
+                      widget.feedbackType ==
+                          FeedbackType.FOR_BORROW_REQUEST_BORROWER)
                   ? 20
                   : 15)
           .toStringAsFixed(1),
@@ -359,7 +436,11 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                           : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
-                  hintText: S.of(context).review_feedback_message,
+                  hintText: widget.requestModel.requestType == RequestType.BORROW ? 
+                            'Please share your appreciation for the borrower or let them know how they can improve next time.'
+                            //NEED TO DIFFERENTIATE HERE BETWEEN BORROWER & LENDER for above message
+                            :
+                            S.of(context).review_feedback_message,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red, //this has no effect
