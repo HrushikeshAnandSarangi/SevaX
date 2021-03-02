@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
@@ -46,6 +47,7 @@ class UserDataBloc extends BlocBase {
           _community.add(CommunityModel(model.community.data));
           AppConfig.paymentStatusMap = _community.value.payment;
           AppConfig.isTestCommunity = _community.value.testCommunity;
+          log('test ${AppConfig.isTestCommunity}');
         }
       });
   }

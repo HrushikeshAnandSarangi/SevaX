@@ -426,13 +426,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 return RaisedButton(
                   // color: Colors.blue,
                   onPressed: () {
-                    if (errTxt != null || errTxt != "" ||
+                    if (errTxt != null ||
+                        errTxt != "" ||
                         duplicateGroupCheck == 'not_done') {}
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
                     //if (location != null) {
                     if (_formKey.currentState.validate() &&
-                        (errTxt == null || errTxt == "") && 
+                        (errTxt == null || errTxt == "") &&
                         duplicateGroupCheck == 'done') {
 //
 //                            // If the form is valid, we want to show a Snackbar
