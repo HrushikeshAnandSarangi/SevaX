@@ -855,7 +855,7 @@ class TaskCardViewState extends State<TaskCardView> {
       MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
-            feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER,
+            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
              //FeedbackType.FOR_REQUEST_CREATOR
              requestModel: requestModel,
           );
