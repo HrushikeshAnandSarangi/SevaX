@@ -4,8 +4,103 @@ class FeedbackConstants {
   static const ANSWER_TEXT = "text";
   static const SCORE = "score";
 
-//FEEDBACK_QUESTIONS_FOR_LENDER
-  static const FEEDBACK_QUESTIONS_FOR_LENDER_EN = const [
+
+  //FEEDBACK_QUESTIONS_FOR_LENDER_ROOM
+  // static const FEEDBACK_QUESTIONS_FOR_LENDER_ROOM_EN = const [
+  //   {
+  //     FEEDBACK_TITLE: "How would you rate your experience?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Excellent", SCORE: 5},
+  //       {ANSWER_TEXT: "Above Average", SCORE: 4},
+  //       {ANSWER_TEXT: "Satisfactory", SCORE: 3},
+  //       {ANSWER_TEXT: "Unsatisfactory", SCORE: 2},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE:
+  //         "Did you experience any difficulty in retrieving back the item you lent?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "No difficulty", SCORE: 5},
+  //       {ANSWER_TEXT: "Only slightly", SCORE: 4},
+  //       {ANSWER_TEXT: "Yes, I had some difficulty", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "Was the item you lent given back in the same condition?",
+  //     ANSWERS: [
+  //       {"text": "Yes, just as good", SCORE: 5},
+  //       {"text": "No, not as good condition", SCORE: 4},
+  //       {"text": "No, in worse condition", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "How likely are you to lend to this person again?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Yes, I would", SCORE: 5},
+  //       {ANSWER_TEXT: "I’m not sure", SCORE: 4},
+  //       {ANSWER_TEXT: "No, I would not", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "Based on your experience, are you likely to lend again?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Yes, I would", SCORE: 5},
+  //       {ANSWER_TEXT: "I’m not sure", SCORE: 4},
+  //       {ANSWER_TEXT: "No, I would not", SCORE: 3},
+  //     ]
+  //   },
+  // ];
+
+    //FEEDBACK_QUESTIONS_FOR_BORROWER_ROOM
+  // static const FEEDBACK_QUESTIONS_FOR_LENDER_ROOM_EN = const [
+  //   {
+  //     FEEDBACK_TITLE: "How would you rate your experience?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Excellent", SCORE: 5},
+  //       {ANSWER_TEXT: "Above Average", SCORE: 4},
+  //       {ANSWER_TEXT: "Satisfactory", SCORE: 3},
+  //       {ANSWER_TEXT: "Unsatisfactory", SCORE: 2},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE:
+  //         "Did you experience any difficulty in retrieving back the item you lent?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "No difficulty", SCORE: 5},
+  //       {ANSWER_TEXT: "Only slightly", SCORE: 4},
+  //       {ANSWER_TEXT: "Yes, I had some difficulty", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "Was the item you lent given back in the same condition?",
+  //     ANSWERS: [
+  //       {"text": "Yes, just as good", SCORE: 5},
+  //       {"text": "No, not as good condition", SCORE: 4},
+  //       {"text": "No, in worse condition", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "How likely are you to lend to this person again?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Yes, I would", SCORE: 5},
+  //       {ANSWER_TEXT: "I’m not sure", SCORE: 4},
+  //       {ANSWER_TEXT: "No, I would not", SCORE: 3},
+  //     ]
+  //   },
+  //   {
+  //     FEEDBACK_TITLE: "Based on your experience, are you likely to lend again?",
+  //     ANSWERS: [
+  //       {ANSWER_TEXT: "Yes, I would", SCORE: 5},
+  //       {ANSWER_TEXT: "I’m not sure", SCORE: 4},
+  //       {ANSWER_TEXT: "No, I would not", SCORE: 3},
+  //     ]
+  //   },
+  // ];
+
+
+
+//FEEDBACK_QUESTIONS_FOR_LENDER_TOOL
+  static const FEEDBACK_QUESTIONS_FOR_LENDER_TOOL_EN = const [
     {
       FEEDBACK_TITLE: "How would you rate your experience?",
       ANSWERS: [
@@ -51,10 +146,9 @@ class FeedbackConstants {
   ];
 
 
-  
 
-//FEEDBACK_QUESTIONS_FOR_BORROWER
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_EN = const [
+//FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL
+  static const FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL_EN = const [
     {
       FEEDBACK_TITLE:
           "Was the transaction completed in a professional manner on a scale between 0-10, where 0 = Not at all professional and 10 = Extremely Professional?",

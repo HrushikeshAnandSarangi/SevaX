@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -17,8 +19,10 @@ enum FeedbackType {
   FOR_REQUEST_VOLUNTEER,
   FOR_REQUEST_CREATOR,
   FOR_ONE_TO_MANY_OFFER,
-  FOR_BORROW_REQUEST_LENDER,
-  FOR_BORROW_REQUEST_BORROWER,
+  FOR_BORROW_REQUEST_LENDER_TOOL,
+  FOR_BORROW_REQUEST_BORROWER_TOOL,
+  FOR_BORROW_REQUEST_LENDER_ROOM,
+  FOR_BORROW_REQUEST_BORROWER_ROOM,
 }
 
 class ReviewFeedback extends StatefulWidget {
@@ -86,7 +90,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -129,23 +133,29 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case FeedbackType.FOR_ONE_TO_MANY_OFFER:
         return getFeedbackQuestionForOneToManyOffer(languageCode);
 
-      case FeedbackType.FOR_BORROW_REQUEST_LENDER:
-        return getFeedbackQuestionsForLender(languageCode);
+      case FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL:
+        return getFeedbackQuestionsForLenderTool(languageCode);
 
-      case FeedbackType.FOR_BORROW_REQUEST_BORROWER:
-        return getFeedbackQuestionsForBorrower(languageCode);
+      case FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL:
+        return getFeedbackQuestionsForBorrowerTool(languageCode);
+
+      //case FeedbackType.FOR_BORROW_REQUEST_LENDER_ROOM:
+       // return getFeedbackQuestionsForLender(languageCode);
+
+      //case FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM:
+       // return getFeedbackQuestionsForBorrower(languageCode);
 
       default:
         throw "FEEDBACK TYPE NOT DEFINED";
     }
   }
 
-  List<Map<String, Object>> getFeedbackQuestionsForLender(
+  List<Map<String, Object>> getFeedbackQuestionsForLenderTool(
     String languageCode,
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_LENDER_EN;
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_LENDER_TOOL_EN;
 
       // case 'sn':
       //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
@@ -171,12 +181,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     }
   }
 
-  List<Map<String, Object>> getFeedbackQuestionsForBorrower(
+  List<Map<String, Object>> getFeedbackQuestionsForBorrowerTool(
     String languageCode,
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_BORROWER_EN;
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL_EN;
 
       // case 'sn':
       //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
@@ -296,7 +306,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   Widget getFeebackQuestions() {
     Widget widgettype;
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
-        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL ||
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM) {
       widgettype = StarRating();
     } else {
       widgettype = getQuestionsWidget(widget, questionIndex);
@@ -366,9 +377,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               totalScore,
               (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
                       widget.feedbackType ==
-                          FeedbackType.FOR_BORROW_REQUEST_LENDER ||
+                          FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL ||
                       widget.feedbackType ==
-                          FeedbackType.FOR_BORROW_REQUEST_BORROWER)
+                          FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM)
                   ? 20
                   : 15)
           .toStringAsFixed(1),
@@ -436,11 +447,17 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                           : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
-                  hintText: widget.requestModel.requestType == RequestType.BORROW ? 
-                            'Please share your appreciation for the borrower or let them know how they can improve next time.'
-                            //NEED TO DIFFERENTIATE HERE BETWEEN BORROWER & LENDER for above message
-                            :
-                            S.of(context).review_feedback_message,
+                  hintText: (widget.requestModel.requestType ==
+                              RequestType.BORROW &&
+                          widget.requestModel.sevaUserId !=
+                              SevaCore.of(context).loggedInUser.sevaUserID)
+                      ? 'Please share your appreciation for the borrower or let them know how they can improve next time.'
+                      : (widget.requestModel.requestType ==
+                                  RequestType.BORROW &&
+                              widget.requestModel.sevaUserId ==
+                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                          ? 'Please share your appreciation for the lender or let them know how they can improve next time.'
+                          : S.of(context).review_feedback_message,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red, //this has no effect

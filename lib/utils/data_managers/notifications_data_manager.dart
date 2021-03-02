@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -260,6 +261,7 @@ Future<void> createApprovalNotificationForMember({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   var requestModel = RequestModel.fromMap(model.data);
+  log('comes here 2');
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
@@ -280,6 +282,7 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
           .setData(model.toMap(), merge: true);
       break;
   }
+  log('comes here 3');
 }
 
 Future<void> processLoans({
