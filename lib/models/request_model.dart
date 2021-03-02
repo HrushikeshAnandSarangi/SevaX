@@ -173,6 +173,7 @@ class RequestModel extends DataModel {
   List<String> approvedUsers;
   List<String> invitedUsers;
   List<String> categories;
+  List<String> timebanksPosted;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
@@ -194,6 +195,9 @@ class RequestModel extends DataModel {
   CashModel cashModel = new CashModel();
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
+  bool public;
+  bool virtualRequest;
+  Map<String, dynamic> participantDetails = {};
   RequestModel({
     this.id,
     this.title,
@@ -235,9 +239,11 @@ class RequestModel extends DataModel {
     this.recommendedMemberIdsForRequest,
     this.categories,
     @required this.communityId,
-  }) {
-    log("===========Constructir called $communityId =======");
-  }
+    this.public,
+    this.virtualRequest,
+    this.timebanksPosted,
+    this.participantDetails,
+  });
 
   RequestModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('donationInstructionLink')) {
@@ -432,6 +438,23 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+      ;
+    }
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -608,7 +631,23 @@ class RequestModel extends DataModel {
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
-      this.cashModel = new CashModel();
+      this.cashModel = CashModel();
+    }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+      ;
     }
   }
 
@@ -786,12 +825,29 @@ class RequestModel extends DataModel {
     if (this.goodsDonationDetails != null) {
       object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
     }
+    if (this.public != null) {
+      object['public'] = this.public;
+    } else {
+      object['public'] = false;
+    }
+    if (this.virtualRequest != null) {
+      object['virtualRequest'] = this.virtualRequest;
+    } else {
+      object['virtualRequest'] = false;
+    }
+    if (this.timebanksPosted != null) {
+      object['timebanksPosted'] = this.timebanksPosted;
+    }
+    if (this.participantDetails != null) {
+      object['participantDetails'] =
+          Map<String, dynamic>.from(this.participantDetails);
+    }
     return object;
   }
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description,email: $email,public: $public, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, categories: $categories, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, numberOfHours: $numberOfHours, maxCredits: $maxCredits, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, projectId: $projectId, address: $address, softDelete: $softDelete, isRecurring: $isRecurring, recurringDays: $recurringDays, occurenceCount: $occurenceCount, end: $end, parent_request_id: $parent_request_id, autoGenerated: $autoGenerated, donationInstructionLink: $donationInstructionLink, allowedCalenderUsers: $allowedCalenderUsers, recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, requestMode: $requestMode, requestType: $requestType, cashModel: $cashModel, goodsDonationDetails: $goodsDonationDetails}';
   }
 }
 

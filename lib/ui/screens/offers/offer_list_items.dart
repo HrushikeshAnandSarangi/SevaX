@@ -198,6 +198,7 @@ class OfferListItems extends StatelessWidget {
           adminCheckToAcceptOfferDialog(context);
           return;
         }
+
         if (model.isRecurring) {
           Navigator.push(
               context,

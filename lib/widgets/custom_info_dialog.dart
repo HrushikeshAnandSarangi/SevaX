@@ -18,6 +18,11 @@ enum InfoType {
   MAX_CREDITS,
   SPONSORED,
   NEGATIVE_CREDITS,
+  OpenScopeRequest,
+  OpenScopeOffer,
+  OpenScopeEvent,
+  VirtualRequest,
+  VirtualOffers,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -32,6 +37,10 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.MAX_CREDITS: "maxCredit",
   InfoType.SPONSORED: "sponsored",
   InfoType.NEGATIVE_CREDITS: 'negativeCredits',
+  InfoType.OpenScopeRequest: "openScopeRequest",
+  InfoType.OpenScopeOffer: "openScopeOffer",
+  InfoType.OpenScopeEvent: "openScopeEvent",
+  InfoType.VirtualRequest: "virtualRequest",
 };
 
 Widget infoButton({

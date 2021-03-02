@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -20,11 +23,12 @@ class DonationView extends StatefulWidget {
   final String timabankName;
   final String notificationId;
 
-  DonationView(
-      {this.requestModel,
-      this.offerModel,
-      this.timabankName,
-      this.notificationId});
+  DonationView({
+    this.requestModel,
+    this.offerModel,
+    this.timabankName,
+    this.notificationId,
+  });
 
   @override
   _DonationViewState createState() => _DonationViewState();
@@ -45,9 +49,9 @@ class _DonationViewState extends State<DonationView> {
     donorDetails: DonorDetails(),
     receiverDetails: DonorDetails(),
     cashDetails: CashDetails(
-        cashDetails: CashModel(
-            paymentType: RequestPaymentType.ZELLEPAY,
-            achdetails: new ACHModel())),
+      cashDetails: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+    ),
     goodsDetails: GoodsDetails(),
   );
   UserModel sevaUser = UserModel();
@@ -85,6 +89,7 @@ class _DonationViewState extends State<DonationView> {
 //            : 280);
 
     super.initState();
+    getCommunity();
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
@@ -96,6 +101,19 @@ class _DonationViewState extends State<DonationView> {
                     ? S.of(context).minmum_amount
                     : S.of(context).select_goods_category);
       }
+    });
+  }
+
+  void getCommunity() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Firestore.instance
+          .collection('communities')
+          .document(SevaCore.of(context).loggedInUser.currentCommunity)
+          .get()
+          .then((value) {
+        logger.i(">>>>>>>>>>>" + CommunityModel(value.data).toMap().toString());
+        donationBloc.addCommunity(CommunityModel(value.data));
+      });
     });
   }
 
@@ -200,9 +218,14 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
       donationsModel.donorDetails.email = sevaUser.email;
       donationsModel.donorDetails.bio = sevaUser.bio;
+      donationsModel.donorDetails.communityId = sevaUser.currentCommunity;
+
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
+      donationsModel.receiverDetails.communityId =
+          widget.requestModel.communityId;
+      donationsModel.communityId = widget.requestModel.communityId;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -218,11 +241,15 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.name = widget.offerModel.fullName;
       donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
       donationsModel.donorDetails.email = widget.offerModel.email;
+      donationsModel.donorDetails.communityId = widget.offerModel.communityId;
+
       donationsModel.receiverDetails.name = sevaUser.fullname;
       donationsModel.receiverDetails.email = sevaUser.email;
       donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;
+      donationsModel.receiverDetails.communityId = sevaUser.currentCommunity;
+
+      donationsModel.communityId = widget.offerModel.communityId;
     }
-    donationsModel.communityId = sevaUser.currentCommunity;
   }
 
   TextStyle hintTextStyle = TextStyle(
@@ -235,11 +262,8 @@ class _DonationViewState extends State<DonationView> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading: Radio(
-        value: value,
-        groupValue: groupvalue,
-        onChanged: onChanged,
-      ),
+      leading:
+          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
     );
   }
 
