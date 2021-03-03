@@ -25,6 +25,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
@@ -1730,14 +1731,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
 
-      if (widget.isOfferRequest == true && widget.userModel != null) {
+      if (widget.isOfferRequest && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 
         List<String> approvedUsers = [];
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
+        //TODO
+        requestModel.participantDetails = {};
+        requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
+          communityId: widget.offer.communityId,
+          communityName: '',
+          memberEmail: widget.userModel.email,
+          memberName: widget.userModel.fullname,
+          memberPhotoUrl: widget.userModel.photoURL,
+          timebankId: widget.offer.timebankId,
+        ).toMap();
         //create an invitation for the request
-
       }
 
       if (requestModel.isRecurring &&

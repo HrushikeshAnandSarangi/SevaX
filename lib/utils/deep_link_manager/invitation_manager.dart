@@ -219,6 +219,7 @@ class InvitationStatus {
 }
 
 //export to  a new  file
+@Deprecated('Class no longer used as we now use normal flow')
 class OfferInvitationManager {
   static Future<bool> handleInvitationNotificationForRequestCreatedFromOffer({
     RequestModel requestModel,

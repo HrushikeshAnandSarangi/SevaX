@@ -9,6 +9,26 @@ import 'models.dart';
 
 enum OfferType { INDIVIDUAL_OFFER, GROUP_OFFER }
 
+extension OfferTypeExtension on OfferType {
+  String readbable(RequestType requestType) {
+    if (this == OfferType.GROUP_OFFER)
+      return 'One to many Offer';
+    else if (this == OfferType.INDIVIDUAL_OFFER)
+      switch (requestType) {
+        case RequestType.CASH:
+          return 'Money Offer';
+        case RequestType.GOODS:
+          return 'Goods Offer';
+        case RequestType.TIME:
+          return 'Time Offer';
+        default:
+          return 'Individual Offer';
+      }
+    else
+      return 'Individual Offer';
+  }
+}
+
 class GroupOfferDataModel {
   String classTitle;
   String classDescription;
