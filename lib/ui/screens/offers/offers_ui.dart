@@ -245,6 +245,11 @@ class OfferCardViewState extends State<OfferCardView> {
                                                               timebankId: widget
                                                                   .offerModel
                                                                   .timebankId,
+                                                              loggedInMemberUserId:
+                                                                  SevaCore.of(
+                                                                          context)
+                                                                      .loggedInUser
+                                                                      .sevaUserID,
                                                             ),
                                                           ),
                                                         );
@@ -261,6 +266,11 @@ class OfferCardViewState extends State<OfferCardView> {
                                                               timebankId: widget
                                                                   .offerModel
                                                                   .timebankId,
+                                                              loggedInMemberUserId:
+                                                                  SevaCore.of(
+                                                                          context)
+                                                                      .loggedInUser
+                                                                      .sevaUserID,
                                                             ),
                                                           ),
                                                         );
