@@ -104,6 +104,12 @@ class _CompletedListState extends State<CompletedList> {
               },
             ),
             trailing: () {
+
+              if(model.transactions == null) {
+
+              //to be completed
+              
+              } else {
               TransactionModel transmodel =
                   model.transactions.firstWhere((transaction) {
                 return transaction.to ==
@@ -122,6 +128,7 @@ class _CompletedListState extends State<CompletedList> {
                       )),
                 ],
               );
+              }
             }(),
             subtitle: FutureBuilder(
               future:

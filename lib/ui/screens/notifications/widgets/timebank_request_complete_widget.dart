@@ -77,37 +77,19 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
-            if (model.requestType == RequestType.BORROW) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BorrowRequestFeedBackView(
-                    requestModel: model,
-                  ),
-                ),
-              );
-              FirestoreManager.readTimeBankNotification(
-                notificationId: notificationId,
-                timebankId: model.timebankId,
-              );
-              //  showMemberClaimConfirmation(
-              //   context: parentContext,
-              //   notificationId: notificationId,
-              //   requestModel: model,
-              //   userId: userId,
-              //   userModel: user,
-              //   credits: transactionModel.credits,
-              // );
-            } else {
-              showMemberClaimConfirmation(
-                context: parentContext,
-                notificationId: notificationId,
-                requestModel: model,
-                userId: userId,
-                userModel: user,
-                credits: transactionModel.credits,
-              );
-            }
+            //How to Integrate for borrow request from here, check and complete
+            //
+
+            showMemberClaimConfirmation(
+              context: parentContext,
+              notificationId: notificationId,
+              requestModel: model,
+              userId: userId,
+              userModel: user,
+              credits: model.requestType == RequestType.BORROW
+                  ? 0
+                  : transactionModel.credits,
+            );
           },
           timestamp: notification.timestamp,
         );
@@ -125,126 +107,259 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-          content: Form(
-            //key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                CustomCloseButton(onTap: () => Navigator.of(viewContext).pop()),
-                Container(
-                  height: 70,
-                  width: 70,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      userModel.photoURL ?? defaultUserImageURL,
+        if (requestModel.requestType == RequestType.BORROW) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  CustomCloseButton(
+                      onTap: () => Navigator.of(viewContext).pop()),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        userModel.photoURL ?? defaultUserImageURL,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text(
-                    userModel.fullname,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Europa',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                if (userModel.bio != null)
                   Padding(
-                    padding: EdgeInsets.all(0.0),
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
                     child: Text(
-                      "${S.of(context).about} ${userModel.fullname}",
+                      userModel.fullname,
                       style: TextStyle(
-                          fontFamily: 'Europa',
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontFamily: 'Europa',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                getBio(context, userModel),
-                Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "${S.of(context).by_approving_you_accept} ${userModel.fullname} has worked for $credits hours",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Europa',
-                          fontStyle: FontStyle.italic,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )),
-                Padding(
-                  padding: EdgeInsets.all(5.0),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        color: FlavorConfig.values.theme.primaryColor,
-                        child: Text(
-                          S.of(context).approve,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Europa',
-                          ),
-                        ),
-                        onPressed: () async {
-                          // Once approved take for feeddback
-                          approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                    ),
+                  if (userModel.bio != null)
                     Padding(
-                      padding: EdgeInsets.all(4.0),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          S.of(context).reject,
-                          style: TextStyle(
-                            color: Colors.white,
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "${S.of(context).about} ${userModel.fullname}",
+                        style: TextStyle(
                             fontFamily: 'Europa',
-                          ),
-                        ),
-                        onPressed: () async {
-                          // reject the claim
-                          rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-                          Navigator.pop(viewContext);
-                        },
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ],
-                )
-              ],
+                  getBio(context, userModel),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          //Label to be provied for below text
+                          'Click button below to review ${userModel.fullname} and complete the task',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Europa',
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            S.of(context).review,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            approveMemberClaim(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            S.of(context).close,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          onPressed: () async {
+                            // reject the claim
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  CustomCloseButton(
+                      onTap: () => Navigator.of(viewContext).pop()),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        userModel.photoURL ?? defaultUserImageURL,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Europa',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "${S.of(context).about} ${userModel.fullname}",
+                        style: TextStyle(
+                            fontFamily: 'Europa',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  getBio(context, userModel),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: requestModel.requestType == RequestType.BORROW
+                            ? Text(
+                                ///////Label to be provied for below text
+                                userModel.fullname +
+                                    ' has reviewed you for this request. Click button below to review and complete the task',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Europa',
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            : Text(
+                                "${S.of(context).by_approving_you_accept} ${userModel.fullname} has worked for $credits hours",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Europa',
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            S.of(context).approve,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            approveMemberClaim(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            S.of(context).reject,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
+                          ),
+                          onPressed: () async {
+                            // reject the claim
+                            rejectMemberClaimForEvent(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        }
       },
     );
   }
@@ -275,13 +390,26 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     BuildContext context,
     SevaCore sevaCore,
   }) async {
-    Map results = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return ReviewFeedback(
-          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
-        );
-      },
-    ));
+    Map results = {};
+
+    if (model.requestType == RequestType.BORROW) {
+      results = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ReviewFeedback(
+            feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER,
+            requestModel: model,
+          );
+        },
+      ));
+    } else {
+      results = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ReviewFeedback(
+            feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
+          );
+        },
+      ));
+    }
 
     if (results != null && results.containsKey('selection')) {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
@@ -298,6 +426,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           results: results,
           reciever: user);
     } else {}
+
+    log('RESULTS:  ' + results.toString());
   }
 
   void onActivityResult(
@@ -329,6 +459,20 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
     approveTransaction(requestModel, userId, notificationId, sevaCore);
+
+      if (requestModel.requestType == RequestType.BORROW && results != null) {
+      if (SevaCore.of(context).loggedInUser.sevaUserID == requestModel.sevaUserId) {
+        requestModel.borrowerReviewed = true;
+      }
+    }
+
+     FirestoreManager.approveAcceptRequestForTimebank(
+      requestModel: requestModel,
+      approvedUserId: requestModel.sevaUserId,
+      notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
+
   }
 
   Future<void> sendMessageToMember({
@@ -385,18 +529,19 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
 
   void approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) {
-    FirestoreManager.approveRequestCompletion(
-      model: model,
-      userId: userId,
-      communityId: sevaCore.loggedInUser.currentCommunity,
-    );
-
+    if (model.requestType != RequestType.BORROW) {
+      FirestoreManager.approveRequestCompletion(
+        model: model,
+        userId: userId,
+        communityId: sevaCore.loggedInUser.currentCommunity,
+      );
+    }
     // return;
+
     FirestoreManager.readTimeBankNotification(
       notificationId: notificationId,
       timebankId: model.timebankId,
     );
-    //
   }
 
   Future<void> rejectMemberClaimForEvent(

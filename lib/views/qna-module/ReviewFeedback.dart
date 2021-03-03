@@ -412,7 +412,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget getTextFeedback(BuildContext context) {
-     log('requestType 25:  ' + widget.requestModel.requestType.toString());
     return Container(
       margin: EdgeInsets.all(10),
       child: SingleChildScrollView(

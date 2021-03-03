@@ -2441,6 +2441,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         }
       }
 
+//Review done or not to be used to find out if Borrow request is completed or not
+      requestModel.lenderReviewed = false;
+      requestModel.borrowerReviewed = false;
 
       //Form and date is valid
       //if(requestModel.requestType != RequestType.BORROW) {

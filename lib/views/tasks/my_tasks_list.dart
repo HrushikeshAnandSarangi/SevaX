@@ -376,6 +376,15 @@ class MyTasksListState extends State<MyTaskList> {
     requestModelNew.approvedUsers = [];
     requestModelNew.acceptors = [];
 
+    if (requestModelNew.requestType == RequestType.BORROW) {
+      if (SevaCore.of(context).loggedInUser.sevaUserID ==
+          requestModelNew.sevaUserId) {
+        requestModelNew.borrowerReviewed = true;
+      } else {
+        requestModelNew.lenderReviewed = true;
+      }
+    }
+
     FirestoreManager.requestComplete(model: requestModelNew);
 
     FirestoreManager.createTaskCompletedNotification(
@@ -392,6 +401,7 @@ class MyTasksListState extends State<MyTaskList> {
         isRead: false,
       ),
     );
+
     Navigator.of(creditRequestDialogContext).pop();
     //Navigator.of(context).pop();
   }
