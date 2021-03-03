@@ -29,7 +29,6 @@ class DonationBloc {
 
   Function(CommunityModel) get addCommunity => _community.sink.add;
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
-  Function(CommunityModel) get addCommunity => _community.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
 

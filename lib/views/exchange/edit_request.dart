@@ -1921,35 +1921,34 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     tempCredits != widget.requestModel.maxCredits ||
         //     tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
         //     location != widget.requestModel.location ||
-            !eq(widget.requestModel.categories, selectedCategoryIds) ||
-            isSkillsUpdated) {
-          log('HERE 1');
-          widget.requestModel.title = initialRequestTitle;
-          widget.requestModel.description = initialRequestDescription;
-          widget.requestModel.location = location;
-          widget.requestModel.address = selectedAddress;
-          widget.requestModel.categories = selectedCategoryIds.toList();
-          startDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.starttimestamp
-              ? widget.requestModel.requestStart =
-                  OfferDurationWidgetState.starttimestamp
-              : null;
-          endDate.millisecondsSinceEpoch !=
-                  OfferDurationWidgetState.endtimestamp
-              ? widget.requestModel.requestEnd =
-                  OfferDurationWidgetState.endtimestamp
-              : null;
-          widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
-          widget.requestModel.maxCredits = tempCredits;
+//            !eq(widget.requestModel.categories, selectedCategoryIds) ||
+//            isSkillsUpdated) {
+        log('HERE 1');
+        widget.requestModel.title = initialRequestTitle;
+        widget.requestModel.description = initialRequestDescription;
+        widget.requestModel.location = location;
+        widget.requestModel.address = selectedAddress;
+        widget.requestModel.categories = selectedCategoryIds.toList();
+        startDate.millisecondsSinceEpoch !=
+                OfferDurationWidgetState.starttimestamp
+            ? widget.requestModel.requestStart =
+                OfferDurationWidgetState.starttimestamp
+            : null;
+        endDate.millisecondsSinceEpoch != OfferDurationWidgetState.endtimestamp
+            ? widget.requestModel.requestEnd =
+                OfferDurationWidgetState.endtimestamp
+            : null;
+        widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
+        widget.requestModel.maxCredits = tempCredits;
 
-          linearProgressForCreatingRequest();
-          await updateRequest(requestModel: widget.requestModel);
-          Navigator.pop(context);
-          Navigator.pop(dialogContext);
-        } else {
-          log('HERE 2');
-          Navigator.of(context).pop();
-        }
+        linearProgressForCreatingRequest();
+        await updateRequest(requestModel: widget.requestModel);
+        Navigator.pop(context);
+        Navigator.pop(dialogContext);
+      } else {
+        log('HERE 2');
+        Navigator.of(context).pop();
+      }
       //}
     }
   }
