@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import 'app_config.dart';
+import 'log_printer/log_printer.dart';
 
 class SevaCreditLimitManager {
   static Future<double> getNegativeThresholdForCommunity(
@@ -91,6 +92,8 @@ class SevaCreditLimitManager {
     @required double credits,
     @required String communityId,
   }) async {
+    logger.i("COmmunity Id being apssed " + communityId);
+
     var currentGlobalBalance = await getCurrentBalance(email: email);
     if (currentGlobalBalance >= credits) {
       return true;
@@ -98,7 +101,7 @@ class SevaCreditLimitManager {
       var associatedBalanceWithinThisCommunity =
           await getMemberBalancePerTimebank(
         userSevaId: userId,
-            communityId: communityId,
+        communityId: communityId,
       );
 
       var communityThreshold =

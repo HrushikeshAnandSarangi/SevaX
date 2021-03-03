@@ -11,6 +11,7 @@ import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -61,7 +62,7 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
   @override
   void initState() {
     timebankModel = widget.timebankModel;
-    AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+    AppConfig.helpIconContextMember = HelpContextMemberType.groups;
     var tempRole = determineUserRoleInAbout(
       sevaUserId: widget.userModel.sevaUserID,
       timeBankModel: timebankModel,
@@ -155,7 +156,8 @@ Widget createAdminTabBar(
       leading: BackButton(
         color: Colors.black,
         onPressed: () {
-          AppConfig.helpIconContext = HelpIconContextClass.COMMUNITY_DEFAULT;
+          AppConfig.helpIconContextMember =
+              HelpContextMemberType.seva_community;
           Navigator.pop(context);
         },
       ),
@@ -176,20 +178,21 @@ Widget createAdminTabBar(
           onTap: (int index) {
             switch (index) {
               case 1:
-                AppConfig.helpIconContext = HelpIconContextClass.EVENTS;
+                AppConfig.helpIconContextMember = HelpContextMemberType.events;
                 break;
               case 2:
-                AppConfig.helpIconContext = HelpIconContextClass.REQUESTS;
+                AppConfig.helpIconContextMember =
+                    HelpContextMemberType.requests;
                 break;
               case 3:
-                AppConfig.helpIconContext = HelpIconContextClass.OFFERS;
+                AppConfig.helpIconContextMember = HelpContextMemberType.offers;
                 break;
               default:
-                AppConfig.helpIconContext = HelpIconContextClass.GROUP_DEFAULT;
+                AppConfig.helpIconContextMember = HelpContextMemberType.groups;
                 break;
             }
             logger.i(
-                "tabbar index group scope tapped is $index with ${AppConfig.helpIconContext}");
+                "tabbar index group scope tapped is $index with ${AppConfig.helpIconContextMember}");
           },
           controller: controller,
           labelPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -307,12 +310,23 @@ Widget createJoinedUserTabBar(
 ) {
   return Scaffold(
     appBar: AppBar(
+      leading: BackButton(
+        color: Colors.black,
+        onPressed: () {
+          AppConfig.helpIconContextMember =
+              HelpContextMemberType.seva_community;
+          Navigator.pop(context);
+        },
+      ),
       elevation: 0.5,
       // backgroundColor: Colors.white,
       title: Text(
         timebankModel.name,
         style: TextStyle(fontSize: 18),
       ),
+      actions: [
+        CommonHelpIconWidget(),
+      ],
     ),
     body: Column(
       children: <Widget>[
@@ -323,6 +337,25 @@ Widget createJoinedUserTabBar(
           indicatorColor: Color(0xFFF766FE0),
           indicatorSize: TabBarIndicatorSize.label,
           isScrollable: true,
+          onTap: (index) {
+            switch (index) {
+              case 1:
+                AppConfig.helpIconContextMember = HelpContextMemberType.events;
+                break;
+              case 2:
+                AppConfig.helpIconContextMember =
+                    HelpContextMemberType.requests;
+                break;
+              case 3:
+                AppConfig.helpIconContextMember = HelpContextMemberType.offers;
+                break;
+              default:
+                AppConfig.helpIconContextMember = HelpContextMemberType.groups;
+                break;
+            }
+            logger.i(
+                "tabbar index group scope tapped is $index with ${AppConfig.helpIconContextMember}");
+          },
           tabs: [
             Tab(
               text: S.of(context).feeds,
@@ -404,11 +437,20 @@ Widget createNormalUserTabBar(
   return Scaffold(
       appBar: AppBar(
         leading: BackButton(
-          onPressed: () => Navigator.of(context).pop(),
+          color: Colors.black,
+          onPressed: () {
+            AppConfig.helpIconContextMember =
+                HelpContextMemberType.seva_community;
+            Navigator.pop(context);
+          },
         ),
         elevation: 0.5,
+
         //  backgroundColor: Colors.white,
         title: Text(timebankModel.name),
+        actions: [
+          CommonHelpIconWidget(),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -440,12 +482,6 @@ Widget createNormalUserTabBar(
                 MembersPage(
                   timebankId: timebankModel.id,
                 ),
-                // TimebankRequestAdminPage(
-                //   isUserAdmin: false,
-                //   timebankId: timebankModel.id,
-                //   userEmail: SevaCore.of(context).loggedInUser.email,
-                //   isFromGroup: true,
-                // ),
               ],
             ),
           ),

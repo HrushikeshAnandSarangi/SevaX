@@ -22,6 +22,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/category_model.dart';
+import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -203,7 +204,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   void initState() {
     super.initState();
 
-    AppConfig.helpIconContext = HelpIconContextClass.TIME_REQUESTS;
+    AppConfig.helpIconContextMember = HelpContextMemberType.time_requests;
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
@@ -988,8 +989,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     groupvalue: requestModel.requestType,
                     onChanged: (value) {
                       requestModel.requestType = value;
-                      AppConfig.helpIconContext =
-                          HelpIconContextClass.TIME_REQUESTS;
+                      AppConfig.helpIconContextMember =
+                          HelpContextMemberType.time_requests;
                       setState(() => {});
                     },
                   ),
@@ -1006,8 +1007,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       onChanged: (value) {
                         requestModel.isRecurring = false;
                         requestModel.requestType = value;
-                        AppConfig.helpIconContext =
-                            HelpIconContextClass.MONEY_REQUESTS;
+                        AppConfig.helpIconContextMember =
+                            HelpContextMemberType.money_requests;
                         setState(() => {});
                       },
                     ),
@@ -1025,8 +1026,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       onChanged: (value) {
                         requestModel.isRecurring = false;
                         requestModel.requestType = value;
-                        AppConfig.helpIconContext =
-                            HelpIconContextClass.GOODS_REQUESTS;
+                        AppConfig.helpIconContextMember =
+                            HelpContextMemberType.goods_requests;
                         setState(() => {});
                       },
                     ),

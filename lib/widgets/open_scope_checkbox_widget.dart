@@ -54,6 +54,9 @@ String getCheckBoxLabel(CheckBoxType checkBoxType) {
       return "Make this event public";
     case CheckBoxType.type_VirtualRequest:
       return "Make this request virtual";
+
+    case CheckBoxType.type_VirtualOffers:
+      return "Make this offer virtual";
     default:
       return "";
   }
@@ -64,4 +67,5 @@ enum CheckBoxType {
   type_Offers,
   type_Events,
   type_VirtualRequest,
+  type_VirtualOffers,
 }

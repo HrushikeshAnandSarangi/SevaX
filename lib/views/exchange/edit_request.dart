@@ -31,6 +31,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -216,6 +217,12 @@ class RequestEditFormState extends State<RequestEditForm> {
     );
     getProjectsByFuture =
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
+    tempCredits = widget.requestModel.maxCredits;
+    initialRequestTitle = widget.requestModel.title;
+    initialRequestDescription = widget.requestModel.description;
+    tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
+
     fetchRemoteConfig();
 
     if (widget.requestModel.skills.values.length > 0) {
@@ -329,10 +336,6 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    initialRequestTitle = widget.requestModel.title;
-    initialRequestDescription = widget.requestModel.description;
-    tempCredits = widget.requestModel.maxCredits;
-    tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
     TextStyle textStyle = Theme.of(context).textTheme.title;
     startDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
@@ -1339,9 +1342,14 @@ class RequestEditFormState extends State<RequestEditForm> {
                   },
                   initialValue: widget.requestModel.maxCredits.toString(),
                   onChanged: (v) {
+                    logger.i("___________>>> Updating credits to ============");
+
                     updateExitWithConfirmationValue(context, 10, v);
                     if (v.isNotEmpty && int.parse(v) >= 0) {
                       //widget.requestModel.maxCredits = int.parse(v);
+                      logger.i("___________>>> Updating credits to " +
+                          int.parse(v).toString());
+
                       tempCredits = int.parse(v);
                       setState(() {});
                     }
@@ -1667,6 +1675,8 @@ class RequestEditFormState extends State<RequestEditForm> {
       return;
     }
 
+    logger.i(widget.requestModel.communityId + "<<<<<<<<<<<<<<<>>>>>>>>>>>>");
+
     if (_formKey.currentState.validate()) {
       if (widget.requestModel.public) {
         widget.requestModel.timebanksPosted = [
@@ -1707,14 +1717,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * recurrences
                 : widget.requestModel.numberOfHours.toDouble(),
-            communityId: SevaCore.of(context).loggedInUser.sevaUserID,
+            communityId: widget.requestModel.communityId,
           );
-          // .hasSufficientCreditsIncludingRecurring(
-          //   credits: widget.requestModel.numberOfHours.toDouble(),
-          //   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-          //   isRecurring: widget.requestModel.isRecurring,
-          //   recurrences: recurrences,
-          // );
         } else {
           onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
@@ -1723,14 +1727,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             credits: widget.requestModel.isRecurring
                 ? widget.requestModel.numberOfHours.toDouble() * 0
                 : widget.requestModel.numberOfHours.toDouble(),
-            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            communityId: widget.requestModel.communityId,
           );
-
-          // .hasSufficientCreditsIncludingRecurring(
-          //     credits: widget.requestModel.numberOfHours.toDouble(),
-          //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
-          //     isRecurring: widget.requestModel.isRecurring,
-          //     recurrences: 0);
         }
 
         if (!onBalanceCheckResult) {
@@ -1738,6 +1736,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           return;
         }
       }
+
+      logger.i("=============||||||===============");
 
       /// TODO take language from Prakash
       if (OfferDurationWidgetState.starttimestamp ==
@@ -1875,6 +1875,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           );
         }
 
+        logger.i("=============////////===============");
+
         if (tempSelectedEndType != widget.requestModel.end.endType ||
             widget.requestModel.end.after !=
                 int.parse(EditRepeatWidgetState.after) ||
@@ -1894,6 +1896,8 @@ class RequestEditFormState extends State<RequestEditForm> {
               EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
           //});
 
+          logger.i("=============IF===============");
+
           linearProgressForCreatingRequest();
           await updateRequest(requestModel: widget.requestModel);
           await RequestManager.updateRecurrenceRequestsFrontEnd(
@@ -1908,17 +1912,18 @@ class RequestEditFormState extends State<RequestEditForm> {
         }
       } else if (widget.requestModel.isRecurring == false &&
           widget.requestModel.autoGenerated == false) {
-        if (widget.requestModel.title != initialRequestTitle ||
-            startDate.millisecondsSinceEpoch !=
-                OfferDurationWidgetState.starttimestamp ||
-            endDate.millisecondsSinceEpoch !=
-                OfferDurationWidgetState.endtimestamp ||
-            widget.requestModel.description != initialRequestDescription ||
-            tempCredits != widget.requestModel.maxCredits ||
-            tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
-            location != widget.requestModel.location ||
+        // if (widget.requestModel.title != initialRequestTitle ||
+        //     startDate.millisecondsSinceEpoch !=
+        //         OfferDurationWidgetState.starttimestamp ||
+        //     endDate.millisecondsSinceEpoch !=
+        //         OfferDurationWidgetState.endtimestamp ||
+        //     widget.requestModel.description != initialRequestDescription ||
+        //     tempCredits != widget.requestModel.maxCredits ||
+        //     tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
+        //     location != widget.requestModel.location ||
             !eq(widget.requestModel.categories, selectedCategoryIds) ||
             isSkillsUpdated) {
+          log('HERE 1');
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
           widget.requestModel.location = location;
@@ -1942,9 +1947,10 @@ class RequestEditFormState extends State<RequestEditForm> {
           Navigator.pop(context);
           Navigator.pop(dialogContext);
         } else {
+          log('HERE 2');
           Navigator.of(context).pop();
         }
-      }
+      //}
     }
   }
 

@@ -173,6 +173,7 @@ class RequestModel extends DataModel {
   List<String> approvedUsers;
   List<String> invitedUsers;
   List<String> categories;
+  List<String> timebanksPosted;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
@@ -640,7 +641,23 @@ class RequestModel extends DataModel {
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
-      this.cashModel = new CashModel();
+      this.cashModel = CashModel();
+    }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+      ;
     }
     if (map.containsKey('public')) {
       this.public = map['public'];

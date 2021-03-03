@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
@@ -90,9 +91,9 @@ class _CreateOfferState extends State<CreateOffer> {
         groupValue: currentPage,
         onValueChanged: (int val) {
           if (val != currentPage) {
-            AppConfig.helpIconContext = val == 0
-                ? HelpIconContextClass.TIME_OFFERS
-                : HelpIconContextClass.ONE_TO_MANY_OFFERS;
+            AppConfig.helpIconContextMember = val == 0
+                ? HelpContextMemberType.time_offers
+                : HelpContextMemberType.one_to_many_offers;
             setState(() {
               currentPage = val;
             });

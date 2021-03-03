@@ -7,6 +7,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -31,10 +33,14 @@ class DonationBloc {
 
   Function(CommunityModel) get addCommunity => _community.sink.add;
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
+  Function(CommunityModel) get addCommunity => _community.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
 
-  void addAddRemove({String selectedKey, String selectedValue}) {
+  void addAddRemove({
+    String selectedKey,
+    String selectedValue,
+  }) {
     var localMap = _selectedList.value;
 
     localMap.containsKey(selectedKey)
@@ -48,9 +54,7 @@ class DonationBloc {
     DonationModel donationModel,
     OfferModel offerModel,
     String notificationId,
-    UserModel notify,
-  }) async {
-//      donationModel.goodsDetails.donatedGoods = _selectedList.value;
+      UserModel notify}) async {
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
         _errorMessage.add('goods');
@@ -217,7 +221,6 @@ class DonationBloc {
         targetUserId: offerModel.sevaUserId,
         data: donationModel.toMap(),
       );
-      log("WRITIN ID  NMID ${notificationsModel.id}=================DONATION MODEL NID=====${donationModel.notificationId}");
       await Firestore.instance
           .collection('users')
           .document(donor.email)

@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -48,9 +49,9 @@ class _DonationViewState extends State<DonationView> {
     donorDetails: DonorDetails(),
     receiverDetails: DonorDetails(),
     cashDetails: CashDetails(
-        cashDetails: CashModel(
-            paymentType: RequestPaymentType.ZELLEPAY,
-            achdetails: new ACHModel())),
+      cashDetails: CashModel(
+          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+    ),
     goodsDetails: GoodsDetails(),
   );
   UserModel sevaUser = UserModel();
@@ -260,11 +261,8 @@ class _DonationViewState extends State<DonationView> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading: Radio(
-        value: value,
-        groupValue: groupvalue,
-        onChanged: onChanged,
-      ),
+      leading:
+          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
     );
   }
 

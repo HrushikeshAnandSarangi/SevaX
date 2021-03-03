@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
 
@@ -83,11 +84,9 @@ class InvitationManager {
   }) async {
     String invitationTitle = S.of(_context).invited_to_timebank_message;
 
-    var mailContent = S
-        .of(_context)
-        .invitation_email_body
-        .replaceAll('***', invitation.timebankTitle);
-    mailContent = mailContent.replaceAll('###', invitation.invitationLink);
+    var mailContent =
+        '''<p>${SevaCore.of(_context).loggedInUser.fullname} has invited you to join their "${invitation.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitation.invitationLink}">${invitation.invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
+
     return await mailCodeToInvitedMember(
       mailContent: mailContent,
       mailReciever: invitation.inviteeEmail,
@@ -108,12 +107,8 @@ class InvitationManager {
         .then((String invitationLink) async {
           String invitationTitle = S.of(context).invited_to_timebank_message;
 
-          var mailContent = S
-              .of(context)
-              .invitation_email_body
-              .replaceAll('***', invitation.timebankTitle);
-
-          mailContent = mailContent.replaceAll('###', invitationLink);
+          var mailContent =
+              '''<p>${SevaCore.of(_context).loggedInUser.fullname} has invited you to join their "${invitation.timebankTitle}" Seva Community. Seva means "selfless service" in Sanskrit. Seva Communities are based on a mutual-reciprocity system, where community members help each other out in exchange for Seva Credits that can be redeemed for services they need. To learn more about being a part of a Seva Community, here's a short explainer video. <a href="https://youtu.be/xe56UJyQ9ws">https://youtu.be/xe56UJyQ9ws</a>   <br><br>Here is what you'll need to know: <br>First, depending on where you click the link from, whether it's your web browser or mobile phone, the link will either take you to our main <a href="https://www.sevaxapp.com">https://www.sevaxapp.com</a>   web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website, you will automatically become a member of the "${invitation.timebankTitle}" Seva Community.<br><br>Click to Join ${SevaCore.of(_context).loggedInUser.fullname} and their Seva Community via this dynamic link at <a href="${invitation.invitationLink}">${invitation.invitationLink}</a>. Please do not share this link with any one.<br><br>Thank you for being a part of our Seva Exchange movement!<br>-the Seva Exchange team<br>Please email us at support@sevaexchange.com if you have any questions or issues joining with the link given.</p>''';
 
           invitation.setInvitationLink(invitationLink);
           await mailCodeToInvitedMember(

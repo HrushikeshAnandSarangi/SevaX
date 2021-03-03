@@ -21,7 +21,8 @@ enum InfoType {
   OpenScopeRequest,
   OpenScopeOffer,
   OpenScopeEvent,
-  VirtualRequest
+  VirtualRequest,
+  VirtualOffers,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -40,6 +41,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.OpenScopeOffer: "openScopeOffer",
   InfoType.OpenScopeEvent: "openScopeEvent",
   InfoType.VirtualRequest: "virtualRequest",
+  InfoType.VirtualOffers: "virtualOffers",
 };
 
 Widget infoButton({

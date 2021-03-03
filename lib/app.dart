@@ -12,6 +12,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -50,6 +51,7 @@ Future<void> initApp(Flavor flavor) async {
   final AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
   await fetchRemoteConfig();
+
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
       return null;
@@ -91,11 +93,16 @@ class MainApplication extends StatelessWidget {
         Provider(
           create: (context) => MembersBloc(),
           dispose: (_, b) => b.dispose(),
-        )
+        ),
+        Provider(
+          create: (context) => HomePageBloc(),
+          dispose: (_, b) => b.dispose(),
+        ),
       ],
       child: ChangeNotifierProvider<AppLanguage>(
-          create: (_) => appLanguage,
-          child: Consumer<AppLanguage>(builder: (context, model, child) {
+        create: (_) => appLanguage,
+        child: Consumer<AppLanguage>(
+          builder: (context, model, child) {
             return AuthProvider(
               auth: Auth(),
               child: MaterialApp(
@@ -123,7 +130,9 @@ class MainApplication extends StatelessWidget {
                 ),
               ),
             );
-          })),
+          },
+        ),
+      ),
     );
   }
 }

@@ -19,8 +19,10 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -285,7 +287,44 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   },
                                 );
                               }),
-                          SizedBox(height: 40),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: StreamBuilder<bool>(
+                                stream: _bloc.makePublicValue,
+                                builder: (context, snapshot) {
+                                  return OpenScopeCheckBox(
+                                      infoType: InfoType.OpenScopeOffer,
+                                      isChecked: snapshot.data,
+                                      checkBoxTypeLabel: CheckBoxType.type_Offers,
+                                      onChangedCB: (bool val) {
+                                        if (snapshot.data != val) {
+                                          _bloc.onOfferMadePublic(val);
+                                          log('value ${val}');
+                                          setState(() {});
+                                        }
+                                      });
+                                }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: StreamBuilder<bool>(
+                                stream: _bloc.makeVirtualValue,
+                                builder: (context, snapshot) {
+                                  return OpenScopeCheckBox(
+                                      infoType: InfoType.VirtualOffers,
+                                      isChecked: snapshot.data,
+                                      checkBoxTypeLabel: CheckBoxType.type_VirtualOffers,
+                                      onChangedCB: (bool val) {
+                                        if (snapshot.data != val) {
+                                          _bloc.onOfferMadeVirtual(val);
+                                          log('value ${val}');
+                                          setState(() {});
+                                        }
+                                      });
+                                }),
+                          ),
+                          SizedBox(height: 20),
                           TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Offers,
                             upgradeDetails: AppConfig

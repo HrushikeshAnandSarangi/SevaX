@@ -15,7 +15,6 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.da
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
