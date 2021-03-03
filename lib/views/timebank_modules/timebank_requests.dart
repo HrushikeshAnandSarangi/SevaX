@@ -34,7 +34,7 @@ import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
 import '../core.dart';
 
 class RequestsModule extends StatefulWidget {

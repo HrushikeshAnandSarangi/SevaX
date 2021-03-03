@@ -350,11 +350,7 @@ Future<UserModelListMoreStatus>
 Future<UserModelListMoreStatus> getUsersForTimebankId(
     String timebankId, int index, String email) async {
   var saveXLink = '';
-  if (FlavorConfig.values.timebankName == "Yang 2020") {
-    saveXLink = '';
-  } else {
-    saveXLink = 'Sevax';
-  }
+  saveXLink = 'Sevax';
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   var res = await http
@@ -467,10 +463,15 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
   return data;
 }
 
-Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
+Future<ProfanityImageModel> checkProfanityForImage(
+    {String imageUrl, String storagePath}) async {
   var result = await http.post(
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
-    body: {"imageURL": imageUrl},
+    //headers: {"Content-Type": "application/json"},
+    body: {
+      "imageURL": imageUrl,
+      "firebaseURL": storagePath,
+    },
   );
 
   ProfanityImageModel profanityImageModel;

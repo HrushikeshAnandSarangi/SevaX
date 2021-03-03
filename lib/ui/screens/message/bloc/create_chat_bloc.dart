@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
+import 'package:sevaexchange/ui/screens/message/message_room_manager.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -91,7 +94,8 @@ class CreateChatBloc extends BlocBase {
     if (!_members.isClosed) _members.add(users);
   }
 
-  Future<ChatModel> createMultiUserMessaging(UserModel creator) async {
+  Future<ChatModel> createMultiUserMessaging(
+      UserModel creator, BuildContext context) async {
     if (_groupName.value == null || _groupName.value.isEmpty) {
       _groupName.addError("validation_error_room_name");
       logger.e('error');
@@ -125,11 +129,21 @@ class CreateChatBloc extends BlocBase {
       );
 
       List<ParticipantInfo> participantInfos = [creatorDetails];
-      _selectedMembers.value.forEach(
-        (String id) => participantInfos.add(
+      _selectedMembers.value.forEach((String id) async {
+        participantInfos.add(
           allMembers[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-        ),
-      );
+        );
+
+        await MessageRoomManager.addRemoveParticipant(
+            communityId: creator.currentCommunity,
+            timebankId: creator.currentTimebank,
+            creatorDetails: creatorDetails,
+            messageRoomImageUrl: groupDetails.imageUrl,
+            messageRoomName: groupDetails.name,
+            notificationType: NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM,
+            participantId: allMembers[id].id,
+            context: context);
+      });
 
       ChatModel model = ChatModel(
         participants: _selectedMembers.value..add(creator.sevaUserID),

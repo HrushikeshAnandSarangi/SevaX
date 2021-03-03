@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -7,7 +5,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -30,8 +27,8 @@ class DonationBloc {
   Map<dynamic, dynamic> get selectedListVal => _selectedList.value;
   String get commentEnteredVal => _comment.value;
 
-  Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(CommunityModel) get addCommunity => _community.sink.add;
+  Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
 
@@ -48,10 +45,10 @@ class DonationBloc {
     _selectedList.add(localMap);
   }
 
-  Future<bool> donateOfferGoods({
-    DonationModel donationModel,
-    OfferModel offerModel,
-    String notificationId,
+  Future<bool> donateOfferGoods(
+      {DonationModel donationModel,
+      OfferModel offerModel,
+      String notificationId,
       UserModel notify}) async {
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
@@ -118,14 +115,14 @@ class DonationBloc {
       newDonors.add(donor.sevaUserID);
       requestModel.goodsDonationDetails.donors = newDonors;
       AcceptorModel acceptorModel = AcceptorModel(
-        timebankId: _community.value.primary_timebank,
-        memberEmail: donor.email,
-        memberName: donor.fullname,
-        communityName: _community.value.name,
-        communityId: _community.value.id,
-        memberPhotoUrl: donor.photoURL,
-      );
+          timebankId: _community.value.primary_timebank,
+          memberEmail: donor.email,
+          memberName: donor.fullname,
+          communityName: _community.value.name,
+          communityId: _community.value.id,
+          memberPhotoUrl: donor.photoURL);
       requestModel.participantDetails[donor.email] = acceptorModel.toMap();
+
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);

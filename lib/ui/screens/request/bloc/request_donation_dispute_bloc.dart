@@ -15,6 +15,7 @@ class RequestDonationDisputeBloc {
   final DonationsRepository _donationsRepository = DonationsRepository();
 
   final _cashAmount = BehaviorSubject<String>();
+  final _requestModel = BehaviorSubject<RequestModel>();
   final _goodsRecieved = BehaviorSubject<Map<String, String>>.seeded({});
 
   Stream<String> get cashAmount => _cashAmount.stream;
@@ -22,6 +23,7 @@ class RequestDonationDisputeBloc {
   String get cashAmoutVal => _cashAmount.value;
   Map<String, String> get goodsRecievedVal => _goodsRecieved.value;
   Function(String) get onAmountChanged => _cashAmount.sink.add;
+  Function(RequestModel) get addRequestModel => _requestModel.sink.add;
   getgoodsRecieved() {
     return _goodsRecieved.value;
   }
@@ -83,34 +85,34 @@ class RequestDonationDisputeBloc {
     } else {
       log("Inside else");
       donationModel.donationStatus =
-      donationModel.donationStatus == DonationStatus.REQUESTED
-          ? DonationStatus.PLEDGED
-          : donationModel.donationStatus;
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
-        operatoreMode: operationMode,
-        requestType: donationModel.donationType,
-        donationStatus: donationModel.donationStatus,
-        associatedId: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank
-            ? donationModel.timebankId
-            : donationModel.donorDetails.email,
-        donationId: donationId,
-        isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank,
-        notificationId: notificationId,
-        acknowledgementNotification: getAcknowlegementNotification(
-          updatedAmount: double.parse(_cashAmount.value),
-          model: donationModel,
-          operatorMode: operationMode,
-          requestMode: requestMode,
-          notificationType:
-          donationModel.donationStatus == DonationStatus.PLEDGED
-              ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
-              : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
-        ),
-      )
+            operatoreMode: operationMode,
+            requestType: donationModel.donationType,
+            donationStatus: donationModel.donationStatus,
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
+                ? donationModel.timebankId
+                : donationModel.donorDetails.email,
+            donationId: donationId,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
+            notificationId: notificationId,
+            acknowledgementNotification: getAcknowlegementNotification(
+              updatedAmount: double.parse(_cashAmount.value),
+              model: donationModel,
+              operatorMode: operationMode,
+              requestMode: requestMode,
+              notificationType:
+                  donationModel.donationStatus == DonationStatus.PLEDGED
+                      ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
+                      : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+            ),
+          )
           .then((value) => true)
           .catchError((onError) => false);
     }
@@ -247,6 +249,7 @@ class RequestDonationDisputeBloc {
   }) async {
     var x = List.from(donatedGoods.keys);
     var y = List.from(_goodsRecieved.value.keys);
+    var donationStatus;
 
     x.sort();
     y.sort();

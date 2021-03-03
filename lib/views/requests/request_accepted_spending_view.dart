@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,6 +13,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
@@ -155,10 +158,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 backgroundImage: NetworkImage(defaultUserImageURL),
               );
             }
-            return
-              UserProfileImage(photoUrl: user.photoURL,email:  user.email,userId:  user.sevaUserID,height: 60,width:60 ,timebankModel: widget.timebankModel,);
-
-
+            return UserProfileImage(
+              photoUrl: user.photoURL,
+              email: user.email,
+              userId: user.sevaUserID,
+              height: 60,
+              width: 60,
+              timebankModel: widget.timebankModel,
+            );
           },
         ),
         trailing: () {
@@ -751,7 +758,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     var loggedInUser = SevaCore.of(context).loggedInUser;
@@ -958,6 +967,25 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
           ? results['comment']
           : S.of(context).no_comments)
     });
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+      log('inside credit');
+      TransactionModel transmodel =
+          requestModel.transactions.firstWhere((transaction) {
+        return transaction.to == reciever.sevaUserID;
+      });
+      await TransactionBloc().createNewTransaction(
+        requestModel.timebankId,
+        requestModel.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        transmodel.credits ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        requestModel.id,
+        requestModel.timebankId,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
+      log('success');
+    }
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,
@@ -974,15 +1002,19 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    await approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
   }
 
   Future approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) async {
+      String notificationId, SevaCore sevaCore, String email) async {
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
 
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
