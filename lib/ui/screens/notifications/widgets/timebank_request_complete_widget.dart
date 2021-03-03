@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -15,6 +17,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -295,13 +298,33 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           ? results['comment']
           : S.of(context).no_comments)
     });
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+      log('inside credit');
+      TransactionModel transmodel =
+          requestModel.transactions.firstWhere((transaction) {
+        return transaction.to == reciever.sevaUserID;
+      });
+      await TransactionBloc().createNewTransaction(
+        requestModel.timebankId,
+        requestModel.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        transmodel.credits ?? 0,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        requestModel.id,
+        requestModel.timebankId,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
+      log('success');
+    }
     await sendMessageToMember(
         context: context,
         loggedInUser: sevaCore.loggedInUser,
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+    approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
   }
 
   Future<void> sendMessageToMember({
@@ -356,12 +379,20 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         sender: sender);
   }
 
-  void approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) {
+  void approveTransaction(
+    RequestModel model,
+    String userId,
+    String notificationId,
+    SevaCore sevaCore,
+    String email,
+  ) {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
 
     // return;
@@ -388,7 +419,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;

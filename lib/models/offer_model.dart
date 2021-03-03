@@ -659,7 +659,10 @@ class OfferModel extends DataModel {
     }
     if (this.public != null) {
       map['public'] = this.public;
+    } else {
+      map['public'] = false;
     }
+
     return map;
   }
 

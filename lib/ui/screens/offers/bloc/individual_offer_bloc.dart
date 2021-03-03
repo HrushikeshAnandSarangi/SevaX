@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -14,18 +15,21 @@ import '../../../../flavor_config.dart';
 class IndividualOfferBloc extends BlocBase with Validators {
   bool allowedCalenderEvent = false;
   bool offerCreatedBool = false;
+
   List<String> offerIds = [];
+
   OfferModel mainOfferModel;
   final _errorMessage = BehaviorSubject<String>();
 
   final _type = BehaviorSubject<RequestType>();
   final _title = BehaviorSubject<String>();
-  final _makePublic = BehaviorSubject<bool>();
-  final _makeVirtual = BehaviorSubject<bool>();
+  final _makePublic = BehaviorSubject<bool>.seeded(false);
+  final _makeVirtual = BehaviorSubject<bool>.seeded(false);
   final _offerDescription = BehaviorSubject<String>();
   final _availabilty = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
+  final _isAdmin = BehaviorSubject<bool>.seeded(false);
 
   final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(
       donors: [],
@@ -48,6 +52,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(RequestType) get onTypeChanged => _type.sink.add;
   Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
+  Function(bool) get isAdminChanged => _isAdmin.sink.add;
+
   Function(GoodsDonationDetails) get onGoodsDetailsChanged =>
       _goodsDonationDetails.sink.add;
 
@@ -58,8 +64,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<String> get availability => _availabilty.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<Status> get status => _status.stream;
+  Stream<bool> get isAdmin => _isAdmin.stream;
   Stream<RequestType> get type => _type.stream;
   Stream<CashModel> get cashModel => _cashModel.stream;
+
   Stream<GoodsDonationDetails> get goodsDonationDetails =>
       _goodsDonationDetails.stream;
 
@@ -148,6 +156,18 @@ class IndividualOfferBloc extends BlocBase with Validators {
         }).catchError((e) => _status.add(Status.ERROR));
       }
     }
+  }
+
+  void checkPublicAvailability(String timebankId, String sevaUserId) {
+    Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .get()
+        .then((value) {
+      final model = TimebankModel.fromMap(value.data);
+      isAdminChanged(model.admins.contains(sevaUserId) ||
+          model.organizers.contains(sevaUserId));
+    });
   }
 
   ///[PRELOAD DATA FOR UPDATE]

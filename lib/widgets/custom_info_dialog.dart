@@ -41,6 +41,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.OpenScopeOffer: "openScopeOffer",
   InfoType.OpenScopeEvent: "openScopeEvent",
   InfoType.VirtualRequest: "virtualRequest",
+  InfoType.VirtualOffers: "virtualOffers",
 };
 
 Widget infoButton({
@@ -128,7 +129,7 @@ Widget infoButton({
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            details[infoKeyMapper[type]], //??
+                            details[infoKeyMapper[type]] ?? 'Dummy label', //??
                             // infoDescriptionMapper[key],
                             style: TextStyle(
                               fontSize: 16,

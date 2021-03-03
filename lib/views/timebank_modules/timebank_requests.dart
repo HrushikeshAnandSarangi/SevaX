@@ -34,7 +34,7 @@ import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
 import '../core.dart';
 
 class RequestsModule extends StatefulWidget {
@@ -501,7 +501,8 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget getTagMainFrame(String tagTitle) {
-    return TagView(tagTitle: tagTitle);
+    return Container(
+        margin: EdgeInsets.only(right: 10), child: TagView(tagTitle: tagTitle));
   }
 
   String getLocation(String location) {
@@ -618,7 +619,38 @@ class RequestListItemsState extends State<RequestListItems> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          getAppropriateTag(model.requestType),
+                          Row(
+                            children: [
+                              getAppropriateTag(model.requestType),
+                              Visibility(
+                                visible: model.virtualRequest ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Virtual',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.public ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Public',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.isRecurring ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Recurring',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -703,21 +735,21 @@ class RequestListItemsState extends State<RequestListItems> {
                                   .subtitle,
                             ),
                           ),
-                          Visibility(
-                            visible: model.isRecurring,
-                            child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  S.of(context).recurring,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Visibility(
+                          //   visible: model.isRecurring,
+                          //   child: Wrap(
+                          //     crossAxisAlignment: WrapCrossAlignment.center,
+                          //     children: <Widget>[
+                          //       Text(
+                          //         S.of(context).recurring,
+                          //         style: TextStyle(
+                          //             fontSize: 16.0,
+                          //             color: Theme.of(context).primaryColor,
+                          //             fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.max,
@@ -880,4 +912,3 @@ class RequestListItemsState extends State<RequestListItems> {
     );
   }
 }
-

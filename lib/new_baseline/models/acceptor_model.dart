@@ -27,22 +27,22 @@ class AcceptorModel {
   String timebankId;
 
   factory AcceptorModel.fromMap(Map<String, dynamic> json) => AcceptorModel(
-    communityId: json["communityId"] == null ? null : json["communityId"],
-    communityName:
-    json["communityName"] == null ? null : json["communityName"],
-    memberName: json["memberName"] == null ? null : json["memberName"],
-    memberEmail: json["memberEmail"] == null ? null : json["memberEmail"],
-    memberPhotoUrl:
-    json["memberPhotoUrl"] == null ? null : json["memberPhotoUrl"],
-    timebankId: json["timebankId"] == null ? null : json["timebankId"],
-  );
+        communityId: json["communityId"] == null ? null : json["communityId"],
+        communityName:
+            json["communityName"] == null ? null : json["communityName"],
+        memberName: json["memberName"] == null ? null : json["memberName"],
+        memberEmail: json["memberEmail"] == null ? null : json["memberEmail"],
+        memberPhotoUrl:
+            json["memberPhotoUrl"] == null ? null : json["memberPhotoUrl"],
+        timebankId: json["timebankId"] == null ? null : json["timebankId"],
+      );
 
   Map<String, dynamic> toMap() => {
-    "communityId": communityId == null ? null : communityId,
-    "communityName": communityName == null ? null : communityName,
-    "memberName": memberName == null ? null : memberName,
-    "memberEmail": memberEmail == null ? null : memberEmail,
-    "memberPhotoUrl": memberPhotoUrl == null ? null : memberPhotoUrl,
-    "timebankId": timebankId == null ? null : timebankId,
-  };
+        "communityId": communityId == null ? null : communityId,
+        "communityName": communityName == null ? null : communityName,
+        "memberName": memberName == null ? null : memberName,
+        "memberEmail": memberEmail == null ? null : memberEmail,
+        "memberPhotoUrl": memberPhotoUrl == null ? null : memberPhotoUrl,
+        "timebankId": timebankId == null ? null : timebankId,
+      };
 }

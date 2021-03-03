@@ -57,13 +57,8 @@ bool isDeletable({
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
 
-bool isOwner(TimebankModel timebank, String userId) {
-  if (timebank.creatorId == userId || timebank.organizers.contains(userId)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+bool isOwnerCreator(TimebankModel timebank, String userId) =>
+    timebank.creatorId == userId || timebank.organizers.contains(userId);
 
 bool isMemberBlocked(UserModel user, String idToCheck) {
   return user.blockedBy.contains(idToCheck) ||
@@ -165,6 +160,18 @@ void showAdminAccessMessage({BuildContext context}) {
       );
     },
   );
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
 class CommonUtils {

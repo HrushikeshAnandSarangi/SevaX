@@ -27,11 +27,13 @@ import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
   final String timebankId;
+  final String loggedInMemberUserId;
 
   const OneToManyOffer({
     Key key,
     this.offerModel,
     this.timebankId,
+    @required this.loggedInMemberUserId,
   }) : super(key: key);
   @override
   _OneToManyOfferState createState() => _OneToManyOfferState();
@@ -50,6 +52,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 
   @override
   void initState() {
+    _bloc.checkPublicAvailability(
+      widget.timebankId,
+      widget.loggedInMemberUserId,
+    );
+
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
@@ -90,7 +97,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           child: StreamBuilder<Status>(
             stream: _bloc.status,
             builder: (_, status) {
-              if (status.data == Status.COMPLETE && closePage && SevaCore.of(context).loggedInUser.calendarId!=null) {
+              if (status.data == Status.COMPLETE &&
+                  closePage &&
+                  SevaCore.of(context).loggedInUser.calendarId != null) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (Navigator.of(mcontext).canPop())
@@ -288,24 +297,34 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 );
                               }),
                           SizedBox(height: 20),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: StreamBuilder<bool>(
-                                stream: _bloc.makePublicValue,
-                                builder: (context, snapshot) {
-                                  return OpenScopeCheckBox(
-                                      infoType: InfoType.OpenScopeOffer,
-                                      isChecked: snapshot.data,
-                                      checkBoxTypeLabel: CheckBoxType.type_Offers,
-                                      onChangedCB: (bool val) {
-                                        if (snapshot.data != val) {
-                                          _bloc.onOfferMadePublic(val);
-                                          log('value ${val}');
-                                          setState(() {});
-                                        }
-                                      });
-                                }),
-                          ),
+                          StreamBuilder<bool>(
+                              stream: _bloc.isAdmin,
+                              builder: (context, snapshot) {
+                                return snapshot.data
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child: StreamBuilder<bool>(
+                                            stream: _bloc.makePublicValue,
+                                            builder: (context, snapshot) {
+                                              return OpenScopeCheckBox(
+                                                  infoType:
+                                                      InfoType.OpenScopeOffer,
+                                                  isChecked: snapshot.data,
+                                                  checkBoxTypeLabel:
+                                                      CheckBoxType.type_Offers,
+                                                  onChangedCB: (bool val) {
+                                                    if (snapshot.data != val) {
+                                                      _bloc.onOfferMadePublic(
+                                                          val);
+                                                      log('value ${val}');
+                                                      setState(() {});
+                                                    }
+                                                  });
+                                            }),
+                                      )
+                                    : Container();
+                              }),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: StreamBuilder<bool>(
@@ -314,7 +333,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   return OpenScopeCheckBox(
                                       infoType: InfoType.VirtualOffers,
                                       isChecked: snapshot.data,
-                                      checkBoxTypeLabel: CheckBoxType.type_VirtualOffers,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_VirtualOffers,
                                       onChangedCB: (bool val) {
                                         if (snapshot.data != val) {
                                           _bloc.onOfferMadeVirtual(val);
@@ -465,8 +485,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                             ),
                                                           ]));
                                                 });
-                                          }
-                                          else {
+                                          } else {
                                             updateOneToManyOfferFunc(2);
                                           }
                                         }
@@ -574,7 +593,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                   eventsIdsArr: _bloc.offerIds);
             },
           ),
-        ).then((_){
+        ).then((_) {
           logger.i("came back from cal page");
         });
       }

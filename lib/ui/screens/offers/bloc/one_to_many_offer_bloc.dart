@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -35,6 +36,7 @@ class OneToManyOfferBloc extends BlocBase {
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _classSizeError = BehaviorSubject<String>();
   final profanityDetector = ProfanityDetector();
+  final _isAdmin = BehaviorSubject<bool>.seeded(false);
 
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
   Function(bool value) get onOfferMadeVirtual => _makeVirtual.sink.add;
@@ -46,6 +48,7 @@ class OneToManyOfferBloc extends BlocBase {
   Function(String) get onclassDescriptionChanged => _classDescription.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(String) get onClassSizeError => _classSizeError.sink.add;
+  Function(bool) get isAdminChanged => _isAdmin.sink.add;
 
   Stream<bool> get makePublicValue => _makePublic.stream;
   Stream<bool> get makeVirtualValue => _makeVirtual.stream;
@@ -54,6 +57,7 @@ class OneToManyOfferBloc extends BlocBase {
   Stream<String> get preparationHours => _preparationHours.stream;
   Stream<String> get classHours => _classHours.stream;
   Stream<String> get classSize => _classSize.stream;
+  Stream<bool> get isAdmin => _isAdmin.stream;
   Stream<String> get classDescription => _classDescription.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<String> get classSizeError => _classSizeError.stream;
@@ -181,6 +185,18 @@ class OneToManyOfferBloc extends BlocBase {
         _classSizeError.add(ValidationErrors.offerCreditError);
       }
     }
+  }
+
+  void checkPublicAvailability(String timebankId, String sevaUserId) {
+    Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .get()
+        .then((value) {
+      final model = TimebankModel.fromMap(value.data);
+      isAdminChanged(model.admins.contains(sevaUserId) ||
+          model.organizers.contains(sevaUserId));
+    });
   }
 
   ///[PRELOAD DATA FOR UPDATE]
