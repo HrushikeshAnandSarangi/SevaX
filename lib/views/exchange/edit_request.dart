@@ -443,19 +443,25 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.OpenScopeRequest,
-                                  isChecked: widget.requestModel.public,
-                                  checkBoxTypeLabel: CheckBoxType.type_Requests,
-                                  onChangedCB: (bool val) {
-                                    if (widget.requestModel.public != val) {
-                                      widget.requestModel.public = val;
-                                      log('value ${widget.requestModel.public}');
-                                      setState(() {});
-                                    }
-                                  }),
+                            Offstage(
+                              offstage: widget.requestModel.requestMode ==
+                                  RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.OpenScopeRequest,
+                                    isChecked: widget.requestModel.public,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_Requests,
+                                    onChangedCB: (bool val) {
+                                      if (widget.requestModel.public != val) {
+                                        widget.requestModel.public = val;
+                                        log('value ${widget.requestModel.public}');
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
                             ),
                             Offstage(
                               offstage: widget.requestModel.requestMode ==
