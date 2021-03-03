@@ -424,17 +424,20 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             Theme.of(context).primaryColor,
                                         children: {
                                           0: Padding(
-                                            padding: EdgeInsets.only(left: 10, right: 10),
-                                          child: Text('Need A Room',          //Label to be created (client approval)
-                                            style: TextStyle(fontSize: 12.0),
-                                          ),
+                                            padding: EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: Text(
+                                              'Need A Room', //Label to be created (client approval)
+                                              style: TextStyle(fontSize: 12.0),
+                                            ),
                                           ),
                                           1: Padding(
-                                            padding: EdgeInsets.only(left: 10, right: 10),
-                                          child:
-                                          Text('Need Tool/s',                //Label to be created (client approval)
-                                            style: TextStyle(fontSize: 12.0),
-                                          ),
+                                            padding: EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: Text(
+                                              'Need Tool/s', //Label to be created (client approval)
+                                              style: TextStyle(fontSize: 12.0),
+                                            ),
                                           ),
                                         },
                                         borderColor: Colors.grey,
@@ -451,12 +454,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               }
                                               roomOrTool = val;
                                             });
-                                            log('Room or Tool: ' + roomOrTool.toString());
+                                            log('Room or Tool: ' +
+                                                roomOrTool.toString());
                                           }
                                         },
                                         //groupValue: sharedValue,
                                       ),
-                                       SizedBox(height: 12),
+                                      SizedBox(height: 12),
                                     ],
                                   )
                                 : Container(),
@@ -1011,7 +1015,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Tool Name*",         //Label to be created (need client approval)
+            "Tool Name*", //Label to be created (need client approval)
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -1335,101 +1339,104 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   Widget BorrowRequest(snapshot, projectModelList) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      RepeatWidget(),
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RepeatWidget(),
 
-      SizedBox(height: 20),
+          SizedBox(height: 20),
 
-      roomOrTool == 1 ?
-      BorrowToolTitleField('Ex: Hammer or Chair...') : Container(),   //Label to be created (need client approval)
+          roomOrTool == 1
+              ? BorrowToolTitleField('Ex: Hammer or Chair...')
+              : Container(), //Label to be created (need client approval)
 
-      SizedBox(height: 15),
+          SizedBox(height: 15),
 
-      RequestDescriptionData('Please describe what you require'),   //Label to be created (need client approval)
-      SizedBox(height: 20),                                              //Same hint for Room and Tools ?
-      // Choose Category and Sub Category
-      InkWell(
-        child: Column(
-          children: [
-            Row(
+          RequestDescriptionData(
+              'Please describe what you require'), //Label to be created (need client approval)
+          SizedBox(height: 20), //Same hint for Room and Tools ?
+          // Choose Category and Sub Category
+          InkWell(
+            child: Column(
               children: [
-                categories == null
-                    ? Text(
-                        S.of(context).choose_category,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      )
-                    : Text(
-                        "${categories[0]}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  size: 16,
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
                 ),
-                // Container(
-                //   height: 25,
-                //   width: 25,
-                //   decoration: BoxDecoration(
-                //       color: Theme.of(context).primaryColor,
-                //       borderRadius: BorderRadius.circular(100)),
-                //   child: Icon(
-                //     Icons.arrow_drop_down_outlined,
-                //     color: Colors.white,
-                //   ),
-                // ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
               ],
             ),
-            SizedBox(height: 20),
-            categories != null
-                ? Wrap(
-                    alignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    children: _buildselectedSubCategories(categories),
-                  )
-                : Container(),
-          ],
-        ),
-        onTap: () => moveToCategory(),
-      ),
-      SizedBox(height: 20),
-      isFromRequest(
-        projectId: widget.projectId,
-      )
-          ? addToProjectContainer(
-              snapshot,
-              projectModelList,
-              requestModel,
-            )
-          : Container(),
+            onTap: () => moveToCategory(),
+          ),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
 
-      SizedBox(height: 15),
+          SizedBox(height: 15),
 
-      Center(
-        child: LocationPickerWidget(
-          selectedAddress: selectedAddress,
-          location: location,
-          onChanged: (LocationDataModel dataModel) {
-            log("received data model");
-            setState(() {
-              location = dataModel.geoPoint;
-              this.selectedAddress = dataModel.location;
-            });
-          },
-        ),
-      )
-    ]);
+          Center(
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
+            ),
+          )
+        ]);
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
@@ -2416,38 +2423,50 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
 //check for tool title/name field is not empty
-      if(requestModel.requestType == RequestType.BORROW && roomOrTool == 1 && 
-         (requestModel.borrowRequestToolName == '' || requestModel.borrowRequestToolName == null)) {
+      if (requestModel.requestType == RequestType.BORROW &&
+          roomOrTool == 1 &&
+          (requestModel.borrowRequestToolName == '' ||
+              requestModel.borrowRequestToolName == null)) {
         showDialogForTitle(
-            dialogTitle: 'Please enter Tool/s name');    //Label to be created
+            dialogTitle: 'Please enter Tool/s name'); //Label to be created
         return;
       }
 
+//Assigning room or tool for Borrrow Requests      
+      if (roomOrTool != null) {
+        if (roomOrTool == 1) {                  //CHANGE to use enums
+          requestModel.roomOrTool = 'TOOL';
+        } else {
+          requestModel.roomOrTool = 'ROOM';
+        }
+      }
+
+
       //Form and date is valid
       //if(requestModel.requestType != RequestType.BORROW) {
-        switch (requestModel.requestMode) {
-          case RequestMode.PERSONAL_REQUEST:
-            var myDetails = SevaCore.of(context).loggedInUser;
-            this.requestModel.fullName = myDetails.fullname;
-            this.requestModel.photoUrl = myDetails.photoURL;
-            var onBalanceCheckResult =
-                await SevaCreditLimitManager.hasSufficientCredits(
-              email: SevaCore.of(context).loggedInUser.email,
-              credits: requestModel.numberOfHours.toDouble(),
-              userId: myDetails.sevaUserID,
-              communityId: timebankModel.communityId,
-            );
-            if (!onBalanceCheckResult) {
-              showInsufficientBalance();
-              return;
-            }
-            break;
+      switch (requestModel.requestMode) {
+        case RequestMode.PERSONAL_REQUEST:
+          var myDetails = SevaCore.of(context).loggedInUser;
+          this.requestModel.fullName = myDetails.fullname;
+          this.requestModel.photoUrl = myDetails.photoURL;
+          var onBalanceCheckResult =
+              await SevaCreditLimitManager.hasSufficientCredits(
+            email: SevaCore.of(context).loggedInUser.email,
+            credits: requestModel.numberOfHours.toDouble(),
+            userId: myDetails.sevaUserID,
+            communityId: timebankModel.communityId,
+          );
+          if (!onBalanceCheckResult) {
+            showInsufficientBalance();
+            return;
+          }
+          break;
 
-          case RequestMode.TIMEBANK_REQUEST:
-            requestModel.fullName = timebankModel.name;
-            requestModel.photoUrl = timebankModel.photoUrl;
-            break;
-        }
+        case RequestMode.TIMEBANK_REQUEST:
+          requestModel.fullName = timebankModel.name;
+          requestModel.photoUrl = timebankModel.photoUrl;
+          break;
+      }
       //}
 
       int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -2475,6 +2494,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
       requestModel.softDelete = false;
+
+      log('ROOM OR TOOL STRING: ' + BorrowRequestType.TOOL.toString());
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!
@@ -2533,7 +2554,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: requestModel.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
-                log('SENT NOTIF');
+            log('SENT NOTIF');
           } else {
             // trigger email for user who is not part of the community for this request
             await sendMailToInstructor(
@@ -2838,7 +2859,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   Future<List<String>> _writeToDB() async {
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
-    if(requestModel.requestType != RequestType.BORROW){
+    if (requestModel.requestType != RequestType.BORROW) {
       log('Comes Here');
       await TransactionBloc().createNewTransaction(
         requestModel.timebankId,
@@ -3032,4 +3053,11 @@ Future<Map<String, String>> getGoodsFuture() async {
   });
   log("goodsVar length ${goodsVar.length.toString()}");
   return goodsVar;
+}
+
+
+
+enum BorrowRequestType {
+  TOOL,
+  ROOM,
 }

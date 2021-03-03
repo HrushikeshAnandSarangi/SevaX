@@ -19,10 +19,8 @@ enum FeedbackType {
   FOR_REQUEST_VOLUNTEER,
   FOR_REQUEST_CREATOR,
   FOR_ONE_TO_MANY_OFFER,
-  FOR_BORROW_REQUEST_LENDER_TOOL,
-  FOR_BORROW_REQUEST_BORROWER_TOOL,
-  FOR_BORROW_REQUEST_LENDER_ROOM,
-  FOR_BORROW_REQUEST_BORROWER_ROOM,
+  FOR_BORROW_REQUEST_LENDER,
+  FOR_BORROW_REQUEST_BORROWER,
 }
 
 class ReviewFeedback extends StatefulWidget {
@@ -133,29 +131,23 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case FeedbackType.FOR_ONE_TO_MANY_OFFER:
         return getFeedbackQuestionForOneToManyOffer(languageCode);
 
-      case FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL:
-        return getFeedbackQuestionsForLenderTool(languageCode);
+      case FeedbackType.FOR_BORROW_REQUEST_LENDER:
+        return getFeedbackQuestionsForLender(languageCode);
 
-      case FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL:
-        return getFeedbackQuestionsForBorrowerTool(languageCode);
-
-      //case FeedbackType.FOR_BORROW_REQUEST_LENDER_ROOM:
-       // return getFeedbackQuestionsForLender(languageCode);
-
-      //case FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM:
-       // return getFeedbackQuestionsForBorrower(languageCode);
+      case FeedbackType.FOR_BORROW_REQUEST_BORROWER:
+        return getFeedbackQuestionsForBorrower(languageCode);
 
       default:
         throw "FEEDBACK TYPE NOT DEFINED";
     }
   }
 
-  List<Map<String, Object>> getFeedbackQuestionsForLenderTool(
+  List<Map<String, Object>> getFeedbackQuestionsForLender(
     String languageCode,
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_LENDER_TOOL_EN;
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_LENDER_EN;
 
       // case 'sn':
       //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
@@ -181,12 +173,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     }
   }
 
-  List<Map<String, Object>> getFeedbackQuestionsForBorrowerTool(
+  List<Map<String, Object>> getFeedbackQuestionsForBorrower(
     String languageCode,
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL_EN;
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_BORROWER_EN;
 
       // case 'sn':
       //   return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_SN;
@@ -306,8 +298,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   Widget getFeebackQuestions() {
     Widget widgettype;
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
-        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL ||
-        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM) {
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
       widgettype = StarRating();
     } else {
       widgettype = getQuestionsWidget(widget, questionIndex);
@@ -377,9 +368,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               totalScore,
               (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
                       widget.feedbackType ==
-                          FeedbackType.FOR_BORROW_REQUEST_BORROWER_TOOL ||
-                      widget.feedbackType ==
-                          FeedbackType.FOR_BORROW_REQUEST_BORROWER_ROOM)
+                          FeedbackType.FOR_BORROW_REQUEST_BORROWER)
                   ? 20
                   : 15)
           .toStringAsFixed(1),
@@ -423,6 +412,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget getTextFeedback(BuildContext context) {
+     log('requestType 25:  ' + widget.requestModel.requestType.toString());
     return Container(
       margin: EdgeInsets.all(10),
       child: SingleChildScrollView(

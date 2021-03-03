@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -149,23 +150,20 @@ class MyTasksListState extends State<MyTaskList> {
         child: InkWell(
           onTap: () {
             logger.e('TYPEE: ------>  ' + model.requestType.toString());
-
-            subjectBorrow.add(0);
+            logger.e('FIRST CLICK 1');
 
             if (model.requestType == RequestType.BORROW) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BorrowRequestFeedBackView(
-                    requestModel: model,
-                  ),
-                ),
-              );
-              // return BorrowRequestFeedBackView(
-              //   requestModel: model,
+              subjectBorrow.add(0);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => BorrowRequestFeedBackView(
+              //       requestModel: model,
+              //     ),
+              //   ),
               // );
             } else {
-              logger.e('COMES TO TIME CLICK 1');
+              logger.e('FIRST CLICK 2');
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -219,10 +217,10 @@ class MyTasksListState extends State<MyTaskList> {
             ),
             onTap: () {
               logger.e('TYPEE: ------>  ' + model.requestType.toString());
-              if (model.requestType == RequestType.BORROW) {
 
+              if (model.requestType == RequestType.BORROW) {
+                logger.e('SECOND CLICK 1');
                 subjectBorrow.add(0);
-                logger.e('added subjectBorrow');
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
@@ -231,11 +229,8 @@ class MyTasksListState extends State<MyTaskList> {
                 //     ),
                 //   ),
                 // );
-                // return BorrowRequestFeedBackView(
-                //   requestModel: model,
-                // );
               } else {
-                logger.e('COMES TO TIME CLICK 2');
+                logger.e('SECOND CLICK 2');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -278,17 +273,12 @@ class MyTasksListState extends State<MyTaskList> {
   }
 
   void checkForReviewBorrowRequests() async {
-
     logger.e('COMES BACK HERE 2');
 
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return ReviewFeedback(
-            feedbackType: FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL,
-            //FeedbackType.FOR_REQUEST_CREATOR
-            requestModel: requestModelNew,
-          );
+          return BorrowRequestFeedBackView(requestModel: requestModelNew);
         },
       ),
     );
@@ -381,9 +371,10 @@ class MyTasksListState extends State<MyTaskList> {
     // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
     logger.e('comes here 1');
 
-    //doing below since in RequestModel if != null nothing happens 
-    //so manually removing user from task 
+    //doing below since in RequestModel if != null nothing happens
+    //so manually removing user from task
     requestModelNew.approvedUsers = [];
+    requestModelNew.acceptors = [];
 
     FirestoreManager.requestComplete(model: requestModelNew);
 
@@ -405,7 +396,7 @@ class MyTasksListState extends State<MyTaskList> {
     //Navigator.of(context).pop();
   }
 
-   BuildContext creditRequestDialogContext;
+  BuildContext creditRequestDialogContext;
   void showProgressForCreditRetrieval() {
     showDialog(
         barrierDismissible: false,
@@ -1055,8 +1046,7 @@ class TaskCardViewState extends State<TaskCardView> {
       MaterialPageRoute(
         builder: (BuildContext context) {
           return ReviewFeedback(
-            feedbackType: FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL,
-            //FeedbackType.FOR_REQUEST_CREATOR
+            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
             requestModel: requestModel,
           );
         },
@@ -1244,8 +1234,6 @@ class TaskCardViewState extends State<TaskCardView> {
   }
 }
 
-
-
 class BorrowRequestFeedBackView extends StatefulWidget {
   final RequestModel requestModel;
   // TODO needs flow correction to tasks model
@@ -1257,7 +1245,6 @@ class BorrowRequestFeedBackView extends StatefulWidget {
 }
 
 class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
-
   RequestModel requestModel;
 
   @override
@@ -1265,7 +1252,6 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
     super.initState();
     this.requestModel = widget.requestModel;
   }
-
 
   TextEditingController hoursController = TextEditingController();
   TextEditingController selectedHoursPrepTimeController =
@@ -1275,7 +1261,6 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -1284,11 +1269,14 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
         ),
       ),
       body: ReviewFeedback(
-        feedbackType: FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL,
+        feedbackType: (requestModel.requestType == RequestType.BORROW &&
+                SevaCore.of(context).loggedInUser.sevaUserID ==
+                    requestModel.sevaUserId)
+            ? FeedbackType.FOR_BORROW_REQUEST_BORROWER
+            : FeedbackType.FOR_BORROW_REQUEST_LENDER,
         //FeedbackType.FOR_REQUEST_CREATOR
         requestModel: requestModel,
       ),
     );
   }
-
 }

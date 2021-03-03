@@ -86,11 +86,18 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                   ),
                 ),
               );
-              
-              //
-              //after this is done, need to update documents that feedback is done and notification should go
-              //
-
+              FirestoreManager.readTimeBankNotification(
+                notificationId: notificationId,
+                timebankId: model.timebankId,
+              );
+              //  showMemberClaimConfirmation(
+              //   context: parentContext,
+              //   notificationId: notificationId,
+              //   requestModel: model,
+              //   userId: userId,
+              //   userModel: user,
+              //   credits: transactionModel.credits,
+              // );
             } else {
               showMemberClaimConfirmation(
                 context: parentContext,

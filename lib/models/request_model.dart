@@ -160,6 +160,7 @@ class RequestModel extends DataModel {
   String fullName;
   String sevaUserId;
   String photoUrl;
+  String roomOrTool;
   List<String> acceptors;
   int durationOfRequest;
   int postTimestamp;
@@ -207,6 +208,7 @@ class RequestModel extends DataModel {
     this.fullName,
     this.sevaUserId,
     this.photoUrl,
+    this.roomOrTool,
     this.accepted,
     this.postTimestamp,
     this.requestEnd,
@@ -336,6 +338,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('requestorphotourl')) {
       this.photoUrl = map['requestorphotourl'];
+    }
+    if (map.containsKey('roomOrTool')) {
+      this.roomOrTool = map['roomOrTool'];
     }
     if (map.containsKey('address')) {
       this.address = map['address'];
@@ -542,6 +547,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('requestorphotourl')) {
       this.photoUrl = map['requestorphotourl'];
     }
+    if (map.containsKey('roomOrTool')) {
+      this.roomOrTool = map['roomOrTool'];
+    }
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
@@ -710,7 +718,8 @@ class RequestModel extends DataModel {
     if (this.description != null && this.description.isNotEmpty) {
       object['description'] = this.description;
     }
-    if (this.borrowRequestToolName != null && this.borrowRequestToolName.isNotEmpty) {
+    if (this.borrowRequestToolName != null &&
+        this.borrowRequestToolName.isNotEmpty) {
       object['borrowRequestToolName'] = this.borrowRequestToolName;
     }
     if (this.email != null && this.email.isNotEmpty) {
@@ -725,6 +734,10 @@ class RequestModel extends DataModel {
     if (this.photoUrl != null && this.photoUrl.isNotEmpty) {
       object['requestorphotourl'] = this.photoUrl;
     }
+    if (this.roomOrTool != null && this.roomOrTool.isNotEmpty) {
+      object['roomOrTool'] = this.roomOrTool;
+    }
+
     if (this.acceptors != null) {
       object['acceptors'] = this.acceptors;
     }
@@ -838,7 +851,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, borrowRequestToolName: $borrowRequestToolName, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, borrowRequestToolName: $borrowRequestToolName, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, roomOrTool: $roomOrTool, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -58,6 +60,9 @@ class _CompletedListState extends State<CompletedList> {
 
   @override
   Widget build(BuildContext context) {
+
+    log('Requests Length:  '   + requestList.length.toString());
+
     if (requestList.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),

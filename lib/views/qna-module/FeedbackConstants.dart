@@ -100,7 +100,7 @@ class FeedbackConstants {
 
 
 //FEEDBACK_QUESTIONS_FOR_LENDER_TOOL
-  static const FEEDBACK_QUESTIONS_FOR_LENDER_TOOL_EN = const [
+  static const FEEDBACK_QUESTIONS_FOR_LENDER_EN = const [
     {
       FEEDBACK_TITLE: "How would you rate your experience?",
       ANSWERS: [
@@ -112,7 +112,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "Did you experience any difficulty in retrieving back the item you lent?",
+          "Did you experience any difficulty in retrieving back what you lent",
       ANSWERS: [
         {ANSWER_TEXT: "No difficulty", SCORE: 5},
         {ANSWER_TEXT: "Only slightly", SCORE: 4},
@@ -120,7 +120,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Was the item you lent given back in the same condition?",
+      FEEDBACK_TITLE: "Was the item or place you lent given back in the same condition?",
       ANSWERS: [
         {"text": "Yes, just as good", SCORE: 5},
         {"text": "No, not as good condition", SCORE: 4},
@@ -148,7 +148,7 @@ class FeedbackConstants {
 
 
 //FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL
-  static const FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL_EN = const [
+  static const FEEDBACK_QUESTIONS_FOR_BORROWER_EN = const [
     {
       FEEDBACK_TITLE:
           "Was the transaction completed in a professional manner on a scale between 0-10, where 0 = Not at all professional and 10 = Extremely Professional?",
@@ -162,7 +162,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "How easy was it for you to obtain the item(s), on a scale between 0-10, where 0 = Not at all Easy and 10 = Extremely Easy?",
+          "How easy was it for you to obtain the item(s) or place, on a scale between 0-10, where 0 = Not at all Easy and 10 = Extremely Easy?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -172,7 +172,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "How satisfied are you with the item you borrowed, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied?",
+      FEEDBACK_TITLE: "How satisfied are you with the item or place you borrowed, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
