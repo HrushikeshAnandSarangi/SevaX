@@ -261,10 +261,10 @@ Future<void> createApprovalNotificationForMember({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   var requestModel = RequestModel.fromMap(model.data);
-  log('comes here 2');
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+      log('User Email to NOtify : '  + user.email);
       await Firestore.instance
           .collection('users')
           .document(user.email)
@@ -274,6 +274,8 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
       break;
 
     case RequestMode.TIMEBANK_REQUEST:
+        log('Timabank ID:  '  + model.timebankId);
+        log('Model ID: ' + model.id);
       await Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
@@ -282,7 +284,6 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
           .setData(model.toMap(), merge: true);
       break;
   }
-  log('comes here 3');
 }
 
 Future<void> processLoans({

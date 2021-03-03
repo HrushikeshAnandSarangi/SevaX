@@ -2424,7 +2424,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       //Form and date is valid
-      if(requestModel.requestType != RequestType.BORROW) {
+      //if(requestModel.requestType != RequestType.BORROW) {
         switch (requestModel.requestMode) {
           case RequestMode.PERSONAL_REQUEST:
             var myDetails = SevaCore.of(context).loggedInUser;
@@ -2448,7 +2448,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             requestModel.photoUrl = timebankModel.photoUrl;
             break;
         }
-      }
+      //}
 
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       String timestampString = timestamp.toString();

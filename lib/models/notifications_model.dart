@@ -114,6 +114,7 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
+  BorrowRequest,
   AddManualTimeRequest,
   RequestScheduleReminder,
   RecurringRequestUpdated,
@@ -190,6 +191,7 @@ NotificationType stringToNotificationType(String str) {
 
 Map<String, NotificationType> typeMapper = {
   "AddManualTimeRequest": NotificationType.AddManualTimeRequest,
+  "BorrowRequest": NotificationType.BorrowRequest,
   "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
   "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RecurringOfferUpdated": NotificationType.RecurringOfferUpdated,

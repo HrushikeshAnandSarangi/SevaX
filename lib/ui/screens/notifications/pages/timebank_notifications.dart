@@ -122,6 +122,26 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                     );
                   break;
+              case NotificationType.BorrowRequest:
+                  Map<dynamic,dynamic> oneToManyModel = notification.data;
+                    return NotificationCard(
+                      timestamp: notification.timestamp,
+                      entityName: 'NAME',
+                      isDissmissible: true,
+                      onDismissed: () {
+                        FirestoreManager.readTimeBankNotification(
+                          notificationId: notification.id,
+                          timebankId: notification.timebankId,
+                        );
+                      },
+                      onPressed: () async {
+                      
+                      },
+                      photoUrl: oneToManyModel['requestorphotourl'],
+                      title: 'Borrow Request',        //Label to be created
+                      subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                    );
+                  break;
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return TimebankRequestWidget(

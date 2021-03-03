@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -19,6 +21,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 
 class TimebankRequestCompletedWidget extends StatelessWidget {
   final NotificationsModel notification;
@@ -68,19 +71,36 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         return NotificationCard(
           isDissmissible: false,
           title: model.title,
-          subTitle:
-              '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour(transactionModel.credits)}, ${S.of(context).notifications_waiting_for_approval}.',
+          subTitle: model.requestType == RequestType.BORROW
+              ? '${user.fullname} has reviewed this request. \nTap to share feedback.' //Label to be given
+              : '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour(transactionModel.credits)}, ${S.of(context).notifications_waiting_for_approval}.',
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
-            showMemberClaimConfirmation(
-              context: parentContext,
-              notificationId: notificationId,
-              requestModel: model,
-              userId: userId,
-              userModel: user,
-              credits: transactionModel.credits,
-            );
+            if (model.requestType == RequestType.BORROW) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BorrowRequestFeedBackView(
+                    requestModel: model,
+                  ),
+                ),
+              );
+              
+              //
+              //after this is done, need to update documents that feedback is done and notification should go
+              //
+
+            } else {
+              showMemberClaimConfirmation(
+                context: parentContext,
+                notificationId: notificationId,
+                requestModel: model,
+                userId: userId,
+                userModel: user,
+                credits: transactionModel.credits,
+              );
+            }
           },
           timestamp: notification.timestamp,
         );

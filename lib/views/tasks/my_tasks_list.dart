@@ -118,7 +118,7 @@ class MyTasksListState extends State<MyTaskList> {
           itemCount: requestModelList.length,
           itemBuilder: (listContext, index) {
             RequestModel model = requestModelList[index];
-            requestModelNew = requestModelList[index];
+            requestModelNew = model;
 
             return getTaskWidget(
               model,
@@ -149,7 +149,9 @@ class MyTasksListState extends State<MyTaskList> {
         child: InkWell(
           onTap: () {
             logger.e('TYPEE: ------>  ' + model.requestType.toString());
+
             subjectBorrow.add(0);
+
             if (model.requestType == RequestType.BORROW) {
               Navigator.push(
                 context,
@@ -218,15 +220,17 @@ class MyTasksListState extends State<MyTaskList> {
             onTap: () {
               logger.e('TYPEE: ------>  ' + model.requestType.toString());
               if (model.requestType == RequestType.BORROW) {
+
                 subjectBorrow.add(0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BorrowRequestFeedBackView(
-                      requestModel: model,
-                    ),
-                  ),
-                );
+                logger.e('added subjectBorrow');
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => BorrowRequestFeedBackView(
+                //       requestModel: model,
+                //     ),
+                //   ),
+                // );
                 // return BorrowRequestFeedBackView(
                 //   requestModel: model,
                 // );
@@ -290,7 +294,7 @@ class MyTasksListState extends State<MyTaskList> {
     );
 
     if (results != null && results.containsKey('selection')) {
-      //showProgressForCreditRetrieval();
+      showProgressForCreditRetrieval();
       onActivityResult(results, SevaCore.of(context).loggedInUser);
     } else {}
   }
@@ -376,6 +380,13 @@ class MyTasksListState extends State<MyTaskList> {
   void startTransaction() async {
     // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
     logger.e('comes here 1');
+
+    //doing below since in RequestModel if != null nothing happens 
+    //so manually removing user from task 
+    requestModelNew.approvedUsers = [];
+
+    FirestoreManager.requestComplete(model: requestModelNew);
+
     FirestoreManager.createTaskCompletedNotification(
       model: NotificationsModel(
         id: utils.Utils.getUuid(),
@@ -390,8 +401,22 @@ class MyTasksListState extends State<MyTaskList> {
         isRead: false,
       ),
     );
-    //Navigator.of(creditRequestDialogContext).pop();
-    Navigator.of(context).pop();
+    Navigator.of(creditRequestDialogContext).pop();
+    //Navigator.of(context).pop();
+  }
+
+   BuildContext creditRequestDialogContext;
+  void showProgressForCreditRetrieval() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          creditRequestDialogContext = context;
+          return AlertDialog(
+            title: Text(S.of(context).please_wait),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   String getTime(int timeInMilliseconds, String timezoneAbb) {
@@ -1219,6 +1244,8 @@ class TaskCardViewState extends State<TaskCardView> {
   }
 }
 
+
+
 class BorrowRequestFeedBackView extends StatefulWidget {
   final RequestModel requestModel;
   // TODO needs flow correction to tasks model
@@ -1230,31 +1257,15 @@ class BorrowRequestFeedBackView extends StatefulWidget {
 }
 
 class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
-  String selectedMinuteValue = "0";
-  String selectedHourValue;
-
-//One To Many Request Variables
-  String selectedMinutesPrepTime = "0";
-  String selectedHoursPrepTime;
-  String selectedMinutesDeliveryTime = "0";
-  String selectedHoursDeliveryTime;
 
   RequestModel requestModel;
-  final subject = ReplaySubject<int>();
 
   @override
   void initState() {
     super.initState();
     this.requestModel = widget.requestModel;
-    subject
-        .transform(ThrottleStreamTransformer(
-            (_) => TimerStream(true, const Duration(seconds: 1))))
-        .listen((data) {
-      checkForReview();
-    });
   }
 
-  final _formKey = GlobalKey<FormState>();
 
   TextEditingController hoursController = TextEditingController();
   TextEditingController selectedHoursPrepTimeController =
@@ -1264,6 +1275,7 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -1279,241 +1291,4 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
     );
   }
 
-  void showDialogFoInfo({String title, String content}) {
-    showDialog(
-        context: context,
-        builder: (BuildContext buildContext) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(content),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(S.of(context).close),
-                onPressed: () {
-                  Navigator.of(buildContext).pop();
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  void checkForReview() async {
-    int totalMinutes = 0;
-    var maxClaim;
-    double creditRequest = 0.0;
-    logger.i('This 1');
-    logger.i('TYPE:  ' + requestModel.requestType.toString());
-
-    if (requestModel.requestType == RequestType.BORROW) {
-      Map results = await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return ReviewFeedback(
-              feedbackType: FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL,
-              //FeedbackType.FOR_REQUEST_CREATOR
-              requestModel: requestModel,
-            );
-          },
-        ),
-      );
-
-      if (results != null && results.containsKey('selection')) {
-        showProgressForCreditRetrieval();
-        onActivityResult(results, SevaCore.of(context).loggedInUser);
-      } else {}
-    } else {
-      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          requestModel.selectedInstructor.sevaUserID ==
-              SevaCore.of(context).loggedInUser.sevaUserID) {
-        if (selectedHoursPrepTimeController.text == null ||
-            selectedHoursPrepTimeController.text.length == 0 ||
-            selectedHoursDeliveryTimeController.text == null ||
-            selectedHoursDeliveryTimeController.text.length == 0) {
-          return;
-        }
-
-        totalMinutes = int.parse(selectedMinutesPrepTime) +
-            int.parse(selectedMinutesDeliveryTime) +
-            (int.parse(selectedHoursPrepTimeController.text) * 60) +
-            (int.parse(selectedHoursDeliveryTimeController.text) * 60);
-      } else if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          requestModel.selectedInstructor.sevaUserID !=
-              SevaCore.of(context).loggedInUser.sevaUserID) {
-        logger.i('This 2');
-
-        if (hoursController.text == null || hoursController.text.length == 0) {
-          return;
-        }
-
-        totalMinutes = int.parse(selectedMinuteValue) +
-            (int.parse(hoursController.text) * 60);
-      } else {
-        logger.i('This 3');
-
-        if (hoursController.text == null || hoursController.text.length == 0) {
-          return;
-        }
-
-        int totalMinutes = int.parse(selectedMinuteValue) +
-            (int.parse(hoursController.text) * 60);
-      }
-
-      creditRequest = totalMinutes / 60;
-      //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-      maxClaim =
-          (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
-
-      if (creditRequest > maxClaim) {
-        showDialogFoInfo(
-          title: S.of(context).limit_exceeded,
-          content:
-              "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
-        );
-        return;
-        //show dialog
-      } else if (creditRequest == 0 &&
-          requestModel.requestType != RequestType.BORROW) {
-        showDialogFoInfo(
-          title: S.of(context).enter_hours,
-          content: S.of(context).validation_error_invalid_hours,
-        );
-        return;
-      }
-
-      Map results = await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return ReviewFeedback(
-              feedbackType: FeedbackType.FOR_BORROW_REQUEST_LENDER_TOOL,
-              //FeedbackType.FOR_REQUEST_CREATOR
-              requestModel: requestModel,
-            );
-          },
-        ),
-      );
-
-      if (results != null && results.containsKey('selection')) {
-        showProgressForCreditRetrieval();
-        onActivityResult(results, SevaCore.of(context).loggedInUser);
-      } else {}
-    }
-  }
-
-  BuildContext creditRequestDialogContext;
-  void showProgressForCreditRetrieval() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          creditRequestDialogContext = context;
-          return AlertDialog(
-            title: Text(S.of(context).please_wait),
-            content: LinearProgressIndicator(),
-          );
-        });
-  }
-
-  Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
-    // adds review to firestore
-    try {
-      logger.i('here 1');
-      await Firestore.instance.collection("reviews").add({
-        "reviewer": SevaCore.of(context).loggedInUser.email,
-        "reviewed": requestModel.email,
-        "ratings": results['selection'],
-        "device_info": results['device_info'],
-        "requestId": requestModel.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments")
-      });
-      logger.i('here 2');
-      await sendMessageToMember(
-          message: results['didComment'] ? results['comment'] : "No comments",
-          requestModel: requestModel,
-          loggedInUser: loggedInUser);
-      logger.i('here 3');
-      startTransaction();
-    } on Exception catch (e) {
-      // TODO
-    }
-  }
-
-  Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    RequestModel requestModel,
-    String message,
-  }) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: requestModel.timebankId);
-    UserModel userModel = await FirestoreManager.getUserForId(
-        sevaUserId: requestModel.sevaUserId);
-    if (userModel != null && timebankModel != null) {
-      ParticipantInfo receiver = ParticipantInfo(
-        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModel.timebankId,
-        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-
-      ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-      await sendBackgroundMessage(
-          messageContent: utils.getReviewMessage(
-            requestTitle: requestModel.title,
-            context: context,
-            userName: loggedInUser.fullname,
-            isForCreator: true,
-            reviewMessage: message,
-          ),
-          reciever: receiver,
-          isTimebankMessage:
-              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                  ? false
-                  : true,
-          timebankId: requestModel.timebankId,
-          communityId: loggedInUser.currentCommunity,
-          sender: sender);
-    }
-  }
-
-  void startTransaction() async {
-    if (_formKey.currentState.validate()) {
-      // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-
-      FirestoreManager.createTaskCompletedNotification(
-        model: NotificationsModel(
-          id: utils.Utils.getUuid(),
-          data: requestModel.toMap(),
-          type: NotificationType.RequestCompleted,
-          senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-          targetUserId: requestModel.sevaUserId,
-          communityId: requestModel.communityId,
-          timebankId: requestModel.timebankId,
-          isTimebankNotification:
-              requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
-          isRead: false,
-        ),
-      );
-      Navigator.of(creditRequestDialogContext).pop();
-      Navigator.of(context).pop();
-    }
-  }
 }
