@@ -170,6 +170,7 @@ class OfferListItems extends StatelessWidget {
         model,
         SevaCore.of(parentContext).loggedInUser.sevaUserID,
       ),
+      requestType: model.type,
       public: model.public,
       virtual: model.virtual,
       userCoordinates: model.currentUserLocation,

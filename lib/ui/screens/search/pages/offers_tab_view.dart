@@ -61,6 +61,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                 itemBuilder: (context, index) {
                   final offer = snapshot.data[index];
                   return OfferCard(
+                    requestType: offer.type,
                     isCardVisible: isOfferVisible(
                       offer,
                       SevaCore.of(context).loggedInUser.sevaUserID,

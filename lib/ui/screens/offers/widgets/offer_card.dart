@@ -33,6 +33,7 @@ class OfferCard extends StatelessWidget {
 
   final bool public;
   final bool virtual;
+  final RequestType requestType;
 
   final RequestType type;
   final int timestamp;
@@ -58,6 +59,7 @@ class OfferCard extends StatelessWidget {
     this.timestamp,
     @required this.public,
     @required this.virtual,
+    @required this.requestType,
   })  : assert(title != null),
         assert(subtitle != null),
         assert(offerType != null),
@@ -92,6 +94,12 @@ class OfferCard extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           children: [
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TagView(
+                                tagTitle: offerType.readbable(requestType),
+                              ),
+                            ),
                             Visibility(
                               visible: public ?? false,
                               child: Container(
