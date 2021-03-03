@@ -65,7 +65,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   email: SevaCore.of(context).loggedInUser.email,
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                      communityId:
+                  communityId:
                       SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
@@ -332,8 +332,8 @@ class RequestCompleteWidget extends StatelessWidget {
             ? results['comment']
             : S.of(context).no_comments)
       });
-      await approveTransaction(
-          requestModel, userId, notificationId, loggedInUser);
+      await approveTransaction(requestModel, userId, notificationId,
+          loggedInUser, receiverUser.email);
 
       await sendMessageToMember(
         receiverUser: receiverUser,
@@ -404,11 +404,15 @@ class RequestCompleteWidget extends StatelessWidget {
     String userId,
     String notificationId,
     UserModel loggedInUser,
+    String email,
   ) {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
     log('clearing notification');
     FirestoreManager.readUserNotification(
@@ -433,7 +437,9 @@ class RequestCompleteWidget extends StatelessWidget {
     FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;

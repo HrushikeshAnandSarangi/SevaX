@@ -237,6 +237,8 @@ class DonorDetails {
     this.email,
     this.bio,
     this.communityId,
+    this.communityName,
+    // @required ÷this.communityName,
   });
 
   String name;
@@ -244,6 +246,7 @@ class DonorDetails {
   String email;
   String bio;
   String communityId;
+  String communityName;
 
   factory DonorDetails.fromMap(Map<String, dynamic> json) => DonorDetails(
         name: json["name"],
@@ -251,6 +254,7 @@ class DonorDetails {
         email: json["email"],
         bio: json["bio"],
         communityId: json["communityId"],
+        communityName: json["communityName"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -259,6 +263,7 @@ class DonorDetails {
         "email": email,
         "bio": bio,
         "communityId": communityId,
+        "communityName": communityName,
       };
 }
 

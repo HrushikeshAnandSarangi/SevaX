@@ -13,12 +13,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -875,12 +873,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  void _acceptRequest() {
-    CommunityModel communityModel = await Provider.of<HomePageBaseBloc>(
-      context,
-      listen: false,
-    ).communtiyModel(widget.timebankModel.communityId);
-
+  void _acceptRequest() async {
+    CommunityModel communityModel;
+    await Firestore.instance
+        .collection('communities')
+        .document(widget.timebankModel.communityId)
+        .get()
+        .then((value) {
+      communityModel = CommunityModel(value.data);
+      setState(() {});
+    });
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.add(SevaCore.of(context).loggedInUser.email);
 

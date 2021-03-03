@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -114,11 +115,15 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     ),
                     onPressed: () async {
                       //Once approvedp
-                      CommunityModel communityModel =
-                          await Provider.of<HomePageBaseBloc>(
-                        context,
-                        listen: false,
-                      ).communtiyModel(widget.userModel.currentCommunity);
+                      CommunityModel communityModel = CommunityModel({});
+                      await Firestore.instance
+                          .collection('communities')
+                          .document(widget.userModel.currentCommunity)
+                          .get()
+                          .then((value) {
+                        communityModel = CommunityModel(value.data);
+                        setState(() {});
+                      });
                       AcceptorModel acceptorModel = AcceptorModel(
                         memberPhotoUrl: widget.userModel.photoURL,
                         communityId: widget.userModel.currentCommunity,

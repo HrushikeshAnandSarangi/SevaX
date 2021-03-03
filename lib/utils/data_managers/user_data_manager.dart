@@ -350,11 +350,7 @@ Future<UserModelListMoreStatus>
 Future<UserModelListMoreStatus> getUsersForTimebankId(
     String timebankId, int index, String email) async {
   var saveXLink = '';
-  if (FlavorConfig.values.timebankName == "Yang 2020") {
-    saveXLink = '';
-  } else {
-    saveXLink = 'Sevax';
-  }
+  saveXLink = 'Sevax';
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   var res = await http

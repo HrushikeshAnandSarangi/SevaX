@@ -155,10 +155,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 backgroundImage: NetworkImage(defaultUserImageURL),
               );
             }
-            return
-              UserProfileImage(photoUrl: user.photoURL,email:  user.email,userId:  user.sevaUserID,height: 60,width:60 ,timebankModel: widget.timebankModel,);
-
-
+            return UserProfileImage(
+              photoUrl: user.photoURL,
+              email: user.email,
+              userId: user.sevaUserID,
+              height: 60,
+              width: 60,
+              timebankModel: widget.timebankModel,
+            );
           },
         ),
         trailing: () {
@@ -751,7 +755,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     var loggedInUser = SevaCore.of(context).loggedInUser;
@@ -974,15 +980,19 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    await approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
   }
 
   Future approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) async {
+      String notificationId, SevaCore sevaCore, String email) async {
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
 
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {

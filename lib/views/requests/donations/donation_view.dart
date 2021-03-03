@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,11 +22,12 @@ class DonationView extends StatefulWidget {
   final String timabankName;
   final String notificationId;
 
-  DonationView(
-      {this.requestModel,
-      this.offerModel,
-      this.timabankName,
-      this.notificationId});
+  DonationView({
+    this.requestModel,
+    this.offerModel,
+    this.timabankName,
+    this.notificationId,
+  });
 
   @override
   _DonationViewState createState() => _DonationViewState();
@@ -102,12 +104,15 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void getCommunity() {
-    Future.delayed(Duration.zero, () async {
-      CommunityModel communityModel = await Provider.of<HomePageBaseBloc>(
-        context,
-        listen: false,
-      ).communtiyModel(SevaCore.of(context).loggedInUser.currentCommunity);
-      donationBloc.addCommunity(communityModel);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Firestore.instance
+          .collection('communities')
+          .document(SevaCore.of(context).loggedInUser.currentCommunity)
+          .get()
+          .then((value) {
+        logger.i(">>>>>>>>>>>" + CommunityModel(value.data).toMap().toString());
+        donationBloc.addCommunity(CommunityModel(value.data));
+      });
     });
   }
 
@@ -212,6 +217,8 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
       donationsModel.donorDetails.email = sevaUser.email;
       donationsModel.donorDetails.bio = sevaUser.bio;
+      donationsModel.donorDetails.communityId = sevaUser.currentCommunity;
+
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
@@ -233,6 +240,8 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.donorDetails.name = widget.offerModel.fullName;
       donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
       donationsModel.donorDetails.email = widget.offerModel.email;
+      donationsModel.donorDetails.communityId = widget.offerModel.communityId;
+
       donationsModel.receiverDetails.name = sevaUser.fullname;
       donationsModel.receiverDetails.email = sevaUser.email;
       donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;

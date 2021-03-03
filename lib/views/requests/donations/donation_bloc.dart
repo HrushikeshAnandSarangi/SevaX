@@ -12,8 +12,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
-  final _amountPledged = BehaviorSubject<String>();
   final _community = BehaviorSubject<CommunityModel>();
+  final _amountPledged = BehaviorSubject<String>();
   final _errorMessage = BehaviorSubject<String>();
   final _comment = BehaviorSubject<String>();
   final _selectedList =
@@ -72,23 +72,15 @@ class DonationBloc {
       newDonors.add(donationModel.donatedTo);
       offerModel.cashModel.donors = newDonors;
     }
+
+    //Setting the receiver Community Title
+    donationModel.receiverDetails.communityName = _community.value.name;
+
+    //HERE
+
     try {
-      // var batch = Firestore.instance.batch();
-      // batch.setData(
-      //   Firestore.instance.collection('donations').document(donationModel.id),
-      //   donationModel.toMap(),
-      // );
-
-      // batch.updateData(
-      //   Firestore.instance.collection('offers').document(offerModel.id),
-      //   offerModel.toMap(),
-      // );
-
-      log("===================DDID  B4${donationModel.notificationId}");
       await FirestoreManager.createDonation(donationModel: donationModel);
       await updateOfferWithRequest(offer: offerModel);
-      log("===================DDID  AF${donationModel.notificationId}");
-
       await sendNotification(
         donationModel: donationModel,
         offerModel: offerModel,
@@ -187,7 +179,6 @@ class DonationBloc {
         communityId: _community.value.id,
         memberPhotoUrl: donor.photoURL);
     requestModel.participantDetails[donor.email] = acceptorModel.toMap();
-
     try {
       await FirestoreManager.createDonation(donationModel: donationModel);
       await FirestoreManager.updateRequest(requestModel: requestModel);
@@ -277,6 +268,7 @@ class DonationBloc {
     _amountPledged.close();
     _goodsDescription.close();
     _errorMessage.close();
+    _community.close();
     _comment.close();
   }
 }

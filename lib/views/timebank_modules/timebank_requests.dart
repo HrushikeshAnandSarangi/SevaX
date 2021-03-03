@@ -33,7 +33,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
 import '../core.dart';
 
 class RequestsModule extends StatefulWidget {
@@ -84,7 +84,9 @@ class RequestsState extends State<RequestsModule> {
                       child: Stack(
                         children: [
                           Container(
-                            padding: EdgeInsets.only(right:10,),
+                            padding: EdgeInsets.only(
+                              right: 10,
+                            ),
                             child: FlatButton(
                               onPressed: () {},
                               child: Text(
@@ -98,7 +100,7 @@ class RequestsState extends State<RequestsModule> {
                             top: 0,
                             right: -20,
                             child: Container(
-                              padding: EdgeInsets.only(left:4, right:4),
+                              padding: EdgeInsets.only(left: 4, right: 4),
                               child: infoButton(
                                 context: context,
                                 key: GlobalKey(),

@@ -301,7 +301,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+    approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
   }
 
   Future<void> sendMessageToMember({
@@ -356,12 +357,20 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         sender: sender);
   }
 
-  void approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) {
+  void approveTransaction(
+    RequestModel model,
+    String userId,
+    String notificationId,
+    SevaCore sevaCore,
+    String email,
+  ) {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
 
     // return;
@@ -388,7 +397,9 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
