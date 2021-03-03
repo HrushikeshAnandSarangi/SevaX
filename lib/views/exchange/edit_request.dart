@@ -37,7 +37,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
-import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -225,10 +224,10 @@ class RequestEditFormState extends State<RequestEditForm> {
 
     fetchRemoteConfig();
 
-    if (widget.requestModel.skills.values.length > 0) {
-      _selectedSkillsMap = widget.requestModel.skills;
-      setState(() {});
-    }
+    // if ((FlavorConfig.appFlavor == Flavor.APP ||
+    //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    //   // _fetchCurrentlocation;
+    // }
   }
 
   // void get _fetchCurrentlocation async {
@@ -1041,41 +1040,10 @@ class RequestEditFormState extends State<RequestEditForm> {
         : Container();
   }
 
-// Navigat to skills class and geting data from the class
-  void selectSkills() async {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return SkillViewNew(
-        automaticallyImplyLeading: false,
-        userModel: SevaCore.of(context).loggedInUser,
-        isFromProfile: false,
-        selectedSkills: _selectedSkillsMap,
-        onSelectedSkillsMap: (skillMap) {
-          Navigator.pop(context);
-          if (skillMap.values != null && skillMap.values.length > 0) {
-            _selectedSkillsMap = skillMap;
-            widget.requestModel.skills = skillMap;
-            isSkillsUpdated = true;
-            setState(() {});
-          }
-        },
-        onSelectedSkills: (skills) {
-          Navigator.pop(context);
-        },
-        onSkipped: () {
-          Navigator.pop(context);
-        },
-        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
-        isFromRequests: true,
-      );
-    }));
-  }
-
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
   List<CategoryModel> modelList = List();
-  Map<String, dynamic> _selectedSkillsMap = {};
-  bool isSkillsUpdated = false;
 
   void updateInformation(List category) {
     setState(() => categories = category);
@@ -1170,130 +1138,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     return selectedSubCategories;
   }
 
-  Widget skillsWidget() {
-    return InkWell(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _selectedSkillsMap.values.length < 1
-                  ? Text(
-                      'Choose Skills for request',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      "Selected Skills",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          _selectedSkillsMap.values != null
-              ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _selectedSkillsMap.values
-                      .toList()
-                      .map(
-                        (value) => value == null
-                            ? Container()
-                            : Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 10, bottom: 10),
-                                child: Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    child: Text(value.toString(),
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ),
-                      )
-                      .toList(),
-                )
-              : Container(),
-        ],
-      ),
-      onTap: () => selectSkills(),
-    );
-  }
-
-  Widget categoryWidget() {
-    return InkWell(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              categories == null
-                  ? Text(
-                      S.of(context).choose_category,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      "${categories[0]}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
-              ),
-              // Container(
-              //   height: 25,
-              //   width: 25,
-              //   decoration: BoxDecoration(
-              //       color: Theme.of(context).primaryColor,
-              //       borderRadius: BorderRadius.circular(100)),
-              //   child: Icon(
-              //     Icons.arrow_drop_down_outlined,
-              //     color: Colors.white,
-              //   ),
-              // ),
-            ],
-          ),
-          SizedBox(height: 20),
-          categories != null
-              ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(categories),
-                )
-              : Container(),
-        ],
-      ),
-      onTap: () => moveToCategory(),
-    );
-  }
-
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1308,15 +1152,61 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint),
-
           SizedBox(height: 20),
-          // Choose Category and Sub Category
-          categoryWidget(),
-
-          SizedBox(height: 20),
-          skillsWidget(),
-          SizedBox(height: 20),
-
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1555,7 +1445,60 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
-          categoryWidget(),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1578,7 +1521,60 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
-          categoryWidget(),
+          InkWell(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
+              ],
+            ),
+            onTap: () => moveToCategory(),
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1666,7 +1662,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   void editRequest() async {
     // verify f the start and end date time is not same
-    Function eq = const ListEquality().equals;
+
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -1786,9 +1782,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             widget.requestModel.description != initialRequestDescription ||
             tempCredits != widget.requestModel.maxCredits ||
             tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
-            location != widget.requestModel.location ||
-            !eq(widget.requestModel.categories, selectedCategoryIds) ||
-            isSkillsUpdated) {
+            location != widget.requestModel.location) {
           //setState(() {
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
@@ -1926,10 +1920,9 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     widget.requestModel.description != initialRequestDescription ||
         //     tempCredits != widget.requestModel.maxCredits ||
         //     tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
-        //     location != widget.requestModel.location ||
-//            !eq(widget.requestModel.categories, selectedCategoryIds) ||
-//            isSkillsUpdated) {
+        //     location != widget.requestModel.location) {
         log('HERE 1');
+
         widget.requestModel.title = initialRequestTitle;
         widget.requestModel.description = initialRequestDescription;
         widget.requestModel.location = location;
@@ -2696,61 +2689,61 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
           )),
     );
   }
-  // Padding getSuggestionLayout({
-  //   String suggestion,
-  // }) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(18.0),
-  //     child: GestureDetector(
-  //       onTap: () async {
-  //         _textEditingController.clear();
-  //         controller.close();
-  //         var goodsId = Uuid().generateV4();
-  //         await addGoodsToDb(
-  //           goodsId: goodsId,
-  //           goodsLanguage: 'en',
-  //           goodsTitle: suggestion,
-  //         );
-  //         goods[goodsId] = suggestion;
+// Padding getSuggestionLayout({
+//   String suggestion,
+// }) {
+//   return Padding(
+//     padding: const EdgeInsets.all(18.0),
+//     child: GestureDetector(
+//       onTap: () async {
+//         _textEditingController.clear();
+//         controller.close();
+//         var goodsId = Uuid().generateV4();
+//         await addGoodsToDb(
+//           goodsId: goodsId,
+//           goodsLanguage: 'en',
+//           goodsTitle: suggestion,
+//         );
+//         goods[goodsId] = suggestion;
 
-  //         if (!_selectedGoods.containsValue(suggestion)) {
-  //           controller.close();
-  //           String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
-  //           _selectedGoods[id] = suggestion;
-  //           setState(() {});
-  //         }
-  //       },
-  //       child: Container(
-  //           height: 40,
-  //           alignment: Alignment.centerLeft,
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Expanded(
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   children: [
-  //                     Text(
-  //                       "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
-  //                       style: TextStyle(fontSize: 16, color: Colors.blue),
-  //                     ),
-  //                     Text(
-  //                       S.of(context).no_data,
-  //                       style: TextStyle(fontSize: 16, color: Colors.grey),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //               Icon(
-  //                 Icons.add,
-  //                 color: Colors.grey,
-  //               ),
-  //             ],
-  //           )),
-  //     ),
-  //   );
-  // }
+//         if (!_selectedGoods.containsValue(suggestion)) {
+//           controller.close();
+//           String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
+//           _selectedGoods[id] = suggestion;
+//           setState(() {});
+//         }
+//       },
+//       child: Container(
+//           height: 40,
+//           alignment: Alignment.centerLeft,
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   mainAxisAlignment: MainAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
+//                       style: TextStyle(fontSize: 16, color: Colors.blue),
+//                     ),
+//                     Text(
+//                       S.of(context).no_data,
+//                       style: TextStyle(fontSize: 16, color: Colors.grey),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               Icon(
+//                 Icons.add,
+//                 color: Colors.grey,
+//               ),
+//             ],
+//           )),
+//     ),
+//   );
+// }
 }
 
 enum TotalCreditseMode { EDIT_MODE, CREATE_MODE }
