@@ -10,6 +10,8 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -32,7 +34,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -875,16 +876,34 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _acceptRequest() {
+    CommunityModel communityModel = await Provider.of<HomePageBaseBloc>(
+      context,
+      listen: false,
+    ).communtiyModel(widget.timebankModel.communityId);
+
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.add(SevaCore.of(context).loggedInUser.email);
 
     widget.requestItem.acceptors = acceptorList.toList();
+    AcceptorModel acceptorModel = AcceptorModel(
+      memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityName: communityModel.name,
+      memberName: SevaCore.of(context).loggedInUser.fullname,
+      memberEmail: SevaCore.of(context).loggedInUser.email,
+      timebankId: widget.timebankModel.id,
+    );
+    widget.requestItem
+            .participantDetails[SevaCore.of(context).loggedInUser.email] =
+        acceptorModel.toMap();
+
     acceptRequest(
       loggedInUser: SevaCore.of(context).loggedInUser,
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       directToMember: !widget.timebankModel.protected,
+      acceptorModel: acceptorModel,
     );
   }
 
@@ -905,6 +924,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
       Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
       acceptorList.remove(assosciatedEmail);
+      widget.requestItem.participantDetails
+          .remove(SevaCore.of(context).loggedInUser.email);
+
       widget.requestItem.acceptors = acceptorList.toList();
       if (widget.requestItem.allowedCalenderUsers.contains(assosciatedEmail)) {
         Set<String> allowedCalenderUsersList =

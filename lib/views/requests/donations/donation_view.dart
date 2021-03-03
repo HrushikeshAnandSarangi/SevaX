@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -85,6 +86,7 @@ class _DonationViewState extends State<DonationView> {
 //            : 280);
 
     super.initState();
+    getCommunity();
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
@@ -96,6 +98,16 @@ class _DonationViewState extends State<DonationView> {
                     ? S.of(context).minmum_amount
                     : S.of(context).select_goods_category);
       }
+    });
+  }
+
+  void getCommunity() {
+    Future.delayed(Duration.zero, () async {
+      CommunityModel communityModel = await Provider.of<HomePageBaseBloc>(
+        context,
+        listen: false,
+      ).communtiyModel(SevaCore.of(context).loggedInUser.currentCommunity);
+      donationBloc.addCommunity(communityModel);
     });
   }
 
@@ -203,6 +215,9 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.name = widget.requestModel.fullName;
       donationsModel.receiverDetails.photoUrl = widget.requestModel.photoUrl;
       donationsModel.receiverDetails.email = widget.requestModel.email;
+      donationsModel.receiverDetails.communityId =
+          widget.requestModel.communityId;
+      donationsModel.communityId = widget.requestModel.communityId;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -221,8 +236,9 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.receiverDetails.name = sevaUser.fullname;
       donationsModel.receiverDetails.email = sevaUser.email;
       donationsModel.receiverDetails.photoUrl = sevaUser.photoURL;
+      donationsModel.receiverDetails.communityId = sevaUser.currentCommunity;
+      donationsModel.communityId = widget.offerModel.communityId;
     }
-    donationsModel.communityId = sevaUser.currentCommunity;
   }
 
   TextStyle hintTextStyle = TextStyle(

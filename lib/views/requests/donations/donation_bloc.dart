@@ -5,12 +5,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
   final _amountPledged = BehaviorSubject<String>();
+  final _community = BehaviorSubject<CommunityModel>();
   final _errorMessage = BehaviorSubject<String>();
   final _comment = BehaviorSubject<String>();
   final _selectedList =
@@ -26,6 +29,7 @@ class DonationBloc {
   Map<dynamic, dynamic> get selectedListVal => _selectedList.value;
   String get commentEnteredVal => _comment.value;
 
+  Function(CommunityModel) get addCommunity => _community.sink.add;
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
   Function(String) get onCommentChanged => _comment.sink.add;
@@ -119,6 +123,15 @@ class DonationBloc {
           new List<String>.from(requestModel.goodsDonationDetails.donors);
       newDonors.add(donor.sevaUserID);
       requestModel.goodsDonationDetails.donors = newDonors;
+      AcceptorModel acceptorModel = AcceptorModel(
+          timebankId: _community.value.primary_timebank,
+          memberEmail: donor.email,
+          memberName: donor.fullname,
+          communityName: _community.value.name,
+          communityId: _community.value.id,
+          memberPhotoUrl: donor.photoURL);
+      requestModel.participantDetails[donor.email] = acceptorModel.toMap();
+
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);
@@ -166,6 +179,15 @@ class DonationBloc {
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =
     //     requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
+    AcceptorModel acceptorModel = AcceptorModel(
+        timebankId: _community.value.primary_timebank,
+        memberEmail: donor.email,
+        memberName: donor.fullname,
+        communityName: _community.value.name,
+        communityId: _community.value.id,
+        memberPhotoUrl: donor.photoURL);
+    requestModel.participantDetails[donor.email] = acceptorModel.toMap();
+
     try {
       await FirestoreManager.createDonation(donationModel: donationModel);
       await FirestoreManager.updateRequest(requestModel: requestModel);

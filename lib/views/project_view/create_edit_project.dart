@@ -27,8 +27,10 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 import '../../flavor_config.dart';
 
@@ -74,7 +76,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final _textUpdates = StreamController<String>();
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
-
+  bool makePublicBool = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -605,6 +607,37 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     )
                   : Offstage(),
               Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: OpenScopeCheckBox(
+                    infoType: InfoType.OpenScopeEvent,
+                    isChecked: projectModel.public,
+                    checkBoxTypeLabel: CheckBoxType.type_Events,
+                    onChangedCB: (bool val) {
+                      if (projectModel.public != val) {
+                        this.projectModel.public = val;
+                        log('value ${projectModel.public}');
+                        setState(() {});
+                      }
+                    }),
+              ),
+              Offstage(
+                offstage: projectModel.mode == ProjectMode.MEMBER_PROJECT,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: OpenScopeCheckBox(
+                      infoType: InfoType.VirtualRequest,
+                      isChecked: projectModel.virtualProject,
+                      checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+                      onChangedCB: (bool val) {
+                        if (projectModel.virtualProject != val) {
+                          this.projectModel.virtualProject = val;
+                          setState(() {});
+                        }
+                      }),
+                ),
+              ),
+
+              Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
                   alignment: Alignment.center,
@@ -648,6 +681,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                   S.of(context).validation_error_no_date,
                             );
                             return;
+                          }
+                          if (projectModel.public) {
+                            projectModel.timebanksPosted = [
+                              widget.timebankId,
+                              FlavorConfig.values.timebankId
+                            ];
+                          } else {
+                            projectModel.timebanksPosted = [
+                              widget.timebankId,
+                            ];
                           }
 
                           projectModel.communityId = SevaCore.of(context)
@@ -727,6 +770,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                               OfferDurationWidgetState.endtimestamp;
                           projectModel.address = selectedAddress;
                           projectModel.location = location;
+                          if (projectModel.public) {
+                            projectModel.timebanksPosted = [
+                              projectModel.timebankId,
+                              FlavorConfig.values.timebankId
+                            ];
+                          } else {
+                            projectModel.timebanksPosted = [
+                              projectModel.timebankId
+                            ];
+                          }
 
                           if (globals.projectsAvtaarURL != null) {
                             projectModel.photoUrl = globals.projectsAvtaarURL;

@@ -202,7 +202,7 @@ class OfferModel extends DataModel {
   List<String> allowedCalenderUsers;
   bool creatorAllowedCalender = false;
   Coordinates currentUserLocation; //to be used locally
-
+  bool public;
   OfferModel(
       {this.isRecurring,
       this.recurringDays,
@@ -229,7 +229,8 @@ class OfferModel extends DataModel {
       this.cashModel,
       this.goodsDonationDetails,
       this.creatorAllowedCalender,
-      this.allowedCalenderUsers}) {
+      this.allowedCalenderUsers,
+      this.public}) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
@@ -350,6 +351,9 @@ class OfferModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -467,6 +471,9 @@ class OfferModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
   }
 
   @override
@@ -573,6 +580,11 @@ class OfferModel extends DataModel {
       }
     } else {
       map['requestType'] = "TIME";
+    }
+    if (this.public != null) {
+      map['public'] = this.public;
+    } else {
+      map['public'] = false;
     }
 
     return map;

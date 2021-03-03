@@ -90,7 +90,8 @@ class DonationModel {
                     : RequestType.TIME,
         id: json["id"] == null ? null : json["id"],
         requestId: json["requestId"] == null ? null : json["requestId"],
-        requestIdType: json['requestIdType'] == null ? null: json["requestIdType"],
+        requestIdType:
+            json['requestIdType'] == null ? null : json["requestIdType"],
         requestTitle:
             json["requestTitle"] == null ? null : json["requestTitle"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
@@ -121,10 +122,10 @@ class DonationModel {
         receiverDetails: json['receiverDetails'] == null
             ? null
             : DonorDetails.fromMap(
-          Map<String, dynamic>.from(
-            json['receiverDetails'],
-          ),
-        ),
+                Map<String, dynamic>.from(
+                  json['receiverDetails'],
+                ),
+              ),
         donationAssociatedTimebankDetails:
             json.containsKey('donationAssociatedTimebankDetails')
                 ? DonationAssociatedTimebankDetails.fromMap(
@@ -163,7 +164,8 @@ class DonationModel {
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
-        "receiverDetails": receiverDetails == null ? null : receiverDetails.toMap(),
+        "receiverDetails":
+            receiverDetails == null ? null : receiverDetails.toMap(),
         'donationAssociatedTimebankDetails':
             donationAssociatedTimebankDetails.toMap(),
         "changeHistory": lastModifiedBy,
@@ -234,18 +236,21 @@ class DonorDetails {
     this.photoUrl,
     this.email,
     this.bio,
+    this.communityId,
   });
 
   String name;
   String photoUrl;
   String email;
   String bio;
+  String communityId;
 
   factory DonorDetails.fromMap(Map<String, dynamic> json) => DonorDetails(
         name: json["name"],
         photoUrl: json["photoUrl"],
         email: json["email"],
         bio: json["bio"],
+        communityId: json["communityId"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -253,6 +258,7 @@ class DonorDetails {
         "photoUrl": photoUrl,
         "email": email,
         "bio": bio,
+        "communityId": communityId,
       };
 }
 

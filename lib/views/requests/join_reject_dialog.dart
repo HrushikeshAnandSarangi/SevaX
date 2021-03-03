@@ -4,6 +4,8 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -112,6 +114,19 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     ),
                     onPressed: () async {
                       //Once approvedp
+                      CommunityModel communityModel =
+                          await Provider.of<HomePageBaseBloc>(
+                        context,
+                        listen: false,
+                      ).communtiyModel(widget.userModel.currentCommunity);
+                      AcceptorModel acceptorModel = AcceptorModel(
+                        memberPhotoUrl: widget.userModel.photoURL,
+                        communityId: widget.userModel.currentCommunity,
+                        communityName: communityModel.name,
+                        memberName: widget.userModel.fullname,
+                        memberEmail: widget.userModel.email,
+                        timebankId: communityModel.primary_timebank,
+                      );
 
                       if (widget.userModel.calendarId != null) {
                         showDialog(
@@ -126,7 +141,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                                     allowedCalender: false,
                                     model: widget.requestInvitationModel,
                                     notificationId: widget.notificationId,
-                                    user: widget.userModel);
+                                    user: widget.userModel,
+                                    acceptorModel: acceptorModel);
                                 Navigator.pop(_context);
                                 Navigator.of(context).pop();
                               },
@@ -135,7 +151,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                                     allowedCalender: true,
                                     model: widget.requestInvitationModel,
                                     notificationId: widget.notificationId,
-                                    user: widget.userModel);
+                                    user: widget.userModel,
+                                    acceptorModel: acceptorModel);
                                 Navigator.pop(_context);
                                 Navigator.of(context).pop();
                               },
@@ -149,7 +166,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                             allowedCalender: false,
                             model: widget.requestInvitationModel,
                             notificationId: widget.notificationId,
-                            user: widget.userModel);
+                            user: widget.userModel,
+                            acceptorModel: acceptorModel);
 
                         Navigator.of(context).pop();
                       }
@@ -226,6 +244,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     String notificationId,
     UserModel user,
     bool allowedCalender,
+    AcceptorModel acceptorModel,
   }) {
     acceptInviteRequest(
       requestId: model.requestModel.id,
@@ -233,6 +252,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
       allowedCalender: allowedCalender,
+      acceptorModel: acceptorModel,
     );
 
     FirestoreManager.readUserNotification(notificationId, user.email);
