@@ -16,7 +16,7 @@ class OpenScopeCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 250,
+        // width: 200,
         height: 50,
         child: Row(
           mainAxisSize: MainAxisSize.min,
