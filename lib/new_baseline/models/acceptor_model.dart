@@ -38,11 +38,11 @@ class AcceptorModel {
       );
 
   Map<String, dynamic> toMap() => {
-    "communityId": communityId == null ? null : communityId,
-    "communityName": communityName == null ? null : communityName,
-    "memberName": memberName == null ? null : memberName,
-    "memberEmail": memberEmail == null ? null : memberEmail,
-    "memberPhotoUrl": memberPhotoUrl == null ? null : memberPhotoUrl,
-    "timebankId": timebankId == null ? null : timebankId,
-  };
+        "communityId": communityId == null ? null : communityId,
+        "communityName": communityName == null ? null : communityName,
+        "memberName": memberName == null ? null : memberName,
+        "memberEmail": memberEmail == null ? null : memberEmail,
+        "memberPhotoUrl": memberPhotoUrl == null ? null : memberPhotoUrl,
+        "timebankId": timebankId == null ? null : timebankId,
+      };
 }

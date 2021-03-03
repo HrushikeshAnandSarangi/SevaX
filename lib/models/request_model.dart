@@ -173,7 +173,6 @@ class RequestModel extends DataModel {
   List<String> approvedUsers;
   List<String> invitedUsers;
   List<String> categories;
-  List<String> timebanksPosted;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;

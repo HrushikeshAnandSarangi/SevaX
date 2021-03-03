@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
@@ -50,10 +46,10 @@ class DonationBloc {
     _selectedList.add(localMap);
   }
 
-  Future<bool> donateOfferGoods({
-    DonationModel donationModel,
-    OfferModel offerModel,
-    String notificationId,
+  Future<bool> donateOfferGoods(
+      {DonationModel donationModel,
+      OfferModel offerModel,
+      String notificationId,
       UserModel notify}) async {
     if (offerModel.type == RequestType.GOODS) {
       if (_selectedList == null || _selectedList.value.isEmpty) {
