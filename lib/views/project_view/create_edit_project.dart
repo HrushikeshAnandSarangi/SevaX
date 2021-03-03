@@ -19,6 +19,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -649,6 +650,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             );
                             return;
                           }
+                          projectModel.liveMode = AppConfig.isTestCommunity;
 
                           projectModel.communityId = SevaCore.of(context)
                               .loggedInUser

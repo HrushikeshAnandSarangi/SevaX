@@ -1751,6 +1751,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
+      requestModel.liveMode=AppConfig.isTestCommunity;
 
       requestModel.communityId =
           SevaCore.of(context).loggedInUser.currentCommunity;

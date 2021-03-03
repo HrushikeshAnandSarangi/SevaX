@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
@@ -155,10 +156,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 backgroundImage: NetworkImage(defaultUserImageURL),
               );
             }
-            return
-              UserProfileImage(photoUrl: user.photoURL,email:  user.email,userId:  user.sevaUserID,height: 60,width:60 ,timebankModel: widget.timebankModel,);
-
-
+            return UserProfileImage(
+              photoUrl: user.photoURL,
+              email: user.email,
+              userId: user.sevaUserID,
+              height: 60,
+              width: 60,
+              timebankModel: widget.timebankModel,
+            );
           },
         ),
         trailing: () {
@@ -956,7 +961,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : S.of(context).no_comments)
+          : S.of(context).no_comments),
+      'liveMode': AppConfig.isTestCommunity,
     });
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(

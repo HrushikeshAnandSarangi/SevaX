@@ -185,6 +185,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.address = selectedAddress;
+    timebankModel.liveMode = AppConfig.isTestCommunity;
     timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     if (sponsored == true &&

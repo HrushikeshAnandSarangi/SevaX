@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
@@ -80,6 +81,7 @@ class OneToManyOfferBloc extends BlocBase {
               _location.value == null ? null : _location.value.address,
           timestamp: timestamp,
           location: _location.value == null ? null : _location.value.location,
+          liveMode: AppConfig.isTestCommunity,
           groupOfferDataModel: GroupOfferDataModel()
             ..classTitle = _title.value
             ..startDate = startTime

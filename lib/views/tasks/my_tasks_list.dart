@@ -631,7 +631,8 @@ class TaskCardViewState extends State<TaskCardView> {
         "ratings": results['selection'],
         "device_info": results['device_info'],
         "requestId": requestModel.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments")
+        "comments": (results['didComment'] ? results['comment'] : "No comments"),
+        'liveMode':AppConfig.isTestCommunity,
       });
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",

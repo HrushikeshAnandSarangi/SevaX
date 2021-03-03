@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
@@ -736,6 +737,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "requestId": "testId",
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
+          'liveMode': AppConfig.isTestCommunity,
         },
       );
       await sendMessageOfferCreator(

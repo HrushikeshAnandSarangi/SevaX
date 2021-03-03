@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
@@ -97,7 +98,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
             offerType: OfferType.INDIVIDUAL_OFFER,
             type: _type.value,
             cashModel: _cashModel.value,
-            goodsDonationDetails: _goodsDonationDetails.value);
+            goodsDonationDetails: _goodsDonationDetails.value,
+            liveMode: AppConfig.isTestCommunity);
         offerIds.add(offerModel.id);
 
         createOffer(offerModel: offerModel).then((_) {

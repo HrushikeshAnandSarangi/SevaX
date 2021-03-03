@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -65,7 +66,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   email: SevaCore.of(context).loggedInUser.email,
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                      communityId:
+                  communityId:
                       SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
@@ -330,7 +331,8 @@ class RequestCompleteWidget extends StatelessWidget {
         "requestId": requestId,
         "comments": (results['didComment']
             ? results['comment']
-            : S.of(context).no_comments)
+            : S.of(context).no_comments),
+        'liveMode': AppConfig.isTestCommunity,
       });
       await approveTransaction(
           requestModel, userId, notificationId, loggedInUser);
