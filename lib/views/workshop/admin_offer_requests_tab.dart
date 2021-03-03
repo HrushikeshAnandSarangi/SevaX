@@ -57,9 +57,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
                 Tab(
                   text: S.of(context).seva_community_requests,
                 ),
-                Tab(
-                  text: S.of(context).pending_requests
-                ),
+                Tab(text: S.of(context).personal_request(0)),
               ],
             ),
             Expanded(

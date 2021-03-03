@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
@@ -840,6 +841,7 @@ Future<void> acceptRequest({
   bool fromOffer = false,
   @required String communityId,
   bool directToMember,
+  AcceptorModel acceptorModel,
 }) async {
   assert(requestModel != null);
 
@@ -1235,24 +1237,27 @@ Future<void> acceptInviteRequest({
   @required String acceptedUserId,
   @required String notificationId,
   @required bool allowedCalender,
+  @required AcceptorModel acceptorModel,
 }) async {
   if (allowedCalender) {
     await Firestore.instance
         .collection('requests')
         .document(requestId)
-        .updateData({
+        .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
+      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap()
+    }, merge: true);
   } else {
     await Firestore.instance
         .collection('requests')
         .document(requestId)
-        .updateData({
+        .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
+      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap(),
+    }, merge: true);
   }
 }
 

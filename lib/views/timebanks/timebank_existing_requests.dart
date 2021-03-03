@@ -268,14 +268,11 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                             widget.userModel.email,
                           );
 
-                          //showProgressDialog(context);
                           sendNotification(
                             requestModel: model,
                             userModel: widget.userModel,
                             timebankModel: timebankModel,
-                            currentCommunity: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
+                            currentCommunity: model.communityId,
                             sevaUserID:
                                 SevaCore.of(context).loggedInUser.sevaUserID,
                           );
