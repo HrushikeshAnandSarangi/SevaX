@@ -416,18 +416,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.OpenScopeEvent,
-                                  isChecked: requestModel.public,
-                                  checkBoxTypeLabel: CheckBoxType.type_Requests,
-                                  onChangedCB: (bool val) {
-                                    if (requestModel.public != val) {
-                                      this.requestModel.public = val;
-                                      setState(() {});
-                                    }
-                                  }),
+                            Offstage(
+                              offstage: requestModel.requestMode ==
+                                  RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.OpenScopeEvent,
+                                    isChecked: requestModel.public,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_Requests,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.public != val) {
+                                        this.requestModel.public = val;
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
                             ),
                             Offstage(
                               offstage: requestModel.requestMode ==

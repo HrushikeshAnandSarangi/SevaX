@@ -606,19 +606,22 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       ],
                     )
                   : Offstage(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: OpenScopeCheckBox(
-                    infoType: InfoType.OpenScopeEvent,
-                    isChecked: projectModel.public,
-                    checkBoxTypeLabel: CheckBoxType.type_Events,
-                    onChangedCB: (bool val) {
-                      if (projectModel.public != val) {
-                        this.projectModel.public = val;
-                        log('value ${projectModel.public}');
-                        setState(() {});
-                      }
-                    }),
+              Offstage(
+                offstage: projectModel.mode == ProjectMode.MEMBER_PROJECT,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: OpenScopeCheckBox(
+                      infoType: InfoType.OpenScopeEvent,
+                      isChecked: projectModel.public,
+                      checkBoxTypeLabel: CheckBoxType.type_Events,
+                      onChangedCB: (bool val) {
+                        if (projectModel.public != val) {
+                          this.projectModel.public = val;
+                          log('value ${projectModel.public}');
+                          setState(() {});
+                        }
+                      }),
+                ),
               ),
               Offstage(
                 offstage: projectModel.mode == ProjectMode.MEMBER_PROJECT,
