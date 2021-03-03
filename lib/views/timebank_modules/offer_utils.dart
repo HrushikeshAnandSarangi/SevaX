@@ -5,6 +5,8 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
@@ -194,6 +196,15 @@ Future<bool> offerActions(
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
 
+    CommunityModel communityMoel;
+    await Firestore.instance
+        .collection('communities')
+        .document(SevaCore.of(context).loggedInUser.currentCommunity)
+        .get()
+        .then((value) {
+      communityMoel = CommunityModel(value.data);
+    });
+
     if (hasSufficientCredits) {
       var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
       var email = SevaCore.of(context).loggedInUser.email;
@@ -205,18 +216,28 @@ Future<bool> offerActions(
         onConfirmed: () async {
           if (SevaCore.of(context).loggedInUser.calendarId != null) {
             await updateOffer(
-                offerId: model.id,
-                userId: myUserID,
-                userEmail: email,
-                allowCalenderEvent: true);
-            // Navigator.of(context).pop();
-
+              offerId: model.id,
+              userId: myUserID,
+              userEmail: email,
+              allowCalenderEvent: true,
+              communityId: communityMoel.id,
+              communityName: communityMoel.name,
+              memberName: SevaCore.of(context).loggedInUser.fullname,
+              memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+            );
           } else {
             await updateOffer(
-                offerId: model.id,
-                userId: myUserID,
-                userEmail: email,
-                allowCalenderEvent: false);
+              offerId: model.id,
+              userId: myUserID,
+              userEmail: email,
+              allowCalenderEvent: false,
+              communityId: communityMoel.id,
+              communityName: communityMoel.name,
+              memberName: SevaCore.of(context).loggedInUser.fullname,
+              memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+            );
           }
         },
       );
@@ -270,25 +291,34 @@ Future<bool> offerActions(
   return true;
 }
 
-void updateOffer(
-    {String userId,
-    bool allowCalenderEvent,
-    String userEmail,
-    String offerId}) {
-  if (allowCalenderEvent) {
-    Firestore.instance.collection("offers").document(offerId).updateData({
+void updateOffer({
+  String userId,
+  bool allowCalenderEvent,
+  String userEmail,
+  String offerId,
+  @required String communityId,
+  @required String communityName,
+  @required String memberName,
+  @required String memberPhotoUrl,
+  @required String timebankId,
+}) {
+  Firestore.instance.collection("offers").document(offerId).updateData(
+    {
       'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
         [userId],
       ),
-      'allowedCalenderUsers': FieldValue.arrayUnion(
-        [userEmail],
-      )
-    });
-  } else {
-    Firestore.instance.collection("offers").document(offerId).updateData({
-      'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
-        [userId],
-      )
-    });
-  }
+      if (allowCalenderEvent)
+        'allowedCalenderUsers': FieldValue.arrayUnion(
+          [userEmail],
+        ),
+      'participantDetails.' + userId: AcceptorModel(
+        communityId: communityId,
+        communityName: communityName,
+        memberEmail: userEmail,
+        memberName: memberName,
+        memberPhotoUrl: memberPhotoUrl,
+        timebankId: timebankId,
+      ).toMap()
+    },
+  );
 }

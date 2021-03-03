@@ -90,9 +90,9 @@ class OneToManyOfferBloc extends BlocBase {
               _location.value == null ? null : _location.value.address,
           timestamp: timestamp,
           location: _location.value == null ? null : _location.value.location,
-          public: _makePublic.value,
-          virtual: _makeVirtual.value,
-          timebanksPosted: _makeVirtual.value
+          public: _makePublic.value ?? false,
+          virtual: _makeVirtual.value ?? false,
+          timebanksPosted: _makePublic.value ?? false
               ? [timebankId, FlavorConfig.values.timebankId]
               : [timebankId],
           groupOfferDataModel: GroupOfferDataModel()
@@ -146,7 +146,7 @@ class OneToManyOfferBloc extends BlocBase {
         _status.add(Status.LOADING);
         offer.location = _location.value.location;
         offer.selectedAdrress = _location.value.address;
-        offer.public = _makePublic.value;
+        offer.public = _makePublic.value ?? false;
         offer.virtual = _makeVirtual.value;
         offer.timebanksPosted = _makeVirtual.value
             ? [offer.timebankId, FlavorConfig.values.timebankId]

@@ -32,6 +32,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
+import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../core.dart';
@@ -84,7 +85,9 @@ class RequestsState extends State<RequestsModule> {
                       child: Stack(
                         children: [
                           Container(
-                            padding: EdgeInsets.only(right:10,),
+                            padding: EdgeInsets.only(
+                              right: 10,
+                            ),
                             child: FlatButton(
                               onPressed: () {},
                               child: Text(
@@ -98,7 +101,7 @@ class RequestsState extends State<RequestsModule> {
                             top: 0,
                             right: -20,
                             child: Container(
-                              padding: EdgeInsets.only(left:4, right:4),
+                              padding: EdgeInsets.only(left: 4, right: 4),
                               child: infoButton(
                                 context: context,
                                 key: GlobalKey(),
@@ -498,26 +501,7 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget getTagMainFrame(String tagTitle) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 3, right: 0, top: 5),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
-            child: Text(
-              tagTitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return TagView(tagTitle: tagTitle);
   }
 
   String getLocation(String location) {
@@ -896,3 +880,4 @@ class RequestListItemsState extends State<RequestListItems> {
     );
   }
 }
+

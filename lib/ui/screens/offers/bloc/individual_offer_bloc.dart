@@ -108,7 +108,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           virtual: _makeVirtual.value ?? false,
           cashModel: _cashModel.value,
           goodsDonationDetails: _goodsDonationDetails.value,
-          timebanksPosted: _makeVirtual.value ?? false
+          timebanksPosted: _makePublic.value ?? false
               ? [timebankId, FlavorConfig.values.timebankId]
               : [timebankId],
         );
