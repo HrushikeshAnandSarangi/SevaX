@@ -1422,15 +1422,12 @@ Stream<List<RequestModel>> getCompletedRequestStream({
   @required String userEmail,
   @required String userId,
 }) async* {
-
-  log('timebankId: ' +  FlavorConfig.values.timebankId  +  '   ' + userEmail);
-
   var data = Firestore.instance
       .collection('requests')
       // .where('transactions.to', isEqualTo: userId)
       // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
       //.where('transactions', arrayContains: true)
-      //.where('approvedUsers', arrayContains: userEmail)
+      .where('approvedUsers', arrayContains: userEmail)
       .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
       // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
@@ -1439,26 +1436,17 @@ Stream<List<RequestModel>> getCompletedRequestStream({
     StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
       handleData: (snapshot, requestSink) {
         List<RequestModel> requestList = [];
-        log('DOCS 1:  ' + snapshot.documents.length.toString());
         snapshot.documents.forEach((document) {
           RequestModel model = RequestModel.fromMap(document.data);
           model.id = document.documentID;
+          bool isRequestCompleted = false;
 
-          if(model.requestType != RequestType.BORROW){
-              bool isRequestCompleted = false;
+          model.transactions?.forEach((transaction) {
+            if (transaction.isApproved && transaction.to == userId)
+              isRequestCompleted = true;
+          });
 
-              model.transactions?.forEach((transaction) {
-                if (transaction.isApproved && transaction.to == userId)
-                  isRequestCompleted = true;
-              });
-
-              if (isRequestCompleted) requestList.add(model);
-
-          } else {
-            log('DOCS 2:  ' + requestList.length.toString());
-              requestList.add(model);
-          }
-
+          if (isRequestCompleted) requestList.add(model);
         });
         requestSink.add(requestList);
       },
