@@ -32,6 +32,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
+import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../core.dart';
@@ -501,25 +502,7 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getTagMainFrame(String tagTitle) {
     return Container(
-      margin: EdgeInsets.only(bottom: 3, right: 0, top: 5),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
-            child: Text(
-              tagTitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        margin: EdgeInsets.only(right: 10), child: TagView(tagTitle: tagTitle));
   }
 
   String getLocation(String location) {
@@ -636,7 +619,38 @@ class RequestListItemsState extends State<RequestListItems> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          getAppropriateTag(model.requestType),
+                          Row(
+                            children: [
+                              getAppropriateTag(model.requestType),
+                              Visibility(
+                                visible: model.virtualRequest ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Virtual',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.public ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Public',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.isRecurring ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Recurring',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -721,21 +735,21 @@ class RequestListItemsState extends State<RequestListItems> {
                                   .subtitle,
                             ),
                           ),
-                          Visibility(
-                            visible: model.isRecurring,
-                            child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  S.of(context).recurring,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Visibility(
+                          //   visible: model.isRecurring,
+                          //   child: Wrap(
+                          //     crossAxisAlignment: WrapCrossAlignment.center,
+                          //     children: <Widget>[
+                          //       Text(
+                          //         S.of(context).recurring,
+                          //         style: TextStyle(
+                          //             fontSize: 16.0,
+                          //             color: Theme.of(context).primaryColor,
+                          //             fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.max,

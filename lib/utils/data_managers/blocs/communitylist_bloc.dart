@@ -370,18 +370,23 @@ class TransactionBloc {
     typeid,
     timebankid, {
     @required String communityId,
+    @required String fromEmailORId,
+    @required String toEmailORId,
   }) async {
     TransactionModel transactionModel = TransactionModel(
-        communityId: communityId,
-        from: from,
-        to: to,
-        timestamp: timestamp,
-        credits: num.parse(credits.toStringAsFixed(2)),
-        isApproved: isApproved,
-        type: type,
-        typeid: typeid,
-        timebankid: timebankid,
-        transactionbetween: [from, to]);
+      communityId: communityId,
+      from: from,
+      to: to,
+      timestamp: timestamp,
+      credits: num.parse(credits.toStringAsFixed(2)),
+      isApproved: isApproved,
+      type: type,
+      typeid: typeid,
+      timebankid: timebankid,
+      transactionbetween: [from, to],
+      toEmail_Id: toEmailORId,
+      fromEmail: fromEmailORId,
+    );
     await handleApprovedTransaction(isApproved, from, to, timebankid, type,
         num.parse(credits.toStringAsFixed(2)));
     await Firestore.instance
@@ -401,6 +406,8 @@ class TransactionBloc {
     timebankid,
     id, {
     @required String communityId,
+    @required String fromEmailORId,
+    @required String toEmailORId,
   }) async {
     TransactionModel prevtransactionModel;
     TransactionModel transactionModel = TransactionModel(
@@ -414,6 +421,8 @@ class TransactionBloc {
       timebankid: timebankid,
       transactionbetween: [from, to],
       communityId: communityId,
+      toEmail_Id: toEmailORId,
+      fromEmail: fromEmailORId,
     );
     if (id) {
       var document = await Firestore.instance

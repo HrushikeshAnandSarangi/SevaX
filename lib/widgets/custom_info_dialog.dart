@@ -22,7 +22,8 @@ enum InfoType {
   OpenScopeOffer,
   OpenScopeEvent,
   VirtualRequest,
-  TestCommunity
+  TestCommunity,
+  VirtualOffers,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -42,6 +43,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.OpenScopeEvent: "openScopeEvent",
   InfoType.VirtualRequest: "virtualRequest",
   InfoType.TestCommunity: "testCommunity",
+  InfoType.VirtualOffers: "virtualOffers",
 };
 
 Widget infoButton({
@@ -129,7 +131,7 @@ Widget infoButton({
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            details[infoKeyMapper[type]] ?? "dummylabel", //??
+                            details[infoKeyMapper[type]] ?? 'Dummy label', //??
                             // infoDescriptionMapper[key],
                             style: TextStyle(
                               fontSize: 16,

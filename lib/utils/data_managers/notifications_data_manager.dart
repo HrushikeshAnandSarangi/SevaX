@@ -338,16 +338,17 @@ Future<void> processLoans({
     var paying = tobepaid > credits ? credits : tobepaid;
 
     await transactionBloc.createNewTransaction(
-      to,
-      timebankId,
-      DateTime.now().millisecondsSinceEpoch,
-      paidamount,
-      true,
-      "USER_PAYLOAN_TOTIMEBANK",
-      null,
-      timebankId,
-      communityId: communityId,
-    );
+        to,
+        timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        paidamount,
+        true,
+        "USER_PAYLOAN_TOTIMEBANK",
+        null,
+        timebankId,
+        communityId: communityId,
+        toEmailORId: timebankId,
+        fromEmailORId: to);
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -15,13 +16,17 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
   final String timebankId;
+  final String loggedInMemberUserId;
 
-  const IndividualOffer({Key key, this.offerModel, this.timebankId})
+  const IndividualOffer(
+      {Key key, this.offerModel, this.timebankId, this.loggedInMemberUserId})
       : super(key: key);
 
   @override
@@ -45,6 +50,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   void initState() {
     AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
+
+    _bloc.checkPublicAvailability(
+      widget.timebankId,
+      widget.loggedInMemberUserId,
+    );
 
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
@@ -421,7 +431,55 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 },
                               );
                             }),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
+                        StreamBuilder<bool>(
+                          initialData: false,
+                          stream: _bloc.isAdmin,
+                          builder: (context, snapshot) {
+                            return snapshot.data
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: StreamBuilder<bool>(
+                                        initialData: false,
+                                        stream: _bloc.makePublicValue,
+                                        builder: (context, snapshot) {
+                                          return OpenScopeCheckBox(
+                                              infoType: InfoType.OpenScopeOffer,
+                                              isChecked: snapshot.data,
+                                              checkBoxTypeLabel:
+                                                  CheckBoxType.type_Offers,
+                                              onChangedCB: (bool val) {
+                                                if (snapshot.data != val) {
+                                                  _bloc.onOfferMadePublic(val);
+                                                  setState(() {});
+                                                }
+                                              });
+                                        }),
+                                  )
+                                : Container();
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: StreamBuilder<bool>(
+                              initialData: false,
+                              stream: _bloc.makeVirtual,
+                              builder: (context, snapshot) {
+                                return OpenScopeCheckBox(
+                                    infoType: InfoType.VirtualOffers,
+                                    isChecked: snapshot.data,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_VirtualOffers,
+                                    onChangedCB: (bool val) {
+                                      if (snapshot.data != val) {
+                                        _bloc.onOfferMadeVirtual(val);
+                                        setState(() {});
+                                      }
+                                    });
+                              }),
+                        ),
+                        SizedBox(height: 20),
                         RaisedButton(
                           onPressed: status.data == Status.LOADING
                               ? () {}

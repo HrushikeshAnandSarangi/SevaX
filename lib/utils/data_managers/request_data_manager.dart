@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
@@ -520,7 +521,7 @@ Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
       ? Firestore.instance.collection('requests')
       : Firestore.instance
           .collection('requests')
-          .where('timebankId', isEqualTo: timebankId)
+          .where('timebanksPosted', arrayContains: timebankId)
           .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
 
   var data = query.snapshots();
@@ -573,7 +574,7 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
-      .where('timebank_id', isEqualTo: timebankid)
+      .where('timebanksPosted', arrayContains: timebankid)
       .where('softDelete', isEqualTo: false)
       .orderBy("created_at", descending: true);
 
@@ -594,6 +595,29 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
       },
     ),
   );
+}
+
+Future<List<ProjectModel>> getUserPersonalProjectsListFuture(
+    {@required String timebankid, @required String sevauserid}) async {
+  List<ProjectModel> projectsList = [];
+  QuerySnapshot data = await Firestore.instance
+      .collection('projects')
+      .where('timebank_id', isEqualTo: timebankid)
+      .where('softDelete', isEqualTo: false)
+      .where("creator_id", isEqualTo: sevauserid)
+      .where("mode", isEqualTo: "Personal")
+      .getDocuments();
+
+  if (data.documents.length > 0) {
+    data.documents.forEach(
+      (documentSnapshot) {
+        ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+        model.id = documentSnapshot.documentID;
+        projectsList.add(model);
+      },
+    );
+  }
+  return projectsList;
 }
 
 Future<List<ProjectModel>> getAllProjectListFuture({String timebankid}) async {
@@ -650,7 +674,7 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
     {String timebankId}) async* {
   var query = Firestore.instance
       .collection('requests')
-      .where('timebankId', isEqualTo: timebankId)
+      .where('timebanksPosted', arrayContains: timebankId)
       .where('accepted', isEqualTo: false)
       .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
 
@@ -664,7 +688,8 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
           (documentSnapshot) {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            if (model.approvedUsers != null) {
+            if (model.approvedUsers != null &&
+                model.requestType == RequestType.TIME) {
               if (model.approvedUsers.length <= model.numberOfApprovals)
                 requestList.add(model);
             }
@@ -840,6 +865,7 @@ Future<void> acceptRequest({
   bool fromOffer = false,
   @required String communityId,
   bool directToMember,
+  AcceptorModel acceptorModel,
 }) async {
   assert(requestModel != null);
 
@@ -930,6 +956,7 @@ Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
   @required String communityId,
+  @required String memberCommunityId,
   // @required num taxPercentage,
 }) async {
   List<TransactionModel> transactions =
@@ -1001,7 +1028,7 @@ Future<void> approveRequestCompletion({
     senderUserId: model.sevaUserId,
     type: NotificationType.RequestCompletedApproved,
     data: model.toMap(),
-    communityId: communityId,
+    communityId: memberCommunityId,
   );
 
   Map<String, dynamic> transactionData = model.transactions
@@ -1069,13 +1096,17 @@ Future<void> approveRequestCompletion({
     model.timebankId,
     false,
     communityId: communityId,
+    fromEmailORId: model.requestMode == RequestMode.PERSONAL_REQUEST
+        ? editedTransaction.from
+        : model.timebankId,
+    toEmailORId: editedTransaction.to,
   );
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: userId,
     senderUserId: model.sevaUserId,
-    communityId: communityId,
+    communityId: memberCommunityId,
     type: NotificationType.TransactionCredit,
     data: transactionData,
   );
@@ -1235,24 +1266,27 @@ Future<void> acceptInviteRequest({
   @required String acceptedUserId,
   @required String notificationId,
   @required bool allowedCalender,
+  @required AcceptorModel acceptorModel,
 }) async {
   if (allowedCalender) {
     await Firestore.instance
         .collection('requests')
         .document(requestId)
-        .updateData({
+        .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
+      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap()
+    }, merge: true);
   } else {
     await Firestore.instance
         .collection('requests')
         .document(requestId)
-        .updateData({
+        .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
+      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap(),
+    }, merge: true);
   }
 }
 
@@ -1408,6 +1442,18 @@ Future<void> updateProjectCompletedRequest(
   });
 }
 
+Future<void> updateProjectPendingRequest(
+    {@required String projectId, @required String requestId}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectId)
+      .updateData({
+    'pendingRequests': FieldValue.arrayUnion(
+      [requestId],
+    ),
+  });
+}
+
 /// Get all timebanknew associated with a User as a Stream
 Stream<List<RequestModel>> getCompletedRequestStream({
   @required String userEmail,
@@ -1449,6 +1495,7 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
   @required String timebankid,
   @required String userId,
 }) async* {
+  log("==========================>>>>>>>>>> getTimebankCreditsDebitsStream");
   var data = Firestore.instance
       .collection('transactions')
       .where("isApproved", isEqualTo: true)

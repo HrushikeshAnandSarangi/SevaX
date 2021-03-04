@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 import 'models.dart';
 
 class TransactionModel extends DataModel {
   String from;
+  String fromEmail;
   String to;
+  String toEmail_Id;
+  bool liveMode;
   int timestamp;
   num credits;
   bool isApproved;
@@ -16,10 +20,13 @@ class TransactionModel extends DataModel {
 
   TransactionModel({
     this.from,
+    @required this.fromEmail,
     this.timestamp,
     this.credits,
     this.to,
+    @required this.toEmail_Id,
     this.isApproved = false,
+    this.liveMode = false,
     this.type,
     this.typeid,
     this.timebankid,
@@ -31,6 +38,9 @@ class TransactionModel extends DataModel {
     if (map.containsKey('from')) {
       this.from = map['from'];
     }
+    if (map.containsKey('fromEmail')) {
+      this.fromEmail = map['fromEmail'];
+    }
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
     }
@@ -39,6 +49,9 @@ class TransactionModel extends DataModel {
     }
     if (map.containsKey('to')) {
       this.to = map['to'];
+    }
+    if (map.containsKey('toEmail_Id')) {
+      this.toEmail_Id = map['toEmail_Id'];
     }
     if (map.containsKey('type')) {
       this.type = map['type'];
@@ -60,6 +73,9 @@ class TransactionModel extends DataModel {
     if (map.containsKey('communityId')) {
       this.communityId = map['communityId'];
     }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    }
   }
 
   @override
@@ -67,6 +83,9 @@ class TransactionModel extends DataModel {
     Map<String, dynamic> map = {};
     if (this.from != null) {
       map['from'] = this.from;
+    }
+    if (this.fromEmail != null) {
+      map['fromEmail'] = this.fromEmail;
     }
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;
@@ -76,6 +95,9 @@ class TransactionModel extends DataModel {
     }
     if (this.to != null) {
       map['to'] = this.to;
+    }
+    if (this.toEmail_Id != null) {
+      map['toEmail_Id'] = this.toEmail_Id;
     }
     if (this.isApproved != null) {
       map['isApproved'] = this.isApproved;
@@ -96,6 +118,8 @@ class TransactionModel extends DataModel {
     if (this.communityId != null) {
       map['communityId'] = this.communityId;
     }
+    map['liveMode'] = AppConfig.isTestCommunity;
+
     return map;
   }
 

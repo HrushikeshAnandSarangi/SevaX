@@ -681,6 +681,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
+    'barney@yopmail.com',
     'tony@yopmail.com',
     'robert@yopmail.com',
     'howard@yopmail.com',

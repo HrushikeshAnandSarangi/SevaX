@@ -631,8 +631,9 @@ class TaskCardViewState extends State<TaskCardView> {
         "ratings": results['selection'],
         "device_info": results['device_info'],
         "requestId": requestModel.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments"),
-        'liveMode':AppConfig.isTestCommunity,
+        "comments":
+            (results['didComment'] ? results['comment'] : "No comments"),
+        'liveMode': AppConfig.isTestCommunity,
       });
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
@@ -714,6 +715,8 @@ class TaskCardViewState extends State<TaskCardView> {
         credits: totalMinutes / 60,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         communityId: requestModel.communityId,
+        fromEmail: requestModel.sevaUserId,
+        toEmail_Id: SevaCore.of(context).loggedInUser.sevaUserID,
       );
 
       if (requestModel.transactions == null) {
@@ -739,6 +742,10 @@ class TaskCardViewState extends State<TaskCardView> {
         this.requestModel.id,
         this.requestModel.timebankId,
         communityId: requestModel.communityId,
+        toEmailORId: SevaCore.of(context).loggedInUser.sevaUserID,
+        fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? requestModel.sevaUserId
+            : requestModel.timebankId,
       );
 
       FirestoreManager.createTaskCompletedNotification(

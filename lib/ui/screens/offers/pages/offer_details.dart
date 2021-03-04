@@ -317,6 +317,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => IndividualOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
             ),
           ),
         );
@@ -327,6 +329,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => OneToManyOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
             ),
           ),
         );
@@ -342,6 +346,8 @@ class OfferDetails extends StatelessWidget {
             builder: (context) => IndividualOffer(
               offerModel: offerModel,
               timebankId: offerModel.timebankId,
+              loggedInMemberUserId:
+                  SevaCore.of(context).loggedInUser.sevaUserID,
             ),
           ),
         );

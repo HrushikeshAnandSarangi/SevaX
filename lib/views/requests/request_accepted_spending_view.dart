@@ -759,7 +759,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     var loggedInUser = SevaCore.of(context).loggedInUser;
@@ -969,16 +971,22 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     });
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       log('inside credit');
+      TransactionModel transmodel =
+          requestModel.transactions.firstWhere((transaction) {
+        return transaction.to == reciever.sevaUserID;
+      });
       await TransactionBloc().createNewTransaction(
         requestModel.timebankId,
         requestModel.timebankId,
         DateTime.now().millisecondsSinceEpoch,
-        requestModel.numberOfHours ?? 0,
+        transmodel.credits ?? 0,
         true,
         "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
         requestModel.id,
         requestModel.timebankId,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        toEmailORId: requestModel.timebankId,
+        fromEmailORId: requestModel.timebankId,
       );
       log('success');
     }
@@ -998,15 +1006,19 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         requestModel: requestModel,
         receiver: reciever,
         message: results['comment'] ?? S.of(context).no_comments);
-    await approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await approveTransaction(
+        requestModel, userId, notificationId, sevaCore, reciever.email);
   }
 
   Future approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) async {
+      String notificationId, SevaCore sevaCore, String email) async {
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
 
     if (model.requestMode == RequestMode.PERSONAL_REQUEST) {

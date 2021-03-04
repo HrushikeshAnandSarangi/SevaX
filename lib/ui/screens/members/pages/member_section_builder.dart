@@ -523,16 +523,17 @@ class MemberSectionBuilder extends StatelessWidget {
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
       await TransactionBloc().createNewTransaction(
-        model.id,
-        user.sevaUserID,
-        DateTime.now().millisecondsSinceEpoch,
-        donateAmount,
-        true,
-        "ADMIN_DONATE_TOUSER",
-        null,
-        model.id,
-        communityId: model.communityId,
-      );
+          model.id,
+          user.sevaUserID,
+          DateTime.now().millisecondsSinceEpoch,
+          donateAmount,
+          true,
+          "ADMIN_DONATE_TOUSER",
+          null,
+          model.id,
+          communityId: model.communityId,
+          fromEmailORId: model.id,
+          toEmailORId: user.email);
       await showDialog<double>(
         context: context,
         builder: (context) => InputDonateSuccessDialog(

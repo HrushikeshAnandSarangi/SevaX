@@ -25,6 +25,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
@@ -54,6 +55,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -414,6 +416,45 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
+                            Offstage(
+                              offstage: requestModel.requestMode ==
+                                  RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.OpenScopeEvent,
+                                    isChecked: requestModel.public,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_Requests,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.public != val) {
+                                        this.requestModel.public = val;
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
+                            ),
+                            Offstage(
+                              offstage: requestModel.requestMode ==
+                                  RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.VirtualRequest,
+                                    isChecked: requestModel.virtualRequest,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_VirtualRequest,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.virtualRequest != val) {
+                                        this.requestModel.virtualRequest = val;
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
+                            ),
+
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -1696,14 +1737,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
 
-      if (widget.isOfferRequest == true && widget.userModel != null) {
+      if (widget.isOfferRequest && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 
         List<String> approvedUsers = [];
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
+        //TODO
+        requestModel.participantDetails = {};
+        requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
+          communityId: widget.offer.communityId,
+          communityName: '',
+          memberEmail: widget.userModel.email,
+          memberName: widget.userModel.fullname,
+          memberPhotoUrl: widget.userModel.photoURL,
+          timebankId: widget.offer.timebankId,
+        ).toMap();
         //create an invitation for the request
-
       }
 
       if (requestModel.isRecurring &&
@@ -1752,6 +1802,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
       requestModel.liveMode=AppConfig.isTestCommunity;
+      if (requestModel.public) {
+        requestModel.timebanksPosted = [
+          timebankModel.id,
+          FlavorConfig.values.timebankId
+        ];
+      } else {
+        requestModel.timebanksPosted = [timebankModel.id];
+      }
 
       requestModel.communityId =
           SevaCore.of(context).loggedInUser.currentCommunity;

@@ -15,6 +15,7 @@ class RequestDonationDisputeBloc {
   final DonationsRepository _donationsRepository = DonationsRepository();
 
   final _cashAmount = BehaviorSubject<String>();
+  final _requestModel = BehaviorSubject<RequestModel>();
   final _goodsRecieved = BehaviorSubject<Map<String, String>>.seeded({});
 
   Stream<String> get cashAmount => _cashAmount.stream;
@@ -22,6 +23,7 @@ class RequestDonationDisputeBloc {
   String get cashAmoutVal => _cashAmount.value;
   Map<String, String> get goodsRecievedVal => _goodsRecieved.value;
   Function(String) get onAmountChanged => _cashAmount.sink.add;
+  Function(RequestModel) get addRequestModel => _requestModel.sink.add;
   getgoodsRecieved() {
     return _goodsRecieved.value;
   }
@@ -83,34 +85,34 @@ class RequestDonationDisputeBloc {
     } else {
       log("Inside else");
       donationModel.donationStatus =
-      donationModel.donationStatus == DonationStatus.REQUESTED
-          ? DonationStatus.PLEDGED
-          : donationModel.donationStatus;
+          donationModel.donationStatus == DonationStatus.REQUESTED
+              ? DonationStatus.PLEDGED
+              : donationModel.donationStatus;
       donationModel.minimumAmount = 0;
       return await _donationsRepository
           .donateOfferCreatorPledge(
-        operatoreMode: operationMode,
-        requestType: donationModel.donationType,
-        donationStatus: donationModel.donationStatus,
-        associatedId: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank
-            ? donationModel.timebankId
-            : donationModel.donorDetails.email,
-        donationId: donationId,
-        isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-            donationModel.donatedToTimebank,
-        notificationId: notificationId,
-        acknowledgementNotification: getAcknowlegementNotification(
-          updatedAmount: double.parse(_cashAmount.value),
-          model: donationModel,
-          operatorMode: operationMode,
-          requestMode: requestMode,
-          notificationType:
-          donationModel.donationStatus == DonationStatus.PLEDGED
-              ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
-              : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
-        ),
-      )
+            operatoreMode: operationMode,
+            requestType: donationModel.donationType,
+            donationStatus: donationModel.donationStatus,
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
+                ? donationModel.timebankId
+                : donationModel.donorDetails.email,
+            donationId: donationId,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
+            notificationId: notificationId,
+            acknowledgementNotification: getAcknowlegementNotification(
+              updatedAmount: double.parse(_cashAmount.value),
+              model: donationModel,
+              operatorMode: operationMode,
+              requestMode: requestMode,
+              notificationType:
+                  donationModel.donationStatus == DonationStatus.PLEDGED
+                      ? NotificationType.ACKNOWLEDGE_DONOR_DONATION
+                      : NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+            ),
+          )
           .then((value) => true)
           .catchError((onError) => false);
     }
@@ -184,6 +186,8 @@ class RequestDonationDisputeBloc {
     Map<String, String> customSelection,
   }) {
     var notificationId = Uuid().generateV4();
+    bool isTimebankNotification =
+        model.donatedToTimebank && operatorMode == OperatingMode.USER;
     if (model.donationType == RequestType.CASH)
       model.cashDetails.pledgedAmount = updatedAmount.toInt();
     else if (model.donationType == RequestType.GOODS)
@@ -191,14 +195,26 @@ class RequestDonationDisputeBloc {
 
     model.notificationId = notificationId;
 
+    var communityId;
+
+    if (model.requestIdType == 'offer') {
+      communityId = getCommunitySpecificNotificationForOffer(
+        model: model,
+        type: notificationType,
+      );
+    } else {
+      communityId = model.donorDetails.communityId;
+    }
+
     return NotificationsModel(
       type: notificationType,
-      communityId: model.communityId,
+      communityId: !isTimebankNotification
+          ? communityId ?? model.communityId
+          : model.communityId,
       data: model.toMap(),
       id: notificationId,
       isRead: false,
-      isTimebankNotification:
-          model.donatedToTimebank && operatorMode == OperatingMode.USER,
+      isTimebankNotification: isTimebankNotification,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,
@@ -207,6 +223,20 @@ class RequestDonationDisputeBloc {
           : model.timebankId,
       timebankId: model.timebankId,
     );
+  }
+
+  String getCommunitySpecificNotificationForOffer(
+      {NotificationType type, DonationModel model}) {
+    switch (type) {
+      case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
+      case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
+      case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
+      case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+        return model.donorDetails.communityId;
+
+      default:
+        return model.receiverDetails.communityId;
+    }
   }
 
   Future<bool> disputeGoods({
@@ -219,6 +249,7 @@ class RequestDonationDisputeBloc {
   }) async {
     var x = List.from(donatedGoods.keys);
     var y = List.from(_goodsRecieved.value.keys);
+    var donationStatus;
 
     x.sort();
     y.sort();
