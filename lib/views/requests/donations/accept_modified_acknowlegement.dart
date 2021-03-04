@@ -309,6 +309,9 @@ class HandlerForModificationManager {
     @required String timeBankId,
     @required bool isTimebankMessage,
     @required String communityId,
+    @required bool interCommunity,
+    @required List<String> showToCommunities,
+    @required String entityId,
   }) async {
     createAndOpenChat(
       isTimebankMessage: isTimebankMessage,
@@ -318,6 +321,9 @@ class HandlerForModificationManager {
       sender: sender,
       reciever: receiver,
       isFromRejectCompletion: false,
+      interCommunity: interCommunity,
+      showToCommunities: showToCommunities,
+      entityId: entityId,
       onChatCreate: () {
         Navigator.pop(context);
       },

@@ -90,7 +90,8 @@ class ChatModel {
         "groupDetails": groupDetails?.toMap(),
         "chatContext": chatContext?.toMap() ?? {},
         "showToCommunities":
-            List<dynamic>.from(showToCommunities ?? []).map((x) => x),
+            List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
+        "interCommunity": interCommunity ?? false,
       };
 
   Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {

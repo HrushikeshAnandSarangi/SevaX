@@ -450,6 +450,9 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
+                            showToCommunities: [],
+                            interCommunity: false,
+                            entityId: widget.model.id,
                           );
                           break;
 
@@ -480,6 +483,13 @@ class _RequestDonationDisputePageState
                             context: context,
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: true,
+                            interCommunity: loggedInUser.currentCommunity !=
+                                timebankModel.communityId,
+                            showToCommunities: [
+                              loggedInUser.currentCommunity,
+                              timebankModel.communityId
+                            ],
+                            entityId: widget.model.id,
                           );
                           break;
 
@@ -512,6 +522,13 @@ class _RequestDonationDisputePageState
                             ),
                             context: context,
                             timeBankId: widget.model.timebankId,
+                            interCommunity: loggedInUser.currentCommunity !=
+                                timebankModel.communityId,
+                            showToCommunities: [
+                              loggedInUser.currentCommunity,
+                              timebankModel.communityId
+                            ],
+                            entityId: widget.model.id,
                           );
                           break;
                       }
