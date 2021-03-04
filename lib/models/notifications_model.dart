@@ -114,7 +114,6 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
-  BorrowRequest,
   AddManualTimeRequest,
   RequestScheduleReminder,
   RecurringRequestUpdated,
@@ -180,6 +179,12 @@ enum NotificationType {
   MANUAL_TIME_CLAIM,
   MANUAL_TIME_CLAIM_APPROVED,
   MANUAL_TIME_CLAIM_REJECTED,
+
+  //Borrow Requests 2nd half of request flow Notifications
+  NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK,
+  NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
+	NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
+
 }
 
 //Check the method
@@ -190,8 +195,10 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
+  "NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK": NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK,
+  "NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT": NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
+  "NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK": NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
   "AddManualTimeRequest": NotificationType.AddManualTimeRequest,
-  "BorrowRequest": NotificationType.BorrowRequest,
   "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
   "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RecurringOfferUpdated": NotificationType.RecurringOfferUpdated,

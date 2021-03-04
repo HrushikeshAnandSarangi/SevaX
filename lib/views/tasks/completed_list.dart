@@ -73,6 +73,15 @@ class _CompletedListState extends State<CompletedList> {
         RequestModel model =
             requestList.elementAt(requestList.length - index - 1);
 
+        TransactionModel transmodel;
+      
+        if (model.transactions.length > 0) {
+          transmodel = model.transactions.firstWhere((transaction) {
+            return transaction.to ==
+                SevaCore.of(context).loggedInUser.sevaUserID;
+          });
+        }
+
         return Card(
           child: ListTile(
             title: Text(model.title),
@@ -99,24 +108,22 @@ class _CompletedListState extends State<CompletedList> {
               },
             ),
             trailing: () {
-              TransactionModel transmodel =
-                  model.transactions.firstWhere((transaction) {
-                return transaction.to ==
-                    SevaCore.of(context).loggedInUser.sevaUserID;
-              });
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('${transmodel.credits}'),
-                  Text(S.of(context).seva_credits,
-                      style: TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.2,
-                      )),
-                ],
-              );
+              transmodel == null 
+                  ? Text('0')
+                  : 
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text('${transmodel.credits}'),
+                      Text(S.of(context).seva_credits,
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.2,
+                          )),
+                    ],
+                  );
             }(),
             subtitle: FutureBuilder(
               future:

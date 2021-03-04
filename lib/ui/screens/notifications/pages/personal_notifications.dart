@@ -3,9 +3,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -15,15 +20,21 @@ import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -32,6 +43,22 @@ class PersonalNotifications extends StatefulWidget {
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
+  final subjectBorrow = ReplaySubject<int>();
+  RequestModel requestModelNew;
+
+  @override
+  void initState() {
+    super.initState();
+
+    subjectBorrow
+        .transform(ThrottleStreamTransformer(
+            (_) => TimerStream(true, const Duration(seconds: 1))))
+        .listen((data) {
+      logger.e('COMES BACK HERE 1');
+      checkForReviewBorrowRequests();
+    });
+  }
+
   BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
@@ -241,7 +268,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     //   break;
 
                     case NotificationType.OneToManyRequestAccept:
-                    Map<dynamic,dynamic> oneToManyModel = notification.data;
+                      Map<dynamic, dynamic> oneToManyModel = notification.data;
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
@@ -252,14 +279,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             timebankId: notification.timebankId,
                           );
                         },
-                        onPressed: () async {
-                        
-                        },
+                        onPressed: () async {},
                         photoUrl: oneToManyModel['requestorphotourl'],
-                        title: 'Invited to instruct a session',        //Label to be created (pending client say)
-                        subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                        title:
+                            'Invited to instruct a session', //Label to be created (pending client say)
+                        subTitle:
+                            '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                       );
                       break;
+
                     case NotificationType.RequestApprove:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -273,11 +301,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             user.email,
                           );
                         },
-                        onPressed: null,   // TO BE MADE
+                        onPressed: null, // TO BE MADE
                         photoUrl: model.photoUrl,
                         title: model.title,
-                        subTitle:
-                            '${S.of(context).notifications_approved_by} ${model.fullName}',
+                        subTitle: model.requestType == RequestType.BORROW
+                            ? 'Request has been approved' //Label to be given by client (maybe Request has been approved by 'name of Borrower') (depends if timebank or personal)
+                            : '${S.of(context).notifications_approved_by} ${model.fullName}',
                       );
                       break;
 
@@ -672,6 +701,168 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: onDismissed,
                       );
 
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () {
+                          // FirestoreManager.readTimeBankNotification(
+                          //   notificationId: notification.id,
+                          //   timebankId: notification.timebankId,
+                          // );
+                        },
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (_context) => AlertDialog(
+                              title: Text(
+                                  'If you have you received your item/place back click the button below to complete this.'),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(_context).pop();
+                                  },
+                                  child: Text(
+                                    S.of(context).not_yet,
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: Theme.of(context).accentColor),
+                                  ),
+                                ),
+                                FlatButton(
+                                  onPressed: () async {
+                                    Navigator.of(_context).pop();
+
+                                    showProgressForCreditRetrieval();
+
+                                    //Send Receipt Email to Lender Below
+                                    await sendReceiptMailToLender(
+                                        senderEmail: 'noreply@sevaexchange.com',
+                                        receiverEmail: SevaCore.of(context)
+                                            .loggedInUser
+                                            .email,
+                                        communityName: requestModelNew.fullName,
+                                        requestName: requestModelNew.title,
+                                        receiverName: SevaCore.of(context)
+                                            .loggedInUser
+                                            .fullname,
+                                        startDate: requestModelNew.requestStart,
+                                        endDate: requestModelNew.requestEnd);
+
+                                    //Send Notification To Lender to let them know it's acknowledged
+                                    await sendNotificationLenderReceipt(
+                                        communityId:
+                                            requestModelNew.communityId,
+                                        timebankId: requestModelNew.timebankId,
+                                        sevaUserId: SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID,
+                                        userEmail: SevaCore.of(context)
+                                            .loggedInUser
+                                            .email,
+                                        requestModel: requestModelNew);
+
+                                    //Update request to complete it                                
+                                      //requestModelNew.approvedUsers = [];
+                                      requestModelNew.acceptors = [];
+                                      requestModelNew.accepted =
+                                          true; //so that we can know that this request has completed
+                                
+                                    FirestoreManager.requestComplete(
+                                        model: requestModelNew);
+
+                                    //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
+                                    await sendNotificationBorrowerRequestCompletedFeedback(
+                                        communityId:
+                                            requestModelNew.communityId,
+                                        timebankId: requestModelNew.timebankId,
+                                        sevaUserId: requestModelNew.sevaUserId,
+                                        userEmail: requestModelNew.email,
+                                        requestModel: requestModelNew);
+
+                                    //Make this notification isRead: true
+                                    log('notification id:' + notification.id);
+                                    log('timebank id:' +
+                                        notification.timebankId);
+
+                                    NotificationsRepository
+                                        .readUserNotification(
+                                            notification.id,
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .email);
+
+                                    Navigator.of(creditRequestDialogContext)
+                                        .pop();
+                                  },
+                                  child: Text(
+                                    S.of(context).yes,
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        photoUrl: model.photoUrl,
+                        title: '${model.title}', //Label to be created
+                        subTitle: //Need final label from client
+                            "This request has now ended. Tap to complete the request.",
+                      );
+                      break;
+
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () {
+                          // FirestoreManager.readTimeBankNotification(
+                          //   notificationId: notification.id,
+                          //   timebankId: notification.timebankId,
+                          // );
+                        },
+                        onPressed: () async {
+                          subjectBorrow.add(0);
+                        },
+                        photoUrl: model.photoUrl,
+                        title: '${model.title}', //Label to be created
+                        subTitle: //Need final label from client
+                            "The request has completed. Tap to leave a feedback.",
+                      );
+                      break;
+
+                    case NotificationType
+                        .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
+                      var model = RequestModel.fromMap(notification.data);
+                      requestModelNew = model;
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: true,
+                        onDismissed: () {
+                          // FirestoreManager.readTimeBankNotification(
+                          //   notificationId: notification.id,
+                          //   timebankId: notification.timebankId,
+                          // );
+                        },
+                        onPressed: () async {
+                          subjectBorrow.add(0);
+                        },
+                        photoUrl: model.photoUrl,
+                        title: '${model.title}', //Label to be created
+                        subTitle: //Need final label from client
+                            "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
+                      );
+                      break;
+
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       Crashlytics().log(
@@ -758,6 +949,256 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           sender: sender);
     }
   }
+
+  void checkForReviewBorrowRequests() async {
+    logger.e('COMES BACK HERE 2');
+
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return BorrowRequestFeedBackView(requestModel: requestModelNew);
+        },
+      ),
+    );
+
+    if (results != null && results.containsKey('selection')) {
+      showProgressForCreditRetrieval();
+      onActivityResult(results, SevaCore.of(context).loggedInUser);
+    } else {}
+  }
+
+  Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
+    // adds review to firestore
+    try {
+      logger.i('here 1');
+      await Firestore.instance.collection("reviews").add({
+        "reviewer": SevaCore.of(context).loggedInUser.email,
+        "reviewed": requestModelNew.email,
+        "ratings": results['selection'],
+        "device_info": results['device_info'],
+        "requestId": requestModelNew.id,
+        "comments": (results['didComment'] ? results['comment'] : "No comments")
+      });
+      logger.i('here 2');
+      await sendMessageToMember(
+          message: results['didComment'] ? results['comment'] : "No comments",
+          loggedInUser: loggedInUser);
+      logger.i('here 3');
+      startTransaction();
+    } on Exception catch (e) {
+      // TODO
+    }
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModelNew.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModelNew.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModelNew.timebankId,
+        photoUrl: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: utils.getReviewMessage(
+            requestTitle: requestModelNew.title,
+            context: context,
+            userName: loggedInUser.fullname,
+            isForCreator: true,
+            reviewMessage: message,
+          ),
+          reciever: receiver,
+          isTimebankMessage:
+              requestModelNew.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? false
+                  : true,
+          timebankId: requestModelNew.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
+  }
+
+  void startTransaction() async {
+    // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
+
+    //doing below since in RequestModel if != null nothing happens
+    //so manually removing user from task
+    // requestModelNew.approvedUsers = [];
+    // requestModelNew.acceptors = [];
+    // requestModelNew.accepted =
+    //     true; //so that we can know that this request has completed
+
+    if (requestModelNew.requestType == RequestType.BORROW) {
+      if (SevaCore.of(context).loggedInUser.sevaUserID ==
+          requestModelNew.sevaUserId) {
+        requestModelNew.borrowerReviewed = true;
+      } else {
+        requestModelNew.lenderReviewed = true;
+      }
+    }
+
+    FirestoreManager.requestComplete(model: requestModelNew);
+
+    FirestoreManager.createTaskCompletedNotification(
+      model: NotificationsModel(
+        id: utils.Utils.getUuid(),
+        data: requestModelNew.toMap(),
+        type: NotificationType.RequestCompleted,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: requestModelNew.sevaUserId,
+        communityId: requestModelNew.communityId,
+        timebankId: requestModelNew.timebankId,
+        isTimebankNotification:
+            requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
+        isRead: false,
+      ),
+    );
+
+    Navigator.of(creditRequestDialogContext).pop();
+    //Navigator.of(context).pop();
+  }
+
+  BuildContext creditRequestDialogContext;
+  void showProgressForCreditRetrieval() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          creditRequestDialogContext = context;
+          return AlertDialog(
+            title: Text(S.of(context).please_wait),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  String getTime(int timeInMilliseconds, String timezoneAbb) {
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
+    String from = DateFormat.jm().format(
+      localtime,
+    );
+    return from;
+  }
+
+  String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
+    DateFormat dateFormat =
+        DateFormat('d MMM hh:mm a ', Locale(getLangTag()).toLanguageTag());
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
+    String from = dateFormat.format(
+      localtime,
+    );
+    return from;
+  }
+
+  Future<void> sendNotificationLenderReceipt(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail,
+      RequestModel requestModel}) async {
+    NotificationsModel notification = NotificationsModel(
+        id: Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: requestModel.toMap(),
+        isRead: false,
+        type: NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+
+    log('WRITTEN TO DB--------------------->>');
+  }
+
+  Future<void> sendNotificationBorrowerRequestCompletedFeedback(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail,
+      RequestModel requestModel}) async {
+    NotificationsModel notification = NotificationsModel(
+        id: Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: requestModel.toMap(),
+        isRead: false,
+        type: NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+
+    log('WRITTEN TO DB--------------------->>');
+  }
+
+  //Send receipt mail to LENDER for end of Borrow Request
+  Future<bool> sendReceiptMailToLender({
+    String senderEmail,
+    String receiverEmail,
+    String communityName,
+    String requestName,
+    String requestCreatorName,
+    String receiverName,
+    int startDate,
+    int endDate,
+  }) async {
+    return await SevaMailer.createAndSendEmail(
+        mailContent: MailContent.createMail(
+      mailSender: senderEmail,
+      mailReciever: 'p.rash.23@hotmail.com', //'receiverEmail',
+      mailSubject: 'Receipt' + ' for ' + requestName + ' from' + communityName,
+      mailContent: requestName +
+          " has completed." +
+          "\n" +
+          "here is the receipt"
+              "\n\n" +
+          "Thanks," +
+          "\n" +
+          "SevaX Team.",
+    ));
+  } //Label to be given by client for email content
 
   @override
   bool get wantKeepAlive => true;

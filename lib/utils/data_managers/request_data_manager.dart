@@ -1295,8 +1295,9 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           });
           if (!isCompletedByUser &&
               (model.requestType == RequestType.TIME ||
-                  model.requestType == RequestType.ONE_TO_MANY_REQUEST ||
-                  model.requestType == RequestType.BORROW)) {
+                  model.requestType == RequestType.ONE_TO_MANY_REQUEST
+              //|| model.requestType == RequestType.BORROW
+              )) {
             // model.timebankId/
             requestModelList.add(model);
           }
@@ -1446,8 +1447,13 @@ Stream<List<RequestModel>> getCompletedRequestStream({
               isRequestCompleted = true;
           });
 
+          (model.accepted == true && model.requestType == RequestType.BORROW)
+              ? requestList.add(model)
+              : null;
+
           if (isRequestCompleted) requestList.add(model);
         });
+        log('REQUESTS LIST COMPLETED:  ' + requestList.toString());
         requestSink.add(requestList);
       },
     ),

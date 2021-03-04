@@ -125,12 +125,20 @@ class TimebankRequestWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                      child: Text(
+                      child: requestModel.requestType == RequestType.BORROW ? 
+                      Text(
+                          "${S.of(context).notifications_by_approving} ${userModel.fullname}, you will go ahead with them for the request.",   
+                          style: TextStyle(                                        //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center)
+                          :
+                          Text(
                           "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                           ),
-                          textAlign: TextAlign.center),
+                          textAlign: TextAlign.center)
                     ),
                     Container(
                       width: double.infinity,

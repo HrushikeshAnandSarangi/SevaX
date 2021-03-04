@@ -264,7 +264,7 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-      log('User Email to NOtify : '  + user.email);
+      log('User Email to Notify : '  + user.email);
       await Firestore.instance
           .collection('users')
           .document(user.email)
