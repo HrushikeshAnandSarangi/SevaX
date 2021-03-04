@@ -19,6 +19,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_w
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -334,6 +335,21 @@ class RequestCompleteWidget extends StatelessWidget {
             : S.of(context).no_comments),
         'liveMode': AppConfig.isTestCommunity,
       });
+      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+        log('inside credit');
+        await TransactionBloc().createNewTransaction(
+          requestModel.timebankId,
+          requestModel.timebankId,
+          DateTime.now().millisecondsSinceEpoch,
+          requestModel.numberOfHours ?? 0,
+          true,
+          "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+          requestModel.id,
+          requestModel.timebankId,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        );
+        log('success');
+      }
       await approveTransaction(
           requestModel, userId, notificationId, loggedInUser);
 
