@@ -64,9 +64,9 @@ class ChatModel {
         interCommunity: map.containsKey('interCommunity')
             ? map['interCommunity'] ?? false
             : false,
-        communityId: map["communityId"],
+        communityId: map.containsKey("communityId") ? map["communityId"] : null,
         showToCommunities: map.containsKey('showToCommunities')
-            ? List<String>.from(map["showToCommunities"].map((x) => x))
+            ? List<String>.from((map["showToCommunities"] ?? []).map((x) => x))
             : [],
         timestamp: map["timestamp"],
         chatContext:

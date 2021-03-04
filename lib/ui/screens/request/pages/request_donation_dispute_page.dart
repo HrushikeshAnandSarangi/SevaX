@@ -450,9 +450,14 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
-                            showToCommunities: [],
-                            interCommunity: false,
                             entityId: widget.model.id,
+                            showToCommunities: [
+                              widget.model.donorDetails.communityId,
+                              timebankModel.communityId
+                            ],
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
 
@@ -463,6 +468,14 @@ class _RequestDonationDisputePageState
                           var loggedInUser = SevaCore.of(context).loggedInUser;
                           await HandlerForModificationManager
                               .createChatForDispute(
+                            entityId: widget.model.id,
+                            showToCommunities: [
+                              widget.model.donorDetails.communityId,
+                              timebankModel.communityId
+                            ],
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -483,13 +496,6 @@ class _RequestDonationDisputePageState
                             context: context,
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: true,
-                            interCommunity: loggedInUser.currentCommunity !=
-                                timebankModel.communityId,
-                            showToCommunities: [
-                              loggedInUser.currentCommunity,
-                              timebankModel.communityId
-                            ],
-                            entityId: widget.model.id,
                           );
                           break;
 
@@ -522,13 +528,14 @@ class _RequestDonationDisputePageState
                             ),
                             context: context,
                             timeBankId: widget.model.timebankId,
-                            interCommunity: loggedInUser.currentCommunity !=
-                                timebankModel.communityId,
+                            entityId: widget.model.id,
                             showToCommunities: [
-                              loggedInUser.currentCommunity,
+                              widget.model.donorDetails.communityId,
                               timebankModel.communityId
                             ],
-                            entityId: widget.model.id,
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
                       }
