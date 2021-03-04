@@ -195,7 +195,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         null,
         this.widget.timebankData.id,
         communityId: widget.loggedInUser.currentCommunity,
-        fromEmailORId: this.widget.loggedInUser.sevaUserID,
+        fromEmailORId: this.widget.loggedInUser.email,
         toEmailORId: this.widget.timebankData.id,
       );
       await showDialog<double>(

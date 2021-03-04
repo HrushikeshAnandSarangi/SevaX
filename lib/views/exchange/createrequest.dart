@@ -217,6 +217,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityId: widget.loggedInUser.currentCommunity,
     );
     this.requestModel.timebankId = _selectedTimebankId;
+    this.requestModel.public = false;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
@@ -1801,7 +1802,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
-      requestModel.liveMode=AppConfig.isTestCommunity;
+      requestModel.liveMode = AppConfig.isTestCommunity;
       if (requestModel.public) {
         requestModel.timebanksPosted = [
           timebankModel.id,

@@ -385,10 +385,13 @@ class TransactionBloc {
       timebankid: timebankid,
       transactionbetween: [from, to],
       toEmail_Id: toEmailORId,
-      fromEmail: fromEmailORId,
+      fromEmail_Id: fromEmailORId,
     );
-    await handleApprovedTransaction(isApproved, from, to, timebankid, type,
-        num.parse(credits.toStringAsFixed(2)));
+
+    //commented because transaction and balance handling will be done in backend
+
+//    await handleApprovedTransaction(isApproved, from, to, timebankid, type,
+//        num.parse(credits.toStringAsFixed(2)));
     await Firestore.instance
         .collection('transactions')
         .document()
@@ -422,7 +425,7 @@ class TransactionBloc {
       transactionbetween: [from, to],
       communityId: communityId,
       toEmail_Id: toEmailORId,
-      fromEmail: fromEmailORId,
+      fromEmail_Id: fromEmailORId,
     );
     if (id) {
       var document = await Firestore.instance
@@ -436,8 +439,10 @@ class TransactionBloc {
             .document(document.documentID)
             .setData(transactionModel.toMap(), merge: true);
         if (!prevtransactionModel.isApproved && isApproved) {
-          await handleApprovedTransaction(isApproved, from, to, timebankid,
-              type, num.parse(credits.toStringAsFixed(2)));
+          //commented because transaction and balance handling will be done in backend
+
+//          await handleApprovedTransaction(isApproved, from, to, timebankid,
+//              type, num.parse(credits.toStringAsFixed(2)));
         }
       }
     } else {
@@ -454,8 +459,10 @@ class TransactionBloc {
       if (document != null)
         prevtransactionModel = TransactionModel.fromMap(document.data);
       if (!prevtransactionModel.isApproved && isApproved) {
-        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
-            num.parse(credits.toStringAsFixed(2)));
+        //commented because transaction and balance handling will be done in backend
+
+//        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
+//            num.parse(credits.toStringAsFixed(2)));
       }
       return await Firestore.instance
           .collection('transactions')

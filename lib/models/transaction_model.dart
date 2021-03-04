@@ -5,7 +5,7 @@ import 'models.dart';
 
 class TransactionModel extends DataModel {
   String from;
-  String fromEmail;
+  String fromEmail_Id;
   String to;
   String toEmail_Id;
   bool liveMode;
@@ -20,7 +20,7 @@ class TransactionModel extends DataModel {
 
   TransactionModel({
     this.from,
-    @required this.fromEmail,
+    @required this.fromEmail_Id,
     this.timestamp,
     this.credits,
     this.to,
@@ -38,8 +38,8 @@ class TransactionModel extends DataModel {
     if (map.containsKey('from')) {
       this.from = map['from'];
     }
-    if (map.containsKey('fromEmail')) {
-      this.fromEmail = map['fromEmail'];
+    if (map.containsKey('fromEmail_Id')) {
+      this.fromEmail_Id = map['fromEmail_Id'];
     }
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
@@ -84,8 +84,8 @@ class TransactionModel extends DataModel {
     if (this.from != null) {
       map['from'] = this.from;
     }
-    if (this.fromEmail != null) {
-      map['fromEmail'] = this.fromEmail;
+    if (this.fromEmail_Id != null) {
+      map['fromEmail_Id'] = this.fromEmail_Id;
     }
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;

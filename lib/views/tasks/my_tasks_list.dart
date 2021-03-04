@@ -715,8 +715,8 @@ class TaskCardViewState extends State<TaskCardView> {
         credits: totalMinutes / 60,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         communityId: requestModel.communityId,
-        fromEmail: requestModel.sevaUserId,
-        toEmail_Id: SevaCore.of(context).loggedInUser.sevaUserID,
+        fromEmail_Id: requestModel.email,
+        toEmail_Id: SevaCore.of(context).loggedInUser.email,
       );
 
       if (requestModel.transactions == null) {
@@ -742,9 +742,9 @@ class TaskCardViewState extends State<TaskCardView> {
         this.requestModel.id,
         this.requestModel.timebankId,
         communityId: requestModel.communityId,
-        toEmailORId: SevaCore.of(context).loggedInUser.sevaUserID,
+        toEmailORId: SevaCore.of(context).loggedInUser.email,
         fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? requestModel.sevaUserId
+            ? requestModel.email
             : requestModel.timebankId,
       );
 

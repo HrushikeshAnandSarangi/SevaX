@@ -1097,9 +1097,9 @@ Future<void> approveRequestCompletion({
     false,
     communityId: communityId,
     fromEmailORId: model.requestMode == RequestMode.PERSONAL_REQUEST
-        ? editedTransaction.from
+        ? editedTransaction.fromEmail_Id ?? editedTransaction.from
         : model.timebankId,
-    toEmailORId: editedTransaction.to,
+    toEmailORId: editedTransaction.toEmail_Id ?? editedTransaction.to,
   );
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
@@ -1115,7 +1115,7 @@ Future<void> approveRequestCompletion({
   await utils.processLoans(
     timebankId: model.timebankId,
     userId: userId,
-    to: editedTransaction.to,
+    to: editedTransaction.toEmail_Id ?? editedTransaction.to,
     credits: editedTransaction.credits,
     communityId: communityId,
   );
@@ -1276,7 +1276,7 @@ Future<void> acceptInviteRequest({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap()
+      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
     }, merge: true);
   } else {
     await Firestore.instance
@@ -1285,7 +1285,7 @@ Future<void> acceptInviteRequest({
         .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap(),
+      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
     }, merge: true);
   }
 }
