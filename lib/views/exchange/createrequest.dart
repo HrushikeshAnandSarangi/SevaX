@@ -1501,7 +1501,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     onPressed: () {
                       setState(() {
                         instructorAdded = false;
-                        requestModel.selectedInstructor.toMap().clear();
+                        requestModel.selectedInstructor = null;
                       });
                     },
                     child: Text(
