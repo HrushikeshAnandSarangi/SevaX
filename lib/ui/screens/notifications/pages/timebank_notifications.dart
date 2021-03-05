@@ -870,7 +870,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     return await SevaMailer.createAndSendEmail(
         mailContent: MailContent.createMail(
       mailSender: senderEmail,
-      mailReciever: 'p.rash.23@hotmail.com', //'receiverEmail',
+      mailReciever: receiverEmail,
       mailSubject: 'Receipt' + ' for ' + requestName + ' from' + communityName,
       mailContent: requestName +
           " has completed." +
