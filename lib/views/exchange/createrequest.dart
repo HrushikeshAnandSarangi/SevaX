@@ -29,6 +29,7 @@ import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -1307,8 +1308,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // Choose Category and Sub Category
           categoryWidget(),
           SizedBox(height: 20),
-
-          skillsWidget(),
+          Text(
+            'Provide the list of Skills that you required for this request',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SkillsForRequests(
+            languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+            selectedSkills: _selectedSkillsMap,
+            onSelectedSkillsMap: (skillMap) {
+              if (skillMap.values != null && skillMap.values.length > 0) {
+                _selectedSkillsMap = skillMap;
+                // setState(() {});
+              }
+            },
+          ),
           SizedBox(height: 20),
 
           // Choose Category and Sub Category
