@@ -164,17 +164,15 @@ class TimebankRequestWidget extends StatelessWidget {
                             Map<String, dynamic> participantDetails = {};
 
                             participantDetails = {
-                              'bio': SevaCore.of(context).loggedInUser.bio,
-                              'email': SevaCore.of(context).loggedInUser.email,
+                              'bio': userModel.bio,
+                              'email': userModel.email,
                               'fullname':
-                                  SevaCore.of(context).loggedInUser.fullname,
+                                  userModel.fullname,
                               'photourl':
-                                  SevaCore.of(context).loggedInUser.photoURL,
+                                  userModel.photoURL,
                               'sevauserid':
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
-                              'communityId': SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
+                                  userModel.sevaUserID,
+                              'communityId': userModel.currentCommunity,
                               'timebankId': requestModel.timebankId,   //will this work when sending notifications?
                             };
 
