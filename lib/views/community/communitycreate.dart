@@ -607,6 +607,33 @@ class CreateEditCommunityViewFormState
                                     value: testCommunity,
                                     onChanged: (bool value) {
                                       if (!canTestCommunity) {
+                                        if (!testCommunity) {
+                                          _showSanBoxdvisory(
+                                                  title:
+                                                      'Sandbox Seva Community',
+                                                  description:
+                                                      'Is this seva community is Non-Profit community?')
+                                              .then((status) {
+                                            if (status) {
+                                              communityModel.payment = {
+                                                "planId": "grande_plan",
+                                                "payment_success": true,
+                                                "message":
+                                                    "You are on Non-Profit Plan",
+                                                "status": 200,
+                                              };
+                                            } else {
+                                              communityModel.payment = {
+                                                "planId": "venti_plan",
+                                                "payment_success": true,
+                                                "message":
+                                                    "You are on Enterprise Plan",
+                                                "status": 200,
+                                              };
+                                            }
+                                          });
+                                        }
+
                                         snapshot.data.community
                                             .updateValueByKey(
                                           'testCommunity',
@@ -952,15 +979,7 @@ class CreateEditCommunityViewFormState
                                               .sevaUserID
                                         ];
 
-                                        if (testCommunity == true) {
-                                          snapshot.data.community.payment = {
-                                            "planId": "venti_plan",
-                                            "payment_success": true,
-                                            "message":
-                                                "You are on Enterprise Plan",
-                                            "status": 200,
-                                          };
-                                        } else {
+                                        if (testCommunity == false) {
                                           //by default every community is on neighbourhood plan
                                           snapshot.data.community.payment = {
                                             "planId": "neighbourhood_plan",
@@ -1155,6 +1174,45 @@ class CreateEditCommunityViewFormState
       child: colums,
     );
     return contain;
+  }
+
+  Future<bool> _showSanBoxdvisory({String title, String description}) {
+    return showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext _context) {
+              return AlertDialog(
+                title: Text(title),
+                content: Text(description),
+                actions: <Widget>[
+                  RaisedButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: Text(
+                      S.of(context).yes,
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(true);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      S.of(context).no,
+                      style: TextStyle(
+                          color: Colors.red, fontSize: dialogButtonSize),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(false);
+                    },
+                  )
+                ],
+              );
+            }) ??
+        false;
   }
 
   BuildContext dialogContext;
