@@ -3,12 +3,14 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -155,6 +157,20 @@ class TimebankRequestWidget extends StatelessWidget {
                             user: userModel,
                             context: context,
                           );
+
+                          // if(requestModel.requestType == RequestType.BORROW){
+
+                          // ParticipantDetails participantDetails = ParticipantDetails(bio: SevaCore.of(context).loggedInUser.bio, 
+                          //                                         email: SevaCore.of(context).loggedInUser.email, 
+                          //                                         fullname: SevaCore.of(context).loggedInUser.fullname, 
+                          //                                         photourl: SevaCore.of(context).loggedInUser.photoURL, 
+                          //                                         sevauserid: SevaCore.of(context).loggedInUser.sevaUserID);
+
+                          //   //requestModel.fromJson(Map<String, dynamic> json) => participantDetails(json);
+
+                          //   await updateRequest(requestModel: requestModel);
+                          // }
+
                           Navigator.pop(viewContext);
                         },
                       ),

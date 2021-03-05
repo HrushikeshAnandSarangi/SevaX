@@ -91,6 +91,8 @@ class ParticipantDetails {
         sevauserid: json["sevauserid"],
         email: json["email"],
       );
+
+  Map<String, dynamic> fromJson(Map<String, dynamic> map) {}
 }
 
 enum ParticipantStatus {

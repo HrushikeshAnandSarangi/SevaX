@@ -701,20 +701,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: onDismissed,
                       );
 
-                    case NotificationType
-                        .NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
+                    case NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
                         isDissmissible: true,
-                        onDismissed: () {
-                          // FirestoreManager.readTimeBankNotification(
-                          //   notificationId: notification.id,
-                          //   timebankId: notification.timebankId,
-                          // );
-                        },
+                        onDismissed: onDismissed,
                         onPressed: () async {
                           showDialog(
                             context: context,
@@ -735,69 +729,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ),
                                 FlatButton(
                                   onPressed: () async {
+                                    
                                     Navigator.of(_context).pop();
 
-                                    showProgressForCreditRetrieval();
-
-                                    //Send Receipt Email to Lender Below
-                                    await sendReceiptMailToLender(
-                                        senderEmail: 'noreply@sevaexchange.com',
-                                        receiverEmail: SevaCore.of(context)
-                                            .loggedInUser
-                                            .email,
-                                        communityName: requestModelNew.fullName,
-                                        requestName: requestModelNew.title,
-                                        receiverName: SevaCore.of(context)
-                                            .loggedInUser
-                                            .fullname,
-                                        startDate: requestModelNew.requestStart,
-                                        endDate: requestModelNew.requestEnd);
-
-                                    //Send Notification To Lender to let them know it's acknowledged
-                                    await sendNotificationLenderReceipt(
-                                        communityId:
-                                            requestModelNew.communityId,
-                                        timebankId: requestModelNew.timebankId,
-                                        sevaUserId: SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID,
-                                        userEmail: SevaCore.of(context)
-                                            .loggedInUser
-                                            .email,
-                                        requestModel: requestModelNew);
-
-                                    //Update request to complete it                                
-                                      //requestModelNew.approvedUsers = [];
-                                      requestModelNew.acceptors = [];
-                                      requestModelNew.accepted =
-                                          true; //so that we can know that this request has completed
-                                
-                                    FirestoreManager.requestComplete(
-                                        model: requestModelNew);
-
-                                    //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
-                                    await sendNotificationBorrowerRequestCompletedFeedback(
-                                        communityId:
-                                            requestModelNew.communityId,
-                                        timebankId: requestModelNew.timebankId,
-                                        sevaUserId: requestModelNew.sevaUserId,
-                                        userEmail: requestModelNew.email,
-                                        requestModel: requestModelNew);
-
-                                    //Make this notification isRead: true
-                                    log('notification id:' + notification.id);
-                                    log('timebank id:' +
-                                        notification.timebankId);
-
-                                    NotificationsRepository
-                                        .readUserNotification(
-                                            notification.id,
-                                            SevaCore.of(context)
-                                                .loggedInUser
-                                                .email);
-
-                                    Navigator.of(creditRequestDialogContext)
-                                        .pop();
+                                    await lenderReceivedBackCheck(
+                                        notification: notification);
                                   },
                                   child: Text(
                                     S.of(context).yes,
@@ -815,22 +751,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
-                    case NotificationType
-                        .NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
+                    case NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
                         isDissmissible: true,
-                        onDismissed: () {
-                          // FirestoreManager.readTimeBankNotification(
-                          //   notificationId: notification.id,
-                          //   timebankId: notification.timebankId,
-                          // );
-                        },
+                        onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
+                          NotificationsRepository.readUserNotification(
+                              notification.id,
+                              SevaCore.of(context).loggedInUser.email);
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}', //Label to be created
@@ -839,20 +772,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
-                    case NotificationType
-                        .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
+                    case NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
                         isDissmissible: true,
-                        onDismissed: () {
-                          // FirestoreManager.readTimeBankNotification(
-                          //   notificationId: notification.id,
-                          //   timebankId: notification.timebankId,
-                          // );
-                        },
+                        onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
                         },
@@ -876,6 +803,56 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
+  }
+
+  Future lenderReceivedBackCheck({
+    NotificationsModel notification,
+  }) async {
+    //add to timebank members
+
+    showProgressForCreditRetrieval();
+
+    //Send Receipt Email to Lender Below
+    await sendReceiptMailToLender(
+        senderEmail: 'noreply@sevaexchange.com',
+        receiverEmail: SevaCore.of(context).loggedInUser.email,
+        communityName: requestModelNew.fullName,
+        requestName: requestModelNew.title,
+        receiverName: SevaCore.of(context).loggedInUser.fullname,
+        startDate: requestModelNew.requestStart,
+        endDate: requestModelNew.requestEnd);
+
+    //Send Notification To Lender to let them know it's acknowledged
+    await sendNotificationLenderReceipt(
+        communityId: requestModelNew.communityId,
+        timebankId: requestModelNew.timebankId,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        requestModel: requestModelNew);
+
+    //Update request to complete it
+    //requestModelNew.approvedUsers = [];
+    requestModelNew.acceptors = [];
+    requestModelNew.accepted = true; //so that we can know that this request has completed
+
+    //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
+    await sendNotificationBorrowerRequestCompletedFeedback(
+        communityId: requestModelNew.communityId,
+        timebankId: requestModelNew.timebankId,
+        sevaUserId: requestModelNew.sevaUserId,
+        userEmail: requestModelNew.email,
+        requestModel: requestModelNew);
+
+    //Make this notification isRead: true
+    log('notification id:' + notification.id);
+    log('timebank id:' + notification.timebankId);
+
+    NotificationsRepository.readUserNotification(
+        notification.id, SevaCore.of(context).loggedInUser.email);
+
+    FirestoreManager.requestComplete(model: requestModelNew);
+
+    Navigator.of(creditRequestDialogContext).pop();
   }
 
   void _handleFeedBackNotificationAction(
@@ -1064,22 +1041,23 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       }
     }
 
+    requestModelNew.accepted = false;
+
     FirestoreManager.requestComplete(model: requestModelNew);
 
-    FirestoreManager.createTaskCompletedNotification(
-      model: NotificationsModel(
-        id: utils.Utils.getUuid(),
-        data: requestModelNew.toMap(),
-        type: NotificationType.RequestCompleted,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: requestModelNew.sevaUserId,
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        isTimebankNotification:
-            requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
-        isRead: false,
-      ),
-    );
+    // FirestoreManager.createTaskCompletedNotification(
+    //   model: NotificationsModel(
+    //     isTimebankNotification: requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
+    //     id: utils.Utils.getUuid(),
+    //     data: requestModelNew.toMap(),
+    //     type: NotificationType.RequestCompleted,
+    //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+    //     targetUserId: requestModelNew.sevaUserId,
+    //     communityId: requestModelNew.communityId,
+    //     timebankId: requestModelNew.timebankId,
+    //     isRead: false,
+    //   ),
+    // );
 
     Navigator.of(creditRequestDialogContext).pop();
     //Navigator.of(context).pop();
@@ -1128,6 +1106,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
+        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -1154,6 +1133,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
+        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -1164,13 +1144,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         targetUserId: sevaUserId);
 
     await Firestore.instance
-        .collection('users')
-        .document(userEmail)
-        .collection("notifications")
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection('notifications')
         .document(notification.id)
         .setData(notification.toMap());
 
-    log('WRITTEN TO DB--------------------->>');
+    log('WRITTEN TO DB new--------------------->>');
   }
 
   //Send receipt mail to LENDER for end of Borrow Request

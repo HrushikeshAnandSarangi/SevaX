@@ -160,10 +160,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () {
-                    // FirestoreManager.readTimeBankNotification(
-                    //   notificationId: notification.id,
-                    //   timebankId: notification.timebankId,
-                    // );
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                   onPressed: () async {
                     showDialog(
@@ -185,60 +185,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           ),
                           FlatButton(
                             onPressed: () async {
-                              Navigator.of(context).pop();
+                              Navigator.of(_context).pop();
 
-                              showProgressForCreditRetrieval();
+                              await lenderReceivedBackCheck(
+                                  notification: notification);                        
 
-                              setState(() {
-                                //requestModelNew.approvedUsers = [];
-                                requestModelNew.acceptors = [];
-                                requestModelNew.accepted =
-                                    true; //so that we can know that this request has completed
-                              });
-
-                              //Send Receipt Email to Lender Below
-                              await sendReceiptMailToLender(
-                                  senderEmail: 'noreply@sevaexchange.com',
-                                  receiverEmail:
-                                      SevaCore.of(context).loggedInUser.email,
-                                  communityName: requestModelNew.fullName,
-                                  requestName: requestModelNew.title,
-                                  receiverName: SevaCore.of(context)
-                                      .loggedInUser
-                                      .fullname,
-                                  startDate: requestModelNew.requestStart,
-                                  endDate: requestModelNew.requestEnd);
-
-                              //Send Notification To Lender to let them know it's acknowledged
-                              await sendNotificationLenderReceipt(
-                                  communityId: requestModelNew.communityId,
-                                  timebankId: requestModelNew.timebankId,
-                                  sevaUserId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID,
-                                  userEmail:
-                                      SevaCore.of(context).loggedInUser.email,
-                                  requestModel: requestModelNew);
-
-                              //Update request to complete it
-                              FirestoreManager.requestComplete(
-                                  model: requestModelNew);
-
-                              //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
-                              await sendNotificationBorrowerRequestCompletedFeedback(
-                                  communityId: requestModelNew.communityId,
-                                  timebankId: requestModelNew.timebankId,
-                                  sevaUserId: requestModelNew.sevaUserId,
-                                  userEmail: requestModelNew.email,
-                                  requestModel: requestModelNew);
-
-                              //Make this notification isRead: true
-                              FirestoreManager.readTimeBankNotification(
-                                notificationId: notification.id,
-                                timebankId: notification.timebankId,
-                              );
-
-                              Navigator.of(creditRequestDialogContext).pop();
                             },
                             child: Text(
                               S.of(context).yes,
@@ -264,10 +215,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () {
-                    // FirestoreManager.readTimeBankNotification(
-                    //   notificationId: notification.id,
-                    //   timebankId: notification.timebankId,
-                    // );
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                   onPressed: () async {
                     subjectBorrow.add(0);
@@ -279,8 +230,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
                 break;
 
-              case NotificationType
-                  .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
+              case NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
                 var model = RequestModel.fromMap(notification.data);
                 requestModelNew = model;
                 return NotificationCard(
@@ -288,13 +238,17 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: 'NAME',
                   isDissmissible: true,
                   onDismissed: () {
-                    // FirestoreManager.readTimeBankNotification(
-                    //   notificationId: notification.id,
-                    //   timebankId: notification.timebankId,
-                    // );
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                   onPressed: () async {
                     subjectBorrow.add(0);
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
@@ -617,6 +571,61 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     );
   }
 
+
+   Future lenderReceivedBackCheck({
+    NotificationsModel notification,
+  }) async {
+    //add to timebank members
+
+    showProgressForCreditRetrieval();
+
+    //Send Receipt Email to Lender Below
+    await sendReceiptMailToLender(
+        senderEmail: 'noreply@sevaexchange.com',
+        receiverEmail: SevaCore.of(context).loggedInUser.email,
+        communityName: requestModelNew.fullName,
+        requestName: requestModelNew.title,
+        receiverName: SevaCore.of(context).loggedInUser.fullname,
+        startDate: requestModelNew.requestStart,
+        endDate: requestModelNew.requestEnd);
+
+    //Send Notification To Lender to let them know it's acknowledged
+    await sendNotificationLenderReceipt(
+        communityId: requestModelNew.communityId,
+        timebankId: requestModelNew.timebankId,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        requestModel: requestModelNew);
+
+    //Update request to complete it
+    //requestModelNew.approvedUsers = [];
+    requestModelNew.acceptors = [];
+    requestModelNew.accepted = true; //so that we can know that this request has completed
+
+    //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
+    await sendNotificationBorrowerRequestCompletedFeedback(
+        communityId: requestModelNew.communityId,
+        timebankId: requestModelNew.timebankId,
+        sevaUserId: requestModelNew.sevaUserId,
+        userEmail: requestModelNew.email,
+        requestModel: requestModelNew);
+
+    //Make this notification isRead: true
+    log('notification id:' + notification.id);
+    log('timebank id:' + notification.timebankId);
+
+    //Make this notification isRead: true
+    FirestoreManager.readTimeBankNotification(
+      notificationId: notification.id,
+      timebankId: notification.timebankId,
+    );
+
+    FirestoreManager.requestComplete(model: requestModelNew);
+
+    Navigator.of(creditRequestDialogContext).pop();
+  }
+
+
   void checkForReviewBorrowRequests() async {
     logger.e('COMES BACK HERE 2');
 
@@ -650,6 +659,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
           loggedInUser: loggedInUser);
+
       logger.i('here 3');
       startTransaction();
     } on Exception catch (e) {
@@ -732,22 +742,24 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       }
     }
 
+    requestModelNew.accepted = false;
+
     FirestoreManager.requestComplete(model: requestModelNew);
 
-    FirestoreManager.createTaskCompletedNotification(
-      model: NotificationsModel(
-        id: utils.Utils.getUuid(),
-        data: requestModelNew.toMap(),
-        type: NotificationType.RequestCompleted,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: requestModelNew.sevaUserId,
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        isTimebankNotification:
-            requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
-        isRead: false,
-      ),
-    );
+    // FirestoreManager.createTaskCompletedNotification(
+    //   model: NotificationsModel(
+    //     id: utils.Utils.getUuid(),
+    //     data: requestModelNew.toMap(),
+    //     type: NotificationType.RequestCompleted,
+    //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+    //     targetUserId: requestModelNew.sevaUserId,
+    //     communityId: requestModelNew.communityId,
+    //     timebankId: requestModelNew.timebankId,
+    //     isTimebankNotification:
+    //         requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
+    //     isRead: false,
+    //   ),
+    // );
 
     Navigator.of(creditRequestDialogContext).pop();
     //Navigator.of(context).pop();
@@ -796,6 +808,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
+        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -822,6 +835,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
+        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
