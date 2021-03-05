@@ -187,8 +187,14 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             onPressed: () async {
                               Navigator.of(_context).pop();
 
+                                  //Update request to complete it
+                                  //requestModelNew.approvedUsers = [];
+                                  requestModelNew.acceptors = [];
+                                  requestModelNew.accepted = true; //so that we can know that this request has completed
+
                               await lenderReceivedBackCheck(
-                                  notification: notification);                        
+                                  notification: notification, 
+                                  requestModelUpdated: requestModelNew);                        
 
                             },
                             child: Text(
@@ -226,7 +232,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
                   subTitle: //Need final label from client
-                      "The request has completed. Tap to leave a feedback.",
+                      "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                 );
                 break;
 
@@ -574,8 +580,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
    Future lenderReceivedBackCheck({
     NotificationsModel notification,
+    RequestModel requestModelUpdated,
   }) async {
-    //add to timebank members
 
     showProgressForCreditRetrieval();
 
@@ -597,10 +603,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         userEmail: SevaCore.of(context).loggedInUser.email,
         requestModel: requestModelNew);
 
-    //Update request to complete it
-    //requestModelNew.approvedUsers = [];
-    requestModelNew.acceptors = [];
-    requestModelNew.accepted = true; //so that we can know that this request has completed
 
     //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
     await sendNotificationBorrowerRequestCompletedFeedback(
@@ -736,15 +738,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     if (requestModelNew.requestType == RequestType.BORROW) {
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
           requestModelNew.sevaUserId) {
-        requestModelNew.borrowerReviewed = true;
-      } else {
-        requestModelNew.lenderReviewed = true;
+          FirestoreManager.borrowRequestFeedbackBorrowerUpdate(model: requestModelNew);
+      } else{
+          FirestoreManager.borrowRequestFeedbackLenderUpdate(model: requestModelNew);
       }
     }
 
-    requestModelNew.accepted = false;
+    //requestModelNew.accepted = false;
 
-    FirestoreManager.requestComplete(model: requestModelNew);
+    //FirestoreManager.borrowRequestComplete(model: requestModelNew);
 
     // FirestoreManager.createTaskCompletedNotification(
     //   model: NotificationsModel(
@@ -837,7 +839,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
+        timebankId: timebankId,
         data: requestModel.toMap(),
         isRead: false,
         type: NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,

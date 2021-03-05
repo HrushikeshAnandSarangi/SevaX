@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -127,21 +129,20 @@ class TimebankRequestWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                      child: requestModel.requestType == RequestType.BORROW ? 
-                      Text(
-                          "${S.of(context).notifications_by_approving} ${userModel.fullname}, you will go ahead with them for the request.",   
-                          style: TextStyle(                                        //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
-                            fontStyle: FontStyle.italic,
-                          ),
-                          textAlign: TextAlign.center)
-                          :
-                          Text(
-                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
-                          textAlign: TextAlign.center)
-                    ),
+                        child: requestModel.requestType == RequestType.BORROW
+                            ? Text(
+                                "${S.of(context).notifications_by_approving} ${userModel.fullname}, you will go ahead with them for the request.",
+                                style: TextStyle(
+                                  //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                textAlign: TextAlign.center)
+                            : Text(
+                                "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                textAlign: TextAlign.center)),
                     Container(
                       width: double.infinity,
                       child: RaisedButton(
@@ -158,18 +159,32 @@ class TimebankRequestWidget extends StatelessWidget {
                             context: context,
                           );
 
-                          // if(requestModel.requestType == RequestType.BORROW){
+                          //Below for Borrow Request To add participant details for notifications data use
+                          if (requestModel.requestType == RequestType.BORROW) {
+                            Map<String, dynamic> participantDetails = {};
 
-                          // ParticipantDetails participantDetails = ParticipantDetails(bio: SevaCore.of(context).loggedInUser.bio, 
-                          //                                         email: SevaCore.of(context).loggedInUser.email, 
-                          //                                         fullname: SevaCore.of(context).loggedInUser.fullname, 
-                          //                                         photourl: SevaCore.of(context).loggedInUser.photoURL, 
-                          //                                         sevauserid: SevaCore.of(context).loggedInUser.sevaUserID);
+                            participantDetails = {
+                              'bio': SevaCore.of(context).loggedInUser.bio,
+                              'email': SevaCore.of(context).loggedInUser.email,
+                              'fullname':
+                                  SevaCore.of(context).loggedInUser.fullname,
+                              'photourl':
+                                  SevaCore.of(context).loggedInUser.photoURL,
+                              'sevauserid':
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              'communityId': SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              'timebankId': requestModel.timebankId,   //will this work when sending notifications?
+                            };
 
-                          //   //requestModel.fromJson(Map<String, dynamic> json) => participantDetails(json);
+                            requestModel.participantDetails =
+                                participantDetails;
 
-                          //   await updateRequest(requestModel: requestModel);
-                          // }
+                            log('participant detailss map written to DB ----->');
+
+                            await updateRequest(requestModel: requestModel);
+                          }
 
                           Navigator.pop(viewContext);
                         },

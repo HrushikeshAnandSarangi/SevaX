@@ -200,6 +200,12 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   BasicUserDetails selectedInstructor = new BasicUserDetails();
+  Map<String, dynamic> skills;
+  List<String> timebanksPosted;
+  bool public;
+  bool virtualRequest;
+  Map<String, dynamic> participantDetails = {};
+
   RequestModel({
     this.id,
     this.title,
@@ -246,6 +252,11 @@ class RequestModel extends DataModel {
     this.categories,
     this.selectedInstructor,
     @required this.communityId,
+    this.skills,
+    this.public,
+    this.virtualRequest,
+    this.timebanksPosted,
+    this.participantDetails,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -468,6 +479,24 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey("skills")) {
+      this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
+    }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+    }
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -670,6 +699,38 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+      ;
+    }
+    if (map.containsKey('public')) {
+      this.public = map['public'];
+    }
+    if (map.containsKey('virtualRequest')) {
+      this.virtualRequest = map['virtualRequest'];
+    }
+    if (map.containsKey('timebanksPosted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+      this.timebanksPosted = timebanksPosted;
+    } else {
+      this.timebanksPosted = [];
+    }
+    if (map.containsKey('participantDetails')) {
+      this.participantDetails = Map.castFrom(map['participantDetails']);
+    }
   }
 
   @override
@@ -871,6 +932,27 @@ class RequestModel extends DataModel {
     if (this.goodsDonationDetails != null) {
       object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
     }
+    if (this.skills != null) {
+      object['skills'] = this.skills;
+    }
+    if (this.public != null) {
+      object['public'] = this.public;
+    } else {
+      object['public'] = false;
+    }
+    if (this.virtualRequest != null) {
+      object['virtualRequest'] = this.virtualRequest;
+    } else {
+      object['virtualRequest'] = false;
+    }
+    if (this.timebanksPosted != null) {
+      object['timebanksPosted'] = this.timebanksPosted;
+    }
+    if (this.participantDetails != null) {
+      object['participantDetails'] =
+          Map<String, dynamic>.from(this.participantDetails);
+    }
+
     return object;
   }
 

@@ -890,6 +890,28 @@ Future<void> requestComplete({
       .setData(model.toMap(), merge: true);
 }
 
+Future<void> borrowRequestFeedbackLenderUpdate({
+  @required RequestModel model,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(model.id)
+      .updateData({
+        'lenderReviewed': true,
+      });
+}
+
+Future<void> borrowRequestFeedbackBorrowerUpdate({
+  @required RequestModel model,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(model.id)
+      .updateData({
+        'lenderReviewed': true,
+      });
+}
+
 Future<void> rejectRequestCompletion({
   @required RequestModel model,
   @required String userId,
@@ -1170,10 +1192,13 @@ Future<void> approveAcceptRequestForTimebank({
   tempTimebankModel.fullName = timebankModel.name;
 
   NotificationsModel model = NotificationsModel(
+    isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,
-    communityId: communityId,
+    communityId: requestModel.requestType == RequestType.BORROW
+        ? requestModel.participantDetails['communityId']
+        : communityId,
     senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempTimebankModel.toMap(),

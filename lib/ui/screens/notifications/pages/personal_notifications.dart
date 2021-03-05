@@ -62,6 +62,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
+
     super.build(context);
     parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
@@ -719,6 +720,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 FlatButton(
                                   onPressed: () {
                                     Navigator.of(_context).pop();
+                                  
                                   },
                                   child: Text(
                                     S.of(context).not_yet,
@@ -732,8 +734,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     
                                     Navigator.of(_context).pop();
 
+                                    log('timebank ID:  ' + requestModelNew.timebankId);
+
+                                        //Update request model to complete it
+                                        //requestModelNew.approvedUsers = [];
+                                        requestModelNew.acceptors = [];
+                                        requestModelNew.accepted = true; //so that we can know that this request has completed
+                                        
                                     await lenderReceivedBackCheck(
-                                        notification: notification);
+                                        notification: notification, 
+                                        requestModelUpdated: requestModelNew);
                                   },
                                   child: Text(
                                     S.of(context).yes,
@@ -768,7 +778,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: model.photoUrl,
                         title: '${model.title}', //Label to be created
                         subTitle: //Need final label from client
-                            "The request has completed. Tap to leave a feedback.",
+                            "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                       );
                       break;
 
@@ -807,8 +817,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   Future lenderReceivedBackCheck({
     NotificationsModel notification,
+    RequestModel requestModelUpdated,
   }) async {
-    //add to timebank members
 
     showProgressForCreditRetrieval();
 
@@ -816,32 +826,27 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     await sendReceiptMailToLender(
         senderEmail: 'noreply@sevaexchange.com',
         receiverEmail: SevaCore.of(context).loggedInUser.email,
-        communityName: requestModelNew.fullName,
-        requestName: requestModelNew.title,
+        communityName: requestModelUpdated.fullName,
+        requestName: requestModelUpdated.title,
         receiverName: SevaCore.of(context).loggedInUser.fullname,
-        startDate: requestModelNew.requestStart,
-        endDate: requestModelNew.requestEnd);
+        startDate: requestModelUpdated.requestStart,
+        endDate: requestModelUpdated.requestEnd);
 
     //Send Notification To Lender to let them know it's acknowledged
     await sendNotificationLenderReceipt(
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
+        communityId: requestModelUpdated.communityId,
+        timebankId: requestModelUpdated.timebankId,
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         userEmail: SevaCore.of(context).loggedInUser.email,
-        requestModel: requestModelNew);
-
-    //Update request to complete it
-    //requestModelNew.approvedUsers = [];
-    requestModelNew.acceptors = [];
-    requestModelNew.accepted = true; //so that we can know that this request has completed
+        requestModel: requestModelUpdated);
 
     //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
     await sendNotificationBorrowerRequestCompletedFeedback(
-        communityId: requestModelNew.communityId,
-        timebankId: requestModelNew.timebankId,
-        sevaUserId: requestModelNew.sevaUserId,
-        userEmail: requestModelNew.email,
-        requestModel: requestModelNew);
+        communityId: requestModelUpdated.communityId,
+        timebankId: requestModelUpdated.timebankId,
+        sevaUserId: requestModelUpdated.sevaUserId,
+        userEmail: requestModelUpdated.email,
+        requestModel: requestModelUpdated);
 
     //Make this notification isRead: true
     log('notification id:' + notification.id);
@@ -850,10 +855,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     NotificationsRepository.readUserNotification(
         notification.id, SevaCore.of(context).loggedInUser.email);
 
-    FirestoreManager.requestComplete(model: requestModelNew);
+    FirestoreManager.requestComplete(model: requestModelUpdated);
 
     Navigator.of(creditRequestDialogContext).pop();
   }
+
+  
 
   void _handleFeedBackNotificationAction(
     BuildContext context,
@@ -1035,15 +1042,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     if (requestModelNew.requestType == RequestType.BORROW) {
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
           requestModelNew.sevaUserId) {
-        requestModelNew.borrowerReviewed = true;
-      } else {
-        requestModelNew.lenderReviewed = true;
+          FirestoreManager.borrowRequestFeedbackBorrowerUpdate(model: requestModelNew);
+      } else{
+          FirestoreManager.borrowRequestFeedbackLenderUpdate(model: requestModelNew);
       }
     }
 
-    requestModelNew.accepted = false;
+    //requestModelNew.accepted = false;
 
-    FirestoreManager.requestComplete(model: requestModelNew);
+    //FirestoreManager.borrowRequestComplete(model: requestModelNew);
 
     // FirestoreManager.createTaskCompletedNotification(
     //   model: NotificationsModel(
@@ -1135,7 +1142,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     NotificationsModel notification = NotificationsModel(
         isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
+        timebankId: timebankId,
         data: requestModel.toMap(),
         isRead: false,
         type: NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
