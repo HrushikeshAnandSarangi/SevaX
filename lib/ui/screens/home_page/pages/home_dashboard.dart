@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
+import 'package:sevaexchange/ui/screens/request/pages/requests_tabs.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -22,7 +23,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -268,7 +268,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           timebankId: primaryTimebank.id,
                           timebankModel: primaryTimebank,
                         ),
-                        RequestsModule.of(
+                        RequestTabs(
                           timebankId: primaryTimebank.id,
                           timebankModel: primaryTimebank,
                           isFromSettings: false,

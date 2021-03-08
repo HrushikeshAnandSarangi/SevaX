@@ -571,6 +571,33 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
   );
 }
 
+Stream<List<RequestModel>> getAllVirtualRequestListStream(
+    {String timebankid}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('accepted', isEqualTo: false)
+      .where('timebanksPosted', arrayContains: timebankid)
+      .where('softDelete', isEqualTo: false)
+      .where('virtualRequest', isEqualTo: true);
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            requestList.add(model);
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
 Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
