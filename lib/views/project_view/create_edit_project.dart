@@ -571,7 +571,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? Row(
                       children: <Widget>[
-                        headingText(S.of(context).save_as_template),
                         Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Checkbox(
@@ -598,6 +597,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             },
                           ),
                         ),
+                        headingText(S.of(context).save_as_template),
+
 //                Column(
 //                  children: <Widget>[
 //
@@ -609,31 +610,31 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: OpenScopeCheckBox(
-                    infoType: InfoType.OpenScopeEvent,
-                    isChecked: projectModel.public,
-                    checkBoxTypeLabel: CheckBoxType.type_Events,
-                    onChangedCB: (bool val) {
-                      if (projectModel.public != val) {
-                        this.projectModel.public = val;
-                        log('value ${projectModel.public}');
-                        setState(() {});
-                      }
-                    }),
+                  infoType: InfoType.OpenScopeEvent,
+                  isChecked: projectModel.public,
+                  checkBoxTypeLabel: CheckBoxType.type_Events,
+                  onChangedCB: (bool val) {
+                    if (projectModel.public != val) {
+                      this.projectModel.public = val;
+                      log('value ${projectModel.public}');
+                      setState(() {});
+                    }
+                  },
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: OpenScopeCheckBox(
-                    infoType: InfoType.VirtualRequest,
-                    isChecked: projectModel.virtualProject,
-                    checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                    onChangedCB: (bool val) {
-                      if (projectModel.virtualProject != val) {
-                        this.projectModel.virtualProject = val;
-                        setState(() {});
-                      }
-                    }),
-              ),
-
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8),
+              //   child: OpenScopeCheckBox(
+              //       infoType: InfoType.VirtualRequest,
+              //       isChecked: projectModel.virtualProject,
+              //       checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+              //       onChangedCB: (bool val) {
+              //         if (projectModel.virtualProject != val) {
+              //           this.projectModel.virtualProject = val;
+              //           setState(() {});
+              //         }
+              //       }),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
