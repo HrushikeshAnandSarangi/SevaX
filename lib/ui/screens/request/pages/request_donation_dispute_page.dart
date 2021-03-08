@@ -450,6 +450,14 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
+                            entityId: widget.model.id,
+                            showToCommunities: [
+                              widget.model.donorDetails.communityId,
+                              timebankModel.communityId
+                            ],
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
 
@@ -460,6 +468,14 @@ class _RequestDonationDisputePageState
                           var loggedInUser = SevaCore.of(context).loggedInUser;
                           await HandlerForModificationManager
                               .createChatForDispute(
+                            entityId: widget.model.id,
+                            showToCommunities: [
+                              widget.model.donorDetails.communityId,
+                              timebankModel.communityId
+                            ],
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -512,6 +528,14 @@ class _RequestDonationDisputePageState
                             ),
                             context: context,
                             timeBankId: widget.model.timebankId,
+                            entityId: widget.model.id,
+                            showToCommunities: [
+                              widget.model.donorDetails.communityId,
+                              timebankModel.communityId
+                            ],
+                            interCommunity:
+                                widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
                       }

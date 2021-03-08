@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class HandleModifiedAcknowlegementForDonationBuilder {
@@ -309,7 +310,11 @@ class HandlerForModificationManager {
     @required String timeBankId,
     @required bool isTimebankMessage,
     @required String communityId,
+    @required bool interCommunity,
+    @required List<String> showToCommunities,
+    @required String entityId,
   }) async {
+    logger.i(showToCommunities);
     createAndOpenChat(
       isTimebankMessage: isTimebankMessage,
       context: context,
@@ -318,6 +323,9 @@ class HandlerForModificationManager {
       sender: sender,
       reciever: receiver,
       isFromRejectCompletion: false,
+      interCommunity: interCommunity,
+      showToCommunities: showToCommunities,
+      entityId: entityId,
       onChatCreate: () {
         Navigator.pop(context);
       },

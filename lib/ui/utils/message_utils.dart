@@ -32,16 +32,22 @@ Future<void> createAndOpenChat({
   bool isFromShare = false,
   String feedId,
   VoidCallback onChatCreate,
+  bool interCommunity = false,
+  List<String> showToCommunities,
+  String entityId,
 }) async {
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
     participants: participants,
-    communityId: communityId,
+    communityId: interCommunity ? null : communityId,
     participantInfo: [sender, reciever],
+    showToCommunities: interCommunity ? showToCommunities : null,
+    interCommunity: interCommunity,
     isTimebankMessage: isTimebankMessage,
   )
-    ..id = "${participants[0]}*${participants[1]}*$communityId"
+    ..id =
+        "${participants[0]}*${participants[1]}*${interCommunity ? entityId : communityId}"
     ..isGroupMessage = false;
 
   log("Sender : -> " + sender.toMap().toString());
