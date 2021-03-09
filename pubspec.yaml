@@ -167,6 +167,9 @@ flutter:
     - images/icons/goods_donation.png
     - images/icons/verified.png
     - images/icons/recommended.png
+    - images/icons/about.png
+    - images/icons/projects.png
+    - images/icons/members.png
 
     - images/csv_example.png
     - images/icons/empty_widget.png

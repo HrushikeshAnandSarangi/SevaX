@@ -598,6 +598,29 @@ Stream<List<RequestModel>> getAllVirtualRequestListStream(
   );
 }
 
+//get all public projects
+Future<List<ProjectModel>> getAllPublicProjectsStream(
+    {String timebankid}) async {
+  List<ProjectModel> projectsList = [];
+  await Firestore.instance
+      .collection('projects')
+      .where('timebanksPosted', arrayContains: timebankid)
+      .where('softDelete', isEqualTo: false)
+      .where('public', isEqualTo: true)
+      .orderBy("created_at", descending: true)
+      .getDocuments()
+      .then((data) {
+    data.documents.forEach(
+      (documentSnapshot) {
+        ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+        model.id = documentSnapshot.documentID;
+        projectsList.add(model);
+      },
+    );
+  });
+  return projectsList;
+}
+
 Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
