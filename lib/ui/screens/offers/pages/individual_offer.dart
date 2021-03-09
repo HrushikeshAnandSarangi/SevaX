@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -50,11 +49,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   void initState() {
     AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
-
-    _bloc.checkPublicAvailability(
-      widget.timebankId,
-      widget.loggedInMemberUserId,
-    );
 
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
@@ -432,9 +426,28 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               );
                             }),
                         SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: StreamBuilder<bool>(
+                              initialData: false,
+                              stream: _bloc.makeVirtual,
+                              builder: (context, snapshot) {
+                                return OpenScopeCheckBox(
+                                    infoType: InfoType.VirtualOffers,
+                                    isChecked: snapshot.data,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_VirtualOffers,
+                                    onChangedCB: (bool val) {
+                                      if (snapshot.data != val) {
+                                        _bloc.onOfferMadeVirtual(val);
+                                        setState(() {});
+                                      }
+                                    });
+                              }),
+                        ),
                         StreamBuilder<bool>(
                           initialData: false,
-                          stream: _bloc.isAdmin,
+                          stream: _bloc.isPublicVisible,
                           builder: (context, snapshot) {
                             return snapshot.data
                                 ? Padding(
@@ -459,25 +472,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   )
                                 : Container();
                           },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: StreamBuilder<bool>(
-                              initialData: false,
-                              stream: _bloc.makeVirtual,
-                              builder: (context, snapshot) {
-                                return OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualOffers,
-                                    isChecked: snapshot.data,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualOffers,
-                                    onChangedCB: (bool val) {
-                                      if (snapshot.data != val) {
-                                        _bloc.onOfferMadeVirtual(val);
-                                        setState(() {});
-                                      }
-                                    });
-                              }),
                         ),
                         SizedBox(height: 20),
                         RaisedButton(

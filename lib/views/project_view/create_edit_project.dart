@@ -620,19 +620,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       }
                     }),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: OpenScopeCheckBox(
-                    infoType: InfoType.VirtualRequest,
-                    isChecked: projectModel.virtualProject,
-                    checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                    onChangedCB: (bool val) {
-                      if (projectModel.virtualProject != val) {
-                        this.projectModel.virtualProject = val;
-                        setState(() {});
-                      }
-                    }),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8),
+              //   child: OpenScopeCheckBox(
+              //       infoType: InfoType.VirtualRequest,
+              //       isChecked: projectModel.virtualProject,
+              //       checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+              //       onChangedCB: (bool val) {
+              //         if (projectModel.virtualProject != val) {
+              //           this.projectModel.virtualProject = val;
+              //           setState(() {});
+              //         }
+              //       }),
+              // ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),

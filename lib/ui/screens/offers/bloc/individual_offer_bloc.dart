@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -29,7 +28,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _availabilty = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
-  final _isAdmin = BehaviorSubject<bool>.seeded(false);
+  final _isVisible = BehaviorSubject<bool>.seeded(false);
+  final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
 
   final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(
       donors: [],
@@ -46,13 +46,23 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
-  Function(bool value) get onOfferMadeVirtual => _makeVirtual.sink.add;
+
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(RequestType) get onTypeChanged => _type.sink.add;
   Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
-  Function(bool) get isAdminChanged => _isAdmin.sink.add;
+  Function(bool) get isVisibleChanged => _isVisible.sink.add;
+
+  void onOfferMadeVirtual(bool value) {
+    if (value != null) {
+      if (!value) {
+        onOfferMadePublic(false);
+      }
+      _isVisible.add(value);
+      _makeVirtual.add(value);
+    }
+  }
 
   Function(GoodsDonationDetails) get onGoodsDetailsChanged =>
       _goodsDonationDetails.sink.add;
@@ -64,12 +74,15 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<String> get availability => _availabilty.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<Status> get status => _status.stream;
-  Stream<bool> get isAdmin => _isAdmin.stream;
+  Stream<bool> get isVisible => _isVisible.stream;
   Stream<RequestType> get type => _type.stream;
   Stream<CashModel> get cashModel => _cashModel.stream;
 
   Stream<GoodsDonationDetails> get goodsDonationDetails =>
       _goodsDonationDetails.stream;
+
+  Stream<bool> get isPublicVisible =>
+      CombineLatestStream.combine2(makeVirtual, isVisible, (a, b) => a && b);
 
   ///[Function] to create offer
   void createOrUpdateOffer({UserModel user, String timebankId}) {
@@ -156,18 +169,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
         }).catchError((e) => _status.add(Status.ERROR));
       }
     }
-  }
-
-  void checkPublicAvailability(String timebankId, String sevaUserId) {
-    Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
-        .get()
-        .then((value) {
-      final model = TimebankModel.fromMap(value.data);
-      isAdminChanged(model.admins.contains(sevaUserId) ||
-          model.organizers.contains(sevaUserId));
-    });
   }
 
   ///[PRELOAD DATA FOR UPDATE]
