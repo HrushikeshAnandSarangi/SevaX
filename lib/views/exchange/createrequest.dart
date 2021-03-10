@@ -53,6 +53,7 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -173,6 +174,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
+  bool isPulicCheckboxVisible = false;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
@@ -416,23 +418,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.VirtualRequest,
-                                  isChecked: requestModel.virtualRequest,
-                                  checkBoxTypeLabel:
-                                      CheckBoxType.type_VirtualRequest,
-                                  onChangedCB: (bool val) {
-                                    if (requestModel.virtualRequest != val) {
-                                      this.requestModel.virtualRequest = val;
-                                      setState(() {});
-                                    }
-                                  }),
-                            ),
+
                             Offstage(
                               offstage: requestModel.requestMode ==
                                   RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.VirtualRequest,
+                                    isChecked: requestModel.virtualRequest,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_VirtualRequest,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.virtualRequest != val) {
+                                        this.requestModel.virtualRequest = val;
+
+                                        if (!val) {
+                                          requestModel.public = false;
+                                          isPulicCheckboxVisible = false;
+                                        } else {
+                                          isPulicCheckboxVisible = true;
+                                        }
+
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
+                            ),
+                            HideWidget(
+                              hide: !isPulicCheckboxVisible,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),

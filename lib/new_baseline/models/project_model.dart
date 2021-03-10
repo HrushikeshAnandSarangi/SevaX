@@ -181,6 +181,6 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, virtualProject: , timebanksPosted: $timebanksPosted}';
+    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
   }
 }
