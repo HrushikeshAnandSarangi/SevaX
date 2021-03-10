@@ -19,7 +19,7 @@ class OneToManyInstructorCard extends StatelessWidget {
   final bool isAdmin;
   final String currentCommunity;
   final String loggedUserId;
-  final VoidCallback onAddClick;
+  //final VoidCallback onAddClick;
 
   OneToManyInstructorCard({
     @required this.userModel,
@@ -29,7 +29,7 @@ class OneToManyInstructorCard extends StatelessWidget {
     @required this.addStatus,
     @required this.currentCommunity,
     @required this.loggedUserId,
-    @required this.onAddClick,
+    //@required this.onAddClick,
   });
 
   @override
@@ -40,127 +40,55 @@ class OneToManyInstructorCard extends StatelessWidget {
   Widget makeUserWidget(context) {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 15, 10, 10),
-      child: Stack(
+      child: Row(
         children: <Widget>[
           getUserCard(context),
-          getUserThumbnail(context),
         ],
       ),
     );
   }
 
-  Widget getUserThumbnail(BuildContext context) {
-    return UserProfileImage(
-      photoUrl: userModel.photoURL,
-      email: userModel.email,
-      userId: userModel.sevaUserID,
-      height: 50,
-      width: 50,
-      timebankModel: timebankModel,
-    );
-  }
-
   Widget getUserCard(context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 30),
-      child: Container(
-        height: 115,
-        width: 300,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              offset: Offset(0.0, 10.0),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 40, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      userModel.fullname ?? S.of(context).name_not_available,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),               
-                 
-                ],
-              ),
-              Expanded(
-                child: Text(
-                  userModel.bio ?? S.of(context).bio_not_updated,
-                  maxLines: 3,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
+    return Container(
+      //height: 40,
+      width: 270,
+      child: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                UserProfileImage(
+                  photoUrl: userModel.photoURL,
+                  email: userModel.email,
+                  userId: userModel.sevaUserID,
+                  height: 45,
+                  width: 45,
+                  timebankModel: timebankModel,
+                ),
+                SizedBox(width: 9),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userModel.fullname ?? S.of(context).name_not_available,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Divider(height: 1, color: Colors.grey,)
+                    ],
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.indigo,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: addStatus != S.of(context).add
-                          ? null
-                          : () async {
-                              
-                            onAddClick();
-
-    //BACKEND LOGIC TO BE CONFIRMED                       
-                              // await timeBankBloc.updateInvitedUsersForRequest(
-                              //   requestModel.id,
-                              //   userModel.sevaUserID,
-                              //   userModel.email,
-                              // );
-
-                              // sendNotification(
-                              //   userModel: userModel,
-                              //   timebankModel: timebankModel,
-                              //   currentCommunity: currentCommunity,
-                              //   sevaUserID: loggedUserId,
-                              // );
-                            },
-                      child: Text(
-                        addStatus ?? "",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

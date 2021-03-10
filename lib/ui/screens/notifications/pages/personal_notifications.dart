@@ -20,6 +20,7 @@ import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/oneToManyInstructorAcceptCard.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -270,7 +271,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.OneToManyRequestAccept:
                       Map<dynamic, dynamic> oneToManyModel = notification.data;
-                      return NotificationCard(
+                      return OneToManyInstructorAcceptCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
                         isDissmissible: true,
@@ -280,12 +281,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             timebankId: notification.timebankId,
                           );
                         },
-                        onPressed: () async {},
+                        onPressedAccept: () async {
+
+                        },
+                        onPressedReject: () async {
+                          
+                        },
                         photoUrl: oneToManyModel['requestorphotourl'],
-                        title:
-                            'Invited to instruct a session', //Label to be created (pending client say)
-                        subTitle:
-                            '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                        creatorName: oneToManyModel['creatorName'],
+                        title: ' added you as Speaker for request', //Label to be created (pending client say)
+                        //subTitle:
+                        //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                       );
                       break;
 

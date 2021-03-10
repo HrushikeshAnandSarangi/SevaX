@@ -24,6 +24,7 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/manual_time_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/oneToManyCreatorApproveCompletionCard.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/sponser_group_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
@@ -187,15 +188,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             onPressed: () async {
                               Navigator.of(_context).pop();
 
-                                  //Update request to complete it
-                                  //requestModelNew.approvedUsers = [];
-                                  requestModelNew.acceptors = [];
-                                  requestModelNew.accepted = true; //so that we can know that this request has completed
+                              //Update request to complete it
+                              //requestModelNew.approvedUsers = [];
+                              requestModelNew.acceptors = [];
+                              requestModelNew.accepted =
+                                  true; //so that we can know that this request has completed
 
                               await lenderReceivedBackCheck(
-                                  notification: notification, 
-                                  requestModelUpdated: requestModelNew);                        
-
+                                  notification: notification,
+                                  requestModelUpdated: requestModelNew);
                             },
                             child: Text(
                               S.of(context).yes,
@@ -236,7 +237,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
                 break;
 
-              case NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
+              case NotificationType
+                  .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
                 var model = RequestModel.fromMap(notification.data);
                 requestModelNew = model;
                 return NotificationCard(
@@ -393,11 +395,35 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.RequestCompleted:
-                return TimebankRequestCompletedWidget(
-                  notification: notification,
-                  timebankModel: widget.timebankModel,
-                  parentContext: parentContext,
-                );
+                Map<dynamic, dynamic> oneToManyModel = notification.data;
+                log('One TO Many Data check:  ' + oneToManyModel['creatorName']);
+                if(oneToManyModel['requestType'] == 'ONE_TO_MANY_REQUEST') {
+                  return OneToManyCreatorApproveCompletionCard(
+                    timestamp: notification.timestamp,
+                    entityName: 'NAME',
+                    isDissmissible: true,
+                    onDismissed: () {
+                      FirestoreManager.readTimeBankNotification(
+                        notificationId: notification.id,
+                        timebankId: notification.timebankId,
+                      );
+                    },
+                    onPressedAccept: () async {},
+                    onPressedReject: () async {},
+                    photoUrl: oneToManyModel['requestorphotourl'],
+                    creatorName: oneToManyModel['selectedInstructor']['fullname'],
+                    title: ' Completed the request', //Label to be created (pending client say)
+                    //subTitle:
+                    //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                  );
+                } else {
+                  return TimebankRequestCompletedWidget(
+                    notification: notification,
+                    timebankModel: widget.timebankModel,
+                    parentContext: parentContext,
+                  );
+                }
+                break;
 
               case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
                 OneToManyNotificationDataModel data =
@@ -577,12 +603,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     );
   }
 
-
-   Future lenderReceivedBackCheck({
+  Future lenderReceivedBackCheck({
     NotificationsModel notification,
     RequestModel requestModelUpdated,
   }) async {
-
     showProgressForCreditRetrieval();
 
     //Send Receipt Email to Lender Below
@@ -602,7 +626,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         userEmail: SevaCore.of(context).loggedInUser.email,
         requestModel: requestModelNew);
-
 
     //NOTIFICATION_TO_ BORROWER _COMPLETION_FEEDBACK
     await sendNotificationBorrowerRequestCompletedFeedback(
@@ -626,7 +649,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     Navigator.of(creditRequestDialogContext).pop();
   }
-
 
   void checkForReviewBorrowRequests() async {
     logger.e('COMES BACK HERE 2');
@@ -738,9 +760,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     if (requestModelNew.requestType == RequestType.BORROW) {
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
           requestModelNew.sevaUserId) {
-          FirestoreManager.borrowRequestFeedbackBorrowerUpdate(model: requestModelNew);
-      } else{
-          FirestoreManager.borrowRequestFeedbackLenderUpdate(model: requestModelNew);
+        FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
+            model: requestModelNew);
+      } else {
+        FirestoreManager.borrowRequestFeedbackLenderUpdate(
+            model: requestModelNew);
       }
     }
 
@@ -810,7 +834,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
-        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+        isTimebankNotification:
+            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -837,7 +862,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
-        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+        isTimebankNotification:
+            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: timebankId,
         data: requestModel.toMap(),

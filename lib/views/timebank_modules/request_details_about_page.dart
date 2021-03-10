@@ -744,6 +744,27 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+       widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST ?
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: isApplied
+                      ? 'You are the tutor for the request'
+                      : S.of(context).particpate_in_request_question,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+        :
         Expanded(
           child: RichText(
             text: TextSpan(
@@ -779,7 +800,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
         padding: EdgeInsets.all(0),
         color: isApplied ? Theme.of(context).accentColor : Colors.green,
-        child: Row(
+        child: 
+        Row(
           children: <Widget>[
             SizedBox(width: 1),
             Spacer(),
@@ -1136,12 +1158,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.BORROW:
         return detailsForBorrowToolsRequest;
 
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return detailsForOneToManyRequest;
+
       default:
         return timeDetailsForTimerequest;
     }
   }
 
   Widget get timeDetailsForTimerequest {
+    return Text(
+      widget.requestItem.description,
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Widget get detailsForOneToManyRequest {
     return Text(
       widget.requestItem.description,
       style: TextStyle(fontSize: 16),

@@ -205,6 +205,7 @@ class RequestModel extends DataModel {
   bool public;
   bool virtualRequest;
   Map<String, dynamic> participantDetails = {};
+  String creatorName = '';
 
   RequestModel({
     this.id,
@@ -257,6 +258,7 @@ class RequestModel extends DataModel {
     this.virtualRequest,
     this.timebanksPosted,
     this.participantDetails,
+    this.creatorName,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -303,6 +305,12 @@ class RequestModel extends DataModel {
       this.projectId = map['projectId'];
     } else {
       this.projectId = "";
+    }
+
+    if (map.containsKey('creatorName')) {
+      this.creatorName = map['creatorName'];
+    } else {
+      this.creatorName = "";
     }
 
     if (map.containsKey('requestMode')) {
@@ -567,6 +575,13 @@ class RequestModel extends DataModel {
     } else {
       this.projectId = "";
     }
+
+    if (map.containsKey('creatorName')) {
+      this.creatorName = map['creatorName'];
+    } else {
+      this.creatorName = "";
+    }
+
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -786,6 +801,13 @@ class RequestModel extends DataModel {
     } else {
       object['projectId'] = "";
     }
+
+    if (this.creatorName != null && this.creatorName.isNotEmpty) {
+      object['creatorName'] = this.creatorName;
+    } else {
+      object['creatorName'] = "";
+    }
+
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
     }

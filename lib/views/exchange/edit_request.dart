@@ -1635,27 +1635,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         List<String> memberId =
                                             user.favoriteByMember ?? [];
 
-                                        return OneToManyInstructorCard(
-                                          userModel: user,
-                                          timebankModel: timebankModel,
-                                          isAdmin: isAdmin,
-                                          //refresh: refresh,
-                                          currentCommunity: SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentCommunity,
-                                          loggedUserId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID,
-                                          isFavorite: isAdmin
-                                              ? timeBankIds.contains(widget
-                                                  .requestModel.timebankId)
-                                              : memberId.contains(
-                                                  SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .sevaUserID),
-                                          addStatus: S.of(context).add,
-                                          onAddClick: () {
-                                            setState(() {
+                                        return InkWell(
+                                          onTap: () { setState(() {
                                               instructorAdded = true;
                                               widget.requestModel
                                                       .selectedInstructor =
@@ -1666,7 +1647,28 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 sevaUserID: user.sevaUserID,
                                               );
                                             });
-                                          },
+                                          }, 
+                                          child: OneToManyInstructorCard(
+                                            userModel: user,
+                                            timebankModel: timebankModel,
+                                            isAdmin: isAdmin,
+                                            //refresh: refresh,
+                                            currentCommunity: SevaCore.of(context)
+                                                .loggedInUser
+                                                .currentCommunity,
+                                            loggedUserId: SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID,
+                                            isFavorite: isAdmin
+                                                ? timeBankIds.contains(widget
+                                                    .requestModel.timebankId)
+                                                : memberId.contains(
+                                                    SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .sevaUserID),
+                                            addStatus: S.of(context).add,
+                                           
+                                          ),
                                         );
                                       }),
                                 ),

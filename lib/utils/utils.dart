@@ -96,6 +96,14 @@ Widget getEmptyWidget(String title, String notFoundValue) {
   );
 }
 
+Widget getEmptyWidgetLeftAligned(String title, String notFoundValue) {
+  return  Text(
+      notFoundValue,
+      overflow: TextOverflow.ellipsis,
+      style: sectionHeadingStyle,
+  );
+}
+
 TextStyle get sectionHeadingStyle {
   return TextStyle(
     fontWeight: FontWeight.w600,
