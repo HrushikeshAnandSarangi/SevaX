@@ -419,35 +419,35 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
 
-                            Offstage(
-                              offstage: requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualRequest,
-                                    isChecked: requestModel.virtualRequest,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualRequest,
-                                    onChangedCB: (bool val) {
-                                      if (requestModel.virtualRequest != val) {
-                                        this.requestModel.virtualRequest = val;
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: OpenScopeCheckBox(
+                                  infoType: InfoType.VirtualRequest,
+                                  isChecked: requestModel.virtualRequest,
+                                  checkBoxTypeLabel:
+                                      CheckBoxType.type_VirtualRequest,
+                                  onChangedCB: (bool val) {
+                                    if (requestModel.virtualRequest != val) {
+                                      this.requestModel.virtualRequest = val;
 
-                                        if (!val) {
-                                          requestModel.public = false;
-                                          isPulicCheckboxVisible = false;
-                                        } else {
-                                          isPulicCheckboxVisible = true;
-                                        }
-
-                                        setState(() {});
+                                      if (!val) {
+                                        requestModel.public = false;
+                                        isPulicCheckboxVisible = false;
+                                      } else {
+                                        isPulicCheckboxVisible = true;
                                       }
-                                    }),
-                              ),
+
+                                      setState(() {});
+                                    }
+                                  }),
                             ),
                             HideWidget(
-                              hide: !isPulicCheckboxVisible,
+                              hide: !isPulicCheckboxVisible &&
+                                  !isMemberAnAdmin(
+                                      timebankModel,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID),
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
