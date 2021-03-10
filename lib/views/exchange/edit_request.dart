@@ -43,6 +43,7 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -183,6 +184,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String _selectedTimebankId;
   int oldHours = 0;
   int oldTotalRecurrences = 0;
+  bool isPublicCheckboxVisible = false;
 
   Future<TimebankModel> getTimebankAdminStatus;
   Future getProjectsByFuture;
@@ -211,6 +213,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
+    isPublicCheckboxVisible = widget.requestModel.virtualRequest;
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -442,9 +445,38 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
+
                             Offstage(
                               offstage: widget.requestModel.requestMode ==
                                   RequestMode.PERSONAL_REQUEST,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: OpenScopeCheckBox(
+                                  infoType: InfoType.VirtualRequest,
+                                  isChecked: widget.requestModel.virtualRequest,
+                                  checkBoxTypeLabel:
+                                      CheckBoxType.type_VirtualRequest,
+                                  onChangedCB: (bool val) {
+                                    if (widget.requestModel.virtualRequest !=
+                                        val) {
+                                      widget.requestModel.virtualRequest = val;
+                                      if (val) {
+                                        isPublicCheckboxVisible = true;
+                                      } else {
+                                        isPublicCheckboxVisible = false;
+                                        widget.requestModel.public = false;
+                                      }
+
+                                      log('value ${widget.requestModel.virtualRequest}');
+                                      setState(() {});
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                            HideWidget(
+                              hide: !isPublicCheckboxVisible,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
@@ -457,29 +489,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       if (widget.requestModel.public != val) {
                                         widget.requestModel.public = val;
                                         log('value ${widget.requestModel.public}');
-                                        setState(() {});
-                                      }
-                                    }),
-                              ),
-                            ),
-                            Offstage(
-                              offstage: widget.requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualRequest,
-                                    isChecked:
-                                        widget.requestModel.virtualRequest,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualRequest,
-                                    onChangedCB: (bool val) {
-                                      if (widget.requestModel.virtualRequest !=
-                                          val) {
-                                        widget.requestModel.virtualRequest =
-                                            val;
-                                        log('value ${widget.requestModel.virtualRequest}');
                                         setState(() {});
                                       }
                                     }),
