@@ -416,6 +416,20 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: OpenScopeCheckBox(
+                                  infoType: InfoType.VirtualRequest,
+                                  isChecked: requestModel.virtualRequest,
+                                  checkBoxTypeLabel:
+                                      CheckBoxType.type_VirtualRequest,
+                                  onChangedCB: (bool val) {
+                                    if (requestModel.virtualRequest != val) {
+                                      this.requestModel.virtualRequest = val;
+                                      setState(() {});
+                                    }
+                                  }),
+                            ),
                             Offstage(
                               offstage: requestModel.requestMode ==
                                   RequestMode.PERSONAL_REQUEST,
@@ -430,25 +444,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     onChangedCB: (bool val) {
                                       if (requestModel.public != val) {
                                         this.requestModel.public = val;
-                                        setState(() {});
-                                      }
-                                    }),
-                              ),
-                            ),
-                            Offstage(
-                              offstage: requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualRequest,
-                                    isChecked: requestModel.virtualRequest,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualRequest,
-                                    onChangedCB: (bool val) {
-                                      if (requestModel.virtualRequest != val) {
-                                        this.requestModel.virtualRequest = val;
                                         setState(() {});
                                       }
                                     }),
