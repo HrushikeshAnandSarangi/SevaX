@@ -118,7 +118,10 @@ class _CommunityAboutState extends State<CommunityAbout>
                             titleSpacing: 10,
                             backgroundColor: Colors.white,
                             pinned: true,
-                            expandedHeight: 560,
+                            expandedHeight: timebankModel.sponsors != null &&
+                                    timebankModel.sponsors.length > 0
+                                ? 250 + timebankModel.sponsors.length * 100.0
+                                : 300,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
                               background: Column(

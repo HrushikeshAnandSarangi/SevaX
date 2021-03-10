@@ -89,7 +89,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     parentContext = context;
-    JOIN = S.of(context).join;
+    JOIN = 'Info';
     JOINED = S.of(context).joined;
     nearTimebankText = S.of(context).timebanks_near_you;
     bool showBachBtn = widget.showBackBtn;
