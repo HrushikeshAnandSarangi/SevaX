@@ -416,7 +416,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             OfferDurationWidget(
                               title: "${S.of(context).request_duration} *",
                             ),
-                            requestModel.requestType == RequestType.TIMEit
+                            requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
