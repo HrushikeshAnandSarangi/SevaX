@@ -567,24 +567,24 @@ class CreateEditCommunityViewFormState
                             ),
                           ],
                         ),
-                        SponsorsWidget(
-                          sponsorsMode: widget.isCreateTimebank
-                              ? SponsorsMode.CREATE
-                              : SponsorsMode.EDIT,
-                          timebankModel: timebankModel,
-                          onCreated: (TimebankModel timebank) {
-                            snapshot.data.timebank.updateValueByKey(
-                              'sponsors',
-                              timebank.sponsors,
-                            );
-                            timebankModel = timebank;
-                            setState(() {});
-                          },
-                          onRemoved: (TimebankModel timebank) {
-                            timebankModel = timebank;
-                            setState(() {});
-                          },
-                        ),
+                        // SponsorsWidget(
+                        //   sponsorsMode: widget.isCreateTimebank
+                        //       ? SponsorsMode.CREATE
+                        //       : SponsorsMode.EDIT,
+                        //   timebankModel: timebankModel,
+                        //   onCreated: (TimebankModel timebank) {
+                        //     snapshot.data.timebank.updateValueByKey(
+                        //       'sponsors',
+                        //       timebank.sponsors,
+                        //     );
+                        //     timebankModel = timebank;
+                        //     setState(() {});
+                        //   },
+                        //   onRemoved: (TimebankModel timebank) {
+                        //     timebankModel = timebank;
+                        //     setState(() {});
+                        //   },
+                        // ),
                         widget.isCreateTimebank
                             ? Container()
                             : SizedBox(height: 10),

@@ -47,16 +47,16 @@ class OpenScopeCheckBox extends StatelessWidget {
 String getCheckBoxLabel(CheckBoxType checkBoxType) {
   switch (checkBoxType) {
     case CheckBoxType.type_Requests:
-      return "Make this request public";
+      return "Public to SevaX Global";
     case CheckBoxType.type_Offers:
-      return "Make this offer public";
+      return "Public to SevaX Global";
     case CheckBoxType.type_Events:
-      return "Make this event public";
+      return "Public to SevaX Global";
     case CheckBoxType.type_VirtualRequest:
-      return "Make this request virtual";
+      return "Virtual";
 
     case CheckBoxType.type_VirtualOffers:
-      return "Make this offer virtual";
+      return "Virtual";
     default:
       return "";
   }

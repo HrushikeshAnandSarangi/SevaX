@@ -118,10 +118,11 @@ class _CommunityAboutState extends State<CommunityAbout>
                             titleSpacing: 10,
                             backgroundColor: Colors.white,
                             pinned: true,
-                            expandedHeight: timebankModel.sponsors != null &&
-                                    timebankModel.sponsors.length > 0
-                                ? 250 + timebankModel.sponsors.length * 100.0
-                                : 300,
+                            expandedHeight: 300,
+                            // expandedHeight: timebankModel.sponsors != null &&
+                            //         timebankModel.sponsors.length > 0
+                            //     ? 250 + timebankModel.sponsors.length * 100.0
+                            //     : 300,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
                               background: Column(
@@ -167,20 +168,20 @@ class _CommunityAboutState extends State<CommunityAbout>
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Offstage(
-                                    offstage: !isPrimaryTimebank(
-                                        parentTimebankId:
-                                            timebankModel.parentTimebankId),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: SponsorsWidget(
-                                        timebankModel: timebankModel,
-                                        sponsorsMode: SponsorsMode.ABOUT,
-                                        //  textColor: Colors.black,
-                                        //textSize: 22,
-                                      ),
-                                    ),
-                                  ),
+                                  // Offstage(
+                                  //   offstage: !isPrimaryTimebank(
+                                  //       parentTimebankId:
+                                  //           timebankModel.parentTimebankId),
+                                  //   child: Padding(
+                                  //     padding: const EdgeInsets.only(left: 10),
+                                  //     child: SponsorsWidget(
+                                  //       timebankModel: timebankModel,
+                                  //       sponsorsMode: SponsorsMode.ABOUT,
+                                  //       //  textColor: Colors.black,
+                                  //       //textSize: 22,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

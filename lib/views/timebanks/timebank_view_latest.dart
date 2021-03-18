@@ -359,13 +359,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 color: Colors.black12,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: SponsorsWidget(
-                sponsorsMode: SponsorsMode.ABOUT,
-                timebankModel: widget.timebankModel,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20),
+            //   child: SponsorsWidget(
+            //     sponsorsMode: SponsorsMode.ABOUT,
+            //     timebankModel: widget.timebankModel,
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: Divider(
