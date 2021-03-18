@@ -211,6 +211,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+
+
     getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     requestModel = RequestModel(
@@ -220,6 +222,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
       goodsDonationDetails: GoodsDonationDetails(),
       communityId: widget.loggedInUser.currentCommunity,
     );
+    this.requestModel.virtualRequest = false;
+    this.requestModel.public=false;
+
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;

@@ -374,6 +374,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
+                if(projectListSnapshot.connectionState == ConnectionState.waiting){
+                  return LoadingIndicator();
+                }
                 List<ProjectModel> projectModelList = projectListSnapshot.data;
                 return Form(
                   key: _formKey,
