@@ -211,6 +211,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
     requestModel = RequestModel(
       requestType: RequestType.TIME,
       cashModel: CashModel(
@@ -232,8 +234,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
       timebankId: _selectedTimebankId,
     );
     fetchRemoteConfig();
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     // if ((FlavorConfig.appFlavor == Flavor.APP ||
     //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
@@ -338,6 +338,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.waiting){
+            return LoadingIndicator();
+          }
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -413,14 +416,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             OfferDurationWidget(
                               title: "${S.of(context).request_duration} *",
                             ),
-                            requestModel.requestType == RequestType.TIME
+                            requestModel.requestType == RequestType.TIMEit
                                 ? TimeRequest(snapshot, projectModelList)
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
 
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
                               child: OpenScopeCheckBox(
                                   infoType: InfoType.VirtualRequest,
                                   isChecked: requestModel.virtualRequest,
@@ -442,12 +446,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   }),
                             ),
                             HideWidget(
-                              hide: !isPulicCheckboxVisible &&
-                                  !isMemberAnAdmin(
-                                      timebankModel,
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID),
+                              hide:  !isPulicCheckboxVisible ||
+                                  requestModel.requestMode ==
+                                      RequestMode.PERSONAL_REQUEST ||
+                                  widget.timebankId ==
+                                      FlavorConfig.values.timebankId,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),

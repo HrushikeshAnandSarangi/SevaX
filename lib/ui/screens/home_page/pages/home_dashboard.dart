@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -268,8 +269,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           timebankId: primaryTimebank.id,
                           timebankModel: primaryTimebank,
                         ),
-                        RequestTabs(
-                          timebankId: primaryTimebank.id,
+                        RequestsModule.of(
+                          
+                            timebankId:primaryTimebank.id,
                           timebankModel: primaryTimebank,
                           isFromSettings: false,
                         ),

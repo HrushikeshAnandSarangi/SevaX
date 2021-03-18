@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart'
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -237,7 +238,7 @@ Widget createAdminTabBar(
                 timebankId: timebankId,
                 timebankModel: timebankModel,
               ),
-              RequestTabs(
+              RequestsModule.of(
                 timebankId: timebankId,
                 timebankModel: timebankModel,
                 isFromSettings: false,
@@ -389,7 +390,7 @@ Widget createJoinedUserTabBar(
                 timebankId: timebankId,
                 timebankModel: timebankModel,
               ),
-              RequestTabs(
+              RequestsModule.of(
                 timebankId: timebankId,
                 timebankModel: timebankModel,
                 isFromSettings: false,
