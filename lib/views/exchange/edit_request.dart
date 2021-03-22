@@ -213,12 +213,11 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
-    isPublicCheckboxVisible = widget.requestModel.virtualRequest;
-    getTimebankAdminStatus = getTimebankDetailsbyFuture(
-      timebankId: _selectedTimebankId,
-    );
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+    isPublicCheckboxVisible = widget.requestModel.virtualRequest??false;
+    // getTimebankAdminStatus = getTimebankDetailsbyFuture(
+    //   timebankId: _selectedTimebankId,
+    // );
+
 
     tempCredits = widget.requestModel.maxCredits;
     initialRequestTitle = widget.requestModel.title;
@@ -352,30 +351,26 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
 
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
+
+
 
     return FutureBuilder<TimebankModel>(
-        future: getTimebankAdminStatus,
+        future: getTimebankDetailsbyFuture(timebankId: _selectedTimebankId),
         builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return LoadingIndicator();
+          }
+          log("timebank ${snapshot.data}");
           return FutureBuilder<List<ProjectModel>>(
-              future: getProjectsByFuture,
+              future: FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId),
               builder: (projectscontext, projectListSnapshot) {
                 if(projectListSnapshot.connectionState == ConnectionState.waiting){
                   return LoadingIndicator();
+                }
+                if(projectListSnapshot.hasError){
+                  return Center(
+                    child: Text(projectListSnapshot.error.toString()),
+                  );
                 }
                 List<ProjectModel> projectModelList = projectListSnapshot.data;
                 return Form(
