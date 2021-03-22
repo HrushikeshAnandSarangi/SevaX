@@ -69,6 +69,7 @@ class UserModel extends DataModel {
   String calendarEmail;
   String calendarScope;
   DeviceDetails deviceDetails;
+  DeviceDetails creationSource;
 
   UserModel(
       {this.seenIntro,
@@ -115,7 +116,9 @@ class UserModel extends DataModel {
       this.cvUrl,
       this.cvName,
       this.deviceDetails,
-      this.curatedRequestIds});
+      this.curatedRequestIds,
+      this.creationSource
+      });
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
@@ -539,6 +542,9 @@ class UserModel extends DataModel {
     if (this.deviceDetails != null) {
       object['deviceDetails'] = this.deviceDetails.toMap();
     }
+    if (this.creationSource != null) {
+      object['creationSource'] = this.creationSource.toMap();
+    }
     return object;
   }
 
@@ -577,6 +583,7 @@ class UserModel extends DataModel {
       ${this.notificationAlerts.toString()},
       ${this.cvUrl.toString()},
       ${this.deviceDetails.toString()},
+      ${this.creationSource.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

@@ -6,14 +6,17 @@ class DeviceDetails {
     this.deviceId,
     this.deviceType,
     this.location,
+    this.timestamp,
   });
 
   String deviceId;
   String deviceType;
+  int timestamp;
   GeoFirePoint location;
 
   factory DeviceDetails.fromMap(Map<String, dynamic> json) => DeviceDetails(
     deviceId: json["deviceId"] == null ? null : json["deviceId"],
+    timestamp: json["timestamp"] == null ? null : json["timestamp"],
     deviceType: json["deviceType"] == null ? null : json["deviceType"],
     location:
     json["location"] == null ? null : getLocation(json["location"]),
@@ -23,6 +26,7 @@ class DeviceDetails {
     "deviceId": deviceId == null ? null : deviceId,
     "deviceType": deviceType == null ? null : deviceType,
     "location": location == null ? null : location.data,
+    "timestamp": timestamp == null ? null : timestamp,
   };
 }
 

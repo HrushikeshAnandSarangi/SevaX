@@ -134,12 +134,12 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
-    deviceDetails.deviceType = androidInfo.androidId;
-    deviceDetails.deviceId = 'Android';
+    deviceDetails.deviceType = 'Android';
+    deviceDetails.deviceId = androidInfo.androidId;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceType = iosInfo.identifierForVendor;
-    deviceDetails.deviceId = 'IOS';
+    deviceDetails.deviceType ='IOS';
+    deviceDetails.deviceId = iosInfo.identifierForVendor ;
   }
 
   if (locationVal == null) {
@@ -156,6 +156,48 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail).updateData({
     'deviceDetails': deviceDetails.toMap(),
+  });
+  return deviceDetails;
+}
+
+
+Future<DeviceDetails> addCreationSourceOfUser(
+    {GeoFirePoint locationVal, String userEmailId}) async {
+  GeoFirePoint location;
+  Location templocation = Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  Geoflutterfire geo = Geoflutterfire();
+  LocationData locationData;
+
+  String userEmail =
+      userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
+  DeviceDetails deviceDetails = DeviceDetails();
+  if (Platform.isAndroid) {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    deviceDetails.deviceType = 'Android';
+    deviceDetails.deviceId = androidInfo.androidId;
+  } else if (Platform.isIOS) {
+    var iosInfo = await DeviceInfoPlugin().iosInfo;
+    deviceDetails.deviceType ='IOS';
+    deviceDetails.deviceId = iosInfo.identifierForVendor ;
+  }
+
+  if (locationVal == null) {
+    _permissionGranted = await templocation.hasPermission();
+    if (_permissionGranted == PermissionStatus.granted) {
+      locationData = await templocation.getLocation();
+      double lat = locationData?.latitude;
+      double lng = locationData?.longitude;
+      location = geo.point(latitude: lat, longitude: lng);
+    }
+  } else {
+    location = locationVal;
+  }
+  deviceDetails.location = location;
+  deviceDetails.timestamp = DateTime.now().millisecondsSinceEpoch;
+  await Firestore.instance.collection("users").document(userEmail).updateData({
+    'creationSource': deviceDetails.toMap(),
   });
   return deviceDetails;
 }
@@ -399,6 +441,7 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
       .where('sevauserid', isEqualTo: sevaUserId)
       .getDocuments()
       .then((snapshot) {
+
     DocumentSnapshot documentSnapshot = snapshot.documents[0];
     UserModel model =
         UserModel.fromMap(documentSnapshot.data, 'user_data_manager');

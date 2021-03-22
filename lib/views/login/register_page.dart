@@ -10,6 +10,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -74,12 +76,14 @@ class _RegisterPageState extends State<RegisterPage>
   String cvName;
   String cvUrl;
   String cvFileError = '';
+  GeoFirePoint location;
 
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
 
   @override
   void initState() {
+    gpsCheck();
     super.initState();
     AnimationController _controller = AnimationController(
       vsync: this,
@@ -89,6 +93,7 @@ class _RegisterPageState extends State<RegisterPage>
     );
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
+
   }
 
   @override
@@ -311,6 +316,62 @@ class _RegisterPageState extends State<RegisterPage>
         ),
       ),
     );
+  }
+  Future<void> gpsCheck() async {
+    Location templocation = Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    Geoflutterfire geo = Geoflutterfire();
+    LocationData locationData;
+
+    try {
+      _serviceEnabled = await templocation.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await templocation.requestService();
+        logger.i("requesting location");
+
+        if (!_serviceEnabled) {
+          return;
+        } else {
+          locationData = await templocation.getLocation();
+
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          location = geo.point(latitude: lat, longitude: lng);
+          setState(() {});
+        }
+      }
+
+      _permissionGranted = await templocation.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await templocation.requestPermission();
+        logger.i("requesting permission");
+        if (_permissionGranted != PermissionStatus.granted) {
+          return;
+        } else {
+          locationData = await templocation.getLocation();
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          location = geo.point(latitude: lat, longitude: lng);
+
+          setState(() {});
+        }
+      } else {
+        locationData = await templocation.getLocation();
+
+        double lat = locationData?.latitude;
+        double lng = locationData?.longitude;
+        location = geo.point(latitude: lat, longitude: lng);
+
+        setState(() {});
+      }
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        logger.e(e);
+      } else if (e.code == 'SERVICE_STATUS_ERROR') {
+        logger.e(e);
+      }
+    }
   }
 
   Widget get _formFields {
@@ -727,6 +788,8 @@ class _RegisterPageState extends State<RegisterPage>
         user.cvName = cvName;
         user.cvUrl = cvUrl;
       }
+     await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -1069,6 +1132,8 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
+    await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+
     isLoading = false;
     _processLogin(user);
   }
@@ -1120,6 +1185,8 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
+    await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+
     isLoading = false;
     _processLogin(user);
   }
