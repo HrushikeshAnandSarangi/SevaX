@@ -990,6 +990,8 @@ class _DonationViewState extends State<DonationView> {
                           if (donationBloc.selectedListVal == null) {
                             showScaffold(S.of(context).select_goods_category);
                           } else {
+                            showProgress(S.of(context).please_wait);
+
                             donationBloc
                                 .donateOfferGoods(
                                     notificationId: widget.notificationId,
@@ -1004,7 +1006,7 @@ class _DonationViewState extends State<DonationView> {
                                             widget.offerModel.sevaUserId))
                                 .then((value) {
                               if (value) {
-                                // hideProgress();
+                                 hideProgress();
                                 getSuccessDialog(S
                                         .of(context)
                                         .donations_requested

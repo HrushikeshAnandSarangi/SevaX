@@ -863,7 +863,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).validation_error_general_text;
               } else {
                 widget.requestModel.cashModel.venmoId = value;
-
                 return null;
               }
             },

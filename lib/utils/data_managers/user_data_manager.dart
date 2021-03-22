@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -465,23 +466,33 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
 
 Future<ProfanityImageModel> checkProfanityForImage(
     {String imageUrl, String storagePath}) async {
+  log("model ${imageUrl}");
+
   var result = await
-  http.post(
+  http.post( "https://proxy.sevaexchange.com/" +
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
-    //headers: {"Content-Type": "application/json"},
-    body: {
+    headers: {"Content-Type": "application/json",  "Access-Control": "Allow-Headers",
+      "x-requested-with": "x-requested-by"},
+    body:jsonEncode({
       "imageURL": imageUrl,
-      "firebaseURL": storagePath,
-    },
+      "firebaseURL": imageUrl,
+    }),
   );
 
   ProfanityImageModel profanityImageModel;
   try {
-    profanityImageModel = ProfanityImageModel.fromMap(json.decode(result.body));
+    log("model ${json.decode(result.body)}");
+    Map<String,dynamic> data =json.decode(result.body);
+    log("data ${data}");
+
+    profanityImageModel = ProfanityImageModel.fromMap(data['safeSearchAnnotation']);
+    log("model ${profanityImageModel.adult}");
+
 //  } on FormatException catch (formatException) {
 //    return null;
   } on Exception catch (exception) {
     //other exception
+    logger.e("$imageUrl>>>>>>>>>>>>>>>>>>>>>${exception.toString()}");
     return null;
   }
 

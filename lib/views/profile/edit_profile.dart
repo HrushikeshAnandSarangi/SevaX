@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -671,7 +672,10 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
+    log("inside profanity");
+
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    log("model ${profanityImageModel.toString()}");
     if (profanityImageModel == null) {
       setState(() {
         this._saving = false;
