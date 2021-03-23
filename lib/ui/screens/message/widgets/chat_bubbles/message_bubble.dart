@@ -62,14 +62,25 @@ class MessageBubble extends StatelessWidget {
                         ),
                       );
                     }),
-                Text(
-                  formatChatDate(
-                    timestamp,
-                    SevaCore.of(context).loggedInUser.timezone,
-                    S.of(context).localeName,
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    formatChatDate(
+                      timestamp,
+                      SevaCore.of(context).loggedInUser.timezone,
+                      S.of(context).localeName,
+                    ),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                   ),
-                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                 ),
+                // Text(
+                //   formatChatDate(
+                //     timestamp,
+                //     SevaCore.of(context).loggedInUser.timezone,
+                //     S.of(context).localeName,
+                //   ),
+                //   style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                // ),
               ],
             ),
           ),
