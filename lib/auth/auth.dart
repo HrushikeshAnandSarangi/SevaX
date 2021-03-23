@@ -181,7 +181,7 @@ class Auth {
 
     UserModel userModel = UserModel(
       photoURL: user.photoUrl,
-      fullname: (name != null || name.isNotEmpty) ? name : user.displayName,
+      fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
       email: user.email,
       sevaUserID: user.uid,
     );
