@@ -302,6 +302,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   );
 
   Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
+    log('project id check:  '  + widget.requestModel.projectId);
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
@@ -312,11 +313,15 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST &&
         isFromRequest()) {
       return ProjectSelection(
-          requestModel: requestModel,
-          projectModelList: projectModelList,
-          selectedProject: null,
-          admin: isAccessAvailable(
-              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
+                requestModel: widget.requestModel,
+                projectModelList: projectModelList,
+                selectedProject: null,
+                updateProjectIdCallback: (String projectid) {
+                  widget.requestModel.projectId = projectid;
+                },
+                admin: isAccessAvailable(
+                    snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)
+             );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -1668,6 +1673,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   void editRequest() async {
     // verify f the start and end date time is not same
+        log('while updating:  ' + widget.requestModel.projectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -2203,12 +2209,14 @@ class ProjectSelection extends StatefulWidget {
       this.requestModel,
       this.admin,
       this.projectModelList,
-      this.selectedProject})
+      this.selectedProject,
+      this.updateProjectIdCallback})
       : super(key: key);
   final admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
+  Function(String projectId) updateProjectIdCallback;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -2220,6 +2228,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
     if (widget.projectModelList == null) {
       return Container();
     }
+    log('Project Model Check:  '  + widget.projectModelList.toString());
     List<dynamic> list = [
       {"name": S.of(context).unassigned, "code": "None"}
     ];
@@ -2253,7 +2262,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       titleTextColor: Colors.black,
       change: (value) {
         if (value != null && value[0] != 'None') {
-          widget.requestModel.projectId = value[0];
+          //widget.requestModel.projectId = value[0];
+          widget.updateProjectIdCallback(value[0]);
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,
