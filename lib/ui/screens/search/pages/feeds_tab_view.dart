@@ -182,7 +182,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: dialogButtonSize,
                   ),
