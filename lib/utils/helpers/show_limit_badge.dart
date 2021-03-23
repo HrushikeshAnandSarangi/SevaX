@@ -90,7 +90,7 @@ enum ViewerRole {
 class TransactionLimitCheck extends StatelessWidget {
   final String timebankId;
   final Widget child;
-  bool isSoftDeleteRequested;
+  final bool isSoftDeleteRequested;
   final ComingFrom comingFrom;
 
   TransactionLimitCheck({
@@ -335,38 +335,38 @@ String getRoleAssociatedMessage({
 String getMessage({
   BuildContext context,
   ViewerRole viewRole,
-  bool isBillingFailed,
+  // bool isBillingFailed,
   bool isSoftDeleteRequested,
-  bool isUpdatingPlan,
-  bool exaustedLimit,
+  // bool isUpdatingPlan,
+  // bool exaustedLimit,
 }) {
-  if (exaustedLimit) {
-     String exhausted = S.of(context).exhausted_free_quota;
-    return getRoleAssociatedMessage(
-      viewRole: viewRole,
-      forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
-      forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
-      forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
-    );
-  }
+  // if (exaustedLimit) {
+  //    String exhausted = S.of(context).exhausted_free_quota;
+  //   return getRoleAssociatedMessage(
+  //     viewRole: viewRole,
+  //     forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
+  //     forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
+  //     forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
+  //   );
+  // }
 
-  if (isUpdatingPlan) {
-    return getRoleAssociatedMessage(
-      viewRole: viewRole,
-      forAdmin: S.of(context).payment_still_processing,
-      forCreator: S.of(context).payment_still_processing,
-      forMember: S.of(context).limit_badge_contact_admin,
-    );
-  }
+  // if (isUpdatingPlan) {
+  //   return getRoleAssociatedMessage(
+  //     viewRole: viewRole,
+  //     forAdmin: S.of(context).payment_still_processing,
+  //     forCreator: S.of(context).payment_still_processing,
+  //     forMember: S.of(context).limit_badge_contact_admin,
+  //   );
+  // }
 
-  if (isBillingFailed) {
-    return getRoleAssociatedMessage(
-      viewRole: viewRole,
-      forAdmin: S.of(context).limit_badge_billing_failed,
-      forCreator: S.of(context).limit_badge_billing_failed,
-      forMember: S.of(context).limit_badge_contact_admin,
-    );
-  }
+  // if (isBillingFailed) {
+  //   return getRoleAssociatedMessage(
+  //     viewRole: viewRole,
+  //     forAdmin: S.of(context).limit_badge_billing_failed,
+  //     forCreator: S.of(context).limit_badge_billing_failed,
+  //     forMember: S.of(context).limit_badge_contact_admin,
+  //   );
+  // }
   if (isSoftDeleteRequested) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
