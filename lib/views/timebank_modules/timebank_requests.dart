@@ -615,11 +615,11 @@ class RequestListItemsState extends State<RequestListItems> {
                     ),
                     SizedBox(width: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.73,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Row(
+                          Wrap(
                             children: [
                               getAppropriateTag(model.requestType),
                               Visibility(
