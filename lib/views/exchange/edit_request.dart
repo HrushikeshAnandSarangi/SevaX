@@ -302,8 +302,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     fontFamily: 'Europa',
   );
 
-  Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
-    log('project id check:  '  + widget.requestModel.projectId);
+  Widget addToProjectContainer(snapshot,List<ProjectModel> projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
@@ -314,15 +313,14 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST &&
         isFromRequest()) {
       return ProjectSelection(
-                requestModel: widget.requestModel,
-                projectModelList: projectModelList,
-                selectedProject: null,
-                updateProjectIdCallback: (String projectid) {
-                  widget.requestModel.projectId = projectid;
-                },
-                admin: isAccessAvailable(
-                    snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)
-             );
+          requestModel: requestModel,
+          projectModelList: projectModelList,
+          selectedProject: widget.requestModel.projectId != null ? projectModelList.firstWhere((element) => element.id==widget.requestModel.projectId,orElse: ()=> null):null,
+          updateProjectIdCallback: (String projectid) {
+            widget.requestModel.projectId = projectid;
+          },
+          admin: isAccessAvailable(
+              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -335,7 +333,79 @@ class RequestEditFormState extends State<RequestEditForm> {
       // );
     }
   }
-
+  // Widget get assignProjectToRequestContainerWidget {
+  //   return InkWell(
+  //     splashColor: Colors.transparent,
+  //     focusColor: Colors.transparent,
+  //     hoverColor: Colors.transparent,
+  //     onTap: () async {
+  //       ExtendedNavigator.ofRouter<RequestsRouter>()
+  //           .pushAssignProjectToRequest(
+  //         timebankModel: timebankModel,
+  //         userModel: BlocProvider.of<AuthBloc>(context).user,
+  //         timebankProjectsList: timebankProjects,
+  //         personalProjectsList: userPersonalProjects,
+  //       )
+  //           .then((projectModelRes) {
+  //         if (projectModelRes != '') {
+  //           selectedProjectModel = projectModelRes;
+  //           //this.requestModel.projectId = selectedProjectModel.id;
+  //           tempProjectId = selectedProjectModel.id;
+  //           updateProject = true;
+  //           setState(() {});
+  //         }
+  //       });
+  //     },
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Text(S.of(context).assign_to_project,
+  //                 style: TextStyle(
+  //                     fontSize: 16,
+  //                     fontWeight: FontWeight.w600,
+  //                     color: Colors.black87)),
+  //             Spacer(),
+  //             Icon(
+  //               Icons.arrow_drop_down_circle,
+  //               size: 30,
+  //               color: Theme.of(context).primaryColor,
+  //             )
+  //           ],
+  //         ),
+  //         SizedBox(
+  //           height: 10,
+  //         ),
+  //         Chip(
+  //           label: Container(
+  //             constraints: BoxConstraints(
+  //                 maxWidth: MediaQuery.of(context).size.width - 80.0),
+  //             child: Text(
+  //                 selectedProjectModel == null
+  //                     ? S.of(context).unassigned
+  //                     : selectedProjectModel.name,
+  //                 overflow: TextOverflow.ellipsis),
+  //           ),
+  //           deleteIcon: Icon(
+  //             Icons.cancel,
+  //             size: 20,
+  //           ),
+  //           deleteIconColor: Colors.black38,
+  //           onDeleted: () {
+  //             if (selectedProjectModel != null) {
+  //               selectedProjectModel = null;
+  //               //selectedProjectModel.id = '';
+  //               tempProjectId = '';
+  //               setState(() {});
+  //             }
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
   void updateExitWithConfirmationValue(
       BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
@@ -1150,7 +1220,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return selectedSubCategories;
   }
 
-  Widget TimeRequest(snapshot, projectModelList) {
+  Widget TimeRequest(snapshot,List<ProjectModel> projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -2224,26 +2294,30 @@ class ProjectSelection extends StatefulWidget {
 }
 
 class ProjectSelectionState extends State<ProjectSelection> {
+  ProjectModel selectedModel=ProjectModel();
   @override
   Widget build(BuildContext context) {
     if (widget.projectModelList == null) {
       return Container();
     }
     log('Project Model Check:  '  + widget.projectModelList.toString());
-    List<dynamic> list = [
-      {"name": S.of(context).unassigned, "code": "None"}
-    ];
-    for (var i = 0; i < widget.projectModelList.length; i++) {
-      list.add({
-        "name": widget.projectModelList[i].name,
-        "code": widget.projectModelList[i].id,
-        "timebankproject":
-            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
-      });
-    }
+    List<dynamic> list= [
+       {"name": S
+            .of(context)
+            .unassigned, "code": "None"}
+      ];
+      for (var i = 0; i < widget.projectModelList.length; i++) {
+        list.add({
+          "name": widget.projectModelList[i].name,
+          "code": widget.projectModelList[i].id,
+          "timebankproject":
+          widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
+
+        });
+      }
     return MultiSelect(
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [widget.selectedProject != null ?widget.selectedProject.id:'None'],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
@@ -2257,7 +2331,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       dataSource: list,
       admin: widget.admin,
       textField: 'name',
-      valueField: 'code',
+      valueField:'code',
       filterable: true,
       required: true,
       titleTextColor: Colors.black,
