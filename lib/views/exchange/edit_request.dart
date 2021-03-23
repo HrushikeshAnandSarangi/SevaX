@@ -316,6 +316,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           requestModel: requestModel,
           projectModelList: projectModelList,
           selectedProject: widget.requestModel.projectId != null ? projectModelList.firstWhere((element) => element.id==widget.requestModel.projectId,orElse: ()=> null):null,
+          updateProjectIdCallback: (String projectid) {
+            widget.requestModel.projectId = projectid;
+          },
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
@@ -1669,6 +1672,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   void editRequest() async {
     // verify f the start and end date time is not same
+        log('while updating:  ' + widget.requestModel.projectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -2204,12 +2208,14 @@ class ProjectSelection extends StatefulWidget {
       this.requestModel,
       this.admin,
       this.projectModelList,
-      this.selectedProject})
+      this.selectedProject,
+      this.updateProjectIdCallback})
       : super(key: key);
   final admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
+  Function(String projectId) updateProjectIdCallback;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -2222,6 +2228,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
     if (widget.projectModelList == null) {
       return Container();
     }
+    log('Project Model Check:  '  + widget.projectModelList.toString());
     List<dynamic> list= [
        widget.selectedProject != null?{"name": widget.selectedProject.name, "code": widget.selectedProject.id}
            : {"name": S
@@ -2241,7 +2248,6 @@ class ProjectSelectionState extends State<ProjectSelection> {
 
         });
       }
-
     return MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
@@ -2264,7 +2270,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       titleTextColor: Colors.black,
       change: (value) {
         if (value != null && value[0] != 'None') {
-          widget.requestModel.projectId = value[0];
+          //widget.requestModel.projectId = value[0];
+          widget.updateProjectIdCallback(value[0]);
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,
