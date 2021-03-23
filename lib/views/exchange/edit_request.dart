@@ -333,7 +333,79 @@ class RequestEditFormState extends State<RequestEditForm> {
       // );
     }
   }
-
+  // Widget get assignProjectToRequestContainerWidget {
+  //   return InkWell(
+  //     splashColor: Colors.transparent,
+  //     focusColor: Colors.transparent,
+  //     hoverColor: Colors.transparent,
+  //     onTap: () async {
+  //       ExtendedNavigator.ofRouter<RequestsRouter>()
+  //           .pushAssignProjectToRequest(
+  //         timebankModel: timebankModel,
+  //         userModel: BlocProvider.of<AuthBloc>(context).user,
+  //         timebankProjectsList: timebankProjects,
+  //         personalProjectsList: userPersonalProjects,
+  //       )
+  //           .then((projectModelRes) {
+  //         if (projectModelRes != '') {
+  //           selectedProjectModel = projectModelRes;
+  //           //this.requestModel.projectId = selectedProjectModel.id;
+  //           tempProjectId = selectedProjectModel.id;
+  //           updateProject = true;
+  //           setState(() {});
+  //         }
+  //       });
+  //     },
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Text(S.of(context).assign_to_project,
+  //                 style: TextStyle(
+  //                     fontSize: 16,
+  //                     fontWeight: FontWeight.w600,
+  //                     color: Colors.black87)),
+  //             Spacer(),
+  //             Icon(
+  //               Icons.arrow_drop_down_circle,
+  //               size: 30,
+  //               color: Theme.of(context).primaryColor,
+  //             )
+  //           ],
+  //         ),
+  //         SizedBox(
+  //           height: 10,
+  //         ),
+  //         Chip(
+  //           label: Container(
+  //             constraints: BoxConstraints(
+  //                 maxWidth: MediaQuery.of(context).size.width - 80.0),
+  //             child: Text(
+  //                 selectedProjectModel == null
+  //                     ? S.of(context).unassigned
+  //                     : selectedProjectModel.name,
+  //                 overflow: TextOverflow.ellipsis),
+  //           ),
+  //           deleteIcon: Icon(
+  //             Icons.cancel,
+  //             size: 20,
+  //           ),
+  //           deleteIconColor: Colors.black38,
+  //           onDeleted: () {
+  //             if (selectedProjectModel != null) {
+  //               selectedProjectModel = null;
+  //               //selectedProjectModel.id = '';
+  //               tempProjectId = '';
+  //               setState(() {});
+  //             }
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
   void updateExitWithConfirmationValue(
       BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
@@ -2230,16 +2302,11 @@ class ProjectSelectionState extends State<ProjectSelection> {
     }
     log('Project Model Check:  '  + widget.projectModelList.toString());
     List<dynamic> list= [
-       widget.selectedProject != null?{"name": widget.selectedProject.name, "code": widget.selectedProject.id}
-           : {"name": S
+       {"name": S
             .of(context)
             .unassigned, "code": "None"}
       ];
       for (var i = 0; i < widget.projectModelList.length; i++) {
-        if (widget.requestModel.projectId != null &&
-            widget.requestModel.projectId == widget.projectModelList[i].id) {
-          selectedModel=widget.projectModelList[i];
-        }
         list.add({
           "name": widget.projectModelList[i].name,
           "code": widget.projectModelList[i].id,
@@ -2250,7 +2317,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       }
     return MultiSelect(
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [widget.selectedProject != null ?widget.selectedProject.id:'None'],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
@@ -2264,7 +2331,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       dataSource: list,
       admin: widget.admin,
       textField: 'name',
-      valueField: selectedModel.id??'code',
+      valueField:'code',
       filterable: true,
       required: true,
       titleTextColor: Colors.black,
