@@ -340,7 +340,7 @@ String getMessage({
   bool isUpdatingPlan,
   bool exaustedLimit,
 }) {
-  if (exaustedLimit) {
+  if (exaustedLimit??false) {
      String exhausted = S.of(context).exhausted_free_quota;
     return getRoleAssociatedMessage(
       viewRole: viewRole,
@@ -359,7 +359,7 @@ String getMessage({
     );
   }
 
-  if (isBillingFailed) {
+  if (isBillingFailed ?? false) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
       forAdmin: S.of(context).limit_badge_billing_failed,

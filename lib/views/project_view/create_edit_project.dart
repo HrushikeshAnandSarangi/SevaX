@@ -93,7 +93,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         } else {
           this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
         }
-        projectModel.public==false;
+        projectModel.public=false;
       });
     }
 

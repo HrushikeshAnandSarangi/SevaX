@@ -421,7 +421,9 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
-        Navigator.of(context).pop();
+        Future.delayed(Duration.zero, () {
+          Phoenix.rebirth(context);
+        });
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
