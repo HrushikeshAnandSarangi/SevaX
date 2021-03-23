@@ -302,7 +302,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     fontFamily: 'Europa',
   );
 
-  Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
+  Widget addToProjectContainer(snapshot,List<ProjectModel> projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
@@ -315,7 +315,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
-          selectedProject: null,
+          selectedProject: widget.requestModel.projectId != null ? projectModelList.firstWhere((element) => element.id==widget.requestModel.projectId,orElse: ()=> null):null,
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
@@ -1145,7 +1145,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return selectedSubCategories;
   }
 
-  Widget TimeRequest(snapshot, projectModelList) {
+  Widget TimeRequest(snapshot,List<ProjectModel> projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -2216,22 +2216,32 @@ class ProjectSelection extends StatefulWidget {
 }
 
 class ProjectSelectionState extends State<ProjectSelection> {
+  ProjectModel selectedModel=ProjectModel();
   @override
   Widget build(BuildContext context) {
     if (widget.projectModelList == null) {
       return Container();
     }
-    List<dynamic> list = [
-      {"name": S.of(context).unassigned, "code": "None"}
-    ];
-    for (var i = 0; i < widget.projectModelList.length; i++) {
-      list.add({
-        "name": widget.projectModelList[i].name,
-        "code": widget.projectModelList[i].id,
-        "timebankproject":
-            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
-      });
-    }
+    List<dynamic> list= [
+       widget.selectedProject != null?{"name": widget.selectedProject.name, "code": widget.selectedProject.id}
+           : {"name": S
+            .of(context)
+            .unassigned, "code": "None"}
+      ];
+      for (var i = 0; i < widget.projectModelList.length; i++) {
+        if (widget.requestModel.projectId != null &&
+            widget.requestModel.projectId == widget.projectModelList[i].id) {
+          selectedModel=widget.projectModelList[i];
+        }
+        list.add({
+          "name": widget.projectModelList[i].name,
+          "code": widget.projectModelList[i].id,
+          "timebankproject":
+          widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
+
+        });
+      }
+
     return MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
@@ -2248,7 +2258,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       dataSource: list,
       admin: widget.admin,
       textField: 'name',
-      valueField: 'code',
+      valueField: selectedModel.id??'code',
       filterable: true,
       required: true,
       titleTextColor: Colors.black,
