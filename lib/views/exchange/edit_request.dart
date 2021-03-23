@@ -125,7 +125,7 @@ class _EditRequestState extends State<EditRequest> {
         widget.requestModel.projectId.isEmpty) {
       return S.of(context).edit;
     }
-    return S.of(context).edit_project;
+    return S.of(context).edit_request;
   }
 }
 
@@ -214,10 +214,11 @@ class RequestEditFormState extends State<RequestEditForm> {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
     isPublicCheckboxVisible = widget.requestModel.virtualRequest??false;
-    // getTimebankAdminStatus = getTimebankDetailsbyFuture(
-    //   timebankId: _selectedTimebankId,
-    // );
-
+    getTimebankAdminStatus = getTimebankDetailsbyFuture(
+      timebankId: _selectedTimebankId,
+    );
+    getProjectsByFuture =
+        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     tempCredits = widget.requestModel.maxCredits;
     initialRequestTitle = widget.requestModel.title;
@@ -355,14 +356,14 @@ class RequestEditFormState extends State<RequestEditForm> {
 
 
     return FutureBuilder<TimebankModel>(
-        future: getTimebankDetailsbyFuture(timebankId: _selectedTimebankId),
+        future: getTimebankAdminStatus,
         builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return LoadingIndicator();
-          }
+          // if(snapshot.connectionState == ConnectionState.waiting){
+          //   return LoadingIndicator();
+          // }
           log("timebank ${snapshot.data}");
           return FutureBuilder<List<ProjectModel>>(
-              future: FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId),
+              future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
                 if(projectListSnapshot.connectionState == ConnectionState.waiting){
                   return LoadingIndicator();
