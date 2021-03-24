@@ -213,7 +213,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
-    isPublicCheckboxVisible = widget.requestModel.virtualRequest??false;
+    isPublicCheckboxVisible = widget.requestModel.virtualRequest ?? false;
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -302,7 +302,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     fontFamily: 'Europa',
   );
 
-  Widget addToProjectContainer(snapshot,List<ProjectModel> projectModelList, requestModel) {
+  Widget addToProjectContainer(
+      snapshot, List<ProjectModel> projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
@@ -315,7 +316,11 @@ class RequestEditFormState extends State<RequestEditForm> {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
-          selectedProject: widget.requestModel.projectId != null ? projectModelList.firstWhere((element) => element.id==widget.requestModel.projectId,orElse: ()=> null):null,
+          selectedProject: widget.requestModel.projectId != null
+              ? projectModelList.firstWhere(
+                  (element) => element.id == widget.requestModel.projectId,
+                  orElse: () => null)
+              : null,
           updateProjectIdCallback: (String projectid) {
             widget.requestModel.projectId = projectid;
           },
@@ -333,6 +338,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       // );
     }
   }
+
   // Widget get assignProjectToRequestContainerWidget {
   //   return InkWell(
   //     splashColor: Colors.transparent,
@@ -427,9 +433,6 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
 
-
-
-
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
@@ -440,10 +443,11 @@ class RequestEditFormState extends State<RequestEditForm> {
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
-                if(projectListSnapshot.connectionState == ConnectionState.waiting){
+                if (projectListSnapshot.connectionState ==
+                    ConnectionState.waiting) {
                   return LoadingIndicator();
                 }
-                if(projectListSnapshot.hasError){
+                if (projectListSnapshot.hasError) {
                   return Center(
                     child: Text(projectListSnapshot.error.toString()),
                   );
@@ -520,37 +524,34 @@ class RequestEditFormState extends State<RequestEditForm> {
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
 
-                            Offstage(
-                              offstage: widget.requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                  infoType: InfoType.VirtualRequest,
-                                  isChecked: widget.requestModel.virtualRequest,
-                                  checkBoxTypeLabel:
-                                      CheckBoxType.type_VirtualRequest,
-                                  onChangedCB: (bool val) {
-                                    if (widget.requestModel.virtualRequest !=
-                                        val) {
-                                      widget.requestModel.virtualRequest = val;
-                                      if (val) {
-                                        isPublicCheckboxVisible = true;
-                                      } else {
-                                        isPublicCheckboxVisible = false;
-                                        widget.requestModel.public = false;
-                                      }
-
-                                      log('value ${widget.requestModel.virtualRequest}');
-                                      setState(() {});
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: OpenScopeCheckBox(
+                                infoType: InfoType.VirtualRequest,
+                                isChecked: widget.requestModel.virtualRequest,
+                                checkBoxTypeLabel:
+                                    CheckBoxType.type_VirtualRequest,
+                                onChangedCB: (bool val) {
+                                  if (widget.requestModel.virtualRequest !=
+                                      val) {
+                                    widget.requestModel.virtualRequest = val;
+                                    if (val) {
+                                      isPublicCheckboxVisible = true;
+                                    } else {
+                                      isPublicCheckboxVisible = false;
+                                      widget.requestModel.public = false;
                                     }
-                                  },
-                                ),
+
+                                    log('value ${widget.requestModel.virtualRequest}');
+                                    setState(() {});
+                                  }
+                                },
                               ),
                             ),
                             HideWidget(
-                              hide: !isPublicCheckboxVisible,
+                              hide: !isPublicCheckboxVisible ||
+                                  widget.requestModel.requestMode !=
+                                      RequestMode.TIMEBANK_REQUEST,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
@@ -1220,7 +1221,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return selectedSubCategories;
   }
 
-  Widget TimeRequest(snapshot,List<ProjectModel> projectModelList) {
+  Widget TimeRequest(snapshot, List<ProjectModel> projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1744,7 +1745,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   void editRequest() async {
     // verify f the start and end date time is not same
-        log('while updating:  ' + widget.requestModel.projectId);
+    log('while updating:  ' + widget.requestModel.projectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -2294,30 +2295,29 @@ class ProjectSelection extends StatefulWidget {
 }
 
 class ProjectSelectionState extends State<ProjectSelection> {
-  ProjectModel selectedModel=ProjectModel();
+  ProjectModel selectedModel = ProjectModel();
   @override
   Widget build(BuildContext context) {
     if (widget.projectModelList == null) {
       return Container();
     }
-    log('Project Model Check:  '  + widget.projectModelList.toString());
-    List<dynamic> list= [
-       {"name": S
-            .of(context)
-            .unassigned, "code": "None"}
-      ];
-      for (var i = 0; i < widget.projectModelList.length; i++) {
-        list.add({
-          "name": widget.projectModelList[i].name,
-          "code": widget.projectModelList[i].id,
-          "timebankproject":
-          widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
-
-        });
-      }
+    log('Project Model Check:  ' + widget.projectModelList.toString());
+    List<dynamic> list = [
+      {"name": S.of(context).unassigned, "code": "None"}
+    ];
+    for (var i = 0; i < widget.projectModelList.length; i++) {
+      list.add({
+        "name": widget.projectModelList[i].name,
+        "code": widget.projectModelList[i].id,
+        "timebankproject":
+            widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
+      });
+    }
     return MultiSelect(
       autovalidate: true,
-      initialValue: [widget.selectedProject != null ?widget.selectedProject.id:'None'],
+      initialValue: [
+        widget.selectedProject != null ? widget.selectedProject.id : 'None'
+      ],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
@@ -2331,7 +2331,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       dataSource: list,
       admin: widget.admin,
       textField: 'name',
-      valueField:'code',
+      valueField: 'code',
       filterable: true,
       required: true,
       titleTextColor: Colors.black,
