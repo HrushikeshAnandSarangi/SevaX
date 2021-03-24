@@ -903,7 +903,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       loggedInUser: SevaCore.of(context).loggedInUser,
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: widget.requestItem.communityId,
       directToMember: !widget.timebankModel.protected,
       acceptorModel: acceptorModel,
     );
@@ -964,7 +964,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         requestModel: widget.requestItem,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         isWithdrawal: true,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        communityId: widget.requestItem.communityId,
         directToMember: !widget.timebankModel.protected,
       );
       Navigator.pop(context);

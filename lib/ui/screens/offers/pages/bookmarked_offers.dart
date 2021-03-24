@@ -16,6 +16,8 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 
+import '../../../../flavor_config.dart';
+
 class BookmarkedOffers extends StatelessWidget {
   final String sevaUserId;
   final TimebankModel timebankModel;
@@ -209,6 +211,20 @@ class BookmarkedOffers extends StatelessWidget {
                           ),
                           onPressed: () async {
                             // Once approved
+
+                            if ((timebankModel.id ==
+                                FlavorConfig.values.timebankId)) {
+                              if (!isAccessAvailable(
+                                timebankModel,
+                                SevaCore.of(parentContext)
+                                    .loggedInUser
+                                    .sevaUserID,
+                              )) {
+                                // ExtendedNavigator.of(context).pop();
+                                showAdminAccessMessage(context: context);
+                                return;
+                              }
+                            }
 
                             Navigator.pop(viewContext);
 
