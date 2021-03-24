@@ -22,9 +22,11 @@ import '../../../../flavor_config.dart';
 
 class CommunityAbout extends StatefulWidget {
   final CommunityModel communityModel;
+  final UserModel userModel;
 
   CommunityAbout({
     this.communityModel,
+    this.userModel,
   });
 
   @override
@@ -235,9 +237,8 @@ class _CommunityAboutState extends State<CommunityAbout>
                       MaterialPageRoute(
                         builder: (contexts) => OnBoardWithTimebank(
                           communityModel: widget.communityModel,
-                          sevauserId:
-                              SevaCore.of(context).loggedInUser.sevaUserID,
-                          user: SevaCore.of(context).loggedInUser,
+                          sevauserId: widget.userModel.sevaUserID,
+                          user: widget.userModel,
                         ),
                       ),
                     );

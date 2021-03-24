@@ -408,6 +408,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     MaterialPageRoute(
                       builder: (contexts) => CommunityAbout(
                         communityModel: communityModel,
+                        userModel: SevaCore.of(context).loggedInUser,
                       ),
                     ),
                   );
