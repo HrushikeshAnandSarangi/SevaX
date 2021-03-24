@@ -1,6 +1,7 @@
 library intro_slider;
 
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class IntroSlider extends StatefulWidget {
@@ -31,7 +32,8 @@ class _IntroSliderState extends State<IntroSlider> {
               //   curve: Curves.easeInOut,
               // );
               if (_controller.hasClients) {
-                if (_controller.page == widget.data.length - 1) {
+
+                if (_controller.page >= widget.data.length - 1) {
                   setState(() {
                     reachedEnd = true;
                   });
@@ -171,7 +173,7 @@ class _IntroSliderState extends State<IntroSlider> {
                                 curve: Curves.easeIn);
 
                             if (_controller.hasClients) {
-                              if (_controller.page == widget.data.length - 1) {
+                              if (_controller.page >= widget.data.length - 1) {
                                 setState(() {
                                   reachedEnd = true;
                                 });
