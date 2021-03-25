@@ -57,6 +57,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
     log('memberslenth  ${_bloc.currentParticipantsList.length}');
     super.initState();
   }
+
   BuildContext dialogContext;
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,6 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-
                   builder: (BuildContext mContext) {
                     dialogContext = mContext;
 
@@ -101,10 +101,9 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     .then(
                   (value) {
                     if (value) {
-                       Navigator.of(dialogContext).pop();
+                      Navigator.of(dialogContext).pop();
 
-                      Navigator.of(context, rootNavigator: true).pop();
-
+                      Navigator.of(context).pop();
                     }
                   },
                 );

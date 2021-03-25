@@ -48,7 +48,7 @@ class MessageBloc extends BlocBase {
         );
         log("===> sender id :$senderId");
         if ((membersInCommunity.contains(UserModel(sevaUserID: senderId)) ||
-                senderId.contains('-')) &&
+                (senderId?.contains('-') ?? true)) &&
             (senderId != null || chat.isGroupMessage)) {
           if (isMemberBlocked(userModel, senderId) ||
               (chat.deletedBy.containsKey(userModel.sevaUserID) &&

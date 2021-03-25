@@ -123,6 +123,7 @@ class _ChatPageState extends State<ChatPage> {
           );
 
           if (model == null) {
+            logger.e("chat model is null");
             if (!exitFromChatPage &&
                 widget.chatViewContext != ChatViewContext.PROJECT) {
               Navigator.of(context).pop();
