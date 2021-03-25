@@ -63,11 +63,15 @@ class AboutApp extends StatelessWidget {
           ),
           getHelpButton(
             context,
-            getOnTap(
-              context,
-              S.of(context).help,
-              'trainingVideo',
-            ),
+            () {
+              navigateToWebView(
+                aboutMode: AboutMode(
+                    title: S.of(context).help,
+                    urlToHit:
+                        AppConfig.remoteConfig.getString('help_videos_admin')),
+                context: context,
+              );
+            },
             S.of(context).help_training_video,
           ),
           getHelpButton(
