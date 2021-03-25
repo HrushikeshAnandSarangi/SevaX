@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
+import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
@@ -455,13 +456,15 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             child: Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(right:10,),
+                  padding: EdgeInsets.only(
+                    right: 10,
+                  ),
                   child: FlatButton(
                     onPressed: () {},
                     child: Text(
                       S.of(context).add_requests,
-                      style:
-                          (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      style: (TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18)),
                     ),
                   ),
                 ),
@@ -470,7 +473,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   top: 0,
                   right: -20,
                   child: Container(
-                    padding: EdgeInsets.only(left:4, right:4),
+                    padding: EdgeInsets.only(left: 4, right: 4),
                     child: infoButton(
                       context: context,
                       key: GlobalKey(),
@@ -674,6 +677,25 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         ));
   }
 
+  Widget getAppropriateTag(RequestType requestType) {
+    switch (requestType) {
+      case RequestType.CASH:
+        return getTagMainFrame(S.of(context).cash_request);
+      case RequestType.GOODS:
+        return getTagMainFrame(S.of(context).goods_request);
+      case RequestType.TIME:
+        return getTagMainFrame(S.of(context).time_request);
+
+      default:
+        return Container();
+    }
+  }
+
+  Widget getTagMainFrame(String tagTitle) {
+    return Container(
+        margin: EdgeInsets.only(right: 10), child: TagView(tagTitle: tagTitle));
+  }
+
   Widget getProjectRequestWidget({
     RequestModel model,
     String loggedintimezone,
@@ -804,11 +826,48 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           minRadius: 40.0,
                         ),
                       ),
+                     
                       Container(
                         child: Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
+                              Row(
+                                children: [
+                                  Wrap(
+                                    children: [
+                                      getAppropriateTag(model.requestType),
+                                      Visibility(
+                                        visible: model.virtualRequest ?? false,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: TagView(
+                                            tagTitle: 'Virtual',
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: model.public ?? false,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: TagView(
+                                            tagTitle: 'Public',
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: model.isRecurring ?? false,
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: TagView(
+                                            tagTitle: 'Recurring',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                               getSpacerItem(
                                 Text(
                                   '${model.title}',
