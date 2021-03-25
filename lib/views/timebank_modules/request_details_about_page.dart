@@ -623,6 +623,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottombarForCreator {
     if (widget.requestItem.requestType == RequestType.TIME) {
+
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,

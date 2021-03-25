@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -393,6 +394,7 @@ class OfferDetails extends StatelessWidget {
     );
 
     bool isCreator = offerModel.sevaUserId == userId;
+    log("creator ${timebankModel.creatorId}");
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;
@@ -453,12 +455,12 @@ class OfferDetails extends StatelessWidget {
                           context: context,
                           contentCreatorId: offerModel.sevaUserId,
                           timebankCreatorId: timebankModel.creatorId,
-                          communityCreatorId: timebankModel == null
+                          communityCreatorId: timebankModel != null
                               ? isPrimaryTimebank(
                                       parentTimebankId:
                                           timebankModel.parentTimebankId)
                                   ? timebankModel.creatorId
-                                  : timebankModel.managedCreatorIds.first
+                                  : timebankModel.managedCreatorIds[0]
                               : '',
                         )
                     ? deleteActionButton(isAccepted, context)
