@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -136,7 +137,8 @@ class _ChatPageState extends State<ChatPage> {
 
             if (chatModel.groupDetails.name != model.groupDetails.name ||
                 chatModel.groupDetails.imageUrl !=
-                    model.groupDetails.imageUrl) {
+                    model.groupDetails.imageUrl ||
+                !listEquals(model.participants, chatModel.participants)) {
               chatModel = model;
               if (this.mounted) setState(() {});
             }
