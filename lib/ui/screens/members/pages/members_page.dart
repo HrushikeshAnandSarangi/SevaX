@@ -247,54 +247,58 @@ class _MembersPageState extends State<MembersPage> {
                         joinRequestBloc: joinRequestBloc,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                S.of(context).members,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                    Visibility(
+                      visible: snapshot.data.timebank.id !=
+                          FlavorConfig.values.timebankId,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  S.of(context).members,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Spacer(),
-                              HideWidget(
-                                hide: !isAdmin,
-                                child: GestureDetector(
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 10,
-                                    child: Image.asset(
-                                      "lib/assets/images/add.png",
+                                Spacer(),
+                                HideWidget(
+                                  hide: !isAdmin,
+                                  child: GestureDetector(
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 10,
+                                      child: Image.asset(
+                                        "lib/assets/images/add.png",
+                                      ),
+                                    ),
+                                    onTap: () => _navigateToAddMembers(
+                                      snapshot.data.timebank,
                                     ),
                                   ),
-                                  onTap: () => _navigateToAddMembers(
-                                    snapshot.data.timebank,
-                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 16),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          MemberSectionBuilder(
-                            section: UsersSection.MEMBERS,
-                            creatorId: snapshot.data.timebank.creatorId,
-                            members: members,
-                            type: memberType(
-                              snapshot.data.timebank,
-                              user.sevaUserID,
+                                SizedBox(width: 16),
+                              ],
                             ),
-                            timebank: snapshot.data.timebank,
-                            progress: _progress,
-                          ),
-                        ],
+                            SizedBox(height: 20),
+                            MemberSectionBuilder(
+                              section: UsersSection.MEMBERS,
+                              creatorId: snapshot.data.timebank.creatorId,
+                              members: members,
+                              type: memberType(
+                                snapshot.data.timebank,
+                                user.sevaUserID,
+                              ),
+                              timebank: snapshot.data.timebank,
+                              progress: _progress,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
