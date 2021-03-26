@@ -383,10 +383,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 FocusScope.of(context)
                                     .requestFocus(focusNodes[0]);
                               },
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter(
-                                    RegExp("[a-zA-Z0-9_ ]*"))
-                              ],
+                              // inputFormatters: <TextInputFormatter>[
+                              //   WhitelistingTextInputFormatter(
+                              //       RegExp("[a-zA-Z0-9_ ]*"))
+                              // ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
                                 hintText: requestModel.requestType ==
