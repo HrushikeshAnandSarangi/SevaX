@@ -323,7 +323,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForGoodRequest {
-    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+    if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
     } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
@@ -342,7 +342,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForCashRequest {
-    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+    if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
     } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
@@ -546,7 +546,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ? Container()
           : goodsRequestActionButtonForParticipant;
     } else {
-      canDelete = widget.requestItem.cashModel.amountRaised == 0;
+      canDelete = widget.requestItem.cashModel.amountRaised == 0
+      ||widget.requestItem.cashModel.amountRaised == null;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
@@ -576,7 +577,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        canDelete
+         canDelete 
             ? Column(
                 children: [
                   actionWidget,
@@ -623,7 +624,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottombarForCreator {
     if (widget.requestItem.requestType == RequestType.TIME) {
-
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
