@@ -296,9 +296,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.name = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
-                inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-                ],
+                // inputFormatters: <TextInputFormatter>[
+                //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                // ],
                 initialValue: widget.isCreateProject
                     ? widget.projectTemplateModel != null
                         ? widget.projectTemplateModel.name

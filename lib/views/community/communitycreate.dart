@@ -331,14 +331,15 @@ class CreateEditCommunityViewFormState
                           keyboardType: TextInputType.text,
                           autocorrect: true,
                           maxLines: 1,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter(
-                              RegExp("[a-zA-Z0-9_ ]*"),
-                            )
-                          ],
+                          // inputFormatters: <TextInputFormatter>[
+                          //   WhitelistingTextInputFormatter(
+                          //     RegExp("[a-zA-Z0-9_ ]*"),
+                          //   )
+                          // ],
                           onSaved: (value) {
                             enteredName =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                               // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                                value.trim();
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
