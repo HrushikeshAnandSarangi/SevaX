@@ -55,32 +55,32 @@ class _BioViewState extends State<BioView> {
             ),
             centerTitle: true,
           ),
-          body: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 0.0, top: 0.0, bottom: 10.0),
-                      child: Text(
-                        S.of(context).bio_description,
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 0.0, top: 0.0, bottom: 10.0),
+                        child: Text(
+                          S.of(context).bio_description,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          TextFormField(
+                      SizedBox(height: 20),
+                      Form(
+                        key: _formKey,
+                        child: Container(
+                          height: 200,
+                          child: TextFormField(
                               textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.black54),
@@ -97,7 +97,7 @@ class _BioViewState extends State<BioView> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               minLines: 6,
-                              maxLines: 50,
+                              maxLines: null,
                               maxLength: 5000,
                               validator: (value) {
                                 if (value.trim().isEmpty) {
@@ -120,44 +120,47 @@ class _BioViewState extends State<BioView> {
                                 }
                                 this.bio = value;
                                 return null;
-                              })
-                        ],
-                      ),
-                    )
-                  ],
+                              }),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Spacer(),
-              SizedBox(
-                width: 134,
-                child: RaisedButton(
+                // Spacer(),
+                SizedBox(
+                  height: 100,
+                ),
+                SizedBox(
+                  width: 134,
+                  child: RaisedButton(
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        widget.onSave(bio);
+                      }
+                    },
+                    child: Text(
+                      S.of(context).next,
+                      style: Theme.of(context).primaryTextTheme.button,
+                    ),
+                    // color: Theme.of(context).accentColor,
+                    // textColor: FlavorConfig.values.buttonTextColor,
+                    // shape: StadiumBorder(),
+                  ),
+                ),
+                FlatButton(
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      widget.onSave(bio);
-                    }
+                    widget.onSkipped();
                   },
                   child: Text(
-                    S.of(context).next,
-                    style: Theme.of(context).primaryTextTheme.button,
+                    AppConfig.prefs.getBool(AppConfig.skip_bio) == null
+                        ? S.of(context).skip
+                        : S.of(context).cancel,
+                    style: TextStyle(color: Theme.of(context).accentColor),
                   ),
-                  // color: Theme.of(context).accentColor,
-                  // textColor: FlavorConfig.values.buttonTextColor,
-                  // shape: StadiumBorder(),
                 ),
-              ),
-              FlatButton(
-                onPressed: () {
-                  widget.onSkipped();
-                },
-                child: Text(
-                  AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? S.of(context).skip
-                      : S.of(context).cancel,
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

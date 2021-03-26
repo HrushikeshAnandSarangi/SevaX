@@ -546,8 +546,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ? Container()
           : goodsRequestActionButtonForParticipant;
     } else {
-      canDelete = widget.requestItem.cashModel.amountRaised == 0
-      ||widget.requestItem.cashModel.amountRaised == null;
+      canDelete = widget.requestItem.cashModel.amountRaised == 0 ||
+          widget.requestItem.cashModel.amountRaised == null;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
@@ -577,7 +577,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-         canDelete 
+        canDelete
             ? Column(
                 children: [
                   actionWidget,
