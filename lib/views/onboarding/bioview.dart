@@ -98,7 +98,7 @@ class _BioViewState extends State<BioView> {
                                   AutovalidateMode.onUserInteraction,
                               minLines: 6,
                               maxLines: 50,
-                              maxLength: 150,
+                              maxLength: 5000,
                               validator: (value) {
                                 if (value.trim().isEmpty) {
                                   return S
@@ -112,7 +112,7 @@ class _BioViewState extends State<BioView> {
                                   return S
                                       .of(context)
                                       .validation_error_bio_min_characters;
-                                } else if (value.length > 250) {
+                                } else if (value.length > 5000) {
                                   this.bio = value;
                                   return S
                                       .of(context)
