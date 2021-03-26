@@ -146,10 +146,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               return CustomTextField(
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
-                                formatters: <TextInputFormatter>[
-                                  WhitelistingTextInputFormatter(
-                                      RegExp("[a-zA-Z0-9_ ]*"))
-                                ],
+                                // formatters: <TextInputFormatter>[
+                                //   WhitelistingTextInputFormatter(
+                                //       RegExp("[a-zA-Z0-9_ ]*"))
+                                // ],
                                 value: snapshot.data != null
                                     ? snapshot.data
                                     : null,

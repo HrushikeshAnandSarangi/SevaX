@@ -331,14 +331,15 @@ class CreateEditCommunityViewFormState
                           keyboardType: TextInputType.text,
                           autocorrect: true,
                           maxLines: 1,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter(
-                              RegExp("[a-zA-Z0-9_ ]*"),
-                            )
-                          ],
+                          // inputFormatters: <TextInputFormatter>[
+                          //   WhitelistingTextInputFormatter(
+                          //     RegExp("[a-zA-Z0-9_ ]*"),
+                          //   )
+                          // ],
                           onSaved: (value) {
                             enteredName =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                               // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                                value.trim();
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
@@ -1444,13 +1445,10 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-          ],
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 5, value);
             controller.community.billing_address
-                .updateValueByKey('pincode', int.parse(value));
+                .updateValueByKey('pincode', value);
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.pincode != null
@@ -1464,7 +1462,7 @@ class CreateEditCommunityViewFormState
                     : null;
           },
           focusNode: focusNodes[3],
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(
