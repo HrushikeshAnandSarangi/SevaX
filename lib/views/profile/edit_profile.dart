@@ -668,15 +668,15 @@ class _EditProfilePageState extends State<EditProfilePage>
       String imageUrl =
           await uploadImage(SevaCore.of(context).loggedInUser.email);
 
-      await profanityCheck(imageURL: imageUrl);
+      await profanityCheck(imageURL: imageUrl,storagePath:imageUrl );
     }
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({String imageURL,String storagePath}) async {
     // _newsImageURL = imageURL;
     log("inside profanity");
 
-    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL,storagePath:imageUrl );
     log("model ${profanityImageModel.toString()}");
     if (profanityImageModel == null) {
       setState(() {
