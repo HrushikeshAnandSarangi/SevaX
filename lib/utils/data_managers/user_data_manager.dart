@@ -472,8 +472,8 @@ Future storeRemoveMemberLog({
   String timebankTitle,
 }) async {
   var response = Firestore.instance
-      .collection('communities')
-      .document(communityId)
+      .collection('timebanknew')
+      .document(timebankId)
       .collection('entryExitLogs')
       .document()
       .setData({

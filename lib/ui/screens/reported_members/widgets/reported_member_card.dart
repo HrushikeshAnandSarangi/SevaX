@@ -339,8 +339,8 @@ class ReportedMemberCard extends StatelessWidget {
                       .delete();
 
                   await Firestore.instance
-                      .collection('communities')
-                      .document(model.communityId)
+                      .collection('timebanknew')
+                      .document(timebankId)
                       .collection('entryExitLogs')
                       .document()
                       .setData({

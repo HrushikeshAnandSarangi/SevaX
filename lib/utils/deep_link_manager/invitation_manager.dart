@@ -206,8 +206,8 @@ class InvitationManager {
     });
 
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(primaryTimebankId)
         .collection('entryExitLogs')
         .document();
 

@@ -1143,8 +1143,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         Firestore.instance.collection('users').document(userEmail);
 
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 

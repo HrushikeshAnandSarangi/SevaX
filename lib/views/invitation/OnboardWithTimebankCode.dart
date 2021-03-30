@@ -648,8 +648,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         .collection("notifications").document(notificationModel.id);
     
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 

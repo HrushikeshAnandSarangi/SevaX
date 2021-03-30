@@ -277,8 +277,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         .document(notificaitonId);
 
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 
@@ -361,8 +361,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         .document(notificaitonId);
     
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 

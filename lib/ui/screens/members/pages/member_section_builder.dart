@@ -323,8 +323,8 @@ class MemberSectionBuilder extends StatelessWidget {
 
     if (isFromExit) {
       await Firestore.instance
-          .collection('communities')
-          .document(member.currentCommunity)
+          .collection('timebanknew')
+          .document(timebank.id)
           .collection('entryExitLogs')
           .document()
           .setData({
@@ -353,8 +353,8 @@ class MemberSectionBuilder extends StatelessWidget {
 
     if (!isFromExit && responseData['deletable'] == true) {
       await Firestore.instance
-          .collection('communities')
-          .document(member.currentCommunity)
+          .collection('timebanknew')
+          .document(timebank.id)
           .collection('entryExitLogs')
           .document()
           .setData({

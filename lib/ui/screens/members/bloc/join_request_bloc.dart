@@ -47,8 +47,8 @@ class JoinRequestBloc {
         .document(notificaitonId);
 
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 
@@ -118,8 +118,8 @@ class JoinRequestBloc {
         .document(notificaitonId);
 
     var entryExitLogReference = Firestore.instance
-        .collection('communities')
-        .document(communityId)
+        .collection('timebanknew')
+        .document(timebankId)
         .collection('entryExitLogs')
         .document();
 
