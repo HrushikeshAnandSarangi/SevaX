@@ -413,57 +413,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             RequestTypeWidget(),
 
-                            requestModel.requestType == RequestType.BORROW
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 8),
-                                      CupertinoSegmentedControl<int>(
-                                        selectedColor:
-                                            Theme.of(context).primaryColor,
-                                        children: {
-                                          0: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Text(
-                                              'Need A Room', //Label to be created (client approval)
-                                              style: TextStyle(fontSize: 12.0),
-                                            ),
-                                          ),
-                                          1: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Text(
-                                              'Need Tool/s', //Label to be created (client approval)
-                                              style: TextStyle(fontSize: 12.0),
-                                            ),
-                                          ),
-                                        },
-                                        borderColor: Colors.grey,
-                                        padding: EdgeInsets.only(
-                                            left: 0.0, right: 0.0),
-                                        groupValue: roomOrTool,
-                                        onValueChanged: (int val) {
-                                          if (val != roomOrTool) {
-                                            setState(() {
-                                              if (val == 0) {
-                                                roomOrTool = 0;
-                                              } else {
-                                                roomOrTool = 1;
-                                              }
-                                              roomOrTool = val;
-                                            });
-                                            log('Room or Tool: ' +
-                                                roomOrTool.toString());
-                                          }
-                                        },
-                                        //groupValue: sharedValue,
-                                      ),
-                                      SizedBox(height: 12),
-                                    ],
-                                  )
-                                : Container(),
+                            SizedBox(height: 14),
 
                             Text(
                               "${S.of(context).request_title}",
@@ -526,275 +476,405 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               },
                             ),
 
-                          //Instructor to be assigned to One to many requests widget Here
-
-      instructorAdded
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  "Selected Speaker", //LABEL TO BE MADE FOR THIS
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  //height: 120,
-                  width: 330,
-                  // decoration: BoxDecoration(
-                  //   color: Colors.white,
-                  //   shape: BoxShape.rectangle,
-                  //   borderRadius: BorderRadius.circular(8.0),
-                  //   boxShadow: <BoxShadow>[
-                  //     BoxShadow(
-                  //       color: Colors.black12,
-                  //       blurRadius: 10.0,
-                  //       offset: Offset(0.0, 10.0),
-                  //     ),
-                  //   ],
-                  // ),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        // SizedBox(
-                        //   height: 15,
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            UserProfileImage(
-                              photoUrl:
-                                  requestModel.selectedInstructor.photoURL,
-                              email: requestModel.selectedInstructor.email,
-                              userId:
-                                  requestModel.selectedInstructor.sevaUserID,
-                              height: 65,
-                              width: 65,
-                              timebankModel: timebankModel,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Text(
-                                requestModel.selectedInstructor.fullname ??
-                                    S.of(context).name_not_available,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
+            requestModel.requestType == RequestType.BORROW
+                ? Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 12),
+                      Text(
+                              "Borrow",           //Label to be created (client approval)
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
                               ),
                             ),
-                            SizedBox(
-                              width: 15,
+                      SizedBox(height: 10),
+                      CupertinoSegmentedControl<int>(
+                        unselectedColor: Colors.grey[200],
+                        selectedColor:
+                            Theme.of(context).primaryColor,
+                        children: {
+                          0: Padding(
+                            padding: EdgeInsets.only(
+                                left: 14, right: 14),
+                            child: Text(
+                              'Need a place', //Label to be created 
+                              style: TextStyle(fontSize: 12.0),
                             ),
-                            Container(
-                              height: 37,
-                              padding: EdgeInsets.only(bottom: 0),
-                              child: InkWell(
-                                child: Icon(Icons.cancel, color: Colors.grey, size: 28),
-                                onTap: () {
-                                    setState(() {
-                                      instructorAdded = false;
-                                      requestModel.selectedInstructor.toMap().clear();
-                                    });
-                                  },
-                                )
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                ),
-              ],
-            )
-          : requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start, 
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Select a Speaker(s)*", //LABEL TO BE MADE FOR THIS
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    style: TextStyle(color: Colors.black),
-                    controller: searchTextController,
-                    onChanged: _search,
-                    autocorrect: true,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.black54,
                           ),
-                          onPressed: () {
-                            searchTextController.clear();
-                          }),
-                      hasFloatingPlaceholder: false,
-                      alignLabelWithHint: true,
-                      isDense: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                      contentPadding:
-                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(15.7),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(15.7)),
-                      hintText: 'Ex: Garry',     //LABEL TO BE CREATED
-                      hintStyle: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                    StreamBuilder<List<UserModel>>(
-                      stream: SearchManager.searchUserInSevaX(
-                        queryString: searchTextController.text,
-                        //validItems: validItems,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          Text(snapshot.error.toString());
-                        }
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              height: 48,
-                              width: 48,
-                              child: CircularProgressIndicator(),
+                          1: Padding(
+                            padding: EdgeInsets.only(
+                                left: 14, right: 14),
+                            child: Text(
+                              'Goods', //Label to be created 
+                              style: TextStyle(fontSize: 12.0),
                             ),
-                          );
-                        }
+                          ),
+                        },
+                        borderColor: Colors.grey,
+                        padding: EdgeInsets.only(
+                            left: 0.0, right: 0.0),
+                        groupValue: roomOrTool,
+                        onValueChanged: (int val) {
+                          if (val != roomOrTool) {
+                            setState(() {
+                              if (val == 0) {
+                                roomOrTool = 0;
+                              } else {
+                                roomOrTool = 1;
+                              }
+                              roomOrTool = val;
+                            });
+                            log('Room or Tool: ' +
+                                roomOrTool.toString());
+                          }
+                        },
+                        //groupValue: sharedValue,
+                      ),
+                    ],
+                  )
+                : Container(),
 
-                        List<UserModel> userList = snapshot.data;
-                        userList.removeWhere((user) =>
-                            user.sevaUserID ==
-                                SevaCore.of(context).loggedInUser.sevaUserID ||
-                            user.sevaUserID == requestModel.sevaUserId);
+            //Instructor to be assigned to One to many requests widget Here
 
-                        if (userList.length == 0) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidgetLeftAligned('', S.of(context).no_members + ' found'),
-                                                                                      //LABEL TO BE CREATED
-                            ],
-                          );
-                        }
+                            instructorAdded
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Selected Speaker", //LABEL TO BE MADE FOR THIS
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Europa',
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Container(
+                                        //height: 120,
+                                        width: 330,
+                                        // decoration: BoxDecoration(
+                                        //   color: Colors.white,
+                                        //   shape: BoxShape.rectangle,
+                                        //   borderRadius: BorderRadius.circular(8.0),
+                                        //   boxShadow: <BoxShadow>[
+                                        //     BoxShadow(
+                                        //       color: Colors.black12,
+                                        //       blurRadius: 10.0,
+                                        //       offset: Offset(0.0, 10.0),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            // SizedBox(
+                                            //   height: 15,
+                                            // ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                UserProfileImage(
+                                                  photoUrl: requestModel
+                                                      .selectedInstructor
+                                                      .photoURL,
+                                                  email: requestModel
+                                                      .selectedInstructor.email,
+                                                  userId: requestModel
+                                                      .selectedInstructor
+                                                      .sevaUserID,
+                                                  height: 65,
+                                                  width: 65,
+                                                  timebankModel: timebankModel,
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    requestModel
+                                                            .selectedInstructor
+                                                            .fullname ??
+                                                        S
+                                                            .of(context)
+                                                            .name_not_available,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Container(
+                                                    height: 37,
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 0),
+                                                    child: InkWell(
+                                                      child: Icon(Icons.cancel,
+                                                          color: Colors.grey,
+                                                          size: 28),
+                                                      onTap: () {
+                                                        setState(() {
+                                                          instructorAdded =
+                                                              false;
+                                                          requestModel
+                                                              .selectedInstructor
+                                                              .toMap()
+                                                              .clear();
+                                                        });
+                                                      },
+                                                    )),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : requestModel.requestType ==
+                                        RequestType.ONE_TO_MANY_REQUEST
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                            SizedBox(height: 20),
+                                            Text(
+                                              "Select a Speaker(s)*", //LABEL TO BE MADE FOR THIS
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Europa',
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            TextField(
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                              controller: searchTextController,
+                                              onChanged: _search,
+                                              autocorrect: true,
+                                              decoration: InputDecoration(
+                                                suffixIcon: IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      color: Colors.black54,
+                                                    ),
+                                                    onPressed: () {
+                                                      searchTextController
+                                                          .clear();
+                                                    }),
+                                                hasFloatingPlaceholder: false,
+                                                alignLabelWithHint: true,
+                                                isDense: true,
+                                                prefixIcon: Icon(
+                                                  Icons.search,
+                                                  color: Colors.grey,
+                                                ),
+                                                contentPadding:
+                                                    EdgeInsets.fromLTRB(
+                                                        10.0, 12.0, 10.0, 5.0),
+                                                filled: true,
+                                                fillColor: Colors.grey[200],
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.white),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.7),
+                                                ),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide(
+                                                                color: Colors
+                                                                    .white),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    15.7)),
+                                                hintText:
+                                                    'Ex: Garry', //LABEL TO BE CREATED
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black45,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                  StreamBuilder<
+                                                      List<UserModel>>(
+                                                    stream: SearchManager
+                                                        .searchUserInSevaX(
+                                                      queryString:
+                                                          searchTextController
+                                                              .text,
+                                                      //validItems: validItems,
+                                                    ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasError) {
+                                                        Text(snapshot.error
+                                                            .toString());
+                                                      }
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            height: 48,
+                                                            width: 48,
+                                                            child:
+                                                                CircularProgressIndicator(),
+                                                          ),
+                                                        );
+                                                      }
 
-                        if (searchTextController.text.trim().length < 3) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidgetLeftAligned(
-                                  '',
-                                  S
-                                      .of(context)
-                                      .validation_error_search_min_characters),
-                            ],
-                          );
-                        } else {
-                          return Scrollbar(
-                            child: Center(
-                              child: Card(
-                                elevation: 0.8,
-                                child: LimitedBox(
-                                  maxHeight: 290,
-                                  maxWidth: 90,
-                                  child: ListView.builder(
-                                      primary: false,
-                                      //physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      itemCount: userList.length,
-                                      //separatorBuilder: (BuildContext context, int index) => Divider(),
-                                      itemBuilder: (context, index) {
-                                        UserModel user = userList[index];
+                                                      List<UserModel> userList =
+                                                          snapshot.data;
+                                                      userList.removeWhere((user) =>
+                                                          user.sevaUserID ==
+                                                              SevaCore.of(
+                                                                      context)
+                                                                  .loggedInUser
+                                                                  .sevaUserID ||
+                                                          user.sevaUserID ==
+                                                              requestModel
+                                                                  .sevaUserId);
 
-                                        List<String> timeBankIds = snapshot
-                                                .data[index]
-                                                .favoriteByTimeBank ??
-                                            [];
-                                        List<String> memberId =
-                                            user.favoriteByMember ?? [];
+                                                      if (userList.length ==
+                                                          0) {
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                                height: 15),
+                                                            getEmptyWidgetLeftAligned(
+                                                                '',
+                                                                S
+                                                                        .of(context)
+                                                                        .no_members +
+                                                                    ' found'),
+                                                            //LABEL TO BE CREATED
+                                                          ],
+                                                        );
+                                                      }
 
-                                        return InkWell(
-                                          onTap: () { setState(() {
-                                              selectedInstructorModel = user;
-                                              instructorAdded = true;
-                                              requestModel.selectedInstructor =
-                                                  BasicUserDetails(
-                                                fullname: user.fullname,
-                                                email: user.email,
-                                                photoURL: user.photoURL,
-                                                sevaUserID: user.sevaUserID,
-                                              );
-                                            });
-                                          },
-                                          child: OneToManyInstructorCard(
-                                            userModel: user,
-                                            timebankModel: timebankModel,
-                                            isAdmin: isAdmin,
-                                            //refresh: refresh,
-                                            currentCommunity: SevaCore.of(context)
-                                                .loggedInUser
-                                                .currentCommunity,
-                                            loggedUserId: SevaCore.of(context)
-                                                .loggedInUser
-                                                .sevaUserID,
-                                            isFavorite: isAdmin
-                                                ? timeBankIds.contains(
-                                                    requestModel.timebankId)
-                                                : memberId.contains(
-                                                    SevaCore.of(context)
-                                                        .loggedInUser
-                                                        .sevaUserID),
-                                            addStatus: S.of(context).add,
-                                           
-                                          ),
-                                        );
-                                      }),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ])),
-                ])
-              : Container(height: 0, width: 0),
+                                                      if (searchTextController
+                                                              .text
+                                                              .trim()
+                                                              .length <
+                                                          3) {
+                                                        return Column(
+                                                          children: [
+                                                            SizedBox(
+                                                                height: 15),
+                                                            getEmptyWidgetLeftAligned(
+                                                                '',
+                                                                S
+                                                                    .of(context)
+                                                                    .validation_error_search_min_characters),
+                                                          ],
+                                                        );
+                                                      } else {
+                                                        return Scrollbar(
+                                                          child: Center(
+                                                            child: Card(
+                                                              elevation: 0.8,
+                                                              child: LimitedBox(
+                                                                maxHeight: 290,
+                                                                maxWidth: 90,
+                                                                child: ListView
+                                                                    .builder(
+                                                                        primary:
+                                                                            false,
+                                                                        //physics: NeverScrollableScrollPhysics(),
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        padding:
+                                                                            EdgeInsets
+                                                                                .zero,
+                                                                        itemCount:
+                                                                            userList
+                                                                                .length,
+                                                                        //separatorBuilder: (BuildContext context, int index) => Divider(),
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          UserModel
+                                                                              user =
+                                                                              userList[index];
 
-      SizedBox(height: 16),
+                                                                          List<String>
+                                                                              timeBankIds =
+                                                                              snapshot.data[index].favoriteByTimeBank ?? [];
+                                                                          List<String>
+                                                                              memberId =
+                                                                              user.favoriteByMember ?? [];
+
+                                                                          return InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              setState(() {
+                                                                                selectedInstructorModel = user;
+                                                                                instructorAdded = true;
+                                                                                requestModel.selectedInstructor = BasicUserDetails(
+                                                                                  fullname: user.fullname,
+                                                                                  email: user.email,
+                                                                                  photoURL: user.photoURL,
+                                                                                  sevaUserID: user.sevaUserID,
+                                                                                );
+                                                                              });
+                                                                            },
+                                                                            child:
+                                                                                OneToManyInstructorCard(
+                                                                              userModel: user,
+                                                                              timebankModel: timebankModel,
+                                                                              isAdmin: isAdmin,
+                                                                              //refresh: refresh,
+                                                                              currentCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
+                                                                              loggedUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                                                                              isFavorite: isAdmin ? timeBankIds.contains(requestModel.timebankId) : memberId.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                                                                              addStatus: S.of(context).add,
+                                                                            ),
+                                                                          );
+                                                                        }),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ])),
+                                          ])
+                                    : Container(height: 0, width: 0),
+
+                            SizedBox(height: 16),
 
                             SizedBox(height: 30),
                             OfferDurationWidget(
@@ -1281,59 +1361,71 @@ class RequestCreateFormState extends State<RequestCreateForm>
     );
   }
 
-  Widget BorrowToolTitleField(hintTextDesc) {
+  // Widget BorrowToolTitleField(hintTextDesc) {
+  //   return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         Text(
+  //           "Request tools description*", //Label to be created
+  //           style: TextStyle(
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //             fontFamily: 'Europa',
+  //             color: Colors.black,
+  //           ),
+  //         ),
+  //         TextFormField(
+  //           autovalidateMode: AutovalidateMode.onUserInteraction,
+  //           onChanged: (value) {
+  //             // if (value != null && value.length > 5) {
+  //             //   _debouncer.run(() {
+  //             //     getCategoriesFromApi(value);
+  //             //   });
+  //             // }
+  //             updateExitWithConfirmationValue(context, 9, value);
+  //           },
+  //           focusNode: focusNodes[3],
+  //           onFieldSubmitted: (v) {
+  //             FocusScope.of(context).requestFocus(focusNodes[3]);
+  //           },
+  //           textInputAction: TextInputAction.next,
+  //           decoration: InputDecoration(
+  //             errorMaxLines: 2,
+  //             hintText: hintTextDesc,
+  //             hintStyle: hintTextStyle,
+  //           ),
+  //           initialValue: "",
+  //           keyboardType: TextInputType.multiline,
+  //           maxLines: 1,
+  //           validator: (value) {
+  //             if (value.isEmpty) {
+  //               return S.of(context).validation_error_general_text;
+  //             }
+  //             if (profanityDetector.isProfaneString(value)) {
+  //               return S.of(context).profanity_text_alert;
+  //             }
+  //             requestModel.borrowRequestToolName = value;
+  //           },
+  //         ),
+  //       ]);
+  // }
+
+  Widget RequestDescriptionData(hintTextDesc) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+
+          requestModel.requestType == RequestType.BORROW ?
           Text(
-            "Tool Name*", //Label to be created (need client approval)
+            "Reqeust",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               fontFamily: 'Europa',
               color: Colors.black,
             ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              // if (value != null && value.length > 5) {
-              //   _debouncer.run(() {
-              //     getCategoriesFromApi(value);
-              //   });
-              // }
-              updateExitWithConfirmationValue(context, 9, value);
-            },
-            focusNode: focusNodes[3],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[3]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: hintTextDesc,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: "",
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              }
-              requestModel.borrowRequestToolName = value;
-            },
-          ),
-        ]);
-  }
-
-  Widget RequestDescriptionData(hintTextDesc) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+          )
+          :
           Text(
             "${S.of(context).request_description}",
             style: TextStyle(
@@ -1616,9 +1708,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
           SizedBox(height: 20),
 
-          roomOrTool == 1
-              ? BorrowToolTitleField('Ex: Hammer or Chair...')
-              : Container(), //Label to be created (need client approval)
+          // roomOrTool == 1
+          //     ? BorrowToolTitleField('Ex: Hammer or Chair...')
+          //     : Container(), 
+              //Label to be created (need client approval)
 
           SizedBox(height: 15),
 
@@ -1710,232 +1803,234 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      RepeatWidget(),
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RepeatWidget(),
 
-      SizedBox(height: 20),
+          SizedBox(height: 20),
 
-      RequestDescriptionData(S.of(context).request_description_hint),
-      SizedBox(height: 20),
-      // Choose Category and Sub Category
-      InkWell(
-        child: Column(
-          children: [
-            Row(
+          RequestDescriptionData(S.of(context).request_description_hint),
+          SizedBox(height: 20),
+          // Choose Category and Sub Category
+          InkWell(
+            child: Column(
               children: [
-                categories == null
-                    ? Text(
-                        S.of(context).choose_category,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      )
-                    : Text(
-                        "${categories[0]}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Europa',
-                          color: Colors.black,
-                        ),
-                      ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  size: 16,
+                Row(
+                  children: [
+                    categories == null
+                        ? Text(
+                            S.of(context).choose_category,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text(
+                            "${categories[0]}",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa',
+                              color: Colors.black,
+                            ),
+                          ),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16,
+                    ),
+                    // Container(
+                    //   height: 25,
+                    //   width: 25,
+                    //   decoration: BoxDecoration(
+                    //       color: Theme.of(context).primaryColor,
+                    //       borderRadius: BorderRadius.circular(100)),
+                    //   child: Icon(
+                    //     Icons.arrow_drop_down_outlined,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                  ],
                 ),
-                // Container(
-                //   height: 25,
-                //   width: 25,
-                //   decoration: BoxDecoration(
-                //       color: Theme.of(context).primaryColor,
-                //       borderRadius: BorderRadius.circular(100)),
-                //   child: Icon(
-                //     Icons.arrow_drop_down_outlined,
-                //     color: Colors.white,
-                //   ),
-                // ),
+                SizedBox(height: 20),
+                categories != null
+                    ? Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        children: _buildselectedSubCategories(categories),
+                      )
+                    : Container(),
               ],
             ),
-            SizedBox(height: 20),
-            categories != null
-                ? Wrap(
-                    alignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    children: _buildselectedSubCategories(categories),
-                  )
-                : Container(),
-          ],
-        ),
-        onTap: () => moveToCategory(),
-      ),
-      SizedBox(height: 20),
-      isFromRequest(
-        projectId: widget.projectId,
-      )
-          ? addToProjectContainer(
-              snapshot,
-              projectModelList,
-              requestModel,
-            )
-          : Container(),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).max_credits,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: TextFormField(
-              focusNode: focusNodes[1],
-              onFieldSubmitted: (v) {
-                FocusScope.of(context).requestFocus(focusNodes[2]);
-              },
-              onChanged: (v) {
-                updateExitWithConfirmationValue(context, 10, v);
-                if (v.isNotEmpty && int.parse(v) >= 0) {
-                  requestModel.maxCredits = int.parse(v);
-                  setState(() {});
-                }
-              },
-              decoration: InputDecoration(
-                hintText: S.of(context).max_credit_hint,
-                hintStyle: hintTextStyle,
-                // labelText: 'No. of volunteers',
-              ),
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return S.of(context).enter_max_credits;
-                } else if (int.parse(value) < 0) {
-                  return S.of(context).enter_max_credits;
-                } else if (int.parse(value) == 0) {
-                  return S.of(context).enter_max_credits;
-                } else {
-                  requestModel.maxCredits = int.parse(value);
-                  setState(() {});
-                  return null;
-                }
-              },
+            onTap: () => moveToCategory(),
+          ),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).max_credits,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
             ),
           ),
-          infoButton(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  focusNode: focusNodes[1],
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(focusNodes[2]);
+                  },
+                  onChanged: (v) {
+                    updateExitWithConfirmationValue(context, 10, v);
+                    if (v.isNotEmpty && int.parse(v) >= 0) {
+                      requestModel.maxCredits = int.parse(v);
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: S.of(context).max_credit_hint,
+                    hintStyle: hintTextStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return S.of(context).enter_max_credits;
+                    } else if (int.parse(value) < 0) {
+                      return S.of(context).enter_max_credits;
+                    } else if (int.parse(value) == 0) {
+                      return S.of(context).enter_max_credits;
+                    } else {
+                      requestModel.maxCredits = int.parse(value);
+                      setState(() {});
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.MAX_CREDITS,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? Text(
+                  'Total No. of Participants*', //LABEL TO BE MADE
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                )
+              : Text(
+                  S.of(context).number_of_volunteers,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+          TextFormField(
+            focusNode: focusNodes[2],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            onChanged: (v) {
+              updateExitWithConfirmationValue(context, 11, v);
+              if (v.isNotEmpty && int.parse(v) >= 0) {
+                requestModel.numberOfApprovals = int.parse(v);
+                setState(() {});
+              }
+            },
+            decoration: InputDecoration(
+              hintText:
+                  requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+                      ? 'No. of Participants'
+                      : S.of(context).number_of_volunteers,
+              hintStyle: hintTextStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_volunteer_count;
+              } else if (int.parse(value) < 0) {
+                return S.of(context).validation_error_volunteer_count_negative;
+              } else if (int.parse(value) == 0) {
+                return S.of(context).validation_error_volunteer_count_zero;
+              } else {
+                requestModel.numberOfApprovals = int.parse(value);
+                setState(() {});
+                return null;
+              }
+            },
+          ),
+
+          SizedBox(height: 10),
+
+          CommonUtils.TotalCredits(
             context: context,
-            key: GlobalKey(),
-            type: InfoType.MAX_CREDITS,
+            requestModel: requestModel,
+            requestCreditsMode: TotalCreditseMode.CREATE_MODE,
           ),
-        ],
-      ),
-      SizedBox(height: 20),
-      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? Text(
-              'Total No. of Participants*', //LABEL TO BE MADE
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            )
-          : Text(
-              S.of(context).number_of_volunteers,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
+
+          // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          //     ? Row(
+          //         children: [
+          //           Checkbox(
+          //             activeColor: Theme.of(context).primaryColor,
+          //             checkColor: Colors.white,
+          //             value: createEvent,
+          //             onChanged: (val) {
+          //               setState(() {
+          //                 createEvent = val;
+          //               });
+          //             },
+          //           ),
+          //           Text(
+          //               'Tick to create an event for this request') // Label to be created
+          //         ],
+          //       )
+          //     : Container(height: 0, width: 0),
+
+          SizedBox(height: 15),
+
+          Center(
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
             ),
-      TextFormField(
-        focusNode: focusNodes[2],
-        onFieldSubmitted: (v) {
-          FocusScope.of(context).unfocus();
-        },
-        onChanged: (v) {
-          updateExitWithConfirmationValue(context, 11, v);
-          if (v.isNotEmpty && int.parse(v) >= 0) {
-            requestModel.numberOfApprovals = int.parse(v);
-            setState(() {});
-          }
-        },
-        decoration: InputDecoration(
-          hintText: requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? 'No. of Participants'
-              : S.of(context).number_of_volunteers,
-          hintStyle: hintTextStyle,
-          // labelText: 'No. of volunteers',
-        ),
-        keyboardType: TextInputType.number,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_volunteer_count;
-          } else if (int.parse(value) < 0) {
-            return S.of(context).validation_error_volunteer_count_negative;
-          } else if (int.parse(value) == 0) {
-            return S.of(context).validation_error_volunteer_count_zero;
-          } else {
-            requestModel.numberOfApprovals = int.parse(value);
-            setState(() {});
-            return null;
-          }
-        },
-      ),
-
-      SizedBox(height: 10),
-
-      CommonUtils.TotalCredits(
-        context: context,
-        requestModel: requestModel,
-        requestCreditsMode: TotalCreditseMode.CREATE_MODE,
-      ),
-
-      // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-      //     ? Row(
-      //         children: [
-      //           Checkbox(
-      //             activeColor: Theme.of(context).primaryColor,
-      //             checkColor: Colors.white,
-      //             value: createEvent,
-      //             onChanged: (val) {
-      //               setState(() {
-      //                 createEvent = val;
-      //               });
-      //             },
-      //           ),
-      //           Text(
-      //               'Tick to create an event for this request') // Label to be created
-      //         ],
-      //       )
-      //     : Container(height: 0, width: 0),
-
-      SizedBox(height: 15),
-
-      Center(
-        child: LocationPickerWidget(
-          selectedAddress: selectedAddress,
-          location: location,
-          onChanged: (LocationDataModel dataModel) {
-            log("received data model");
-            setState(() {
-              location = dataModel.geoPoint;
-              this.selectedAddress = dataModel.location;
-            });
-          },
-        ),
-      )
-    ]);
+          )
+        ]);
   }
 
   void _search(String queryString) {
@@ -2414,7 +2509,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
 //Assigning room or tool for Borrrow Requests
-      if (roomOrTool != null && requestModel.requestType == RequestType.BORROW) {
+      if (roomOrTool != null &&
+          requestModel.requestType == RequestType.BORROW) {
         if (roomOrTool == 1) {
           //CHANGE to use enums
           requestModel.roomOrTool = 'TOOL';

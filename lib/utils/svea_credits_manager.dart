@@ -111,7 +111,9 @@ class SevaCreditLimitManager {
         return (currentGlobalBalance > 0
                     ? currentGlobalBalance -
                         associatedBalanceWithinThisCommunity
-                    : 0) +
+                    : 0
+                    ) 
+                    +
                 (communityThreshold.abs() +
                     associatedBalanceWithinThisCommunity) >=
             credits;
