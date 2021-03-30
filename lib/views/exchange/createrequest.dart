@@ -1721,9 +1721,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
+          double creditsNeeded = 
+                await SevaCreditLimitManager.checkCreditsNeeded(
+            email: SevaCore.of(context).loggedInUser.email,
+            credits: requestModel.numberOfHours.toDouble(),
+            userId: myDetails.sevaUserID,
+            communityId: timebankModel.communityId,
+          );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
-            await sendInsufficentNotificationToAdmin();
+            await sendInsufficentNotificationToAdmin(creditsNeeded: creditsNeeded);
             return;
           }
           break;
@@ -2079,8 +2086,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   void sendInsufficentNotificationToAdmin({
-    String communityId,
+    double creditsNeeded,
   }) async {
+
+    log('creditsNeeded:  '  + creditsNeeded.toString());
 
     UserInsufficentCreditsModel userInsufficientModel = UserInsufficentCreditsModel(
       senderName: SevaCore.of(context).loggedInUser.fullname,
@@ -2088,6 +2097,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       senderPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
       timebankId: timebankModel.id,
       timebankName: timebankModel.name,
+      creditsNeeded: creditsNeeded,
     );
 
     NotificationsModel notification = NotificationsModel(

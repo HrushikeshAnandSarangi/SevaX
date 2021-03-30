@@ -82,7 +82,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           shrinkWrap: true,
           itemCount: notifications.length,
           itemBuilder: (context, index) {
-            double creditsNeeded = 10;
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
               case NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS:
@@ -93,7 +92,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   title: "${userInsufficientModel.senderName}"
                       " Has Insufficient Credits To Create Requests",
                   subTitle: "Credits Needed: "
-                      "${creditsNeeded} \n${S.of(context).tap_to_view_details}",
+                      "${userInsufficientModel.creditsNeeded} \n${S.of(context).tap_to_view_details}",
                   photoUrl: userInsufficientModel.senderPhotoUrl,
                   entityName: userInsufficientModel.senderName,
                   onPressed: () {
@@ -141,7 +140,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           },
                           onDonateClick: () async {
                             Navigator.pop(_context);
-                            await _showFontSizePickerDialog(context, notification.senderUserId, widget.timebankModel);
+                            await _showFontSizePickerDialog(context, notification.senderUserId, 
+                                                            widget.timebankModel, userInsufficientModel.creditsNeeded);
                           },
                         );
                       },
@@ -496,7 +496,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }
 
    void _showFontSizePickerDialog(
-      BuildContext context, String userId, TimebankModel model) async {
+      BuildContext context, String userId, TimebankModel model, double creditsNeeded) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -530,7 +530,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     final donateAmount_Received = await showDialog<double>(
       context: context,
       builder: (context) => InputDonateDialog(
-          donateAmount: donateAmount, maxAmount: widget.timebankModel.balance.toDouble()),
+          donateAmount: donateAmount, maxAmount: widget.timebankModel.balance.toDouble(),
+          creditsNeeded: creditsNeeded),
     );
 
     // execution of this code continues when the dialog was closed (popped)

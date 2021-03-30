@@ -6,12 +6,14 @@ class UserInsufficentCreditsModel extends DataModel {
   String senderPhotoUrl;
   String timebankId;
   String timebankName;
+  double creditsNeeded;
   UserInsufficentCreditsModel(
       {this.senderName,
       this.senderId,
       this.senderPhotoUrl,
       this.timebankId,
-      this.timebankName}); //  String senderName;
+      this.timebankName,
+      this.creditsNeeded}); //  String senderName;
 
   @override
   Map<String, dynamic> toMap() {
@@ -32,6 +34,9 @@ class UserInsufficentCreditsModel extends DataModel {
     }
     if (this.timebankName != null && this.timebankName.isNotEmpty) {
       object['timebankName'] = this.timebankName;
+    }
+    if (this.creditsNeeded != null) {
+      object['creditsNeeded'] = this.creditsNeeded;
     }
     return object;
   }
@@ -55,6 +60,10 @@ class UserInsufficentCreditsModel extends DataModel {
 
     if (map.containsKey('timebankName')) {
       this.timebankName = map['timebankName'];
+    }
+
+    if (map.containsKey('creditsNeeded')) {
+      this.creditsNeeded = map['creditsNeeded'];
     }
 
   }

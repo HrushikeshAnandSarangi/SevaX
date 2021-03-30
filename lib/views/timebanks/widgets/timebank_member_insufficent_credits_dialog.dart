@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -46,7 +47,9 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               width: 70,
               child: CircleAvatar(
                 backgroundImage:
-                    NetworkImage(userInsufficientModel.senderPhotoUrl),
+                  userInsufficientModel.senderPhotoUrl == null ?  
+                  NetworkImage(defaultUserImageURL) :
+                  NetworkImage(userInsufficientModel.senderPhotoUrl),
               ),
             ),
             Padding(

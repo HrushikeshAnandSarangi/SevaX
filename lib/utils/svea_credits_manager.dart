@@ -92,36 +92,56 @@ class SevaCreditLimitManager {
     @required String communityId,
   }) async {
     var currentGlobalBalance = await getCurrentBalance(email: email);
-    
+    log('currentGlobalBalance:  ' + currentGlobalBalance.toString());
+
     if (currentGlobalBalance >= credits) {
-
       return true;
-    
     } else {
+      var associatedBalanceWithinThisCommunity =
+          await getMemberBalancePerTimebank(
+        userSevaId: userId,
+        communityId: communityId,
+      );
 
-        var associatedBalanceWithinThisCommunity =
-            await getMemberBalancePerTimebank(
-          userSevaId: userId,
-              communityId: communityId,
-        );
+      var communityThreshold =
+          await getNegativeThresholdForCommunity(communityId);
 
-        var communityThreshold = await getNegativeThresholdForCommunity(communityId);
-
-          if (associatedBalanceWithinThisCommunity > communityThreshold) {
-            return (currentGlobalBalance > 0
-                        ? currentGlobalBalance -
-                            associatedBalanceWithinThisCommunity
-                        : 0) +
-                    (communityThreshold.abs() +
-                        associatedBalanceWithinThisCommunity) >=
-                credits;
-          
-          } else {
-        
-            return false;
-        
-          }
+      if (associatedBalanceWithinThisCommunity > communityThreshold) {
+        return (currentGlobalBalance > 0
+                    ? currentGlobalBalance -
+                        associatedBalanceWithinThisCommunity
+                    : 0) +
+                (communityThreshold.abs() +
+                    associatedBalanceWithinThisCommunity) >=
+            credits;
+      } else {
+        return false;
+      }
     }
+  }
+
+  static Future<double> checkCreditsNeeded({
+    @required String email,
+    @required String userId,
+    @required double credits,
+    @required String communityId,
+  }) async {
+    var associatedBalanceWithinThisCommunity =
+        await getMemberBalancePerTimebank(
+      userSevaId: userId,
+      communityId: communityId,
+    );
+    var communityThreshold =
+        await getNegativeThresholdForCommunity(communityId);
+
+    var creditsNeeded = (credits -
+        (associatedBalanceWithinThisCommunity + communityThreshold.abs()));
+
+    log('credits:  ' + associatedBalanceWithinThisCommunity.toString()); 
+    log('CAB:  ' + associatedBalanceWithinThisCommunity.toString());
+    log('CT:  ' + communityThreshold.toString());
+    log('cNeeded:  ' + creditsNeeded.toString());
+    return creditsNeeded;
   }
 
   static Future<double> getCurrentBalance({String email}) {
