@@ -5,12 +5,15 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
@@ -59,6 +62,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     }
                     if (value) {
                       await addMemberToTimebank(
+                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                         timebankId: model.entityId,
                         timebankTitle: model.timebankTitle,
                         joinRequestId: model.id,
@@ -77,6 +81,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     } else {
                       await showProgressForOnboardingUser(context);
                       rejectMemberJoinRequest(
+                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                         timebankId: model.entityId,
                         joinRequestId: model.id,
                         notificaitonId: notification.id,
@@ -258,6 +263,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String adminId,
     String adminFullName,
     String adminPhotoUrl,
+    CommunityModel communityModel,
   }) {
     //add to timebank members
 
@@ -313,6 +319,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
+        'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -347,6 +354,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String adminFullName,
     String adminPhotoUrl,
     String timebankTitle,
+    CommunityModel communityModel,
   }) {
     //add to timebank members
 
@@ -376,6 +384,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
+      'isGroup':  communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,

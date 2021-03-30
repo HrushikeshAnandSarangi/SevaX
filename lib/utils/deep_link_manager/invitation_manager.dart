@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -177,6 +178,7 @@ class InvitationManager {
     @required String newMemberFullName,
     @required String newMemberPhotoUrl,
     TimebankModel timebankModel,
+    CommunityModel communityModel,
   }) {
     //add to timebank members
 
@@ -216,6 +218,7 @@ class InvitationManager {
       'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
+      'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,

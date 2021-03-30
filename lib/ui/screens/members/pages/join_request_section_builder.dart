@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -72,6 +74,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                               //Todo : add loading indicator
                               var joinRequestModel = snapshot.data[index];
                               joinRequestBloc.addMemberToTimebank(
+                                communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                 timebankId: joinRequestModel.entityId,
                                 joinRequestId: joinRequestModel.id,
                                 memberJoiningSevaUserId:
@@ -108,6 +111,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             onPressed: () {
                               //Todo : add loading indicator
                               joinRequestBloc.rejectMemberJoinRequest(
+                                communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                 timebankId: snapshot.data[index].entityId,
                                 joinRequestId: snapshot.data[index].id,
                                 notificaitonId:
