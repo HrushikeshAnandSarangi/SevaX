@@ -290,8 +290,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                     onTap: () async {
                                       indexPosition = index;
                                       getLogoFile(widget.timebankModel);
-
-
                                     },
                                     title: Text(S.of(context).edit),
                                     trailing: Icon(Icons.edit),
