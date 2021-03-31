@@ -788,11 +788,11 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         Offstage(
-                            offstage: widget.isCreateTimebank && communityModel.testCommunity,
+                            offstage: widget.isCreateTimebank || communityModel.testCommunity,
                             child:
                                 headingText(S.of(context).timebank_has_parent)),
                         Offstage(
-                          offstage: widget.isCreateTimebank,
+                          offstage: widget.isCreateTimebank  || communityModel.testCommunity,
                           child: Text(
                             S
                                 .of(context)
@@ -804,7 +804,7 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         Offstage(
-                          offstage: widget.isCreateTimebank,
+                          offstage: widget.isCreateTimebank  || communityModel.testCommunity,
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Community,
                             upgradeDetails: AppConfig

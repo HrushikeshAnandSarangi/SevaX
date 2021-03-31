@@ -429,28 +429,31 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
 
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.VirtualRequest,
-                                  isChecked: requestModel.virtualRequest,
-                                  checkBoxTypeLabel:
-                                      CheckBoxType.type_VirtualRequest,
-                                  onChangedCB: (bool val) {
-                                    if (requestModel.virtualRequest != val) {
-                                      this.requestModel.virtualRequest = val;
+                            HideWidget(
+                              hide: AppConfig.isTestCommunity,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.VirtualRequest,
+                                    isChecked: requestModel.virtualRequest,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_VirtualRequest,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.virtualRequest != val) {
+                                        this.requestModel.virtualRequest = val;
 
-                                      if (!val) {
-                                        requestModel.public = false;
-                                        isPulicCheckboxVisible = false;
-                                      } else {
-                                        isPulicCheckboxVisible = true;
+                                        if (!val) {
+                                          requestModel.public = false;
+                                          isPulicCheckboxVisible = false;
+                                        } else {
+                                          isPulicCheckboxVisible = true;
+                                        }
+
+                                        setState(() {});
                                       }
-
-                                      setState(() {});
-                                    }
-                                  }),
+                                    }),
+                              ),
                             ),
                             HideWidget(
                               hide:  !isPulicCheckboxVisible ||
