@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
@@ -348,6 +349,7 @@ class ReportedMemberCard extends StatelessWidget {
                     'modeType': ExitMode.REPORTED_IN_COMMUNITY.readable,
                     'timestamp': DateTime.now().millisecondsSinceEpoch,
                     'communityId': model.communityId,
+                    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
                     'memberDetails': {
                       'email': model.reportedUserEmail,
                       'id': model.reportedId,

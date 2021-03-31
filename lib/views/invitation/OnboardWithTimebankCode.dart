@@ -565,7 +565,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     adminId: SevaCore.of(context).loggedInUser.sevaUserID,
                     adminFullName: SevaCore.of(context).loggedInUser.fullname,
                     adminPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
-                    timebankId: timebankModel.id,
+                    timebankModel: timebankModel,
                     timebankTitle: timebankModel.name,
                   ).commit();
 
@@ -615,7 +615,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     String adminId,
     String adminFullName,
     String adminPhotoUrl,
-    String timebankId,
+    TimebankModel timebankModel,
     String timebankTitle,
   }) {
     var batchUpdate = Firestore.instance.batch();
@@ -649,7 +649,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     
     var entryExitLogReference = Firestore.instance
         .collection('timebanknew')
-        .document(timebankId)
+        .document(timebankModel.id)
         .collection('entryExitLogs')
         .document();
 
@@ -670,6 +670,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       'modeType': JoinMode.JOINED_VIA_CODE.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': onBoardingMemberEmail,
         'id': onBaordingMemberSevaId,
@@ -683,7 +684,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       //   'photoUrl': adminPhotoUrl,
       // },
       'associatedTimebankDetails': {
-        'timebankId': timebankId,
+        'timebankId': timebankModel.id,
         'timebankTitle': timebankTitle,
       },
     });

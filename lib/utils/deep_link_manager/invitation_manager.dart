@@ -178,7 +178,6 @@ class InvitationManager {
     @required String newMemberFullName,
     @required String newMemberPhotoUrl,
     TimebankModel timebankModel,
-    CommunityModel communityModel,
   }) {
     //add to timebank members
 
@@ -209,7 +208,7 @@ class InvitationManager {
 
     var entryExitLogReference = Firestore.instance
         .collection('timebanknew')
-        .document(primaryTimebankId)
+        .document(timebankModel.id)
         .collection('entryExitLogs')
         .document();
 
@@ -218,7 +217,7 @@ class InvitationManager {
       'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,

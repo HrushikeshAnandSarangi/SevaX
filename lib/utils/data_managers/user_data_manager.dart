@@ -447,7 +447,8 @@ Future<Map<String, dynamic>> removeMemberFromGroup({
 
 Future<Map<String, dynamic>> removeMemberFromTimebank({
   String sevauserid,
-  String timebankId,
+  String timebankModel,
+  Timebank
 }) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
@@ -459,7 +460,7 @@ Future<Map<String, dynamic>> removeMemberFromTimebank({
 }
 
 Future storeRemoveMemberLog({
-  String timebankId,
+  TimebankModel timebankModel,
   String communityId,
   String memberEmail,
   String memberUid,
@@ -473,7 +474,7 @@ Future storeRemoveMemberLog({
 }) async {
   var response = Firestore.instance
       .collection('timebanknew')
-      .document(timebankId)
+      .document(timebankModel.id)
       .collection('entryExitLogs')
       .document()
       .setData({
@@ -481,6 +482,7 @@ Future storeRemoveMemberLog({
     'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
     'timestamp': DateTime.now().millisecondsSinceEpoch,
     'communityId': communityId,
+    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
     'memberDetails': {
       'email': memberEmail,
       'id': memberUid,
@@ -494,7 +496,7 @@ Future storeRemoveMemberLog({
       'photoUrl': adminPhotoUrl,
     },
     'associatedTimebankDetails': {
-      'timebankId': timebankId,
+      'timebankId': timebankModel.id,
       'timebankTitle': timebankTitle,
     },
   });
