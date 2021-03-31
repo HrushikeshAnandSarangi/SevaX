@@ -853,7 +853,7 @@ class _RegisterPageState extends State<RegisterPage>
       selectedImage,
       StorageMetadata(
         contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'News Image'},
+        customMetadata: <String, String>{'activity': 'Profile Image'},
       ),
     );
 
