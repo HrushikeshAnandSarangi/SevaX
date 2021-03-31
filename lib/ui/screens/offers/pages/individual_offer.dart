@@ -426,24 +426,27 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               );
                             }),
                         SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: StreamBuilder<bool>(
-                              initialData: false,
-                              stream: _bloc.makeVirtual,
-                              builder: (context, snapshot) {
-                                return OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualOffers,
-                                    isChecked: snapshot.data,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualOffers,
-                                    onChangedCB: (bool val) {
-                                      if (snapshot.data != val) {
-                                        _bloc.onOfferMadeVirtual(val);
-                                        setState(() {});
-                                      }
-                                    });
-                              }),
+                        Offstage(
+                          offstage: AppConfig.isTestCommunity,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: StreamBuilder<bool>(
+                                initialData: false,
+                                stream: _bloc.makeVirtual,
+                                builder: (context, snapshot) {
+                                  return OpenScopeCheckBox(
+                                      infoType: InfoType.VirtualOffers,
+                                      isChecked: snapshot.data,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_VirtualOffers,
+                                      onChangedCB: (bool val) {
+                                        if (snapshot.data != val) {
+                                          _bloc.onOfferMadeVirtual(val);
+                                          setState(() {});
+                                        }
+                                      });
+                                }),
+                          ),
                         ),
                         StreamBuilder<bool>(
                           initialData: false,

@@ -1572,13 +1572,23 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
   @required String userEmail,
   @required String userId,
 }) async* {
-  var data = Firestore.instance
-      .collection('transactions')
-      .where("isApproved", isEqualTo: true)
-      .where('transactionbetween', arrayContains: userId)
-      .orderBy("timestamp", descending: true)
-      .snapshots();
-
+  var data;
+  if(AppConfig.isTestCommunity){
+    data = Firestore.instance
+        .collection('transactions')
+        .where("isApproved", isEqualTo: true)
+        .where('transactionbetween', arrayContains: userId)
+        .where('liveMode', isEqualTo: true)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }else {
+    data = Firestore.instance
+        .collection('transactions')
+        .where("isApproved", isEqualTo: true)
+        .where('transactionbetween', arrayContains: userId)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<TransactionModel>>.fromHandlers(
       handleData: (snapshot, requestSink) {

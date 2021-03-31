@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
@@ -78,6 +79,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
   bool makePublicBool = false;
+  bool isPulicCheckboxVisible = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -609,19 +612,49 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       ],
                     )
                   : Offstage(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: OpenScopeCheckBox(
-                    infoType: InfoType.OpenScopeEvent,
-                    isChecked: projectModel.public,
-                    checkBoxTypeLabel: CheckBoxType.type_Events,
-                    onChangedCB: (bool val) {
-                      if (projectModel.public != val) {
-                        this.projectModel.public = val;
-                        log('value ${projectModel.public}');
-                        setState(() {});
-                      }
-                    }),
+              HideWidget(
+                hide: AppConfig.isTestCommunity,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 8),
+                  child: OpenScopeCheckBox(
+                      infoType: InfoType.VirtualRequest,
+                      isChecked: projectModel.virtualProject,
+                      checkBoxTypeLabel:
+                      CheckBoxType.type_VirtualRequest,
+                      onChangedCB: (bool val) {
+                        if (projectModel.virtualProject != val) {
+                          this.projectModel.virtualProject = val;
+
+                          if (!val) {
+                            projectModel.public = false;
+                            isPulicCheckboxVisible = false;
+                          } else {
+                            isPulicCheckboxVisible = true;
+                          }
+
+                          setState(() {});
+                        }
+                      }),
+                ),
+              ),
+
+              HideWidget(
+                hide: !isPulicCheckboxVisible ,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: OpenScopeCheckBox(
+                      infoType: InfoType.OpenScopeEvent,
+                      isChecked: projectModel.public,
+                      checkBoxTypeLabel: CheckBoxType.type_Events,
+                      onChangedCB: (bool val) {
+                        if (projectModel.public != val) {
+                          this.projectModel.public = val;
+                          log('value ${projectModel.public}');
+                          setState(() {});
+                        }
+                      }),
+                ),
               ),
               // Padding(
               //   padding: const EdgeInsets.symmetric(vertical: 8),
