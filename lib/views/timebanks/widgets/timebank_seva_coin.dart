@@ -152,7 +152,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       return;
     }
 
-    if (this.widget.loggedInUser.currentBalance <= 0) {
+    if ( AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
@@ -172,7 +172,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
-          maxAmount: this.widget.loggedInUser.currentBalance),
+          maxAmount:AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -182,8 +182,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (donateAmount_Received != null) {
       setState(() {
         donateAmount = donateAmount_Received;
-        SevaCore.of(context).loggedInUser.currentBalance =
-            widget.loggedInUser.currentBalance - donateAmount_Received;
+
+        AppConfig.isTestCommunity ? SevaCore.of(context).loggedInUser.testBalance: SevaCore.of(context).loggedInUser.currentBalance =
+        AppConfig.isTestCommunity ?  widget.loggedInUser.testBalance:  widget.loggedInUser.currentBalance - donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
         this.widget.loggedInUser.sevaUserID,

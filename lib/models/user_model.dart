@@ -27,6 +27,7 @@ class UserModel extends DataModel {
   String sevaUserID;
   List<String> invitedRequests;
   double currentBalance;
+  double testBalance;
   double trustworthinessscore;
   double reliabilityscore;
   int totalReviews;
@@ -90,6 +91,7 @@ class UserModel extends DataModel {
       this.sevaUserID,
       this.skills,
       this.currentBalance,
+      this.testBalance,
       this.reliabilityscore,
       this.trustworthinessscore,
       this.totalReviews,
@@ -285,6 +287,12 @@ class UserModel extends DataModel {
     } else {
       this.currentBalance = 0.0;
     }
+
+    if (map.containsKey('testBalance')) {
+      this.testBalance = map['testBalance'].toDouble();
+    } else {
+      this.testBalance = 0.0;
+    }
     if (map.containsKey('trustworthinessscore')) {
       this.trustworthinessscore = map['trustworthinessscore'].toDouble();
     } else {
@@ -479,6 +487,11 @@ class UserModel extends DataModel {
     } else {
       object['currentBalance'] = 0;
     }
+    if (this.testBalance != null) {
+      object['testBalance'] = this.testBalance;
+    } else {
+      object['testBalance'] = 0;
+    }
     if (this.trustworthinessscore != null) {
       object['trustworthinessscore'] = this.trustworthinessscore;
     } else {
@@ -559,6 +572,7 @@ class UserModel extends DataModel {
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},
+      ${this.testBalance.toString()},
       ${this.reliabilityscore.toString()},
       ${this.totalReviews.toString()}, 
       ${this.trustworthinessscore.toString()},

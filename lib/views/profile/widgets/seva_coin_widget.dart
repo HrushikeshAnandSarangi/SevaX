@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 class SevaCoinWidget extends StatelessWidget {
   final double amount;
@@ -40,7 +41,7 @@ class SevaCoinWidget extends StatelessWidget {
             ),
             SizedBox(width: 5),
             Text(
-              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${S.of(context).seva_credits}',
+              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppConfig.isTestCommunity ? 'Test '+ S.of(context).seva_credits: S.of(context).seva_credits}',
               style: TextStyle(
                 color: amount > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,

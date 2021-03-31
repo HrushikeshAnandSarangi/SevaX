@@ -108,7 +108,7 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
-      if (community.private == false) {
+      if (community.private == false && !community.testCommunity) {
         communityList.add(community);
       }
 

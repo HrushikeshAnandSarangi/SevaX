@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../../app_config.dart';
 import '../resources/repository.dart';
 
 class CommunityFindBloc {
@@ -216,7 +217,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance': 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
         // credit to user
@@ -232,7 +233,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance':  'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
@@ -266,7 +267,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance':  'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
@@ -319,7 +320,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance':   'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       } else if (type == "ADMIN_DONATE_TOUSER") {
@@ -353,7 +354,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance':  'currentBalance':
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       }
