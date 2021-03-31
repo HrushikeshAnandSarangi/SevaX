@@ -6,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/join_request_repository.dart';
 
 class JoinRequestBloc {
@@ -34,7 +35,7 @@ class JoinRequestBloc {
     String timebankTitle,
     String memberEmail,
     String memberId,
-    CommunityModel communityModel,
+    TimebankModel timebankModel,
   }) {
 
     log('REJECT COMES HERE!');
@@ -65,7 +66,7 @@ class JoinRequestBloc {
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': memberEmail,
         'id': memberId,
@@ -105,7 +106,7 @@ class JoinRequestBloc {
     String adminFullName,
     String adminPhotoUrl,
     String timebankTitle,
-    CommunityModel communityModel,
+    TimebankModel timebankModel,
   }) {
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef =
@@ -155,7 +156,7 @@ class JoinRequestBloc {
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,

@@ -867,7 +867,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         onPressed: !isJoined
                             ? () async {
                                 await addMemberToTimebank(
-                                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                        timebankModel: timebankModel,
                                         sevaUserId: user.sevaUserID,
                                         timebankId: timebankModel.id,
                                         communityId: timebankModel.communityId,
@@ -1134,7 +1134,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String userPhotoURL,
     String timebankTitle,
     String parentTimebankId,
-    CommunityModel communityModel,
+    TimebankModel timebankModel,
   }) {
     WriteBatch batch = Firestore.instance.batch();
 
@@ -1170,7 +1170,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable, 
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': userEmail,
         'id': sevaUserId,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -14,9 +15,11 @@ class JoinRequestSectionBuilder extends StatelessWidget {
   const JoinRequestSectionBuilder({
     Key key,
     @required this.joinRequestBloc,
+    this.timebankModel,
   }) : super(key: key);
 
   final JoinRequestBloc joinRequestBloc;
+  final TimebankModel timebankModel;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +77,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                               //Todo : add loading indicator
                               var joinRequestModel = snapshot.data[index];
                               joinRequestBloc.addMemberToTimebank(
-                                communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                timebankModel: timebankModel,
                                 timebankId: joinRequestModel.entityId,
                                 joinRequestId: joinRequestModel.id,
                                 memberJoiningSevaUserId:
@@ -111,7 +114,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             onPressed: () {
                               //Todo : add loading indicator
                               joinRequestBloc.rejectMemberJoinRequest(
-                                communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                timebankModel: timebankModel,
                                 timebankId: snapshot.data[index].entityId,
                                 joinRequestId: snapshot.data[index].id,
                                 notificaitonId:

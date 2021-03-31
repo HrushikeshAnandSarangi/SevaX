@@ -245,6 +245,7 @@ class _MembersPageState extends State<MembersPage> {
                       hide: !isAdmin,
                       child: JoinRequestSectionBuilder(
                         joinRequestBloc: joinRequestBloc,
+                        timebankModel: snapshot.data.timebank,
                       ),
                     ),
                     Padding(

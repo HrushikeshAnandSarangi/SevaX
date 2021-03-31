@@ -8,20 +8,23 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 
 class TimebankJoinRequestWidget extends StatelessWidget {
   final NotificationsModel notification;
+  final TimebankModel timebankModel;
 
-  const TimebankJoinRequestWidget({Key key, this.notification})
+  const TimebankJoinRequestWidget({Key key, this.notification, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -62,7 +65,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     }
                     if (value) {
                       await addMemberToTimebank(
-                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                        timebankModel: timebankModel,
                         timebankId: model.entityId,
                         timebankTitle: model.timebankTitle,
                         joinRequestId: model.id,
@@ -81,7 +84,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     } else {
                       await showProgressForOnboardingUser(context);
                       rejectMemberJoinRequest(
-                        communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                        timebankModel: timebankModel,
                         timebankId: model.entityId,
                         joinRequestId: model.id,
                         notificaitonId: notification.id,
@@ -263,7 +266,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String adminId,
     String adminFullName,
     String adminPhotoUrl,
-    CommunityModel communityModel,
+    TimebankModel timebankModel,
   }) {
     //add to timebank members
 
@@ -319,7 +322,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-        'isGroup': communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+        'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -354,7 +357,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String adminFullName,
     String adminPhotoUrl,
     String timebankTitle,
-    CommunityModel communityModel,
+    TimebankModel timebankModel,
   }) {
     //add to timebank members
 
@@ -384,7 +387,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup':  communityModel.primary_timebank == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':  timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
