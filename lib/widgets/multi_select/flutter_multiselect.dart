@@ -117,8 +117,8 @@ class MultiSelect extends FormField<dynamic> {
             initialValue: initialValue,
             autovalidate: autovalidate,
             builder: (FormFieldState<dynamic> state) {
-              List<Widget> _buildSelectedOptions(dynamic values, state) {
-                List<Widget> selectedOptions = [];
+              Widget _buildSelectedOptions(dynamic values, state) {
+                Widget selectedOptions;
 
                 if (values != null) {
                   values.forEach((item) {
@@ -126,10 +126,12 @@ class MultiSelect extends FormField<dynamic> {
                         (itm) => itm[valueField] == item,
                         orElse: () => null);
                     if (existingItem != null) {
-                      selectedOptions.add(Chip(
+                      selectedOptions=Chip(
                         label: Text(existingItem[textField],
                             overflow: TextOverflow.ellipsis),
-                      ));
+                      );
+                    }else{
+                      selectedOptions=Container();
                     }
                   });
                 }
@@ -252,12 +254,8 @@ class MultiSelect extends FormField<dynamic> {
                                 ),
                               ),
                             )
-                          : Wrap(
-                              spacing: 8.0, // gap between adjacent chips
-                              runSpacing: 1.0, // gap between lines
-                              children:
-                                  _buildSelectedOptions(state.value, state),
-                            )
+                          :                                  _buildSelectedOptions(state.value, state),
+
                     ],
                   ));
             });

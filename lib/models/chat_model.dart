@@ -13,7 +13,9 @@ class ChatModel {
   Map<dynamic, dynamic> deletedBy;
   bool isTimebankMessage;
   // String timebankId;
+  bool interCommunity;
   String communityId;
+  List<String> showToCommunities;
   bool isGroupMessage;
   MultiUserMessagingModel groupDetails;
   ChatContext chatContext;
@@ -27,7 +29,8 @@ class ChatModel {
     this.softDeletedBy,
     this.deletedBy,
     this.isTimebankMessage = false,
-    // this.timebankId,
+    this.interCommunity = false,
+    this.showToCommunities,
     this.communityId,
     this.timestamp,
     this.isGroupMessage,
@@ -56,8 +59,15 @@ class ChatModel {
                     Map<String, dynamic>.from(map["groupDetails"]),
                   )
                 : null,
+
         // timebankId: map["timebankId"],
-        communityId: map["communityId"],
+        interCommunity: map.containsKey('interCommunity')
+            ? map['interCommunity'] ?? false
+            : false,
+        communityId: map.containsKey("communityId") ? map["communityId"] : null,
+        showToCommunities: map.containsKey('showToCommunities')
+            ? List<String>.from((map["showToCommunities"] ?? []).map((x) => x))
+            : [],
         timestamp: map["timestamp"],
         chatContext:
             map.containsKey('chatContext') && map['chatContext'] != null
@@ -79,6 +89,9 @@ class ChatModel {
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
         "chatContext": chatContext?.toMap() ?? {},
+        "showToCommunities":
+            List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
+        "interCommunity": interCommunity ?? false,
       };
 
   Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {
@@ -92,6 +105,7 @@ class ChatModel {
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
         "chatContext": chatContext.toMap(),
+        "interCommunity": interCommunity ?? false,
       };
 }
 

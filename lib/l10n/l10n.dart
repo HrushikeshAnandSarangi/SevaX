@@ -362,7 +362,7 @@ class S {
       );
 
   String get bio_description => Intl.message(
-        'Please tell us a little bit about yourself in a few sentences.For example, you can tell us what makes you unique.',
+        'Please tell us a little bit about yourself in a few sentences. For example, you can tell us what makes you unique.',
         name: 'bio_description',
       );
 

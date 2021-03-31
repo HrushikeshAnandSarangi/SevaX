@@ -159,7 +159,11 @@ class _NewChatPageState extends State<NewChatPage> {
                             0 ||
                         !_bloc.isSelectionEnabled
                     ? FrequentContactsBuilder(
-                        widget.frequentContacts,
+                        _bloc.isSelectionEnabled
+                            ? widget.frequentContacts
+                                .where((element) => !element.isGroupMessage)
+                                .toList()
+                            : widget.frequentContacts,
                         _bloc.isSelectionEnabled,
                       )
                     : Center(

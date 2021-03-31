@@ -71,7 +71,12 @@ class Auth {
           AuthResult _result =
               await _firebaseAuth.signInWithCredential(credential);
 
-          return _processGoogleUser(_result.user);
+          return _processGoogleUser(
+            _result.user,
+            name: nameBuilder(_auth.fullName.givenName) +
+                nameBuilder(_auth.fullName.middleName) +
+                nameBuilder(_auth.fullName.familyName)?.trim(),
+          );
 
         default:
           return null;
@@ -80,6 +85,10 @@ class Auth {
     } else {
       return null;
     }
+  }
+
+  String nameBuilder(String text) {
+    return text != null ? ' $text ' : '';
   }
 
   /// SignIn a User with his [email] and [password]
@@ -165,14 +174,14 @@ class Auth {
     return userModel;
   }
 
-  Future<UserModel> _processGoogleUser(FirebaseUser user) async {
+  Future<UserModel> _processGoogleUser(FirebaseUser user, {String name}) async {
     if (user == null) {
       return null;
     }
 
     UserModel userModel = UserModel(
       photoURL: user.photoUrl,
-      fullname: user.displayName,
+      fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
       email: user.email,
       sevaUserID: user.uid,
     );

@@ -431,6 +431,10 @@ class _RequestDonationDisputePageState
                                     ? recieverId
                                     : widget.model.donatedTo,
                           );
+                          logger.wtf(
+                              widget.model.donorDetails.communityId !=
+                                  widget.model.receiverDetails.communityId,
+                              'offer1');
 
                           await HandlerForModificationManager
                               .createChatForDispute(
@@ -450,6 +454,23 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             isTimebankMessage: false,
                             communityId: loggedInUser.currentCommunity,
+                            entityId: widget.model.id,
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
+                                ? [
+                                    widget.model.donorDetails.communityId,
+                                    widget.model.receiverDetails.communityId,
+                                  ]
+                                : [
+                                    widget.model.donorDetails.communityId,
+                                    timebankModel.communityId
+                                  ],
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                           );
                           break;
 
@@ -458,8 +479,26 @@ class _RequestDonationDisputePageState
                             timebankId: widget.model.timebankId,
                           );
                           var loggedInUser = SevaCore.of(context).loggedInUser;
+
                           await HandlerForModificationManager
                               .createChatForDispute(
+                            entityId: widget.model.id,
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
+                                ? [
+                                    widget.model.donorDetails.communityId,
+                                    widget.model.receiverDetails.communityId,
+                                  ]
+                                : [
+                                    widget.model.donorDetails.communityId,
+                                    timebankModel.communityId
+                                  ],
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -512,6 +551,23 @@ class _RequestDonationDisputePageState
                             ),
                             context: context,
                             timeBankId: widget.model.timebankId,
+                            entityId: widget.model.id,
+                            showToCommunities: widget.model.requestIdType ==
+                                    'offer'
+                                ? [
+                                    widget.model.donorDetails.communityId,
+                                    widget.model.receiverDetails.communityId,
+                                  ]
+                                : [
+                                    widget.model.donorDetails.communityId,
+                                    timebankModel.communityId
+                                  ],
+                            interCommunity:
+                                widget.model.requestIdType == 'offer'
+                                    ? widget.model.donorDetails.communityId !=
+                                        widget.model.receiverDetails.communityId
+                                    : widget.model.donorDetails.communityId !=
+                                        timebankModel.communityId,
                           );
                           break;
                       }

@@ -615,11 +615,11 @@ class RequestListItemsState extends State<RequestListItems> {
                     ),
                     SizedBox(width: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.73,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Row(
+                          Wrap(
                             children: [
                               getAppropriateTag(model.requestType),
                               Visibility(
@@ -716,6 +716,8 @@ class RequestListItemsState extends State<RequestListItems> {
                                 SizedBox(width: 2),
                                 Text(
                                   getTimeFormattedString(
+
+
                                       model.requestEnd, loggedintimezone),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
@@ -898,17 +900,18 @@ class RequestListItemsState extends State<RequestListItems> {
   //   );
   // }
 
-  BoxDecoration get containerDecorationR {
-    return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(2.0)),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black.withAlpha(2),
-            spreadRadius: 6,
-            offset: Offset(0, 3),
-            blurRadius: 6)
-      ],
-      color: Colors.white,
-    );
-  }
+}
+
+BoxDecoration get containerDecorationR {
+  return BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+    boxShadow: [
+      BoxShadow(
+          color: Colors.black.withAlpha(2),
+          spreadRadius: 6,
+          offset: Offset(0, 3),
+          blurRadius: 6)
+    ],
+    color: Colors.white,
+  );
 }

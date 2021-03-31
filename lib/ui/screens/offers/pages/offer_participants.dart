@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -95,12 +96,34 @@ class OfferParticipants extends StatelessWidget {
       type: ChatType.TYPE_PERSONAL,
     );
 
+    List<String> showToCommunities = [];
+    try {
+      String communityId1 = loggedInUser.currentCommunity;
+
+      String communityId2 =
+          offerModel.participantDetails[user.sevauserid]['communityId'];
+
+      if (communityId1 != null &&
+          communityId2 != null &&
+          communityId1.isNotEmpty &&
+          communityId2.isNotEmpty &&
+          communityId1 != communityId2) {
+        showToCommunities.add(communityId1);
+        showToCommunities.add(communityId2);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
     createAndOpenChat(
       context: context,
       timebankId: timebankId,
       communityId: communityId,
       sender: sender,
       reciever: reciever,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
+      interCommunity: showToCommunities.isNotEmpty,
     );
   }
 }

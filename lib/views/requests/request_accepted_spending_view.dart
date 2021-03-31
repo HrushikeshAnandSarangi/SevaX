@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -811,11 +812,32 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       credits: credits,
     );
 
+    List<String> showToCommunities = [];
+    try {
+      String communityId1 = model.communityId;
+
+      String communityId2 = model.participantDetails[user.email]['communityId'];
+
+      if (communityId1 != null &&
+          communityId2 != null &&
+          communityId1.isNotEmpty &&
+          communityId2.isNotEmpty &&
+          communityId1 != communityId2) {
+        showToCommunities.add(communityId1);
+        showToCommunities.add(communityId2);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
     createAndOpenChat(
       isTimebankMessage:
           widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
       context: context,
       timebankId: model.timebankId,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
+      interCommunity: showToCommunities.isNotEmpty,
       communityId: loggedInUser.currentCommunity,
       sender: sender,
       reciever: reciever,

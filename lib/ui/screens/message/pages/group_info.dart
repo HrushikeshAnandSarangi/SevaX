@@ -58,6 +58,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
     super.initState();
   }
 
+  BuildContext dialogContext;
   @override
   Widget build(BuildContext context) {
     final bool isAdmin = chatModel.groupDetails.admins
@@ -81,7 +82,9 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (BuildContext context) {
+                  builder: (BuildContext mContext) {
+                    dialogContext = mContext;
+
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -98,9 +101,9 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     .then(
                   (value) {
                     if (value) {
-                      Navigator.of(context).pop();
+                      Navigator.of(dialogContext).pop();
 
-                      Navigator.of(context, rootNavigator: true).pop();
+                      Navigator.of(context).pop();
                     }
                   },
                 );

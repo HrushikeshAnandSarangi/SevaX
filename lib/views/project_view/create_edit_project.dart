@@ -94,6 +94,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         } else {
           this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
         }
+        projectModel.public=false;
       });
     }
 
@@ -296,9 +297,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.name = value;
                 },
                 textCapitalization: TextCapitalization.sentences,
-                inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-                ],
+                // inputFormatters: <TextInputFormatter>[
+                //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                // ],
                 initialValue: widget.isCreateProject
                     ? widget.projectTemplateModel != null
                         ? widget.projectTemplateModel.name
@@ -572,7 +573,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               widget.isCreateProject
                   ? Row(
                       children: <Widget>[
-                        headingText(S.of(context).save_as_template),
                         Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Checkbox(
@@ -599,6 +599,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             },
                           ),
                         ),
+                        headingText(S.of(context).save_as_template),
+
 //                Column(
 //                  children: <Widget>[
 //
@@ -621,20 +623,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       }
                     }),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: OpenScopeCheckBox(
-                    infoType: InfoType.VirtualRequest,
-                    isChecked: projectModel.virtualProject,
-                    checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
-                    onChangedCB: (bool val) {
-                      if (projectModel.virtualProject != val) {
-                        this.projectModel.virtualProject = val;
-                        setState(() {});
-                      }
-                    }),
-              ),
-
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8),
+              //   child: OpenScopeCheckBox(
+              //       infoType: InfoType.VirtualRequest,
+              //       isChecked: projectModel.virtualProject,
+              //       checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+              //       onChangedCB: (bool val) {
+              //         if (projectModel.virtualProject != val) {
+              //           this.projectModel.virtualProject = val;
+              //           setState(() {});
+              //         }
+              //       }),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(

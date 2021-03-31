@@ -53,6 +53,8 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
   NotificationType.MANUAL_TIME_CLAIM_APPROVED,
   NotificationType.MANUAL_TIME_CLAIM_REJECTED,
+  NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM,
+  NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM,
 ];
 
 //Not dismissiable notifications

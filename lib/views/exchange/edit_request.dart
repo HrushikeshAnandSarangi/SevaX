@@ -44,6 +44,7 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -125,7 +126,7 @@ class _EditRequestState extends State<EditRequest> {
         widget.requestModel.projectId.isEmpty) {
       return S.of(context).edit;
     }
-    return S.of(context).edit_project;
+    return S.of(context).edit_request;
   }
 }
 
@@ -184,6 +185,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String _selectedTimebankId;
   int oldHours = 0;
   int oldTotalRecurrences = 0;
+  bool isPublicCheckboxVisible = false;
 
   Future<TimebankModel> getTimebankAdminStatus;
   Future getProjectsByFuture;
@@ -212,6 +214,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
     }
+    isPublicCheckboxVisible = widget.requestModel.virtualRequest ?? false;
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
@@ -300,7 +303,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     fontFamily: 'Europa',
   );
 
-  Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
+  Widget addToProjectContainer(
+      snapshot, List<ProjectModel> projectModelList, requestModel) {
     if (snapshot.hasError) return Text(snapshot.error.toString());
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Container();
@@ -313,7 +317,14 @@ class RequestEditFormState extends State<RequestEditForm> {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
-          selectedProject: null,
+          selectedProject: widget.requestModel.projectId != null
+              ? projectModelList.firstWhere(
+                  (element) => element.id == widget.requestModel.projectId,
+                  orElse: () => null)
+              : null,
+          updateProjectIdCallback: (String projectid) {
+            widget.requestModel.projectId = projectid;
+          },
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
@@ -329,6 +340,79 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
+  // Widget get assignProjectToRequestContainerWidget {
+  //   return InkWell(
+  //     splashColor: Colors.transparent,
+  //     focusColor: Colors.transparent,
+  //     hoverColor: Colors.transparent,
+  //     onTap: () async {
+  //       ExtendedNavigator.ofRouter<RequestsRouter>()
+  //           .pushAssignProjectToRequest(
+  //         timebankModel: timebankModel,
+  //         userModel: BlocProvider.of<AuthBloc>(context).user,
+  //         timebankProjectsList: timebankProjects,
+  //         personalProjectsList: userPersonalProjects,
+  //       )
+  //           .then((projectModelRes) {
+  //         if (projectModelRes != '') {
+  //           selectedProjectModel = projectModelRes;
+  //           //this.requestModel.projectId = selectedProjectModel.id;
+  //           tempProjectId = selectedProjectModel.id;
+  //           updateProject = true;
+  //           setState(() {});
+  //         }
+  //       });
+  //     },
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Text(S.of(context).assign_to_project,
+  //                 style: TextStyle(
+  //                     fontSize: 16,
+  //                     fontWeight: FontWeight.w600,
+  //                     color: Colors.black87)),
+  //             Spacer(),
+  //             Icon(
+  //               Icons.arrow_drop_down_circle,
+  //               size: 30,
+  //               color: Theme.of(context).primaryColor,
+  //             )
+  //           ],
+  //         ),
+  //         SizedBox(
+  //           height: 10,
+  //         ),
+  //         Chip(
+  //           label: Container(
+  //             constraints: BoxConstraints(
+  //                 maxWidth: MediaQuery.of(context).size.width - 80.0),
+  //             child: Text(
+  //                 selectedProjectModel == null
+  //                     ? S.of(context).unassigned
+  //                     : selectedProjectModel.name,
+  //                 overflow: TextOverflow.ellipsis),
+  //           ),
+  //           deleteIcon: Icon(
+  //             Icons.cancel,
+  //             size: 20,
+  //           ),
+  //           deleteIconColor: Colors.black38,
+  //           onDeleted: () {
+  //             if (selectedProjectModel != null) {
+  //               selectedProjectModel = null;
+  //               //selectedProjectModel.id = '';
+  //               tempProjectId = '';
+  //               setState(() {});
+  //             }
+  //           },
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
   void updateExitWithConfirmationValue(
       BuildContext context, int index, String value) {
     ExitWithConfirmation.of(context).fieldValues[index] = value;
@@ -350,28 +434,25 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
 
-    Widget headerContainer(snapshot) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (isAccessAvailable(
-          snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return requestSwitch();
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        this.requestModel.requestType = RequestType.TIME;
-        return Container();
-      }
-    }
-
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
+          // if(snapshot.connectionState == ConnectionState.waiting){
+          //   return LoadingIndicator();
+          // }
+          log("timebank ${snapshot.data}");
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
+                if (projectListSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return LoadingIndicator();
+                }
+                if (projectListSnapshot.hasError) {
+                  return Center(
+                    child: Text(projectListSnapshot.error.toString()),
+                  );
+                }
                 List<ProjectModel> projectModelList = projectListSnapshot.data;
                 return Form(
                   key: _formKey,
@@ -408,10 +489,10 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 FocusScope.of(context)
                                     .requestFocus(focusNodes[0]);
                               },
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter(
-                                    RegExp("[a-zA-Z0-9_ ]*"))
-                              ],
+                              // inputFormatters: <TextInputFormatter>[
+                              //   WhitelistingTextInputFormatter(
+                              //       RegExp("[a-zA-Z0-9_ ]*"))
+                              // ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
                                 hintText: S.of(context).request_title_hint,
@@ -443,9 +524,35 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
-                            Offstage(
-                              offstage: widget.requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: OpenScopeCheckBox(
+                                infoType: InfoType.VirtualRequest,
+                                isChecked: widget.requestModel.virtualRequest,
+                                checkBoxTypeLabel:
+                                    CheckBoxType.type_VirtualRequest,
+                                onChangedCB: (bool val) {
+                                  if (widget.requestModel.virtualRequest !=
+                                      val) {
+                                    widget.requestModel.virtualRequest = val;
+                                    if (val) {
+                                      isPublicCheckboxVisible = true;
+                                    } else {
+                                      isPublicCheckboxVisible = false;
+                                      widget.requestModel.public = false;
+                                    }
+
+                                    log('value ${widget.requestModel.virtualRequest}');
+                                    setState(() {});
+                                  }
+                                },
+                              ),
+                            ),
+                            HideWidget(
+                              hide: !isPublicCheckboxVisible ||
+                                  widget.requestModel.requestMode !=
+                                      RequestMode.TIMEBANK_REQUEST,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
@@ -458,29 +565,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       if (widget.requestModel.public != val) {
                                         widget.requestModel.public = val;
                                         log('value ${widget.requestModel.public}');
-                                        setState(() {});
-                                      }
-                                    }),
-                              ),
-                            ),
-                            Offstage(
-                              offstage: widget.requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualRequest,
-                                    isChecked:
-                                        widget.requestModel.virtualRequest,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualRequest,
-                                    onChangedCB: (bool val) {
-                                      if (widget.requestModel.virtualRequest !=
-                                          val) {
-                                        widget.requestModel.virtualRequest =
-                                            val;
-                                        log('value ${widget.requestModel.virtualRequest}');
                                         setState(() {});
                                       }
                                     }),
@@ -852,7 +936,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                 return S.of(context).validation_error_general_text;
               } else {
                 widget.requestModel.cashModel.venmoId = value;
-
                 return null;
               }
             },
@@ -1140,7 +1223,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return selectedSubCategories;
   }
 
-  Widget TimeRequest(snapshot, projectModelList) {
+  Widget TimeRequest(snapshot, List<ProjectModel> projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1685,6 +1768,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   void editRequest() async {
     // verify f the start and end date time is not same
+    log('while updating:  ' + widget.requestModel.projectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -2220,23 +2304,27 @@ class ProjectSelection extends StatefulWidget {
       this.requestModel,
       this.admin,
       this.projectModelList,
-      this.selectedProject})
+      this.selectedProject,
+      this.updateProjectIdCallback})
       : super(key: key);
   final admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
+  Function(String projectId) updateProjectIdCallback;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
 }
 
 class ProjectSelectionState extends State<ProjectSelection> {
+  ProjectModel selectedModel = ProjectModel();
   @override
   Widget build(BuildContext context) {
     if (widget.projectModelList == null) {
       return Container();
     }
+    log('Project Model Check:  ' + widget.projectModelList.toString());
     List<dynamic> list = [
       {"name": S.of(context).unassigned, "code": "None"}
     ];
@@ -2250,7 +2338,9 @@ class ProjectSelectionState extends State<ProjectSelection> {
     }
     return MultiSelect(
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [
+        widget.selectedProject != null ? widget.selectedProject.id : 'None'
+      ],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
@@ -2270,7 +2360,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       titleTextColor: Colors.black,
       change: (value) {
         if (value != null && value[0] != 'None') {
-          widget.requestModel.projectId = value[0];
+          //widget.requestModel.projectId = value[0];
+          widget.updateProjectIdCallback(value[0]);
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,

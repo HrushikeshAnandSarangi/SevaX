@@ -460,6 +460,8 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('virtualRequest')) {
       this.virtualRequest = map['virtualRequest'];
+    }else{
+      this.virtualRequest=map['virtualRequest'];
     }
     if (map.containsKey('timebanksPosted')) {
       List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);

@@ -479,12 +479,34 @@ class RequestCompleteWidget extends StatelessWidget {
       photoUrl: user.photoURL,
       type: ChatType.TYPE_PERSONAL,
     );
+
+    List<String> showToCommunities = [];
+    try {
+      String communityId1 = model.communityId;
+
+      String communityId2 = model.participantDetails[user.email]['communityId'];
+
+      if (communityId1 != null &&
+          communityId2 != null &&
+          communityId1.isNotEmpty &&
+          communityId2.isNotEmpty &&
+          communityId1 != communityId2) {
+        showToCommunities.add(communityId1);
+        showToCommunities.add(communityId2);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
     createAndOpenChat(
       communityId: loggedInUser.currentCommunity,
       context: context,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: true,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
+      interCommunity: showToCommunities.isNotEmpty,
     );
     FirestoreManager.readUserNotification(
       notificationId,

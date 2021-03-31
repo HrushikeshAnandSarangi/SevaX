@@ -285,9 +285,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           // keyboardType: TextInputType.multiline,
           // maxLines: 1,
-          inputFormatters: <TextInputFormatter>[
-            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-          ],
+          // inputFormatters: <TextInputFormatter>[
+          //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+          // ],
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;

@@ -54,6 +54,7 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -174,6 +175,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
+  bool isPulicCheckboxVisible = false;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
@@ -210,6 +212,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+
+
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
     requestModel = RequestModel(
       requestType: RequestType.TIME,
       cashModel: CashModel(
@@ -217,6 +223,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
       goodsDonationDetails: GoodsDonationDetails(),
       communityId: widget.loggedInUser.currentCommunity,
     );
+    this.requestModel.virtualRequest = false;
+    this.requestModel.public=false;
+
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.public = false;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -232,8 +241,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
       timebankId: _selectedTimebankId,
     );
     fetchRemoteConfig();
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     // if ((FlavorConfig.appFlavor == Flavor.APP ||
     //     FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
@@ -338,6 +345,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.waiting){
+            return LoadingIndicator();
+          }
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -375,10 +385,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 FocusScope.of(context)
                                     .requestFocus(focusNodes[0]);
                               },
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter(
-                                    RegExp("[a-zA-Z0-9_ ]*"))
-                              ],
+                              // inputFormatters: <TextInputFormatter>[
+                              //   WhitelistingTextInputFormatter(
+                              //       RegExp("[a-zA-Z0-9_ ]*"))
+                              // ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
                                 hintText: requestModel.requestType ==
@@ -418,9 +428,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : GoodsRequest(snapshot, projectModelList),
-                            Offstage(
-                              offstage: requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              child: OpenScopeCheckBox(
+                                  infoType: InfoType.VirtualRequest,
+                                  isChecked: requestModel.virtualRequest,
+                                  checkBoxTypeLabel:
+                                      CheckBoxType.type_VirtualRequest,
+                                  onChangedCB: (bool val) {
+                                    if (requestModel.virtualRequest != val) {
+                                      this.requestModel.virtualRequest = val;
+
+                                      if (!val) {
+                                        requestModel.public = false;
+                                        isPulicCheckboxVisible = false;
+                                      } else {
+                                        isPulicCheckboxVisible = true;
+                                      }
+
+                                      setState(() {});
+                                    }
+                                  }),
+                            ),
+                            HideWidget(
+                              hide:  !isPulicCheckboxVisible ||
+                                  requestModel.requestMode ==
+                                      RequestMode.PERSONAL_REQUEST ||
+                                  widget.timebankId ==
+                                      FlavorConfig.values.timebankId,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
@@ -432,25 +469,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     onChangedCB: (bool val) {
                                       if (requestModel.public != val) {
                                         this.requestModel.public = val;
-                                        setState(() {});
-                                      }
-                                    }),
-                              ),
-                            ),
-                            Offstage(
-                              offstage: requestModel.requestMode ==
-                                  RequestMode.PERSONAL_REQUEST,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.VirtualRequest,
-                                    isChecked: requestModel.virtualRequest,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_VirtualRequest,
-                                    onChangedCB: (bool val) {
-                                      if (requestModel.virtualRequest != val) {
-                                        this.requestModel.virtualRequest = val;
                                         setState(() {});
                                       }
                                     }),
@@ -1709,7 +1727,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     requestModel.autoGenerated = false;
 
     requestModel.isRecurring = RepeatWidgetState.isRecurring;
-    requestModel.skills = _selectedSkillsMap;
+   // requestModel.skills = _selectedSkillsMap;
     if (requestModel.requestType == RequestType.CASH ||
         requestModel.requestType == RequestType.GOODS) {
       requestModel.isRecurring = false;

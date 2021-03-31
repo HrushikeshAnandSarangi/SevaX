@@ -136,7 +136,7 @@ class DonationsRepository {
         if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
               (donationModel).cashDetails.pledgedAmount,
-        if (donationStatus == DonationStatus.ACKNOWLEDGED &&
+        if (
             requestType == RequestType.GOODS)
           'goodsDetails.donatedGoods':
               (donationModel).goodsDetails.donatedGoods,

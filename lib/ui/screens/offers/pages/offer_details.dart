@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -393,6 +394,7 @@ class OfferDetails extends StatelessWidget {
     );
 
     bool isCreator = offerModel.sevaUserId == userId;
+    log("creator ${timebankModel.creatorId}");
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;
@@ -450,16 +452,23 @@ class OfferDetails extends StatelessWidget {
               children: [
                 canDeleteOffer ||
                         utils.isDeletable(
+                          communityCreatorId: timebankModel != null
+                              ? isPrimaryTimebank(
+                                  parentTimebankId:
+                                      timebankModel.parentTimebankId,
+                                )
+                                  ? timebankModel.creatorId
+                                  : (timebankModel.managedCreatorIds != null &&
+                                          timebankModel
+                                                  .managedCreatorIds.length >
+                                              0)
+                                      ? timebankModel.managedCreatorIds[0]
+                                      : ''
+                              : '',
+                          // communityCreatorId: timebankModel != null ,
                           context: context,
                           contentCreatorId: offerModel.sevaUserId,
                           timebankCreatorId: timebankModel.creatorId,
-                          communityCreatorId: timebankModel == null
-                              ? isPrimaryTimebank(
-                                      parentTimebankId:
-                                          timebankModel.parentTimebankId)
-                                  ? timebankModel.creatorId
-                                  : timebankModel.managedCreatorIds.first
-                              : '',
                         )
                     ? deleteActionButton(isAccepted, context)
                     : Container(),
