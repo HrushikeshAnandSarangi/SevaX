@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -315,6 +316,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.GOODS:
         return getBottomFrameForGoodRequest;
 
+      case RequestType.BORROW:
+        return getBottomFrameForBorrowRequest;
+
       case RequestType.TIME:
         return getBottomFrameForTimeRequest;
 
@@ -514,6 +518,27 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
+  Widget get getBottomFrameForBorrowRequest {
+    switch (userMode) {
+      case UserMode.TIMEBANK_CREATOR:
+        return getBottombarForTimebankCreator;
+
+      case UserMode.REQUEST_CREATOR:
+        return getBottombarForCreator;
+
+      case UserMode.TIMEBANK_ADMIN:
+      case UserMode.APPROVED_MEMBER:
+      case UserMode.ACCEPTED_MEMBER:
+      case UserMode.COMPLETED_MEMBER:
+      case UserMode.AWAITING_FOR_APPROVAL_FROM_CREATOR:
+      case UserMode.NOT_YET_SIGNED_UP:
+        return getBottombarForParticipant;
+
+      default:
+        return getBottombarForParticipant;
+    }
+  }
+
   Widget get getBottombarForTimebankCreator {
     String textLabel = '';
     Widget actionWidget;
@@ -546,6 +571,26 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : goodsRequestActionButtonForParticipant;
+    } else if (widget.requestItem.requestType == RequestType.BORROW) {
+      canDelete = widget.requestItem.participantDetails != null && 
+                  widget.requestItem.acceptors.length == 0;
+
+      if (widget.requestItem.roomOrTool == 'ROOM') {
+        textLabel = widget.requestItem.sevaUserId ==
+                SevaCore.of(context).loggedInUser.sevaUserID
+            ? S.of(context).creator_of_request_message
+            : 'Borrow Request a place';
+      } else {
+        textLabel = widget.requestItem.sevaUserId ==
+                SevaCore.of(context).loggedInUser.sevaUserID
+            ? S.of(context).creator_of_request_message
+            : 'Borrow Request goods';
+      }
+
+      actionWidget = widget.requestItem.sevaUserId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
+          ? Container()
+          : timeRequestActionWidgetForParticipant;
     } else {
       canDelete = widget.requestItem.cashModel.amountRaised == 0;
       textLabel = widget.requestItem.sevaUserId ==
@@ -578,7 +623,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
         ),
         canDelete
-            ? Column(
+            ? Row(
                 children: [
                   actionWidget,
                   SizedBox(
@@ -660,6 +705,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               timebankCreatorId: widget.timebankModel.creatorId) &&
           (widget.requestItem.goodsDonationDetails.donors == null ||
               widget.requestItem.goodsDonationDetails.donors.length < 1);
+    } else if (widget.requestItem.requestType == RequestType.BORROW) {
+      canDeleteRequest = utils.isDeletable(
+              contentCreatorId: widget.requestItem.sevaUserId,
+              context: context,
+              communityCreatorId:
+                  widget.timebankModel.managedCreatorIds.isNotEmpty
+                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                      :
+                      // BlocProvider.of<HomeDashBoardBloc>(context)
+                      //         .selectedCommunityModel.created_by
+                      isPrimaryTimebank(
+                              parentTimebankId:
+                                  widget.timebankModel.parentTimebankId)
+                          ? widget.timebankModel.creatorId
+                          : widget.timebankModel.managedCreatorIds.first,
+              timebankCreatorId: widget.timebankModel.creatorId) &&
+              widget.requestItem.participantDetails == null && 
+              widget.requestItem.acceptors.length == 0;
     } else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
@@ -744,46 +807,45 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-       widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST ?
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              style: TextStyle(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: isApplied
-                      ? 'You are the tutor for the request'
-                      : S.of(context).particpate_in_request_question,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Europa',
-                    fontWeight: FontWeight.bold,
+        widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST
+            ? Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: isApplied
+                            ? 'You are the tutor for the request'
+                            : S.of(context).particpate_in_request_question,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Europa',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        )
-        :
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              style: TextStyle(color: Colors.black),
-              children: [
-                TextSpan(
-                  text: isApplied
-                      ? S.of(context).applied_for_request
-                      : S.of(context).particpate_in_request_question,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'Europa',
-                    fontWeight: FontWeight.bold,
+              )
+            : Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: isApplied
+                            ? S.of(context).applied_for_request
+                            : S.of(context).particpate_in_request_question,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Europa',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
         timeRequestActionWidgetForParticipant,
       ],
     );
@@ -800,11 +862,19 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
         padding: EdgeInsets.all(0),
         color: isApplied ? Theme.of(context).accentColor : Colors.green,
-        child: 
-        Row(
+        child: Row(
           children: <Widget>[
             SizedBox(width: 1),
             Spacer(),
+            widget.requestItem.requestType == RequestType.BORROW ?
+            Text(
+              isApplied ? S.of(context).withdraw : S.of(context).accept,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            )
+            :
             Text(
               isApplied ? S.of(context).withdraw : S.of(context).apply,
               textAlign: TextAlign.center,
@@ -818,7 +888,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ],
         ),
         onPressed: () {
-          applyAction();
+          if(widget.requestItem.requestType == RequestType.BORROW){
+            borrowApplyAction();
+          } else {
+            applyAction();
+          }
         },
       ),
     );
@@ -843,6 +917,40 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       } else {
         proccedWithCalander();
       }
+    }
+  }
+
+  void borrowApplyAction() async {
+    if (isApplied) {
+      _withdrawRequest();
+    } else {
+
+        Map<String, dynamic> participantDetails = {};
+
+        participantDetails = {
+          'bio': SevaCore.of(context).loggedInUser.bio,
+          'email': SevaCore.of(context).loggedInUser.email,
+          'fullname':
+              SevaCore.of(context).loggedInUser.fullname,
+          'photourl':
+              SevaCore.of(context).loggedInUser.photoURL,
+          'sevauserid':
+              SevaCore.of(context).loggedInUser.sevaUserID,
+          'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
+          'timebankId': widget.requestItem.timebankId,   //will this work when sending notifications?
+        };
+
+        widget.requestItem.participantDetails =
+            participantDetails;
+        
+        widget.requestItem.accepted = true;
+
+        log('participant detailss map written to DB ----->');
+
+        await updateRequest(requestModel: widget.requestItem);
+
+        proccedWithCalander();
+      
     }
   }
 
@@ -1155,9 +1263,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.TIME:
         return timeDetailsForTimerequest;
 
-      case RequestType.BORROW:
-        return detailsForBorrowToolsRequest;
-
       case RequestType.ONE_TO_MANY_REQUEST:
         return detailsForOneToManyRequest;
 
@@ -1178,30 +1283,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       widget.requestItem.description,
       style: TextStyle(fontSize: 16),
     );
-  }
-
-  Widget get detailsForBorrowToolsRequest {
-    if (widget.requestItem.borrowRequestToolName != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.requestItem.borrowRequestToolName,
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 8),
-          Text(
-            widget.requestItem.description,
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
-      );
-    } else {
-      return Text(
-            widget.requestItem.description,
-            style: TextStyle(fontSize: 16),
-          );
-    }
   }
 
   Widget get getCashDetailsForCashDonations {

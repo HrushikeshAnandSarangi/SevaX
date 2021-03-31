@@ -930,54 +930,54 @@ class RequestEditFormState extends State<RequestEditForm> {
     }
   }
 
-   Widget BorrowToolTitleField(hintTextDesc) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Tool Name*",         //Label to be created (need client approval)
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              // if (value != null && value.length > 5) {
-              //   _debouncer.run(() {
-              //     getCategoriesFromApi(value);
-              //   });
-              // }
-              updateExitWithConfirmationValue(context, 9, value);
-            },
-            focusNode: focusNodes[3],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[3]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: hintTextDesc,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.requestModel.borrowRequestToolName,
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              }
-              widget.requestModel.borrowRequestToolName = value;
-            },
-          ),
-        ]);
-  }
+  //  Widget BorrowToolTitleField(hintTextDesc) {
+  //   return Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         Text(
+  //           "Tool Name*",         //Label to be created (need client approval)
+  //           style: TextStyle(
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.bold,
+  //             fontFamily: 'Europa',
+  //             color: Colors.black,
+  //           ),
+  //         ),
+  //         TextFormField(
+  //           autovalidateMode: AutovalidateMode.onUserInteraction,
+  //           onChanged: (value) {
+  //             // if (value != null && value.length > 5) {
+  //             //   _debouncer.run(() {
+  //             //     getCategoriesFromApi(value);
+  //             //   });
+  //             // }
+  //             updateExitWithConfirmationValue(context, 9, value);
+  //           },
+  //           focusNode: focusNodes[3],
+  //           onFieldSubmitted: (v) {
+  //             FocusScope.of(context).requestFocus(focusNodes[3]);
+  //           },
+  //           textInputAction: TextInputAction.next,
+  //           decoration: InputDecoration(
+  //             errorMaxLines: 2,
+  //             hintText: hintTextDesc,
+  //             hintStyle: hintTextStyle,
+  //           ),
+  //           initialValue: widget.requestModel.borrowRequestToolName,
+  //           keyboardType: TextInputType.multiline,
+  //           maxLines: 1,
+  //           validator: (value) {
+  //             if (value.isEmpty) {
+  //               return S.of(context).validation_error_general_text;
+  //             }
+  //             if (profanityDetector.isProfaneString(value)) {
+  //               return S.of(context).profanity_text_alert;
+  //             }
+  //             widget.requestModel.borrowRequestToolName = value;
+  //           },
+  //         ),
+  //       ]);
+  // }
 
   Widget RequestDescriptionData(hintTextDesc) {
     return Column(
@@ -1744,9 +1744,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           ),
           SizedBox(height: 20),
 
-          widget.requestModel.borrowRequestToolName != null
-          ? BorrowToolTitleField('Ex: Hammer or Chair...')
-              : Container(), //Label to be created (need client approval)
+          // widget.requestModel.borrowRequestToolName != null
+          // ? BorrowToolTitleField('Ex: Hammer or Chair...')
+          //     : Container(), //Label to be created (need client approval)
 
           SizedBox(height: 15),
 
