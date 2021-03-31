@@ -447,7 +447,7 @@ Future<Map<String, dynamic>> removeMemberFromGroup({
 
 Future<Map<String, dynamic>> removeMemberFromTimebank({
   String sevauserid,
-  String timebankModel,
+  String timebankId,
   Timebank
 }) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
