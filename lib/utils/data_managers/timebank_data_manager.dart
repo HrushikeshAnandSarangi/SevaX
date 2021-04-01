@@ -16,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
@@ -292,7 +293,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
                 CommunityModel model = CommunityModel(documentSnapshot.data);
                 model.id = documentSnapshot.documentID;
 
-                model.softDelete == true || model.private == true
+                model.softDelete == true || model.private == true || AppConfig.isTestCommunity
                     ? null
                     : communityList.add(model);
               },

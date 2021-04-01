@@ -367,6 +367,8 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
+                            }else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.deviceId)){
+                              return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "").trim();
@@ -403,17 +405,18 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
-                            } else {
-                              snapshot.data.community
-                                  .updateValueByKey('about', value);
+                            } else{
+                                snapshot.data.community
+                                    .updateValueByKey('about', value);
 
-                              snapshot.data.timebank
-                                  .updateValueByKey('missionStatement', value);
-                              createEditCommunityBloc.onChange(snapshot.data);
-                              timebankModel.missionStatement = value;
-                              communityModel.about = value;
-                              return null;
-                            }
+                                snapshot.data.timebank
+                                    .updateValueByKey('missionStatement', value);
+                                createEditCommunityBloc.onChange(snapshot.data);
+                                timebankModel.missionStatement = value;
+                                communityModel.about = value;
+                                return null;
+                              }
+
                           },
                         ),
                         Padding(

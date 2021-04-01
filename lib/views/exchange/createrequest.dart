@@ -412,11 +412,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return S.of(context).request_subject;
-                                }
+                                }else
                                 if (profanityDetector.isProfaneString(value)) {
                                   return S.of(context).profanity_text_alert;
+                                } else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.deviceId)){
+                                  return 'Creating request with "_" is not allowed';
+                                }else {
+                                  requestModel.title = value;
+                                  return null;
                                 }
-                                requestModel.title = value;
                               },
                             ),
                             SizedBox(height: 30),

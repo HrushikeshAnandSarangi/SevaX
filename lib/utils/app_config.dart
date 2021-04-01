@@ -15,6 +15,7 @@ class AppConfig {
 
   static BillingPlanModel billing;
   static SharedPreferences prefs;
+  static List<dynamic> testingDeviceIds=[];
 
   static int maxTransactionLimit;
   static int currentTransactionLimit;
@@ -30,6 +31,7 @@ class AppConfig {
   static String appVersion;
   static int buildNumber;
   static String packageName;
+  static String deviceId;
 
   //Platform checks
   static bool isWeb;

@@ -291,8 +291,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;
+            }else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.deviceId)){
+              return 'Creating community with "_" is not allowed';
+            }else {
+              timebankModel.name = value.trim();
+              return null;
             }
-            timebankModel.name = value.trim();
           },
         ),
         headingText(S.of(context).about, true),
