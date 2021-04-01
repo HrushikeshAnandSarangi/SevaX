@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -21,13 +20,12 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -139,9 +137,6 @@ class CreateEditCommunityViewFormState
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
 
-  bool disableCreateButton = false;
-  String duplicateGroupCheck = 'not_done';
-
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
@@ -173,30 +168,21 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
-        duplicateGroupCheck = 'not_done';
         if (communitynName != s) {
-          setState(() {
-            disableCreateButton = true;
-          });
+          setState(() {});
           SearchManager.searchCommunityForDuplicate(queryString: s.trim())
               .then((commFound) {
             if (commFound) {
               setState(() {
-                disableCreateButton = false;
                 communityFound = true;
                 errTxt = 'Seva Community name already exists';
               });
             } else {
               setState(() {
-                disableCreateButton = false;
                 communityFound = false;
                 errTxt = null;
               });
             }
-          }).whenComplete(() {
-            setState(() {
-              duplicateGroupCheck = 'done';
-            });
           });
         }
       }
@@ -232,7 +218,6 @@ class CreateEditCommunityViewFormState
       selectedTimebank = parentTimebank.name;
     }
 
-    logger.i('location', selectedAddress + location.toString());
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
     setState(() {});
@@ -346,14 +331,15 @@ class CreateEditCommunityViewFormState
                           keyboardType: TextInputType.text,
                           autocorrect: true,
                           maxLines: 1,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter(
-                              RegExp("[a-zA-Z0-9_ ]*"),
-                            )
-                          ],
+                          // inputFormatters: <TextInputFormatter>[
+                          //   WhitelistingTextInputFormatter(
+                          //     RegExp("[a-zA-Z0-9_ ]*"),
+                          //   )
+                          // ],
                           onSaved: (value) {
                             enteredName =
-                                value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                               // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                                value.trim();
                           },
                           // onSaved: (value) => enteredName = value,
                           validator: (value) {
@@ -582,6 +568,24 @@ class CreateEditCommunityViewFormState
                             ),
                           ],
                         ),
+                        // SponsorsWidget(
+                        //   sponsorsMode: widget.isCreateTimebank
+                        //       ? SponsorsMode.CREATE
+                        //       : SponsorsMode.EDIT,
+                        //   timebankModel: timebankModel,
+                        //   onCreated: (TimebankModel timebank) {
+                        //     snapshot.data.timebank.updateValueByKey(
+                        //       'sponsors',
+                        //       timebank.sponsors,
+                        //     );
+                        //     timebankModel = timebank;
+                        //     setState(() {});
+                        //   },
+                        //   onRemoved: (TimebankModel timebank) {
+                        //     timebankModel = timebank;
+                        //     setState(() {});
+                        //   },
+                        // ),
                         widget.isCreateTimebank
                             ? Container()
                             : SizedBox(height: 10),
@@ -829,10 +833,8 @@ class CreateEditCommunityViewFormState
                                   );
                                   return;
                                 }
-                                if (disableCreateButton || duplicateGroupCheck == 'not_done') {
-                                  return;
-                                }
-                                if (errTxt != null || duplicateGroupCheck == 'not_done') {
+
+                                if (errTxt != null) {
                                   showDialogForSuccess(
                                     dialogTitle:
                                         S.of(context).timebank_name_exists,
@@ -842,7 +844,7 @@ class CreateEditCommunityViewFormState
                                 }
                                 // show a dialog
                                 if (widget.isCreateTimebank) {
-                                  if (_formKey.currentState.validate() && duplicateGroupCheck == 'done') {
+                                  if (_formKey.currentState.validate()) {
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
@@ -872,7 +874,6 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.UpdateTimebankDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
-                                          widget,
                                         );
                                         // updating the community with default timebank id
                                         snapshot.data.community.timebanks = [
@@ -1014,20 +1015,6 @@ class CreateEditCommunityViewFormState
                                     timebankModel.location = location;
 
                                     timebankModel.address = selectedAddress;
-
-                                    if (widget.isCreateTimebank) {
-                                      var taxDefaultVal = (json.decode(
-                                              AppConfig.remoteConfig.getString(
-                                                  'defaultTaxPercentValue')))
-                                          .toDouble();
-                                      snapshot.data.community.updateValueByKey(
-                                          'taxPercentage', taxDefaultVal / 100);
-                                      communityModel.taxPercentage =
-                                          taxDefaultVal / 100;
-                                    }
-
-                                    // creation of community;
-
                                     // updating timebank with latest values
                                     await FirestoreManager.updateTimebank(
                                       timebankModel: timebankModel,
@@ -1458,13 +1445,10 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
           },
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-          ],
           onChanged: (value) {
             updateExitWithConfirmationValue(context, 5, value);
             controller.community.billing_address
-                .updateValueByKey('pincode', int.parse(value));
+                .updateValueByKey('pincode', value);
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.pincode != null
@@ -1478,7 +1462,7 @@ class CreateEditCommunityViewFormState
                     : null;
           },
           focusNode: focusNodes[3],
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(

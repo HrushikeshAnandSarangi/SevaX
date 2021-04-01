@@ -123,6 +123,27 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
   );
 }
 
+//getAll the group
+Future<List<TimebankModel>> getAllTheGroups(
+  String communinityId,
+) async {
+  List<TimebankModel> timeBankModelList = [];
+
+  if (communinityId.isNotEmpty) {
+    await Firestore.instance
+        .collection('timebanknew')
+        .where('community_id', isEqualTo: communinityId)
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+        var timebank = TimebankModel(documentSnapshot.data);
+        timeBankModelList.add(timebank);
+      });
+    });
+  }
+  return timeBankModelList;
+}
+
 /// Get all timebanknew associated with a User as a Stream_
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
     {@required String communityId}) async {
@@ -531,7 +552,11 @@ Future<int> changePlan(
   try {
     http.Response result = await http.post(
       FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
-      body: json.encode({'communityId': communityId, "newPlanId": planId, 'private': isPrivate}),
+      body: json.encode({
+        'communityId': communityId,
+        "newPlanId": planId,
+        'private': isPrivate
+      }),
       headers: {"Content-type": "application/json"},
     );
     if (result.statusCode == 200) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -187,6 +188,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    log("model ${profanityImageModel.toString()}");
+
     if (profanityImageModel == null) {
       setState(() {
         this._saving = false;

@@ -19,7 +19,6 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_createRequest.dart';
-import 'package:sevaexchange/components/instructor_dynamic_selection_createOneToManyRequest.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -28,6 +27,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
@@ -39,29 +39,25 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
-import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
+import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
-import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
-import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
@@ -180,6 +176,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final volunteersTextFocus = FocusNode();
   ProjectModel selectedProjectModel = null;
   RequestModel requestModel;
+  bool isPulicCheckboxVisible = false;
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
@@ -232,6 +229,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
+
+
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+
     requestModel = RequestModel(
       requestType: RequestType.TIME,
       cashModel: CashModel(
@@ -239,6 +240,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
       goodsDonationDetails: GoodsDonationDetails(),
       communityId: widget.loggedInUser.currentCommunity,
     );
+    this.requestModel.virtualRequest = false;
+    this.requestModel.public=false;
+
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
@@ -253,8 +257,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
       timebankId: _selectedTimebankId,
     );
     fetchRemoteConfig();
-    getProjectsByFuture =
-        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FirestoreManager.getAllTimebankIdStream(
@@ -395,6 +397,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
+          if(snapshot.connectionState==ConnectionState.waiting){
+            return LoadingIndicator();
+          }
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
@@ -438,10 +443,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 FocusScope.of(context)
                                     .requestFocus(focusNodes[0]);
                               },
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter(
-                                    RegExp("[a-zA-Z0-9_ ]*"))
-                              ],
+                              // inputFormatters: <TextInputFormatter>[
+                              //   WhitelistingTextInputFormatter(
+                              //       RegExp("[a-zA-Z0-9_ ]*"))
+                              // ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
                                 hintText: requestModel.requestType ==
@@ -888,12 +893,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
                             requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
-                                : requestModel.requestType ==
-                                        RequestType.ONE_TO_MANY_REQUEST
-                                    ? TimeRequest(snapshot, projectModelList)
-                                    : requestModel.requestType ==
-                                            RequestType.CASH
-                                        ? CashRequest(
+                                : requestModel.requestType == RequestType.CASH
+                                   ? CashRequest(
                                             snapshot, projectModelList)
                                         : requestModel.requestType ==
                                                 RequestType.BORROW
@@ -901,6 +902,53 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                 snapshot, projectModelList)
                                             : GoodsRequest(
                                                 snapshot, projectModelList),
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              child: OpenScopeCheckBox(
+                                  infoType: InfoType.VirtualRequest,
+                                  isChecked: requestModel.virtualRequest,
+                                  checkBoxTypeLabel:
+                                      CheckBoxType.type_VirtualRequest,
+                                  onChangedCB: (bool val) {
+                                    if (requestModel.virtualRequest != val) {
+                                      this.requestModel.virtualRequest = val;
+
+                                      if (!val) {
+                                        requestModel.public = false;
+                                        isPulicCheckboxVisible = false;
+                                      } else {
+                                        isPulicCheckboxVisible = true;
+                                      }
+
+                                      setState(() {});
+                                    }
+                                  }),
+                            ),
+                            HideWidget(
+                              hide:  !isPulicCheckboxVisible ||
+                                  requestModel.requestMode ==
+                                      RequestMode.PERSONAL_REQUEST ||
+                                  widget.timebankId ==
+                                      FlavorConfig.values.timebankId,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: OpenScopeCheckBox(
+                                    infoType: InfoType.OpenScopeEvent,
+                                    isChecked: requestModel.public,
+                                    checkBoxTypeLabel:
+                                        CheckBoxType.type_Requests,
+                                    onChangedCB: (bool val) {
+                                      if (requestModel.public != val) {
+                                        this.requestModel.public = val;
+                                        setState(() {});
+                                      }
+                                    }),
+                              ),
+                            ),
+
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -1657,10 +1705,37 @@ class RequestCreateFormState extends State<RequestCreateForm>
         : Container();
   }
 
+// Navigat to skills class and geting data from the class
+  void selectSkills() async {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return SkillViewNew(
+        automaticallyImplyLeading: false,
+        userModel: SevaCore.of(context).loggedInUser,
+        isFromProfile: false,
+        selectedSkills: _selectedSkillsMap,
+        onSelectedSkillsMap: (skillMap) {
+          Navigator.pop(context);
+          if (skillMap.values != null && skillMap.values.length > 0) {
+            _selectedSkillsMap = skillMap;
+            setState(() {});
+          }
+        },
+        onSelectedSkills: (skills) {
+          Navigator.pop(context);
+        },
+        onSkipped: () {
+          Navigator.pop(context);
+        },
+        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+        isFromRequests: true,
+      );
+    }));
+  }
+
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
-
+  Map<String, dynamic> _selectedSkillsMap = {};
   void updateInformation(List category) {
     setState(() => categories = category);
   }
@@ -1722,8 +1797,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
               )),
     );
     updateInformation(category);
-    logger.i(
-        'poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
   }
 
   //building list of selectedSubCategories
@@ -1732,8 +1805,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
     subCategories = categories[1];
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
-
-    //logger.i('poped selectedSubCategories => ${categories[1]} ');
     subCategories.forEach((item) {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
@@ -1859,6 +1930,130 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  Widget skillsWidget() {
+    return InkWell(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _selectedSkillsMap.values.length < 1
+                  ? Text(
+                      'Choose Skills for request',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                  : Text(
+                      "Selected Skills",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 16,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          _selectedSkillsMap.values != null
+              ? Wrap(
+                  alignment: WrapAlignment.start,
+                  children: _selectedSkillsMap.values
+                      .toList()
+                      .map(
+                        (value) => value == null
+                            ? Container()
+                            : Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 10, bottom: 10),
+                                child: Container(
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                    child: Text(value.toString(),
+                                        style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              ),
+                      )
+                      .toList(),
+                )
+              : Container(),
+        ],
+      ),
+      onTap: () => selectSkills(),
+    );
+  }
+
+  Widget categoryWidget() {
+    return InkWell(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              categories == null
+                  ? Text(
+                      S.of(context).choose_category,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                  : Text(
+                      "${categories[0]}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 16,
+              ),
+              // Container(
+              //   height: 25,
+              //   width: 25,
+              //   decoration: BoxDecoration(
+              //       color: Theme.of(context).primaryColor,
+              //       borderRadius: BorderRadius.circular(100)),
+              //   child: Icon(
+              //     Icons.arrow_drop_down_outlined,
+              //     color: Colors.white,
+              //   ),
+              // ),
+            ],
+          ),
+          SizedBox(height: 20),
+          categories != null
+              ? Wrap(
+                  alignment: WrapAlignment.start,
+                  children: _buildselectedSubCategories(categories),
+                )
+              : Container(),
+        ],
+      ),
+      onTap: () => moveToCategory(),
+    );
+  }
+
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1870,60 +2065,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
           RequestDescriptionData(S.of(context).request_description_hint),
           SizedBox(height: 20),
           // Choose Category and Sub Category
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
+          SizedBox(height: 20),
+
+         // skillsWidget(),
+          SizedBox(height: 20),
+
+          // Choose Category and Sub Category
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2125,60 +2273,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           RequestDescriptionData("Ex: Fundraiser to expand women’s shelter..."),
           // RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
@@ -2300,60 +2395,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           RequestDescriptionData("Ex: Local Food Bank has a shortage..."),
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2474,7 +2516,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     requestModel.autoGenerated = false;
 
     requestModel.isRecurring = RepeatWidgetState.isRecurring;
-
+   // requestModel.skills = _selectedSkillsMap;
     if (requestModel.requestType == RequestType.CASH ||
         requestModel.requestType == RequestType.GOODS) {
       requestModel.isRecurring = false;
@@ -2521,14 +2563,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
         return;
       }
 
-      if (widget.isOfferRequest == true && widget.userModel != null) {
+      if (widget.isOfferRequest && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 
         List<String> approvedUsers = [];
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
+        //TODO
+        requestModel.participantDetails = {};
+        requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
+          communityId: widget.offer.communityId,
+          communityName: '',
+          memberEmail: widget.userModel.email,
+          memberName: widget.userModel.fullname,
+          memberPhotoUrl: widget.userModel.photoURL,
+          timebankId: widget.offer.timebankId,
+        ).toMap();
         //create an invitation for the request
-
       }
 
       if (requestModel.isRecurring &&
@@ -2621,6 +2672,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
+      if (requestModel.public) {
+        requestModel.timebanksPosted = [
+          timebankModel.id,
+          FlavorConfig.values.timebankId
+        ];
+      } else {
+        requestModel.timebanksPosted = [timebankModel.id];
+      }
 
       requestModel.communityId =
           SevaCore.of(context).loggedInUser.currentCommunity;

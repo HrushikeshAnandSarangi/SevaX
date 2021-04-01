@@ -8,6 +8,8 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
+import '../../../../flavor_config.dart';
+
 class OneToManyOfferBloc extends BlocBase {
   int startTime;
   int endTime;
@@ -21,6 +23,8 @@ class OneToManyOfferBloc extends BlocBase {
   String parent_offer_id;
   OfferModel mainOfferModel = null;
   List<String> offerIds = [];
+  final _makePublic = BehaviorSubject<bool>();
+  final _makeVirtual = BehaviorSubject<bool>();
 
   final _title = BehaviorSubject<String>();
   final _preparationHours = BehaviorSubject<String>();
@@ -31,6 +35,18 @@ class OneToManyOfferBloc extends BlocBase {
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _classSizeError = BehaviorSubject<String>();
   final profanityDetector = ProfanityDetector();
+  final _isVisible = BehaviorSubject<bool>.seeded(false);
+
+  Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
+  void onOfferMadeVirtual(bool value) {
+    if (value != null) {
+      if (!value) {
+        onOfferMadePublic(false);
+      }
+      _isVisible.add(value);
+      _makeVirtual.add(value);
+    }
+  }
 
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onPreparationHoursChanged => _preparationHours.sink.add;
@@ -39,11 +55,17 @@ class OneToManyOfferBloc extends BlocBase {
   Function(String) get onclassDescriptionChanged => _classDescription.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(String) get onClassSizeError => _classSizeError.sink.add;
+  // Function(bool) get isAdminChanged => _isAdmin.sink.add;
+  Stream<bool> get isVisible => _isVisible.stream;
+
+  Stream<bool> get makePublicValue => _makePublic.stream;
+  Stream<bool> get makeVirtualValue => _makeVirtual.stream;
 
   Stream<String> get title => _title.stream;
   Stream<String> get preparationHours => _preparationHours.stream;
   Stream<String> get classHours => _classHours.stream;
   Stream<String> get classSize => _classSize.stream;
+  // Stream<bool> get isAdmin => _isAdmin.stream;
   Stream<String> get classDescription => _classDescription.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<String> get classSizeError => _classSizeError.stream;
@@ -80,6 +102,11 @@ class OneToManyOfferBloc extends BlocBase {
               _location.value == null ? null : _location.value.address,
           timestamp: timestamp,
           location: _location.value == null ? null : _location.value.location,
+          public: _makePublic.value ?? false,
+          virtual: _makeVirtual.value ?? false,
+          timebanksPosted: _makePublic.value ?? false
+              ? [timebankId, FlavorConfig.values.timebankId]
+              : [timebankId],
           groupOfferDataModel: GroupOfferDataModel()
             ..classTitle = _title.value
             ..startDate = startTime
@@ -131,6 +158,11 @@ class OneToManyOfferBloc extends BlocBase {
         _status.add(Status.LOADING);
         offer.location = _location.value.location;
         offer.selectedAdrress = _location.value.address;
+        offer.public = _makePublic.value ?? false;
+        offer.virtual = _makeVirtual.value;
+        offer.timebanksPosted = _makeVirtual.value
+            ? [offer.timebankId, FlavorConfig.values.timebankId]
+            : [offer.timebankId];
         offer.groupOfferDataModel = GroupOfferDataModel()
           ..classTitle = _title.value
           ..startDate = startTime
@@ -163,6 +195,18 @@ class OneToManyOfferBloc extends BlocBase {
     }
   }
 
+  // void checkPublicAvailability(String timebankId, String sevaUserId) {
+  //   Firestore.instance
+  //       .collection('timebanknew')
+  //       .document(timebankId)
+  //       .get()
+  //       .then((value) {
+  //     final model = TimebankModel.fromMap(value.data);
+  //     isAdminChanged(model.admins.contains(sevaUserId) ||
+  //         model.organizers.contains(sevaUserId));
+  //   });
+  // }
+
   ///[PRELOAD DATA FOR UPDATE]
   void loadData(OfferModel offerModel) {
     _title.add(
@@ -179,6 +223,8 @@ class OneToManyOfferBloc extends BlocBase {
       offerModel.groupOfferDataModel.classDescription,
     );
 
+    _makePublic.add(offerModel.public);
+    _makeVirtual.add(offerModel.virtual);
     _location.add(
       CustomLocation(
         offerModel.location,

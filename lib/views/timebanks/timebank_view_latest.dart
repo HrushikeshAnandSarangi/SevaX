@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -358,6 +359,19 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 color: Colors.black12,
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 20),
+            //   child: SponsorsWidget(
+            //     sponsorsMode: SponsorsMode.ABOUT,
+            //     timebankModel: widget.timebankModel,
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Divider(
+                color: Colors.black12,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
@@ -432,7 +446,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                       : CircleAvatar()
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

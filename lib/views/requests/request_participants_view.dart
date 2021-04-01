@@ -18,7 +18,7 @@ import 'package:shimmer/shimmer.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
-  RequestModel requestModel;
+  final RequestModel requestModel;
   final TimebankModel timebankModel;
 
   RequestParticipantsView({@required this.requestModel, this.timebankModel});
@@ -32,21 +32,17 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   List<String> acceptors;
   List<String> approvedMembers;
   List<String> newList;
+  RequestModel requestModel;
   // RequestModel requestModel;
   HashMap<String, AcceptorItem> filteredList = HashMap();
-
-  _RequestParticipantsViewState() {}
-
-  static String ACCEPTED;
-  static String APPROVED;
 
   @override
   void initState() {
     super.initState();
-    FirestoreRequestManager.getRequestStreamById(
-            requestId: widget.requestModel.id)
+    requestModel = widget.requestModel;
+    FirestoreRequestManager.getRequestStreamById(requestId: requestModel.id)
         .listen((_requestModel) {
-      widget.requestModel = _requestModel;
+      requestModel = _requestModel;
       try {
         setState(() {});
       } on Exception catch (error) {
@@ -66,16 +62,14 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   @override
   Widget build(BuildContext context) {
-    ACCEPTED = S.of(context).accepted.toUpperCase();
-    APPROVED = S.of(context).approved.toUpperCase();
     return list;
   }
 
   Widget get list {
     var futures = <Future>[];
     futures.clear();
-    acceptors = widget.requestModel.acceptors ?? [];
-    approvedMembers = widget.requestModel.approvedUsers ?? [];
+    acceptors = requestModel.acceptors ?? [];
+    approvedMembers = requestModel.approvedUsers ?? [];
     newList = acceptors + approvedMembers;
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
@@ -114,8 +108,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 // return Text(f['fullname']);
 
                 UserRequestStatusType status;
-                status = getUserRequestStatusType(
-                    userModel.email, widget.requestModel);
+                status =
+                    getUserRequestStatusType(userModel.email, requestModel);
 
                 return makeUserWidget(userModel, context, status);
               }).toList()
@@ -127,12 +121,22 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   Widget makeUserWidget(
       UserModel userModel, BuildContext context, UserRequestStatusType status) {
     return Container(
-        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
-        child: Stack(children: <Widget>[
+      margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
+      child: Stack(
+        children: <Widget>[
           getUserCard(userModel, context: context, statusType: status),
-          getUserThumbnail(
-              userModel.photoURL, userModel.email, userModel.sevaUserID),
-        ]));
+          Positioned(
+            left: 5,
+            top: 10,
+            child: getUserThumbnail(
+              userModel.photoURL,
+              userModel.email,
+              userModel.sevaUserID,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getUserThumbnail(String photoURL, String email, String sevaUserID) {
@@ -217,7 +221,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             elevation: 5,
                             onPressed: () async {
                               approveMemberForVolunteerRequest(
-                                model: widget.requestModel,
+                                model: requestModel,
                                 notificationId: Utils.getUuid(),
                                 user: userModel,
                                 context: context,
@@ -240,7 +244,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             elevation: 5,
                             onPressed: () async {
                               declineRequestedMember(
-                                  model: widget.requestModel,
+                                  model: requestModel,
                                   notificationId: "sampleID",
                                   user: userModel);
                             },
@@ -280,7 +284,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   }
 
   bool ifUserIsNotApproved(UserModel user) {
-    return !widget.requestModel.approvedUsers.contains(user.email);
+    return !requestModel.approvedUsers.contains(user.email);
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {

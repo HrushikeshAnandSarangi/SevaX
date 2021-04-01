@@ -681,6 +681,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<String> emails = [
+    'barney@yopmail.com',
     'tony@yopmail.com',
     'robert@yopmail.com',
     'howard@yopmail.com',
@@ -861,7 +862,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       user = await auth.signInWithApple();
       await getAndUpdateDeviceDetailsOfUser(
-        locationVal: location,
+        locationVal: location,userEmailId: user.email
       );
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
@@ -897,7 +898,7 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location);
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location,userEmailId: user.email);
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -919,7 +920,7 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location)
+      await getAndUpdateDeviceDetailsOfUser(locationVal: location,userEmailId: user.email)
           .timeout(Duration(seconds: 3));
       logger.i('device details fixed');
     } on TimeoutException catch (e) {

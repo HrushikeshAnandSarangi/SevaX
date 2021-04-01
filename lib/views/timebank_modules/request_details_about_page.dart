@@ -10,13 +10,13 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -33,7 +33,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -328,7 +327,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForGoodRequest {
-    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+    if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
     } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
@@ -347,7 +346,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForCashRequest {
-    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+    if (userMode == UserMode.TIMEBANK_CREATOR) {
       return getBottombarForTimebankCreator;
     } else if (widget.requestItem.sevaUserId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
@@ -592,7 +591,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ? Container()
           : timeRequestActionWidgetForParticipant;
     } else {
-      canDelete = widget.requestItem.cashModel.amountRaised == 0;
+      canDelete = widget.requestItem.cashModel.amountRaised == 0 ||
+          widget.requestItem.cashModel.amountRaised == null;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
@@ -1004,17 +1004,39 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  void _acceptRequest() {
+  void _acceptRequest() async {
+    CommunityModel communityModel;
+    await Firestore.instance
+        .collection('communities')
+        .document(widget.timebankModel.communityId)
+        .get()
+        .then((value) {
+      communityModel = CommunityModel(value.data);
+      setState(() {});
+    });
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.add(SevaCore.of(context).loggedInUser.email);
 
     widget.requestItem.acceptors = acceptorList.toList();
+    AcceptorModel acceptorModel = AcceptorModel(
+      memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityName: communityModel.name,
+      memberName: SevaCore.of(context).loggedInUser.fullname,
+      memberEmail: SevaCore.of(context).loggedInUser.email,
+      timebankId: widget.timebankModel.id,
+    );
+    widget.requestItem
+            .participantDetails[SevaCore.of(context).loggedInUser.email] =
+        acceptorModel.toMap();
+
     acceptRequest(
       loggedInUser: SevaCore.of(context).loggedInUser,
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: widget.requestItem.communityId,
       directToMember: !widget.timebankModel.protected,
+      acceptorModel: acceptorModel,
     );
   }
 
@@ -1035,6 +1057,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
       Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
       acceptorList.remove(assosciatedEmail);
+      widget.requestItem.participantDetails
+          .remove(SevaCore.of(context).loggedInUser.email);
+
       widget.requestItem.acceptors = acceptorList.toList();
       if (widget.requestItem.allowedCalenderUsers.contains(assosciatedEmail)) {
         Set<String> allowedCalenderUsersList =
@@ -1070,7 +1095,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         requestModel: widget.requestItem,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         isWithdrawal: true,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        communityId: widget.requestItem.communityId,
         directToMember: !widget.timebankModel.protected,
       );
       Navigator.pop(context);

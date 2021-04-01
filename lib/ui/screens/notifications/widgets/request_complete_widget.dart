@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -65,7 +66,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   email: SevaCore.of(context).loggedInUser.email,
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                      communityId:
+                  communityId:
                       SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
@@ -332,8 +333,26 @@ class RequestCompleteWidget extends StatelessWidget {
             ? results['comment']
             : S.of(context).no_comments)
       });
-      await approveTransaction(
-          requestModel, userId, notificationId, loggedInUser);
+      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+        TransactionModel transmodel =
+            requestModel.transactions.firstWhere((transaction) {
+          return transaction.to == receiverUser.sevaUserID;
+        });
+        await TransactionBloc().createNewTransaction(
+          requestModel.timebankId,
+          requestModel.timebankId,
+          DateTime.now().millisecondsSinceEpoch,
+          transmodel.credits ?? 0,
+          true,
+          "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+          requestModel.id,
+          requestModel.timebankId,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        );
+        log('success');
+      }
+      await approveTransaction(requestModel, userId, notificationId,
+          loggedInUser, receiverUser.email);
 
       await sendMessageToMember(
         receiverUser: receiverUser,
@@ -404,11 +423,15 @@ class RequestCompleteWidget extends StatelessWidget {
     String userId,
     String notificationId,
     UserModel loggedInUser,
+    String email,
   ) {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: loggedInUser.currentCommunity,
+      memberCommunityId: model.participantDetails[email] != null
+          ? model.participantDetails[email]['communityId']
+          : model.communityId,
     );
     log('clearing notification');
     FirestoreManager.readUserNotification(
@@ -433,7 +456,9 @@ class RequestCompleteWidget extends StatelessWidget {
     FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
-      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityid: model.participantDetails[user.email] != null
+          ? model.participantDetails[user.email]['communityId']
+          : model.communityId,
     );
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
@@ -450,12 +475,34 @@ class RequestCompleteWidget extends StatelessWidget {
       photoUrl: user.photoURL,
       type: ChatType.TYPE_PERSONAL,
     );
+
+    List<String> showToCommunities = [];
+    try {
+      String communityId1 = model.communityId;
+
+      String communityId2 = model.participantDetails[user.email]['communityId'];
+
+      if (communityId1 != null &&
+          communityId2 != null &&
+          communityId1.isNotEmpty &&
+          communityId2.isNotEmpty &&
+          communityId1 != communityId2) {
+        showToCommunities.add(communityId1);
+        showToCommunities.add(communityId2);
+      }
+    } catch (e) {
+      logger.e(e);
+    }
+
     createAndOpenChat(
       communityId: loggedInUser.currentCommunity,
       context: context,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: true,
+      showToCommunities:
+          showToCommunities.isNotEmpty ? showToCommunities : null,
+      interCommunity: showToCommunities.isNotEmpty,
     );
     FirestoreManager.readUserNotification(
       notificationId,

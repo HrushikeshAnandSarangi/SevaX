@@ -9,7 +9,7 @@ class BillingAddress {
   String city;
   String state;
   String country;
-  int pincode;
+  String pincode;
   String additionalnotes;
 
   BillingAddress(Map<String, dynamic> map) {
@@ -21,7 +21,8 @@ class BillingAddress {
     this.city = map.containsKey('city') ? map['city'] : '';
     this.state = map.containsKey('state') ? map['state'] : '';
     this.country = map.containsKey('country') ? map['country'] : '';
-    this.pincode = map.containsKey('pincode') ? map['pincode'] : null;
+    this.pincode =
+        map.containsKey('pincode') ? map['pincode'].toString() : null;
     this.additionalnotes =
         map.containsKey('additionalnotes') ? map['additionalnotes'] : '';
   }

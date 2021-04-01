@@ -12,6 +12,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -21,7 +22,6 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -89,7 +89,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     parentContext = context;
-    JOIN = S.of(context).join;
+    JOIN = 'Info';
     JOINED = S.of(context).joined;
     nearTimebankText = S.of(context).timebanks_near_you;
     bool showBachBtn = widget.showBackBtn;
@@ -403,14 +403,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   createEditCommunityBloc
                       .updateUserDetails(SevaCore.of(context).loggedInUser);
                   // snapshot.data.communities[index].
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (contexts) => OnBoardWithTimebank(
+                      builder: (contexts) => CommunityAbout(
                         communityModel: communityModel,
-                        sevauserId: widget.loggedInUser.sevaUserID,
-                        user: SevaCore.of(context).loggedInUser,
+                        userModel: SevaCore.of(context).loggedInUser,
                       ),
                     ),
                   );

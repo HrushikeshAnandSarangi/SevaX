@@ -32,8 +32,9 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
+import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
 import '../core.dart';
 
 class RequestsModule extends StatefulWidget {
@@ -505,25 +506,7 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getTagMainFrame(String tagTitle) {
     return Container(
-      margin: EdgeInsets.only(bottom: 3, right: 0, top: 5),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 5, top: 3, bottom: 3),
-            child: Text(
-              tagTitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        margin: EdgeInsets.only(right: 10), child: TagView(tagTitle: tagTitle));
   }
 
   String getLocation(String location) {
@@ -636,11 +619,42 @@ class RequestListItemsState extends State<RequestListItems> {
                     ),
                     SizedBox(width: 16),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.73,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          getAppropriateTag(model.requestType),
+                          Wrap(
+                            children: [
+                              getAppropriateTag(model.requestType),
+                              Visibility(
+                                visible: model.virtualRequest ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Virtual',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.public ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Public',
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: model.isRecurring ?? false,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: TagView(
+                                    tagTitle: 'Recurring',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -706,6 +720,8 @@ class RequestListItemsState extends State<RequestListItems> {
                                 SizedBox(width: 2),
                                 Text(
                                   getTimeFormattedString(
+
+
                                       model.requestEnd, loggedintimezone),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
@@ -725,21 +741,21 @@ class RequestListItemsState extends State<RequestListItems> {
                                   .subtitle,
                             ),
                           ),
-                          Visibility(
-                            visible: model.isRecurring,
-                            child: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  S.of(context).recurring,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Visibility(
+                          //   visible: model.isRecurring,
+                          //   child: Wrap(
+                          //     crossAxisAlignment: WrapCrossAlignment.center,
+                          //     children: <Widget>[
+                          //       Text(
+                          //         S.of(context).recurring,
+                          //         style: TextStyle(
+                          //             fontSize: 16.0,
+                          //             color: Theme.of(context).primaryColor,
+                          //             fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             mainAxisSize: MainAxisSize.max,
@@ -888,17 +904,18 @@ class RequestListItemsState extends State<RequestListItems> {
   //   );
   // }
 
-  BoxDecoration get containerDecorationR {
-    return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(2.0)),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black.withAlpha(2),
-            spreadRadius: 6,
-            offset: Offset(0, 3),
-            blurRadius: 6)
-      ],
-      color: Colors.white,
-    );
-  }
+}
+
+BoxDecoration get containerDecorationR {
+  return BoxDecoration(
+    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+    boxShadow: [
+      BoxShadow(
+          color: Colors.black.withAlpha(2),
+          spreadRadius: 6,
+          offset: Offset(0, 3),
+          blurRadius: 6)
+    ],
+    color: Colors.white,
+  );
 }

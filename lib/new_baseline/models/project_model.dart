@@ -47,6 +47,9 @@ class ProjectModel extends DataModel {
   bool requestedSoftDelete;
   bool softDelete;
   String associatedMessaginfRoomId;
+  bool public;
+  // bool virtualProject;
+  List<String> timebanksPosted;
 
   ProjectModel({
     this.id,
@@ -71,11 +74,17 @@ class ProjectModel extends DataModel {
     this.requestedSoftDelete,
     this.associatedMessaginfRoomId,
     this.associatedmembers,
+    this.public,
+    // this.virtualProject,
+    this.timebanksPosted,
   });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => ProjectModel(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
+        public: json['public'] == null ? false : json['public'],
+        // virtualProject:
+        //     json['virtualProject'] == null ? false : json['virtualProject'],
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
         communityId: json["communityId"] == null ? null : json["communityId"],
         description: json["description"] == null ? null : json["description"],
@@ -116,6 +125,9 @@ class ProjectModel extends DataModel {
         pendingRequests: json["pendingRequests"] == null
             ? []
             : List<String>.from(json["pendingRequests"].map((x) => x)),
+        timebanksPosted: json["timebanksPosted"] == null
+            ? []
+            : List<String>.from(json["timebanksPosted"].map((x) => x)),
         completedRequests: json["completedRequests"] == null
             ? []
             : List<String>.from(
@@ -136,6 +148,8 @@ class ProjectModel extends DataModel {
       "name": name == null ? null : name,
       "timebank_id": timebankId == null ? null : timebankId,
       "communityId": communityId == null ? null : communityId,
+      "public": public == null ? false : public,
+      // "virtualProject": virtualProject == null ? false : virtualProject,
       "description": description == null ? null : description,
       "email_id": emailId == null ? null : emailId,
       "phone_number": phoneNumber == null ? null : phoneNumber,
@@ -153,6 +167,9 @@ class ProjectModel extends DataModel {
       "pendingRequests": pendingRequests == null
           ? null
           : List<dynamic>.from(pendingRequests.map((x) => x)),
+      "timebanksPosted": timebanksPosted == null
+          ? null
+          : List<dynamic>.from(timebanksPosted.map((x) => x)),
       "associatedMessaginfRoomId":
           associatedMessaginfRoomId == null ? null : associatedMessaginfRoomId,
     };
@@ -164,6 +181,6 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests}';
+    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
   }
 }

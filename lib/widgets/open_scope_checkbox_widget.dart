@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+
+class OpenScopeCheckBox extends StatelessWidget {
+  final bool isChecked;
+  final InfoType infoType;
+  final CheckBoxType checkBoxTypeLabel;
+  final ValueChanged<bool> onChangedCB;
+
+  OpenScopeCheckBox(
+      {this.isChecked,
+      @required this.infoType,
+      @required this.checkBoxTypeLabel,
+      @required this.onChangedCB});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        // width: 200,
+        height: 50,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              value: isChecked ?? false,
+              onChanged: onChangedCB,
+            ),
+            Text(getCheckBoxLabel(checkBoxTypeLabel),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                )),
+            SizedBox(width: 5),
+            infoButton(
+              context: context,
+              key: GlobalKey(),
+              type: infoType,
+              // text: infoDetails['projectsInfo'] ?? description,
+            ),
+          ],
+        ));
+  }
+}
+
+String getCheckBoxLabel(CheckBoxType checkBoxType) {
+  switch (checkBoxType) {
+    case CheckBoxType.type_Requests:
+      return "Public to SevaX Global";
+    case CheckBoxType.type_Offers:
+      return "Public to SevaX Global";
+    case CheckBoxType.type_Events:
+      return "Public to SevaX Global";
+    case CheckBoxType.type_VirtualRequest:
+      return "Virtual";
+
+    case CheckBoxType.type_VirtualOffers:
+      return "Virtual";
+    default:
+      return "";
+  }
+}
+
+enum CheckBoxType {
+  type_Requests,
+  type_Offers,
+  type_Events,
+  type_VirtualRequest,
+  type_VirtualOffers,
+}

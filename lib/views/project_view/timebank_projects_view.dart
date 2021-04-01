@@ -153,11 +153,14 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
                     if (projectModelList.length == 0) {
                       return Center(
-                        child: EmptyWidget(
-                          title: S.of(context).no_events_title,
-                          sub_title: isAdminOrOwner
-                              ? S.of(context).no_content_common_description
-                              : S.of(context).cannot_create_project,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: EmptyWidget(
+                            title: S.of(context).no_events_title,
+                            sub_title: isAdminOrOwner
+                                ? S.of(context).no_content_common_description
+                                : S.of(context).cannot_create_project,
+                          ),
                         ),
                         // child: Padding(
                         //   padding: const EdgeInsets.all(16.0),
