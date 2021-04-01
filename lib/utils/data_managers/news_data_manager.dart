@@ -35,14 +35,8 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
-      //Removed to support feeds in parent timebank
-      // .where('entity', isEqualTo: {
-      //   'entityType': 'timebanks',
-      //   'entityId': timebankID,
-      // })
       .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
-      // .orderBy('posttimestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -55,23 +49,6 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       //futures.add(getUserInfo(newsModel.email));
       modelList.add(newsModel);
     });
-
-//    //await process goes here
-//    for (int i = 0; i < modelList.length; i += 1) {
-//      UserModel userModel = await getUserForId(
-//        sevaUserId: modelList[i].sevaUserId,
-//      );
-//      modelList[i].userPhotoURL=userModel.photoURL;
-//      timeBankModelList.add(timeBankModel);
-//    }
-    // await Future.wait(futures).then((onValue) async {
-    // for (var i = 0; i < modelList.length; i++) {
-    //   //  modelList[i].userPhotoURL = onValue[i]['photourl'];
-    //   UserModel userModel = await getUserForId(
-    //     sevaUserId: modelList[i].sevaUserId,
-    //   );
-    //   modelList[i].userPhotoURL = userModel?.photoURL ?? defaultUserImageURL;
-    // }
 
     newsSink.add(modelList);
   }));
@@ -233,4 +210,9 @@ Future _getLocation(double latitude, double longitude) async {
     longitude,
   );
   return address;
+}
+
+class SortOrderClass {
+  static const LIKES = "Likes";
+  static const LATEST = "Latest";
 }

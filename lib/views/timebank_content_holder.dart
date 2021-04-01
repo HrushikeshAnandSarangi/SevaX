@@ -521,6 +521,8 @@ class DiscussionListState extends State<DiscussionList> {
   bool isPinned = false;
   NewsModel pinnedNewsModel;
   StreamController<List<NewsModel>> newsStream;
+  List<String> sortOrderArr = ["Latest", "Likes"];
+  String sortOrderVal="Latest";
 
   @override
   void initState() {
@@ -556,6 +558,38 @@ class DiscussionListState extends State<DiscussionList> {
               Text(
                 S.of(context).feeds,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              Spacer(),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  style: TextStyle(color: Colors.white),
+                  focusColor: Colors.white,
+                  iconEnabledColor: FlavorConfig.values.theme.primaryColor,
+                  value: sortOrderVal,
+                  onChanged: (val) {
+                    if(val != sortOrderVal){
+                      sortOrderVal = val;
+                      setState((){});
+                    }
+                  },
+                  items: List.generate(
+                    sortOrderArr.length,
+                        (index) => DropdownMenuItem(
+                      value: sortOrderArr[index],
+                      child: Text(
+                        sortOrderArr[index],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: FlavorConfig.values.theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10),
               ),
             ],
           ),
@@ -627,6 +661,11 @@ class DiscussionListState extends State<DiscussionList> {
               );
 
             List<NewsModel> newsList = snapshot.data;
+            if(sortOrderVal.toLowerCase() == SortOrderClass.LIKES.toLowerCase()){
+              newsList.sort((a, b)=> b.likes.length.compareTo(a.likes.length));
+            } else {
+              newsList.sort((a, b)=> b.postTimestamp.compareTo(a.postTimestamp));
+            }
             newsList = filterBlockedContent(newsList, context);
             newsList = filterPinnedNews(newsList, context);
 
