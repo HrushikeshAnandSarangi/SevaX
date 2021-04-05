@@ -292,10 +292,17 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
               (documentSnapshot) {
                 CommunityModel model = CommunityModel(documentSnapshot.data);
                 model.id = documentSnapshot.documentID;
+                if(AppConfig.isTestCommunity){
+                  if(model.testCommunity){
+                    communityList.add(model);
 
-                model.softDelete == true || model.private == true || AppConfig.isTestCommunity
-                    ? null
-                    : communityList.add(model);
+                  }
+                }else {
+                  model.softDelete == true || model.private == true ||
+                      AppConfig.isTestCommunity
+                      ? null
+                      : communityList.add(model);
+                }
               },
             );
             requestSink.add(communityList);

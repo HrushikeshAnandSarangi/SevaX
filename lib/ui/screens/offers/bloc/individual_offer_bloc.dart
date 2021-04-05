@@ -208,8 +208,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
     } else if (_title.value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
     _title.addError(ValidationErrors.char_error );
      flag = true;
-
-
     }else if (profanityDetector.isProfaneString(_title.value)) {
       _title.addError(ValidationErrors.profanityError);
       flag = true;

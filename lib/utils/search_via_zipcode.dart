@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/zip_code_model.dart';
 
@@ -25,8 +28,11 @@ class SearchCommunityViaZIPCode {
 
   static Future<Location> _searchViaGeoCode(searchTerm) async {
     GeoCode geoCode = GeoCode();
+    log('tiggeres');
     try {
       var coordinates = await geoCode.forwardGeocoding(address: searchTerm);
+      log('lat ${coordinates.latitude}');
+      log('lon ${coordinates.longitude}');
       return Location(
         lat: coordinates.latitude,
         lng: coordinates.longitude,
@@ -61,6 +67,10 @@ class SearchCommunityViaZIPCode {
   static Future<List<CommunityModel>> _getNearCommunitiesListStream(
       Location location,
       ) async {
+
+    log('near ');
+    log('lat ${location.lat}');
+    log('lon ${location.lng}');
     Geoflutterfire geo = Geoflutterfire();
     var radius = 60;
     GeoFirePoint center = geo.point(
@@ -95,7 +105,14 @@ class SearchCommunityViaZIPCode {
     communitiesMatched.forEach(
           (documentSnapshot) {
         CommunityModel model = CommunityModel(documentSnapshot.data);
-        if (!model.softDelete || !model.private) communityList.add(model);
+        if(AppConfig.isTestCommunity){
+          if(model.testCommunity){
+            communityList.add(model);
+
+          }
+        }else {
+          if (!model.softDelete || !model.private) communityList.add(model);
+        }
       },
     );
     return communityList;

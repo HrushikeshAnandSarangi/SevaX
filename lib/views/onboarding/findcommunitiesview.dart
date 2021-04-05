@@ -402,7 +402,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   createEditCommunityBloc.selectCommunity(communityModell);
                   createEditCommunityBloc
                       .updateUserDetails(SevaCore.of(context).loggedInUser);
-                  // snapshot.data.communities[index].
+                  // snapshot.data.comm
+                  // unities[index].
                   Navigator.push(
                     context,
                     MaterialPageRoute(
