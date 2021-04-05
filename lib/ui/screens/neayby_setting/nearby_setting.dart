@@ -46,7 +46,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   int selectedRadio;
   final _debouncer = Debouncer(milliseconds: 700);
   static const double minKM = 3;
-  static const double maxKM = 80;
+  static const double maxKM = 100;
   static const double minMi = 2;
   static const double maxMi = 50;
 
