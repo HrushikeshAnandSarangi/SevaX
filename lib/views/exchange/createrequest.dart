@@ -415,7 +415,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 }else
                                 if (profanityDetector.isProfaneString(value)) {
                                   return S.of(context).profanity_text_alert;
-                                } else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.deviceId)){
+                                } else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.loggedInEmail)){
                                   return 'Creating request with "_" is not allowed';
                                 }else {
                                   requestModel.title = value;

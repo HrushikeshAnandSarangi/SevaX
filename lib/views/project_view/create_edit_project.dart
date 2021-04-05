@@ -329,7 +329,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     return S.of(context).validation_error_project_name_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;
-                  } else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.deviceId)){
+                  } else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.loggedInEmail)){
                     return 'Creating event with "_" is not allowed';
                   }else {
                     projectModel.name = value;

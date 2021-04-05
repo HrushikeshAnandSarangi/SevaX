@@ -31,7 +31,7 @@ class AppConfig {
   static String appVersion;
   static int buildNumber;
   static String packageName;
-  static String deviceId;
+  static String loggedInEmail;
 
   //Platform checks
   static bool isWeb;

@@ -154,7 +154,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   } else {
     location = locationVal;
   }
-  AppConfig.deviceId=deviceDetails.deviceId;
+  AppConfig.loggedInEmail=userEmail;
   deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail).updateData({
     'deviceDetails': deviceDetails.toMap(),
