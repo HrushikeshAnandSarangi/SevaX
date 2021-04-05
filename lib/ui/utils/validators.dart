@@ -69,7 +69,7 @@ String getValidationError(BuildContext context, String errorCode) {
       return error.validation_error_offer_title;
       break;
       case ValidationErrors.char_error:
-      return 'Creating community with "_" is not allowed';
+      return 'Creating offer with "_" is not allowed';
       break;
     case ValidationErrors.genericError:
       return error.validation_error_general_text;
