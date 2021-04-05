@@ -15,7 +15,7 @@ class AppConfig {
 
   static BillingPlanModel billing;
   static SharedPreferences prefs;
-  static List<dynamic> testingDeviceIds=[];
+  static List<dynamic> testingEmails=[];
 
   static int maxTransactionLimit;
   static int currentTransactionLimit;

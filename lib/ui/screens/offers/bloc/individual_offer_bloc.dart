@@ -205,7 +205,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
-    } else if (_title.value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.loggedInEmail)){
+    } else if (_title.value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
     _title.addError(ValidationErrors.char_error );
      flag = true;
 

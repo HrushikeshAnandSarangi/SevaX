@@ -367,7 +367,7 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
-                            }else if (value.substring(0,1).contains('_') && !AppConfig.testingDeviceIds.contains(AppConfig.loggedInEmail)){
+                            }else if (value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
