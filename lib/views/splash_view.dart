@@ -459,6 +459,10 @@ class _SplashViewState extends State<SplashView> {
     List<dynamic> testingEmails =
     json.decode(AppConfig.remoteConfig.getString('testing_emails'));
     AppConfig.testingEmails=testingEmails??[];
+
+    log("emai;s ${AppConfig.testingEmails}");
+    log("email;s ${AppConfig.loggedInEmail}");
+    log("email;s ${AppConfig.loggedInEmail}");
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig.getString('app_version'));
 
