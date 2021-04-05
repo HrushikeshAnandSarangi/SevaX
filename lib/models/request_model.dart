@@ -203,7 +203,7 @@ class RequestModel extends DataModel {
   List<String> timebanksPosted;
   bool public;
   bool virtualRequest;
-  Map<String, dynamic> participantDetails = {};
+  Map<dynamic, dynamic> participantDetails = {};
   String creatorName = '';
 
   RequestModel({
@@ -490,8 +490,8 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('virtualRequest')) {
       this.virtualRequest = map['virtualRequest'];
-    }else{
-      this.virtualRequest=map['virtualRequest'];
+    } else {
+      this.virtualRequest = map['virtualRequest'];
     }
     if (map.containsKey('timebanksPosted')) {
       List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
@@ -588,7 +588,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('description')) {
       this.description = map['description'];
     }
-    
+
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -724,10 +724,7 @@ class RequestModel extends DataModel {
     } else {
       this.timebanksPosted = [];
     }
-    if (map.containsKey('participantDetails')) {
-      this.participantDetails = Map.castFrom(map['participantDetails']);
-      ;
-    }
+
     if (map.containsKey('public')) {
       this.public = map['public'];
     }
@@ -739,9 +736,6 @@ class RequestModel extends DataModel {
       this.timebanksPosted = timebanksPosted;
     } else {
       this.timebanksPosted = [];
-    }
-    if (map.containsKey('participantDetails')) {
-      this.participantDetails = Map.castFrom(map['participantDetails']);
     }
 
     if (map.containsKey('public')) {
@@ -756,10 +750,7 @@ class RequestModel extends DataModel {
     } else {
       this.timebanksPosted = [];
     }
-    if (map.containsKey('participantDetails')) {
-      this.participantDetails = Map.castFrom(map['participantDetails']);
-      ;
-    }
+
     if (map.containsKey('public')) {
       this.public = map['public'];
     }
@@ -772,6 +763,7 @@ class RequestModel extends DataModel {
     } else {
       this.timebanksPosted = [];
     }
+
     if (map.containsKey('participantDetails')) {
       this.participantDetails = Map.castFrom(map['participantDetails']);
     }
@@ -849,7 +841,7 @@ class RequestModel extends DataModel {
     if (this.description != null && this.description.isNotEmpty) {
       object['description'] = this.description;
     }
-   
+
     if (this.email != null && this.email.isNotEmpty) {
       object['email'] = this.email;
     }
@@ -996,9 +988,10 @@ class RequestModel extends DataModel {
     if (this.timebanksPosted != null) {
       object['timebanksPosted'] = this.timebanksPosted;
     }
+
     if (this.participantDetails != null) {
       object['participantDetails'] =
-          Map<String, dynamic>.from(this.participantDetails);
+          Map<dynamic, dynamic>.from(this.participantDetails);
     }
 
     return object;

@@ -475,7 +475,6 @@ class RequestEditFormState extends State<RequestEditForm> {
       }
     }
 
-
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
@@ -566,14 +565,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 ? TimeRequest(snapshot, projectModelList)
                                 : widget.requestModel.requestType ==
                                         RequestType.CASH
-                                    ? CashRequest(
+                                    ? CashRequest(snapshot, projectModelList)
+                                    : widget.requestModel.requestType ==
+                                            RequestType.BORROW
+                                        ? BorrowRequest(
                                             snapshot, projectModelList)
-                                        : widget.requestModel.requestType ==
-                                                RequestType.BORROW
-                                            ? BorrowRequest(
-                                                snapshot, projectModelList)
-                                            : GoodsRequest(
-                                                snapshot, projectModelList),
+                                        : GoodsRequest(
+                                            snapshot, projectModelList),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -652,8 +650,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               });
         });
   }
-
-  
 
   Widget RequestGoodsDescriptionData() {
     return Column(
@@ -1448,7 +1444,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-   Widget BorrowRequest(snapshot, projectModelList) {
+  Widget BorrowRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1554,7 +1550,6 @@ class RequestEditFormState extends State<RequestEditForm> {
           )
         ]);
   }
-
 
   Widget CashRequest(snapshot, projectModelList) {
     return Column(
@@ -2138,7 +2133,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             communityId: SevaCore.of(context).loggedInUser.currentCommunity,
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
           );
-          
+
           Navigator.pop(dialogContext);
           Navigator.pop(context);
         } else {
@@ -2176,10 +2171,11 @@ class RequestEditFormState extends State<RequestEditForm> {
 
         linearProgressForCreatingRequest();
         await updateRequest(requestModel: widget.requestModel);
-        Navigator.pop(context);
+
         Navigator.pop(dialogContext);
+        Navigator.pop(context);
+
       } else {
-        log('HERE 2');
         Navigator.of(context).pop();
       }
       //}
@@ -2448,11 +2444,10 @@ class ProjectSelectionState extends State<ProjectSelection> {
   ProjectModel selectedModel = ProjectModel();
   @override
   Widget build(BuildContext context) {
-    
     if (widget.projectModelList == null) {
       return Container();
     }
-    log('Project Model Check:  ' + widget.projectModelList.toString());
+    // log('Project Model Check:  ' + widget.projectModelList.toString());
     List<dynamic> list = [
       {"name": S.of(context).unassigned, "code": "None"}
     ];
@@ -2464,8 +2459,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
             widget.projectModelList[i].mode == ProjectMode.TIMEBANK_PROJECT,
       });
     }
-    log('Model List:  '+  list.toString());
-    log('Project Id:  '+   widget.requestModel.projectId.toString());
+    // log('Model List:  ' + list.toString());
+    // log('Project Id:  ' + widget.requestModel.projectId.toString());
     return MultiSelect(
       autovalidate: true,
       initialValue: [

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
@@ -28,6 +29,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
@@ -241,11 +243,37 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
+
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? addressComponentBorrowRequest
+                      : Container(),
+
                   getRequestModeComponent,
-                  timestampComponent,
-                  createdAt,
-                  addressComponent,
-                  hostNameComponent,
+
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? Container()
+                      : timestampComponent,
+
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? timestampComponentBorrowRequest 
+                      : Container(),
+                  
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? Container()
+                      : createdAt,
+
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? Container()
+                      : addressComponent,
+
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? Container()
+                      : hostNameComponent,
+                  
+                  widget.requestItem.requestType == RequestType.BORROW
+                      ? requestedByBorrowRequestComponent
+                      : Container(),
+
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -257,7 +285,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           ],
                         )
                       : Container(),
+                  
+                  
                   requestDescriptionComponent,
+
+                  SizedBox(height: 10),
+
                 ],
               ),
             ),
@@ -571,19 +604,19 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ? Container()
           : goodsRequestActionButtonForParticipant;
     } else if (widget.requestItem.requestType == RequestType.BORROW) {
-      canDelete = widget.requestItem.participantDetails != null && 
-                  widget.requestItem.acceptors.length == 0;
+      canDelete = widget.requestItem.participantDetails != null &&
+          widget.requestItem.acceptors.length == 0;
 
       if (widget.requestItem.roomOrTool == 'ROOM') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request a place';
+            : 'Borrow Request for place';
       } else {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request goods';
+            : 'Borrow Request for goods';
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -721,8 +754,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           ? widget.timebankModel.creatorId
                           : widget.timebankModel.managedCreatorIds.first,
               timebankCreatorId: widget.timebankModel.creatorId) &&
-              widget.requestItem.participantDetails == null && 
-              widget.requestItem.acceptors.length == 0;
+          widget.requestItem.participantDetails == null &&
+          widget.requestItem.acceptors.length == 0;
     } else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
@@ -835,7 +868,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       TextSpan(
                         text: isApplied
                             ? S.of(context).applied_for_request
-                            : S.of(context).particpate_in_request_question,
+                            : (widget.requestItem.roomOrTool == 'ROOM' ? 
+                                'Borrow request for place' : 'Borrow request for goods'),
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Europa',
@@ -866,29 +900,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           children: <Widget>[
             SizedBox(width: 1),
             Spacer(),
-            widget.requestItem.requestType == RequestType.BORROW ?
-            Text(
-              isApplied ? S.of(context).withdraw : S.of(context).accept,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            )
-            :
-            Text(
-              isApplied ? S.of(context).withdraw : S.of(context).apply,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+            widget.requestItem.requestType == RequestType.BORROW
+                ? Text(
+                    isApplied ? S.of(context).withdraw : S.of(context).accept,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )
+                : Text(
+                    isApplied ? S.of(context).withdraw : S.of(context).apply,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
             Spacer(
               flex: 1,
             ),
           ],
         ),
         onPressed: () {
-          if(widget.requestItem.requestType == RequestType.BORROW){
+          if (widget.requestItem.requestType == RequestType.BORROW) {
             borrowApplyAction();
           } else {
             applyAction();
@@ -925,32 +958,51 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       _withdrawRequest();
     } else {
 
-        Map<String, dynamic> participantDetails = {};
+      Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AcceptBorrowRequest(
+                  requestModel: widget.requestItem,
+                  timeBankId: widget.requestItem.timebankId,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  parentContext: context,
+                  onTap: () async {
+                    log('Came out of accept borrow request');
+                    
+                    Navigator.of(context).pop();
 
-        participantDetails = {
-          'bio': SevaCore.of(context).loggedInUser.bio,
-          'email': SevaCore.of(context).loggedInUser.email,
-          'fullname':
-              SevaCore.of(context).loggedInUser.fullname,
-          'photourl':
-              SevaCore.of(context).loggedInUser.photoURL,
-          'sevauserid':
-              SevaCore.of(context).loggedInUser.sevaUserID,
-          'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
-          'timebankId': widget.requestItem.timebankId,   //will this work when sending notifications?
-        };
+                    Map<String, dynamic> participantDetails = {};
 
-        widget.requestItem.participantDetails =
-            participantDetails;
-        
-        widget.requestItem.accepted = true;
+                    participantDetails = {
+                      SevaCore.of(context).loggedInUser.email: {
+                        'bio': SevaCore.of(context).loggedInUser.bio,
+                        'email': SevaCore.of(context).loggedInUser.email,
+                        'fullname': SevaCore.of(context).loggedInUser.fullname,
+                        'photourl': SevaCore.of(context).loggedInUser.photoURL,
+                        'sevauserid': SevaCore.of(context).loggedInUser.sevaUserID,
+                        'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
+                        'timebankId': widget.requestItem
+                            .timebankId, //will this work when sending notifications?
+                      },
+                    };
 
-        log('participant detailss map written to DB ----->');
+                    await 
 
-        await updateRequest(requestModel: widget.requestItem);
+                    //widget.requestItem.participantDetails = participantDetails;
+                    //widget.requestItem.accepted = true;
+                    log('participant detailss map written to DB ----->');
 
-        proccedWithCalander();
-      
+                    await updateAcceptBorrowRequest(
+                      requestModel: widget.requestItem,
+                      participantDetails: participantDetails,
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                    );
+
+                    proccedWithCalander();
+                  },
+                ),
+              ),
+            );
+       
     }
   }
 
@@ -1122,6 +1174,43 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Offstage();
   }
 
+  Widget get requestedByBorrowRequestComponent {
+     return Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+            Text(
+              "Requested by",    //Label To Be Created
+              style: titleStyle,
+              maxLines: 1,
+            ),
+          SizedBox(height: 10),
+          Row(
+           children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                widget.requestItem.photoUrl ?? defaultUserImageURL,
+              ),
+              backgroundColor: Colors.white,
+              radius: MediaQuery.of(context).size.width / 10.5,
+            ),
+            SizedBox(width: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.requestItem.creatorName, 
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21)),
+                SizedBox(height: 7),
+                createdAt,
+             ],
+            ),
+           ],
+          ),
+         SizedBox(height: 20),
+        ],
+      );
+  }
+
   Widget get hostNameComponent {
     return CustomListTile(
       leading: Icon(
@@ -1198,6 +1287,43 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
+  Widget get subtitleComponentBorrowRequest {
+    return Text(
+      // DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
+      //       getDateTimeAccToUserTimezone(
+      //           dateTime: DateTime.fromMillisecondsSinceEpoch(
+      //               widget.requestItem.requestStart),
+      //           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+      //     ) +
+      DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                    widget.requestItem.requestStart,
+                  ),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+              ) +
+          ' - ' +
+          DateFormat.MMMd(getLangTag()).add_jm().format(
+                getDateTimeAccToUserTimezone(
+                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                      widget.requestItem.requestEnd),
+                  timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                ),
+                // ),
+                // DateFormat('h:mm a', Locale(getLangTag()).toLanguageTag()).format(
+                //   getDateTimeAccToUserTimezone(
+                //     dateTime: DateTime.fromMillisecondsSinceEpoch(
+                //         widget.requestItem.requestEnd),
+                //     timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                //   ),
+              ),
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+      maxLines: 1,
+      //overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget get timestampComponent {
     return CustomListTile(
       leading: Icon(
@@ -1207,6 +1333,72 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       title: date,
       subtitle: subtitleComponent,
       trailing: trailingComponent,
+    );
+  }
+
+
+  Widget get timestampComponentBorrowRequest {
+    return CustomListTile(
+      leading: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          Card(
+            color: Colors.transparent,
+            elevation: 3,
+            child: Column(
+              children: [
+                Container(
+                  width: 58,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    border: Border.all(
+                      color: Colors.transparent,
+                    ),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7))
+                  ),
+                ),
+                Container(
+                  width: 58,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                    color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7))
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12.0),
+            child: Text(
+              DateFormat('dd', Locale(getLangTag()).toLanguageTag())
+              .format(
+                getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        widget.requestItem.requestStart),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+                ),
+                style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+            ),
+          ),
+       ],
+      ),
+      title: Padding(
+        padding: const EdgeInsets.only(top: 16.0, left: 8),
+        child: date,
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: subtitleComponentBorrowRequest,
+      ),
+      trailing: Padding(
+        padding: const EdgeInsets.only(left: 8),
+        child: trailingComponent,
+      ),
     );
   }
 
@@ -1243,6 +1435,45 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 : Text(''),
           )
         : Container();
+  }
+
+  Widget get addressComponentBorrowRequest {
+
+    String locationSubitleFinal = '';
+    String locationTitle = '';
+
+    if(widget.requestItem.address != null){
+      List locationTitleList = widget.requestItem.address.split(',');
+      locationTitle = locationTitleList[0];
+
+      List locationSubitleList = widget.requestItem.address.split(',');
+      locationSubitleList.removeAt(0);
+
+      locationSubitleFinal = locationSubitleList.toString().replaceAll('[', '').replaceAll(']', '');
+
+      return widget.requestItem.address != null
+        ? CustomListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.black,
+            ),
+            title: Text(
+              widget.requestItem.address.trim() != null ? locationTitle : '',
+              style: titleStyle,
+              maxLines: 1,
+            ),
+            subtitle: widget.requestItem.address != null
+                ? Text(locationSubitleFinal.trim(),
+                    style: TextStyle(
+                        color: Colors.grey, fontWeight: FontWeight.w600))
+                : Text(''),
+          )
+        : Container();
+    } else { 
+      return Text('Location not provided', style: TextStyle(color: Colors.grey));
+    }
+
+    
   }
 
   Widget get trailingComponent {
@@ -1288,6 +1519,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.TIME:
         return timeDetailsForTimerequest;
 
+      case RequestType.BORROW:
+        return timeDetailsForBorrowrequest;
+
       case RequestType.ONE_TO_MANY_REQUEST:
         return detailsForOneToManyRequest;
 
@@ -1300,6 +1534,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Text(
       widget.requestItem.description,
       style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Widget get timeDetailsForBorrowrequest {
+    return Text(
+      widget.requestItem.description,
+      style: TextStyle(fontSize: 16, color: Colors.grey)
     );
   }
 

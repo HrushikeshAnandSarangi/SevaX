@@ -122,13 +122,21 @@ class RequestAcceptedWidget extends StatelessWidget {
                   ),
                 Center(child: getBio(context, userModel)),
                 Center(
-                  child: Text(
-                    "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child: model.requestType == RequestType.BORROW
+                      ? Text(
+                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} will be added to the request.", //Label to be created
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      : Text(
+                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(5.0),
@@ -226,6 +234,10 @@ class RequestAcceptedWidget extends StatelessWidget {
 
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
+
+    (model.numberOfApprovals == 1 && model.requestType == RequestType.BORROW)
+        ? null
+        : model.accepted = true;
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;

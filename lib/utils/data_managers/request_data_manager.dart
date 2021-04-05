@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
@@ -37,15 +38,29 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
 }
 
 Future<void> updateRequest({@required RequestModel requestModel}) async {
-  // if (requestModel.projectId != null) {
-  //   await Firestore.instance.updateData(db.collection("projects").document(projectData.id),
-  //       projectData.toMap());
-  // }
-
+  log('RequestModel:  ' + requestModel.toMap().toString());
   return await Firestore.instance
       .collection('requests')
       .document(requestModel.id)
       .updateData(requestModel.toMap());
+}
+
+Future<void> updateAcceptBorrowRequest({
+  @required RequestModel requestModel,
+  @required Map participantDetails,
+  @required String userEmail,
+}) async {
+  log('accept updated borrow request');
+  return await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(
+    {
+      'participantDetails.$userEmail': participantDetails,
+      'accepted': true,
+      'approvedUsers': FieldValue.arrayUnion([userEmail]),
+    },
+  );
 }
 
 Future<void> updateRequestsByFields(
@@ -973,8 +988,8 @@ Future<void> borrowRequestFeedbackLenderUpdate({
       .collection('requests')
       .document(model.id)
       .updateData({
-        'lenderReviewed': true,
-      });
+    'lenderReviewed': true,
+  });
 }
 
 Future<void> borrowRequestFeedbackBorrowerUpdate({
@@ -984,8 +999,30 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
       .collection('requests')
       .document(model.id)
       .updateData({
-        'lenderReviewed': true,
-      });
+    'lenderReviewed': true,
+  });
+}
+
+Future<void> storeAcceptorDataBorrowRequest({
+  @required RequestModel model,
+  @required String acceptorEmail,
+  String doAndDonts,
+  String selectedAddress,
+  GeoFirePoint location,
+  String acceptorName,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(model.id)
+      .collection('borrowRequestAcceptor')
+      .document(acceptorEmail)
+      .setData({
+    'acceptorEmail': acceptorEmail,
+    'doAndDonts': doAndDonts,
+    'location': location.data,
+    'acceptorName': acceptorName,
+    'requestStart': model.requestStart,
+  });
 }
 
 Future<void> rejectRequestCompletion({
@@ -1269,7 +1306,8 @@ Future<void> approveAcceptRequestForTimebank({
   tempTimebankModel.fullName = timebankModel.name;
 
   NotificationsModel model = NotificationsModel(
-    isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+    isTimebankNotification:
+        requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,

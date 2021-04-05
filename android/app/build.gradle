@@ -55,15 +55,9 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-<<<<<<< HEAD
-        //storeFile file(keystoreProperties['storeFile'])
-        storeFile file('Keystore')
-        storePassword keystoreProperties['storePassword']
-=======
-            storeFile file(keystoreProperties['storeFile'])
-            // storeFile file('Keystore')
+            // storeFile file(keystoreProperties['storeFile'])
+            storeFile file('Keystore')
             storePassword keystoreProperties['storePassword']
->>>>>>> 1.6.2_release
         }
     }
 
