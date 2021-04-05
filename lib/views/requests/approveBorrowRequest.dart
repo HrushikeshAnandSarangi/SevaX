@@ -157,22 +157,25 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                         //donation approved
                         if (_formKey.currentState.validate()) {
                           if (location == null) {
-                             _key.currentState.showSnackBar(
+                            _key.currentState.showSnackBar(
                               SnackBar(
                                 content: Text(S.of(context).location_not_added),
                               ),
                             );
                           } else {
-                            await storeAcceptorDataBorrowRequest(
-                              model: widget.requestModel,
-                              acceptorEmail:
-                                  SevaCore.of(context).loggedInUser.email,
-                              doAndDonts: doAndDonts,
-                              selectedAddress: selectedAddress,
-                              location: location,
-                              acceptorName:
-                                  SevaCore.of(context).loggedInUser.fullname,
-                            );
+
+                            if (widget.requestModel.roomOrTool == 'ROOM') {
+                              await storeAcceptorDataBorrowRequest(
+                                model: widget.requestModel,
+                                acceptorEmail:
+                                    SevaCore.of(context).loggedInUser.email,
+                                doAndDonts: doAndDonts,
+                                selectedAddress: selectedAddress,
+                                location: location,
+                                acceptorName:
+                                    SevaCore.of(context).loggedInUser.fullname,
+                              );
+                            }
 
                             widget.onTap?.call();
                           }
@@ -218,7 +221,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                           sender: sender,
                           reciever: reciever,
                           onChatCreate: () {
-                            Navigator.of(context).pop();
+                            //Navigator.of(context).pop();
                           },
                         );
                       },

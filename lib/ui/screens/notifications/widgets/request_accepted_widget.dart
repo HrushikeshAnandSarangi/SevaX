@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -154,14 +156,26 @@ class RequestAcceptedWidget extends StatelessWidget {
                               color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
-                          approveMemberForVolunteerRequest(
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
-                          );
+                          if (requestModel.requestType == RequestType.BORROW) {
+                            log('ONE');
+                            approveMemberForBorrowRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                            );
+                          } else {
+                            approveMemberForVolunteerRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                            );
+                          }
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -235,10 +249,6 @@ class RequestAcceptedWidget extends StatelessWidget {
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    (model.numberOfApprovals == 1 && model.requestType == RequestType.BORROW)
-        ? null
-        : model.accepted = true;
-
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;
     FirestoreManager.approveAcceptRequest(
@@ -248,6 +258,30 @@ class RequestAcceptedWidget extends StatelessWidget {
       communityId: communityId,
       directToMember: true,
     );
+  }
+
+  void approveMemberForBorrowRequest({
+    RequestModel model,
+    UserModel user,
+    String notificationId,
+    String communityId,
+  }) {
+    List<String> approvedUsers = model.approvedUsers;
+    Set<String> usersSet = approvedUsers.toSet();
+  
+    usersSet.add(user.email);
+    model.approvedUsers = usersSet.toList();
+
+    if (model.approvedUsers.length < 1) {
+        model.accepted = true;
+      FirestoreManager.approveAcceptRequest(
+        requestModel: model,
+        approvedUserId: user.sevaUserID,
+        notificationId: notificationId,
+        communityId: communityId,
+        directToMember: true,
+      );
+    }
   }
 }
 

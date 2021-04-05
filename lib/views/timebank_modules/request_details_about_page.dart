@@ -89,6 +89,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   CashStatus cashStatus;
   var recurringRequestsDocs;
   bool deletingParent = false;
+  bool isApproved = false;
 
   String location = 'Location';
   TextStyle titleStyle = TextStyle(
@@ -219,6 +220,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
 
+      isApproved = widget.requestItem.approvedUsers
+          .contains(SevaCore.of(context).loggedInUser.email);
+
+      log('is approved?  ' + isApproved.toString());
+
       isApplied = widget.requestItem.acceptors
               .contains(SevaCore.of(context).loggedInUser.email) ||
           widget.requestItem.approvedUsers
@@ -228,6 +234,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           false;
     } else {
       isApplied = false;
+      isApproved = false;
     }
 
     return Scaffold(
@@ -243,37 +250,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
-
                   widget.requestItem.requestType == RequestType.BORROW
                       ? addressComponentBorrowRequest
                       : Container(),
-
                   getRequestModeComponent,
-
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : timestampComponent,
-
                   widget.requestItem.requestType == RequestType.BORROW
-                      ? timestampComponentBorrowRequest 
+                      ? timestampComponentBorrowRequest
                       : Container(),
-                  
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : createdAt,
-
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : addressComponent,
-
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : hostNameComponent,
-                  
                   widget.requestItem.requestType == RequestType.BORROW
                       ? requestedByBorrowRequestComponent
                       : Container(),
-
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -285,12 +283,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           ],
                         )
                       : Container(),
-                  
-                  
                   requestDescriptionComponent,
-
+                  SizedBox(height: 17),
+                  (isApproved &&
+                          widget.requestItem.requestType == RequestType.BORROW)
+                      ? approvedBorrowRequestDetailsComponent
+                      : Container(),
                   SizedBox(height: 10),
-
                 ],
               ),
             ),
@@ -866,10 +865,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     style: TextStyle(color: Colors.black),
                     children: [
                       TextSpan(
-                        text: isApplied
-                            ? S.of(context).applied_for_request
-                            : (widget.requestItem.roomOrTool == 'ROOM' ? 
-                                'Borrow request for place' : 'Borrow request for goods'),
+                        text: (isApproved &&
+                                widget.requestItem.requestType ==
+                                    RequestType.BORROW)
+                            ? 'Request Approved'
+                            : isApplied
+                                ? S.of(context).applied_for_request
+                                : (widget.requestItem.roomOrTool == 'ROOM'
+                                    ? 'Borrow request for place'
+                                    : 'Borrow request for goods'),
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Europa',
@@ -887,7 +891,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get timeRequestActionWidgetForParticipant {
     return Container(
-      margin: EdgeInsets.only(right: 5),
+      margin: EdgeInsets.only(right: 12),
       width: 100,
       height: 32,
       child: FlatButton(
@@ -902,7 +906,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             Spacer(),
             widget.requestItem.requestType == RequestType.BORROW
                 ? Text(
-                    isApplied ? S.of(context).withdraw : S.of(context).accept,
+                    isApplied ? S.of(context).cancel : S.of(context).accept,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -957,52 +961,47 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     if (isApplied) {
       _withdrawRequest();
     } else {
-
       Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AcceptBorrowRequest(
-                  requestModel: widget.requestItem,
-                  timeBankId: widget.requestItem.timebankId,
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  parentContext: context,
-                  onTap: () async {
-                    log('Came out of accept borrow request');
-                    
-                    Navigator.of(context).pop();
+        MaterialPageRoute(
+          builder: (context) => AcceptBorrowRequest(
+            requestModel: widget.requestItem,
+            timeBankId: widget.requestItem.timebankId,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            parentContext: context,
+            onTap: () async {
+              log('Came out of accept borrow request');
 
-                    Map<String, dynamic> participantDetails = {};
+              Navigator.of(context).pop();
 
-                    participantDetails = {
-                      SevaCore.of(context).loggedInUser.email: {
-                        'bio': SevaCore.of(context).loggedInUser.bio,
-                        'email': SevaCore.of(context).loggedInUser.email,
-                        'fullname': SevaCore.of(context).loggedInUser.fullname,
-                        'photourl': SevaCore.of(context).loggedInUser.photoURL,
-                        'sevauserid': SevaCore.of(context).loggedInUser.sevaUserID,
-                        'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
-                        'timebankId': widget.requestItem
-                            .timebankId, //will this work when sending notifications?
-                      },
-                    };
+              //Map<String, dynamic> participantDetails = {};
 
-                    await 
+              // participantDetails = {
+              //   SevaCore.of(context).loggedInUser.email: {
+              //     'bio': SevaCore.of(context).loggedInUser.bio,
+              //     'email': SevaCore.of(context).loggedInUser.email,
+              //     'fullname': SevaCore.of(context).loggedInUser.fullname,
+              //     'photourl': SevaCore.of(context).loggedInUser.photoURL,
+              //     'sevauserid': SevaCore.of(context).loggedInUser.sevaUserID,
+              //     'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
+              //     'timebankId': widget.requestItem
+              //         .timebankId, //will this work when sending notifications?
+              //   },
+              // };
 
-                    //widget.requestItem.participantDetails = participantDetails;
-                    //widget.requestItem.accepted = true;
-                    log('participant detailss map written to DB ----->');
+              //widget.requestItem.accepted = true;
+              //log('participant detailss map written to DB ----->');
 
-                    await updateAcceptBorrowRequest(
-                      requestModel: widget.requestItem,
-                      participantDetails: participantDetails,
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                    );
+              proccedWithCalander();
 
-                    proccedWithCalander();
-                  },
-                ),
-              ),
-            );
-       
+              // await updateAcceptBorrowRequest(
+              //   requestModel: widget.requestItem,
+              //   //participantDetails: participantDetails,
+              //   userEmail: SevaCore.of(context).loggedInUser.email,
+              // );
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -1175,18 +1174,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get requestedByBorrowRequestComponent {
-     return Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-            Text(
-              "Requested by",    //Label To Be Created
-              style: titleStyle,
-              maxLines: 1,
-            ),
-          SizedBox(height: 10),
-          Row(
-           children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        Text(
+          "Requested by", //Label To Be Created
+          style: titleStyle,
+          maxLines: 1,
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
                 widget.requestItem.photoUrl ?? defaultUserImageURL,
@@ -1198,17 +1197,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.requestItem.creatorName, 
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 21)),
+                Text(widget.requestItem.creatorName,
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 21)),
                 SizedBox(height: 7),
                 createdAt,
-             ],
+              ],
             ),
-           ],
-          ),
-         SizedBox(height: 20),
-        ],
-      );
+          ],
+        ),
+        SizedBox(height: 20),
+      ],
+    );
   }
 
   Widget get hostNameComponent {
@@ -1318,9 +1318,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 //     timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
                 //   ),
               ),
-      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
+      style: TextStyle(
+          fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey),
       maxLines: 1,
-      //overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -1336,7 +1337,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-
   Widget get timestampComponentBorrowRequest {
     return CustomListTile(
       leading: Stack(
@@ -1351,23 +1351,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   width: 58,
                   height: 15,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    border: Border.all(
-                      color: Colors.transparent,
-                    ),
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(7), topRight: Radius.circular(7))
-                  ),
+                      color: Theme.of(context).accentColor,
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(7),
+                          topRight: Radius.circular(7))),
                 ),
                 Container(
                   width: 58,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                    color: Colors.white,
-                    ),
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7))
-                  ),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(7),
+                          bottomRight: Radius.circular(7))),
                 ),
               ],
             ),
@@ -1375,17 +1377,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: Text(
-              DateFormat('dd', Locale(getLangTag()).toLanguageTag())
-              .format(
+              DateFormat('dd', Locale(getLangTag()).toLanguageTag()).format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(
                         widget.requestItem.requestStart),
                     timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
-                ),
-                style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+              ),
+              style: TextStyle(fontSize: 24, color: Colors.grey[700]),
             ),
           ),
-       ],
+        ],
       ),
       title: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 8),
@@ -1396,7 +1397,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         child: subtitleComponentBorrowRequest,
       ),
       trailing: Padding(
-        padding: const EdgeInsets.only(left: 8),
+        padding: const EdgeInsets.only(left: 5, top: 18),
         child: trailingComponent,
       ),
     );
@@ -1438,42 +1439,43 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get addressComponentBorrowRequest {
-
     String locationSubitleFinal = '';
     String locationTitle = '';
 
-    if(widget.requestItem.address != null){
+    if (widget.requestItem.address != null) {
       List locationTitleList = widget.requestItem.address.split(',');
       locationTitle = locationTitleList[0];
 
       List locationSubitleList = widget.requestItem.address.split(',');
       locationSubitleList.removeAt(0);
 
-      locationSubitleFinal = locationSubitleList.toString().replaceAll('[', '').replaceAll(']', '');
+      locationSubitleFinal = locationSubitleList
+          .toString()
+          .replaceAll('[', '')
+          .replaceAll(']', '');
 
       return widget.requestItem.address != null
-        ? CustomListTile(
-            leading: Icon(
-              Icons.location_on,
-              color: Colors.black,
-            ),
-            title: Text(
-              widget.requestItem.address.trim() != null ? locationTitle : '',
-              style: titleStyle,
-              maxLines: 1,
-            ),
-            subtitle: widget.requestItem.address != null
-                ? Text(locationSubitleFinal.trim(),
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.w600))
-                : Text(''),
-          )
-        : Container();
-    } else { 
-      return Text('Location not provided', style: TextStyle(color: Colors.grey));
+          ? CustomListTile(
+              leading: Icon(
+                Icons.location_on,
+                color: Colors.black,
+              ),
+              title: Text(
+                widget.requestItem.address.trim() != null ? locationTitle : '',
+                style: titleStyle,
+                maxLines: 1,
+              ),
+              subtitle: widget.requestItem.address != null
+                  ? Text(locationSubitleFinal.trim(),
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.w600))
+                  : Text(''),
+            )
+          : Container();
+    } else {
+      return Text('Location not provided',
+          style: TextStyle(color: Colors.grey));
     }
-
-    
   }
 
   Widget get trailingComponent {
@@ -1520,7 +1522,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         return timeDetailsForTimerequest;
 
       case RequestType.BORROW:
-        return timeDetailsForBorrowrequest;
+        return descriptionForBorrowRequest;
 
       case RequestType.ONE_TO_MANY_REQUEST:
         return detailsForOneToManyRequest;
@@ -1537,11 +1539,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  Widget get timeDetailsForBorrowrequest {
-    return Text(
-      widget.requestItem.description,
-      style: TextStyle(fontSize: 16, color: Colors.grey)
-    );
+  Widget get descriptionForBorrowRequest {
+    return Text(widget.requestItem.description,
+        style: TextStyle(fontSize: 16, color: Colors.grey));
   }
 
   Widget get detailsForOneToManyRequest {
@@ -1549,6 +1549,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       widget.requestItem.description,
       style: TextStyle(fontSize: 16),
     );
+  }
+
+  Widget get approvedBorrowRequestDetailsComponent {
+    return Text('Borrow request approved details here',
+        style: TextStyle(fontSize: 16, color: Colors.grey));
+
+        //APPROVED USER UI FOR DETAILS PAGE TO BE DONE HERE
   }
 
   Widget get getCashDetailsForCashDonations {

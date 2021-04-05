@@ -45,23 +45,23 @@ Future<void> updateRequest({@required RequestModel requestModel}) async {
       .updateData(requestModel.toMap());
 }
 
-Future<void> updateAcceptBorrowRequest({
-  @required RequestModel requestModel,
-  @required Map participantDetails,
-  @required String userEmail,
-}) async {
-  log('accept updated borrow request');
-  return await Firestore.instance
-      .collection('requests')
-      .document(requestModel.id)
-      .updateData(
-    {
-      'participantDetails.$userEmail': participantDetails,
-      'accepted': true,
-      'approvedUsers': FieldValue.arrayUnion([userEmail]),
-    },
-  );
-}
+// Future<void> updateAcceptBorrowRequest({
+//   @required RequestModel requestModel,
+//   //@required Map participantDetails,
+//   @required String userEmail,
+// }) async {
+//   log('accept updated borrow request');
+//   return await Firestore.instance
+//       .collection('requests')
+//       .document(requestModel.id)
+//       .updateData(
+//     {
+//       //'participantDetails.$userEmail': participantDetails,
+//       'accepted': true,
+//       'approvedUsers': FieldValue.arrayUnion([userEmail]),
+//     },
+//   );
+// }
 
 Future<void> updateRequestsByFields(
     {List<String> requestIds, Map<String, dynamic> fields}) async {
@@ -1014,7 +1014,7 @@ Future<void> storeAcceptorDataBorrowRequest({
   await Firestore.instance
       .collection('requests')
       .document(model.id)
-      .collection('borrowRequestAcceptor')
+      .collection('borrowRequestAcceptors')
       .document(acceptorEmail)
       .setData({
     'acceptorEmail': acceptorEmail,
@@ -1294,7 +1294,13 @@ Future<void> approveAcceptRequestForTimebank({
       }
     }
   }
-  requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
+
+  log('BOOLEAN CHECK: ' + (requestModel.approvedUsers.isEmpty).toString());
+
+  requestModel.requestType == RequestType.BORROW
+      ? null //requestModel.accepted = requestModel.approvedUsers.length >= requestModel.numberOfApprovals
+      : requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
+
   await Firestore.instance
       .collection('requests')
       .document(requestModel.id)

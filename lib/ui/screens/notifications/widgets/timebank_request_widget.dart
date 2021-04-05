@@ -160,29 +160,29 @@ class TimebankRequestWidget extends StatelessWidget {
                           );
 
                           //Below for Borrow Request To add participant details for notifications data use
-                          if (requestModel.requestType == RequestType.BORROW) {
-                            Map<String, dynamic> participantDetails = {};
+                          // if (requestModel.requestType == RequestType.BORROW) {
+                          //   Map<String, dynamic> participantDetails = {};
 
-                            participantDetails = {
-                              'bio': userModel.bio,
-                              'email': userModel.email,
-                              'fullname':
-                                  userModel.fullname,
-                              'photourl':
-                                  userModel.photoURL,
-                              'sevauserid':
-                                  userModel.sevaUserID,
-                              'communityId': userModel.currentCommunity,
-                              'timebankId': requestModel.timebankId,   //will this work when sending notifications?
-                            };
+                          //   participantDetails = {
+                          //     'bio': userModel.bio,
+                          //     'email': userModel.email,
+                          //     'fullname':
+                          //         userModel.fullname,
+                          //     'photourl':
+                          //         userModel.photoURL,
+                          //     'sevauserid':
+                          //         userModel.sevaUserID,
+                          //     'communityId': userModel.currentCommunity,
+                          //     'timebankId': requestModel.timebankId,   //will this work when sending notifications?
+                          //   };
 
-                            requestModel.participantDetails =
-                                participantDetails;
+                          //   requestModel.participantDetails =
+                          //       participantDetails;
 
-                            log('participant detailss map written to DB ----->');
+                          //   log('participant detailss map written to DB ----->');
 
-                            await updateRequest(requestModel: requestModel);
-                          }
+                          //   await updateRequest(requestModel: requestModel);
+                          // }
 
                           Navigator.pop(viewContext);
                         },
@@ -229,8 +229,11 @@ class TimebankRequestWidget extends StatelessWidget {
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length)
-      model.accepted = true;
+    (model.numberOfApprovals <= model.approvedUsers.length ||
+            model.approvedUsers.length == 0)
+        ? model.accepted == true
+        : null;
+
     FirestoreManager.approveAcceptRequestForTimebank(
       requestModel: model,
       approvedUserId: user.sevaUserID,

@@ -61,6 +61,9 @@ class TabarView extends StatelessWidget {
                 requestModel: requestItem,
                 timebankModel: timebankModel,
               ),
+              requestItem.requestType == RequestType.BORROW ?
+              Center(child: Text('UI TO BE MADE FOR BORROW REQUEST'))
+              :
               RequestAcceptedSpendingView(
                 requestModel: requestItem,
                 timebankModel: timebankModel,

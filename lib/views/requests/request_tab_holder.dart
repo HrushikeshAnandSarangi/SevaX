@@ -79,7 +79,8 @@ class RequestTabHolder extends StatelessWidget {
                               requestItem: requestModel,
                             ),
                           ),
-                          ...requestModel.requestType == RequestType.TIME
+                          ...(requestModel.requestType == RequestType.TIME ||
+                                  requestModel.requestType == RequestType.BORROW)
                               ? <Widget>[
                                   Container(
                                     child: RequestAcceptedTabsViewHolder.of(
