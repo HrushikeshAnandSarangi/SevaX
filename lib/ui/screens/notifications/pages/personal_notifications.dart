@@ -64,7 +64,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
-
     super.build(context);
     parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
@@ -277,20 +276,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         entityName: 'NAME',
                         isDissmissible: true,
                         onDismissed: () {
-                          FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
                           );
                         },
-                        onPressedAccept: () async {
-
-                        },
-                        onPressedReject: () async {
-                          
-                        },
+                        onPressedAccept: () async {},
+                        onPressedReject: () async {},
                         photoUrl: oneToManyModel['requestorphotourl'],
-                        creatorName: oneToManyModel['creatorName'],
-                        title: ' added you as Speaker for request', //Label to be created (pending client say)
+                        creatorName: oneToManyModel['creatorName'] != null ? oneToManyModel['creatorName'] : '',
+                        title:
+                            ' added you as Speaker for request', //Label to be created (pending client say)
                         //subTitle:
                         //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                       );
@@ -499,7 +495,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle:
                             '${S.of(context).notifications_request_rejected_by} ${model.fullName} ',
                       );
-
                       break;
 
                     case NotificationType.RequestCompletedRejected:
@@ -755,7 +750,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: onDismissed,
                       );
 
-                    case NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
@@ -773,7 +769,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 FlatButton(
                                   onPressed: () {
                                     Navigator.of(_context).pop();
-                                  
                                   },
                                   child: Text(
                                     S.of(context).not_yet,
@@ -784,18 +779,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 ),
                                 FlatButton(
                                   onPressed: () async {
-                                    
                                     Navigator.of(_context).pop();
 
-                                    log('timebank ID:  ' + requestModelNew.timebankId);
+                                    log('timebank ID:  ' +
+                                        requestModelNew.timebankId);
 
-                                        //Update request model to complete it
-                                        //requestModelNew.approvedUsers = [];
-                                        requestModelNew.acceptors = [];
-                                        requestModelNew.accepted = true; //so that we can know that this request has completed
-                                        
+                                    //Update request model to complete it
+                                    //requestModelNew.approvedUsers = [];
+                                    requestModelNew.acceptors = [];
+                                    requestModelNew.accepted =
+                                        true; //so that we can know that this request has completed
+                                    requestModelNew.isNotified = true; //resets to false otherwise
+
                                     await lenderReceivedBackCheck(
-                                        notification: notification, 
+                                        notification: notification,
                                         requestModelUpdated: requestModelNew);
                                   },
                                   child: Text(
@@ -814,7 +811,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
-                    case NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
+                    case NotificationType
+                        .NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
@@ -835,7 +833,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
-                    case NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
+                    case NotificationType
+                        .NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK:
                       var model = RequestModel.fromMap(notification.data);
                       requestModelNew = model;
                       return NotificationCard(
@@ -845,6 +844,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
+                          NotificationsRepository.readUserNotification(
+                              notification.id,
+                              SevaCore.of(context).loggedInUser.email);
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}', //Label to be created
@@ -872,7 +874,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     NotificationsModel notification,
     RequestModel requestModelUpdated,
   }) async {
-
     showProgressForCreditRetrieval();
 
     //Send Receipt Email to Lender Below
@@ -912,8 +913,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
     Navigator.of(creditRequestDialogContext).pop();
   }
-
-  
 
   void _handleFeedBackNotificationAction(
     BuildContext context,
@@ -988,8 +987,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   }
 
   void checkForReviewBorrowRequests() async {
-    logger.e('COMES BACK HERE 2');
-
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
@@ -1095,9 +1092,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     if (requestModelNew.requestType == RequestType.BORROW) {
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
           requestModelNew.sevaUserId) {
-          FirestoreManager.borrowRequestFeedbackBorrowerUpdate(model: requestModelNew);
-      } else{
-          FirestoreManager.borrowRequestFeedbackLenderUpdate(model: requestModelNew);
+        FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
+            model: requestModelNew);
+      } else {
+        FirestoreManager.borrowRequestFeedbackLenderUpdate(
+            model: requestModelNew);
       }
     }
 
@@ -1166,7 +1165,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
-        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+        isTimebankNotification:
+            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
         data: requestModel.toMap(),
@@ -1193,7 +1193,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       String userEmail,
       RequestModel requestModel}) async {
     NotificationsModel notification = NotificationsModel(
-        isTimebankNotification: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+        isTimebankNotification:
+            requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
         id: Utils.getUuid(),
         timebankId: timebankId,
         data: requestModel.toMap(),
@@ -1203,14 +1204,21 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
-        .collection('notifications')
-        .document(notification.id)
-        .setData(notification.toMap());
+    requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+        ? await Firestore.instance
+            .collection('users')
+            .document(userEmail)
+            .collection('notifications')
+            .document(notification.id)
+            .setData(notification.toMap())
+        : await Firestore.instance
+            .collection('timebanknew')
+            .document(timebankId)
+            .collection('notifications')
+            .document(notification.id)
+            .setData(notification.toMap());
 
-    log('WRITTEN TO DB new--------------------->>');
+    log('SEND FEEDBACK NOTIFICATION TO BORROWER--------------------->>');
   }
 
   //Send receipt mail to LENDER for end of Borrow Request

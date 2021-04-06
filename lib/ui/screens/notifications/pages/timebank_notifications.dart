@@ -19,6 +19,7 @@ import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -396,8 +397,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.RequestCompleted:
                 Map<dynamic, dynamic> oneToManyModel = notification.data;
-                log('One TO Many Data check:  ' + oneToManyModel['creatorName']);
-                if(oneToManyModel['requestType'] == 'ONE_TO_MANY_REQUEST') {
+                log('One TO Many Data check:  ' +
+                    oneToManyModel['creatorName']);
+                if (oneToManyModel['requestType'] == 'ONE_TO_MANY_REQUEST') {
                   return OneToManyCreatorApproveCompletionCard(
                     timestamp: notification.timestamp,
                     entityName: 'NAME',
@@ -411,8 +413,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     onPressedAccept: () async {},
                     onPressedReject: () async {},
                     photoUrl: oneToManyModel['requestorphotourl'],
-                    creatorName: oneToManyModel['selectedInstructor']['fullname'],
-                    title: ' Completed the request', //Label to be created (pending client say)
+                    creatorName: oneToManyModel['selectedInstructor']
+                        ['fullname'],
+                    title:
+                        ' Completed the request', //Label to be created (pending client say)
                     //subTitle:
                     //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                   );
@@ -423,6 +427,49 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     parentContext: parentContext,
                   );
                 }
+                break;
+
+              case NotificationType.RequestApprove:
+                RequestModel model = RequestModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: null,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    log('REQUEST REJECT:   '  + notification.id + ' ' + notification.timebankId);
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: null, // TO BE MADE
+                  photoUrl: model.photoUrl,
+                  title: model.title,
+                  subTitle: model.requestType == RequestType.BORROW
+                      ? 'Request has been approved' //Label to be given by client (maybe Request has been approved by 'name of Borrower') (depends if timebank or personal)
+                      : '${S.of(context).notifications_approved_by} ${model.fullName}',
+                );
+                break;
+
+              case NotificationType.RequestReject:
+                RequestModel model = RequestModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: model.fullName,
+                  title: model.title,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    log('REQUEST REJECT:   '  + notification.id + ' ' + notification.timebankId);
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: null,
+                  photoUrl: model.photoUrl,
+                  subTitle:
+                      '${S.of(context).notifications_request_rejected_by} ${model.fullName} ',
+                );
                 break;
 
               case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:

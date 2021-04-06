@@ -606,22 +606,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       canDelete = widget.requestItem.participantDetails != null &&
           widget.requestItem.acceptors.length == 0;
 
-      if (widget.requestItem.roomOrTool == 'ROOM') {
+      if (widget.requestItem.approvedUsers.length >= 1) {
+        textLabel = widget.requestItem.sevaUserId ==
+                SevaCore.of(context).loggedInUser.sevaUserID
+            ? 'Request Approved' //Label to hbe created
+            : 'Request has been assigned to a member';
+      } else if (widget.requestItem.roomOrTool == 'ROOM') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for place';
+            : 'Borrow Request for place'; //Label to be created
       } else {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for goods';
+            : 'Borrow Request for goods'; //Label to be created
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
-          : timeRequestActionWidgetForParticipant;
+          : (widget.requestItem.approvedUsers.length >= 1
+              ? Container()
+              : timeRequestActionWidgetForParticipant);
     } else {
       canDelete = widget.requestItem.cashModel.amountRaised == 0 ||
           widget.requestItem.cashModel.amountRaised == null;
@@ -859,32 +866,61 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ),
               )
-            : Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(color: Colors.black),
-                    children: [
-                      TextSpan(
-                        text: (isApproved &&
-                                widget.requestItem.requestType ==
-                                    RequestType.BORROW)
-                            ? 'Request Approved'
-                            : isApplied
-                                ? S.of(context).applied_for_request
-                                : (widget.requestItem.roomOrTool == 'ROOM'
-                                    ? 'Borrow request for place'
-                                    : 'Borrow request for goods'),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Europa',
-                          fontWeight: FontWeight.bold,
-                        ),
+            : widget.requestItem.requestType == RequestType.BORROW
+                ? Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: (widget.requestItem.approvedUsers.length >=
+                                        1 &&
+                                    widget.requestItem.requestType ==
+                                        RequestType.BORROW)
+                                ? (widget.requestItem.sevaUserId ==
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID
+                                    ? 'Request Approved' //Label to hbe created
+                                    : 'Request has been assigned to a member')
+                                : isApplied
+                                    ? S.of(context).applied_for_request
+                                    : (widget.requestItem.roomOrTool == 'ROOM'
+                                        ? 'Borrow request for place'
+                                        : 'Borrow request for goods'),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Europa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  )
+                : Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: isApplied
+                                ? S.of(context).applied_for_request
+                                : S.of(context).particpate_in_request_question,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Europa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-        timeRequestActionWidgetForParticipant,
+        (widget.requestItem.approvedUsers.length >= 1 &&
+                widget.requestItem.requestType == RequestType.BORROW)
+            ? Container()
+            : timeRequestActionWidgetForParticipant,
       ],
     );
   }
@@ -926,7 +962,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
         onPressed: () {
           if (widget.requestItem.requestType == RequestType.BORROW) {
-            borrowApplyAction();
+            widget.requestItem.roomOrTool == 'ROOM'
+                ? borrowApplyAction()
+                : proccedWithCalander();
           } else {
             applyAction();
           }
@@ -1070,6 +1108,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     widget.requestItem.acceptors = acceptorList.toList();
     AcceptorModel acceptorModel = AcceptorModel(
+      sevauserid: SevaCore.of(context).loggedInUser.sevaUserID,
       memberPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       communityName: communityModel.name,
@@ -1555,7 +1594,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Text('Borrow request approved details here',
         style: TextStyle(fontSize: 16, color: Colors.grey));
 
-        //APPROVED USER UI FOR DETAILS PAGE TO BE DONE HERE
+    //APPROVED USER UI FOR DETAILS PAGE TO BE DONE HERE
   }
 
   Widget get getCashDetailsForCashDonations {

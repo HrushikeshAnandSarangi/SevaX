@@ -1597,7 +1597,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.one_to_many_request,
+                        AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
@@ -1619,7 +1619,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.one_to_many_request,
+                        AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(

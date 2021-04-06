@@ -999,7 +999,7 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
       .collection('requests')
       .document(model.id)
       .updateData({
-    'lenderReviewed': true,
+    'borrowerReviewed': true,
   });
 }
 

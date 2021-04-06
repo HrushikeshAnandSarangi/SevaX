@@ -266,13 +266,17 @@ class RequestAcceptedWidget extends StatelessWidget {
     String notificationId,
     String communityId,
   }) {
+
+    log('TWO' + ' ' + model.approvedUsers.length.toString());
+
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
   
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    if (model.approvedUsers.length < 1) {
+    if (model.numberOfApprovals <= model.approvedUsers.length) {  //approved
+      log('THREE');
         model.accepted = true;
       FirestoreManager.approveAcceptRequest(
         requestModel: model,
