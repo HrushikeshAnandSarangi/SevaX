@@ -14,6 +14,11 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import '../flavor_config.dart';
 
 class ImageUrlView extends StatefulWidget {
+  final Function(String link) onLinkCreated;
+
+
+  ImageUrlView({this.onLinkCreated});
+
   @override
   _ImageUrlViewState createState() => _ImageUrlViewState();
 }
@@ -64,6 +69,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
             onPressed: () {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
+                widget.onLinkCreated(imageUrls[0]);
 
                 Navigator.of(context).pop();
               } else {

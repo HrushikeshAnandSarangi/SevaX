@@ -50,6 +50,7 @@ import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 import '../../flavor_config.dart';
 
@@ -1314,6 +1315,11 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
           ),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
+          SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
           )
@@ -1551,6 +1557,11 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
+          SizedBox(height: 20),
           InkWell(
             child: Column(
               children: [
@@ -1682,6 +1693,12 @@ class RequestEditFormState extends State<RequestEditForm> {
             onTap: () => moveToCategory(),
           ),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
+          SizedBox(height: 20),
+
           isFromRequest(
             projectId: widget.projectId,
           )

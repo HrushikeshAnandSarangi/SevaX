@@ -60,6 +60,7 @@ import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -1354,7 +1355,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
           SizedBox(height: 20),
 
-          // Choose Category and Sub Category
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            requestModel.imageUrls=imageUrls;
+          },),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1494,6 +1497,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
           categoryWidget(),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            requestModel.imageUrls=imageUrls;
+          },),
+          SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
             style: TextStyle(
@@ -1615,6 +1622,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),
+
+          SizedBox(height: 10),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            requestModel.imageUrls=imageUrls;
+          },),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
