@@ -26,6 +26,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -420,7 +421,7 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     var appLanguage = AppLanguage();
-    appLanguage.changeLanguage(Locale(loggedInUser.language));
+    appLanguage.changeLanguage(getLocaleFromCode(loggedInUser.language));
 
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
