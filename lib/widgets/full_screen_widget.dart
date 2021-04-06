@@ -17,7 +17,7 @@ class FullScreenImage extends StatelessWidget {
           FadeInImage(
             placeholder: AssetImage("lib/assets/images/seva-x-logo.png"),
             image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
             height: double.infinity,
             width: double.infinity,
             //if you use a larger image, you can set where in the image you like most
