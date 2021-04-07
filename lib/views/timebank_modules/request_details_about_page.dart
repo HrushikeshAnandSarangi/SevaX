@@ -269,7 +269,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.requestItem.requestType == RequestType.BORROW
                       ? Container()
                       : hostNameComponent,
-                  widget.requestItem.requestType == RequestType.BORROW
+                  (widget.requestItem.requestType == RequestType.BORROW &&
+                          SevaCore.of(context).loggedInUser.sevaUserID !=
+                              widget.requestItem.sevaUserId)
                       ? requestedByBorrowRequestComponent
                       : Container(),
                   widget.requestItem.requestType == RequestType.TIME
@@ -284,9 +286,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         )
                       : Container(),
                   requestDescriptionComponent,
-                  SizedBox(height: 17),
-                  (isApproved &&
-                          widget.requestItem.requestType == RequestType.BORROW)
+                  SizedBox(height: 20),
+                  (widget.requestItem.requestType ==
+                              RequestType.BORROW &&
+                          widget.requestItem.roomOrTool == 'ROOM' &&
+                          (SevaCore.of(context).loggedInUser.email ==
+                              widget.requestItem.approvedUsers[0] ||
+                              SevaCore.of(context).loggedInUser.email ==
+                              widget.requestItem.email))
                       ? approvedBorrowRequestDetailsComponent
                       : Container(),
                   SizedBox(height: 10),
@@ -877,10 +884,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                         1 &&
                                     widget.requestItem.requestType ==
                                         RequestType.BORROW)
-                                ? (widget.requestItem.sevaUserId ==
+                                ? ((widget.requestItem.sevaUserId ==
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID ||
                                         SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID
+                                                .loggedInUser
+                                                .email ==
+                                            widget.requestItem.approvedUsers[0])
                                     ? 'Request Approved' //Label to hbe created
                                     : 'Request has been assigned to a member')
                                 : isApplied
@@ -1517,6 +1528,47 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
+
+  Widget addressComponentBorrowRequestForApproved(String address) {
+    String locationSubitleFinal = '';
+    String locationTitle = '';
+
+    if (address != null) {
+      List locationTitleList = address.split(',');
+      locationTitle = locationTitleList[0];
+
+      List locationSubitleList = address.split(',');
+      locationSubitleList.removeAt(0);
+
+      locationSubitleFinal = locationSubitleList
+          .toString()
+          .replaceAll('[', '')
+          .replaceAll(']', '');
+
+      return address != null
+          ? CustomListTile(
+              leading: Icon(
+                Icons.location_on,
+                color: Colors.black,
+              ),
+              title: Text(
+                address.trim() != null ? locationTitle : '',
+                style: titleStyle,
+                maxLines: 1,
+              ),
+              subtitle: address != null
+                  ? Text(locationSubitleFinal.trim(),
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.w600))
+                  : Text(''),
+            )
+          : Container();
+    } else {
+      return Text('Location not provided',
+          style: TextStyle(color: Colors.grey));
+    }
+  }
+
   Widget get trailingComponent {
     return Container(
       height: 25,
@@ -1591,10 +1643,44 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get approvedBorrowRequestDetailsComponent {
-    return Text('Borrow request approved details here',
-        style: TextStyle(fontSize: 16, color: Colors.grey));
-
-    //APPROVED USER UI FOR DETAILS PAGE TO BE DONE HERE
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      StreamBuilder(
+          stream: Firestore.instance
+              .collection('requests')
+              .document(widget.requestItem.id)
+              .collection('borrowRequestAcceptors')
+              .where('acceptorEmail',
+                  isEqualTo: widget.requestItem.approvedUsers[0])
+              .snapshots(),
+          builder: (context, snapshot) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.grey[300],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 7.0, right: 7, top: 5, bottom: 5),
+                    child: Text('Your request has been approved by ' +
+                      snapshot.data.documents[0]['acceptorName'],
+                      style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                addressComponentBorrowRequestForApproved(snapshot.data.documents[0]['selectedAddress']),
+                Text(
+                  'Instruction for the stay',
+                   style: TextStyle(fontSize: 15, color: Colors.grey[800], fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  snapshot.data.documents[0]['doAndDonts'],
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            );
+          })
+    ]);
   }
 
   Widget get getCashDetailsForCashDonations {

@@ -52,12 +52,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   void initState() {
     super.initState();
 
-    subjectBorrow
-        .transform(ThrottleStreamTransformer(
-            (_) => TimerStream(true, const Duration(seconds: 1))))
-        .listen((data) {
-      logger.e('COMES BACK HERE 1');
-      checkForReviewBorrowRequests();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(Duration(milliseconds: 200));
+      subjectBorrow
+          .transform(ThrottleStreamTransformer(
+              (_) => TimerStream(true, const Duration(seconds: 1))))
+          .listen((data) {
+        logger.e('COMES BACK HERE PERSONAL Notufications');
+        checkForReviewBorrowRequests();
+      });
     });
   }
 
@@ -284,7 +287,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onPressedAccept: () async {},
                         onPressedReject: () async {},
                         photoUrl: oneToManyModel['requestorphotourl'],
-                        creatorName: oneToManyModel['creatorName'] != null ? oneToManyModel['creatorName'] : '',
+                        creatorName: oneToManyModel['creatorName'] != null
+                            ? oneToManyModel['creatorName']
+                            : '',
                         title:
                             ' added you as Speaker for request', //Label to be created (pending client say)
                         //subTitle:
@@ -789,7 +794,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                     requestModelNew.acceptors = [];
                                     requestModelNew.accepted =
                                         true; //so that we can know that this request has completed
-                                    requestModelNew.isNotified = true; //resets to false otherwise
+                                    requestModelNew.isNotified =
+                                        true; //resets to false otherwise
 
                                     await lenderReceivedBackCheck(
                                         notification: notification,
@@ -996,6 +1002,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
 
     if (results != null && results.containsKey('selection')) {
+      log('after feedback here 2');
       showProgressForCreditRetrieval();
       onActivityResult(results, SevaCore.of(context).loggedInUser);
     } else {}

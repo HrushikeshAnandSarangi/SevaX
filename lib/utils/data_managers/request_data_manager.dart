@@ -1022,6 +1022,7 @@ Future<void> storeAcceptorDataBorrowRequest({
     'location': location.data,
     'acceptorName': acceptorName,
     'requestStart': model.requestStart,
+    'selectedAddress': selectedAddress,
   });
 }
 

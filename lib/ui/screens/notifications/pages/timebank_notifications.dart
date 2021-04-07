@@ -66,12 +66,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   void initState() {
     super.initState();
 
-    subjectBorrow
-        .transform(ThrottleStreamTransformer(
-            (_) => TimerStream(true, const Duration(seconds: 1))))
-        .listen((data) {
-      logger.e('COMES BACK HERE 1');
-      checkForReviewBorrowRequests();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(Duration(milliseconds: 200));
+      subjectBorrow
+          .transform(ThrottleStreamTransformer(
+              (_) => TimerStream(true, const Duration(seconds: 1))))
+          .listen((data) {
+        logger.e('COMES BACK HERE 1');
+
+        checkForReviewBorrowRequests();
+      });
     });
   }
 
@@ -436,7 +440,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: null,
                   isDissmissible: true,
                   onDismissed: () {
-                    log('REQUEST REJECT:   '  + notification.id + ' ' + notification.timebankId);
+                    log('REQUEST REJECT:   ' +
+                        notification.id +
+                        ' ' +
+                        notification.timebankId);
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
@@ -459,7 +466,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   title: model.title,
                   isDissmissible: true,
                   onDismissed: () {
-                    log('REQUEST REJECT:   '  + notification.id + ' ' + notification.timebankId);
+                    log('REQUEST REJECT:   ' +
+                        notification.id +
+                        ' ' +
+                        notification.timebankId);
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
@@ -709,6 +719,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     );
 
     if (results != null && results.containsKey('selection')) {
+      log('after feedback here 1');
       showProgressForCreditRetrieval();
       onActivityResult(results, SevaCore.of(context).loggedInUser);
     } else {}
@@ -805,6 +816,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     //     true; //so that we can know that this request has completed
 
     if (requestModelNew.requestType == RequestType.BORROW) {
+      log('UID CHECK borrower:  ' +
+          SevaCore.of(context).loggedInUser.sevaUserID +
+          ' | ' +
+          requestModelNew.sevaUserId);
       if (SevaCore.of(context).loggedInUser.sevaUserID ==
           requestModelNew.sevaUserId) {
         FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
