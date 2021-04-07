@@ -278,6 +278,7 @@ Widget get requestImages{
           itemCount: widget.requestItem.imageUrls.length,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
+
           itemBuilder:(context,index) {
                return InkWell(onTap: () {
                  showDialog(
@@ -287,7 +288,10 @@ Widget get requestImages{
                          imageUrl: widget.requestItem.imageUrls[index],
                        );
                      });
-               },child: Image.network(widget.requestItem.imageUrls[index]));
+               },child: Padding(
+                 padding: const EdgeInsets.symmetric(horizontal: 1),
+                 child: Image.network(widget.requestItem.imageUrls[index]),
+               ));
           }
         ),
       ),
