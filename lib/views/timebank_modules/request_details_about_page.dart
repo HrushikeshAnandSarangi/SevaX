@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -237,6 +238,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 shrinkWrap: true,
                 children: <Widget>[
+                  requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
@@ -264,9 +266,33 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ],
         ),
       ),
+
     );
   }
-
+Widget get requestImages{
+    return Offstage(
+      offstage: widget.requestItem.imageUrls == null && widget.requestItem.imageUrls.length < 0,
+      child: Container(
+        height: 200,
+        child: ListView.builder(
+          itemCount: widget.requestItem.imageUrls.length,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder:(context,index) {
+               return InkWell(onTap: () {
+                 showDialog(
+                     context: context,
+                     builder: (BuildContext dialogContext) {
+                       return FullScreenImage(
+                         imageUrl: widget.requestItem.imageUrls[index],
+                       );
+                     });
+               },child: Image.network(widget.requestItem.imageUrls[index]));
+          }
+        ),
+      ),
+    );
+}
   Widget get getRequestModeComponent {
     switch (widget.requestItem.requestType) {
       case RequestType.CASH:
