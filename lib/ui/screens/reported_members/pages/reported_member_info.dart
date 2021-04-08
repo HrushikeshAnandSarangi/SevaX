@@ -3,6 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/report_info_card.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_chip.dart';
+import 'package:sevaexchange/ui/utils/editDeleteIconWidget.dart';
 
 enum ACTIONS { REMOVE, MESSAGE }
 
@@ -66,7 +67,7 @@ class ReportedMemberInfo extends StatelessWidget {
           }, itemBuilder: (context) {
             List<PopupMenuItem> items = [
               PopupMenuItem(
-                child: Text(S.of(context).message),
+                child: textAndImageIconWidget("images/icons/message.png", S.of(context).message, context),
                 value: ACTIONS.MESSAGE,
               )
             ];
@@ -74,7 +75,7 @@ class ReportedMemberInfo extends StatelessWidget {
             if (canRemove) {
               items.add(
                 PopupMenuItem(
-                  child: Text(S.of(context).remove),
+                  child: textAndImageIconWidgetWithSize("images/icons/remove_user.png", 20, S.of(context).remove, context),
                   value: ACTIONS.REMOVE,
                 ),
               );

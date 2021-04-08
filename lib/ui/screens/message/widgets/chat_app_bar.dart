@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/ui/utils/editDeleteIconWidget.dart';
 import 'package:sevaexchange/views/core.dart';
 
 enum MessageMenu {
@@ -143,17 +144,15 @@ class ChatAppBar extends PreferredSize {
       itemBuilder: (BuildContext _context) {
         return [
           PopupMenuItem(
-            child: Text(
-              S.of(context).delete_chat,
-            ),
+            child: textAndIconWidget(
+                        Icons.delete, S.of(context).delete_chat, context),
             value: MessageMenu.CLEAR_CHAT,
           ),
           ...!isBlockEnabled
               ? [
                   PopupMenuItem(
-                    child: Text(
-                      S.of(context).block,
-                    ),
+                    child: textAndIconWidget(
+                        Icons.block, S.of(context).block, context),
                     value: MessageMenu.BLOCK,
                   )
                 ]
@@ -163,9 +162,8 @@ class ChatAppBar extends PreferredSize {
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID))
               ? [
                   PopupMenuItem(
-                    child: Text(
-                      S.of(context).edit,
-                    ),
+                    child: textAndIconWidget(
+                        Icons.edit, S.of(context).edit, context),
                     value: MessageMenu.EDIT_GROUP,
                   )
                 ]
@@ -173,9 +171,8 @@ class ChatAppBar extends PreferredSize {
           ...isGroupMessage
               ? [
                   PopupMenuItem(
-                    child: Text(
-                      S.of(context).exit,
-                    ),
+                    child: textAndIconWidget(
+                        Icons.exit_to_app, S.of(context).exit, context),
                     value: MessageMenu.EXIT_CHAT,
                   )
                 ]
