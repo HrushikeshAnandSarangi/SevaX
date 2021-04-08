@@ -65,3 +65,23 @@ Widget textAndImageIconWidgetWithSize(String imageIcon, double size, String text
     ],
   );
 }
+
+
+Widget messageIconTextWidget(String imageIcon, String text, context) {
+  return Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Image.asset(imageIcon, width: 17),
+      ),
+      SizedBox(width: 10),
+      Text(
+        text,
+        style: TextStyle(
+          fontSize: 17,
+          color: Colors.black87,
+        ),
+      ),
+    ],
+  );
+}

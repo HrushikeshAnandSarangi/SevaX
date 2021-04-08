@@ -67,7 +67,7 @@ class ReportedMemberInfo extends StatelessWidget {
           }, itemBuilder: (context) {
             List<PopupMenuItem> items = [
               PopupMenuItem(
-                child: textAndImageIconWidget("images/icons/message.png", S.of(context).message, context),
+                child: messageIconTextWidget("images/icons/message.png", S.of(context).message, context),
                 value: ACTIONS.MESSAGE,
               )
             ];
