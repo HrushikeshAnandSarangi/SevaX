@@ -119,56 +119,61 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
             ),
           ),
            SizedBox(height: 8,),
-           Row(
-             children:
-               List.generate(
-                 imageUrls.length,
-                     (index) => Stack(
-                   children: <Widget>[
-                     InkWell(
-                       onTap: (){
-                         showDialog(
-                             context: context,
-                             builder: (BuildContext dialogContext) {
-                               return FullScreenImage(
-                                imageUrl: imageUrls[index],
-                               );
-                             });
-                       },
-                       child: Container(
-                         width:100,
-                         height:100,
-                         child: Padding(
-                             padding: const EdgeInsets.all(8.0),
-                             child: Image.network(imageUrls[index])),
-                       ),
-                     ),
-                     Align(
-                       alignment: Alignment.topRight,
-                       child: InkWell(
-                         onTap: () {
-                           imageUrls.removeAt(index);
-                           widget.onLinksCreated(imageUrls);
-                           setState(() {
-                           });
+           Container(
+             height: 100,
+             child: ListView(
+               shrinkWrap: true,
+               scrollDirection: Axis.horizontal,
+               children:
+                 List.generate(
+                   imageUrls.length,
+                       (index) => Stack(
+                     children: <Widget>[
+                       InkWell(
+                         onTap: (){
+                           showDialog(
+                               context: context,
+                               builder: (BuildContext dialogContext) {
+                                 return FullScreenImage(
+                                  imageUrl: imageUrls[index],
+                                 );
+                               });
                          },
                          child: Container(
-                           decoration: BoxDecoration(
-                             shape: BoxShape.circle,
-                             color: Colors.white,
-                           ),
-                           child: Icon(
-                             Icons.cancel,
-                             color: Colors.red,
+                           width:100,
+                           height:100,
+                           child: Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: Image.network(imageUrls[index])),
+                         ),
+                       ),
+                       Align(
+                         alignment: Alignment.topRight,
+                         child: InkWell(
+                           onTap: () {
+                             imageUrls.removeAt(index);
+                             widget.onLinksCreated(imageUrls);
+                             setState(() {
+                             });
+                           },
+                           child: Container(
+                             decoration: BoxDecoration(
+                               shape: BoxShape.circle,
+                               color: Colors.white,
+                             ),
+                             child: Icon(
+                               Icons.cancel,
+                               color: Colors.red,
+                             ),
                            ),
                          ),
                        ),
-                     ),
-                   ],
+                     ],
+                   ),
                  ),
-               ),
 
 
+             ),
            ),
 
 
