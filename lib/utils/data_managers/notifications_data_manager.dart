@@ -489,7 +489,7 @@ Future<void> unreadUserNotification(
   });
 }
 
-Future<void> readTimeBankNotification({
+Future<void>  readTimeBankNotification({
   String notificationId,
   String timebankId,
 }) async {

@@ -34,6 +34,7 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -66,17 +67,17 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(milliseconds: 200));
-      subjectBorrow
-          .transform(ThrottleStreamTransformer(
-              (_) => TimerStream(true, const Duration(seconds: 1))))
-          .listen((data) {
-        logger.e('COMES BACK HERE 1');
-
-        checkForReviewBorrowRequests();
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   await Future.delayed(Duration(milliseconds: 200));
+    //   subjectBorrow
+    //       .transform(ThrottleStreamTransformer(
+    //           (_) => TimerStream(true, const Duration(seconds: 1))))
+    //       .listen((data) {
+    //     logger.e('COMES BACK HERE 1');
+    //
+    //     checkForReviewBorrowRequests();
+    //   });
+    // });
   }
 
   BuildContext parentContext;
@@ -233,7 +234,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                   onPressed: () async {
-                    subjectBorrow.add(0);
+                    checkForReviewBorrowRequests(notification);
+
+                   // subjectBorrow.add(0);
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
@@ -257,11 +260,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                   onPressed: () async {
-                    subjectBorrow.add(0);
-                    FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
+                   // subjectBorrow.add(0);
+                    checkForReviewBorrowRequests(notification);
+
+
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
@@ -664,7 +666,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     NotificationsModel notification,
     RequestModel requestModelUpdated,
   }) async {
-    showProgressForCreditRetrieval();
+    showProgressForCreditRetrieval(parentContext);
 
     //Send Receipt Email to Lender Below
     await sendReceiptMailToLender(
@@ -707,10 +709,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     Navigator.of(creditRequestDialogContext).pop();
   }
 
-  void checkForReviewBorrowRequests() async {
+  void checkForReviewBorrowRequests(NotificationsModel notification) async {
     logger.e('COMES BACK HERE 2');
 
-    Map results = await Navigator.of(context).push(
+    Map results = await Navigator.of(parentContext).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
           return BorrowRequestFeedBackView(requestModel: requestModelNew);
@@ -720,12 +722,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     if (results != null && results.containsKey('selection')) {
       log('after feedback here 1');
-      showProgressForCreditRetrieval();
-      onActivityResult(results, SevaCore.of(context).loggedInUser);
+      showProgressForCreditRetrieval(parentContext);
+
+      onActivityResult(results, SevaCore.of(context).loggedInUser,notification);
     } else {}
   }
 
-  Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
+  Future<void> onActivityResult(Map results, UserModel loggedInUser, NotificationsModel notification,) async {
     // adds review to firestore
     try {
       logger.i('here 1');
@@ -735,15 +738,65 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         "ratings": results['selection'],
         "device_info": results['device_info'],
         "requestId": requestModelNew.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments")
+        "comments": (results['didComment'] ? results['comment'] : "No comments"),
       });
       logger.i('here 2');
+
       await sendMessageToMember(
           message: results['didComment'] ? results['comment'] : "No comments",
           loggedInUser: loggedInUser);
 
       logger.i('here 3');
-      startTransaction();
+      // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
+      logger.e('comes here 1');
+
+      //doing below since in RequestModel if != null nothing happens
+      //so manually removing user from task
+      // requestModelNew.approvedUsers = [];
+      // requestModelNew.acceptors = [];
+      // requestModelNew.accepted =
+      //     true; //so that we can know that this request has completed
+
+      if (requestModelNew.requestType == RequestType.BORROW) {
+        log('UID CHECK borrower:  ' +
+            SevaCore.of(context).loggedInUser.sevaUserID +
+            ' | ' +
+            requestModelNew.sevaUserId);
+        if (SevaCore.of(context).loggedInUser.sevaUserID ==
+            requestModelNew.sevaUserId) {
+          FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
+              model: requestModelNew);
+        } else {
+          FirestoreManager.borrowRequestFeedbackLenderUpdate(
+              model: requestModelNew);
+        }
+      }
+
+      //requestModelNew.accepted = false;
+
+      //FirestoreManager.borrowRequestComplete(model: requestModelNew);
+
+      // FirestoreManager.createTaskCompletedNotification(
+      //   model: NotificationsModel(
+      //     id: utils.Utils.getUuid(),
+      //     data: requestModelNew.toMap(),
+      //     type: NotificationType.RequestCompleted,
+      //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      //     targetUserId: requestModelNew.sevaUserId,
+      //     communityId: requestModelNew.communityId,
+      //     timebankId: requestModelNew.timebankId,
+      //     isTimebankNotification:
+      //         requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
+      //     isRead: false,
+      //   ),
+      // );
+
+      Navigator.pop(creditRequestDialogContext);
+      FirestoreManager.readTimeBankNotification(
+        notificationId: notification.id,
+        timebankId: notification.timebankId,
+      );
+      //Navigator.of(context).pop();
     } on Exception catch (e) {
       // TODO
     }
@@ -804,60 +857,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     }
   }
 
-  void startTransaction() async {
-    // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-    logger.e('comes here 1');
-
-    //doing below since in RequestModel if != null nothing happens
-    //so manually removing user from task
-    // requestModelNew.approvedUsers = [];
-    // requestModelNew.acceptors = [];
-    // requestModelNew.accepted =
-    //     true; //so that we can know that this request has completed
-
-    if (requestModelNew.requestType == RequestType.BORROW) {
-      log('UID CHECK borrower:  ' +
-          SevaCore.of(context).loggedInUser.sevaUserID +
-          ' | ' +
-          requestModelNew.sevaUserId);
-      if (SevaCore.of(context).loggedInUser.sevaUserID ==
-          requestModelNew.sevaUserId) {
-        FirestoreManager.borrowRequestFeedbackBorrowerUpdate(
-            model: requestModelNew);
-      } else {
-        FirestoreManager.borrowRequestFeedbackLenderUpdate(
-            model: requestModelNew);
-      }
-    }
-
-    //requestModelNew.accepted = false;
-
-    //FirestoreManager.borrowRequestComplete(model: requestModelNew);
-
-    // FirestoreManager.createTaskCompletedNotification(
-    //   model: NotificationsModel(
-    //     id: utils.Utils.getUuid(),
-    //     data: requestModelNew.toMap(),
-    //     type: NotificationType.RequestCompleted,
-    //     senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-    //     targetUserId: requestModelNew.sevaUserId,
-    //     communityId: requestModelNew.communityId,
-    //     timebankId: requestModelNew.timebankId,
-    //     isTimebankNotification:
-    //         requestModelNew.requestMode == RequestMode.TIMEBANK_REQUEST,
-    //     isRead: false,
-    //   ),
-    // );
-
-    Navigator.of(creditRequestDialogContext).pop();
-    //Navigator.of(context).pop();
-  }
 
   BuildContext creditRequestDialogContext;
-  void showProgressForCreditRetrieval() {
+  void showProgressForCreditRetrieval(BuildContext parentContext) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
+        barrierDismissible: true,
+        context: parentContext,
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
