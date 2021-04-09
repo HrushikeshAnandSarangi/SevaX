@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_list.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 
 class OfferRouter extends StatelessWidget {
   final String timebankId;
@@ -35,8 +35,7 @@ class OfferRouter extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    OffersModule.of(
-                      timebankId: timebankId,
+                    OfferList(
                       timebankModel: timebankModel,
                     ),
                     BookmarkedOffers(

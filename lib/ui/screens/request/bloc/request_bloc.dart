@@ -33,7 +33,7 @@ class RequestBloc {
             requestLists.addRequest(userId, model);
             continue;
           }
-          if (filter.publicRequest && model.public) {
+          if (filter.publicRequest && model.public ?? false) {
             requestLists.addRequest(userId, model);
             continue;
           }
