@@ -716,8 +716,6 @@ class RequestListItemsState extends State<RequestListItems> {
                                 SizedBox(width: 2),
                                 Text(
                                   getTimeFormattedString(
-
-
                                       model.requestEnd, loggedintimezone),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),

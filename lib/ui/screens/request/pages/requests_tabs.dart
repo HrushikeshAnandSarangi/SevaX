@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/virtual_requests.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 
@@ -37,8 +38,7 @@ class RequestTabs extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    RequestsModule.of(
-                      timebankId: timebankId,
+                    RequestListingPage(
                       isFromSettings: false,
                       timebankModel: timebankModel,
                     ),
