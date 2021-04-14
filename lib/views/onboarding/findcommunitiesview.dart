@@ -396,7 +396,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         RaisedButton(
-          onPressed: status == CompareUserStatus.JOIN
+          onPressed: communityModel.id != SevaCore.of(context).loggedInUser.currentCommunity
               ? () {
                   var communityModell = communityModel;
                   createEditCommunityBloc.selectCommunity(communityModell);
@@ -410,6 +410,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       builder: (contexts) => CommunityAbout(
                         communityModel: communityModel,
                         userModel: SevaCore.of(context).loggedInUser,
+                        joinStatus: status,
                       ),
                     ),
                   );

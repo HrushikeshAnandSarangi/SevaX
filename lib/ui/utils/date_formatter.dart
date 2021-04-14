@@ -20,7 +20,7 @@ String getTimeFormattedString(int timeInMilliseconds, String locale) {
 
 String formatChatDate(int timestamp, String timezone, String locale) {
   return DateFormat(
-    'h:mm a, d/M/y',
+    'h:mm a, MMM dd,yyyy',
     Locale(locale ?? "en").toLanguageTag(),
   ).format(
     getDateTimeAccToUserTimezone(

@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     log("profile page init");
-    _profileBloc = UserProfileBloc(context);
+    _profileBloc = UserProfileBloc();
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
     _profileBloc.communityLoaded.listen((value) {
