@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -263,12 +264,34 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
             getBottomFrame,
+            HideWidget(
+              hide: widget.requestItem.sevaUserId!=SevaCore.of(context).loggedInUser.sevaUserID,
+              child: InkWell(
+                onTap: ()async {
+                await Firestore.instance.collection('requests')
+                     .document(widget.requestItem.id).updateData({'accepted':true});
+                Navigator.of(context).pop();
+                },
+                child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    color: FlavorConfig.values.theme.primaryColor,
+                    child: Center(
+                        child: Text(
+                          S.of(context).close +' '+S.of(context).request,
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),),),
+              ),
+            )
+
           ],
         ),
       ),
 
     );
   }
+
+
 Widget get requestImages{
     return Offstage(
       offstage: widget.requestItem.imageUrls == null && widget.requestItem.imageUrls.length < 0,
