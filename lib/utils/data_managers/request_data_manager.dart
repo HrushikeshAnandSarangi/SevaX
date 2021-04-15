@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -17,8 +19,10 @@ import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
+import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/core.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../app_config.dart';
@@ -1235,30 +1239,77 @@ Future<void> acceptInviteRequest({
   @required String acceptedUserId,
   @required String notificationId,
   @required bool allowedCalender,
+  RequestInvitationModel model,
+  UserModel user,
 }) async {
-  if (allowedCalender) {
-    await Firestore.instance
-        .collection('requests')
-        .document(requestId)
-        .updateData({
-      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+  var batch = Firestore.instance.batch();
+  var db = Firestore.instance;
+
+  BasicUserDetails attendeeObject = BasicUserDetails(
+      fullname: user.fullname,
+      email: user.email,
+      photoURL: user.photoURL,
+      sevaUserID: user.sevaUserID,
+  );
+
+  if (model.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+
+        batch.setData(
+          db.collection('requests')
+            .document(requestId)
+            .collection('oneToManyAttendeesDetails')
+            .document(acceptedUserEmail),
+        attendeeObject.toMap());
+      
+      if(allowedCalender) {
+         batch.updateData(db.collection('requests')
+            .document(requestId), 
+            {
+            //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+            'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+            'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+         });
+      } else{
+         batch.updateData(db.collection('requests')
+            .document(requestId), 
+            {
+            //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+            //'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+            'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+         });
+      }
+
+      batch.commit();
+      
+      log('request accept one to many stored attendee details');
+
   } else {
-    await Firestore.instance
-        .collection('requests')
-        .document(requestId)
-        .updateData({
-      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-    });
+
+    if (allowedCalender) {
+      await Firestore.instance
+          .collection('requests')
+          .document(requestId)
+          .updateData({
+        'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+      });
+    } else {
+      await Firestore.instance
+          .collection('requests')
+          .document(requestId)
+          .updateData({
+        'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+      });
+    }
   }
 }
 
 Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   @required String userEmail,
   @required String userId,
+  BuildContext context,
 }) async* {
   /* TODO needs flow correction need to be corrected as below when tasks introduced- Eswar
   *   var data = Firestore.instance
@@ -1284,10 +1335,19 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.id = documentSnapshot.documentID;
           bool isCompletedByUser = false;
 
+          log('TYPE:  ' +
+              model.requestType.toString() +
+              '  ' +
+              isCompletedByUser.toString());
+
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if (!isCompletedByUser && (model.requestType == RequestType.TIME || model.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
+          if ((!isCompletedByUser && model.requestType == RequestType.TIME) ||
+              (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                  model.accepted == false &&
+                  model.approvedUsers
+                      .contains(SevaCore.of(context).loggedInUser.email))) {
             // model.timebankId/
             requestModelList.add(model);
           }

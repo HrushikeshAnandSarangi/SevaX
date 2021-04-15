@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyAccept.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -22,6 +25,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
@@ -241,25 +245,76 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     //   break;
 
                     case NotificationType.OneToManyRequestAccept:
-                    Map<dynamic,dynamic> oneToManyModel = notification.data;
-                      return NotificationCard(
+                      Map oneToManyRequestModel = notification.data;
+                      RequestModel model = RequestModel.fromMap(notification.data);
+                      return NotificationCardOneToManyAccept(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: true,
-                        onDismissed: () {
-                          FirestoreManager.readTimeBankNotification(
-                            notificationId: notification.id,
-                            timebankId: notification.timebankId,
-                          );
+                        isDissmissible: false,
+                        // onDismissed: () {
+                        //   FirestoreManager.readTimeBankNotification(
+                        //     notificationId: notification.id,
+                        //     timebankId: notification.timebankId,
+                        //   );
+                        // },
+                        onPressedAccept: () async {
+                          Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return OneToManySpeakerTimeEntry(
+                                requestModel: model
+                              );
+                            },
+                        ),);
+                          await oneToManySpeakerInviteAccepted(
+                              oneToManyRequestModel);
+                          await onDismissed();
                         },
-                        onPressed: () async {
-                        
+                        onPressedReject: () async {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext viewContext) {
+                                return AlertDialog(
+                                  title: Text(
+                                      'Are you sure you want to reject invite?'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      color: Theme.of(context).primaryColor,
+                                      child: Text(
+                                        S.of(context).yes,
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.of(viewContext).pop();
+                                        await oneToManySpeakerInviteRejected(
+                                            oneToManyRequestModel);
+                                        await onDismissed();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      color: Theme.of(context).accentColor,
+                                      child: Text(
+                                        S.of(context).no,
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(viewContext).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
                         },
-                        photoUrl: oneToManyModel['requestorphotourl'],
-                        title: 'Invited to instruct a session',        //Label to be created (pending client say)
-                        subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                        photoUrl: oneToManyRequestModel['requestorphotourl'],
+                        title: oneToManyRequestModel['requestCreatorName'],
+                        subTitle:
+                            'added you as Speaker for request', //Label to be created
                       );
                       break;
+
+
                     case NotificationType.RequestApprove:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -273,7 +328,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             user.email,
                           );
                         },
-                        onPressed: null,   // TO BE MADE
+                        onPressed: null, // TO BE MADE
                         photoUrl: model.photoUrl,
                         title: model.title,
                         subTitle:
@@ -685,6 +740,68 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
+  }
+
+  Future oneToManySpeakerInviteAccepted(requestModel) async {
+    log('after pop comes here');
+    Set<String> approvedUsersList = Set.from(requestModel['approvedUsers']);
+    approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+    requestModel['approvedUsers'] = approvedUsersList.toList();
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestModel['id'])
+        .updateData(requestModel);
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['sevaUserId'],
+        data: requestModel.toMap(),
+        type: NotificationType.OneToManyRequestInviteAccepted,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  }
+
+  Future oneToManySpeakerInviteRejected(requestModel) async {
+    Set<String> acceptorsList = Set.from(requestModel['acceptors']);
+    acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
+    requestModel['acceptors'] = acceptorsList.toList();
+    //requestModel['selectedInstructor'] =  {};
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestModel['id'])
+        .updateData(requestModel);
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['sevaUserId'],
+        data: requestModel,
+        type: NotificationType.OneToManyRequestInviteRejected,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+
+        log('sends timebank notif to 1 to many creator abt rejection!');
   }
 
   void _handleFeedBackNotificationAction(

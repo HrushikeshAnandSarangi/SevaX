@@ -153,6 +153,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
                         Navigator.of(context).pop();
                       }
+
                     },
                   ),
                 ),
@@ -228,6 +229,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     bool allowedCalender,
   }) {
     acceptInviteRequest(
+      user: user,
+      model: model,
       requestId: model.requestModel.id,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,

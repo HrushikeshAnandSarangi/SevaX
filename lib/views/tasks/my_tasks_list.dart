@@ -77,6 +77,7 @@ class MyTasksListState extends State<MyTaskList> {
     myTasksStream = FirestoreManager.getTaskStreamForUserWithEmail(
       userEmail: widget.email,
       userId: widget.sevaUserId,
+      context: context,
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -157,6 +158,7 @@ class RequestModel extends DataModel {
   String description;
   String email;
   String fullName;
+  String requestCreatorName;
   String sevaUserId;
   String photoUrl;
   List<String> acceptors;
@@ -196,6 +198,7 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   BasicUserDetails selectedInstructor = new BasicUserDetails();
+  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
   RequestModel({
     this.id,
     this.title,
@@ -203,6 +206,7 @@ class RequestModel extends DataModel {
     this.durationOfRequest,
     this.email,
     this.fullName,
+    this.requestCreatorName,
     this.sevaUserId,
     this.photoUrl,
     this.accepted,
@@ -237,6 +241,7 @@ class RequestModel extends DataModel {
     this.recommendedMemberIdsForRequest,
     this.categories,
     this.selectedInstructor,
+    this.selectedSpeakerTimeDetails,
     @required this.communityId,
   }) {
     log("===========Constructir called $communityId =======");
@@ -305,6 +310,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.GOODS;
       } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
+      } else if (map['requestType'] == "BORROW") {
+        this.requestType = RequestType.BORROW;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -323,6 +330,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('fullname')) {
       this.fullName = map['fullname'];
+    }
+    if (map.containsKey('requestCreatorName')) {
+      this.requestCreatorName = map['requestCreatorName'];
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
@@ -433,9 +443,17 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor =
+          BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
+    }
+
+    if (map.containsKey('selectedSpeakerTimeDetails')) {
+      this.selectedSpeakerTimeDetails =
+          SelectedSpeakerTimeDetails.fromMap(map['selectedSpeakerTimeDetails']);
+    } else {
+      this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
     }
 
     if (map.containsKey('cashModeDetails')) {
@@ -488,6 +506,8 @@ class RequestModel extends DataModel {
         this.requestType = RequestType.GOODS;
       } else if (map['requestType'] == "ONE_TO_MANY_REQUEST") {
         this.requestType = RequestType.ONE_TO_MANY_REQUEST;
+      } else if (map['requestType'] == "BORROW") {
+        this.requestType = RequestType.BORROW;
       } else {
         this.requestType = RequestType.TIME;
       }
@@ -522,6 +542,9 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('fullname')) {
       this.fullName = map['fullname'];
+    }
+    if (map.containsKey('requestCreatorName')) {
+      this.requestCreatorName = map['requestCreatorName'];
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
@@ -603,11 +626,19 @@ class RequestModel extends DataModel {
       List<int> recurringDaysList = List.castFrom(map['recurringDays']);
       this.recurringDays = recurringDaysList;
     }
-    
+
     if (map.containsKey('selectedInstructor')) {
-      this.selectedInstructor = BasicUserDetails.fromMap(map['selectedInstructor']);
+      this.selectedInstructor =
+          BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
+    }
+
+    if (map.containsKey('selectedSpeakerTimeDetails')) {
+      this.selectedSpeakerTimeDetails =
+          SelectedSpeakerTimeDetails.fromMap(map['selectedSpeakerTimeDetails']);
+    } else {
+      this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
     }
 
     if (map.containsKey('occurenceCount')) {
@@ -667,6 +698,10 @@ class RequestModel extends DataModel {
           object['requestType'] = "ONE_TO_MANY_REQUEST";
           break;
 
+        case RequestType.BORROW:
+          object['requestType'] = "BORROW";
+          break;
+
         case RequestType.TIME:
           object['requestType'] = "TIME";
           break;
@@ -697,6 +732,9 @@ class RequestModel extends DataModel {
     }
     if (this.fullName != null && this.fullName.isNotEmpty) {
       object['fullname'] = this.fullName;
+    }
+    if (this.requestCreatorName != null && this.requestCreatorName.isNotEmpty) {
+      object['requestCreatorName'] = this.requestCreatorName;
     }
     if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
       object['sevauserid'] = this.sevaUserId;
@@ -794,6 +832,9 @@ class RequestModel extends DataModel {
     if (this.selectedInstructor != null) {
       object['selectedInstructor'] = this.selectedInstructor.toMap();
     }
+    if (this.selectedSpeakerTimeDetails != null) {
+      object['selectedSpeakerTimeDetails'] = this.selectedSpeakerTimeDetails.toMap();
+    }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;
     }
@@ -817,7 +858,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 
@@ -857,6 +898,7 @@ enum RequestType {
   CASH,
   TIME,
   GOODS,
+  BORROW,
   ONE_TO_MANY_REQUEST,
 }
 enum RequestPaymentType {
@@ -872,6 +914,7 @@ Map<String, RequestType> requestTypeMapper = {
   "CASH": RequestType.CASH,
   "TIME": RequestType.TIME,
   "GOODS": RequestType.GOODS,
+  "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {
