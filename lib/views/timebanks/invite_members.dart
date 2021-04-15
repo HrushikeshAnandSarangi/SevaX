@@ -35,6 +35,7 @@ import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
+import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -46,7 +47,8 @@ class InviteAddMembers extends StatefulWidget {
 }
 
 class InviteAddMembersState extends State<InviteAddMembers> {
-  TimebankCodeModel codeModel = TimebankCodeModel();
+  TimebankCodeModel codeModel=TimebankCodeModel();
+  TimebankCodeModel generatedModel;
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
@@ -66,11 +68,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53";
   String _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  final String samplelink =
+      "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Fumesha%40uipep.com15918788235481000%20Sales%20Records.csv?alt=media&token=d1919180-7e97-4f95-b2e3-6cca1c51c688";
 
   @override
   void initState() {
     super.initState();
+
     setup();
 
     _setTimebankModel();
@@ -272,17 +276,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
+
+
   Widget headingTitle(String label) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
-      child: Container(
-        height: 25,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+    return Container(
+      height: 25,
+      child: Text(
+        label,
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
         ),
       ),
     );
@@ -1045,17 +1049,26 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   fontSize: dialogButtonSize,
                 ),
               ),
-              onPressed: () {
+              onPressed: ()async {
                 var today = DateTime.now();
                 var oneDayFromToday =
                     today.add(Duration(days: 30)).millisecondsSinceEpoch;
-                registerTimebankCode(
+              await  registerTimebankCode(
                   timebankCode: timebankCode,
                   timebankId: widget.timebankModel.id,
                   validUpto: oneDayFromToday,
                   communityId: widget.timebankModel.communityId,
                 );
                 Navigator.of(context).pop("completed");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TimebankCodeWidget(
+                      timebankCodeModel: codeModel,
+                      timebankName: widget.timebankModel.name,
+                    ),
+                  ),
+                );
               },
             ),
             FlatButton(
