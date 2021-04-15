@@ -265,7 +265,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
             getBottomFrame,
             HideWidget(
-              hide: widget.requestItem.sevaUserId!=SevaCore.of(context).loggedInUser.sevaUserID,
+              hide: widget.requestItem.sevaUserId!=SevaCore.of(context).loggedInUser.sevaUserID && widget.requestItem.accepted==false,
               child: InkWell(
                 onTap: ()async {
                 await Firestore.instance.collection('requests')
