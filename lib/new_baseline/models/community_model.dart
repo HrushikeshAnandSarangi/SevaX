@@ -21,7 +21,7 @@ class BillingAddress {
     this.city = map.containsKey('city') ? map['city'] : '';
     this.state = map.containsKey('state') ? map['state'] : '';
     this.country = map.containsKey('country') ? map['country'] : '';
-    this.pincode = map.containsKey('pincode') ? map['pincode'] : '';
+    this.pincode = map.containsKey('pincode') ? map['pincode'].toString()  : '';
     this.additionalnotes =
         map.containsKey('additionalnotes') ? map['additionalnotes'] : '';
   }

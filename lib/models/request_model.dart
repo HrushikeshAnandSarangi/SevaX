@@ -176,6 +176,7 @@ class RequestModel extends DataModel {
   List<String> approvedUsers;
   List<String> invitedUsers;
   List<String> categories;
+  List<String> oneToManyRequestAttenders;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
@@ -243,6 +244,7 @@ class RequestModel extends DataModel {
     this.selectedInstructor,
     this.selectedSpeakerTimeDetails,
     @required this.communityId,
+    this.oneToManyRequestAttenders,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -461,6 +463,13 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('oneToManyRequestAttenders')) {
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      this.oneToManyRequestAttenders = oneToManyRequestAttenders;
+    } else {
+      this.oneToManyRequestAttenders = List();
+    }
+
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -660,6 +669,13 @@ class RequestModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('oneToManyRequestAttenders')) {
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      this.oneToManyRequestAttenders = oneToManyRequestAttenders;
+    } else {
+      this.oneToManyRequestAttenders = List();
+    }
+
   }
 
   @override
@@ -745,6 +761,7 @@ class RequestModel extends DataModel {
     if (this.acceptors != null) {
       object['acceptors'] = this.acceptors;
     }
+
     if (this.recommendedMemberIdsForRequest != null) {
       object['recommendedMemberIdsForRequest'] =
           this.recommendedMemberIdsForRequest;
@@ -853,12 +870,15 @@ class RequestModel extends DataModel {
     if (this.goodsDonationDetails != null) {
       object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
     }
+    if (this.oneToManyRequestAttenders != null) {
+      object['oneToManyRequestAttenders'] = this.oneToManyRequestAttenders;
+    }
     return object;
   }
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
 

@@ -233,7 +233,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       cashModel: CashModel(
           paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
       goodsDonationDetails: GoodsDonationDetails(),
-      communityId: widget.loggedInUser.currentCommunity,
+      communityId: widget.loggedInUser.currentCommunity, oneToManyRequestAttenders: [],
     );
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;

@@ -296,7 +296,7 @@ class RequestListItemsState extends State<RequestListItems> {
   Future<Coordinates> currentCoords;
   @override
   void initState() {
-    currentCoords = findcurrentLocation();
+   // currentCoords = findcurrentLocation();
     super.initState();
 
     if (!widget.isFromSettings) {
@@ -307,7 +307,9 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Coordinates>(
-      future: currentCoords,
+      future: findcurrentLocation(
+
+      ),
       builder: (context, currentLocation) {
         if (currentLocation.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();

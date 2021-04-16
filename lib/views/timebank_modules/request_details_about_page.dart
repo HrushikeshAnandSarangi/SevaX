@@ -12,6 +12,8 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -318,10 +320,151 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.TIME:
         return getBottomFrameForTimeRequest;
 
+        case RequestType.ONE_TO_MANY_REQUEST:
+        return getBottomFrameForOneToManyRequest;
+
       default:
         return getBottomFrameForTimeRequest;
     }
   }
+Widget get getBottomFrameForOneToManyRequest{
+     if (UserMode == UserMode.TIMEBANK_CREATOR) {
+      return getBottombarForTimebankCreator;
+    } else if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else if(UserMode ==UserMode.APPROVED_MEMBER ||UserMode ==UserMode.ACCEPTED_MEMBER) {
+      return getOneToManySpeakerWidget;
+    }else{
+   return getBottombarForParticipant;
+  }
+}
+Widget get getOneToManySpeakerWidget {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: UserMode== UserMode.APPROVED_MEMBER
+                      ? 'The Request is complete by speaker'
+                      : 'The Request is complete by speaker',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(0),
+          color: Theme.of(context).accentColor,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 1),
+              Spacer(),
+              Text(
+                S.of(context).reject,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext viewContext) {
+                  return AlertDialog(
+                    title: Text(
+                        'Are you sure you want to reject invite?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        color: Theme.of(context).primaryColor,
+                        child: Text(
+                          S.of(context).yes,
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          Navigator.of(viewContext).pop();
+                          await oneToManySpeakerInviteRejected(
+                              widget.requestItem,context);
+                         // await onDismissed();
+                        },
+                      ),
+                      FlatButton(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          S.of(context).no,
+                          style: TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.of(viewContext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          },
+        ),
+        FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(0),
+          color: FlavorConfig.values.theme.primaryColor,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 1),
+              Spacer(),
+              Text(
+                S.of(context).approve,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return OneToManySpeakerTimeEntry(
+                    requestModel: widget.requestItem,
+                    onFinish: () async {
+                      await oneToManySpeakerInviteAccepted(
+                          widget.requestItem,context);
+                     // await onDismissed();
+                    },
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ],
+    );
+
+}
 
   Widget get getBottomFrameForGoodRequest {
     if (UserMode == UserMode.TIMEBANK_CREATOR) {
@@ -514,7 +657,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  Widget get getBottombarForTimebankCreator {
+  Widget get  getBottombarForTimebankCreator {
     String textLabel = '';
     Widget actionWidget;
     var canDelete = false;
@@ -803,7 +946,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void applyAction() async {
-    if (isApplied) {
+    if(widget.requestItem.requestType==RequestType.ONE_TO_MANY_REQUEST){
+      if(widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID)){
+        Set<String> attenders = Set.from(widget.requestItem.acceptors);
+        attenders.remove(SevaCore.of(context).loggedInUser.sevaUserID);
+
+        widget.requestItem.oneToManyRequestAttenders = attenders.toList();
+        await Firestore.instance
+            .collection('requests')
+            .document(widget.requestItem.id)
+            .updateData(widget.requestItem.toMap());
+      }else{
+        Set<String> attenders = Set.from(widget.requestItem.acceptors);
+        attenders.add(SevaCore.of(context).loggedInUser.sevaUserID);
+
+        widget.requestItem.oneToManyRequestAttenders = attenders.toList();
+        await Firestore.instance
+            .collection('requests')
+            .document(widget.requestItem.id)
+            .updateData(widget.requestItem.toMap());
+
+      }
+
+    }else if (isApplied) {
       _withdrawRequest();
     } else {
       if (widget.requestItem.projectId != null &&
