@@ -336,7 +336,7 @@ Widget get getBottomFrameForOneToManyRequest{
     } else if(UserMode ==UserMode.APPROVED_MEMBER ||UserMode ==UserMode.ACCEPTED_MEMBER) {
       return getOneToManySpeakerWidget;
     }else{
-   return getBottombarForParticipant;
+   return getBottombarAttenders;
   }
 }
 Widget get getOneToManySpeakerWidget {
@@ -362,106 +362,113 @@ Widget get getOneToManySpeakerWidget {
             ),
           ),
         ),
-        FlatButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.all(0),
-          color: Theme.of(context).accentColor,
-          child: Row(
-            children: <Widget>[
-              SizedBox(width: 1),
-              Spacer(),
-              Text(
-                S.of(context).reject,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext viewContext) {
-                  return AlertDialog(
-                    title: Text(
-                        'Are you sure you want to reject invite?'),
-                    actions: <Widget>[
-                      FlatButton(
-                        color: Theme.of(context).primaryColor,
-                        child: Text(
-                          S.of(context).yes,
-                          style: TextStyle(
-                              fontSize: 16, color: Colors.white),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(viewContext).pop();
-                          await oneToManySpeakerInviteRejected(
-                              widget.requestItem,context);
-                         // await onDismissed();
-                        },
-                      ),
-                      FlatButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          S.of(context).no,
-                          style: TextStyle(
-                              fontSize: 16, color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.of(viewContext).pop();
-                        },
-                      ),
-                    ],
-                  );
-                });
-          },
-        ),
-        FlatButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.all(0),
-          color: FlavorConfig.values.theme.primaryColor,
-          child: Row(
-            children: <Widget>[
-              SizedBox(width: 1),
-              Spacer(),
-              Text(
-                S.of(context).approve,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return OneToManySpeakerTimeEntry(
-                    requestModel: widget.requestItem,
-                    onFinish: () async {
-                      await oneToManySpeakerInviteAccepted(
-                          widget.requestItem,context);
-                     // await onDismissed();
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        ),
+        rejectOneToManySpeakerRequest,
+        acceptOneToManySpeakerRequest,
       ],
+    );
+
+}
+Widget get acceptOneToManySpeakerRequest{
+    return         FlatButton(
+  shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(20),
+  ),
+  padding: EdgeInsets.all(0),
+  color: FlavorConfig.values.theme.primaryColor,
+  child: Row(
+  children: <Widget>[
+  SizedBox(width: 1),
+  Spacer(),
+  Text(
+  S.of(context).approve,
+  textAlign: TextAlign.center,
+  style: TextStyle(
+  color: Colors.white,
+  ),
+  ),
+  Spacer(
+  flex: 1,
+  ),
+  ],
+  ),
+  onPressed: () {
+  Navigator.of(context).push(
+  MaterialPageRoute(
+  builder: (context) {
+  return OneToManySpeakerTimeEntry(
+  requestModel: widget.requestItem,
+  onFinish: () async {
+  await oneToManySpeakerInviteAccepted(
+  widget.requestItem,context);
+  // await onDismissed();
+  },
+  );
+  },
+  ),
+  );
+  },
+  );
+}
+Widget get rejectOneToManySpeakerRequest{
+    return         FlatButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: EdgeInsets.all(0),
+      color: Theme.of(context).accentColor,
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 1),
+          Spacer(),
+          Text(
+            S.of(context).reject,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          Spacer(
+            flex: 1,
+          ),
+        ],
+      ),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext viewContext) {
+              return AlertDialog(
+                title: Text(
+                    'Are you sure you want to reject invite?'),
+                actions: <Widget>[
+                  FlatButton(
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      S.of(context).yes,
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(viewContext).pop();
+                      await oneToManySpeakerInviteRejected(
+                          widget.requestItem,context);
+                      // await onDismissed();
+                    },
+                  ),
+                  FlatButton(
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      S.of(context).no,
+                      style: TextStyle(
+                          fontSize: 16, color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.of(viewContext).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      },
     );
 
 }
@@ -660,6 +667,7 @@ Widget get getOneToManySpeakerWidget {
   Widget get  getBottombarForTimebankCreator {
     String textLabel = '';
     Widget actionWidget;
+    Widget actionWidgetTwo;
     var canDelete = false;
     if (widget.requestItem.requestType == RequestType.TIME) {
       canDelete = widget.requestItem.acceptors.length == 0 &&
@@ -689,7 +697,26 @@ Widget get getOneToManySpeakerWidget {
               SevaCore.of(context).loggedInUser.sevaUserID
           ? Container()
           : goodsRequestActionButtonForParticipant;
-    } else {
+    } else if(widget.requestItem.requestType==RequestType.ONE_TO_MANY_REQUEST){
+      canDelete=widget.requestItem.acceptors.length == 0 &&
+          widget.requestItem.approvedUsers.length == 0 &&
+          widget.requestItem.invitedUsers.length == 0;
+
+      if(widget.requestItem.sevaUserId ==
+          SevaCore.of(context).loggedInUser.sevaUserID){
+        actionWidget =Container();
+      }else if(
+          widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)){
+        actionWidget=acceptOneToManySpeakerRequest;
+        actionWidgetTwo=rejectOneToManySpeakerRequest;
+
+      }else if(
+      widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)){
+    actionWidget=Container();
+      }else{
+        actionWidget=oneToManyRequestActionWidgetForParticipant;
+    }
+    }else {
       canDelete = widget.requestItem.cashModel.amountRaised == 0;
       textLabel = widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
@@ -724,6 +751,7 @@ Widget get getOneToManySpeakerWidget {
             ? Column(
                 children: [
                   actionWidget,
+                  actionWidgetTwo==null ?Container():actionWidgetTwo,
                   SizedBox(
                     height: 5,
                   ),
@@ -760,7 +788,13 @@ Widget get getOneToManySpeakerWidget {
                   ),
                 ],
               )
-            : actionWidget,
+            : Column(
+              children: [
+                actionWidget,
+                actionWidgetTwo==null ?Container():actionWidgetTwo,
+
+              ],
+            ),
       ],
     );
   }
@@ -803,7 +837,26 @@ Widget get getOneToManySpeakerWidget {
               timebankCreatorId: widget.timebankModel.creatorId) &&
           (widget.requestItem.goodsDonationDetails.donors == null ||
               widget.requestItem.goodsDonationDetails.donors.length < 1);
-    } else {
+    } else if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      canDeleteRequest = utils.isDeletable(
+          contentCreatorId: widget.requestItem.sevaUserId,
+          context: context,
+          communityCreatorId:
+          widget.timebankModel.managedCreatorIds.isNotEmpty
+              ? widget.timebankModel.managedCreatorIds.elementAt(0)
+              :
+          // BlocProvider.of<HomeDashBoardBloc>(context)
+          //         .selectedCommunityModel.created_by
+          isPrimaryTimebank(
+              parentTimebankId:
+              widget.timebankModel.parentTimebankId)
+              ? widget.timebankModel.creatorId
+              : widget.timebankModel.managedCreatorIds.first,
+          timebankCreatorId: widget.timebankModel.creatorId) &&
+          widget.requestItem.acceptors.length == 0 &&
+          widget.requestItem.approvedUsers.length == 0 &&
+          widget.requestItem.invitedUsers.length == 0;
+    }else {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
@@ -883,6 +936,34 @@ Widget get getOneToManySpeakerWidget {
     );
   }
 
+  Widget get getBottombarAttenders {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID)
+                      ? S.of(context).applied_for_request
+                      : S.of(context).particpate_in_request_question,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        oneToManyRequestActionWidgetForParticipant,
+      ],
+    );
+  }
+
   Widget get getBottombarForParticipant {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -911,6 +992,41 @@ Widget get getOneToManySpeakerWidget {
     );
   }
 
+  Widget get oneToManyRequestActionWidgetForParticipant {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      width: 100,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color:  widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID) ? Theme.of(context).accentColor : Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+                 widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID)?
+
+                S.of(context).withdraw : S.of(context).apply,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          applyAction();
+        },
+      ),
+    );
+  }
   Widget get timeRequestActionWidgetForParticipant {
     return Container(
       margin: EdgeInsets.only(right: 5),
@@ -956,6 +1072,8 @@ Widget get getOneToManySpeakerWidget {
             .collection('requests')
             .document(widget.requestItem.id)
             .updateData(widget.requestItem.toMap());
+        Navigator.pop(context);
+
       }else{
         Set<String> attenders = Set.from(widget.requestItem.acceptors);
         attenders.add(SevaCore.of(context).loggedInUser.sevaUserID);
