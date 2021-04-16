@@ -6,8 +6,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
-class NotificationCardOneToManyAccept extends StatelessWidget {
-  final VoidCallback onPressedAccept;
+class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
+  final VoidCallback onPressedApprove;
   final VoidCallback onPressedReject;
   final Function onDismissed;
   final String photoUrl;
@@ -17,9 +17,9 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
   final String entityName;
   final int timestamp;
 
-  const NotificationCardOneToManyAccept({
+  const NotificationCardOneToManyCompletedApproval({
     Key key,
-    this.onPressedAccept,
+    this.onPressedApprove,
     this.onPressedReject,
     this.photoUrl,
     this.title,
@@ -37,7 +37,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing:
-          !isDissmissible && onPressedAccept == null && onPressedReject == null,
+          !isDissmissible && onPressedApprove == null && onPressedReject == null,
       child: Slidable(
         actionExtentRatio: 0.25,
         actions: isDissmissible
@@ -143,14 +143,14 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
-                        S.of(context).accept,
+                        S.of(context).approve,
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Europa',
                             fontSize: 12),
                       ),
                       onPressed: () =>
-                          onPressedAccept != null ? onPressedAccept() : null,
+                          onPressedApprove != null ? onPressedApprove() : null,
                     ),
                   ),
 

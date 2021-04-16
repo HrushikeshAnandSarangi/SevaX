@@ -1246,46 +1246,40 @@ Future<void> acceptInviteRequest({
   var db = Firestore.instance;
 
   BasicUserDetails attendeeObject = BasicUserDetails(
-      fullname: user.fullname,
-      email: user.email,
-      photoURL: user.photoURL,
-      sevaUserID: user.sevaUserID,
+    fullname: user.fullname,
+    email: user.email,
+    photoURL: user.photoURL,
+    sevaUserID: user.sevaUserID,
   );
 
   if (model.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-
-        batch.setData(
-          db.collection('requests')
+    batch.setData(
+        db
+            .collection('requests')
             .document(requestId)
             .collection('oneToManyAttendeesDetails')
             .document(acceptedUserEmail),
         attendeeObject.toMap());
-      
-      if(allowedCalender) {
-         batch.updateData(db.collection('requests')
-            .document(requestId), 
-            {
-            //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-            'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-            'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-         });
-      } else{
-         batch.updateData(db.collection('requests')
-            .document(requestId), 
-            {
-            //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-            //'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-            'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
-            'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-         });
-      }
 
-      batch.commit();
-      
-      log('request accept one to many stored attendee details');
+    if (allowedCalender) {
+      batch.updateData(db.collection('requests').document(requestId), {
+        //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+      });
+    } else {
+      batch.updateData(db.collection('requests').document(requestId), {
+        //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        //'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
+        'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+      });
+    }
 
+    batch.commit();
+
+    log('request accept one to many stored attendee details');
   } else {
-
     if (allowedCalender) {
       await Firestore.instance
           .collection('requests')
@@ -1344,11 +1338,15 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if ((!isCompletedByUser && model.requestType == RequestType.TIME) ||
+          if ((!isCompletedByUser && model.requestType == RequestType.TIME) 
+              ||
               (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
                   model.accepted == false &&
-                  model.approvedUsers
-                      .contains(SevaCore.of(context).loggedInUser.email))) {
+                  model.approvedUsers.contains(SevaCore.of(context).loggedInUser.email) &&
+                  !SevaCore.of(context).loggedInUser.communities.contains(model.communityId) 
+                  //So that only outside community speaker sees option in pending tasks intead of notifications
+              )
+             ) {
             // model.timebankId/
             requestModelList.add(model);
           }
@@ -1624,4 +1622,29 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
   });
 
   return categoryModel;
+}
+
+Future oneToManyCreatorRequestCompletionRejected(requestModel, context) async {
+  //Send notification OneToManyCreatorRejectedCompletion
+  //and speaker enters hours again and sends same completed notitifiation to creator
+
+  NotificationsModel notificationModel = NotificationsModel(
+      timebankId: requestModel['timebankId'],
+      targetUserId: requestModel['selectedInstructor']['sevaUserID'],
+      data: requestModel,
+      type: NotificationType.OneToManyCreatorRejectedCompletion,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: requestModel['communityId'],
+      isTimebankNotification: false);
+
+  await Firestore.instance
+      .collection('users')
+      .document(requestModel['selectedInstructor']['email'])
+      .collection('notifications')
+      .document(notificationModel.id)
+      .setData(notificationModel.toMap());
+
+  log('oneToManyCreatorRequestCompletionRejected end of function');
 }

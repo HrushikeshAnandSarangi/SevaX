@@ -6,9 +6,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
-class NotificationCardOneToManyAccept extends StatelessWidget {
+class NotificationCardOneToManySpeakerRecalims extends StatelessWidget {
   final VoidCallback onPressedAccept;
-  final VoidCallback onPressedReject;
   final Function onDismissed;
   final String photoUrl;
   final String title;
@@ -17,10 +16,9 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
   final String entityName;
   final int timestamp;
 
-  const NotificationCardOneToManyAccept({
+  const NotificationCardOneToManySpeakerRecalims({
     Key key,
     this.onPressedAccept,
-    this.onPressedReject,
     this.photoUrl,
     this.title,
     this.subTitle,
@@ -37,7 +35,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
   Widget build(BuildContext context) {
     return AbsorbPointer(
       absorbing:
-          !isDissmissible && onPressedAccept == null && onPressedReject == null,
+          !isDissmissible && onPressedAccept == null,
       child: Slidable(
         actionExtentRatio: 0.25,
         actions: isDissmissible
@@ -154,24 +152,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(width: 12),
-
-                  Container(
-                    height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
-                      padding: EdgeInsets.zero,
-                      color: FlavorConfig.values.theme.accentColor,
-                      child: Text(
-                        S.of(context).reject,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Europa',
-                            fontSize: 12),
-                      ),
-                      onPressed: () =>
-                          onPressedReject != null ? onPressedReject() : null,
-                    ),
-                  ),
+                  
                 ],
               ),
 
