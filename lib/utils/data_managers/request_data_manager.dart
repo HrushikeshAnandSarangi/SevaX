@@ -24,6 +24,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../app_config.dart';
 import '../svea_credits_manager.dart';
@@ -1338,15 +1339,8 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if ((!isCompletedByUser && model.requestType == RequestType.TIME) 
-              ||
-              (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                  model.accepted == false &&
-                  model.approvedUsers.contains(SevaCore.of(context).loggedInUser.email) &&
-                  !SevaCore.of(context).loggedInUser.communities.contains(model.communityId) 
-                  //So that only outside community speaker sees option in pending tasks intead of notifications
-              )
-             ) {
+          if ((!isCompletedByUser && model.requestType == RequestType.TIME) &&
+              model.requestType != RequestType.ONE_TO_MANY_REQUEST) {
             // model.timebankId/
             requestModelList.add(model);
           }
@@ -1628,23 +1622,52 @@ Future oneToManyCreatorRequestCompletionRejected(requestModel, context) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
-  NotificationsModel notificationModel = NotificationsModel(
-      timebankId: requestModel['timebankId'],
-      targetUserId: requestModel['selectedInstructor']['sevaUserID'],
-      data: requestModel,
-      type: NotificationType.OneToManyCreatorRejectedCompletion,
-      id: utils.Utils.getUuid(),
-      isRead: false,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: requestModel['communityId'],
-      isTimebankNotification: false);
+  log('HERE HERE!');
 
-  await Firestore.instance
-      .collection('users')
-      .document(requestModel['selectedInstructor']['email'])
-      .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+  UserModel speakerModel = await FirestoreManager.getUserForId(
+      sevaUserId: requestModel['selectedInstructor']['sevaUserID']);
+
+  if (speakerModel.communities.contains(requestModel['communityId'])) {
+    log('in community');
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['selectedInstructor']['sevaUserID'],
+        data: requestModel,
+        type: NotificationType.OneToManyCreatorRejectedCompletion,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: false);
+
+    await Firestore.instance
+        .collection('users')
+        .document(requestModel['selectedInstructor']['email'])
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  } else {
+    log('outisde community');
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: FlavorConfig.values.timebankId,
+        targetUserId: requestModel['selectedInstructor']['sevaUserID'],
+        data: requestModel,
+        type: NotificationType.OneToManyCreatorRejectedCompletion,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: FlavorConfig.values.timebankId,
+        isTimebankNotification: false);
+
+    await Firestore.instance
+        .collection('users')
+        .document(requestModel['selectedInstructor']['email'])
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  }
 
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
