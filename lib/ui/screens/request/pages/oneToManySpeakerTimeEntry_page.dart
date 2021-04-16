@@ -277,7 +277,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                             }
                           },
                           child: Text(
-                            S.of(context).accept,
+                            S.of(context).completed,
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           elevation: 0,
@@ -304,7 +304,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                               id: requestModel.sevaUserId,
                               name: requestModel.fullName,
                               photoUrl: requestModel.photoUrl,
-                              type: ChatType.TYPE_PERSONAL,
+                              type: ChatType.TYPE_TIMEBANK,
                             );
 
                             createAndOpenChat(
@@ -314,7 +314,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                               sender: sender,
                               reciever: reciever,
                               onChatCreate: () {
-                                Navigator.of(context).pop();
+                                //Navigator.of(context).pop();
                               },
                             );
                           },

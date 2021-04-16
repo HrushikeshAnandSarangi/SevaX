@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:sevaexchange/models/basic_user_details.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -318,6 +319,43 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             'added you as Speaker for request', //Label to be created
                       );
                       break;
+
+                    case NotificationType.OneToManyCreatorRejectedCompletion:
+                      Map oneToManyRequestModel = notification.data;
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return NotificationCardOneToManySpeakerRecalims(
+                        timestamp: notification.timestamp,
+                        entityName: 'NAME',
+                        isDissmissible: false,
+                        // onDismissed: () {
+                        //   FirestoreManager.readTimeBankNotification(
+                        //     notificationId: notification.id,
+                        //     timebankId: notification.timebankId,
+                        //   );
+                        // },
+                        onPressedAccept: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return OneToManySpeakerTimeEntry(
+                                  requestModel: model,
+                                  onFinish: () async {
+                                    await oneToManySpeakerReclaimRejection(
+                                        oneToManyRequestModel);
+                                    await onDismissed();
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        photoUrl: oneToManyRequestModel['requestorphotourl'],
+                        title: oneToManyRequestModel['requestCreatorName'],
+                        subTitle:
+                            'Rejected completion of request. Please confirm again to close the request.', //Label to be created
+                      );
+                    break;
 
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -747,6 +785,29 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   }
 
 
+
+  Future oneToManySpeakerReclaimRejection(requestModel) async {
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['sevaUserId'],
+        data: requestModel,
+        type: NotificationType.OneToManyRequestCompleted,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+
+    log('sends timebank notif oneToManySpeakerReclaimRejection');
+  }
 
   void _handleFeedBackNotificationAction(
     BuildContext context,
