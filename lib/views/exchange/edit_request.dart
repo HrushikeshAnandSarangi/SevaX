@@ -2318,16 +2318,21 @@ class RequestEditFormState extends State<RequestEditForm> {
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
           } else {
-            // trigger email for user who is not part of the community for this request
-            await sendMailToInstructor(
-                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-                receiverEmail: selectedInstructorModel.email,
-                communityName: widget.requestModel.fullName,
-                requestName: widget.requestModel.title,
-                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                receiverName: selectedInstructorModel.fullname,
-                startDate: widget.requestModel.requestStart,
-                endDate: widget.requestModel.requestEnd);
+            await sendNotificationToMemberOneToManyRequest(
+                communityId: FlavorConfig.values.timebankId,
+                timebankId: FlavorConfig.values.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
+            // send sevax global notification for user who is not part of the community for this request
+            // await sendMailToInstructor(
+            //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+            //     receiverEmail: selectedInstructorModel.email,
+            //     communityName: widget.requestModel.fullName,
+            //     requestName: widget.requestModel.title,
+            //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+            //     receiverName: selectedInstructorModel.fullname,
+            //     startDate: widget.requestModel.requestStart,
+            //     endDate: widget.requestModel.requestEnd);
           }
         }
 
@@ -2468,16 +2473,21 @@ class RequestEditFormState extends State<RequestEditForm> {
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
           } else {
-            // trigger email for user who is not part of the community for this request
-            await sendMailToInstructor(
-                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-                receiverEmail: selectedInstructorModel.email,
-                communityName: widget.requestModel.fullName,
-                requestName: widget.requestModel.title,
-                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-                receiverName: selectedInstructorModel.fullname,
-                startDate: widget.requestModel.requestStart,
-                endDate: widget.requestModel.requestEnd);
+            // send sevax global notification for user who is not part of the community for this request
+            await sendNotificationToMemberOneToManyRequest(
+                communityId: FlavorConfig.values.timebankId,
+                timebankId: FlavorConfig.values.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
+            // await sendMailToInstructor(
+            //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+            //     receiverEmail: selectedInstructorModel.email,
+            //     communityName: widget.requestModel.fullName,
+            //     requestName: widget.requestModel.title,
+            //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+            //     receiverName: selectedInstructorModel.fullname,
+            //     startDate: widget.requestModel.requestStart,
+            //     endDate: widget.requestModel.requestEnd);
           }
         }
 

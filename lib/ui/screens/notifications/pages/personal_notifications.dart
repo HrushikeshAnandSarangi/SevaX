@@ -315,8 +315,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
                         title: oneToManyRequestModel['requestCreatorName'],
-                        subTitle:
-                            'added you as Speaker for request', //Label to be created
+                        subTitle: 'added you as Speaker for request: ' +
+                            oneToManyRequestModel[
+                                'title'], //Label to be created
                       );
                       break;
 
@@ -355,7 +356,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         subTitle:
                             'Rejected completion of request. Please confirm again to close the request.', //Label to be created
                       );
-                    break;
+                      break;
 
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -784,10 +785,66 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
   }
 
+  Future oneToManySpeakerInviteAccepted(requestModel) async {
+    log('after pop comes here');
 
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['sevaUserId'],
+        data: requestModel,
+        type: NotificationType.OneToManyRequestInviteAccepted,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  }
+
+  Future oneToManySpeakerInviteRejected(requestModel) async {
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel['timebankId'],
+        targetUserId: requestModel['sevaUserId'],
+        data: requestModel,
+        type: NotificationType.OneToManyRequestInviteRejected,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel['communityId'],
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+
+    Set<String> acceptorsList = Set.from(requestModel['acceptors']);
+    acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
+    requestModel['acceptors'] = acceptorsList.toList();
+    requestModel['selectedInstructor'] = {
+      'fullname': requestModel['requestCreatorName'],
+      'email': requestModel['email'],
+      'photoURL': requestModel['requestorphotourl'],
+      'sevaUserID': requestModel['sevauserid'],
+    };
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestModel['id'])
+        .updateData(requestModel);
+
+    log('sends timebank notif to 1 to many creator abt rejection!');
+  }
 
   Future oneToManySpeakerReclaimRejection(requestModel) async {
-
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel['timebankId'],
         targetUserId: requestModel['sevaUserId'],
