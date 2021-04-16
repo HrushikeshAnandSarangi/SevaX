@@ -1275,6 +1275,7 @@ Future<void> acceptInviteRequest({
             {
             //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
             //'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+            'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
             'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
          });
       }

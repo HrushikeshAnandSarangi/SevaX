@@ -200,7 +200,7 @@ Map<String, NotificationType> typeMapper = {
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
   "OneToManyRequestAccept": NotificationType.OneToManyRequestAccept,
-  "OneToManyRequestAccepted": NotificationType.OneToManyRequestInviteAccepted,
+  "OneToManyRequestInviteAccepted": NotificationType.OneToManyRequestInviteAccepted,
   "OneToManyRequestInviteRejected": NotificationType.OneToManyRequestInviteRejected,
   "OneToManyRequestCompleted": NotificationType.OneToManyRequestCompleted,
   "RequestReject": NotificationType.RequestReject,

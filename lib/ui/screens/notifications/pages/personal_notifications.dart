@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -246,7 +247,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     case NotificationType.OneToManyRequestAccept:
                       Map oneToManyRequestModel = notification.data;
-                      RequestModel model = RequestModel.fromMap(notification.data);
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
                       return NotificationCardOneToManyAccept(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
@@ -259,16 +261,19 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         // },
                         onPressedAccept: () async {
                           Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return OneToManySpeakerTimeEntry(
-                                requestModel: model
-                              );
-                            },
-                        ),);
-                          await oneToManySpeakerInviteAccepted(
-                              oneToManyRequestModel);
-                          await onDismissed();
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return OneToManySpeakerTimeEntry(
+                                  requestModel: model,
+                                  onFinish: () async {
+                                    await oneToManySpeakerInviteAccepted(
+                                        oneToManyRequestModel);
+                                    await onDismissed();
+                                  },
+                                );
+                              },
+                            ),
+                          );
                         },
                         onPressedReject: () async {
                           showDialog(
@@ -313,7 +318,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             'added you as Speaker for request', //Label to be created
                       );
                       break;
-
 
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -744,19 +748,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   Future oneToManySpeakerInviteAccepted(requestModel) async {
     log('after pop comes here');
-    Set<String> approvedUsersList = Set.from(requestModel['approvedUsers']);
-    approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
-    requestModel['approvedUsers'] = approvedUsersList.toList();
-
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel['id'])
-        .updateData(requestModel);
 
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel['timebankId'],
         targetUserId: requestModel['sevaUserId'],
-        data: requestModel.toMap(),
+        data: requestModel,
         type: NotificationType.OneToManyRequestInviteAccepted,
         id: utils.Utils.getUuid(),
         isRead: false,
@@ -776,7 +772,12 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     Set<String> acceptorsList = Set.from(requestModel['acceptors']);
     acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
     requestModel['acceptors'] = acceptorsList.toList();
-    //requestModel['selectedInstructor'] =  {};
+    requestModel['selectedInstructor'] = {
+      'fullname': requestModel['requestCreatorName'],
+      'email': requestModel['email'],
+      'photoURL': requestModel['requestorphotourl'],
+      'sevaUserID': requestModel['sevauserid'],
+    };
 
     await Firestore.instance
         .collection('requests')
@@ -801,7 +802,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         .document(notificationModel.id)
         .setData(notificationModel.toMap());
 
-        log('sends timebank notif to 1 to many creator abt rejection!');
+    log('sends timebank notif to 1 to many creator abt rejection!');
   }
 
   void _handleFeedBackNotificationAction(

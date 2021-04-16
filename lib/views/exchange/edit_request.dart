@@ -20,12 +20,14 @@ import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -35,6 +37,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -194,6 +197,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   final searchOnChange = BehaviorSubject<String>();
   final _textUpdates = StreamController<String>();
 
+  UserModel selectedInstructorModel;
   bool createEvent = false;
   bool instructorAdded = true;
 
@@ -331,7 +335,11 @@ class RequestEditFormState extends State<RequestEditForm> {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
-          selectedProject: null,
+          selectedProject: widget.requestModel.projectId != null
+              ? projectModelList.firstWhere(
+                  (element) => element.id == widget.requestModel.projectId,
+                  orElse: () => null)
+              : null,
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
@@ -450,7 +458,455 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 initialRequestTitle = value;
                               },
                             ),
+
+                            SizedBox(height: 15),
+
+                            //Instructor to be assigned to One to many requests widget Here
+
+                            instructorAdded
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Selected Speaker", //LABEL TO BE MADE FOR THIS
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Europa',
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(height: 15),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 0, right: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            // SizedBox(
+                                            //   height: 15,
+                                            // ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                UserProfileImage(
+                                                  photoUrl: widget.requestModel
+                                                      .selectedInstructor
+                                                      .photoURL,
+                                                  email: widget.requestModel
+                                                      .selectedInstructor.email,
+                                                  userId: widget.requestModel
+                                                      .selectedInstructor
+                                                      .sevaUserID,
+                                                  height: 75,
+                                                  width: 75,
+                                                  timebankModel: timebankModel,
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.requestModel
+                                                            .selectedInstructor
+                                                            .fullname ??
+                                                        S
+                                                            .of(context)
+                                                            .name_not_available,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Container(
+                                                  height: 37,
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 0),
+                                                  child: InkWell(
+                                                    child: Icon(
+                                                      Icons.cancel_rounded,
+                                                      size: 30,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        instructorAdded = false;
+                                                        widget.requestModel.selectedInstructor = null;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : widget.requestModel.requestType ==
+                                        RequestType.ONE_TO_MANY_REQUEST
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                            SizedBox(height: 20),
+                                            Text(
+                                              "Select a Speaker*", //LABEL TO BE MADE FOR THIS
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Europa',
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(height: 15),
+                                            TextField(
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                              controller: searchTextController,
+                                              onChanged: _search,
+                                              autocorrect: true,
+                                              decoration: InputDecoration(
+                                                suffixIcon: IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      color: Colors.black54,
+                                                    ),
+                                                    onPressed: () {
+                                                      searchTextController
+                                                          .clear();
+                                                    }),
+                                                hasFloatingPlaceholder: false,
+                                                alignLabelWithHint: true,
+                                                isDense: true,
+                                                prefixIcon: Icon(
+                                                  Icons.search,
+                                                  color: Colors.grey,
+                                                ),
+                                                contentPadding:
+                                                    EdgeInsets.fromLTRB(
+                                                        10.0, 12.0, 10.0, 5.0),
+                                                filled: true,
+                                                fillColor: Colors.grey[200],
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.white),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.7),
+                                                ),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide(
+                                                                color: Colors
+                                                                    .white),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    15.7)),
+                                                hintText:
+                                                    'Ex: Garry', //Label to be created
+                                                hintStyle: TextStyle(
+                                                  color: Colors.black45,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+
+                                            //SizedBox(height: 5),
+
+                                            Container(
+                                                child: Column(children: [
+                                              StreamBuilder<List<UserModel>>(
+                                                stream: SearchManager
+                                                    .searchUserInSevaX(
+                                                  queryString:
+                                                      searchTextController.text,
+                                                  //validItems: validItems,
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasError) {
+                                                    Text(snapshot.error
+                                                        .toString());
+                                                  }
+                                                  if (!snapshot.hasData) {
+                                                    return Center(
+                                                      child: SizedBox(
+                                                        height: 48,
+                                                        width: 40,
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 12.0),
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+
+                                                  List<UserModel> userList =
+                                                      snapshot.data;
+                                                  userList.removeWhere((user) =>
+                                                      user.sevaUserID ==
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID ||
+                                                      user.sevaUserID ==
+                                                          widget.requestModel
+                                                              .sevaUserId);
+
+                                                  if (userList.length == 0) {
+                                                    return Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.85,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.15,
+                                                          child: Card(
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  width: 0),
+                                                              borderRadius: BorderRadius.vertical(
+                                                                  bottom: Radius
+                                                                      .circular(
+                                                                          7.0)),
+                                                            ),
+                                                            borderOnForeground:
+                                                                false,
+                                                            shadowColor:
+                                                                Colors.white24,
+                                                            elevation: 5,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          15.0,
+                                                                      top:
+                                                                          11.0),
+                                                              child: Text(
+                                                                S
+                                                                    .of(context)
+                                                                    .no_member_found,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }
+
+                                                  if (searchTextController.text
+                                                          .trim()
+                                                          .length <
+                                                      3) {
+                                                    return Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.85,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.15,
+                                                          child: Card(
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  width: 0),
+                                                              borderRadius: BorderRadius.vertical(
+                                                                  bottom: Radius
+                                                                      .circular(
+                                                                          7.0)),
+                                                            ),
+                                                            borderOnForeground:
+                                                                false,
+                                                            shadowColor:
+                                                                Colors.white24,
+                                                            elevation: 5,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          15.0,
+                                                                      top:
+                                                                          11.0),
+                                                              child: Text(
+                                                                S
+                                                                    .of(context)
+                                                                    .validation_error_search_min_characters,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  } else {
+                                                    return Scrollbar(
+                                                      child: Center(
+                                                        child: Card(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            side: BorderSide(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                width: 0),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          borderOnForeground:
+                                                              false,
+                                                          shadowColor:
+                                                              Colors.white24,
+                                                          elevation: 5,
+                                                          child: LimitedBox(
+                                                            maxHeight:
+                                                                MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.55,
+                                                            maxWidth: 90,
+                                                            child: ListView
+                                                                .separated(
+                                                                    primary:
+                                                                        false,
+                                                                    //physics: NeverScrollableScroflutter card bordellPhysics(),
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    itemCount:
+                                                                        userList
+                                                                            .length,
+                                                                    separatorBuilder: (BuildContext
+                                                                                context,
+                                                                            int
+                                                                                index) =>
+                                                                        Divider(),
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      UserModel
+                                                                          user =
+                                                                          userList[
+                                                                              index];
+
+                                                                      List<String>
+                                                                          timeBankIds =
+                                                                          snapshot.data[index].favoriteByTimeBank ??
+                                                                              [];
+                                                                      List<String>
+                                                                          memberId =
+                                                                          user.favoriteByMember ??
+                                                                              [];
+
+                                                                      return OneToManyInstructorCard(
+                                                                        userModel:
+                                                                            user,
+                                                                        timebankModel:
+                                                                            timebankModel,
+                                                                        isAdmin:
+                                                                            isAdmin,
+                                                                        //refresh: refresh,
+                                                                        currentCommunity: SevaCore.of(context)
+                                                                            .loggedInUser
+                                                                            .currentCommunity,
+                                                                        loggedUserId: SevaCore.of(context)
+                                                                            .loggedInUser
+                                                                            .sevaUserID,
+                                                                        isFavorite: isAdmin
+                                                                            ? timeBankIds.contains(widget.requestModel.timebankId)
+                                                                            : memberId.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                                                                        addStatus: S
+                                                                            .of(context)
+                                                                            .add,
+                                                                        onAddClick:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            selectedInstructorModel =
+                                                                                user;
+                                                                            instructorAdded =
+                                                                                true;
+                                                                            widget.requestModel.selectedInstructor =
+                                                                                BasicUserDetails(
+                                                                              fullname: user.fullname,
+                                                                              email: user.email,
+                                                                              photoURL: user.photoURL,
+                                                                              sevaUserID: user.sevaUserID,
+                                                                            );
+                                                                          });
+                                                                        },
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ])),
+                                          ])
+                                    : Container(height: 0, width: 0),
+
+                            
                             SizedBox(height: 30),
+
                             OfferDurationWidget(
                                 title: S.of(context).request_duration,
                                 startTime: startDate,
@@ -1327,311 +1783,27 @@ class RequestEditFormState extends State<RequestEditForm> {
         requestCreditsMode: TotalCreditseMode.EDIT_MODE,
         requestModel: widget.requestModel,
       ),
+
       SizedBox(height: 10),
 
-//Instructor to be assigned to One to many requests widget Here
-      instructorAdded
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  height: 80,
-                  width: 290,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10.0,
-                        offset: Offset(0.0, 10.0),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        // SizedBox(
-                        //   height: 15,
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            UserProfileImage(
-                              photoUrl: widget.requestModel.selectedInstructor.photoURL,
-                              email: widget.requestModel.selectedInstructor.email,
-                              userId: widget.requestModel.selectedInstructor.sevaUserID,
-                              height: 50,
-                              width: 50,
-                              timebankModel: timebankModel,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.requestModel.selectedInstructor.fullname ??
-                                    S.of(context).name_not_available,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Container(
-                              height: 37,
-                              padding: EdgeInsets.only(bottom: 0),
-                              child: RaisedButton(
-                                shape: StadiumBorder(),
-                                disabledColor: Theme.of(context).primaryColor,
-                                elevation: 4,
-                                onPressed: null,
-                                child: Text(
-                                  'Added',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  height: 35,
-                  padding: EdgeInsets.only(bottom: 0),
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    elevation: 5,
-                    onPressed: () {
-                      setState(() {
-                        instructorAdded = false;
-                        requestModel.selectedInstructor = null;
-                      });
-                    },
-                    child: Text(
-                      'Remove',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    style: TextStyle(color: Colors.black),
-                    controller: searchTextController,
-                    onChanged: _search,
-                    autocorrect: true,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () {
-                            searchTextController.clear();
-                          }),
-                      hasFloatingPlaceholder: false,
-                      alignLabelWithHint: true,
-                      isDense: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                      contentPadding:
-                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(15.7),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(15.7)),
-                      hintText: S.of(context).type_team_member_name,
-                      hintStyle: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                      child: Column(children: [
-                    StreamBuilder<List<UserModel>>(
-                      stream: SearchManager.searchUserInSevaX(
-                        queryString: searchTextController.text,
-                        //validItems: validItems,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          Text(snapshot.error.toString());
-                        }
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              height: 48,
-                              width: 48,
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-
-                        List<UserModel> userList = snapshot.data;
-                        userList.removeWhere((user) =>
-                            user.sevaUserID ==
-                                SevaCore.of(context).loggedInUser.sevaUserID ||
-                            user.sevaUserID == widget.requestModel.sevaUserId);
-
-                        if (userList.length == 0) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidget('', S.of(context).no_user_found),
-                            ],
-                          );
-                        }
-
-                        if (searchTextController.text.trim().length < 3) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidget(
-                                  '',
-                                  S
-                                      .of(context)
-                                      .validation_error_search_min_characters),
-                            ],
-                          );
-                        } else {
-                          return Scrollbar(
-                            child: Center(
-                              child: Card(
-                                elevation: 0.4,
-                                child: LimitedBox(
-                                  maxHeight: 270,
-                                  maxWidth: 90,
-                                  child: ListView.builder(
-                                      primary: false,
-                                      //physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.all(10),
-                                      itemCount: userList.length,
-                                      itemBuilder: (context, index) {
-                                        UserModel user = userList[index];
-
-                                        List<String> timeBankIds = snapshot
-                                                .data[index]
-                                                .favoriteByTimeBank ??
-                                            [];
-                                        List<String> memberId =
-                                            user.favoriteByMember ?? [];
-
-                                        return OneToManyInstructorCard(
-                                          userModel: user,
-                                          timebankModel: timebankModel,
-                                          isAdmin: isAdmin,
-                                          //refresh: refresh,
-                                          currentCommunity: SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentCommunity,
-                                          loggedUserId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID,
-                                          isFavorite: isAdmin
-                                              ? timeBankIds.contains(
-                                                  widget.requestModel.timebankId)
-                                              : memberId.contains(
-                                                  SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .sevaUserID),
-                                          addStatus: S.of(context).add,
-                                          onAddClick: () {
-                                            setState(() {
-                                              instructorAdded = true;
-                                              widget.requestModel.selectedInstructor =
-                                              BasicUserDetails(
-                                                fullname: user.fullname,
-                                                email:user.email,
-                                                photoURL: user.photoURL,
-                                                sevaUserID: user.sevaUserID,
-                                              );
-                                            });
-                                          },
-                                        );
-                                      }),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ])),
-                ])
-              : Container(height: 0, width: 0),
-
-      SizedBox(height: 20),
-
-      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? Row(
-              children: [
-                Checkbox(
-                  activeColor: Theme.of(context).primaryColor,
-                  checkColor: Colors.white,
-                  value: createEvent,
-                  onChanged: (val) {
-                    setState(() {
-                      createEvent = val;
-                    });
-                  },
-                ),
-                Text(
-                    'Tick to create an event for this request') // Label to be created
-              ],
-            )
-          : Container(height: 0, width: 0),
+      // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+      //     ? Row(
+      //         children: [
+      //           Checkbox(
+      //             activeColor: Theme.of(context).primaryColor,
+      //             checkColor: Colors.white,
+      //             value: createEvent,
+      //             onChanged: (val) {
+      //               setState(() {
+      //                 createEvent = val;
+      //               });
+      //             },
+      //           ),
+      //           Text(
+      //               'Tick to create an event for this request') // Label to be created
+      //         ],
+      //       )
+      //     : Container(height: 0, width: 0),
 
       SizedBox(height: 15),
 
@@ -2068,25 +2240,19 @@ class RequestEditFormState extends State<RequestEditForm> {
         return;
       }
 
-      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-        List<String> approvedUsers = [];
-        approvedUsers.add(widget.requestModel.selectedInstructor.email);
-        widget.requestModel.approvedUsers = approvedUsers;
-      }
+      // if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      //   List<String> approvedUsers = [];
+      //   approvedUsers.add(widget.requestModel.selectedInstructor.email);
+      //   widget.requestModel.approvedUsers = approvedUsers;
+      // }
 
-      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          (requestModel.selectedInstructor.toMap().isEmpty ||
-              requestModel.selectedInstructor == null ||
+      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+          (widget.requestModel.selectedInstructor == {} ||
+              widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
             dialogTitle: 'Select an Instructor'); //Label to be created
         return;
-      }
-
-      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-        List<String> approvedUsers = [];
-        approvedUsers.add(widget.requestModel.selectedInstructor.email);
-        widget.requestModel.approvedUsers = approvedUsers;
       }
 
       //comparing the recurring days List
@@ -2131,6 +2297,39 @@ class RequestEditFormState extends State<RequestEditForm> {
                   OfferDurationWidgetState.endtimestamp
               : null;
           //});
+
+        if (selectedInstructorModel != null &&
+            selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+            !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+            widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+
+          List<String> acceptorsList = [];
+          acceptorsList.add(selectedInstructorModel.email);
+          widget.requestModel.acceptors = acceptorsList;
+          widget.requestModel.requestCreatorName =
+              SevaCore.of(context).loggedInUser.fullname;
+          log('ADDED ACCEPTOR');
+
+          if (selectedInstructorModel.communities
+              .contains(widget.requestModel.communityId)) {
+            await sendNotificationToMemberOneToManyRequest(
+                communityId: widget.requestModel.communityId,
+                timebankId: widget.requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
+          } else {
+            // trigger email for user who is not part of the community for this request
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: widget.requestModel.fullName,
+                requestName: widget.requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: widget.requestModel.requestStart,
+                endDate: widget.requestModel.requestEnd);
+          }
+        }
 
           return showDialog(
             barrierDismissible: false,
@@ -2249,6 +2448,39 @@ class RequestEditFormState extends State<RequestEditForm> {
         //     location != widget.requestModel.location) {
         log('HERE 1');
 
+        if (selectedInstructorModel != null &&
+            selectedInstructorModel.sevaUserID != widget.requestModel.sevaUserId &&
+            !widget.requestModel.acceptors.contains(selectedInstructorModel.email) &&
+            widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+
+          List<String> acceptorsList = [];
+          acceptorsList.add(selectedInstructorModel.email);
+          widget.requestModel.acceptors = acceptorsList;
+          widget.requestModel.requestCreatorName =
+              SevaCore.of(context).loggedInUser.fullname;
+          log('ADDED ACCEPTOR');
+
+          if (selectedInstructorModel.communities
+              .contains(widget.requestModel.communityId)) {
+            await sendNotificationToMemberOneToManyRequest(
+                communityId: widget.requestModel.communityId,
+                timebankId: widget.requestModel.timebankId,
+                sevaUserId: selectedInstructorModel.sevaUserID,
+                userEmail: selectedInstructorModel.email);
+          } else {
+            // trigger email for user who is not part of the community for this request
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: widget.requestModel.fullName,
+                requestName: widget.requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: widget.requestModel.requestStart,
+                endDate: widget.requestModel.requestEnd);
+          }
+        }
+
         widget.requestModel.title = initialRequestTitle;
         widget.requestModel.description = initialRequestDescription;
         widget.requestModel.location = location;
@@ -2318,6 +2550,73 @@ class RequestEditFormState extends State<RequestEditForm> {
   bool hasRegisteredLocation() {
     return location != null;
   }
+
+
+  Future<void> sendNotificationToMemberOneToManyRequest(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) async {
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: widget.requestModel.toMap(),
+        isRead: false,
+        isTimebankNotification: false,
+        type: NotificationType.OneToManyRequestAccept,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+
+    log('WRITTEN TO DB--------------------->>');
+  }
+
+//Sending only if instructor is not part of the community of the request
+  Future<bool> sendMailToInstructor({
+    String senderEmail,
+    String receiverEmail,
+    String communityName,
+    String requestName,
+    String requestCreatorName,
+    String receiverName,
+    int startDate,
+    int endDate,
+  }) async {
+    return await SevaMailer.createAndSendEmail(
+        mailContent: MailContent.createMail(
+      mailSender: senderEmail,
+      mailReciever: receiverEmail,
+      mailSubject:
+          requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailContent: 'You have been invited to instruct ' +
+          requestName +
+          ' from ' +
+          DateTime.fromMillisecondsSinceEpoch(startDate)
+              .toString()
+              .substring(0, 11) +
+          ' to ' +
+          DateTime.fromMillisecondsSinceEpoch(endDate)
+              .toString()
+              .substring(0, 11) +
+          "\n\n" +
+          'Thanks,' +
+          "\n" +
+          'SevaX Team.',
+    ));
+  } //Label to be given by client for email content
+  
 
   void showInsufficientBalance() {
     showDialog(
@@ -2553,7 +2852,9 @@ class ProjectSelectionState extends State<ProjectSelection> {
     }
     return MultiSelect(
       autovalidate: true,
-      initialValue: ['None'],
+      initialValue: [
+        widget.selectedProject != null ? widget.selectedProject.id : 'None'
+      ],
       titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,

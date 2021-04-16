@@ -28,6 +28,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
@@ -150,6 +151,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.OneToManyRequestInviteRejected:
                 Map oneToManyRequestModel = notification.data;
+                RequestModel model = new RequestModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: null,
@@ -160,7 +162,18 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       timebankId: notification.timebankId,
                     );
                   },
-                  onPressed: null, // TO BE MADE
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditRequest(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          requestModel: model,
+                        ),
+                      ),
+                    );
+                  },
                   photoUrl: oneToManyRequestModel['selectedInstructor']
                       ['photoURL'],
                   title: oneToManyRequestModel['selectedInstructor']

@@ -339,6 +339,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST && createEvent) ?
+          Container()
+          : 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -352,12 +355,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 ),
               ),
               SizedBox(width: 3),
+              requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST ? 
               GestureDetector(
                 onTap: () {
                   setState(() {
                     createEvent = !createEvent;
-                    log('projectId:  ' + requestModel.projectId.toString());
-                    log('createEvent:  ' + createEvent.toString());
+                    requestModel.projectId = '';
+                    log('projectId1:  ' + requestModel.projectId.toString());
+                    log('createEvent1:  ' + createEvent.toString());
                   });
                 },
                 child: Padding(
@@ -366,24 +371,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       size: 28,
                       color: createEvent ? Colors.green : Colors.grey),
                 ),
-              ),
+              )
+              :
+              Container()
             ],
           ),
           createEvent
-              ? Row(
-                  children: [
-                    Icon(Icons.check_box, size: 19, color: Colors.green),
-                    SizedBox(width: 3),
-                    Text('New event will be created for this request.'),
-                  ],
-                )
+              ? GestureDetector(
+                onTap: (){
+                  setState(() {
+                    createEvent = !createEvent;
+                    requestModel.projectId = '';
+                    log('projectId2:  ' + requestModel.projectId.toString());
+                    log('createEvent2:  ' + createEvent.toString());
+                  });
+                },
+                child: Row(
+                    children: [
+                      Icon(Icons.check_box, size: 19, color: Colors.green),
+                      SizedBox(width: 3),
+                      Text('New event will be created for this request.'),
+                    ],
+                  ),
+              )
               : Container(),
         ],
       );
     } else {
+      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel.requestType = RequestType.TIME;
       return Container();
-      // this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      // this.requestModel.requestType = RequestType.TIME;
       // return ProjectSelection(
       //   requestModel: requestModel,
       //   projectModelList: projectModelList,
@@ -2481,7 +2498,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await continueCreateRequest(confirmationDialogContext: null);
 
       } else {
-        
+
         linearProgressForCreatingRequest();
 
         await createProjectOneToManyRequest();

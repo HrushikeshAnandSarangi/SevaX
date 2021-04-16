@@ -26,8 +26,9 @@ import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
 class OneToManySpeakerTimeEntry extends StatefulWidget {
   final RequestModel requestModel;
+  final VoidCallback onFinish;
   // TODO needs flow correction to tasks model
-  OneToManySpeakerTimeEntry({@required this.requestModel});
+  OneToManySpeakerTimeEntry({@required this.requestModel, @required this.onFinish});
 
   @override
   OneToManySpeakerTimeEntryState createState() =>
@@ -259,10 +260,16 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                               requestModel.selectedSpeakerTimeDetails
                                   .speakingTime = speakingTime;
 
+                              Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
+                              approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+                              requestModel.approvedUsers = approvedUsersList.toList();
+
                               await Firestore.instance
                                   .collection('requests')
                                   .document(requestModel.id)
                                   .updateData(requestModel.toMap());
+
+                              widget.onFinish();
 
                               //Navigator.of(creditRequestDialogContext).pop();
                               Navigator.of(context).pop();
