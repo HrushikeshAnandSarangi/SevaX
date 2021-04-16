@@ -785,7 +785,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
   }
 
-  Future oneToManySpeakerInviteAccepted(requestModel) async {
+  Future oneToManySpeakerInviteAccepted(requestModel,BuildContext context) async {
     log('after pop comes here');
 
     NotificationsModel notificationModel = NotificationsModel(
@@ -807,7 +807,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         .setData(notificationModel.toMap());
   }
 
-  Future oneToManySpeakerInviteRejected(requestModel) async {
+  Future oneToManySpeakerInviteRejected(requestModel,BuildContext context) async {
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel['timebankId'],
         targetUserId: requestModel['sevaUserId'],
