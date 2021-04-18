@@ -8,6 +8,7 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -349,7 +350,7 @@ Widget get getOneToManySpeakerWidget {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: UserMode== UserMode.APPROVED_MEMBER
+                  text: widget.requestItem.acceptors.contains(SevaCore.of(context).loggedInUser.email)
                       ? 'The Request is complete by speaker'
                       : 'The Request is complete by speaker',
                   style: TextStyle(
@@ -368,47 +369,50 @@ Widget get getOneToManySpeakerWidget {
     );
 
 }
-Widget get acceptOneToManySpeakerRequest{
-    return         FlatButton(
-  shape: RoundedRectangleBorder(
-  borderRadius: BorderRadius.circular(20),
-  ),
-  padding: EdgeInsets.all(0),
-  color: FlavorConfig.values.theme.primaryColor,
-  child: Row(
-  children: <Widget>[
-  SizedBox(width: 1),
-  Spacer(),
-  Text(
-  S.of(context).approve,
-  textAlign: TextAlign.center,
-  style: TextStyle(
-  color: Colors.white,
-  ),
-  ),
-  Spacer(
-  flex: 1,
-  ),
-  ],
-  ),
-  onPressed: () {
-  Navigator.of(context).push(
-  MaterialPageRoute(
-  builder: (context) {
-  return OneToManySpeakerTimeEntry(
-  requestModel: widget.requestItem,
-  onFinish: () async {
-  await oneToManySpeakerInviteAccepted(
-  widget.requestItem,context);
-  // await onDismissed();
-  },
-  );
-  },
-  ),
-  );
-  },
-  );
-}
+
+  Widget get acceptOneToManySpeakerRequest {
+    return FlatButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: EdgeInsets.all(0),
+      color: FlavorConfig.values.theme.primaryColor,
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 1),
+          Spacer(),
+          Text(
+            S
+                .of(context)
+                .approve,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          Spacer(
+            flex: 1,
+          ),
+        ],
+      ),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return OneToManySpeakerTimeEntry(
+                requestModel: widget.requestItem,
+                onFinish: () async {
+                  await oneToManySpeakerInviteAccepted(
+                      widget.requestItem, context);
+                  // await onDismissed();
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 Widget get rejectOneToManySpeakerRequest{
     return         FlatButton(
       shape: RoundedRectangleBorder(
@@ -1062,27 +1066,49 @@ Widget get rejectOneToManySpeakerRequest{
   }
 
   void applyAction() async {
+    var batch = Firestore.instance.batch();
+    var db = Firestore.instance;
     if(widget.requestItem.requestType==RequestType.ONE_TO_MANY_REQUEST){
       if(widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID)){
-        Set<String> attenders = Set.from(widget.requestItem.acceptors);
+        Set<String> attenders = Set.from(widget.requestItem.oneToManyRequestAttenders);
         attenders.remove(SevaCore.of(context).loggedInUser.sevaUserID);
 
         widget.requestItem.oneToManyRequestAttenders = attenders.toList();
-        await Firestore.instance
-            .collection('requests')
-            .document(widget.requestItem.id)
-            .updateData(widget.requestItem.toMap());
+        batch.delete(
+            db
+                .collection('requests')
+                .document(widget.requestItem.id)
+                .collection('oneToManyAttendeesDetails')
+                .document(SevaCore.of(context).loggedInUser.email),
+            );
+
+        batch.updateData(db.collection('requests').document(widget.requestItem.id), widget.requestItem.toMap());
+        await batch.commit();
         Navigator.pop(context);
 
       }else{
-        Set<String> attenders = Set.from(widget.requestItem.acceptors);
+        Set<String> attenders = Set.from(widget.requestItem.oneToManyRequestAttenders);
         attenders.add(SevaCore.of(context).loggedInUser.sevaUserID);
 
         widget.requestItem.oneToManyRequestAttenders = attenders.toList();
-        await Firestore.instance
-            .collection('requests')
-            .document(widget.requestItem.id)
-            .updateData(widget.requestItem.toMap());
+        BasicUserDetails attendeeObject = BasicUserDetails(
+          fullname: SevaCore.of(context).loggedInUser.fullname,
+          email: SevaCore.of(context).loggedInUser.email,
+          photoURL: SevaCore.of(context).loggedInUser.photoURL??defaultUserImageURL,
+          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+        );
+        batch.setData(
+            db
+                .collection('requests')
+                .document(widget.requestItem.id)
+                .collection('oneToManyAttendeesDetails')
+                .document(SevaCore.of(context).loggedInUser.email),
+            attendeeObject.toMap());
+
+        batch.updateData(db.collection('requests').document(widget.requestItem.id), widget.requestItem.toMap());
+      await  batch.commit();
+
+        Navigator.pop(context);
 
       }
 
