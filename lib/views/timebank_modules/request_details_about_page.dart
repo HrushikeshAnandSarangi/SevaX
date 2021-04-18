@@ -1014,7 +1014,7 @@ Widget get rejectOneToManySpeakerRequest{
             Text(
                  widget.requestItem.oneToManyRequestAttenders.contains(SevaCore.of(context).loggedInUser.sevaUserID)?
 
-                S.of(context).withdraw : S.of(context).apply,
+                S.of(context).withdraw : 'Attend',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,

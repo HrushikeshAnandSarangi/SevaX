@@ -1225,13 +1225,34 @@ Future<void> rejectInviteRequest({
   @required String requestId,
   @required String rejectedUserId,
   @required String notificationId,
+  @required String acceptedUserEmail,
+  @required RequestInvitationModel model
 }) async {
-  await Firestore.instance
-      .collection('requests')
-      .document(requestId)
-      .updateData({
-    'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
-  });
+  var batch = Firestore.instance.batch();
+  var db = Firestore.instance;
+
+  if (model.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+    batch.delete(
+        db
+            .collection('requests')
+            .document(requestId)
+            .collection('oneToManyAttendeesDetails')
+            .document(acceptedUserEmail),);
+
+
+      batch.updateData(db.collection('requests').document(requestId), {
+        'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
+      });
+    batch.commit();
+
+  }else {
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
+    });
+  }
 }
 
 Future<void> acceptInviteRequest({
@@ -1266,14 +1287,15 @@ Future<void> acceptInviteRequest({
       batch.updateData(db.collection('requests').document(requestId), {
         //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+
       });
     } else {
       batch.updateData(db.collection('requests').document(requestId), {
-        //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-        //'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-        'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
+        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+
       });
     }
 
