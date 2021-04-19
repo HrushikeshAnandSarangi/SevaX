@@ -267,8 +267,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 return OneToManySpeakerTimeEntry(
                                   requestModel: model,
                                   onFinish: () async {
-                                    await oneToManySpeakerInviteAccepted(
-                                        oneToManyRequestModel,context);
+                                    await oneToManySpeakerInviteAcceptedPersonalNotifications(
+                                        oneToManyRequestModel, context);
                                     await onDismissed();
                                   },
                                 );
@@ -293,8 +293,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       ),
                                       onPressed: () async {
                                         Navigator.of(viewContext).pop();
-                                        await oneToManySpeakerInviteRejected(
-                                            oneToManyRequestModel,context);
+                                        await oneToManySpeakerInviteRejectedPersonalNotifications(
+                                            oneToManyRequestModel, context);
                                         await onDismissed();
                                       },
                                     ),
@@ -785,8 +785,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
   }
 
-
-
   Future oneToManySpeakerReclaimRejection(requestModel) async {
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel['timebankId'],
@@ -902,17 +900,18 @@ class WithdrawnRequestBody {
     }
   }
 }
-Future oneToManySpeakerInviteAccepted(requestModel,BuildContext context) async {
 
+Future oneToManySpeakerInviteAcceptedPersonalNotifications(
+    oneToManyRequestModel, BuildContext context) async {
   NotificationsModel notificationModel = NotificationsModel(
-      timebankId: requestModel['timebankId'],
-      targetUserId: requestModel['sevaUserId'],
-      data: requestModel,
+      timebankId: oneToManyRequestModel['timebankId'],
+      targetUserId: oneToManyRequestModel['sevaUserId'],
+      data: oneToManyRequestModel,
       type: NotificationType.OneToManyRequestInviteAccepted,
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: requestModel['communityId'],
+      communityId: oneToManyRequestModel['communityId'],
       isTimebankNotification: true);
 
   await Firestore.instance
@@ -923,16 +922,17 @@ Future oneToManySpeakerInviteAccepted(requestModel,BuildContext context) async {
       .setData(notificationModel.toMap());
 }
 
-Future oneToManySpeakerInviteRejected(requestModel,BuildContext context) async {
+Future oneToManySpeakerInviteRejectedPersonalNotifications(
+    oneToManyRequestModel, BuildContext context) async {
   NotificationsModel notificationModel = NotificationsModel(
-      timebankId: requestModel['timebankId'],
-      targetUserId: requestModel['sevaUserId'],
-      data: requestModel,
+      timebankId: oneToManyRequestModel['timebankId'],
+      targetUserId: oneToManyRequestModel['sevaUserId'],
+      data: oneToManyRequestModel,
       type: NotificationType.OneToManyRequestInviteRejected,
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: requestModel['communityId'],
+      communityId: oneToManyRequestModel['communityId'],
       isTimebankNotification: true);
 
   await Firestore.instance
@@ -942,21 +942,107 @@ Future oneToManySpeakerInviteRejected(requestModel,BuildContext context) async {
       .document(notificationModel.id)
       .setData(notificationModel.toMap());
 
-  Set<String> acceptorsList = Set.from(requestModel['acceptors']);
+  Set<String> acceptorsList = Set.from(oneToManyRequestModel['acceptors']);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
-  requestModel['acceptors'] = acceptorsList.toList();
-  requestModel['selectedInstructor'] = {
-    'fullname': requestModel['requestCreatorName'],
-    'email': requestModel['email'],
-    'photoURL': requestModel['requestorphotourl'],
-    'sevaUserID': requestModel['sevauserid'],
+  oneToManyRequestModel['acceptors'] = acceptorsList.toList();
+  oneToManyRequestModel['selectedInstructor'] = {
+    'fullname': oneToManyRequestModel['requestCreatorName'],
+    'email': oneToManyRequestModel['email'],
+    'photoURL': oneToManyRequestModel['requestorphotourl'],
+    'sevaUserID': oneToManyRequestModel['sevauserid'],
   };
 
   await Firestore.instance
       .collection('requests')
-      .document(requestModel['id'])
-      .updateData(requestModel);
+      .document(oneToManyRequestModel['id'])
+      .updateData(oneToManyRequestModel);
 
   log('sends timebank notif to 1 to many creator abt rejection!');
 }
 
+Future oneToManySpeakerInviteAccepted(
+    RequestModel requestModel, BuildContext context) async {
+  NotificationsModel notificationModel = NotificationsModel(
+      timebankId: requestModel.timebankId,
+      targetUserId: requestModel.sevaUserId,
+      data: requestModel.toMap(),
+      type: NotificationType.OneToManyRequestInviteAccepted,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: requestModel.communityId,
+      isTimebankNotification: true);
+
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(notificationModel.timebankId)
+      .collection('notifications')
+      .document(notificationModel.id)
+      .setData(notificationModel.toMap());
+}
+
+Future oneToManySpeakerInviteRejected(
+    RequestModel requestModel, BuildContext context) async {
+  NotificationsModel notificationModel = NotificationsModel(
+      timebankId: requestModel.timebankId,
+      targetUserId: requestModel.sevaUserId,
+      data: requestModel.toMap(),
+      type: NotificationType.OneToManyRequestInviteRejected,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: requestModel.communityId,
+      isTimebankNotification: true);
+
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(notificationModel.timebankId)
+      .collection('notifications')
+      .document(notificationModel.id)
+      .setData(notificationModel.toMap());
+
+  Set<String> acceptorsList = Set.from(requestModel.acceptors);
+  acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
+  requestModel.acceptors = acceptorsList.toList();
+  requestModel.selectedInstructor = BasicUserDetails(
+    fullname: requestModel.fullName,
+    email: requestModel.email,
+    photoURL: requestModel.photoUrl,
+    sevaUserID: requestModel.sevaUserId,
+  );
+
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
+
+  log('sends timebank notif to 1 to many creator abt rejection!');
+}
+
+Future oneToManySpeakerRequestCompleted(
+    RequestModel requestModel, BuildContext context) async {
+  NotificationsModel notificationModel = NotificationsModel(
+      timebankId: requestModel.timebankId,
+      targetUserId: requestModel.sevaUserId,
+      data: requestModel.toMap(),
+      type: NotificationType.OneToManyRequestCompleted,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: requestModel.communityId,
+      isTimebankNotification: true);
+
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(notificationModel.timebankId)
+      .collection('notifications')
+      .document(notificationModel.id)
+      .setData(notificationModel.toMap());
+
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData({
+    'isSpeakerCompleted': true,
+  });
+}

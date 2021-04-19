@@ -181,6 +181,7 @@ class RequestModel extends DataModel {
   String root_timebank_id;
   Color color;
   bool isNotified = false;
+  bool isSpeakerCompleted = false;
   String projectId = "";
   String address;
   bool softDelete;
@@ -379,6 +380,10 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('isNotified')) {
       this.isNotified = map['isNotified'];
+    }
+
+    if (map.containsKey('isSpeakerCompleted')) {
+      this.isSpeakerCompleted = map['isSpeakerCompleted'];
     }
 
     if (map.containsKey('transactions')) {
@@ -597,6 +602,10 @@ class RequestModel extends DataModel {
       this.isNotified = map['isNotified'];
     }
 
+    if (map.containsKey('isSpeakerCompleted')) {
+      this.isSpeakerCompleted = map['isSpeakerCompleted'];
+    }
+
     if (map.containsKey('transactions')) {
       List<TransactionModel> transactionList = [];
       List transactionDataList = List.castFrom(map['transactions']);
@@ -809,6 +818,10 @@ class RequestModel extends DataModel {
       object['isNotified'] = this.isNotified;
     }
 
+    if (this.isSpeakerCompleted != null) {
+      object['isSpeakerCompleted'] = this.isSpeakerCompleted;
+    }
+
     if (this.transactions != null) {
       List<Map<String, dynamic>> transactionList =
           this.transactions.map<Map<String, dynamic>>((map) {
@@ -878,7 +891,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, isSpeakerCompleted: $isSpeakerCompleted}';
   }
 }
 

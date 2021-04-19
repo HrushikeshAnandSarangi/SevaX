@@ -1640,7 +1640,7 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
   return categoryModel;
 }
 
-Future oneToManyCreatorRequestCompletionRejected(requestModel, context) async {
+Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(requestModel, context) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
@@ -1686,6 +1686,62 @@ Future oneToManyCreatorRequestCompletionRejected(requestModel, context) async {
     await Firestore.instance
         .collection('users')
         .document(requestModel['selectedInstructor']['email'])
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  }
+
+  log('oneToManyCreatorRequestCompletionRejected end of function');
+}
+
+
+
+Future oneToManyCreatorRequestCompletionRejected(RequestModel requestModel, context) async {
+  //Send notification OneToManyCreatorRejectedCompletion
+  //and speaker enters hours again and sends same completed notitifiation to creator
+
+  log('HERE HERE!');
+
+  UserModel speakerModel = await FirestoreManager.getUserForId(
+      sevaUserId: requestModel.selectedInstructor.sevaUserID);
+
+  if (speakerModel.communities.contains(requestModel.communityId)) {
+    log('in community');
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel.timebankId,
+        targetUserId: requestModel.selectedInstructor.sevaUserID,
+        data: requestModel.toMap(),
+        type: NotificationType.OneToManyCreatorRejectedCompletion,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel.communityId,
+        isTimebankNotification: false);
+
+    await Firestore.instance
+        .collection('users')
+        .document(requestModel.selectedInstructor.email)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+  } else {
+    log('outisde community');
+
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: FlavorConfig.values.timebankId,
+        targetUserId: requestModel.selectedInstructor.sevaUserID,
+        data: requestModel.toMap(),
+        type: NotificationType.OneToManyCreatorRejectedCompletion,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: FlavorConfig.values.timebankId,
+        isTimebankNotification: false);
+
+    await Firestore.instance
+        .collection('users')
+        .document(requestModel.selectedInstructor.email)
         .collection('notifications')
         .document(notificationModel.id)
         .setData(notificationModel.toMap());

@@ -25,7 +25,6 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_requ
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -236,7 +235,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                 ),
                                 onPressed: () async {
                                   Navigator.of(viewContext).pop();
-                                  await oneToManyCreatorRequestCompletionRejected(
+                                  await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
                                       oneToManyRequestModel, context);
                                   FirestoreManager.readTimeBankNotification(
                                 notificationId: notification.id,

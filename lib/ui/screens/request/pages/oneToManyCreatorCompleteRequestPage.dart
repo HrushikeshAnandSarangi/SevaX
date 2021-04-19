@@ -489,6 +489,8 @@ class OneToManyCreatorCompleteRequestPageState
                                             Navigator.pop(viewContext);
                                             Navigator.of(viewContext).pop();
                                             Navigator.of(context).pop();
+
+                                            Navigator.of(context).pop();
                                           },
                                         ),
                                         FlatButton(
