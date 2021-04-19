@@ -126,6 +126,10 @@ class _CommunityAboutState extends State<CommunityAbout>
                           sliver: SliverAppBar(
                             title: Container(),
                             titleSpacing: 10,
+                            leading: IconButton(
+                              color: Colors.black,
+                              onPressed: ()=> Navigator.of(context).pop(), icon: Icon(Icons.arrow_back),
+                            ),
                             backgroundColor: Colors.white,
                             pinned: true,
                             expandedHeight: 300,
@@ -135,6 +139,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                             //     : 300,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
+
                               background: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
