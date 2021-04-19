@@ -79,6 +79,24 @@ class AboutApp extends StatelessWidget {
             contactUsOnTap(context),
             S.of(context).help_contact_us,
           ),
+          getHelpButton(
+            context,
+            getOnTap(
+              context,
+              'Glossaries',
+              'glossariesLink',
+            ),
+           'Glossaries',
+          ),
+          getHelpButton(
+            context,
+            getOnTap(
+              context,
+              'FAQ',
+              'faqLink',
+            ),
+            'FAQ',
+          ),
         ],
       ),
       bottomSheet: Container(
@@ -125,6 +143,7 @@ class AboutApp extends StatelessWidget {
         context: context,
       );
     };
+
   }
 
   Widget getHelpButton(BuildContext context, Function onTap, String title) {
