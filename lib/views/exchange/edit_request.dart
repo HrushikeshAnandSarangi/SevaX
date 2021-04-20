@@ -340,6 +340,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                   (element) => element.id == widget.requestModel.projectId,
                   orElse: () => null)
               : null,
+          updateProjectIdCallback: (String projectid) {
+            widget.requestModel.projectId = projectid;
+          },
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
     } else {
@@ -2832,12 +2835,14 @@ class ProjectSelection extends StatefulWidget {
       this.requestModel,
       this.admin,
       this.projectModelList,
-      this.selectedProject})
+      this.selectedProject,
+      this.updateProjectIdCallback})
       : super(key: key);
   final admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
+  Function(String projectId) updateProjectIdCallback;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -2884,7 +2889,8 @@ class ProjectSelectionState extends State<ProjectSelection> {
       titleTextColor: Colors.black,
       change: (value) {
         if (value != null && value[0] != 'None') {
-          widget.requestModel.projectId = value[0];
+          //widget.requestModel.projectId = value[0];
+          widget.updateProjectIdCallback(value[0]);
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,

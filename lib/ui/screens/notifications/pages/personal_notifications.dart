@@ -804,6 +804,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         .document(notificationModel.id)
         .setData(notificationModel.toMap());
 
+    await Firestore.instance
+        .collection('requests')
+        .document(requestModel['id'])
+        .updateData({
+      'isSpeakerCompleted': true,
+    });
+
     log('sends timebank notif oneToManySpeakerReclaimRejection');
   }
 

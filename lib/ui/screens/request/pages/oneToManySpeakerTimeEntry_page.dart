@@ -277,7 +277,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                             }
                           },
                           child: Text(
-                            S.of(context).completed,
+                            S.of(context).accept,
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           elevation: 0,

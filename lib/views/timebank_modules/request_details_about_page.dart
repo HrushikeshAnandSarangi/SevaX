@@ -250,6 +250,105 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   createdAt,
                   addressComponent,
                   hostNameComponent,
+
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                   widget.requestItem.oneToManyRequestAttenders.length >= 1 && 
+                   (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
+                   || userMode == UserMode.TIMEBANK_ADMIN)
+                  )
+                      ? Expanded(
+                        flex: 1,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.width * 0.24,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                    '${widget.requestItem.oneToManyRequestAttenders.length}/' +
+                                        '${widget.requestItem.numberOfApprovals}' +
+                                        ' people Applied'),
+                                StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection("requests")
+                                        .document(widget.requestItem.id)
+                                        .collection('oneToManyAttendeesDetails')
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Text(
+                                          'No images available...',
+                                        );
+                                      } else {
+                                        return Expanded(
+                                          flex: 1,
+                                          child: ListView.builder(
+                                            reverse: true,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: snapshot.data.documents.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.all(4.0),
+                                                child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          snapshot.data.documents[
+                                                                      index]
+                                                                  ['photoURL'] ??
+                                                              defaultUserImageURL),
+                                                      minRadius: 23.0),
+                                                );
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    }),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                        ),
+                      )
+                      : Container(),
+
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                   widget.requestItem.selectedInstructor != null &&
+                   (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
+                   || userMode == UserMode.TIMEBANK_ADMIN)
+                  ) ?
+                  Container(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text('Speaker', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 10),
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                widget.requestItem.selectedInstructor.photoURL ??
+                                    defaultUserImageURL),
+                            minRadius: 34.0),
+                            SizedBox(width: 25),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                               Text(widget.requestItem.selectedInstructor.fullname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                               SizedBox(height: 7),
+                               widget.requestItem.selectedSpeakerTimeDetails.speakingTime == null ?
+                               Text('hours not updated..', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey))
+                               :
+                               Text('Session: ' + widget.requestItem.selectedSpeakerTimeDetails.speakingTime.toString() + ' hours', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                    ],
+                   ),
+                  )
+                  : Container(),
+                  
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -426,7 +525,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             SizedBox(width: 1),
             Spacer(),
             Text(
-              S.of(context).approve,
+              S.of(context).accept,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -625,6 +724,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         Navigator.of(viewContext).pop();
                         await oneToManySpeakerRequestCompleted(
                             widget.requestItem, context);
+                        Navigator.of(context).pop();
                         // await onDismissed();
                       },
                     ),
@@ -1202,7 +1302,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   duration: Duration(seconds: 3),
-                  content: Text('Rejection notification has been sent.',
+                  content: Text(
+                    'Rejection notification has been sent.',
                   ),
                 ),
               );
