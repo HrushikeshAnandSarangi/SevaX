@@ -12,6 +12,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -108,11 +109,20 @@ class MyTasksListState extends State<MyTaskList> {
           itemBuilder: (listContext, index) {
             RequestModel model = requestModelList[index];
 
-            return getTaskWidget(
-              model,
-              SevaCore.of(context).loggedInUser.timezone,
-              context,
-            );
+            if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                model.accepted == false) {
+              return getOneToManyTaskWidget(
+                  model, SevaCore.of(context).loggedInUser.timezone, context);
+            } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                model.accepted == true) {
+              return Container();
+            } else {
+              return getTaskWidget(
+                model,
+                SevaCore.of(context).loggedInUser.timezone,
+                context,
+              );
+            }
           },
         );
       },
@@ -221,6 +231,86 @@ class MyTasksListState extends State<MyTaskList> {
     //     });
   }
 
+  Widget getOneToManyTaskWidget(
+    RequestModel model,
+    String userTimezone,
+    BuildContext context,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          shadows: shadowList,
+        ),
+        child: InkWell(
+          onTap: () {
+            return null;
+          },
+          child: ListTile(
+            title: Text(
+              model.title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(model.fullName),
+                SizedBox(height: 4),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  //runAlignment: WrapAlignment.center,
+                  spacing: 8,
+                  children: <Widget>[
+                    model.isSpeakerCompleted
+                        ? Text('You have requested completion.')
+                        : RaisedButton(
+                            padding: EdgeInsets.zero,
+                            color: FlavorConfig.values.theme.primaryColor,
+                            child: Text(
+                              'Complete', //Label to be created
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Europa',
+                                  fontSize: 12),
+                            ),
+                            onPressed: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return OneToManySpeakerTimeEntry(
+                                      requestModel: model,
+                                      onFinish: () async {
+                                        await oneToManySpeakerCompletesRequest(
+                                            model);
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                    SizedBox(height: 4),
+                  ],
+                ),
+              ],
+            ),
+            leading: CircleAvatar(
+              backgroundImage:
+                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
+            ),
+            onTap: () {
+              return null;
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   String getTime(int timeInMilliseconds, String timezoneAbb) {
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
@@ -307,6 +397,33 @@ class MyTasksListState extends State<MyTaskList> {
         model.color = Color.fromRGBO(237, 230, 110, 1.0);
         return 'lib/assets/images/yellow.png';
     }
+  }
+
+  Future oneToManySpeakerCompletesRequest(RequestModel requestModel) async {
+    NotificationsModel notificationModel = NotificationsModel(
+        timebankId: requestModel.timebankId,
+        targetUserId: requestModel.sevaUserId,
+        data: requestModel.toMap(),
+        type: NotificationType.OneToManyRequestCompleted,
+        id: utils.Utils.getUuid(),
+        isRead: false,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: requestModel.communityId,
+        isTimebankNotification: true);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(notificationModel.timebankId)
+        .collection('notifications')
+        .document(notificationModel.id)
+        .setData(notificationModel.toMap());
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestModel.id)
+        .updateData({
+      'isSpeakerCompleted': true,
+    });
   }
 }
 
@@ -798,7 +915,6 @@ class TaskCardViewState extends State<TaskCardView> {
     if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
         requestModel.selectedInstructor.sevaUserID ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
-
       if (selectedHoursPrepTimeController.text == null ||
           selectedHoursPrepTimeController.text.length == 0 ||
           selectedHoursDeliveryTimeController.text == null ||
@@ -819,7 +935,7 @@ class TaskCardViewState extends State<TaskCardView> {
         return;
       }
 
-       totalMinutes = int.parse(selectedMinuteValue) +
+      totalMinutes = int.parse(selectedMinuteValue) +
           (int.parse(hoursController.text) * 60);
     } else {
       logger.i('This 3');
@@ -969,8 +1085,8 @@ class TaskCardViewState extends State<TaskCardView> {
       int totalMinutes = 0;
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-        requestModel.selectedInstructor.sevaUserID ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+          requestModel.selectedInstructor.sevaUserID ==
+              SevaCore.of(context).loggedInUser.sevaUserID) {
         totalMinutes = int.parse(selectedMinutesPrepTime) +
             int.parse(selectedMinutesDeliveryTime) +
             (int.parse(selectedHoursPrepTimeController.text) * 60) +

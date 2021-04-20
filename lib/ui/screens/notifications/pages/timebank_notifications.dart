@@ -194,13 +194,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCardOneToManyCompletedApproval(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: false,
-                  // onDismissed: () {
-                  //   FirestoreManager.readTimeBankNotification(
-                  //     notificationId: notification.id,
-                  //     timebankId: notification.timebankId,
-                  //   );
-                  // },
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
                   onPressedApprove: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(

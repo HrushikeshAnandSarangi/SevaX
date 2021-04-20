@@ -253,13 +253,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCardOneToManyAccept(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
-                        // onDismissed: () {
-                        //   FirestoreManager.readTimeBankNotification(
-                        //     notificationId: notification.id,
-                        //     timebankId: notification.timebankId,
-                        //   );
-                        // },
+                        isDissmissible: true,
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
                         onPressedAccept: () async {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -328,13 +328,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCardOneToManySpeakerRecalims(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
-                        // onDismissed: () {
-                        //   FirestoreManager.readTimeBankNotification(
-                        //     notificationId: notification.id,
-                        //     timebankId: notification.timebankId,
-                        //   );
-                        // },
+                        isDissmissible: true,
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
                         onPressedAccept: () async {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -354,7 +354,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
                         title: oneToManyRequestModel['requestCreatorName'],
                         subTitle:
-                            'Rejected completion of request. Please confirm again to close the request.', //Label to be created
+                            'Rejected completion of request: ${oneToManyRequestModel['title']}. Please confirm again to close the request.', //Label to be created
                       );
                       break;
 

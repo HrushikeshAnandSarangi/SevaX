@@ -484,6 +484,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                 .document(requestModel.id)
                                                 .updateData({
                                               'accepted': true,
+                                              'approvedUsers': [],  //so that we don't see it in pending tasks
                                             });
 
                                             Navigator.pop(viewContext);

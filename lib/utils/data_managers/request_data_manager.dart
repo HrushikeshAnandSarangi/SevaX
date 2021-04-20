@@ -1221,31 +1221,29 @@ Future<void> rejectAcceptRequest({
   await utils.createRequestApprovalNotification(model: model);
 }
 
-Future<void> rejectInviteRequest({
-  @required String requestId,
-  @required String rejectedUserId,
-  @required String notificationId,
-  @required String acceptedUserEmail,
-  @required RequestInvitationModel model
-}) async {
+Future<void> rejectInviteRequest(
+    {@required String requestId,
+    @required String rejectedUserId,
+    @required String notificationId,
+    @required String acceptedUserEmail,
+    @required RequestInvitationModel model}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
 
   if (model.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
     batch.delete(
-        db
-            .collection('requests')
-            .document(requestId)
-            .collection('oneToManyAttendeesDetails')
-            .document(acceptedUserEmail),);
+      db
+          .collection('requests')
+          .document(requestId)
+          .collection('oneToManyAttendeesDetails')
+          .document(acceptedUserEmail),
+    );
 
-
-      batch.updateData(db.collection('requests').document(requestId), {
-        'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
-      });
+    batch.updateData(db.collection('requests').document(requestId), {
+      'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
+    });
     batch.commit();
-
-  }else {
+  } else {
     await Firestore.instance
         .collection('requests')
         .document(requestId)
@@ -1289,13 +1287,11 @@ Future<void> acceptInviteRequest({
         'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-
       });
     } else {
       batch.updateData(db.collection('requests').document(requestId), {
         'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-
       });
     }
 
@@ -1361,8 +1357,9 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
           model.transactions?.forEach((transaction) {
             if (transaction.to == userId) isCompletedByUser = true;
           });
-          if ((!isCompletedByUser && model.requestType == RequestType.TIME) &&
-              model.requestType != RequestType.ONE_TO_MANY_REQUEST) {
+          if ((!isCompletedByUser &&
+              (model.requestType == RequestType.TIME ||
+                  model.requestType == RequestType.ONE_TO_MANY_REQUEST))) {
             // model.timebankId/
             requestModelList.add(model);
           }
@@ -1640,7 +1637,8 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
   return categoryModel;
 }
 
-Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(requestModel, context) async {
+Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
+    requestModel, context) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
@@ -1691,12 +1689,18 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(requestMod
         .setData(notificationModel.toMap());
   }
 
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel['id'])
+      .updateData({
+    'isSpeakerCompleted': false,
+  });
+
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
 
-
-
-Future oneToManyCreatorRequestCompletionRejected(RequestModel requestModel, context) async {
+Future oneToManyCreatorRequestCompletionRejected(
+    RequestModel requestModel, context) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
@@ -1746,6 +1750,13 @@ Future oneToManyCreatorRequestCompletionRejected(RequestModel requestModel, cont
         .document(notificationModel.id)
         .setData(notificationModel.toMap());
   }
+
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData({
+    'isSpeakerCompleted': false,
+  });
 
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
