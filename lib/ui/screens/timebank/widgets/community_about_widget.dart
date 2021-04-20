@@ -30,7 +30,8 @@ class CommunityAbout extends StatefulWidget {
 
   CommunityAbout({
     this.communityModel,
-    this.userModel, this.joinStatus,
+    this.userModel,
+    this.joinStatus,
   });
 
   @override
@@ -56,8 +57,7 @@ class _CommunityAboutState extends State<CommunityAbout>
   void initState() {
     _profileBloc = UserProfileBloc();
 
-
-  var templist = [
+    var templist = [
       ...widget.communityModel.members,
       ...widget.communityModel.organizers,
       ...widget.communityModel.admins,
@@ -126,20 +126,33 @@ class _CommunityAboutState extends State<CommunityAbout>
                           sliver: SliverAppBar(
                             title: Container(),
                             titleSpacing: 10,
-                            leading: IconButton(
-                              color: Colors.black,
-                              onPressed: ()=> Navigator.of(context).pop(), icon: Icon(Icons.arrow_back),
+                            leading: Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.white60,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.black),
+                              ),
+                              // width: 30,
+                              child: IconButton(
+                                color: Colors.black,
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  size: 20,
+                                ),
+                              ),
                             ),
+                            leadingWidth: 37,
                             backgroundColor: Colors.white,
                             pinned: true,
-                            expandedHeight: 300,
-                            // expandedHeight: timebankModel.sponsors != null &&
-                            //         timebankModel.sponsors.length > 0
-                            //     ? 250 + timebankModel.sponsors.length * 100.0
-                            //     : 300,
+                            expandedHeight: timebankModel.sponsors != null &&
+                                    timebankModel.sponsors.length > 0
+                                ? 250 + timebankModel.sponsors.length * 100.0
+                                : 270,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
-
                               background: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -288,7 +301,6 @@ class _CommunityAboutState extends State<CommunityAbout>
           style: TextStyle(
             fontSize: 16,
             fontFamily: 'Europa',
-            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -347,13 +359,13 @@ class _CommunityAboutState extends State<CommunityAbout>
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
-                              fontWeight: FontWeight.w700,
                               color: Colors.black87)),
                       SizedBox(
                         height: 7,
                       ),
 //                    InkWell(
 //                      onTap:
+
 //                          () {}, //TODO navigate to messaing view on tapping of this text
 //                      child: Text(
 //                        'Message',
@@ -397,7 +409,6 @@ class _CommunityAboutState extends State<CommunityAbout>
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -442,7 +453,6 @@ class _CommunityAboutState extends State<CommunityAbout>
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'Europa',
-                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -522,17 +532,11 @@ class _CommunityAboutState extends State<CommunityAbout>
               newPostCount: 0,
               subtitle: '',
               onTap: () {
-          if(widget.joinStatus ==CompareUserStatus.JOINED){
-          switchCommunity(message:S
-              .of(context)
-              .groups
-              .toLowerCase());
-          }else {
-            showAlertMessage(message: S
-                .of(context)
-                .groups
-                .toLowerCase());
-          }
+                if (widget.joinStatus == CompareUserStatus.JOINED) {
+                  switchCommunity(message: S.of(context).groups.toLowerCase());
+                } else {
+                  showAlertMessage(message: S.of(context).groups.toLowerCase());
+                }
               },
               sponsoredWidget: timabanksList[index].sponsored
                   ? Align(
@@ -567,10 +571,10 @@ class _CommunityAboutState extends State<CommunityAbout>
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          SwitchTimebank(),
+                      builder: (context) => SwitchTimebank(),
                     ),
-                  );},
+                  );
+                },
                 child: Text(S.of(context).switch_timebank),
               )
             ],
@@ -665,27 +669,23 @@ class _CommunityAboutState extends State<CommunityAbout>
                       project.completedRequests.length
                   : 0;
               return ProjectsCard(
-                timestamp: project.createdAt,
-                startTime: project.startTime,
-                endTime: project.endTime,
-                title: project.name,
-                description: project.description,
-                photoUrl: project.photoUrl,
-                location: project.address,
-                tasks: totalTask,
-                pendingTask: project.pendingRequests?.length,
-                onTap: () {
-                  if(widget.joinStatus ==CompareUserStatus.JOINED){
-                    switchCommunity(message:'Event');
-                  }else {
-                    showAlertMessage(
-                        message: S
-                            .of(context)
-                            .projects
-                            .toLowerCase());
-                  }
-                }
-              );
+                  timestamp: project.createdAt,
+                  startTime: project.startTime,
+                  endTime: project.endTime,
+                  title: project.name,
+                  description: project.description,
+                  photoUrl: project.photoUrl,
+                  location: project.address,
+                  tasks: totalTask,
+                  pendingTask: project.pendingRequests?.length,
+                  onTap: () {
+                    if (widget.joinStatus == CompareUserStatus.JOINED) {
+                      switchCommunity(message: 'Event');
+                    } else {
+                      showAlertMessage(
+                          message: S.of(context).projects.toLowerCase());
+                    }
+                  });
             },
           );
         });
