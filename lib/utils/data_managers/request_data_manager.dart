@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/configuaration_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -1573,7 +1574,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
   @required String userId,
 }) async* {
   var data;
-  if(AppConfig.isTestCommunity){
+  if (AppConfig.isTestCommunity) {
     data = Firestore.instance
         .collection('transactions')
         .where("isApproved", isEqualTo: true)
@@ -1581,7 +1582,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         .where('liveMode', isEqualTo: true)
         .orderBy("timestamp", descending: true)
         .snapshots();
-  }else {
+  } else {
     data = Firestore.instance
         .collection('transactions')
         .where("isApproved", isEqualTo: true)
@@ -1654,6 +1655,25 @@ Future<List<CategoryModel>> getAllCategories() async {
     );
   });
   return categories;
+}
+
+Future<List<ConfigurationModel>> getAllConfiguarations() async {
+  List<ConfigurationModel> configuarations = [];
+
+  await Firestore.instance
+      .collection('memberConfigurations')
+      .getDocuments()
+      .then((data) {
+    data.documents.forEach(
+      (documentSnapshot) {
+        ConfigurationModel model =
+            ConfigurationModel.fromMap(documentSnapshot.data);
+        model.id = documentSnapshot.documentID;
+        configuarations.add(model);
+      },
+    );
+  });
+  return configuarations;
 }
 
 /// Get a particular category by it's ID
