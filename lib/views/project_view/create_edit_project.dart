@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -97,7 +98,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         } else {
           this.projectModel.mode = ProjectMode.TIMEBANK_PROJECT;
         }
-        projectModel.public=false;
+        projectModel.public = false;
       });
     }
 
@@ -329,9 +330,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     return S.of(context).validation_error_project_name_empty;
                   } else if (profanityDetector.isProfaneString(value)) {
                     return S.of(context).profanity_text_alert;
-                  } else if (value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
+                  } else if (value.substring(0, 1).contains('_') &&
+                      !AppConfig.testingEmails
+                          .contains(AppConfig.loggedInEmail)) {
                     return 'Creating event with "_" is not allowed';
-                  }else {
+                  } else {
                     projectModel.name = value;
                   }
 
@@ -617,45 +620,53 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               HideWidget(
                 hide: AppConfig.isTestCommunity,
                 child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 8),
-                  child: OpenScopeCheckBox(
-                      infoType: InfoType.VirtualRequest,
-                      isChecked: projectModel.virtualProject,
-                      checkBoxTypeLabel:
-                      CheckBoxType.type_VirtualRequest,
-                      onChangedCB: (bool val) {
-                        if (projectModel.virtualProject != val) {
-                          this.projectModel.virtualProject = val;
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: ConfigurationCheck(
+                    actionType: 'create_virtual_event',
+                    role: memberType(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.VirtualRequest,
+                        isChecked: projectModel.virtualProject,
+                        checkBoxTypeLabel: CheckBoxType.type_VirtualRequest,
+                        onChangedCB: (bool val) {
+                          if (projectModel.virtualProject != val) {
+                            this.projectModel.virtualProject = val;
 
-                          if (!val) {
-                            projectModel.public = false;
-                            isPulicCheckboxVisible = false;
-                          } else {
-                            isPulicCheckboxVisible = true;
+                            if (!val) {
+                              projectModel.public = false;
+                              isPulicCheckboxVisible = false;
+                            } else {
+                              isPulicCheckboxVisible = true;
+                            }
+
+                            setState(() {});
                           }
-
-                          setState(() {});
-                        }
-                      }),
+                        }),
+                  ),
                 ),
               ),
 
               HideWidget(
-                hide: !isPulicCheckboxVisible ,
+                hide: !isPulicCheckboxVisible,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: OpenScopeCheckBox(
-                      infoType: InfoType.OpenScopeEvent,
-                      isChecked: projectModel.public,
-                      checkBoxTypeLabel: CheckBoxType.type_Events,
-                      onChangedCB: (bool val) {
-                        if (projectModel.public != val) {
-                          this.projectModel.public = val;
-                          log('value ${projectModel.public}');
-                          setState(() {});
-                        }
-                      }),
+                  child: ConfigurationCheck(
+                    actionType: 'create_public_event',
+                    role: memberType(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.OpenScopeEvent,
+                        isChecked: projectModel.public,
+                        checkBoxTypeLabel: CheckBoxType.type_Events,
+                        onChangedCB: (bool val) {
+                          if (projectModel.public != val) {
+                            this.projectModel.public = val;
+                            log('value ${projectModel.public}');
+                            setState(() {});
+                          }
+                        }),
+                  ),
                 ),
               ),
               // Padding(

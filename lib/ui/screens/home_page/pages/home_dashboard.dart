@@ -196,6 +196,8 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                   if (data.id ==
                       snapshot.data.currentCommunity.primary_timebank) {
                     primaryTimebank = data;
+                    AppConfig.timebankConfigurations =
+                        data.timebankConfigurations ?? TimebankConfigurations();
 
                     timeBankModelSingleton.model = primaryTimebank;
                   }

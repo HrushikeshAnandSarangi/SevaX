@@ -320,6 +320,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );
@@ -332,6 +333,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );
@@ -349,6 +351,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );

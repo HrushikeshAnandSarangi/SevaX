@@ -7,11 +7,13 @@ import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -23,9 +25,14 @@ class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
   final String timebankId;
   final String loggedInMemberUserId;
+  final TimebankModel timebankModel;
 
   const IndividualOffer(
-      {Key key, this.offerModel, this.timebankId, this.loggedInMemberUserId})
+      {Key key,
+      this.offerModel,
+      this.timebankId,
+      this.loggedInMemberUserId,
+      @required this.timebankModel})
       : super(key: key);
 
   @override
@@ -128,54 +135,69 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       comingFrom: ComingFrom.Offers,
                       child: Column(
                         children: <Widget>[
-                          _optionRadioButton(
-                            title: S.of(context).request_type_time,
-                            value: RequestType.TIME,
-                            groupvalue: snapshot.data != null
-                                ? snapshot.data
-                                : RequestType.TIME,
-                            onChanged: (data) {
-                              AppConfig.helpIconContextMember =
-                                  HelpContextMemberType.time_offers;
-                              _bloc.onTypeChanged(data);
-                              title_hint = S.of(context).offer_title_hint;
-                              description_hint =
-                                  S.of(context).offer_description_hint;
-                              setState(() {});
-                            },
+                          ConfigurationCheck(
+                            actionType: 'create_time_offers',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                              title: S.of(context).request_type_time,
+                              value: RequestType.TIME,
+                              groupvalue: snapshot.data != null
+                                  ? snapshot.data
+                                  : RequestType.TIME,
+                              onChanged: (data) {
+                                AppConfig.helpIconContextMember =
+                                    HelpContextMemberType.time_offers;
+                                _bloc.onTypeChanged(data);
+                                title_hint = S.of(context).offer_title_hint;
+                                description_hint =
+                                    S.of(context).offer_description_hint;
+                                setState(() {});
+                              },
+                            ),
                           ),
-                          _optionRadioButton(
-                              title: S.of(context).request_type_cash,
-                              value: RequestType.CASH,
-                              groupvalue: snapshot.data != null
-                                  ? snapshot.data
-                                  : RequestType.TIME,
-                              onChanged: (data) {
-                                AppConfig.helpIconContextMember =
-                                    HelpContextMemberType.money_offers;
-                                _bloc.onTypeChanged(data);
-                                title_hint =
-                                    S.of(context).cash_offer_title_hint;
-                                description_hint =
-                                    S.of(context).cash_offer_desc_hint;
-                                setState(() {});
-                              }),
-                          _optionRadioButton(
-                              title: S.of(context).request_type_goods,
-                              value: RequestType.GOODS,
-                              groupvalue: snapshot.data != null
-                                  ? snapshot.data
-                                  : RequestType.TIME,
-                              onChanged: (data) {
-                                AppConfig.helpIconContextMember =
-                                    HelpContextMemberType.goods_offers;
-                                title_hint =
-                                    S.of(context).goods_offer_title_hint;
-                                description_hint =
-                                    S.of(context).goods_offer_desc_hint;
-                                _bloc.onTypeChanged(data);
-                                setState(() {});
-                              })
+                          ConfigurationCheck(
+                            actionType: 'create_money_offers',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: S.of(context).request_type_cash,
+                                value: RequestType.CASH,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.TIME,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.money_offers;
+                                  _bloc.onTypeChanged(data);
+                                  title_hint =
+                                      S.of(context).cash_offer_title_hint;
+                                  description_hint =
+                                      S.of(context).cash_offer_desc_hint;
+                                  setState(() {});
+                                }),
+                          ),
+                          ConfigurationCheck(
+                            actionType: 'create_goods_offers',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: S.of(context).request_type_goods,
+                                value: RequestType.GOODS,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.TIME,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.goods_offers;
+                                  title_hint =
+                                      S.of(context).goods_offer_title_hint;
+                                  description_hint =
+                                      S.of(context).goods_offer_desc_hint;
+                                  _bloc.onTypeChanged(data);
+                                  setState(() {});
+                                }),
+                          )
                         ],
                       ),
                     )
@@ -434,17 +456,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 initialData: false,
                                 stream: _bloc.makeVirtual,
                                 builder: (context, snapshot) {
-                                  return OpenScopeCheckBox(
-                                      infoType: InfoType.VirtualOffers,
-                                      isChecked: snapshot.data,
-                                      checkBoxTypeLabel:
-                                          CheckBoxType.type_VirtualOffers,
-                                      onChangedCB: (bool val) {
-                                        if (snapshot.data != val) {
-                                          _bloc.onOfferMadeVirtual(val);
-                                          setState(() {});
-                                        }
-                                      });
+                                  return ConfigurationCheck(
+                                    actionType: 'create_virtual_offer',
+                                    role: memberType(
+                                        widget.timebankModel,
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID),
+                                    child: OpenScopeCheckBox(
+                                        infoType: InfoType.VirtualOffers,
+                                        isChecked: snapshot.data,
+                                        checkBoxTypeLabel:
+                                            CheckBoxType.type_VirtualOffers,
+                                        onChangedCB: (bool val) {
+                                          if (snapshot.data != val) {
+                                            _bloc.onOfferMadeVirtual(val);
+                                            setState(() {});
+                                          }
+                                        }),
+                                  );
                                 }),
                           ),
                         ),
@@ -460,17 +490,27 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         initialData: false,
                                         stream: _bloc.makePublicValue,
                                         builder: (context, snapshot) {
-                                          return OpenScopeCheckBox(
-                                              infoType: InfoType.OpenScopeOffer,
-                                              isChecked: snapshot.data,
-                                              checkBoxTypeLabel:
-                                                  CheckBoxType.type_Offers,
-                                              onChangedCB: (bool val) {
-                                                if (snapshot.data != val) {
-                                                  _bloc.onOfferMadePublic(val);
-                                                  setState(() {});
-                                                }
-                                              });
+                                          return ConfigurationCheck(
+                                            actionType: 'create_public_offer',
+                                            role: memberType(
+                                                widget.timebankModel,
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID),
+                                            child: OpenScopeCheckBox(
+                                                infoType:
+                                                    InfoType.OpenScopeOffer,
+                                                isChecked: snapshot.data,
+                                                checkBoxTypeLabel:
+                                                    CheckBoxType.type_Offers,
+                                                onChangedCB: (bool val) {
+                                                  if (snapshot.data != val) {
+                                                    _bloc
+                                                        .onOfferMadePublic(val);
+                                                    setState(() {});
+                                                  }
+                                                }),
+                                          );
                                         }),
                                   )
                                 : Container();

@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -184,18 +185,23 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           timebankId: widget.primaryTimebankModel.id,
                           isSoftDeleteRequested:
                               widget.primaryTimebankModel.requestedSoftDelete,
-                          child: IconButton(
-                            icon: Icon(Icons.add_circle),
-                            color: FlavorConfig.values.theme.primaryColor,
-                            onPressed: widget.primaryTimebankModel.protected
-                                ? isAccessAvailable(
-                                        widget.primaryTimebankModel,
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID)
-                                    ? navigateToCreateGroup
-                                    : showProtctedTImebankDialog
-                                : navigateToCreateGroup,
+                          child: ConfigurationCheck(
+                            actionType: 'create_group',
+                            role: memberType(widget.primaryTimebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: IconButton(
+                              icon: Icon(Icons.add_circle),
+                              color: FlavorConfig.values.theme.primaryColor,
+                              onPressed: widget.primaryTimebankModel.protected
+                                  ? isAccessAvailable(
+                                          widget.primaryTimebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID)
+                                      ? navigateToCreateGroup
+                                      : showProtctedTImebankDialog
+                                  : navigateToCreateGroup,
+                            ),
                           ),
                         ),
                         Spacer(),

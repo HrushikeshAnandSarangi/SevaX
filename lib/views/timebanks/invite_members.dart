@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -47,7 +48,7 @@ class InviteAddMembers extends StatefulWidget {
 }
 
 class InviteAddMembersState extends State<InviteAddMembers> {
-  TimebankCodeModel codeModel=TimebankCodeModel();
+  TimebankCodeModel codeModel = TimebankCodeModel();
   TimebankCodeModel generatedModel;
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
@@ -276,8 +277,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-
-
   Widget headingTitle(String label) {
     return Container(
       height: 25,
@@ -315,68 +314,74 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             comingFrom: ComingFrom.Members,
             upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
             transaction_matrix_type: "csv_import_users",
-            child: GestureDetector(
-              onTap: () {
-                _openFileExplorer();
-              },
-              child: Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: DashPathBorder.all(
-                    dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+            child: ConfigurationCheck(
+              actionType: 'invite_bulk_members',
+              role: memberType(widget.timebankModel,
+                  SevaCore.of(context).loggedInUser.sevaUserID),
+              child: GestureDetector(
+                onTap: () {
+                  _openFileExplorer();
+                },
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: DashPathBorder.all(
+                      dashArray:
+                          CircularIntervalList<double>(<double>[5.0, 2.5]),
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'images/csv_example.png',
-                      width: 200,
-                    ),
-                    Text(
-                      S.of(context).choose_csv,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    _isDocumentBeingUploaded
-                        ? Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: Center(
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'images/csv_example.png',
+                        width: 200,
+                      ),
+                      Text(
+                        S.of(context).choose_csv,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      _isDocumentBeingUploaded
+                          ? Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Center(
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(),
+                                ),
                               ),
-                            ),
-                          )
-                        : Container(
-                            child: csvFileModel.csvUrl == null
-                                ? Offstage()
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Card(
-                                      color: Colors.grey[100],
-                                      child: ListTile(
-                                        leading: Icon(Icons.attachment),
-                                        title: Text(
-                                          csvFileModel.csvTitle ??
-                                              "Document.csv",
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        trailing: IconButton(
-                                          icon: Icon(Icons.clear),
-                                          onPressed: () => setState(() {
-                                            csvFileModel.csvTitle = null;
-                                            csvFileModel.csvUrl = null;
-                                          }),
+                            )
+                          : Container(
+                              child: csvFileModel.csvUrl == null
+                                  ? Offstage()
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Card(
+                                        color: Colors.grey[100],
+                                        child: ListTile(
+                                          leading: Icon(Icons.attachment),
+                                          title: Text(
+                                            csvFileModel.csvTitle ??
+                                                "Document.csv",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.clear),
+                                            onPressed: () => setState(() {
+                                              csvFileModel.csvTitle = null;
+                                              csvFileModel.csvUrl = null;
+                                            }),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                          ),
-                  ],
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1049,11 +1054,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   fontSize: dialogButtonSize,
                 ),
               ),
-              onPressed: ()async {
+              onPressed: () async {
                 var today = DateTime.now();
                 var oneDayFromToday =
                     today.add(Duration(days: 30)).millisecondsSinceEpoch;
-              await  registerTimebankCode(
+                await registerTimebankCode(
                   timebankCode: timebankCode,
                   timebankId: widget.timebankModel.id,
                   validUpto: oneDayFromToday,

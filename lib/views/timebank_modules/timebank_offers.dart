@@ -84,8 +84,8 @@ class OffersState extends State<OffersModule> {
                   TransactionLimitCheck(
                     comingFrom: ComingFrom.Offers,
                     timebankId: widget.timebankId,
-                   isSoftDeleteRequested:
-                       widget.timebankModel.requestedSoftDelete,
+                    isSoftDeleteRequested:
+                        widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
                         if (widget.timebankModel.id ==
@@ -99,6 +99,7 @@ class OffersState extends State<OffersModule> {
                             MaterialPageRoute(
                               builder: (context) => prefix0.CreateOffer(
                                 timebankId: timebankId,
+                                timebankModel: widget.timebankModel,
                                 // communityId: widget.communityId,
                               ),
                             ),

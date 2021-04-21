@@ -28,7 +28,7 @@ class TimebankCombinedWithMembers {
   TimebankCombinedWithMembers(this.timebank, this.members);
 }
 
-enum MemberType { CREATOR, ADMIN, MEMBER, OWNER }
+enum MemberType { CREATOR, ADMIN, MEMBER, SUPER_ADMIN }
 enum UsersSection { ADMINS, MEMBERS, OWNERS }
 enum ActionType { PROMOTE, DEMOTE, REMOVE, DONATE, EXIT }
 
@@ -45,7 +45,7 @@ Map<MemberType, List<ActionType>> actionPermission = {
     ActionType.DEMOTE,
     ActionType.DONATE,
   ],
-  MemberType.OWNER: [
+  MemberType.SUPER_ADMIN: [
     ActionType.REMOVE,
     ActionType.PROMOTE,
     ActionType.DEMOTE,
@@ -342,7 +342,7 @@ class _MembersPageState extends State<MembersPage> {
     } else if (model.admins.contains(userId)) {
       return MemberType.ADMIN;
     } else if (model.organizers.contains(userId)) {
-      return MemberType.OWNER;
+      return MemberType.SUPER_ADMIN;
     } else {
       return MemberType.MEMBER;
     }

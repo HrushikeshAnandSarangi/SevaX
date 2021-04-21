@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -29,12 +30,14 @@ class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
   final String timebankId;
   final String loggedInMemberUserId;
+  final TimebankModel timebankModel;
 
   const OneToManyOffer({
     Key key,
     this.offerModel,
     this.timebankId,
     @required this.loggedInMemberUserId,
+    @required this.timebankModel,
   }) : super(key: key);
   @override
   _OneToManyOfferState createState() => _OneToManyOfferState();
@@ -300,18 +303,26 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               child: StreamBuilder<bool>(
                                   stream: _bloc.makeVirtualValue,
                                   builder: (context, snapshot) {
-                                    return OpenScopeCheckBox(
-                                        infoType: InfoType.VirtualOffers,
-                                        isChecked: snapshot.data,
-                                        checkBoxTypeLabel:
-                                            CheckBoxType.type_VirtualOffers,
-                                        onChangedCB: (bool val) {
-                                          if (snapshot.data != val) {
-                                            _bloc.onOfferMadeVirtual(val);
-                                            log('value ${val}');
-                                            setState(() {});
-                                          }
-                                        });
+                                    return ConfigurationCheck(
+                                      actionType: 'create_virtual_offer',
+                                      role: memberType(
+                                          widget.timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID),
+                                      child: OpenScopeCheckBox(
+                                          infoType: InfoType.VirtualOffers,
+                                          isChecked: snapshot.data,
+                                          checkBoxTypeLabel:
+                                              CheckBoxType.type_VirtualOffers,
+                                          onChangedCB: (bool val) {
+                                            if (snapshot.data != val) {
+                                              _bloc.onOfferMadeVirtual(val);
+                                              log('value ${val}');
+                                              setState(() {});
+                                            }
+                                          }),
+                                    );
                                   }),
                             ),
                           ),
@@ -325,20 +336,31 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         child: StreamBuilder<bool>(
                                             stream: _bloc.makePublicValue,
                                             builder: (context, snapshot) {
-                                              return OpenScopeCheckBox(
-                                                  infoType:
-                                                      InfoType.OpenScopeOffer,
-                                                  isChecked: snapshot.data,
-                                                  checkBoxTypeLabel:
-                                                      CheckBoxType.type_Offers,
-                                                  onChangedCB: (bool val) {
-                                                    if (snapshot.data != val) {
-                                                      _bloc.onOfferMadePublic(
-                                                          val);
-                                                      log('value ${val}');
-                                                      setState(() {});
-                                                    }
-                                                  });
+                                              return ConfigurationCheck(
+                                                actionType:
+                                                    'create_public_offer',
+                                                role: memberType(
+                                                    widget.timebankModel,
+                                                    SevaCore.of(context)
+                                                        .loggedInUser
+                                                        .sevaUserID),
+                                                child: OpenScopeCheckBox(
+                                                    infoType:
+                                                        InfoType.OpenScopeOffer,
+                                                    isChecked: snapshot.data,
+                                                    checkBoxTypeLabel:
+                                                        CheckBoxType
+                                                            .type_Offers,
+                                                    onChangedCB: (bool val) {
+                                                      if (snapshot.data !=
+                                                          val) {
+                                                        _bloc.onOfferMadePublic(
+                                                            val);
+                                                        log('value ${val}');
+                                                        setState(() {});
+                                                      }
+                                                    }),
+                                              );
                                             }),
                                       )
                                     : Container();

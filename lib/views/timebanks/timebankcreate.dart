@@ -22,6 +22,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
@@ -291,9 +292,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;
-            }else if (value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
+            } else if (value.substring(0, 1).contains('_') &&
+                !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)) {
               return 'Creating community with "_" is not allowed';
-            }else {
+            } else {
               timebankModel.name = value.trim();
               return null;
             }
@@ -337,15 +339,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               upgradeDetails: AppConfig.upgradePlanBannerModel.private_groups,
               comingFrom: ComingFrom.Groups,
               transaction_matrix_type: "private_groups",
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: Checkbox(
-                  value: timebankModel.private,
-                  onChanged: (bool value) {
-                    setState(() {
-                      timebankModel.private = value;
-                    });
-                  },
+              child: ConfigurationCheck(
+                actionType: 'create_private_group',
+                role: memberType(parentTimebankModel,
+                    SevaCore.of(context).loggedInUser.sevaUserID),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                  child: Checkbox(
+                    value: timebankModel.private,
+                    onChanged: (bool value) {
+                      setState(() {
+                        timebankModel.private = value;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
@@ -403,13 +410,18 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       AppConfig.upgradePlanBannerModel.sponsored_groups,
                   transaction_matrix_type: "sponsored_groups",
                   comingFrom: ComingFrom.Groups,
-                  child: Checkbox(
-                    value: sponsored,
-                    onChanged: (bool value) {
-                      setState(() {
-                        sponsored = !sponsored;
-                      });
-                    },
+                  child: ConfigurationCheck(
+                    actionType: 'create_endorsed_group',
+                    role: memberType(parentTimebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: Checkbox(
+                      value: sponsored,
+                      onChanged: (bool value) {
+                        setState(() {
+                          sponsored = !sponsored;
+                        });
+                      },
+                    ),
                   ),
                 ),
               ],

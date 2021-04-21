@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuaration_model.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
+import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -29,6 +30,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   List<ConfigurationModel> requestsList = [];
   List<ConfigurationModel> eventsList = [];
   List<ConfigurationModel> offerList = [];
+  List<ConfigurationModel> groupsList = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -38,10 +40,8 @@ class _MemberPermissionsState extends State<MemberPermissions> {
 
   void setUp() {
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getAllConfiguarations().then((value) {
-        configurationsList = value;
-        filterPermissions(value);
-      });
+      configurationsList = ConfigurationsList().getData();
+      filterPermissions(configurationsList);
       roles = [S.of(context).super_admin, S.of(context).admin, 'Member'];
       // general_permissions = [
       //   'Create Feeds',
@@ -174,6 +174,13 @@ class _MemberPermissionsState extends State<MemberPermissions> {
                 title: 'Offer Permissions',
               ),
               offerPermissionsWidget(),
+              SizedBox(
+                height: 10,
+              ),
+              titleText(
+                title: 'Group Permissions',
+              ),
+              groupPermissionsWidget(),
               SizedBox(
                 height: 10,
               ),
@@ -310,6 +317,29 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         ));
   }
 
+  Widget groupPermissionsWidget() {
+    return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: List.generate(
+          groupsList.length,
+          (index) => CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Text(groupsList[index].title_en),
+            value: all_permissions.contains(offerList[index].id),
+            onChanged: (value) {
+              if (value) {
+                all_permissions.add(groupsList[index].id);
+              } else {
+                all_permissions.remove(groupsList[index].id);
+              }
+              setState(() {});
+            },
+          ),
+        ));
+  }
+
   Widget _optionRadioButton<T>({
     String title,
     T value,
@@ -346,6 +376,8 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         mainCategories.where((element) => element.type == 'events'));
     offerList = List<ConfigurationModel>.from(
         mainCategories.where((element) => element.type == 'offer'));
+    groupsList = List<ConfigurationModel>.from(
+        mainCategories.where((element) => element.type == 'group'));
     setState(() {});
   }
 

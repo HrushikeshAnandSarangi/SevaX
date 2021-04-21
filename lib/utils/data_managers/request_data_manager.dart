@@ -1657,25 +1657,6 @@ Future<List<CategoryModel>> getAllCategories() async {
   return categories;
 }
 
-Future<List<ConfigurationModel>> getAllConfiguarations() async {
-  List<ConfigurationModel> configuarations = [];
-
-  await Firestore.instance
-      .collection('memberConfigurations')
-      .getDocuments()
-      .then((data) {
-    data.documents.forEach(
-      (documentSnapshot) {
-        ConfigurationModel model =
-            ConfigurationModel.fromMap(documentSnapshot.data);
-        model.id = documentSnapshot.documentID;
-        configuarations.add(model);
-      },
-    );
-  });
-  return configuarations;
-}
-
 /// Get a particular category by it's ID
 Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
   CategoryModel categoryModel;
