@@ -38,9 +38,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
   String selectedAddress;
   CustomLocation customLocation;
 
-  String title = '';
+  // String title = '';
   String title_hint;
   String description_hint;
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _availabilityController = TextEditingController();
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
@@ -52,7 +56,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
 
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
-      title = widget.offerModel.individualOfferDataModel.title;
+      _titleController.text = widget.offerModel.individualOfferDataModel.title;
+      _descriptionController.text =
+          widget.offerModel.individualOfferDataModel.description;
+      _availabilityController.text =
+          widget.offerModel.individualOfferDataModel.schedule;
       AppConfig.helpIconContextMember =
           widget.offerModel.type == RequestType.TIME
               ? HelpContextMemberType.time_offers
@@ -89,6 +97,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
     _title.dispose();
     _description.dispose();
     _availability.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _availabilityController.dispose();
+
     super.dispose();
   }
 
@@ -193,6 +205,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.availability,
             builder: (context, snapshot) {
               return CustomTextField(
+                controller: _availabilityController,
                 currentNode: _availability,
                 value: snapshot.data,
                 heading: S.of(context).availablity,
@@ -356,13 +369,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           stream: _bloc.title,
                           builder: (context, snapshot) {
                             return CustomTextField(
+                              controller: _titleController,
                               currentNode: _title,
                               nextNode: _description,
                               value: snapshot.data,
                               heading: "${S.of(context).title}*",
                               onChanged: (String value) {
                                 _bloc.onTitleChanged(value);
-                                title = value;
+                                // title = value;
                               },
                               hint: title_hint != null
                                   ? title_hint
@@ -378,6 +392,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           stream: _bloc.offerDescription,
                           builder: (context, snapshot) {
                             return CustomTextField(
+                              controller: _descriptionController,
                               currentNode: _description,
                               nextNode: _availability,
                               value: snapshot.data,

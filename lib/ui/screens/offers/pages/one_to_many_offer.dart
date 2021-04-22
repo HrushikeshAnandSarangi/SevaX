@@ -50,11 +50,27 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 
   List<FocusNode> focusNodes;
 
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _preparationController = TextEditingController();
+  TextEditingController _classHourController = TextEditingController();
+  TextEditingController _sizeClassController = TextEditingController();
+  TextEditingController _classDescriptionController = TextEditingController();
+
   @override
   void initState() {
     focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
+      _titleController.text = widget.offerModel.groupOfferDataModel.classTitle;
+      _preparationController.text = widget
+          .offerModel.groupOfferDataModel.numberOfPreperationHours
+          .toString();
+      _classHourController.text =
+          widget.offerModel.groupOfferDataModel.numberOfClassHours.toString();
+      _sizeClassController.text =
+          widget.offerModel.groupOfferDataModel.sizeOfClass.toString();
+      _classDescriptionController.text =
+          widget.offerModel.groupOfferDataModel.classDescription;
     }
     super.initState();
     _bloc.classSizeError.listen((error) {
@@ -72,6 +88,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   void dispose() {
     focusNodes.forEach((node) => node.dispose());
     _bloc.dispose();
+    _titleController.dispose();
+    _preparationController.dispose();
+    _classHourController.dispose();
+    _sizeClassController.dispose();
+    _classDescriptionController.dispose();
     super.dispose();
   }
 
@@ -144,6 +165,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.title,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                controller: _titleController,
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
                                 // formatters: <TextInputFormatter>[
@@ -196,6 +218,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.preparationHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                controller: _preparationController,
                                 currentNode: focusNodes[1],
                                 nextNode: focusNodes[2],
                                 value: snapshot.data != null
@@ -215,6 +238,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                controller: _classHourController,
                                 currentNode: focusNodes[2],
                                 nextNode: focusNodes[3],
                                 value: snapshot.data != null
@@ -237,6 +261,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classSize,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                controller: _sizeClassController,
                                 currentNode: focusNodes[3],
                                 nextNode: focusNodes[4],
                                 value: snapshot.data != null
@@ -256,6 +281,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classDescription,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                controller: _classDescriptionController,
                                 currentNode: focusNodes[4],
                                 value: snapshot.data != null
                                     ? snapshot.data

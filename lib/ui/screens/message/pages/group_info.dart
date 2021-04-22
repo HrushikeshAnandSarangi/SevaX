@@ -186,6 +186,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                         stream: _bloc.groupName,
                         builder: (context, snapshot) {
                           _controller.value = _controller.value.copyWith(
+                            composing: TextRange(start: 0, end: 0),
                             text: snapshot.data,
                           );
                           return TextField(

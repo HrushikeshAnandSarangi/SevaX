@@ -136,6 +136,7 @@ class CreateGroupPage extends StatelessWidget {
                         builder: (context, snapshot) {
                           _controller.value = _controller.value.copyWith(
                             text: snapshot.data,
+                            composing: TextRange(start: 0, end: 0),
                           );
 
                           return TextField(
