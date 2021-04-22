@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -6,13 +8,14 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuaration_model.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class MemberPermissions extends StatefulWidget {
   final TimebankModel timebankModel;
-
   MemberPermissions({this.timebankModel});
 
   @override
@@ -24,7 +27,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   String selectedRole = '';
   List<String> roles = [];
   List<String> all_permissions = [];
-
+  bool isNotGroup = false;
   List<ConfigurationModel> configurationsList = [];
   List<ConfigurationModel> generalList = [];
   List<ConfigurationModel> requestsList = [];
@@ -35,6 +38,8 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    isNotGroup = isPrimaryTimebank(
+        parentTimebankId: widget.timebankModel.parentTimebankId);
     setUp();
   }
 
@@ -43,28 +48,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       configurationsList = ConfigurationsList().getData();
       filterPermissions(configurationsList);
       roles = [S.of(context).super_admin, S.of(context).admin, 'Member'];
-      // general_permissions = [
-      //   'Create Feeds',
-      //   'Invite / Invite bulk members',
-      //   'Manage Users',
-      //   'Manage report feeds',
-      //   'Billing Access'
-      // ];
-      // event_permissions = ['Create Events', 'Manage Events'];
-      // request_permissions = [
-      //   'Create Time Request',
-      //   'Create Money Request',
-      //   'Create Goods Request',
-      //   'Accept requests',
-      //   'Create Borrow Request',
-      //   'Personal Requests'
-      // ];
-      // offer_persmissions = [
-      //   'Create Time Offers',
-      //   'Create Money Offers',
-      //   'Create Goods Offers',
-      //   'Accept Offers'
-      // ];
+
       selectedRole = S.of(context).super_admin;
       if (widget.timebankModel.timebankConfigurations != null &&
           widget.timebankModel.timebankConfigurations.superAdmin != null) {
@@ -177,8 +161,11 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               SizedBox(
                 height: 10,
               ),
-              titleText(
-                title: 'Group Permissions',
+              HideWidget(
+                hide: !isNotGroup,
+                child: titleText(
+                  title: 'Group Permissions',
+                ),
               ),
               groupPermissionsWidget(),
               SizedBox(
@@ -376,8 +363,10 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         mainCategories.where((element) => element.type == 'events'));
     offerList = List<ConfigurationModel>.from(
         mainCategories.where((element) => element.type == 'offer'));
-    groupsList = List<ConfigurationModel>.from(
-        mainCategories.where((element) => element.type == 'group'));
+    if (isNotGroup) {
+      groupsList = List<ConfigurationModel>.from(
+          mainCategories.where((element) => element.type == 'group'));
+    }
     setState(() {});
   }
 
