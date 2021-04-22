@@ -17,8 +17,10 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'create_edit_project.dart';
 
@@ -160,6 +162,27 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                     ),
                     SizedBox(height: 10),
                     Text(projectModel.description ?? ""),
+
+                    (projectModel.registrationLink == null
+                        || projectModel.registrationLink == '') ?
+                    Container()
+                    :
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      headingText('Registration Link'), //Label to be created
+                      SizedBox(height: 10),
+                      Umeshify(
+                        text: projectModel.registrationLink,
+                        onOpen: (link) async {
+                          if (await canLaunch(link)) {
+                            await launch(link);
+                          }
+                        },
+                      ),
+                     ],
+                    ),
+
                     headingText(S.of(context).organizer),
                     SizedBox(height: 10),
                     Row(

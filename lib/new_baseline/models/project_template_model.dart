@@ -14,6 +14,7 @@ class ProjectTemplateModel extends DataModel {
   ProjectMode mode;
   int createdAt;
   bool softDelete;
+  String registrationLink;
 
   ProjectTemplateModel({
     this.id,
@@ -27,6 +28,7 @@ class ProjectTemplateModel extends DataModel {
     this.mode,
     this.createdAt,
     this.softDelete,
+    this.registrationLink
   });
 
   factory ProjectTemplateModel.fromMap(Map<String, dynamic> json) =>
@@ -38,6 +40,7 @@ class ProjectTemplateModel extends DataModel {
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
         communityId: json["communityId"] == null ? null : json["communityId"],
         description: json["description"] == null ? null : json["description"],
+        registrationLink: json["registrationLink"] == null ? null : json["registrationLink"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
         mode: json["mode"] == null
@@ -56,6 +59,7 @@ class ProjectTemplateModel extends DataModel {
         "timebank_id": timebankId == null ? null : timebankId,
         "communityId": communityId == null ? null : communityId,
         "description": description == null ? null : description,
+        "registrationLink": registrationLink == null ? null : registrationLink,
         "creator_id": creatorId == null ? null : creatorId,
         "photo_url": photoUrl == null ? null : photoUrl,
         "mode": mode == null ? null : mode.readable,
@@ -65,6 +69,6 @@ class ProjectTemplateModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectTemplateModel{id: $id, name: $name,templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt,  softDelete: $softDelete}';
+    return 'ProjectTemplateModel{id: $id, name: $name, registrationLink: $registrationLink, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt,  softDelete: $softDelete}';
   }
 }
