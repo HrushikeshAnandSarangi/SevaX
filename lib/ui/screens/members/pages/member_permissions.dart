@@ -44,7 +44,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   }
 
   void setUp() {
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () async {
       configurationsList = ConfigurationsList().getData();
       filterPermissions(configurationsList);
       roles = [S.of(context).super_admin, S.of(context).admin, 'Member'];

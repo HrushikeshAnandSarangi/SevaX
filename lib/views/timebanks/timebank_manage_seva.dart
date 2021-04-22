@@ -386,7 +386,11 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           viewReportedMembers(context: context),
           SizedBox(height: 20),
 
-          viewMemberConfigurations(context: context),
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? viewMemberConfigurations(context: context)
+              : Container(),
+
           SizedBox(height: 20),
           widget.timebankModel.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID

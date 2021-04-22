@@ -47,18 +47,6 @@ class ConfigurationsList {
         title_en: 'Invite / Invite bulk members',
         type: 'general'),
     ConfigurationModel(
-        id: 'manage_events', title_en: 'Manage Events', type: 'events'),
-    ConfigurationModel(
-        id: 'manage_report_feeds',
-        title_en: 'Manage report feeds',
-        type: 'general'),
-    ConfigurationModel(
-        id: 'manage_users', title_en: 'Manage Users', type: 'general'),
-    ConfigurationModel(
-        id: 'personal_requests',
-        title_en: 'Personal Requests',
-        type: 'request'),
-    ConfigurationModel(
         id: 'create_group', title_en: 'Create Group', type: 'group'),
     ConfigurationModel(
         id: 'promote_user', title_en: 'Promote User', type: 'general'),
