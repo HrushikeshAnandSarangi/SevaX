@@ -355,7 +355,7 @@ class CreateEditCommunityViewFormState
                           // ],
                           onSaved: (value) {
                             enteredName =
-                               // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                                // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
                                 value.trim();
                           },
                           // onSaved: (value) => enteredName = value,
@@ -367,7 +367,9 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
-                            }else if (value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
+                            } else if (value.substring(0, 1).contains('_') &&
+                                !AppConfig.testingEmails
+                                    .contains(AppConfig.loggedInEmail)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
@@ -405,18 +407,17 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
-                            } else{
-                                snapshot.data.community
-                                    .updateValueByKey('about', value);
+                            } else {
+                              snapshot.data.community
+                                  .updateValueByKey('about', value);
 
-                                snapshot.data.timebank
-                                    .updateValueByKey('missionStatement', value);
-                                createEditCommunityBloc.onChange(snapshot.data);
-                                timebankModel.missionStatement = value;
-                                communityModel.about = value;
-                                return null;
-                              }
-
+                              snapshot.data.timebank
+                                  .updateValueByKey('missionStatement', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                              timebankModel.missionStatement = value;
+                              communityModel.about = value;
+                              return null;
+                            }
                           },
                         ),
                         Padding(
@@ -795,7 +796,7 @@ class CreateEditCommunityViewFormState
                             child:
                                 headingText(S.of(context).timebank_has_parent)),
                         Offstage(
-                          offstage: widget.isCreateTimebank  ,
+                          offstage: widget.isCreateTimebank,
                           child: Text(
                             S
                                 .of(context)
@@ -807,7 +808,7 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         Offstage(
-                          offstage: widget.isCreateTimebank ,
+                          offstage: widget.isCreateTimebank,
                           child: TransactionsMatrixCheck(
                             comingFrom: ComingFrom.Community,
                             upgradeDetails: AppConfig

@@ -229,6 +229,9 @@ class TimebankModel extends DataModel {
     if (key == 'liveMode') {
       this.liveMode = value;
     }
+    if (key == 'timebankConfigurations') {
+      this.timebankConfigurations = value;
+    }
   }
 
   factory TimebankModel.fromMap(Map<dynamic, dynamic> json) {
