@@ -138,8 +138,8 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
     deviceDetails.deviceId = androidInfo.androidId;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceType ='IOS';
-    deviceDetails.deviceId = iosInfo.identifierForVendor ;
+    deviceDetails.deviceType = 'IOS';
+    deviceDetails.deviceId = iosInfo.identifierForVendor;
   }
 
   if (locationVal == null) {
@@ -160,7 +160,6 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   return deviceDetails;
 }
 
-
 Future<DeviceDetails> addCreationSourceOfUser(
     {GeoFirePoint locationVal, String userEmailId}) async {
   GeoFirePoint location;
@@ -179,8 +178,8 @@ Future<DeviceDetails> addCreationSourceOfUser(
     deviceDetails.deviceId = androidInfo.androidId;
   } else if (Platform.isIOS) {
     var iosInfo = await DeviceInfoPlugin().iosInfo;
-    deviceDetails.deviceType ='IOS';
-    deviceDetails.deviceId = iosInfo.identifierForVendor ;
+    deviceDetails.deviceType = 'IOS';
+    deviceDetails.deviceId = iosInfo.identifierForVendor;
   }
 
   if (locationVal == null) {
@@ -441,7 +440,6 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
       .where('sevauserid', isEqualTo: sevaUserId)
       .getDocuments()
       .then((snapshot) {
-
     DocumentSnapshot documentSnapshot = snapshot.documents[0];
     UserModel model =
         UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
@@ -511,12 +509,15 @@ Future<ProfanityImageModel> checkProfanityForImage(
     {String imageUrl, String storagePath}) async {
   log("model ${imageUrl}");
 
-  var result = await
-  http.post( "https://proxy.sevaexchange.com/" +
-    "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
-    headers: {"Content-Type": "application/json",  "Access-Control": "Allow-Headers",
-      "x-requested-with": "x-requested-by"},
-    body:jsonEncode({
+  var result = await http.post(
+    "https://proxy.sevaexchange.com/" +
+        "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control": "Allow-Headers",
+      "x-requested-with": "x-requested-by"
+    },
+    body: jsonEncode({
       "imageURL": imageUrl,
       "firebaseURL": imageUrl,
     }),
@@ -525,10 +526,16 @@ Future<ProfanityImageModel> checkProfanityForImage(
   ProfanityImageModel profanityImageModel;
   try {
     log("model ${json.decode(result.body)}");
-    Map<String,dynamic> data =json.decode(result.body);
-    log("data ${data}");
+    Map<String, dynamic> data = json.decode(result.body);
+    logger.i("data ${data}");
 
-    profanityImageModel = ProfanityImageModel.fromMap(data['safeSearchAnnotation']);
+    if (data['safeSearchAnnotation'] == null) {
+      logger.i(data['safeSearchAnnotation']);
+      return null;
+    }
+    profanityImageModel =
+        ProfanityImageModel.fromMap(data['safeSearchAnnotation']);
+
     log("model ${profanityImageModel.adult}");
 
 //  } on FormatException catch (formatException) {
