@@ -1012,9 +1012,27 @@ Future<void> approveRequestCompletion({
   List<TransactionModel> transactions =
       model.transactions.map((t) => t).toList();
   TransactionModel editedTransaction;
+
+  double taxPercentage;
+
+  DocumentSnapshot data = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get();
+  Map<String, dynamic> dataMap = data.data;
+  CommunityModel communityModel = CommunityModel(dataMap);
+  taxPercentage = communityModel.taxPercentage ?? 0;
+  //
+
+  double transactionvalue = (model.durationOfRequest / 60);
+
+  double tax = transactionvalue * taxPercentage;
+  transactionvalue = transactionvalue - tax;
+
   model.transactions = transactions.map((t) {
     if (t.to == userId) {
       editedTransaction = t;
+      editedTransaction.credits = transactionvalue;
       editedTransaction.isApproved = true;
       return editedTransaction;
     }
@@ -1034,26 +1052,10 @@ Future<void> approveRequestCompletion({
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
 
-  double transactionvalue = (model.durationOfRequest / 60);
-
   TimeBankBalanceTransactionModel balanceTransactionModel;
   var updatedRequestModel = model;
 
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
-    double taxPercentage;
-
-    DocumentSnapshot data = await Firestore.instance
-        .collection('communities')
-        .document(communityId)
-        .get();
-    Map<String, dynamic> dataMap = data.data;
-    CommunityModel communityModel = CommunityModel(dataMap);
-    taxPercentage = communityModel.taxPercentage ?? 0;
-    //
-
-    double tax = transactionvalue * taxPercentage;
-    transactionvalue = transactionvalue - tax;
-
     balanceTransactionModel = TimeBankBalanceTransactionModel(
       communityId: communityId,
       userId: userId,
