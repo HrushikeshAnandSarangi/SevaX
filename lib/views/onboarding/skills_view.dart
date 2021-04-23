@@ -100,7 +100,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
-          'Your Skills',
+          S.of(context).your_skills,
           style: TextStyle(
             fontSize: 18,
           ),

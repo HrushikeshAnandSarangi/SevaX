@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2021-02-09T06:08:39+00:00",
+    "@@last_modified": "2021-04-23T15:44:50+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "Ex: Fundraiser yekuwedzera dzimba dzevakadzi ...",
     "request_goods_title_hint": "Ex: Zvisingaperi zvinhu zveFood Bank ...",
     "request_goods_desc_hint": "Ex: Yemunharaunda Chikafu Bhangi ine kushomeka ...",
-    "cannot_create_project": "Zviitiko zvinogona kugadzirwa chete ne admin.Kana iwe uchida kugadzira chiitiko, ndokumbira utumire meseji kune admin yako."
+    "cannot_create_project": "Zviitiko zvinogona kugadzirwa chete ne admin.Kana iwe uchida kugadzira chiitiko, ndokumbira utumire meseji kune admin yako.",
+    "virtual": "Virtual",
+    "public_to_sevax": "Veruzhinji kuna Sevax Global",
+    "your_skills": "Unyanzvi Hwako",
+    "your_interests": "Zvaunofarira",
+    "feature_disabled": "Ichi chimiro chakaremara nharaunda yako",
+    "currently_not_permitted": "Izvi hazvitenderwi, ndapota ona iyo inotevera link kuti uwane rumwe ruzivo.http:\/\/www.bswes.sexapp.com\/"
 }

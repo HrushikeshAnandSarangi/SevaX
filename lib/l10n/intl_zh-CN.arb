@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2021-04-20T17:16:50+00:00",
+    "@@last_modified": "2021-04-23T15:44:49+00:00",
     "check_met": "查看我们曾经见过？",
     "we_met": "是的，我们曾见过",
     "hang_on": "请稍待。。。",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "例如：筹款活动扩大了妇女的庇护所...",
     "request_goods_title_hint": "例如：食品银行的不易腐烂物品...",
     "request_goods_desc_hint": "例如：当地食品银行短缺...",
-    "cannot_create_project": "活动只能由管理员创建。如果您想创建活动，请向管理员发送消息。"
+    "cannot_create_project": "活动只能由管理员创建。如果您想创建活动，请向管理员发送消息。",
+    "virtual": "虚拟的",
+    "public_to_sevax": "公共到Sevax Global",
+    "your_skills": "你的技能",
+    "your_interests": "你的兴趣",
+    "feature_disabled": "为您的社区禁用此功能",
+    "currently_not_permitted": "这是目前不允许的，请参阅以下链接以获取更多信息。http:\/\/www.web.sevaxapp.com\/"
 }

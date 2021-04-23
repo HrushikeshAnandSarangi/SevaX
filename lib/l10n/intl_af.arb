@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-02-09T06:08:38+00:00",
+    "@@last_modified": "2021-04-23T15:44:50+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "Byvoorbeeld: fondsinsameling om vroueskuiling uit te brei ...",
     "request_goods_title_hint": "Byvoorbeeld: Nie-bederfbare goedere vir voedselbank ...",
     "request_goods_desc_hint": "Byvoorbeeld: die plaaslike voedselbank het 'n tekort ...",
-    "cannot_create_project": "Gebeurtenisse kan slegs deur 'n admin geskep word.Stuur 'n boodskap aan u admin as u 'n geleentheid wil skep."
+    "cannot_create_project": "Gebeurtenisse kan slegs deur 'n admin geskep word.Stuur 'n boodskap aan u admin as u 'n geleentheid wil skep.",
+    "virtual": "Virtueel",
+    "public_to_sevax": "Publiek om Sevax Global",
+    "your_skills": "Jou vaardighede",
+    "your_interests": "Jou belange",
+    "feature_disabled": "Hierdie funksie is afgeskakel vir jou gemeenskap",
+    "currently_not_permitted": "Dit is tans nie toegelaat nie, sien asseblief die volgende skakel vir meer inligting.http:\/\/www.web.sevaxapp.com\/"
 }

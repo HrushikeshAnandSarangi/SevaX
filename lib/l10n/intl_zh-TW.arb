@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2021-04-20T17:16:57+00:00",
+    "@@last_modified": "2021-04-23T15:44:49+00:00",
     "check_met": "查看我們曾經見過？",
     "we_met": "是的，我們曾見過",
     "hang_on": "請稍待。。。",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "例如：籌款活動擴大了婦女的庇護所...",
     "request_goods_title_hint": "例如：食品銀行的不易腐爛物品...",
     "request_goods_desc_hint": "例如：當地食品銀行短缺...",
-    "cannot_create_project": "活動只能由管理員創建。如果您想創建活動，請向管理員發送消息。"
+    "cannot_create_project": "活動只能由管理員創建。如果您想創建活動，請向管理員發送消息。",
+    "virtual": "虛擬的",
+    "public_to_sevax": "公共到Sevax Global",
+    "your_skills": "你的技能",
+    "your_interests": "你的興趣",
+    "feature_disabled": "為您的社區禁用此功能",
+    "currently_not_permitted": "這是目前不允許的，請參閱以下鏈接以獲取更多信息。http:\/\/www.web.sevaxapp.com\/"
 }

@@ -6135,6 +6135,36 @@ class S {
         'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
         name: 'cannot_create_project',
       );
+
+  String get virtual => Intl.message(
+        'Virtual',
+        name: 'virtual',
+      );
+
+  String get public_to_sevax => Intl.message(
+        'Public to SevaX Global',
+        name: 'public_to_sevax',
+      );
+
+  String get your_skills => Intl.message(
+        'Your Skills',
+        name: 'your_skills',
+      );
+
+  String get your_interests => Intl.message(
+        'Your Interests',
+        name: 'your_interests',
+      );
+
+  String get feature_disabled => Intl.message(
+        'This feature is disabled for your community',
+        name: 'feature_disabled',
+      );
+
+  String get currently_not_permitted => Intl.message(
+        'This is currently not permitted, Please see the following link for more information. http://www.web.sevaxapp.com/',
+        name: 'currently_not_permitted',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

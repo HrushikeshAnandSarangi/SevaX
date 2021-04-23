@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -103,6 +104,13 @@ class CreateEditCommunityViewFormState
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
+  final infoWindowKeys = [
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+  ];
+
   TextEditingController searchTextController = TextEditingController();
   TextEditingController descriptionTextController = TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
@@ -338,7 +346,7 @@ class CreateEditCommunityViewFormState
                           // ],
                           onSaved: (value) {
                             enteredName =
-                               // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
+                                // value.replaceAll("[^a-zA-Z0-9_ ]*", "").trim();
                                 value.trim();
                           },
                           // onSaved: (value) => enteredName = value,
@@ -515,12 +523,19 @@ class CreateEditCommunityViewFormState
                             headingText(S.of(context).protected_timebank),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
-                              child: infoButton(
-                                context: context,
-                                key: GlobalKey(),
+                              child: getInfoWidget(
+                                infoKey: infoWindowKeys[0],
                                 type: InfoType.PROTECTED_TIMEBANK,
                               ),
                             ),
+                            // Padding(
+                            //   padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                            //   child: infoButton(
+                            //     context: context,
+                            //     key: GlobalKey(),
+                            //     type: InfoType.PROTECTED_TIMEBANK,
+                            //   ),
+                            // ),
                             Column(
                               children: <Widget>[
                                 Divider(),
@@ -599,13 +614,21 @@ class CreateEditCommunityViewFormState
                                       .timebank_select_tax_percentage),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(2, 15, 0, 0),
-                                    child: infoButton(
-                                      context: context,
-                                      key: GlobalKey(),
+                                        const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                    child: getInfoWidget(
+                                      infoKey: infoWindowKeys[1],
                                       type: InfoType.TAX_CONFIGURATION,
                                     ),
                                   ),
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                                  //   child: infoButton(
+                                  //     context: context,
+                                  //     key: GlobalKey(),
+                                  //     type: InfoType.TAX_CONFIGURATION,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                         widget.isCreateTimebank
@@ -654,15 +677,46 @@ class CreateEditCommunityViewFormState
                                 children: <Widget>[
                                   headingText(
                                       S.of(context).negative_threshold_title),
+                                  SizedBox(width: 8),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(2, 15, 0, 0),
-                                    child: infoButton(
-                                      context: context,
-                                      key: GlobalKey(),
+                                        const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                    child: getInfoWidget(
+                                      infoKey: infoWindowKeys[2],
                                       type: InfoType.NEGATIVE_CREDITS,
                                     ),
                                   ),
+
+                                  // infoButton(
+                                  //   context: context,
+                                  //   key: GlobalKey(),
+                                  //   type: InfoType.NEGATIVE_CREDITS,
+                                  // ),
+                                  // IconButton(
+                                  //   key: infoWindowKeys[0],
+                                  //   icon: Image.asset(
+                                  //     'lib/assets/images/info.png',
+                                  //     color: FlavorConfig
+                                  //         .values.theme.primaryColor,
+                                  //     height: 16,
+                                  //     width: 16,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     RenderBox renderBox = infoWindowKeys[0]
+                                  //         .currentContext
+                                  //         .findRenderObject();
+                                  //     Offset buttonPosition =
+                                  //         renderBox.localToGlobal(Offset.zero);
+                                  //     logger.i(
+                                  //         "====" + buttonPosition.toString());
+                                  //     showDialogFromInfoWindow(
+                                  //       context: context,
+                                  //       key: infoWindowKeys[0],
+                                  //       type: InfoType.NEGATIVE_CREDITS,
+                                  //       buttonPosition: buttonPosition,
+                                  //     );
+                                  //   },
+                                  // ),
                                 ],
                               ),
                               Slider(
@@ -1086,6 +1140,31 @@ class CreateEditCommunityViewFormState
       child: colums,
     );
     return contain;
+  }
+
+  getInfoWidget({
+    GlobalKey infoKey,
+    InfoType type,
+  }) {
+    return IconButton(
+      key: infoKey,
+      icon: Image.asset(
+        'lib/assets/images/info.png',
+        color: FlavorConfig.values.theme.primaryColor,
+        height: 16,
+        width: 16,
+      ),
+      onPressed: () {
+        RenderBox renderBox = infoKey.currentContext.findRenderObject();
+        Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
+        showDialogFromInfoWindow(
+          context: context,
+          key: infoKey,
+          type: type,
+          buttonPosition: buttonPosition,
+        );
+      },
+    );
   }
 
   BuildContext dialogContext;
