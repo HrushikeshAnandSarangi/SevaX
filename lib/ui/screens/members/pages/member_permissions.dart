@@ -25,6 +25,7 @@ class MemberPermissions extends StatefulWidget {
 class _MemberPermissionsState extends State<MemberPermissions> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String selectedRole = '';
+  String selectedRoleId = '';
   List<String> roles = [];
   List<String> all_permissions = [];
   bool isNotGroup = false;
@@ -50,6 +51,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       roles = [S.of(context).super_admin, S.of(context).admin, 'Member'];
 
       selectedRole = S.of(context).super_admin;
+      selectedRoleId = 'super_admin';
       if (widget.timebankModel.timebankConfigurations != null &&
           widget.timebankModel.timebankConfigurations.superAdmin != null) {
         all_permissions =
@@ -66,7 +68,11 @@ class _MemberPermissionsState extends State<MemberPermissions> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            updateConfigurations().then(
+              (value) => Navigator.of(context).pop(),
+            );
+          },
         ),
         centerTitle: true,
         title: Text(
@@ -76,17 +82,6 @@ class _MemberPermissionsState extends State<MemberPermissions> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.done,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                updateConfigurations();
-                Navigator.of(context).pop();
-              }),
-        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -195,13 +190,17 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               if (value == 'Member') {
                 all_permissions =
                     widget.timebankModel.timebankConfigurations.member ?? [];
+
+                selectedRoleId = 'member';
               } else if (value == S.of(context).admin) {
                 all_permissions =
                     widget.timebankModel.timebankConfigurations.admin ?? [];
+                selectedRoleId = 'admin';
               } else {
                 all_permissions =
                     widget.timebankModel.timebankConfigurations.superAdmin ??
                         [];
+                selectedRoleId = 'super_admin';
               }
               setState(() {});
             },
@@ -371,12 +370,12 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   }
 
   Future<void> updateConfigurations() async {
-    if (selectedRole == S.of(context).super_admin &&
+    if (selectedRoleId == 'super_admin' &&
         widget.timebankModel.timebankConfigurations.superAdmin.length !=
             all_permissions) {
       updateQuery();
       widget.timebankModel.timebankConfigurations.superAdmin = all_permissions;
-    } else if (selectedRole == S.of(context).admin &&
+    } else if (selectedRoleId == 'admin' &&
         widget.timebankModel.timebankConfigurations.admin.length !=
             all_permissions) {
       updateQuery();
@@ -396,7 +395,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         .document(widget.timebankModel.id)
         .updateData({
       'timebankConfigurations.' +
-          selectedRole.toLowerCase().replaceAll(' ', '_'): all_permissions
+          selectedRoleId.toLowerCase().replaceAll(' ', '_'): all_permissions
     });
   }
 }
