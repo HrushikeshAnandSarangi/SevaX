@@ -235,12 +235,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
         FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     requestModel = RequestModel(
-      requestType: RequestType.TIME,
-      cashModel: CashModel(
-          paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
-      goodsDonationDetails: GoodsDonationDetails(),
-      communityId: widget.loggedInUser.currentCommunity,
-    );
+        requestType: RequestType.TIME,
+        cashModel: CashModel(
+            paymentType: RequestPaymentType.ZELLEPAY,
+            achdetails: new ACHModel()),
+        goodsDonationDetails: GoodsDonationDetails(),
+        communityId: widget.loggedInUser.currentCommunity,
+        timebankId: widget.timebankId);
     this.requestModel.virtualRequest = false;
     this.requestModel.public = false;
 
@@ -487,8 +488,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               },
                             ),
 
-
-
                             SizedBox(height: 20),
                             requestModel.requestType == RequestType.BORROW
                                 ? Row(
@@ -499,7 +498,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           style: TextStyle(fontSize: 15),
                                         ),
                                         onTap: () {
-                                          
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -507,8 +505,17 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                 builder: (context) =>
                                                     RequestOfferAgreementForm(
                                                       isRequest: true,
-                                                      roomOrTool: roomOrTool == 1 ? 'TOOL' : 'ROOM',
-                                                      requestModel: requestModel,
+                                                      roomOrTool:
+                                                          roomOrTool == 1
+                                                              ? 'TOOL'
+                                                              : 'ROOM',
+                                                      requestModel:
+                                                          requestModel,
+                                                      communityId: requestModel
+                                                          .communityId,
+                                                      timebankId:
+                                                          widget.timebankId,
+
                                                       // onTap: () {
                                                       //   //if anything is to be done after ontap
                                                       // },
@@ -520,8 +527,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   )
                                 : Container(),
                             SizedBox(height: 14),
-
-
 
                             requestModel.requestType == RequestType.BORROW
                                 ? Column(

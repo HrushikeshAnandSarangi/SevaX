@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/search_via_zipcode.dart';
@@ -97,11 +98,10 @@ class SearchManager {
     List<CommunityModel> communityList = [];
     try {
       communityList =
-      await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
+          await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
     } on NoNearByCommunitesFoundException catch (e) {
       Crashlytics.instance.log('NoNearByCommunitesViaZIPFoundException');
     }
-
 
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
@@ -111,7 +111,6 @@ class SearchManager {
       if (community.private == false) {
         communityList.add(community);
       }
-
     });
     yield communityList;
   }
@@ -188,53 +187,87 @@ class SearchManager {
     yield templatesList;
   }
 
+  //searcch borrow agreement template
+  static Stream<List<BorrowAgreementTemplateModel>>
+      searchBorrowAgreementTemplate({
+    @required queryString,
+  }) async* {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": queryString,
+                "fields": ["templateName"],
+                "type": "phrase_prefix"
+              }
+            }
+          ]
+        }
+      },
+      "sort": {
+        "name.keyword": {"order": "asc"}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    log('hit ${hitList}');
 
-  // static Stream<List<ProjectTemplateModel>> searchBorrowAgreementTemplate({
-  //   @required queryString,
-  // }) async* {
-  //   String url =
-  //       '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
-  //   dynamic body = json.encode({
-  //     "query": {
-  //       "bool": {
-  //         "must": [
-  //           {
-  //             "multi_match": {
-  //               "query": queryString,
-  //               "fields": ["templateName"],
-  //               "type": "phrase_prefix"
-  //             }
-  //           }
-  //         ]
-  //       }
-  //     },
-  //     "sort": {
-  //       "name.keyword": {"order": "asc"}
-  //     }
-  //   });
-  //   List<Map<String, dynamic>> hitList =
-  //       await _makeElasticSearchPostRequest(url, body);
-  //   List<ProjectTemplateModel> templatesList = [];
-  //   hitList.forEach((map) {
-  //     Map<String, dynamic> sourceMap = map['_source'];
+    List<BorrowAgreementTemplateModel> templatesList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      log('source ${sourceMap}');
+      var template = BorrowAgreementTemplateModel.fromMap(sourceMap);
+      log('temp ${template}');
 
-  //     var template = ProjectTemplateModel.fromMap(sourceMap);
-  //     if (template.softDelete == false) {
-  //       templatesList.add(template);
-  //     }
-
-  //     //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
-  //     //communityList.add(communityModel);
-  //   });
-  //   yield templatesList;
-  // }
-  
+      if (template.softDelete == false) {
+        templatesList.add(template);
+      }
+    });
+    yield templatesList;
+  }
 
   static Future<bool> searchTemplateForDuplicate(
       {@required String queryString}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
-//    '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
+
+    dynamic body = json.encode({
+      "query": {
+        "match": {"templateName": queryString}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+//    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    bool templateFound = false;
+    for (var map in hitList) {
+      if (map['_source']['templateName'].toLowerCase() ==
+          queryString.toLowerCase()) {
+        templateFound = true;
+
+        break;
+      }
+    }
+
+    return templateFound;
+//    int count =
+//        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+//    if (count > 0) {
+//      return true;
+//    } else {
+//      return false;
+//    }
+  }
+
+  static Future<bool> searchBorrowAgrrementTemplateForDuplicate(
+      {@required String queryString}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+
     dynamic body = json.encode({
       "query": {
         "match": {"templateName": queryString}

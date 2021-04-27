@@ -9,21 +9,17 @@ class BorrowAgreementTemplateModel extends DataModel {
   String templateName;
   int createdAt;
   bool softDelete;
-
   String documentName;
   String otherDetails;
-
   String specificConditions;
   String itemDescription;
   String additionalConditions;
-
   bool isFixedTerm;
   bool isQuietHoursAllowed;
   bool isPetsAllowed;
   int maximumOccupants;
   int securityDeposit;
   String contactDetails;
-
   String roomOrTool;
   bool isRequest;
 
@@ -76,9 +72,12 @@ class BorrowAgreementTemplateModel extends DataModel {
             : json["isQuietHoursAllowed"],
         isPetsAllowed:
             json["isPetsAllowed"] == null ? false : json["isPetsAllowed"],
-        maximumOccupants: json["maximumOccupants"] == null ? null : json["maximumOccupants"],
-        securityDeposit: json["securityDeposit"] == null ? null : json["securityDeposit"],
-        contactDetails: json["contactDetails"] == null ? null : json["contactDetails"],
+        maximumOccupants:
+            json["maximumOccupants"] == null ? null : json["maximumOccupants"],
+        securityDeposit:
+            json["securityDeposit"] == null ? null : json["securityDeposit"],
+        contactDetails:
+            json["contactDetails"] == null ? null : json["contactDetails"],
         roomOrTool: json["roomOrTool"] == null ? null : json["roomOrTool"],
         isRequest: json["isRequest"] == null ? false : json["isRequest"],
       );

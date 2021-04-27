@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
+import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
@@ -1539,6 +1540,15 @@ Future<void> createProjectTemplate(
       .collection('project_templates')
       .document(projectTemplateModel.id)
       .setData(projectTemplateModel.toMap());
+}
+
+Future<void> createBorrowAgreementTemplate(
+    {@required
+        BorrowAgreementTemplateModel borrowAgreementTemplateModel}) async {
+  return await Firestore.instance
+      .collection('borrowAgreement_templates')
+      .document(borrowAgreementTemplateModel.id)
+      .setData(borrowAgreementTemplateModel.toMap());
 }
 
 Future<void> createProject({@required ProjectModel projectModel}) async {
