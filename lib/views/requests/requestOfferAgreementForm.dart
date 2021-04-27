@@ -28,7 +28,8 @@ class RequestOfferAgreementForm extends StatefulWidget {
   final bool isRequest; //false means offer
   final String roomOrTool; //'ROOM' or 'TOOL' (for request) (for offer same?)
   final RequestModel requestModel;
-  void Function(String borrowAgreementLinkFinal, String documentName) onPdfCreated;
+  void Function(String borrowAgreementLinkFinal, String documentName)
+      onPdfCreated;
 
   RequestOfferAgreementForm({
     @required this.isRequest,
@@ -238,9 +239,8 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                             widget.isRequest,
                                             widget.roomOrTool);
 
-                                //2.3 - update request document in DB with agreementPDF link
-
-                                //widget.onTap?.call(borrowAgreementLinkFinal);
+                                widget.onPdfCreated(
+                                    borrowAgreementLinkFinal, documentName);
 
                                 //Step 4
                                 //Navigator.of(context).pop;
@@ -897,7 +897,8 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                                 widget.isRequest,
                                                 widget.roomOrTool);
 
-                                    widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
+                                    widget.onPdfCreated(
+                                        borrowAgreementLinkFinal, documentName);
 
                                     //Step 4
                                     //Navigator.of(context).pop;
