@@ -188,6 +188,48 @@ class SearchManager {
     yield templatesList;
   }
 
+
+  // static Stream<List<ProjectTemplateModel>> searchBorrowAgreementTemplate({
+  //   @required queryString,
+  // }) async* {
+  //   String url =
+  //       '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
+  //   dynamic body = json.encode({
+  //     "query": {
+  //       "bool": {
+  //         "must": [
+  //           {
+  //             "multi_match": {
+  //               "query": queryString,
+  //               "fields": ["templateName"],
+  //               "type": "phrase_prefix"
+  //             }
+  //           }
+  //         ]
+  //       }
+  //     },
+  //     "sort": {
+  //       "name.keyword": {"order": "asc"}
+  //     }
+  //   });
+  //   List<Map<String, dynamic>> hitList =
+  //       await _makeElasticSearchPostRequest(url, body);
+  //   List<ProjectTemplateModel> templatesList = [];
+  //   hitList.forEach((map) {
+  //     Map<String, dynamic> sourceMap = map['_source'];
+
+  //     var template = ProjectTemplateModel.fromMap(sourceMap);
+  //     if (template.softDelete == false) {
+  //       templatesList.add(template);
+  //     }
+
+  //     //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
+  //     //communityList.add(communityModel);
+  //   });
+  //   yield templatesList;
+  // }
+  
+
   static Future<bool> searchTemplateForDuplicate(
       {@required String queryString}) async {
     String url =

@@ -48,6 +48,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
+import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -230,8 +231,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     WidgetsBinding.instance.addObserver(this);
     _selectedTimebankId = widget.timebankId;
 
-
-    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
+    getProjectsByFuture =
+        FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     requestModel = RequestModel(
       requestType: RequestType.TIME,
@@ -241,7 +242,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityId: widget.loggedInUser.currentCommunity,
     );
     this.requestModel.virtualRequest = false;
-    this.requestModel.public=false;
+    this.requestModel.public = false;
 
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -397,7 +398,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return FutureBuilder<TimebankModel>(
         future: getTimebankAdminStatus,
         builder: (context, snapshot) {
-          if(snapshot.connectionState==ConnectionState.waiting){
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
           return FutureBuilder<List<ProjectModel>>(
@@ -485,6 +486,42 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 requestModel.title = value;
                               },
                             ),
+
+
+
+                            SizedBox(height: 20),
+                            requestModel.requestType == RequestType.BORROW
+                                ? Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: Text(
+                                          'Go to agreement page',
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                        onTap: () {
+                                          
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    RequestOfferAgreementForm(
+                                                      isRequest: true,
+                                                      roomOrTool: roomOrTool == 1 ? 'TOOL' : 'ROOM',
+                                                      requestModel: requestModel,
+                                                      // onTap: () {
+                                                      //   //if anything is to be done after ontap
+                                                      // },
+                                                    )),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
+                            SizedBox(height: 14),
+
+
 
                             requestModel.requestType == RequestType.BORROW
                                 ? Column(
@@ -894,18 +931,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
                                 : requestModel.requestType == RequestType.CASH
-                                   ? CashRequest(
+                                    ? CashRequest(snapshot, projectModelList)
+                                    : requestModel.requestType ==
+                                            RequestType.BORROW
+                                        ? BorrowRequest(
                                             snapshot, projectModelList)
-                                        : requestModel.requestType ==
-                                                RequestType.BORROW
-                                            ? BorrowRequest(
-                                                snapshot, projectModelList)
-                                            : GoodsRequest(
-                                                snapshot, projectModelList),
+                                        : GoodsRequest(
+                                            snapshot, projectModelList),
 
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
                               child: OpenScopeCheckBox(
                                   infoType: InfoType.VirtualRequest,
                                   isChecked: requestModel.virtualRequest,
@@ -927,7 +962,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   }),
                             ),
                             HideWidget(
-                              hide:  !isPulicCheckboxVisible ||
+                              hide: !isPulicCheckboxVisible ||
                                   requestModel.requestMode ==
                                       RequestMode.PERSONAL_REQUEST ||
                                   widget.timebankId ==
@@ -1693,8 +1728,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       //By default instructor for One To Many Requests is the creator
                       //instructorAdded = false;
                       //requestModel.selectedInstructor = null;
-                      AppConfig.helpIconContextMember =
-                          HelpContextMemberType.time_requests;    //need to make for Borrow requests
+                      AppConfig.helpIconContextMember = HelpContextMemberType
+                          .time_requests; //need to make for Borrow requests
                       setState(() => {});
                     },
                   ),
@@ -2068,7 +2103,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           categoryWidget(),
           SizedBox(height: 20),
 
-         // skillsWidget(),
+          // skillsWidget(),
           SizedBox(height: 20),
 
           // Choose Category and Sub Category
@@ -2516,7 +2551,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     requestModel.autoGenerated = false;
 
     requestModel.isRecurring = RepeatWidgetState.isRecurring;
-   // requestModel.skills = _selectedSkillsMap;
+    // requestModel.skills = _selectedSkillsMap;
     if (requestModel.requestType == RequestType.CASH ||
         requestModel.requestType == RequestType.GOODS) {
       requestModel.isRecurring = false;

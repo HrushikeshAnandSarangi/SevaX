@@ -205,6 +205,7 @@ class RequestModel extends DataModel {
   bool virtualRequest;
   Map<dynamic, dynamic> participantDetails = {};
   String creatorName = '';
+  String borrowAgreementLink;
 
   RequestModel({
     this.id,
@@ -257,6 +258,7 @@ class RequestModel extends DataModel {
     this.timebanksPosted,
     this.participantDetails,
     this.creatorName,
+    this.borrowAgreementLink,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -309,6 +311,12 @@ class RequestModel extends DataModel {
       this.creatorName = map['creatorName'];
     } else {
       this.creatorName = "";
+    }
+
+    if (map.containsKey('borrowAgreementLink')) {
+      this.borrowAgreementLink = map['borrowAgreementLink'];
+    } else {
+      this.borrowAgreementLink = "";
     }
 
     if (map.containsKey('requestMode')) {
@@ -582,6 +590,12 @@ class RequestModel extends DataModel {
       this.creatorName = "";
     }
 
+    if (map.containsKey('borrowAgreementLink')) {
+      this.borrowAgreementLink = map['borrowAgreementLink'];
+    } else {
+      this.borrowAgreementLink = "";
+    }
+
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -827,6 +841,12 @@ class RequestModel extends DataModel {
       object['creatorName'] = this.creatorName;
     } else {
       object['creatorName'] = "";
+    }
+
+    if (this.borrowAgreementLink != null && this.borrowAgreementLink.isNotEmpty) {
+      object['borrowAgreementLink'] = this.borrowAgreementLink;
+    } else {
+      object['borrowAgreementLink'] = "";
     }
 
     if (this.title != null && this.title.isNotEmpty) {

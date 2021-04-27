@@ -287,13 +287,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       : Container(),
                   requestDescriptionComponent,
                   SizedBox(height: 20),
-                  (widget.requestItem.requestType ==
-                              RequestType.BORROW &&
+                  (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.roomOrTool == 'ROOM' &&
                           (SevaCore.of(context).loggedInUser.email ==
-                              widget.requestItem.approvedUsers[0] ||
-                              SevaCore.of(context).loggedInUser.email ==
-                              widget.requestItem.email))
+                                  widget.requestItem.email ||
+                              widget.requestItem.approvedUsers.contains(
+                                  SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestDetailsComponent
                       : Container(),
                   SizedBox(height: 10),
@@ -1528,7 +1527,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-
   Widget addressComponentBorrowRequestForApproved(String address) {
     String locationSubitleFinal = '';
     String locationTitle = '';
@@ -1659,18 +1657,27 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 Container(
                   color: Colors.grey[300],
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 7.0, right: 7, top: 5, bottom: 5),
-                    child: Text('Your request has been approved by ' +
-                      snapshot.data.documents[0]['acceptorName'],
-                      style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w600),
+                    padding: const EdgeInsets.only(
+                        left: 7.0, right: 7, top: 5, bottom: 5),
+                    child: Text(
+                      'Your request has been approved by ' +
+                          snapshot.data.documents[0]['acceptorName'],
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
                 SizedBox(height: 5),
-                addressComponentBorrowRequestForApproved(snapshot.data.documents[0]['selectedAddress']),
+                addressComponentBorrowRequestForApproved(
+                    snapshot.data.documents[0]['selectedAddress']),
                 Text(
                   'Instruction for the stay',
-                   style: TextStyle(fontSize: 15, color: Colors.grey[800], fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 5),
                 Text(
