@@ -465,10 +465,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             RequestType.CASH
                                         ? "Ex: Fundraiser for women’s shelter..."
                                         : requestModel.requestType ==
-                                                    RequestType.BORROW
-                                                ? S.of(context)
-                                                    .request_title_hint
-                                                : "Ex: Non-perishable goods for Food Bank...",
+                                                RequestType.BORROW
+                                            ? S.of(context).request_title_hint
+                                            : "Ex: Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -491,7 +490,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               },
                             ),
 
-                           //Below is for testing purpose
+                            //Below is for testing purpose
 
                             // SizedBox(height: 20),
                             // requestModel.requestType == RequestType.BORROW
@@ -511,21 +510,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             //                         RequestOfferAgreementForm(
                             //                           isRequest: true,
                             //                          roomOrTool:
-                                                          roomOrTool == 1
-                                                              ? 'TOOL'
-                                                              : 'ROOM',
-                            //                          requestModel:
-                                                          requestModel,
-                                                      communityId: requestModel
-                                                          .communityId,
-                                                      timebankId:
-                                                          widget.timebankId,
+                            //                               roomOrTool == 1
+                            //                                   ? 'TOOL'
+                            //                                   : 'ROOM',
+                            // //                          requestModel:
+                            //                               requestModel,
+                            //                           communityId: requestModel
+                            //                               .communityId,
+                            //                           timebankId:
+                            //                               widget.timebankId,
 
-                                                      // onPdfCreated: (pdfLink, documentNameFinal) {
+                            // onPdfCreated: (pdfLink, documentNameFinal) {
                             //                               borrowAgreementLinkFinal = pdfLink;
                             //                               documentName = documentNameFinal;
                             //                               requestModel.borrowAgreementLink = pdfLink;
-                                                          //// when request is created check if above value is stored in document
+                            //// when request is created check if above value is stored in document
                             //                               setState(() => {});
                             //                           },
                             //                         )),
@@ -616,7 +615,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     ],
                                   )
                                 : Container(),
-
 
                             SizedBox(height: 30),
                             OfferDurationWidget(
@@ -2480,9 +2478,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
     }
   }
 
-
   Future openPdfViewer(
-   String pdfURL, String documentName, BuildContext context) {
+      String pdfURL, String documentName, BuildContext context) {
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
