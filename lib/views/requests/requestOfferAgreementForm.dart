@@ -8,33 +8,22 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
-import 'package:sevaexchange/models/location_model.dart';
-import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
-import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
-import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class RequestOfferAgreementForm extends StatefulWidget {
   final bool isRequest; //false means offer
@@ -42,7 +31,8 @@ class RequestOfferAgreementForm extends StatefulWidget {
   final RequestModel requestModel;
   final String timebankId;
   final String communityId;
-  //final VoidCallback onTap;
+  void Function(String borrowAgreementLinkFinal, String documentName)
+      onPdfCreated;
 
   RequestOfferAgreementForm({
     @required this.isRequest,
@@ -50,7 +40,7 @@ class RequestOfferAgreementForm extends StatefulWidget {
     @required this.requestModel,
     @required this.timebankId,
     @required this.communityId,
-    //this.onTap,
+    @required this.onPdfCreated,
   });
 
   @override
@@ -67,7 +57,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   bool saveAsTemplate = false;
   String templateName = '';
   bool templateFound = false;
-
+String borrowAgreementLinkFinal = '';
   String documentName = '';
   String otherDetails = '';
   int value;
@@ -99,6 +89,24 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    //get agreement document templates
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          //_searchText = "";
+        });
+      } else {
+        setState(() {
+          // _searchText = s;
+        });
+      }
+    });
 
     searchTextController2
         .addListener(() => _textUpdates2.add(searchTextController2.text));
@@ -234,7 +242,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             onPressed: () async {
-                              //donation approved
+
                               if (_formKey.currentState.validate()) {
                                 //Step 1
                                 //if save as template option is true, store template data in
@@ -246,26 +254,24 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 //2.1 - Generate agreement pdf according to template (pending)
 
                                 //2.2 - Then store pdf in Storage and obtain download url
-                                //String uploadedDoc = await uploadDocument(widget.requestModel.id);
-                                //widget.requestModel.borrowAgreementLink = uploadedDoc;
 
-                                //2.3 - update request document in DB with agreementPDF link
 
-                                //Step 3
+                                borrowAgreementLinkFinal =
+                                    await BorrowAgreementPdf()
+                                        .borrowAgreementPdf(
+                                            context,
+                                            widget.requestModel,
+                                            documentName,
+                                            widget.isRequest,
+                                            widget.roomOrTool);
+
+      widget.onPdfCreated(
+                                    borrowAgreementLinkFinal, documentName);
+
+                                //Step 4
                                 //Navigator.of(context).pop;
 
-                                //  await storeAcceptorDataBorrowRequest(
-                                //       model: widget.requestModel,
-                                //       acceptorEmail:
-                                //           SevaCore.of(context).loggedInUser.email,
-                                //       doAndDonts: doAndDonts,
-                                //       selectedAddress: selectedAddress,
-                                //       location: location,
-                                //       acceptorName:
-                                //           SevaCore.of(context).loggedInUser.fullname,
-                                //     );
 
-                                //widget.onTap?.call();
 
                               }
                             },
@@ -371,10 +377,10 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                     } else {
                                       documentName = value;
                                       return null;
-                                    }
-                                  },
-                                ),
-                                SizedBox(height: 17),
+
+                                  }
+                                },
+      ),                          SizedBox(height: 17),
                                 Text(
                                   "Any specific condition(s)", //Label to be created
                                   style: TextStyle(
@@ -538,6 +544,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                   onChanged: (enteredValue) {
                                     documentName = enteredValue;
+                                    setState(() {});
                                   },
                                   decoration: InputDecoration(
                                     hintText: S.of(context).request_title_hint,
@@ -551,6 +558,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       return "Please enter document name"; //Label to be created
                                     } else {
                                       documentName = value;
+                                      setState(() {});
                                       return null;
                                     }
                                   },
@@ -572,6 +580,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
                                     isFixedTerm = value;
+                                    setState(() => {});
                                   },
                                 ),
                                 _optionRadioButtonRoomForm<bool>(
@@ -581,6 +590,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
                                     isFixedTerm = value;
+                                    setState(() => {});
                                   },
                                 ),
                                 Row(
@@ -588,7 +598,9 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                     Checkbox(
                                       value: isQuietHoursAllowed,
                                       onChanged: (Value) {
-                                        isQuietHoursAllowed = Value;
+                                        setState(() {
+                                          isQuietHoursAllowed = Value;
+                                        });
                                       },
                                     ),
                                     Text(
@@ -607,7 +619,9 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                     Checkbox(
                                       value: isPetsAllowed,
                                       onChanged: (Value) {
-                                        isPetsAllowed = Value;
+                                        setState(() {
+                                          isPetsAllowed = Value;
+                                        });
                                       },
                                     ),
                                     Text(
@@ -637,6 +651,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                   onChanged: (enteredValue) {
                                     maximumOccupants = int.parse(enteredValue);
+                                    setState(() {});
                                   },
                                   decoration: InputDecoration(
                                     hintText: 'Ex: 3', //Label to be created
@@ -650,6 +665,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   //     return "Ex: 3"; //Label to be created
                                   //   } else {
                                   //     maximumOccupants = int.parse(value);
+                                  //     setState(() {});
                                   //     return null;
                                   //   }
                                   // },
@@ -670,6 +686,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                   onChanged: (enteredValue) {
                                     securityDeposit = int.parse(enteredValue);
+                                    setState(() {});
                                   },
                                   decoration: InputDecoration(
                                     hintText: "Ex: \$300", //Label to be created
@@ -683,6 +700,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   //     return "Ex: 3"; //Label to be created
                                   //   } else {
                                   //     maximumOccupants = int.parse(value);
+                                  //     setState(() {});
                                   //     return null;
                                   //   }
                                   // },
@@ -703,6 +721,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                   onChanged: (enteredValue) {
                                     contactDetails = enteredValue;
+                                    setState(() {});
                                   },
                                   decoration: InputDecoration(
                                     hintText: S.of(context).request_title_hint,
@@ -716,6 +735,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   //     return "Please enter document name"; //Label to be created
                                   //   } else {
                                   //     documentName = value;
+                                  //     setState(() {});
                                   //     return null;
                                   //   }
                                   // },
@@ -736,6 +756,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                   onChanged: (enteredValue) {
                                     otherDetails = enteredValue;
+                                    setState(() {});
                                   },
                                   decoration: InputDecoration(
                                     hintMaxLines: 11,
@@ -752,6 +773,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   //     return "Please enter specific conditions"; //Label to be created
                                   //   } else {
                                   //     specificConditions = value;
+                                  //     setState(() {});
                                   //     return null;
                                   //   }
                                   // },
@@ -878,7 +900,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                     color: Colors.white, fontSize: 16),
                               ),
                               onPressed: () async {
-                                //donation approved
+
                                 if (_formKey.currentState.validate()) {
                                   if (saveAsTemplate) {
                                     borrowAgreementTemplateModel.documentName =
@@ -929,31 +951,31 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                                 borrowAgreementTemplateModel);
                                     Navigator.of(context).pop();
                                   }
-                                  // if (location == null) {
-                                  //   _key.currentState.showSnackBar(
-                                  //     SnackBar(
-                                  //       content: Text(S.of(context).location_not_added),
-                                  //     ),
-                                  //   );
-                                  // } else {
-                                  //   if (widget.requestModel.roomOrTool == 'ROOM') {
-                                  //  await storeAcceptorDataBorrowRequest(
-                                  //       model: widget.requestModel,
-                                  //       acceptorEmail:
-                                  //           SevaCore.of(context).loggedInUser.email,
-                                  //       doAndDonts: doAndDonts,
-                                  //       selectedAddress: selectedAddress,
-                                  //       location: location,
-                                  //       acceptorName:
-                                  //           SevaCore.of(context).loggedInUser.fullname,
-                                  //     );
-                                  //   }
+                                  // Step 1
+                                    //if save as template option is true, store template data in
+                                  //   collection 'borrowAgreement_templates'
 
-                                  //   //widget.onTap?.call();
-                                  // }
-                                }
-                              },
-                            ),
+                                  //       Step 2
+                                  //     2.1 - Generate agreement pdf according to template (pending)
+                                  //   2.2 - Then store pdf in Storage and obtain download url
+
+                                  borrowAgreementLinkFinal =
+                                    await BorrowAgreementPdf()
+                                  .borrowAgreementPdf(
+                                  context,
+                                  widget.requestModel,
+                                  documentName,
+                                  widget.isRequest,
+                                  widget.roomOrTool);
+
+                                  widget.onPdfCreated(
+                                  borrowAgreementLinkFinal, documentName);
+
+                                  //   Step 4
+                                  // Navigator.of(context).pop;
+
+                              }
+                            }),
                           ),
                         ],
                       ),
@@ -965,6 +987,28 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               ),
       ),
     );
+  }
+
+  Future openPdfViewer(String pdfURL, String documentName) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: true,
+    );
+    progressDialog.show();
+    createFileOfPdfUrl(pdfURL, documentName).then((f) {
+      progressDialog.hide();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PDFScreen(
+                  docName: documentName,
+                  pathPDF: f.path,
+                  isFromFeeds: false,
+                  isDownloadable: false,
+                )),
+      );
+    });
   }
 
   void showTermsPage() {
@@ -1326,30 +1370,6 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           );
         });
   }
-
-  // Future<String> uploadDocument(String requestId) async {
-
-  //   int timestamp = DateTime.now().millisecondsSinceEpoch;
-
-  //   String timestampString = timestamp.toString();
-
-  //   String name = requestId+ '_' + timestampString;
-
-  //   StorageReference ref = FirebaseStorage.instance.ref().child('borrow_agreement_docs').child(name);
-
-  //   StorageUploadTask uploadTask = ref.putFile(
-  //     File(_path), //change with generated pdf
-  //     StorageMetadata(
-  //       contentLanguage: 'en',
-  //       customMetadata: <String, String>{'activity': 'CV File'},
-  //     ),
-  //   );
-  //   String documentURL =
-  //       await (await uploadTask.onComplete).ref.getDownloadURL();
-
-  //   return documentURL;
-  // }
-
 }
 
 enum AgreementDocumentType {
