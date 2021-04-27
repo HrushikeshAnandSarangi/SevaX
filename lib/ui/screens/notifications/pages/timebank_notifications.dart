@@ -226,7 +226,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: true,
+                  isDissmissible: false,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
@@ -252,7 +252,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: true,
+                  isDissmissible: false,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
