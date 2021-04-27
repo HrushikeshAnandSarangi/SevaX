@@ -670,6 +670,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
   Widget get documentNameTextField {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Document Name*", //Label to be created
@@ -711,6 +712,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
   Widget get otherDetailsWidget {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Other details", //Label to be created

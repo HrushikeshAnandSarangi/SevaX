@@ -208,9 +208,6 @@ class SearchManager {
           ]
         }
       },
-      "sort": {
-        "name.keyword": {"order": "asc"}
-      }
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
