@@ -229,6 +229,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         user: user,
                         context: context,
                       );
+                    case NotificationType.OfferRequestInvite:
+                      return PersonalNotificationReducerForRequests
+                          .getInvitationForRequest(
+                        notification: notification,
+                        user: user,
+                        context: context,
+                      );
 
                     case NotificationType.RecurringOfferUpdated:
                       return PersonalNotificationReducerForRequests

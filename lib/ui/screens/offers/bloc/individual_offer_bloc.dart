@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -108,6 +109,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           softDelete: false,
           fullName: user.fullname,
           sevaUserId: user.sevaUserID,
+          photoUrlImage: user.photoURL ?? defaultUserImageURL,
           timebankId: timebankId,
           communityId: user.currentCommunity,
           allowedCalenderUsers: allowedCalenderEvent ? [user.email] : [],

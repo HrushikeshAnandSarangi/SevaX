@@ -258,6 +258,7 @@ class OfferModel extends DataModel {
     this.timebanksPosted,
     this.virtual,
     this.participantDetails,
+    this.photoUrlImage,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -400,6 +401,9 @@ class OfferModel extends DataModel {
     } else {
       this.public = false;
     }
+    if (map.containsKey('photoUrlImage')) {
+      this.photoUrlImage = map['photoUrlImage'];
+    }
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -536,6 +540,9 @@ class OfferModel extends DataModel {
     } else {
       this.public = false;
     }
+    if (map.containsKey('photoUrlImage')) {
+      this.photoUrlImage = map['photoUrlImage'];
+    }
   }
 
   @override
@@ -662,7 +669,9 @@ class OfferModel extends DataModel {
     } else {
       map['public'] = false;
     }
-
+    if (this.photoUrlImage != null) {
+      map['photoUrlImage'] = this.photoUrlImage;
+    }
     return map;
   }
 
@@ -690,6 +699,9 @@ class OfferModel extends DataModel {
     }
     if (this.fullName != null && this.fullName.isNotEmpty) {
       map['fullName'] = this.fullName;
+    }
+    if (this.photoUrlImage != null && this.photoUrlImage.isNotEmpty) {
+      map['photoUrlImage'] = this.photoUrlImage;
     }
 
     if (this.offerType != null) {

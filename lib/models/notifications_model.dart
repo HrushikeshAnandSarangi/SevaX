@@ -183,11 +183,14 @@ enum NotificationType {
   //Borrow Requests 2nd half of request flow Notifications
   NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK,
   NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
-	NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
+  NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
 
   //messaging room
   MEMBER_ADDED_TO_MESSAGE_ROOM,
-  MEMBER_REMOVED_FROM_MESSAGE_ROOM
+  MEMBER_REMOVED_FROM_MESSAGE_ROOM,
+
+  //offer request invite
+  OfferRequestInvite
 }
 
 //Check the method
@@ -198,9 +201,12 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
-  "NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK": NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK,
-  "NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT": NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
-  "NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK": NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
+  "NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK":
+      NotificationType.NOTIFICATION_TO_LENDER_RECEIVED_BACK_CHECK,
+  "NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT":
+      NotificationType.NOTIFICATION_TO_LENDER_COMPLETION_RECEIPT,
+  "NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK":
+      NotificationType.NOTIFICATION_TO_BORROWER_COMPLETION_FEEDBACK,
   "AddManualTimeRequest": NotificationType.AddManualTimeRequest,
   "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
   "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
@@ -283,6 +289,7 @@ Map<String, NotificationType> typeMapper = {
   "MANUAL_TIME_CLAIM_APPROVED": NotificationType.MANUAL_TIME_CLAIM_APPROVED,
   "APPROVE_SPONSORED_GROUP_REQUEST":
       NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
+  "OfferRequestInvite": NotificationType.OfferRequestInvite,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

@@ -228,7 +228,7 @@ class RequestCardWidget extends StatelessWidget {
 
     NotificationsModel notification = NotificationsModel(
       id: utils.Utils.getUuid(),
-      timebankId: FlavorConfig.values.timebankId,
+      timebankId: timebankModel.id,
       data: requestInvitationModel.toMap(),
       isRead: false,
       type: NotificationType.RequestInvite,

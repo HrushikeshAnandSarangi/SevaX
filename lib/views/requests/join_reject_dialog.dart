@@ -16,12 +16,14 @@ class JoinRejectDialogView extends StatefulWidget {
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
-
-  JoinRejectDialogView(
-      {this.requestInvitationModel,
-      this.timeBankId,
-      this.notificationId,
-      this.userModel});
+  bool isFromOfferRequest;
+  JoinRejectDialogView({
+    this.requestInvitationModel,
+    this.timeBankId,
+    this.notificationId,
+    this.userModel,
+    this.isFromOfferRequest = false,
+  });
 
   @override
   _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState();

@@ -295,7 +295,7 @@ class OfferInvitationManager {
   }) {
     return NotificationsModel(
       id: utils.Utils.getUuid(),
-      timebankId: FlavorConfig.values.timebankId,
+      timebankId: timebankModel.id,
       data: RequestInvitationModel(
         requestModel: requestModel,
         timebankModel: timebankModel,

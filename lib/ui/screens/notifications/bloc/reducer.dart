@@ -487,6 +487,21 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
+  static Widget getOfferRequestInvitation({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+  }) {
+    RequestInvitationModel requestInvitationModel =
+        RequestInvitationModel.fromMap(notification.data);
+    return _getNotificationCardForOfferRequestInvitationRequest(
+      notification: notification,
+      user: user,
+      context: context,
+      requestInvitationModel: requestInvitationModel,
+    );
+  }
+
   static Widget getInvitationForRequest({
     NotificationsModel notification,
     UserModel user,
@@ -779,6 +794,48 @@ class PersonalNotificationReducerForRequests {
                 timeBankId: notification.timebankId,
                 notificationId: notification.id,
                 userModel: user,
+              );
+            },
+          );
+        }
+      },
+      timestamp: notification.timestamp,
+    );
+  }
+
+  static Widget _getNotificationCardForOfferRequestInvitationRequest({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+    RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel.name,
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      subTitle:
+          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+      title: S.of(context).notifications_join_request,
+      onPressed: () {
+        if (SevaCore.of(context).loggedInUser.calendarId == null) {
+          _settingModalBottomSheet(context, requestInvitationModel,
+              notification.timebankId, notification.id, user);
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return JoinRejectDialogView(
+                requestInvitationModel: requestInvitationModel,
+                timeBankId: notification.timebankId,
+                notificationId: notification.id,
+                userModel: user,
+                isFromOfferRequest: true,
               );
             },
           );

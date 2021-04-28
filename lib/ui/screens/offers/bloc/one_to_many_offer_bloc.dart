@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -96,6 +97,7 @@ class OneToManyOfferBloc extends BlocBase {
           sevaUserId: user.sevaUserID,
           timebankId: timebankId,
           communityId: user.currentCommunity,
+          photoUrlImage: user.photoURL ?? defaultUserImageURL,
           creatorAllowedCalender: allowedCalenderEvent,
           allowedCalenderUsers: allowedCalenderEvent ? [user.email] : [],
           selectedAdrress:
