@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -294,6 +295,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               widget.requestItem.approvedUsers.contains(
                                   SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestDetailsComponent
+                      : Container(),
+                  SizedBox(height: 20),
+                  (widget.requestItem.requestType == RequestType.BORROW &&
+                          widget.requestItem.hasBorrowAgreement &&
+                          (SevaCore.of(context).loggedInUser.email ==
+                                  widget.requestItem.email ||
+                              widget.requestItem.approvedUsers.contains(
+                                  SevaCore.of(context).loggedInUser.email)))
+                      ? approvedBorrowRequestViewAgreementComponent
                       : Container(),
                   SizedBox(height: 10),
                 ],
@@ -626,7 +636,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for goods'; //Label to be created
+            : 'Borrow Request for item'; //Label to be created
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -1688,6 +1698,39 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             );
           })
     ]);
+  }
+
+  Widget get approvedBorrowRequestViewAgreementComponent {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 5),
+        GestureDetector(
+          child: Row(
+            children: [
+              Text(
+                  (widget.requestItem.borrowAgreementLink == null ||
+                          widget.requestItem.borrowAgreementLink == '')
+                      ? 'Request agreement not available'
+                      : 'Click to view request agreement',
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600)), //Label to be created
+            ],
+          ),
+          onTap: () async {
+            if (widget.requestItem.borrowAgreementLink == null ||
+                widget.requestItem.borrowAgreementLink == '') {
+              return null;
+            } else {
+              await openPdfViewer(widget.requestItem.borrowAgreementLink,
+                  'Request Agreement Document', context);
+            }
+          },
+        ),
+      ],
+    );
   }
 
   Widget get getCashDetailsForCashDonations {

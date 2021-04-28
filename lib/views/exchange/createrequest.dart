@@ -553,15 +553,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                 : 'No Agreement Selected',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
+                                                color: documentName != ''
+                                                    ? Theme.of(context)
+                                                        .primaryColor
+                                                    : Colors.grey)),
                                       ],
                                     ),
                                     onTap: () async {
-                                      await openPdfViewer(
-                                          borrowAgreementLinkFinal,
-                                          'test document',
-                                          context);
+                                      if (documentName != '') {
+                                        await openPdfViewer(
+                                            borrowAgreementLinkFinal,
+                                            'test document',
+                                            context);
+                                      } else {
+                                        return null;
+                                      }
                                     },
                                   )
                                 : Container(),
