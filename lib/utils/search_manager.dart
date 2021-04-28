@@ -211,6 +211,7 @@ class SearchManager {
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
+
     log('hit ${hitList}');
 
     List<BorrowAgreementTemplateModel> templatesList = [];

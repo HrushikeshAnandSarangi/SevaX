@@ -843,7 +843,8 @@ class RequestModel extends DataModel {
       object['creatorName'] = "";
     }
 
-    if (this.borrowAgreementLink != null && this.borrowAgreementLink.isNotEmpty) {
+    if (this.borrowAgreementLink != null &&
+        this.borrowAgreementLink.isNotEmpty) {
       object['borrowAgreementLink'] = this.borrowAgreementLink;
     } else {
       object['borrowAgreementLink'] = "";
