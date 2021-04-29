@@ -301,17 +301,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RequestDescriptionData(S.of(context).request_description_hint),
-          SizedBox(height: 20),
-          Text(
-            S.of(context).max_credits,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa'
-                  '',
-              color: Colors.black,
-            ),
-          ),
           SizedBox(height: 15),
           Center(
             child: LocationPickerWidget(
@@ -507,6 +496,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       // if (SevaCore.of(context).loggedInUser.calendarId != null) {
       //   // calendar  integrated!
       //   if (communityModel.payment['planId'] !=
+
       //       SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
       //     List<String> acceptorList = [widget.offer.email, requestModel.email];
       //     requestModel.all
