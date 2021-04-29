@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -608,21 +609,26 @@ class PersonalNotificationReducerForRequests {
     RequestModel model = RequestModel.fromMap(notification.data);
 
     return FutureBuilder<RequestModel>(
-      future: RequestRepository.getRequestFutureById(model.id),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Container();
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        return RequestAcceptedWidget(
-          model: snapshot.data,
-          userId: notification.senderUserId,
-          notificationId: notification.id,
-        );
-      },
-    );
+        future: RequestRepository.getRequestFutureById(model.id),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Container();
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          }
+          log('request type: ' + model.requestType.toString());
+          if (model.requestType == RequestType.BORROW) {
+            return Container();
+            //add page here for creator/borrower accepting lender after viewing agreement
+          } else {
+            return RequestAcceptedWidget(
+              model: snapshot.data,
+              userId: notification.senderUserId,
+              notificationId: notification.id,
+            );
+          }
+        });
   }
 
   static Widget getNotificationForRecurringOffer({

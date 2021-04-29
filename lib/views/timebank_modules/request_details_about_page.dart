@@ -299,6 +299,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 20),
                   (widget.requestItem.requestType == RequestType.BORROW &&
                           widget.requestItem.hasBorrowAgreement &&
+                          widget.requestItem.approvedUsers.length > 0 &&
                           (SevaCore.of(context).loggedInUser.email ==
                                   widget.requestItem.email ||
                               widget.requestItem.approvedUsers.contains(

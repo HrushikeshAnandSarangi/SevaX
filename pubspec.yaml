@@ -93,6 +93,7 @@ dependencies:
   url_launcher: 5.0.2
   usage: ^3.4.1
   webview_flutter: ^0.3.22+1
+  syncfusion_flutter_pdfviewer: ^18.4.49-beta
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

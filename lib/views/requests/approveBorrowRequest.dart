@@ -1,22 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
-import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -182,7 +173,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             //     }
             //   },
             // ),
-            
+
             requestAgreementFormComponent,
 
             SizedBox(height: 20),
@@ -281,6 +272,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                     borrowRequestSetHasCreatedAgreement(
                         requestModel: widget.requestModel);
                   } else {
+                    await storeAcceptorDataBorrowRequest(
+                      model: widget.requestModel,
+                      acceptorEmail: SevaCore.of(context).loggedInUser.email,
+                      doAndDonts: doAndDonts,
+                      selectedAddress: selectedAddress,
+                      location: location,
+                      acceptorName: SevaCore.of(context).loggedInUser.fullname,
+                    );
                     borrowRequestSetHasCreatedAgreement(
                         requestModel: widget.requestModel);
                   }

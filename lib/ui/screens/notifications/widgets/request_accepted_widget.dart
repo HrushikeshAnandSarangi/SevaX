@@ -157,7 +157,6 @@ class RequestAcceptedWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           if (requestModel.requestType == RequestType.BORROW) {
-                            log('ONE');
                             approveMemberForBorrowRequest(
                               model: requestModel,
                               notificationId: notificationId,
@@ -166,6 +165,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                                   .loggedInUser
                                   .currentCommunity,
                             );
+                            log('approved member for borrow request');
                           } else {
                             approveMemberForVolunteerRequest(
                               model: requestModel,
