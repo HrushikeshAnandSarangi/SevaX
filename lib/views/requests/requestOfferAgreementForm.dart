@@ -833,12 +833,10 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
-
-                if (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable) {
-                  
+                if (agreementDocumentType ==
+                    AgreementDocumentType.NO_AGREEMENT.readable) {
                   widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
                   Navigator.of(context).pop();
-
                 } else {
                   if (_formKey.currentState.validate()) {
                     if (saveAsTemplate) {
