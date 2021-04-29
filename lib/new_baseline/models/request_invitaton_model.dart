@@ -30,6 +30,8 @@ class RequestInvitationModel extends DataModel {
     this.timebankModel = TimebankModel.fromMap(map['timebankModel']);
     if (map.containsKey('offerModel')) {
       this.offerModel = OfferModel.fromMap(map['offerModel']);
+    } else {
+      this.offerModel = OfferModel();
     }
   }
 }

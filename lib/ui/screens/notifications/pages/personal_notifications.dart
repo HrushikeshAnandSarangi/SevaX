@@ -231,7 +231,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                     case NotificationType.OfferRequestInvite:
                       return PersonalNotificationReducerForRequests
-                          .getInvitationForRequest(
+                          .getOfferRequestInvitation(
                         notification: notification,
                         user: user,
                         context: context,

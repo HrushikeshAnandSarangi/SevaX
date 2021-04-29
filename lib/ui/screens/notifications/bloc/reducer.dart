@@ -820,8 +820,12 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-      title: S.of(context).notifications_join_request,
+          '${requestInvitationModel.requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+      title: S.of(context).join +
+          ' ' +
+          S.of(context).time_offer +
+          ' ' +
+          S.of(context).request,
       onPressed: () {
         if (SevaCore.of(context).loggedInUser.calendarId == null) {
           _settingModalBottomSheet(context, requestInvitationModel,

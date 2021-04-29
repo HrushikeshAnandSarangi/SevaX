@@ -357,48 +357,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
             ],
           ),
           SizedBox(height: 20),
-          Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            focusNode: focusNodes[2],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).unfocus();
-            },
-            onChanged: (v) {
-              updateExitWithConfirmationValue(context, 11, v);
-              if (v.isNotEmpty && int.parse(v) >= 0) {
-                requestModel.numberOfApprovals = int.parse(v);
-                setState(() {});
-              }
-            },
-            decoration: InputDecoration(
-              hintText: S.of(context).number_of_volunteers,
-              hintStyle: hintTextStyle,
-              // labelText: 'No. of volunteers',
-            ),
-            keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_volunteer_count;
-              } else if (int.parse(value) < 0) {
-                return S.of(context).validation_error_volunteer_count_negative;
-              } else if (int.parse(value) == 0) {
-                return S.of(context).validation_error_volunteer_count_zero;
-              } else {
-                requestModel.numberOfApprovals = int.parse(value);
-                setState(() {});
-                return null;
-              }
-            },
-          ),
-          SizedBox(height: 10),
           CommonUtils.TotalCredits(
             context: context,
             requestModel: requestModel,
@@ -513,14 +471,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.approvedUsers = [];
       requestModel.participantDetails = {};
 
-      requestModel.participantDetails[widget.offer.email] = AcceptorModel(
-        communityId: widget.offer.communityId,
-        communityName: '',
-        memberEmail: widget.offer.email,
-        memberName: widget.offer.fullName,
-        memberPhotoUrl: widget.offer.photoUrlImage ?? widget.userModel.photoURL,
-        timebankId: widget.offer.timebankId,
-      ).toMap();
+      // requestModel.participantDetails[widget.offer.email] = AcceptorModel(
+      //   communityId: widget.offer.communityId,
+      //   communityName: '',
+      //   memberEmail: widget.offer.email,
+      //   memberName: widget.offer.fullName,
+      //   memberPhotoUrl: widget.offer.photoUrlImage ?? widget.userModel.photoURL,
+      //   timebankId: widget.offer.timebankId,
+      // ).toMap();
 
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
@@ -564,11 +522,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.recommendedMemberIdsForRequest = [];
       requestModel.categories = [];
       requestModel.address = selectedAddress;
+
       requestModel.location = location;
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
       requestModel.softDelete = false;
       requestModel.creatorName = SevaCore.of(context).loggedInUser.fullname;
       requestModel.isFromOfferRequest = true;
+      requestModel.numberOfApprovals = 1;
+
       linearProgressForCreatingRequest();
 
       await FirestoreManager.createRequest(requestModel: requestModel);
@@ -594,7 +555,8 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       //   if (communityModel.payment['planId'] !=
       //       SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
       //     List<String> acceptorList = [widget.offer.email, requestModel.email];
-      //     requestModel.allowedCalenderUsers = acceptorList.toList();
+      //     requestModel.all
+      //     owedCalenderUsers = acceptorList.toList();
       //   } else {
       //     requestModel.allowedCalenderUsers = [];
       //   }

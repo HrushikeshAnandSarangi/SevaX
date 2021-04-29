@@ -406,7 +406,7 @@ class OfferModel extends DataModel {
     }
   }
 
-  OfferModel.fromMap(Map<String, dynamic> map) {
+  OfferModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('participantDetails')) {
       this.participantDetails = Map.castFrom(map['participantDetails']);
     }

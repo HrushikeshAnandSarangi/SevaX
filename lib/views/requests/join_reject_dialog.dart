@@ -70,7 +70,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                widget.requestInvitationModel.timebankModel.name ??
+                widget.requestInvitationModel.requestModel.fullName ??
                     "${S.of(context).timebank} name not updated",
               ),
             ),
@@ -86,7 +86,9 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
+                  widget.isFromOfferRequest
+                      ? "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}"
+                      : "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
