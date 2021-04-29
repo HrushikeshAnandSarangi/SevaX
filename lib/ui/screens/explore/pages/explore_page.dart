@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/find_communities_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
+import 'package:sevaexchange/ui/screens/explore/widgets/community_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_browse_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_events_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_featured_card.dart';
