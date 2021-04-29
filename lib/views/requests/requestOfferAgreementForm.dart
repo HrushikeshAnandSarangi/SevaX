@@ -833,12 +833,11 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               onPressed: () async {
                 log('agreement type:  ' + agreementDocumentType);
 
-                if (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable) {
-                  
+                if (agreementDocumentType ==
+                    AgreementDocumentType.NO_AGREEMENT.readable) {
                   //log('HEREEEE');
                   //widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
-                  Navigator.of(context).pop;
-
+                  Navigator.of(context).pop();
                 } else {
                   if (_formKey.currentState.validate()) {
                     if (saveAsTemplate) {
