@@ -312,57 +312,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
               color: Colors.black,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  focusNode: focusNodes[1],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[2]);
-                  },
-                  onChanged: (v) {
-                    updateExitWithConfirmationValue(context, 10, v);
-                    if (v.isNotEmpty && int.parse(v) >= 0) {
-                      requestModel.maxCredits = int.parse(v);
-                      setState(() {});
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: S.of(context).max_credit_hint,
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) < 0) {
-                      return S.of(context).enter_max_credits;
-                    } else if (int.parse(value) == 0) {
-                      return S.of(context).enter_max_credits;
-                    } else {
-                      requestModel.maxCredits = int.parse(value);
-                      setState(() {});
-                      return null;
-                    }
-                  },
-                ),
-              ),
-              infoButton(
-                context: context,
-                key: GlobalKey(),
-                type: InfoType.MAX_CREDITS,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          CommonUtils.TotalCredits(
-            context: context,
-            requestModel: requestModel,
-            requestCreditsMode: TotalCreditseMode.CREATE_MODE,
-          ),
           SizedBox(height: 15),
           Center(
             child: LocationPickerWidget(
@@ -533,6 +482,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.numberOfApprovals = 1;
       requestModel.minimumCredits =
           widget.offer.individualOfferDataModel.minimumCredits ?? 0;
+      requestModel.maxCredits = 0;
 
       linearProgressForCreatingRequest();
 
