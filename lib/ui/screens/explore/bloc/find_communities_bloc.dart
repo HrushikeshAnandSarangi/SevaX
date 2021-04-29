@@ -2,8 +2,9 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 
-enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
+// enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 
 class FindCommunitiesBloc {
   final _searchText = BehaviorSubject<String>();

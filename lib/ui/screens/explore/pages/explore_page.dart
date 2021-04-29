@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/globals.dart';
+
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/explore_cards_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -18,7 +18,7 @@ import 'package:sevaexchange/ui/screens/explore/widgets/explore_find_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_offers_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_requests_card.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
+
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
