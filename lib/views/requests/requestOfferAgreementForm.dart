@@ -184,6 +184,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
                           agreementDocumentType = value;
+                          saveAsTemplate = false;
                           setState(() => {});
                         },
                       ),
@@ -776,6 +777,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               groupvalue: agreementDocumentType,
               onChanged: (value) {
                 agreementDocumentType = value;
+                saveAsTemplate = false;
                 setState(() => {});
               },
             ),
@@ -831,13 +833,11 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
-                log('agreement type:  ' + agreementDocumentType);
 
                 if (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable) {
                   
-                  //log('HEREEEE');
-                  //widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
-                  Navigator.of(context).pop;
+                  widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
+                  Navigator.of(context).pop();
 
                 } else {
                   if (_formKey.currentState.validate()) {
