@@ -27,6 +27,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _makeVirtual = BehaviorSubject<bool>.seeded(false);
   final _offerDescription = BehaviorSubject<String>();
   final _availabilty = BehaviorSubject<String>();
+  final _minimumCredits = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
@@ -73,6 +74,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<bool> get makeVirtual => _makeVirtual.stream;
   Stream<String> get offerDescription => _offerDescription.stream;
   Stream<String> get availability => _availabilty.stream;
+  Stream<String> get minimumCredits => _minimumCredits.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<Status> get status => _status.stream;
   Stream<bool> get isVisible => _isVisible.stream;
@@ -124,7 +126,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
           individualOfferDataModel: IndividualOfferDataModel()
             ..title = _title.value
             ..description = _offerDescription.value
-            ..schedule = _availabilty.value,
+            ..schedule = _availabilty.value
+            ..minimumCredits = int.parse(_minimumCredits.value),
           offerType: OfferType.INDIVIDUAL_OFFER,
           type: _type.value,
           public: _makePublic.value ?? false,
@@ -181,11 +184,16 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _offerDescription.add(
       offerModel.individualOfferDataModel.description,
     );
+
     _type.add(offerModel.type);
     _makePublic.add(offerModel.public);
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _cashModel.add(offerModel.cashModel);
+    if (offerModel.individualOfferDataModel != null) {
+      _minimumCredits
+          .add(offerModel.individualOfferDataModel.minimumCredits.toString());
+    }
     if (offerModel.individualOfferDataModel.schedule != null) {
       _availabilty.add(
         offerModel.individualOfferDataModel.schedule,
@@ -224,6 +232,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
           flag = true;
         } else if (profanityDetector.isProfaneString(_availabilty.value)) {
           _availabilty.addError(ValidationErrors.profanityError);
+          flag = true;
+        } else if (_availabilty.value == null || _availabilty.value == 0) {
+          _availabilty.addError(ValidationErrors.minimumCreditsError);
           flag = true;
         }
       } else if (_type.value == RequestType.CASH) {

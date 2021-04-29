@@ -307,7 +307,8 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
+              fontFamily: 'Europa'
+                  '',
               color: Colors.black,
             ),
           ),
@@ -528,7 +529,10 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.softDelete = false;
       requestModel.creatorName = SevaCore.of(context).loggedInUser.fullname;
       requestModel.isFromOfferRequest = true;
+
       requestModel.numberOfApprovals = 1;
+      requestModel.minimumCredits =
+          widget.offer.individualOfferDataModel.minimumCredits ?? 0;
 
       linearProgressForCreatingRequest();
 

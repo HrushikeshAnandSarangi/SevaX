@@ -46,6 +46,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
   FocusNode _availability = FocusNode();
+  FocusNode _minimumCredits = FocusNode();
   var focusNodes = List.generate(8, (_) => FocusNode());
   @override
   void initState() {
@@ -199,6 +200,20 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,
                 hint: S.of(context).availablity_description,
+                maxLength: 100,
+                error: getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+          StreamBuilder<String>(
+            stream: _bloc.minimumCredits,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                currentNode: _minimumCredits,
+                value: snapshot.data,
+                heading: 'Minimum Credits',
+                onChanged: _bloc.onAvailabilityChanged,
+                hint: 'Provide minimum credits you require',
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
               );

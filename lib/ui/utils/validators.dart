@@ -57,6 +57,7 @@ class ValidationErrors {
   static const String profanityError = "profanity_error";
   static const String emptyErrorCash = "add_amount_donate_empty";
   static const String emptyErrorGoods = "add_goods_donate_empty";
+  static const String minimumCreditsError = "minimum_credits_empty";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }
@@ -100,6 +101,9 @@ String getValidationError(BuildContext context, String errorCode) {
       break;
     case ValidationErrors.emptyErrorGoods:
       return error.add_goods_donate_empty;
+      break;
+    case ValidationErrors.minimumCreditsError:
+      return 'Minimum credits cannot be empty or zero';
       break;
 
     default:

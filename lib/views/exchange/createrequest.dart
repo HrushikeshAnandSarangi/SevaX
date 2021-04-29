@@ -2395,6 +2395,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
       requestModel.softDelete = false;
       requestModel.creatorName = SevaCore.of(context).loggedInUser.fullname;
+      requestModel.minimumCredits = 0;
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         // calendar  integrated!

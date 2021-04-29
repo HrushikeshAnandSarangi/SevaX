@@ -143,6 +143,7 @@ class IndividualOfferDataModel extends DataModel {
   List<String> offerAcceptors;
   String schedule;
   String title;
+  int minimumCredits;
 
   IndividualOfferDataModel();
 
@@ -164,6 +165,9 @@ class IndividualOfferDataModel extends DataModel {
     } else {
       this.offerAcceptors = [];
     }
+    if (map.containsKey('minimumCredits')) {
+      this.minimumCredits = map['minimumCredits'];
+    }
   }
 
   @override
@@ -181,6 +185,9 @@ class IndividualOfferDataModel extends DataModel {
       map['schedule'] = schedule;
     }
     map['offerAcceptors'] = [];
+    if (this.minimumCredits != null) {
+      map['minimumCredits'] = this.minimumCredits;
+    }
     return map;
   }
 
@@ -312,6 +319,7 @@ class OfferModel extends DataModel {
     if (map.containsKey('occurenceCount')) {
       this.occurenceCount = map['occurenceCount'];
     }
+
     if (map.containsKey('end')) {
       this.end = End.fromMap(Map<String, dynamic>.from(map['end']));
     }
@@ -672,6 +680,7 @@ class OfferModel extends DataModel {
     if (this.photoUrlImage != null) {
       map['photoUrlImage'] = this.photoUrlImage;
     }
+
     return map;
   }
 
