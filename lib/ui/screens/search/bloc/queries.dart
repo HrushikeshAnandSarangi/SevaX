@@ -556,4 +556,121 @@ class Searches {
 
     return skillsInterestsConsolidated;
   }
+
+  static Stream<List<OfferModel>> getPublicOffers() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "match": {'private': false}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<OfferModel> communityList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        OfferModel model = OfferModel.fromMap(sourceMap);
+        communityList.add(model);
+      } else {
+        if (sourceMap['softDelete'] == false) {
+          OfferModel model = OfferModel.fromMap(sourceMap);
+          communityList.add(model);
+        }
+      }
+    });
+    communityList.sort((a, b) => a.fullName.compareTo(b.fullName));
+    yield communityList;
+  }
+
+  static Stream<List<CommunityModel>> getPublicCommunities() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "match": {'private': false}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<CommunityModel> communityList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        CommunityModel model = CommunityModel(sourceMap);
+        communityList.add(model);
+      } else {
+        if (sourceMap['softDelete'] == false) {
+          CommunityModel model = CommunityModel(sourceMap);
+          communityList.add(model);
+        }
+      }
+    });
+    communityList.sort((a, b) => a.name.compareTo(b.name));
+    yield communityList;
+  }
+
+  static Stream<List<RequestModel>> getPublicRequests() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/requests/request/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {'public': true}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<RequestModel> requestsList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        RequestModel model = RequestModel.fromMap(sourceMap);
+        requestsList.add(model);
+      } else {
+        if (sourceMap['softDelete'] == false) {
+          RequestModel model = RequestModel.fromMap(sourceMap);
+          requestsList.add(model);
+        }
+      }
+    });
+    requestsList.sort((a, b) => a.title.compareTo(b.title));
+    yield requestsList;
+  }
+
+  static Stream<List<ProjectModel>> getPublicProjects() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/sevaxprojects/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {'public': true}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<ProjectModel> projectsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        ProjectModel model = ProjectModel.fromMap(sourceMap);
+        projectsList.add(model);
+      } else {
+        if (sourceMap['softDelete'] == false) {
+          ProjectModel model = ProjectModel.fromMap(sourceMap);
+          projectsList.add(model);
+        }
+      }
+    });
+    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    yield projectsList;
+  }
 }

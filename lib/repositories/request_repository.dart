@@ -9,4 +9,19 @@ class RequestRepository {
     DocumentSnapshot document = await ref.document(requestId).get();
     return RequestModel.fromMap(document.data);
   }
+
+  static Future<List<RequestModel>> getAllRequestsOfCommunity(
+      String communityId,
+      {int limit = 10}) async {
+    var result = await ref
+        .where("communityId", isEqualTo: communityId)
+        .limit(limit)
+        .getDocuments();
+
+    List<RequestModel> models = [];
+    result.documents.forEach((element) {
+      models.add(RequestModel.fromMap(element.data));
+    });
+    return models;
+  }
 }

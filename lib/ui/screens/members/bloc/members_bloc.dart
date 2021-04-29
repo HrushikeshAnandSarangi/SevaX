@@ -64,6 +64,28 @@ class MembersBloc extends BlocBase {
     return images;
   }
 
+  Future<List<String>> getUserImages(List<String> ids) async {
+    try {
+      List<Future<UserModel>> futures = ids
+          .map(
+            (id) => id.contains('@')
+                ? getUserModel(email: id)
+                : getUserModel(userId: id),
+          )
+          .toList();
+
+      List<UserModel> users = await Future.wait(futures);
+      logger.d("usercount ${users.length}");
+      users.forEach((element) {
+        logger.e(element.fullname);
+      });
+      return users.map((user) => user.photoURL).toList();
+    } on Exception catch (e) {
+      logger.e("error is -> $e");
+      return [];
+    }
+  }
+
   Future<void> promoteMember(
       String userId, String communityId, String timebankId) async {
     await UserRepository.promoteOrDemoteUser(
