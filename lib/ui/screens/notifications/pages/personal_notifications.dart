@@ -824,7 +824,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
@@ -846,7 +846,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);

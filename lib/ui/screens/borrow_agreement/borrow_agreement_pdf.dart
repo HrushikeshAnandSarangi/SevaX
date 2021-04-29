@@ -128,7 +128,7 @@ class BorrowAgreementPdf {
     await file.writeAsBytes(pdf.save());
 
     log("requestModel check   " + requestModel.id.toString());
-    borrowAgreementLinkFinal = await uploadDocument(requestModel.id, file);
+    borrowAgreementLinkFinal = await uploadDocument(requestModel.id, file, documentName);
 
     //await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
 
@@ -164,12 +164,12 @@ Future openPdfViewer(
   });
 }
 
-Future<String> uploadDocument(String requestId, File _path) async {
+Future<String> uploadDocument(String requestId, File _path, String documentName) async {
   int timestamp = DateTime.now().millisecondsSinceEpoch;
 
   String timestampString = timestamp.toString();
 
-  String name = requestId.toString() + '_' + timestampString;
+  String name = requestId.toString() + '_' + timestampString + '_' + documentName;
 
   StorageReference ref =
       FirebaseStorage.instance.ref().child('borrow_agreement_docs').child(name);

@@ -441,12 +441,13 @@ class RequestModel extends DataModel {
       this.maxCredits = map['maxCredits'];
     }
 
-    if (map.containsKey('location')) {
-      GeoPoint geoPoint = map['location']['geopoint'];
+    // if (map.containsKey('location')) {
+    //   GeoPoint geoPoint = map['location']['geopoint'];
 
-      this.location = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    }
+    //   this.location = Geoflutterfire()
+    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    // }
+    
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
     }
@@ -685,13 +686,13 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
-    if (map.containsKey('location')) {
-      GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
-          map['location']['geopoint']['_longitude']);
+    // if (map.containsKey('location')) {
+    //   GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
+    //       map['location']['geopoint']['_longitude']);
 
-      this.location = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    }
+    //   this.location = Geoflutterfire()
+    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    // }
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
     }
@@ -927,7 +928,7 @@ class RequestModel extends DataModel {
       object['numberOfApprovals'] = this.numberOfApprovals;
     }
     if (this.location != null) {
-      object['location'] = Map<String, dynamic>.from(this.location.data);
+      object['location'] = this.location.data;//Map<String, dynamic>.from(this.location.data);
     }
     if (this.id != null) {
       object['id'] = this.id;

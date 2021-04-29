@@ -831,59 +831,70 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  if (saveAsTemplate) {
-                    borrowAgreementTemplateModel.documentName = documentName;
-                    borrowAgreementTemplateModel.id = Utils.getUuid();
-                    borrowAgreementTemplateModel.timebankId = widget.timebankId;
-                    borrowAgreementTemplateModel.communityId =
-                        widget.communityId;
-                    borrowAgreementTemplateModel.createdAt =
-                        DateTime.now().millisecondsSinceEpoch;
-                    borrowAgreementTemplateModel.isRequest = widget.isRequest;
-                    borrowAgreementTemplateModel.roomOrTool = widget.roomOrTool;
-                    borrowAgreementTemplateModel.additionalConditions =
-                        additionalConditions ?? '';
-                    borrowAgreementTemplateModel.contactDetails =
-                        contactDetails ?? "";
-                    borrowAgreementTemplateModel.itemDescription =
-                        itemDescription;
-                    borrowAgreementTemplateModel.maximumOccupants =
-                        maximumOccupants ?? 0;
-                    borrowAgreementTemplateModel.specificConditions =
-                        specificConditions;
-                    borrowAgreementTemplateModel.softDelete = false;
-                    borrowAgreementTemplateModel.otherDetails = otherDetails;
-                    borrowAgreementTemplateModel.securityDeposit =
-                        securityDeposit;
-                    borrowAgreementTemplateModel.templateName = templateName;
-                    borrowAgreementTemplateModel.isFixedTerm =
-                        isFixedTerm ?? true;
-                    borrowAgreementTemplateModel.isPetsAllowed = isPetsAllowed;
-                    borrowAgreementTemplateModel.isQuietHoursAllowed =
-                        isQuietHoursAllowed;
-                    await FirestoreManager.createBorrowAgreementTemplate(
-                        borrowAgreementTemplateModel:
-                            borrowAgreementTemplateModel);
-                  }
-                  // Step 1
-                  //if save as template option is true, store template data in
-                  //   collection 'borrowAgreement_templates'
+                log('agreement type:  ' + agreementDocumentType);
 
-                  //       Step 2
-                  //     2.1 - Generate agreement pdf according to template (pending)
-                  //   2.2 - Then store pdf in Storage and obtain download url
-
-                  borrowAgreementLinkFinal = await BorrowAgreementPdf()
-                      .borrowAgreementPdf(context, widget.requestModel,
-                          documentName, widget.isRequest, widget.roomOrTool);
-
-                  widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
-
+                if (agreementDocumentType == AgreementDocumentType.NO_AGREEMENT.readable) {
+                  
+                  //log('HEREEEE');
+                  //widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
                   Navigator.of(context).pop;
+
+                } else {
+                  if (_formKey.currentState.validate()) {
+                    if (saveAsTemplate) {
+                      borrowAgreementTemplateModel.documentName = documentName;
+                      borrowAgreementTemplateModel.id = Utils.getUuid();
+                      borrowAgreementTemplateModel.timebankId =
+                          widget.timebankId;
+                      borrowAgreementTemplateModel.communityId =
+                          widget.communityId;
+                      borrowAgreementTemplateModel.createdAt =
+                          DateTime.now().millisecondsSinceEpoch;
+                      borrowAgreementTemplateModel.isRequest = widget.isRequest;
+                      borrowAgreementTemplateModel.roomOrTool =
+                          widget.roomOrTool;
+                      borrowAgreementTemplateModel.additionalConditions =
+                          additionalConditions ?? '';
+                      borrowAgreementTemplateModel.contactDetails =
+                          contactDetails ?? "";
+                      borrowAgreementTemplateModel.itemDescription =
+                          itemDescription;
+                      borrowAgreementTemplateModel.maximumOccupants =
+                          maximumOccupants ?? 0;
+                      borrowAgreementTemplateModel.specificConditions =
+                          specificConditions;
+                      borrowAgreementTemplateModel.softDelete = false;
+                      borrowAgreementTemplateModel.otherDetails = otherDetails;
+                      borrowAgreementTemplateModel.securityDeposit =
+                          securityDeposit;
+                      borrowAgreementTemplateModel.templateName = templateName;
+                      borrowAgreementTemplateModel.isFixedTerm =
+                          isFixedTerm ?? true;
+                      borrowAgreementTemplateModel.isPetsAllowed =
+                          isPetsAllowed;
+                      borrowAgreementTemplateModel.isQuietHoursAllowed =
+                          isQuietHoursAllowed;
+                      await FirestoreManager.createBorrowAgreementTemplate(
+                          borrowAgreementTemplateModel:
+                              borrowAgreementTemplateModel);
+                    }
+                    // Step 1
+                    //if save as template option is true, store template data in
+                    //   collection 'borrowAgreement_templates'
+
+                    //       Step 2
+                    //     2.1 - Generate agreement pdf according to template (pending)
+                    //   2.2 - Then store pdf in Storage and obtain download url
+
+                    borrowAgreementLinkFinal = await BorrowAgreementPdf()
+                        .borrowAgreementPdf(context, widget.requestModel,
+                            documentName, widget.isRequest, widget.roomOrTool);
+
+                    widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
+
+                    Navigator.of(context).pop;
+                  }
                 }
-                //   Step 4
-                // Navigator.of(context).pop;
               }),
         ),
       ],

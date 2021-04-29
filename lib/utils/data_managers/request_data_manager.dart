@@ -1004,6 +1004,18 @@ Future<void> borrowRequestFeedbackBorrowerUpdate({
   });
 }
 
+Future<void> borrowRequestSetHasCreatedAgreement({
+  @required RequestModel requestModel,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData({
+    'hasBorrowAgreement': requestModel.hasBorrowAgreement,
+    'borrowAgreementLink': requestModel.borrowAgreementLink,
+  });
+}
+
 Future<void> storeAcceptorDataBorrowRequest({
   @required RequestModel model,
   @required String acceptorEmail,
@@ -1024,6 +1036,7 @@ Future<void> storeAcceptorDataBorrowRequest({
     'acceptorName': acceptorName,
     'requestStart': model.requestStart,
     'selectedAddress': selectedAddress,
+    'roomOrTool': model.roomOrTool,
   });
 }
 

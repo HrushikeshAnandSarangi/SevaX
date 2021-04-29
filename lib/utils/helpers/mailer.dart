@@ -68,8 +68,8 @@ class MailBorrowRequestReceipts {
   static Future<void> sendBorrowRequestReceipts(RequestModel requestModel) async {
     try {
       log('inside send borrow requests receipts api');
-      var result = await http.post(
-        '${FlavorConfig.values.cloudFunctionBaseURL}/sendBorrowRequestReceipts',
+      await http.post(
+        'https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/sendBorrowRequestReceipts',
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "requestModel": requestModel.toMap(),

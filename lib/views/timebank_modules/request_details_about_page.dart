@@ -901,13 +901,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .loggedInUser
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
-                                    ? 'Request Approved' //Label to hbe created
-                                    : 'Request has been assigned to a member')
+                                    ? 'Request Approved' //Label to be created
+                                    : 'Request has been assigned to a member')   //Label to be created
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
-                                        ? 'Borrow request for place'
-                                        : 'Borrow request for goods'),
+                                        ? 'Borrow request for place'   //Label to be created
+                                        : 'Borrow request for item'),  //Label to be created
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -982,9 +982,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
         onPressed: () {
           if (widget.requestItem.requestType == RequestType.BORROW) {
-            widget.requestItem.roomOrTool == 'ROOM'
-                ? borrowApplyAction()
-                : proccedWithCalander();
+            //widget.requestItem.roomOrTool == 'ROOM'
+                //? 
+                borrowApplyAction();
+                //: proccedWithCalander();
           } else {
             applyAction();
           }
@@ -1652,6 +1653,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get approvedBorrowRequestDetailsComponent {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      widget.requestItem.approvedUsers.length > 0 ?
       StreamBuilder(
           stream: Firestore.instance
               .collection('requests')
@@ -1697,6 +1699,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             );
           })
+          :
+          Container(),
     ]);
   }
 
@@ -1711,12 +1715,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? 'Request agreement not available'
-                      : 'Click to view request agreement',
+                      ? 'Request agreement not available'        //Label to be created
+                      : 'Click to view request agreement',       //Label to be created
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600)), //Label to be created
+                      fontWeight: FontWeight.w600)), 
             ],
           ),
           onTap: () async {

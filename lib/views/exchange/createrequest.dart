@@ -208,8 +208,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
   bool instructorAdded = false;
 
   //Borrow request fields below
-  String borrowAgreementLinkFinal = '';
-  String documentName = '';
+  // String borrowAgreementLinkFinal = '';
+  // String documentName = '';
 
   //Below variable for Borrow Requests
   int roomOrTool = 0;
@@ -492,85 +492,87 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
                             //Below is for testing purpose
 
-                            SizedBox(height: 20),
-                            requestModel.requestType == RequestType.BORROW
-                                ? Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: Text(
-                                          'Go to agreement page',
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                fullscreenDialog: true,
-                                                builder: (context) =>
-                                                    RequestOfferAgreementForm(
-                                                      isRequest: true,
-                                                      roomOrTool:
-                                                          roomOrTool == 1
-                                                              ? 'TOOL'
-                                                              : 'ROOM',
-                                                      requestModel:
-                                                          requestModel,
-                                                      communityId: requestModel
-                                                          .communityId,
-                                                      timebankId:
-                                                          widget.timebankId,
-                                                      onPdfCreated: (pdfLink,
-                                                          documentNameFinal) {
-                                                        borrowAgreementLinkFinal =
-                                                            pdfLink;
-                                                        documentName =
-                                                            documentNameFinal;
-                                                        requestModel
-                                                                .borrowAgreementLink =
-                                                            pdfLink;
-                                                        // when request is created check if above value is stored in document
-                                                        setState(() => {});
-                                                      },
-                                                    )),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                : Container(),
-                            SizedBox(height: 12),
+                            // SizedBox(height: 20),
+                            // requestModel.requestType == RequestType.BORROW
+                            //     ? Row(
+                            //         children: [
+                            //           GestureDetector(
+                            //             child: Text(
+                            //               'Go to agreement page',
+                            //               style: TextStyle(fontSize: 15),
+                            //             ),
+                            //             onTap: () {
+                            //               Navigator.push(
+                            //                 context,
+                            //                 MaterialPageRoute(
+                            //                     fullscreenDialog: true,
+                            //                     builder: (context) =>
+                            //                         RequestOfferAgreementForm(
+                            //                           isRequest: true,
+                            //                           roomOrTool:
+                            //                               roomOrTool == 1
+                            //                                   ? 'TOOL'
+                            //                                   : 'ROOM',
+                            //                           requestModel:
+                            //                               requestModel,
+                            //                           communityId: requestModel
+                            //                               .communityId,
+                            //                           timebankId:
+                            //                               widget.timebankId,
+                            //                           onPdfCreated: (pdfLink,
+                            //                               documentNameFinal) {
+                            //                             borrowAgreementLinkFinal =
+                            //                                 pdfLink;
+                            //                             documentName =
+                            //                                 documentNameFinal;
+                            //                             requestModel
+                            //                                     .borrowAgreementLink =
+                            //                                 pdfLink;
+                            //                             // when request is created check if above value is stored in document
+                            //                             setState(() => {});
+                            //                           },
+                            //                         )),
+                            //               );
+                            //             },
+                            //           ),
+                            //         ],
+                            //       )
+                            //     : Container(),
+                            // SizedBox(height: 12),
 
-                            requestModel.requestType == RequestType.BORROW
-                                ? GestureDetector(
-                                    child: Row(
-                                      children: [
-                                        Text(documentName != ''
-                                            ? 'view '
-                                            : ''), //Label to be created
-                                        Text(
-                                            documentName != ''
-                                                ? documentName
-                                                : 'No Agreement Selected',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                color: documentName != ''
-                                                    ? Theme.of(context)
-                                                        .primaryColor
-                                                    : Colors.grey)),
-                                      ],
-                                    ),
-                                    onTap: () async {
-                                      if (documentName != '') {
-                                        await openPdfViewer(
-                                            borrowAgreementLinkFinal,
-                                            'test document',
-                                            context);
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  )
-                                : Container(),
+                            // requestModel.requestType == RequestType.BORROW
+                            //     ? GestureDetector(
+                            //         child: Row(
+                            //           children: [
+                            //             Text(documentName != ''
+                            //                 ? 'view '
+                            //                 : ''), //Label to be created
+                            //             Text(
+                            //                 documentName != ''
+                            //                     ? documentName
+                            //                     : 'No Agreement Selected',
+                            //                 style: TextStyle(
+                            //                     fontWeight: FontWeight.w600,
+                            //                     color: documentName != ''
+                            //                         ? Theme.of(context)
+                            //                             .primaryColor
+                            //                         : Colors.grey)),
+                            //           ],
+                            //         ),
+                            //         onTap: () async {
+                            //           if (documentName != '') {
+                            //             await openPdfViewer(
+                            //                 borrowAgreementLinkFinal,
+                            //                 'test document',
+                            //                 context);
+                            //           } else {
+                            //             return null;
+                            //           }
+                            //         },
+                            //       )
+                            //     : Container(),
+
+
 
                             requestModel.requestType == RequestType.BORROW
                                 ? Column(

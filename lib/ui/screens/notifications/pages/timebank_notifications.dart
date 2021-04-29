@@ -165,13 +165,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
+                  isDissmissible: false,
+                  // onDismissed: () {
+                  //   FirestoreManager.readTimeBankNotification(
+                  //     notificationId: notification.id,
+                  //     timebankId: notification.timebankId,
+                  //   );
+                  // },
                   onPressed: () async {
                     showDialog(
                       context: context,
@@ -226,7 +226,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: false,
+                  isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
@@ -252,7 +252,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: false,
+                  isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
