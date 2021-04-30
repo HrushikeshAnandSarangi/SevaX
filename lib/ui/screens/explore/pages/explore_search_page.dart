@@ -6,6 +6,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
@@ -40,6 +41,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   @override
   void initState() {
     super.initState();
+    _bloc.load();
     _tabIndex.add(widget.tabIndex);
     _searchController.text = widget.searchText;
     _bloc.onSearchChange(widget.searchText);
@@ -63,8 +65,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       create: (context) => _bloc,
       dispose: (context, bloc) => bloc.dispose(),
       child: ExplorePageViewHolder(
-        hideHeader: SevaCore.of(context).loggedInUser != null,
-        hideFooter: SevaCore.of(context).loggedInUser != null,
+        hideHeader: Provider.of<UserModel>(context) != null,
+        hideFooter: Provider.of<UserModel>(context) != null,
         controller: _searchController,
         onSearchChanged: (value) {
           logger.i(value);
@@ -79,7 +81,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 SizedBox(height: 12),
                 Builder(
                   builder: (context) {
-                    var user = SevaCore.of(context).loggedInUser;
+                    var user = Provider.of<UserModel>(context);
                     return Row(
                       children: [
                         Container(
@@ -96,7 +98,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                                   .push(
                                     MaterialPageRoute(
                                       builder: (context) => NearByFiltersView(
-                                        SevaCore.of(context).loggedInUser,
+                                        Provider.of<UserModel>(context),
                                       ),
                                     ),
                                   )
@@ -156,7 +158,6 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 // FindCommunitiesView(),
                 // SizedBox(height: 12),
                 SizedBox(
-                  height: 500,
                   width: double.infinity,
                   child: StreamBuilder<List<CommunityCategoryModel>>(
                     stream: _bloc.communityCategory,
@@ -171,7 +172,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: constraints.maxWidth < 550 ? 2 : 3,
+                            crossAxisCount: 1,
                             childAspectRatio: 4 / 0.5,
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 8,
@@ -515,57 +516,51 @@ class _ExploreCommunityCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: SizedBox(
-            height: 250,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: constraints.maxWidth * 0.3,
-                  height: 250,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      model.logo_url,
-                      fit: BoxFit.cover,
+            height: 400,
+            child: Padding(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AspectRatio(
+                    aspectRatio: 3 / 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        model.logo_url,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          model.name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          ' New York | USA',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          model.about,
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Spacer(),
-                        MemberAvatarListWithCount(
-                          userIds: model.members,
-                        ),
-                        SizedBox(height: 12),
-                      ],
+                  Text(
+                    model.name,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 4),
+                  Text(
+                    ' New York | USA',
+                    style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Flexible(
+                    child: Text(
+                      model.about,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Spacer(),
+                  MemberAvatarListWithCount(
+                    userIds: model.members,
+                  ),
+                  SizedBox(height: 12),
+                ],
+              ),
             ),
           ),
         ),

@@ -17,7 +17,7 @@ class ExplorePageAppBar extends PreferredSize {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
+      height: 200,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -25,7 +25,7 @@ class ExplorePageAppBar extends PreferredSize {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 40),
         child: Column(
           children: [
             Row(

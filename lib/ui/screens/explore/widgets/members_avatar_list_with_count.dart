@@ -21,7 +21,7 @@ class MemberAvatarListWithCount extends StatelessWidget {
         logger.e(snapshot.error);
         if (snapshot.data == null) {
           return Container(
-            height: 2 * (radius ?? 12),
+            height: 2 * (radius ?? 12.0),
             child: Text(snapshot.error.toString()),
           );
         }

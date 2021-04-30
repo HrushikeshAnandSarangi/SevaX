@@ -7,6 +7,8 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class ExploreSearchPageBloc {
   final _communityCategory = BehaviorSubject<List<CommunityCategoryModel>>();
@@ -37,7 +39,8 @@ class ExploreSearchPageBloc {
     }
   }
 
-  ExplorePageBloc() {
+  void load() {
+    logger.i("explorePage init");
     CommunityRepository.getCommunityCategories().then((value) {
       _communityCategory.add(value);
     });
@@ -48,7 +51,20 @@ class ExploreSearchPageBloc {
       }
     });
     _searchText.listen((searchText) {
+      logger.i("search tapped");
       if (searchText == null || searchText.isEmpty) {
+        ElasticSearchApi.getPublicCommunities().then((value) {
+          _communities.add(value);
+        });
+        FirestoreManager.getPublicOffers().listen((event) {
+          _offers.add(event);
+        });
+        FirestoreManager.getPublicProjects().listen((event) {
+          _events.add(event);
+        });
+        FirestoreManager.getPublicRequests().listen((event) {
+          _requests.add(event);
+        });
       } else {
         ElasticSearchApi.searchPublicRequests(queryString: searchText).then(
           (data) => _requests.add(data),

@@ -25,73 +25,60 @@ class ExploreEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 235,
+      height: 400,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(13),
         ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(13),
-                bottomLeft: Radius.circular(13),
-              ),
-              child: SizedBox(
-                width: 308,
-                height: double.infinity,
-                child: Image.network(
-                  photoUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(fontSize: 24),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            communityName,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 3 / 2,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(13),
+                  child: SizedBox(
+                    width: 308,
+                    height: double.infinity,
+                    child: Image.network(
+                      photoUrl,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Row(
-                    children: [
-                      ...iconText(context, Icons.calendar_today, date),
-                      ...iconText(context, Icons.access_time, time),
-                      ...iconText(context, Icons.location_on, location),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 14),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Spacer(),
-                  memberList ?? Container(),
+                ),
+              ),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 24),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                communityName,
+                style: const TextStyle(fontSize: 12),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  ...iconText(context, Icons.calendar_today, date),
+                  ...iconText(context, Icons.access_time, time),
+                  ...iconText(context, Icons.location_on, location),
                 ],
               ),
-            )
-          ],
+              const SizedBox(height: 8),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 14),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Spacer(),
+              memberList ?? Container(),
+              SizedBox(height: 12),
+            ],
+          ),
         ),
       ),
     );

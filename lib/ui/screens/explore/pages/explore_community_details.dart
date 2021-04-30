@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -31,7 +32,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
   @override
   Widget build(BuildContext context) {
     return ExplorePageViewHolder(
-      hideHeader: SevaCore.of(context).loggedInUser != null,
+      hideHeader: Provider.of<UserModel>(context) != null,
       hideFooter: true,
       child: StreamBuilder<CommunityModel>(
         stream: _bloc.community,
