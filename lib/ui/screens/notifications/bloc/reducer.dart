@@ -612,22 +612,20 @@ class PersonalNotificationReducerForRequests {
         future: RequestRepository.getRequestFutureById(model.id),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            log('Error request accept');
             return Container();
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
+
           log('request type: ' + model.requestType.toString());
-          if (model.requestType == RequestType.BORROW) {
-            return Container();
-            //add page here for creator/borrower accepting lender after viewing agreement
-          } else {
-            return RequestAcceptedWidget(
-              model: snapshot.data,
-              userId: notification.senderUserId,
-              notificationId: notification.id,
-            );
-          }
+
+          return RequestAcceptedWidget(
+            model: snapshot.data,
+            userId: notification.senderUserId,
+            notificationId: notification.id,
+          );
         });
   }
 
