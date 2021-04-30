@@ -1,23 +1,18 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
-
+import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
-
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
@@ -39,7 +34,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
     with SingleTickerProviderStateMixin {
   TabController _controller;
   TextEditingController _searchController = TextEditingController();
-  ExplorePageBloc _bloc = ExplorePageBloc();
+  ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
   StreamController _tabIndex = StreamController<int>();
 
   @override
@@ -64,7 +59,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
 
   @override
   Widget build(BuildContext context) {
-    return Provider<ExplorePageBloc>(
+    return Provider<ExploreSearchPageBloc>(
       create: (context) => _bloc,
       dispose: (context, bloc) => bloc.dispose(),
       child: ExplorePageViewHolder(
@@ -290,7 +285,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
 class _CommunitiesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExplorePageBloc>(context);
+    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
     return StreamBuilder<List<CommunityModel>>(
       initialData: null,
       stream: _bloc.communities,
@@ -378,7 +373,7 @@ class _CommunitiesView extends StatelessWidget {
 class _RequestsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExplorePageBloc>(context);
+    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
     return StreamBuilder<List<RequestModel>>(
       stream: _bloc.requests,
       builder: (context, snapshot) {
@@ -419,7 +414,7 @@ class _RequestsView extends StatelessWidget {
 class _OffersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExplorePageBloc>(context);
+    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
     return StreamBuilder<List<OfferModel>>(
       stream: _bloc.offers,
       builder: (context, snapshot) {
@@ -456,7 +451,7 @@ class _OffersView extends StatelessWidget {
 class _EventsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExplorePageBloc>(context);
+    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
 
     return StreamBuilder<List<ProjectModel>>(
       stream: _bloc.events,

@@ -12,12 +12,16 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'models/user_model.dart';
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -86,6 +90,7 @@ class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
   final AppLanguage appLanguage = AppLanguage()..fetchLocale();
   MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
+  UserBloc userBloc = UserBloc();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -97,6 +102,13 @@ class MainApplication extends StatelessWidget {
         Provider(
           create: (context) => HomePageBloc(),
           dispose: (_, b) => b.dispose(),
+        ),
+        Provider(
+          create: (context) => userBloc,
+          dispose: (_, b) => b.dispose(),
+        ),
+        StreamProvider<UserModel>.value(
+          value: userBloc.user,
         ),
       ],
       child: ChangeNotifierProvider<AppLanguage>(

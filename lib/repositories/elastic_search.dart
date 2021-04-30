@@ -289,4 +289,124 @@ class ElasticSearchApi {
     communityList.sort((a, b) => a.name.compareTo(b.name));
     return communityList;
   }
+
+  static Future<List<OfferModel>> getPublicOffers() async {
+    String endPoint = '//elasticsearch/offers/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"private": false}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(
+      endPoint,
+      body,
+    );
+    List<OfferModel> models = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      OfferModel model = OfferModel.fromMap(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.fullName.compareTo(b.fullName));
+    return models;
+  }
+
+  static Future<List<CommunityModel>> getPublicCommunities() async {
+    String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"private": false}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<CommunityModel> models = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      CommunityModel model = CommunityModel(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.name.compareTo(b.name));
+    return models;
+  }
+
+  static Future<List<RequestModel>> getPublicRequests() async {
+    String endPoint = '//elasticsearch/requests/request/_search';
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "term": {"private": false}
+              },
+              {
+                "term": {"softDelete": false}
+              }
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<RequestModel> models = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      RequestModel model = RequestModel.fromMap(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.title.compareTo(b.title));
+    return models;
+  }
+
+  static Future<List<ProjectModel>> getPublicProjects() async {
+    String endPoint = '//elasticsearch/sevaxprojects/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"private": false}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<ProjectModel> models = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      ProjectModel model = ProjectModel.fromMap(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.name.compareTo(b.name));
+    return models;
+  }
 }

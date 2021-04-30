@@ -37,15 +37,17 @@ class ExplorePageViewHolder extends StatelessWidget {
                 controller: controller,
               ),
             ),
-            Padding(
-              padding:
-                  childPadding ?? const EdgeInsets.symmetric(horizontal: 136),
-              child: child,
+            SafeArea(
+              child: Padding(
+                padding:
+                    childPadding ?? const EdgeInsets.symmetric(horizontal: 12),
+                child: child,
+              ),
             ),
-            HideWidget(
-              hide: hideFooter,
-              child: SevaExploreFooter(),
-            ),
+            // HideWidget(
+            //   hide: hideFooter,
+            //   child: SevaExploreFooter(),
+            // ),
           ],
         ),
       ),

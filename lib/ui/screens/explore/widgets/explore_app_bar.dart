@@ -25,21 +25,45 @@ class ExplorePageAppBar extends PreferredSize {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
+        child: Column(
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).maybePop();
-              },
-              child: Image.asset(
-                'images/logo/seva_x_logo.png',
-                width: 110,
-                height: 31,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).maybePop();
+                  },
+                  child: Image.asset(
+                    'images/seva_x_logo.png',
+                    width: 110,
+                    height: 31,
+                  ),
+                ),
+                Spacer(),
+                appBarButton(
+                  'Sign Up',
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RegisterPage(),
+                      ),
+                    );
+                  },
+                ),
+                appBarButton(
+                  'Sign In',
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            Spacer(),
             HideWidget(
               hide: hideSearchBar,
               child: Flexible(
@@ -57,13 +81,29 @@ class ExplorePageAppBar extends PreferredSize {
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(40),
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: Icon(Icons.search),
                         suffixIcon: FlatButton(
                           child: Text('Search'),
                           textColor: Colors.white,
-                          color: Colors.orange, //Theme.of(context).accentColor,
+                          color: Colors.orange,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -76,29 +116,6 @@ class ExplorePageAppBar extends PreferredSize {
                 ),
               ),
             ),
-            Spacer(),
-            appBarButton('Create a seva community', () {}),
-            appBarButton('Help', () {}),
-            appBarButton(
-              'Sign Up',
-              () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RegisterPage(),
-                  ),
-                );
-              },
-            ),
-            appBarButton(
-              'Sign In',
-              () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
-              },
-            ),
           ],
         ),
       ),
@@ -107,6 +124,7 @@ class ExplorePageAppBar extends PreferredSize {
 
   FlatButton appBarButton(String text, VoidCallback onTap) {
     return FlatButton(
+      padding: EdgeInsets.zero,
       child: Text(text),
       textColor: Colors.white,
       onPressed: onTap,
