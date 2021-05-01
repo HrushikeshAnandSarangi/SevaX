@@ -1,39 +1,30 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
-import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
-import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -77,17 +68,23 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     _selectedTimebankId = widget.timebankId;
     Future.delayed(Duration.zero, () {
       requestModel = RequestModel(
-          requestType: RequestType.TIME,
-          goodsDonationDetails: GoodsDonationDetails(),
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-          timebankId: widget.timebankId,
-          email: SevaCore.of(context).loggedInUser.email,
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID);
+        requestType: RequestType.TIME,
+        goodsDonationDetails: GoodsDonationDetails(),
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        timebankId: widget.timebankId,
+        email: SevaCore.of(context).loggedInUser.email,
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      );
       this.requestModel.virtualRequest = false;
       this.requestModel.public = false;
       this.requestModel.timebankId = _selectedTimebankId;
       this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
       requestModel.requestType = widget.offer.type;
+
+      this.requestModel.title = widget.offer.individualOfferDataModel.title;
+      this.requestModel.description =
+          widget.offer.individualOfferDataModel.description;
+
       fetchRemoteConfig();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         FirestoreManager.getTimeBankForId(
@@ -96,18 +93,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           setState(() {
             timebankModel = onValue;
           });
-          // if (isAccessAvailable(
-          //     timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
-          //   isAdmin = true;
-          // }
         });
-        // executes after build
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.i("message");
     return ExitWithConfirmation(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -135,48 +128,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                         children: <Widget>[
                           headerContainer(),
                           SizedBox(height: 14),
-                          Text(
-                            "${S.of(context).request_title}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            onChanged: (value) {
-                              updateExitWithConfirmationValue(
-                                  context, 1, value);
-                            },
-                            onFieldSubmitted: (v) {
-                              FocusScope.of(context)
-                                  .requestFocus(focusNodes[0]);
-                            },
-                            decoration: InputDecoration(
-                              errorMaxLines: 2,
-                              hintText: S.of(context).request_title_hint,
-                              hintStyle: hintTextStyle,
-                            ),
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.text,
-                            initialValue: getOfferTitle(
-                              offerDataModel: widget.offer,
-                            ),
-                            textCapitalization: TextCapitalization.sentences,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return S.of(context).request_subject;
-                              }
-                              if (profanityDetector.isProfaneString(value)) {
-                                return S.of(context).profanity_text_alert;
-                              }
-                              requestModel.title = value;
-                            },
-                          ),
-                          SizedBox(height: 30),
                           OfferDurationWidget(
                             title: "${S.of(context).request_duration} *",
                           ),
@@ -225,7 +176,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
 
   TextStyle hintTextStyle = TextStyle(
     fontSize: 14,
-    // fontWeight: FontWeight.bold,
     color: Colors.grey,
     fontFamily: 'Europa',
   );
@@ -243,57 +193,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      //this.requestModel.requestType = RequestType.TIME;
+      this.requestModel.requestType = RequestType.TIME;
       return Container();
     }
   }
 
   Widget RequestDescriptionData(hintTextDesc) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "${S.of(context).request_description}",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (value) {
-              if (value != null && value.length > 5) {}
-              updateExitWithConfirmationValue(context, 9, value);
-            },
-            focusNode: focusNodes[0],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[1]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: hintTextDesc,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: getOfferDescription(
-              offerDataModel: widget.offer,
-            ),
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              }
-              if (profanityDetector.isProfaneString(value)) {
-                return S.of(context).profanity_text_alert;
-              }
-              requestModel.description = value;
-              return null;
-            },
-          ),
-        ]);
+        crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[]);
   }
 
   Widget TimeRequest() {
@@ -302,19 +209,6 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         children: <Widget>[
           RequestDescriptionData(S.of(context).request_description_hint),
           SizedBox(height: 15),
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
-              },
-            ),
-          )
         ]);
   }
 
@@ -322,7 +216,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     TimebankModel timebankModel,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
+      margin: EdgeInsets.only(bottom: 0),
       width: double.infinity,
       child: CupertinoSegmentedControl<int>(
         selectedColor: Theme.of(context).primaryColor,
@@ -366,20 +260,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
   BuildContext dialogContext;
 
   void createRequest() async {
-    // verify f the start and end date time is not same
-    var connResult = await Connectivity().checkConnectivity();
-    if (connResult == ConnectivityResult.none) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(S.of(context).check_internet),
-          action: SnackBarAction(
-            label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
-          ),
-        ),
-      );
-      return;
-    }
+    logger.i("Inside create Request ======");
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
     requestModel.autoGenerated = false;
@@ -410,14 +291,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.approvedUsers = [];
       requestModel.participantDetails = {};
 
-      // requestModel.participantDetails[widget.offer.email] = AcceptorModel(
-      //   communityId: widget.offer.communityId,
-      //   communityName: '',
-      //   memberEmail: widget.offer.email,
-      //   memberName: widget.offer.fullName,
-      //   memberPhotoUrl: widget.offer.photoUrlImage ?? widget.userModel.photoURL,
-      //   timebankId: widget.offer.timebankId,
-      // ).toMap();
+      requestModel.participantDetails[widget.offer.email] = AcceptorModel(
+        communityId: widget.offer.communityId,
+        communityName: '',
+        memberEmail: widget.offer.email,
+        memberName: widget.offer.fullName,
+        memberPhotoUrl: widget.offer.photoUrlImage ?? widget.userModel.photoURL,
+        timebankId: widget.offer.timebankId,
+      ).toMap();
 
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
@@ -427,7 +308,8 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           var onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
-            credits: requestModel.numberOfHours.toDouble(),
+            // credits: requestModel.numberOfHours.toDouble(),
+            credits: 1,
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
@@ -472,7 +354,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       requestModel.minimumCredits =
           widget.offer.individualOfferDataModel.minimumCredits ?? 0;
       requestModel.maxCredits = 0;
-
+      logger.i('========= send notifiction');
       linearProgressForCreatingRequest();
 
       await FirestoreManager.createRequest(requestModel: requestModel);
@@ -492,57 +374,45 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       }
       Navigator.pop(dialogContext);
       Navigator.pop(context);
-
-      // if (SevaCore.of(context).loggedInUser.calendarId != null) {
-      //   // calendar  integrated!
-      //   if (communityModel.payment['planId'] !=
-
-      //       SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
-      //     List<String> acceptorList = [widget.offer.email, requestModel.email];
-      //     requestModel.all
-      //     owedCalenderUsers = acceptorList.toList();
-      //   } else {
-      //     requestModel.allowedCalenderUsers = [];
-      //   }
-      //
-      //   await continueCreateRequest(confirmationDialogContext: null);
-      // } else {
-      //
-      //   eventsIdsArr = await _writeToDB();
-      //
-      //   Navigator.pop(dialogContext);
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return AddToCalendar(
-      //             isOfferRequest: true,
-      //             offer: widget.offer,
-      //             requestModel: requestModel,
-      //             userModel: widget.userModel,
-      //             eventsIdsArr: eventsIdsArr);
-      //       },
-      //     ),
-      //   );
-      //   // await _settingModalBottomSheet(context);
-      // }
     }
   }
 
-  void continueCreateRequest({BuildContext confirmationDialogContext}) async {
-    linearProgressForCreatingRequest();
+  Future<void> createOfferAcceptorDocument({
+    TimebankModel timebankModel,
+    String offerId,
+    String notifictionId,
+  }) async {
+    var status = 'REQUESTED';
 
-    List<String> resVar = await _writeToDB();
-    eventsIdsArr = resVar;
-    Navigator.pop(dialogContext);
+    var timebankId = timebankModel.id;
+    var communityId = SevaCore.of(context).loggedInUser.currentCommunity;
 
-    if (resVar.length == 0 && requestModel.requestType != RequestType.BORROW) {
-      showInsufficientBalance();
-    }
-    if (confirmationDialogContext != null) {
-      Navigator.pop(confirmationDialogContext);
-    }
-    Navigator.pop(context, {'response': 'ACCEPTED'});
+    var fullName = SevaCore.of(context).loggedInUser.fullname;
+    var photoURL = SevaCore.of(context).loggedInUser.photoURL;
+    var acceptorEmail = SevaCore.of(context).loggedInUser.email;
+    var acceptorSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+    var acceptorBio = SevaCore.of(context).loggedInUser.bio;
+    var acceptorDocumentId = '';
+
+    await Firestore.instance
+        .collection('offers')
+        .document(offerId)
+        .collection('offerParticipants')
+        .document(notifictionId)
+        .setData({
+      'status': status,
+      'timebankId': timebankId,
+      'acceptorNotificationId': notifictionId,
+      'acceptorDocumentId': acceptorDocumentId,
+      'communityId': communityId,
+      'acceptorDetails': {
+        'fullName': fullName,
+        'photoURL': photoURL,
+        'email': acceptorEmail,
+        'sevauserid': acceptorSevaUserId,
+        'bio': acceptorBio,
+      }
+    });
   }
 
   void linearProgressForCreatingRequest() {
@@ -634,6 +504,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     TimebankModel timebankModel,
     OfferModel offerModel,
   }) async {
+    var notificationId = utils.Utils.getUuid();
     WriteBatch batchWrite = Firestore.instance.batch();
 
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
@@ -642,7 +513,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         offerModel: offerModel);
 
     NotificationsModel notification = NotificationsModel(
-        id: utils.Utils.getUuid(),
+        id: notificationId,
         timebankId: offerModel.timebankId,
         data: requestInvitationModel.toMap(),
         isRead: false,
@@ -662,6 +533,12 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           .collection("notifications")
           .document(notification.id),
       notification.toMap(),
+    );
+
+    await createOfferAcceptorDocument(
+      timebankModel: timebankModel,
+      offerId: widget.offer.id,
+      notifictionId: notificationId,
     );
     return await batchWrite
         .commit()
