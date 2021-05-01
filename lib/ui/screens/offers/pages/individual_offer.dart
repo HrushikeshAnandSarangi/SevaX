@@ -212,7 +212,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 currentNode: _minimumCredits,
                 value: snapshot.data,
                 heading: 'Minimum Credits',
-                onChanged: _bloc.onAvailabilityChanged,
+                onChanged: _bloc.onMinimumCreditsChanged,
                 hint: 'Provide minimum credits you require',
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),

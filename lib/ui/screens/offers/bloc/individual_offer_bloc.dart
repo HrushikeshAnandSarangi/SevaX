@@ -47,6 +47,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<String> get errorMessage => _errorMessage.stream;
 
   Function(String value) get onTitleChanged => _title.sink.add;
+  Function(String value) get onMinimumCreditsChanged => _minimumCredits.sink.add;
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
@@ -104,6 +105,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
         individualOfferDataModel.title = _title.value;
         individualOfferDataModel.description = _offerDescription.value;
         individualOfferDataModel.schedule = _availabilty.value;
+        individualOfferDataModel.minimumCredits =
+            int.parse(_minimumCredits.value);
 
         OfferModel offerModel = OfferModel(
           id: id,
