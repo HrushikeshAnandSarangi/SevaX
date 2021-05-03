@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2021-02-09T06:08:39+00:00",
+    "@@last_modified": "2021-04-23T15:44:50+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "Ex: Mfadhili wa kupanua makazi ya wanawake ...",
     "request_goods_title_hint": "Ex: Bidhaa zisizoharibika kwa Benki ya Chakula ...",
     "request_goods_desc_hint": "Ex: Benki ya Chakula ya Mitaa ina upungufu ...",
-    "cannot_create_project": "Matukio yanaweza tu kuundwa na msimamizi.Ikiwa unataka kuunda hafla, tafadhali tuma ujumbe kwa msimamizi wako."
+    "cannot_create_project": "Matukio yanaweza tu kuundwa na msimamizi.Ikiwa unataka kuunda hafla, tafadhali tuma ujumbe kwa msimamizi wako.",
+    "virtual": "Virtual.",
+    "public_to_sevax": "Umma kwa Sevax Global.",
+    "your_skills": "Ujuzi wako",
+    "your_interests": "Maslahi yako",
+    "feature_disabled": "Kipengele hiki kinazimwa kwa jumuiya yako",
+    "currently_not_permitted": "Hivi sasa hairuhusiwi, tafadhali angalia kiungo kinachofuata kwa habari zaidi.http:\/\/www.web.sevaxapp.com\/"
 }

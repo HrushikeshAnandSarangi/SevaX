@@ -310,6 +310,11 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(top: 20, bottom: 0),
+                child: Text((questionIndex + 1).toString() +
+                    ' / ${widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ? 4 : 3}'),
+              ),
+              Container(
                 margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -322,7 +327,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   ),
                 ),
               ),
-              Expanded(child: widgettype)
+              Expanded(child: widgettype),
             ],
           );
   }

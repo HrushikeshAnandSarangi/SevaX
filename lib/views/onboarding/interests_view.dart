@@ -91,7 +91,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 onPressed: widget.onBacked,
               ),
         title: Text(
-          'Your Interests',
+          S.of(context).your_interests,
           style: TextStyle(
             fontSize: 18,
           ),

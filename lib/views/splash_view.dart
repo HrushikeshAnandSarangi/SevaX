@@ -9,11 +9,15 @@ import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/intro_slider.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -26,6 +30,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -420,7 +425,7 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     var appLanguage = AppLanguage();
-    appLanguage.changeLanguage(Locale(loggedInUser.language));
+    appLanguage.changeLanguage(getLocaleFromCode(loggedInUser.language));
 
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
@@ -444,6 +449,8 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+
+    Provider.of<UserBloc>(context, listen: false).loadUser(loggedInUser.email);
 
     // UserData.shared.user = loggedInUser;
 
@@ -560,7 +567,7 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToLoginPage() async {
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => LoginPage(),
+        builder: (context) => ExplorePage(),
       ),
     );
   }

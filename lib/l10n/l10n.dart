@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -362,7 +361,7 @@ class S {
       );
 
   String get bio_description => Intl.message(
-        'Please tell us a little bit about yourself in a few sentences. For example, you can tell us what makes you unique.',
+        'Please tell us a little bit about yourself in a few sentences.For example, you can tell us what makes you unique.',
         name: 'bio_description',
       );
 
@@ -6135,6 +6134,36 @@ class S {
   String get cannot_create_project => Intl.message(
         'Events can only be created by an admin. If you wish to create an event, please send a message to your admin.',
         name: 'cannot_create_project',
+      );
+
+  String get virtual => Intl.message(
+        'Virtual',
+        name: 'virtual',
+      );
+
+  String get public_to_sevax => Intl.message(
+        'Public to SevaX Global',
+        name: 'public_to_sevax',
+      );
+
+  String get your_skills => Intl.message(
+        'Your Skills',
+        name: 'your_skills',
+      );
+
+  String get your_interests => Intl.message(
+        'Your Interests',
+        name: 'your_interests',
+      );
+
+  String get feature_disabled => Intl.message(
+        'This feature is disabled for your community',
+        name: 'feature_disabled',
+      );
+
+  String get currently_not_permitted => Intl.message(
+        'This is currently not permitted, Please see the following link for more information. http://www.web.sevaxapp.com/',
+        name: 'currently_not_permitted',
       );
 }
 

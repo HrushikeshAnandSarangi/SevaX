@@ -130,6 +130,19 @@ class UserRepository {
     return members;
   }
 
+  static Stream<UserModel> getUserStream(String email) async* {
+    var data =
+        Firestore.instance.collection("users").document(email).snapshots();
+    yield* data.transform(
+      StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
+        handleData: (snapshot, sink) {
+          sink.add(UserModel.fromMap(snapshot.data, 'User Repository'));
+        },
+        handleError: (error, _, sink) => sink.addError(error),
+      ),
+    );
+  }
+
   static Stream<QuerySnapshot> getBlockedMembers(String userId) {
     return ref.where("blockedBy", arrayContains: userId).snapshots();
   }

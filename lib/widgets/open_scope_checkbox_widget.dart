@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 class OpenScopeCheckBox extends StatelessWidget {
@@ -26,7 +27,11 @@ class OpenScopeCheckBox extends StatelessWidget {
               value: isChecked ?? false,
               onChanged: onChangedCB,
             ),
-            Text(getCheckBoxLabel(checkBoxTypeLabel),
+            Text(
+                getCheckBoxLabel(
+                  checkBoxTypeLabel,
+                  context,
+                ),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -44,19 +49,16 @@ class OpenScopeCheckBox extends StatelessWidget {
   }
 }
 
-String getCheckBoxLabel(CheckBoxType checkBoxType) {
+String getCheckBoxLabel(CheckBoxType checkBoxType, BuildContext context) {
   switch (checkBoxType) {
-    case CheckBoxType.type_Requests:
-      return "Public to SevaX Global";
     case CheckBoxType.type_Offers:
-      return "Public to SevaX Global";
     case CheckBoxType.type_Events:
-      return "Public to SevaX Global";
-    case CheckBoxType.type_VirtualRequest:
-      return "Virtual";
+    case CheckBoxType.type_Requests:
+      return S.of(context).public_to_sevax;
 
     case CheckBoxType.type_VirtualOffers:
-      return "Virtual";
+    case CheckBoxType.type_VirtualRequest:
+      return S.of(context).virtual;
     default:
       return "";
   }

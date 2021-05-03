@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -43,7 +44,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   MessageBloc _messageBloc = MessageBloc();
   NotificationsBloc _notificationsBloc = NotificationsBloc();
   List<Widget> pages = [
-    ExploreTabView(),
+    ExplorePage(),
+    // ExploreTabView(),
     CombinedNotificationsPage(),
     HomeDashBoard(),
     MessagePageRouter(),

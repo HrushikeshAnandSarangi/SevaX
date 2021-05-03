@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../flavor_config.dart';
 
@@ -53,10 +54,12 @@ Widget infoButton({
   assert(key != null);
   assert(type != null);
   // var temp = AppLocalizations.of(context).translate('info_window', 'mapper');
-  Map<String, dynamic> details = json.decode(AppConfig.remoteConfig
-      .getString("i_button_info_${S.of(context).localeName}"));
+
   return IconButton(
     key: key,
+    enableFeedback: true,
+    padding: EdgeInsets.all(4),
+    visualDensity: VisualDensity.standard,
     icon: Image.asset(
       'lib/assets/images/info.png',
       color: FlavorConfig.values.theme.primaryColor,
@@ -66,94 +69,106 @@ Widget infoButton({
     onPressed: () {
       RenderBox renderBox = key.currentContext.findRenderObject();
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
-      showDialog(
-        context: context,
-        builder: (BuildContext _context) {
-          // Map<InfoType, String> infoDescriptionMapper = {
-          //   InfoType.GROUPS:
-          //       AppLocalizations.of(context).translate('info_window', 'groups'),
-          //   InfoType.PROJECTS: AppLocalizations.of(context)
-          //       .translate('info_window', 'projects'),
-          //   InfoType.REQUESTS: AppLocalizations.of(context)
-          //       .translate('info_window', 'requests'),
-          //   InfoType.OFFERS:
-          //       AppLocalizations.of(context).translate('info_window', 'offers'),
-          //   InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
-          //       .translate('info_window', 'protected_timebank'),
-          //   InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
-          //       .translate('info_window', 'private_timebank'),
-          //   InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
-          //       .translate('info_window', 'private_group'),
-          //   InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
-          //       .translate('info_window', 'tax_configuration'),
-          // };
-          bool _isDialogBottom = buttonPosition.dy >
-              (MediaQuery.of(context).size.height / 2) + 100;
-          return Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Positioned(
-                top: _isDialogBottom ? null : (buttonPosition.dy - 30),
-                bottom: _isDialogBottom
-                    ? MediaQuery.of(context).size.height -
-                        buttonPosition.dy -
-                        45
-                    : null,
-                left: buttonPosition.dx + 8,
-                child: ClipPath(
-                  clipper:
-                      _isDialogBottom ? ReverseArrowClipper() : ArrowClipper(),
-                  child: Container(
-                    height: 60,
-                    width: 30,
-                    color: Colors.white,
-                  ),
-                ),
+      showDialogFromInfoWindow(
+          context: context,
+          key: key,
+          type: type,
+          buttonPosition: buttonPosition);
+    },
+  );
+}
+
+void showDialogFromInfoWindow(
+    {@required BuildContext context,
+    @required GlobalKey key,
+    @required InfoType type,
+    @required Offset buttonPosition}) {
+  Map<String, dynamic> details = json.decode(AppConfig.remoteConfig
+      .getString("i_button_info_${S.of(context).localeName}"));
+
+  showDialog(
+    context: context,
+    builder: (BuildContext _context) {
+      // Map<InfoType, String> infoDescriptionMapper = {
+      //   InfoType.GROUPS:
+      //       AppLocalizations.of(context).translate('info_window', 'groups'),
+      //   InfoType.PROJECTS: AppLocalizations.of(context)
+      //       .translate('info_window', 'projects'),
+      //   InfoType.REQUESTS: AppLocalizations.of(context)
+      //       .translate('info_window', 'requests'),
+      //   InfoType.OFFERS:
+      //       AppLocalizations.of(context).translate('info_window', 'offers'),
+      //   InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
+      //       .translate('info_window', 'protected_timebank'),
+      //   InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
+      //       .translate('info_window', 'private_timebank'),
+      //   InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
+      //       .translate('info_window', 'private_group'),
+      //   InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
+      //       .translate('info_window', 'tax_configuration'),
+      // };
+      bool _isDialogBottom =
+          buttonPosition.dy > (MediaQuery.of(context).size.height / 2) + 100;
+      return Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Positioned(
+            top: _isDialogBottom ? null : (buttonPosition.dy - 30),
+            bottom: _isDialogBottom
+                ? MediaQuery.of(context).size.height - buttonPosition.dy - 45
+                : null,
+            left: buttonPosition.dx + 8,
+            child: ClipPath(
+              clipper: _isDialogBottom ? ReverseArrowClipper() : ArrowClipper(),
+              child: Container(
+                height: 60,
+                width: 30,
+                color: Colors.white,
               ),
-              Positioned(
-                top: _isDialogBottom ? null : (buttonPosition.dy + 20),
-                bottom: _isDialogBottom
-                    ? MediaQuery.of(context).size.height - buttonPosition.dy
-                    : null,
-                left: 20,
-                right: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                  ),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            details[infoKeyMapper[type]] ?? 'Dummy label', //??
-                            // infoDescriptionMapper[key],
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
+            ),
+          ),
+          Positioned(
+            top: _isDialogBottom ? null : (buttonPosition.dy + 20),
+            bottom: _isDialogBottom
+                ? MediaQuery.of(context).size.height - buttonPosition.dy
+                : null,
+            left: 20,
+            right: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        details[infoKeyMapper[type]] ?? 'Dummy label', //??
+                        // infoDescriptionMapper[key],
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
                         ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: FlatButton(
-                            child: Text(S.of(context).ok),
-                            onPressed: () {
-                              Navigator.of(_context).pop();
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: FlatButton(
+                        child: Text(S.of(context).ok),
+                        onPressed: () {
+                          Navigator.of(_context).pop();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ],
       );
     },
   );

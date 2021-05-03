@@ -668,6 +668,79 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   );
 }
 
+Stream<List<ProjectModel>> getPublicProjects() async* {
+  var data = Firestore.instance
+      .collection('projects')
+      .where('public', isEqualTo: true)
+      .where('softDelete', isEqualTo: false)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
+      handleData: (snapshot, projectSink) {
+        List<ProjectModel> projectsList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            projectsList.add(model);
+          },
+        );
+        projectSink.add(projectsList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getPublicRequests() async* {
+  var data = Firestore.instance
+      .collection('requests')
+      .where('accepted', isEqualTo: false)
+      .where('public', isEqualTo: true)
+      .where('softDelete', isEqualTo: false)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            requestList.add(model);
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<OfferModel>> getPublicOffers() async* {
+  var data = Firestore.instance
+      .collection('offers')
+      .where('public', isEqualTo: true)
+      .where('softDelete', isEqualTo: false)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (snapshot, offerSink) {
+        List<OfferModel> offerList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            OfferModel model = OfferModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            offerList.add(model);
+          },
+        );
+        offerSink.add(offerList);
+      },
+    ),
+  );
+}
+
 Future<List<ProjectModel>> getUserPersonalProjectsListFuture(
     {@required String timebankid, @required String sevauserid}) async {
   List<ProjectModel> projectsList = [];
@@ -1078,9 +1151,27 @@ Future<void> approveRequestCompletion({
   List<TransactionModel> transactions =
       model.transactions.map((t) => t).toList();
   TransactionModel editedTransaction;
+
+  double taxPercentage;
+
+  DocumentSnapshot data = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get();
+  Map<String, dynamic> dataMap = data.data;
+  CommunityModel communityModel = CommunityModel(dataMap);
+  taxPercentage = communityModel.taxPercentage ?? 0;
+  //
+
+  double transactionvalue = (model.durationOfRequest / 60);
+
+  double tax = transactionvalue * taxPercentage;
+  transactionvalue = transactionvalue - tax;
+
   model.transactions = transactions.map((t) {
     if (t.to == userId) {
       editedTransaction = t;
+      editedTransaction.credits = transactionvalue;
       editedTransaction.isApproved = true;
       return editedTransaction;
     }
@@ -1100,26 +1191,10 @@ Future<void> approveRequestCompletion({
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
 
-  double transactionvalue = (model.durationOfRequest / 60);
-
   TimeBankBalanceTransactionModel balanceTransactionModel;
   var updatedRequestModel = model;
 
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
-    double taxPercentage;
-
-    DocumentSnapshot data = await Firestore.instance
-        .collection('communities')
-        .document(communityId)
-        .get();
-    Map<String, dynamic> dataMap = data.data;
-    CommunityModel communityModel = CommunityModel(dataMap);
-    taxPercentage = communityModel.taxPercentage ?? 0;
-    //
-
-    double tax = transactionvalue * taxPercentage;
-    transactionvalue = transactionvalue - tax;
-
     balanceTransactionModel = TimeBankBalanceTransactionModel(
       communityId: communityId,
       userId: userId,

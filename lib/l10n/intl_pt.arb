@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2021-02-09T06:08:38+00:00",
+    "@@last_modified": "2021-04-23T15:44:50+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "Ex: Arrecadação de fundos para expandir o abrigo para mulheres ...",
     "request_goods_title_hint": "Ex: Bens não perecíveis para Banco Alimentar ...",
     "request_goods_desc_hint": "Ex: Banco Alimentar Local tem escassez ...",
-    "cannot_create_project": "Os eventos só podem ser criados por um administrador.Se você deseja criar um evento, por favor, envie uma mensagem ao seu administrador."
+    "cannot_create_project": "Os eventos só podem ser criados por um administrador.Se você deseja criar um evento, por favor, envie uma mensagem ao seu administrador.",
+    "virtual": "Virtual",
+    "public_to_sevax": "Público a Sevít Global",
+    "your_skills": "Suas habilidades",
+    "your_interests": "Seus interesses",
+    "feature_disabled": "Este recurso é desativado para sua comunidade",
+    "currently_not_permitted": "Isso atualmente não é permitido, consulte o seguinte link para mais informações.http:\/\/www.web.sevaxapp.com\/"
 }

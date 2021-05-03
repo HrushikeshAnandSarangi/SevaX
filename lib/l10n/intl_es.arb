@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2021-02-09T06:08:38+00:00",
+    "@@last_modified": "2021-04-23T15:44:50+00:00",
     "check_met": "Comprobando, si nos conocimos antes",
     "we_met": "Nos conocimos antes",
     "hang_on": "Agárrate fuerte",
@@ -1217,5 +1217,11 @@
     "request_money_desc_hint": "Ej .: Recaudación de fondos para ampliar el refugio de mujeres ...",
     "request_goods_title_hint": "Ej .: Bienes no perecederos para Banco de Alimentos ...",
     "request_goods_desc_hint": "Ej: El banco de alimentos local tiene escasez ...",
-    "cannot_create_project": "Los eventos solo pueden ser creados por un administrador.Si desea crear un evento, envíe un mensaje a su administrador."
+    "cannot_create_project": "Los eventos solo pueden ser creados por un administrador.Si desea crear un evento, envíe un mensaje a su administrador.",
+    "virtual": "Virtual",
+    "public_to_sevax": "Público a Sevax Global",
+    "your_skills": "Tus habilidades",
+    "your_interests": "Tus intereses",
+    "feature_disabled": "Esta característica está deshabilitada para su comunidad.",
+    "currently_not_permitted": "Esto actualmente no está permitido, consulte el siguiente enlace para obtener más información.http:\/\/www.web.sevaxapp.com\/"
 }

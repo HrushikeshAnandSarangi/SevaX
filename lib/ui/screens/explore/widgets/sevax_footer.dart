@@ -1,0 +1,387 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/language.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+enum FooterData {
+  SevaX,
+  Discover,
+  Hosting,
+  About_Us,
+  Trust_Safety,
+  Host_community,
+  Careers,
+  Requests,
+  Create_offer,
+  Press,
+  Communities,
+  Organize_event,
+  Policies,
+  Offers,
+  Create_request,
+  Help,
+  Events,
+  Diversity_Belonging,
+  Guidebooks,
+  EMPTY
+}
+
+extension Label on FooterData {
+  String label({@required BuildContext context}) {
+    switch (this) {
+      case FooterData.About_Us:
+        return S.of(context).help_about_us;
+      case FooterData.Careers:
+        return 'Careers';
+      case FooterData.Communities:
+        return 'Communities';
+      case FooterData.Create_offer:
+        return S.of(context).create_offer;
+      case FooterData.Create_request:
+        return S.of(context).create_request;
+      case FooterData.Discover:
+        return 'Discover';
+      case FooterData.Diversity_Belonging:
+        return 'Diversity Belonging';
+      case FooterData.Events:
+        return S.of(context).projects;
+      case FooterData.Guidebooks:
+        return 'Guidebooks';
+      case FooterData.Help:
+        return S.of(context).help;
+      case FooterData.Hosting:
+        return 'Hosting';
+      case FooterData.Host_community:
+        return 'Host a community';
+      case FooterData.Organize_event:
+        return 'Organize an event';
+      case FooterData.Policies:
+        return 'Policies';
+      case FooterData.Press:
+        return 'Press';
+      case FooterData.Offers:
+        return S.of(context).offers;
+      case FooterData.Trust_Safety:
+        return 'Trust & Safety';
+      case FooterData.SevaX:
+        return 'SevaX';
+      case FooterData.Requests:
+        return S.of(context).requests;
+      case FooterData.EMPTY:
+        return '';
+      default:
+        return '';
+    }
+  }
+}
+
+class SevaExploreFooter extends StatelessWidget {
+  final List<List<FooterData>> footerData = [
+    [FooterData.SevaX, FooterData.Discover, FooterData.Hosting],
+    [FooterData.About_Us, FooterData.Trust_Safety, FooterData.Host_community],
+    [FooterData.Careers, FooterData.Requests, FooterData.Create_offer],
+    [FooterData.Press, FooterData.Communities, FooterData.Organize_event],
+    [FooterData.Policies, FooterData.Offers, FooterData.Create_request],
+    [FooterData.Help, FooterData.Events, FooterData.EMPTY],
+    [FooterData.Diversity_Belonging, FooterData.Guidebooks, FooterData.EMPTY],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: Theme.of(context).primaryColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      onChanged: (value) async {
+                        Provider.of<AppLanguage>(context, listen: false)
+                            .changeLanguage(
+                          getLocaleFromCode(value),
+                        );
+                        if (SevaCore.of(context).loggedInUser != null) {
+                          await updateUserLanguage(
+                            user: SevaCore.of(context).loggedInUser
+                              ..language = value,
+                          );
+                        }
+                      },
+                      value: S.of(context).localeName,
+                      items: languageNames.keys
+                          .map(
+                            (key) => DropdownMenuItem(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  languageNames[key],
+                                ),
+                              ),
+                              value: key,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 12),
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      onChanged: (value) {},
+                      items: languageNames.keys
+                          .map(
+                            (key) => DropdownMenuItem(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  languageNames[key],
+                                ),
+                              ),
+                              value: key,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Table(
+              children: [
+                ...footerData
+                    .map(
+                      (row) => TableRow(
+                        children: row
+                            .map(
+                              (data) => TableRowInkWell(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        footerData[0].contains(data) ? 16 : 4,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      data.label(context: context),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: footerData[0].contains(data)
+                                            ? 16
+                                            : 14,
+                                        fontWeight: footerData[0].contains(data)
+                                            ? FontWeight.w500
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  openUrl(
+                                    context: context,
+                                    data: data,
+                                  );
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    )
+                    .toList(),
+              ],
+            ),
+            Divider(
+              color: Colors.white,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                button(
+                  'Terms',
+                  getOnTap(
+                    context,
+                    S.of(context).login_agreement_terms_link,
+                    'termsAndConditionsLink',
+                  ),
+                ),
+                button(
+                  'Privacy',
+                  getOnTap(
+                    context,
+                    S.of(context).login_agreement_privacy_link,
+                    'privacyPolicyLink',
+                  ),
+                ),
+                button('Site Map', () {
+                  return getOnTap(context, 'Site Map', 'aboutSeva');
+                }),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Image.network(
+                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Ffacebook.png?alt=media&token=2a2ee259-0c97-4fee-bda8-aecd56a857aa',
+                    width: 15,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Image.network(
+                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Ftwitter.png?alt=media&token=4246c0d2-6971-474a-9096-3ccb2a7649a3',
+                    width: 15,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Image.network(
+                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Finstagram-symbol.png?alt=media&token=7e08d6c7-00a6-4187-a2ff-a0883c13f1ac',
+                    width: 15,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            Text(
+              '© Seva Exchange Corporation',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextButton button(
+    String text,
+    VoidCallback onTap,
+  ) {
+    return TextButton(
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      onPressed: onTap,
+    );
+  }
+
+  Function getOnTap(BuildContext context, String title, String dynamicKey) {
+    return () async {
+      var dynamicLinks;
+      dynamicLinks = json.decode(
+        AppConfig.remoteConfig.getString(
+          'links_${S.of(context).localeName}',
+        ),
+      );
+
+      navigateToWebView(
+        aboutMode: AboutMode(title: title, urlToHit: dynamicLinks[dynamicKey]),
+        context: context,
+      );
+    };
+  }
+
+  Function openUrl(
+      {@required FooterData data, @required BuildContext context}) {
+    switch (data) {
+      case FooterData.About_Us:
+        return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
+
+      case FooterData.Careers:
+        return getOnTap(context, 'Careers', 'aboutSeva');
+      case FooterData.Communities:
+        return getOnTap(context, 'Communities', 'aboutSeva');
+
+      case FooterData.Create_offer:
+        return getOnTap(context, S.of(context).create_offer, 'offersInfoLink');
+
+      case FooterData.Create_request:
+        return getOnTap(
+            context, S.of(context).create_request, 'requestsInfoLink');
+
+      case FooterData.Discover:
+        return getOnTap(context, 'Discover', 'aboutSeva');
+
+      case FooterData.Diversity_Belonging:
+        return getOnTap(context, 'Diversity Belonging', 'aboutSeva');
+
+      case FooterData.Events:
+        return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
+
+      case FooterData.Guidebooks:
+        return getOnTap(context, 'Guidebooks', 'aboutSeva');
+
+      case FooterData.Help:
+        return getOnTap(context, S.of(context).help, 'trainingVideo');
+
+      case FooterData.Hosting:
+        return getOnTap(context, 'Hosting', 'aboutSeva');
+
+      case FooterData.Host_community:
+        return getOnTap(context, 'Host a community', 'aboutSeva');
+
+      case FooterData.Organize_event:
+        return getOnTap(context, 'Organize an event', 'projectsInfoLink');
+
+      case FooterData.Policies:
+        return getOnTap(context, 'Policies', 'privacyPolicyLink');
+
+      case FooterData.Press:
+        return getOnTap(context, 'Press', 'aboutSeva');
+
+      case FooterData.Offers:
+        return getOnTap(context, S.of(context).offers, 'offersInfoLink');
+
+      case FooterData.Trust_Safety:
+        return getOnTap(context, 'Trust & Safety', 'aboutSeva');
+
+      case FooterData.SevaX:
+        return getOnTap(context, 'SevaX', 'aboutSeva');
+
+      case FooterData.Requests:
+        return getOnTap(context, S.of(context).requests, 'requestsInfoLink');
+
+      case FooterData.EMPTY:
+        return () {};
+
+      default:
+        return () {};
+    }
+  }
+}

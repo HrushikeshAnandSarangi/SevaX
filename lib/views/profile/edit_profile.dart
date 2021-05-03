@@ -165,14 +165,14 @@ class _EditProfilePageState extends State<EditProfilePage>
               onTap: _updateBio,
             ),
             detailsBuilder(
-              title: 'Your Interests',
-            //  title: S.of(context).interests.firstWordUpperCase(),
+              title: S.of(context).your_interests,
+              //  title: S.of(context).interests.firstWordUpperCase(),
               text: S.of(context).click_to_see_interests,
               onTap: () => _navigateToInterestsView(usermodel),
             ),
             detailsBuilder(
-              title: 'Your Skills',
-             // title: S.of(context).skills.firstWordUpperCase(),
+              title: S.of(context).your_skills,
+              // title: S.of(context).skills.firstWordUpperCase(),
               text: S.of(context).click_to_see_skills,
               onTap: () => _navigateToSkillsView(usermodel),
             ),
@@ -668,15 +668,16 @@ class _EditProfilePageState extends State<EditProfilePage>
       String imageUrl =
           await uploadImage(SevaCore.of(context).loggedInUser.email);
 
-      await profanityCheck(imageURL: imageUrl);
+      await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
     }
   }
 
-  Future<void> profanityCheck({String imageURL}) async {
+  Future<void> profanityCheck({String imageURL, String storagePath}) async {
     // _newsImageURL = imageURL;
     log("inside profanity");
 
-    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    profanityImageModel =
+        await checkProfanityForImage(imageUrl: imageURL, storagePath: imageUrl);
     log("model ${profanityImageModel.toString()}");
     if (profanityImageModel == null) {
       setState(() {

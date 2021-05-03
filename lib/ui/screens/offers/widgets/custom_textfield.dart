@@ -14,7 +14,7 @@ class CustomTextField extends StatelessWidget {
   final FocusNode currentNode;
   final FocusNode nextNode;
   final List<TextInputFormatter> formatters;
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
   final Function(String) validator;
   final bool autovalidate;
   final textCapitalization;
@@ -40,6 +40,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.errorMaxLines,
     this.onSaved,
+    this.controller,
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
@@ -55,15 +56,15 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (value != null) {
-      controller.value = controller.value.copyWith(
-        text: value,
-      );
-      controller.selection = controller.selection.copyWith(
-        baseOffset: value?.length,
-        extentOffset: value?.length,
-      );
-    }
+    // if (value != null) {
+    //   controller.value = controller.value.copyWith(
+    //     text: value,
+    //   );
+    //   controller.selection = controller.selection.copyWith(
+    //     baseOffset: value?.length,
+    //     extentOffset: value?.length,
+    //   );
+    // }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

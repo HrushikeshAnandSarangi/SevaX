@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 ProfanityImageModel profanityImageModelFromMap(String str) =>
     ProfanityImageModel.fromMap(json.decode(str));
@@ -35,28 +36,32 @@ class ProfanityImageModel extends DataModel {
   int racyConfidence;
   int nsfwConfidence;
 
-  factory ProfanityImageModel.fromMap(Map<String, dynamic> json) =>
-      ProfanityImageModel(
-        adult: json["adult"] == null ? null : json["adult"],
-        spoof: json["spoof"] == null ? null : json["spoof"],
-        medical: json["medical"] == null ? null : json["medical"],
-        violence: json["violence"] == null ? null : json["violence"],
-        racy: json["racy"] == null ? null : json["racy"],
-        adultConfidence:
-            json["adultConfidence"] == null ? null : json["adultConfidence"],
-        spoofConfidence:
-            json["spoofConfidence"] == null ? null : json["spoofConfidence"],
-        medicalConfidence: json["medicalConfidence"] == null
-            ? null
-            : json["medicalConfidence"],
-        violenceConfidence: json["violenceConfidence"] == null
-            ? null
-            : json["violenceConfidence"],
-        racyConfidence:
-            json["racyConfidence"] == null ? null : json["racyConfidence"],
-        nsfwConfidence:
-            json["nsfwConfidence"] == null ? null : json["nsfwConfidence"],
-      );
+  factory ProfanityImageModel.fromMap(Map<String, dynamic> json) {
+    logger.d(">>>>>   " + json.toString());
+
+    if (json == null) json = Map();
+
+    return ProfanityImageModel(
+      adult: json["adult"] == null ? null : json["adult"],
+      spoof: json["spoof"] == null ? null : json["spoof"],
+      medical: json["medical"] == null ? null : json["medical"],
+      violence: json["violence"] == null ? null : json["violence"],
+      racy: json["racy"] == null ? null : json["racy"],
+      adultConfidence:
+          json["adultConfidence"] == null ? null : json["adultConfidence"],
+      spoofConfidence:
+          json["spoofConfidence"] == null ? null : json["spoofConfidence"],
+      medicalConfidence:
+          json["medicalConfidence"] == null ? null : json["medicalConfidence"],
+      violenceConfidence: json["violenceConfidence"] == null
+          ? null
+          : json["violenceConfidence"],
+      racyConfidence:
+          json["racyConfidence"] == null ? null : json["racyConfidence"],
+      nsfwConfidence:
+          json["nsfwConfidence"] == null ? null : json["nsfwConfidence"],
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         "adult": adult == null ? null : adult,
