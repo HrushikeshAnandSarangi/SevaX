@@ -24,39 +24,32 @@ class ExploreFeaturedCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 0, right: 10),
       child: InkWell(
         onTap: onTap,
-        child: Flex(
-          direction: Axis.horizontal,
-          children: [
-            Column(
-              children: [
-                //Card(
-                //  borderOnForeground: false,
-                //  elevation: 1,
-                //  child:
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(3.0),
-                  child: Image.network(imageUrl,
-                      height: 200, width: 250, fit: BoxFit.contain),
-                  //  ),
-                ),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(left: 0),
-                  child: Container(
-                    width: 180,
-                    child: Text(
-                      communityName,
-                      style: textStyle ??
-                          const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
+        child: SizedBox(
+          height: 300,
+          width: 150,
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(3.0),
+                child: AspectRatio(
+                  aspectRatio: 2 / 3,
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                communityName,
+                style: textStyle ??
+                    const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

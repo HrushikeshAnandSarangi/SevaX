@@ -40,11 +40,25 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
         future: communities,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
+            return Container(
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 4),
+                child: LoadingIndicator(),
+              ),
+            );
           }
-
-          if (snapshot.data.isEmpty) {
-            return Text('No communities found');
+          if (snapshot.data == null || snapshot.data.isEmpty) {
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 4 - 20),
+                child: Text('No result found'),
+              ),
+            );
           }
 
           int length = snapshot.data.length;

@@ -23,8 +23,7 @@ class RequestsByCategoryView extends StatefulWidget {
     @required this.model,
   }) : super(key: key);
   @override
-  _RequestsByCategoryViewState createState() =>
-      _RequestsByCategoryViewState();
+  _RequestsByCategoryViewState createState() => _RequestsByCategoryViewState();
 }
 
 class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
@@ -33,10 +32,9 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
   @override
   void initState() {
     requests = ElasticSearchApi.getRequestsByCategory(widget.model.typeId);
-    log('type id: '  + widget.model.typeId);
+    log('type id: ' + widget.model.typeId);
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -49,44 +47,45 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
         future: requests,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 4 - 20),
+                child: LoadingIndicator(),
+              ),
+            );
+          }
+          if (snapshot.data == null || snapshot.data.isEmpty) {
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 4 - 20),
+                child: Text('No result found'),
+              ),
+            );
           }
 
-          // if (snapshot.data.isEmpty) {
-          //   return Text('No requests found');
-          // }
-
-          return StreamBuilder<List<RequestModel>>(
-            stream: snapshot.data,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return LoadingIndicator();
-              }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
-                return Text('No result found');
-              }
-
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  var request = snapshot.data[index];
-                  var date =
-                      DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-                  return ExploreEventCard(
-                    photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                    title: request.title,
-                    description: request.description,
-                    location: request.address,
-                    communityName: "request.communityName ?? ''",
-                    date: DateFormat('d MMMM, y').format(date),
-                    time: DateFormat.jm().format(date),
-                    memberList: MemberAvatarListWithCount(
-                      userIds: request.approvedUsers,
-                    ),
-                  );
-                },
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              var request = snapshot.data[index];
+              var date =
+                  DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+              return ExploreEventCard(
+                photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                title: request.title,
+                description: request.description,
+                location: request.address,
+                communityName: "request.communityName ?? ''",
+                date: DateFormat('d MMMM, y').format(date),
+                time: DateFormat.jm().format(date),
+                memberList: MemberAvatarListWithCount(
+                  userIds: request.approvedUsers,
+                ),
               );
             },
           );
@@ -94,5 +93,4 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       ),
     );
   }
-  
 }

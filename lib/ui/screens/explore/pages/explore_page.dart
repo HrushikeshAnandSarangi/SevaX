@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/requests_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/find_communities_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/requests_by_category_view.dart';
@@ -443,15 +444,19 @@ class _ExplorePageState extends State<ExplorePage> {
                                 if (index > 5) {
                                   return null;
                                 } else {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ExploreFeaturedCard(
-                                        imageUrl: community.logo_url,
-                                        communityName: community.name,
-                                        onTap: () {},
-                                      ),
-                                    ],
+                                  return ExploreFeaturedCard(
+                                    imageUrl: community.logo_url,
+                                    communityName: community.name,
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExploreCommunityDetails(
+                                            communityId: community.id,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 }
                               },
@@ -643,12 +648,13 @@ class _ExplorePageState extends State<ExplorePage> {
                                       'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore%20browse%20card%20image.JPG?alt=media&token=48eda7bf-0089-40f4-8b04-0efcb3a881bd',
                                   title: categories[index].title_en,
                                   onTap: () {
-                                    log('Category id: ' + categories[index].categoryId);
+                                    log('Category id: ' +
+                                        categories[index].categoryId);
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (context) => RequestsByCategoryView(
-                                          model: categories[index]
-                                        ),
+                                        builder: (context) =>
+                                            RequestsByCategoryView(
+                                                model: categories[index]),
                                       ),
                                     );
                                   },
