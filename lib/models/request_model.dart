@@ -507,8 +507,8 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey("skills")) {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
-    }else{
-      this.skills={};
+    } else {
+      this.skills = {};
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
@@ -539,8 +539,7 @@ class RequestModel extends DataModel {
       ;
     }
     if (map.containsKey('imageUrls')) {
-      List<String> imageUrls =
-      List.castFrom(map['imageUrls']);
+      List<String> imageUrls = List.castFrom(map['imageUrls']);
       this.imageUrls = imageUrls;
     } else {
       this.imageUrls = [];
@@ -581,8 +580,8 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey("skills")) {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
-    }else{
-      this.skills={};
+    } else {
+      this.skills = {};
     }
 
     if (map.containsKey('requestMode')) {
@@ -750,7 +749,6 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('end')) {
-//      this.end = map['end'];
       this.end = End.fromMap(Map<String, dynamic>.from(map['end']));
     }
     if (map.containsKey('parent_request_id')) {
@@ -781,56 +779,56 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('hasBorrowAgreement')) {
       this.hasBorrowAgreement = map['hasBorrowAgreement'];
-    if (map.containsKey('timebanksPosted')) {
-      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-      this.timebanksPosted = timebanksPosted;
-    } else {
-      this.timebanksPosted = [];
-    }
-    if (map.containsKey('timebanksPosted')) {
-      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-      this.timebanksPosted = timebanksPosted;
-    } else {
-      this.timebanksPosted = [];
-    }
+      if (map.containsKey('timebanksPosted')) {
+        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+        this.timebanksPosted = timebanksPosted;
+      } else {
+        this.timebanksPosted = [];
+      }
+      if (map.containsKey('timebanksPosted')) {
+        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+        this.timebanksPosted = timebanksPosted;
+      } else {
+        this.timebanksPosted = [];
+      }
 
-    if (map.containsKey('public')) {
-      this.public = map['public'];
-    } else {
-      this.public = false;
-    }
-    if (map.containsKey('virtualRequest')) {
-      this.virtualRequest = map['virtualRequest'];
-    } else {
-      this.virtualRequest = false;
-    }
-    if (map.containsKey('timebanksPosted')) {
-      List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
-      this.timebanksPosted = timebanksPosted;
-    } else {
-      this.timebanksPosted = [];
-    }
+      if (map.containsKey('public')) {
+        this.public = map['public'];
+      } else {
+        this.public = false;
+      }
+      if (map.containsKey('virtualRequest')) {
+        this.virtualRequest = map['virtualRequest'];
+      } else {
+        this.virtualRequest = false;
+      }
+      if (map.containsKey('timebanksPosted')) {
+        List<String> timebanksPosted = List.castFrom(map['timebanksPosted']);
+        this.timebanksPosted = timebanksPosted;
+      } else {
+        this.timebanksPosted = [];
+      }
 
-    if (map.containsKey('participantDetails')) {
-      this.participantDetails = Map.castFrom(map['participantDetails']);
-    }
-    if (map.containsKey('isFromOfferRequest')) {
-      this.isFromOfferRequest = map['isFromOfferRequest'];
-    } else {
-      this.isFromOfferRequest = false;
-    }
-    if (map.containsKey('minimumCredits')) {
-      this.minimumCredits = map['minimumCredits'];
-    }
-    if (map.containsKey('liveMode')) {
-      this.liveMode = map['liveMode'];
-    }
-    if (map.containsKey('imageUrls')) {
-      List<String> imageUrls =
-      List.castFrom(map['imageUrls']);
-      this.imageUrls = imageUrls;
-    } else {
-      this.imageUrls = [];
+      if (map.containsKey('participantDetails')) {
+        this.participantDetails = Map.castFrom(map['participantDetails']);
+      }
+      if (map.containsKey('isFromOfferRequest')) {
+        this.isFromOfferRequest = map['isFromOfferRequest'];
+      } else {
+        this.isFromOfferRequest = false;
+      }
+      if (map.containsKey('minimumCredits')) {
+        this.minimumCredits = map['minimumCredits'];
+      }
+      if (map.containsKey('liveMode')) {
+        this.liveMode = map['liveMode'];
+      }
+      if (map.containsKey('imageUrls')) {
+        List<String> imageUrls = List.castFrom(map['imageUrls']);
+        this.imageUrls = imageUrls;
+      } else {
+        this.imageUrls = [];
+      }
     }
   }
 
@@ -1006,7 +1004,8 @@ class RequestModel extends DataModel {
       object['numberOfApprovals'] = this.numberOfApprovals;
     }
     if (this.location != null) {
-      object['location'] = this.location.data;//Map<String, dynamic>.from(this.location.data);
+      object['location'] =
+          this.location.data; //Map<String, dynamic>.from(this.location.data);
     }
     if (this.id != null) {
       object['id'] = this.id;
@@ -1084,8 +1083,8 @@ class RequestModel extends DataModel {
     }
     if (this.imageUrls != null) {
       object['imageUrls'] = this.imageUrls;
-    }else{
-      object['imageUrls']=[];
+    } else {
+      object['imageUrls'] = [];
     }
     return object;
   }
