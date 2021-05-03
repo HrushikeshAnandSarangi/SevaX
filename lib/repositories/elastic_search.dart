@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -372,6 +373,42 @@ class ElasticSearchApi {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
     List<RequestModel> models = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      RequestModel model = RequestModel.fromMap(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.title.compareTo(b.title));
+    return models;
+  }
+
+  static Future<List<RequestModel>> getRequestsByCategory(typeId) async {
+    String endPoint = '//elasticsearch/requests/request/_search';
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "term": {"public": true}
+              },
+              {
+                "term": {"softDelete": false}
+              },
+              {
+                "term": {"categories": typeId}
+              }
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<RequestModel> models = [];
+
+    log('Returned Requests: ' + hitList.toString());
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];

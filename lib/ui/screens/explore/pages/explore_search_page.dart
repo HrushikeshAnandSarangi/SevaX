@@ -69,6 +69,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       dispose: (context, bloc) => bloc.dispose(),
       child: ExplorePageViewHolder(
         appBarTitle: 'Search',
+        hideSearchBar: true,
         hideHeader: Provider.of<UserModel>(context) != null,
         hideFooter: Provider.of<UserModel>(context) != null,
         controller: _searchController,
@@ -391,21 +392,33 @@ class _CommunitiesView extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0,
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 200,
-                                          height: 320,
-                                          child: Image.network(
-                                            community.logo_url,
-                                            fit: BoxFit.cover,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExploreCommunityDetails(
+                                              communityId: community.id,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(community.name),
-                                      ],
+                                        );
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 200,
+                                            height: 320,
+                                            child: Image.network(
+                                              community.logo_url,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          SizedBox(height: 3),
+                                          Text(community.name),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
