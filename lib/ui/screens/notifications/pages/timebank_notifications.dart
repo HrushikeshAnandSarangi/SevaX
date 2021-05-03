@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,7 @@ import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -33,11 +35,13 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_w
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -45,15 +49,18 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent_credits_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
   final ScrollPhysics physics;
+  final UserModel userModel;
 
-  const TimebankNotifications({Key key, this.timebankModel, this.physics})
+  const TimebankNotifications({Key key, this.timebankModel, this.physics, this.userModel})
       : super(key: key);
   @override
   _TimebankNotificationsState createState() => _TimebankNotificationsState();
@@ -113,6 +120,77 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
             switch (notification.type) {
+              case NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS:
+                UserInsufficentCreditsModel userInsufficientModel =
+                    UserInsufficentCreditsModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  title: "${userInsufficientModel.senderName}"
+                      " Has Insufficient Credits To Create Requests",
+                  subTitle: "Credits Needed: "
+                      "${userInsufficientModel.creditsNeeded} \n${S.of(context).tap_to_view_details}",
+                  photoUrl: userInsufficientModel.senderPhotoUrl,
+                  entityName: userInsufficientModel.senderName,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_context) {
+                        return TimebankUserInsufficientCreditsDialog(
+                          userInsufficientModel: userInsufficientModel,
+                          timeBankId: userInsufficientModel.timebankId,
+                          notificationId: notification.id,
+                          userModel: SevaCore.of(context).loggedInUser,
+                          timebankModel: widget.timebankModel,
+                          onMessageClick: () {
+                            ParticipantInfo sender = ParticipantInfo(
+                              id: SevaCore.of(context).loggedInUser.sevaUserID,
+                              name: SevaCore.of(context).loggedInUser.fullname,
+                              photoUrl:
+                                  SevaCore.of(context).loggedInUser.photoURL,
+                              type: ChatType.TYPE_TIMEBANK,
+                            );
+
+                            ParticipantInfo reciever = ParticipantInfo(
+                              id: notification.senderUserId,
+                              name: userInsufficientModel.senderName,
+                              photoUrl: userInsufficientModel.senderPhotoUrl,
+                              type: ChatType.TYPE_PERSONAL,
+                            );
+
+                            createAndOpenChat(
+                              isTimebankMessage: true,
+                              context: context,
+                              timebankId: userInsufficientModel.timebankId,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              sender: sender,
+                              reciever: reciever,
+                              isFromRejectCompletion: false,
+                              // onChatCreate: () {
+                              //   Navigator.of(context).pop();
+                              // },
+                            );
+
+                            Navigator.pop(_context);
+                          },
+                          onDonateClick: () async {
+                            Navigator.pop(_context);
+                            await _showFontSizePickerDialog(context, notification.senderUserId,
+                                                            widget.timebankModel, userInsufficientModel.creditsNeeded);
+                          },
+                        );
+                      },
+                    );
+                  },
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+                break;
               case NotificationType.TypeMemberJoinViaCode:
                 UserAddedModel userAddedModel =
                     UserAddedModel.fromMap(notification.data);
@@ -660,8 +738,75 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         );
       },
     );
+
   }
 
+  void _showFontSizePickerDialog(
+      BuildContext context, String userId, TimebankModel model, double creditsNeeded) async {
+    var connResult = await Connectivity().checkConnectivity();
+    if (connResult == ConnectivityResult.none) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).check_internet),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (widget.timebankModel.balance <= 0) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(S.of(context).insufficient_credits_to_donate),
+          action: SnackBarAction(
+            label: S.of(context).dismiss,
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // <-- note the async keyword here
+    double donateAmount = 0;
+//     this will contain the result from Navigator.pop(context, result)
+    final donateAmount_Received = await showDialog<double>(
+      context: context,
+      builder: (context) => InputDonateDialog(
+          donateAmount: donateAmount, maxAmount: widget.timebankModel.balance.toDouble(),
+          creditsNeeded: creditsNeeded),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (donateAmount_Received != null) {
+      donateAmount = donateAmount_Received;
+      widget.timebankModel.balance = widget.timebankModel.balance - donateAmount_Received;
+
+      //from, to, timestamp, credits, isApproved, type, typeid, timebankid
+      await TransactionBloc().createNewTransaction(
+        model.id,
+        userId,
+        DateTime.now().millisecondsSinceEpoch,
+        donateAmount,
+        true,
+        "ADMIN_DONATE_TOUSER",
+        null,
+        model.id,
+        communityId: model.communityId,
+      );
+      await showDialog<double>(
+        context: context,
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
+      );
+    }
+  }
   Future lenderReceivedBackCheck({
     NotificationsModel notification,
     RequestModel requestModelUpdated,
@@ -943,6 +1088,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     log('WRITTEN TO DB--------------------->>');
   }
+
+
+}
 
 
 }

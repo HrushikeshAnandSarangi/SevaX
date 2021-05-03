@@ -33,6 +33,8 @@ import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -68,6 +70,8 @@ import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -2439,8 +2443,16 @@ class RequestCreateFormState extends State<RequestCreateForm>
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
+          double creditsNeeded =
+                await SevaCreditLimitManager.checkCreditsNeeded(
+            email: SevaCore.of(context).loggedInUser.email,
+            credits: requestModel.numberOfHours.toDouble(),
+            userId: myDetails.sevaUserID,
+            communityId: timebankModel.communityId,
+          );
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
+            await sendInsufficentNotificationToAdmin(creditsNeeded: creditsNeeded);
             return;
           }
           break;
@@ -2983,6 +2995,41 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           );
         });
+  }
+
+  void sendInsufficentNotificationToAdmin({
+    double creditsNeeded,
+  }) async {
+
+    log('creditsNeeded:  '  + creditsNeeded.toString());
+
+    UserInsufficentCreditsModel userInsufficientModel = UserInsufficentCreditsModel(
+      senderName: SevaCore.of(context).loggedInUser.fullname,
+      senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+      senderPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+      timebankId: timebankModel.id,
+      timebankName: timebankModel.name,
+      creditsNeeded: creditsNeeded,
+    );
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: timebankModel.id,
+        data: userInsufficientModel.toMap(),
+        isRead: false,
+        type: NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
+        communityId: timebankModel.communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: timebankModel.creatorId);
+
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(timebankModel.id)
+        .collection("notifications")
+        .document(notification.id)
+        .setData((notification..isTimebankNotification = true).toMap());
+
+    log('writtent to DB');
   }
 }
 

@@ -97,6 +97,8 @@ class SevaCreditLimitManager {
       return true;
     }
     var currentGlobalBalance = await getCurrentBalance(email: email);
+    log('currentGlobalBalance:  ' + currentGlobalBalance.toString());
+
     if (currentGlobalBalance >= credits) {
       return true;
     } else {
@@ -123,6 +125,30 @@ class SevaCreditLimitManager {
         return false;
       }
     }
+  }
+
+  static Future<double> checkCreditsNeeded({
+    @required String email,
+    @required String userId,
+    @required double credits,
+    @required String communityId,
+  }) async {
+    var associatedBalanceWithinThisCommunity =
+        await getMemberBalancePerTimebank(
+      userSevaId: userId,
+      communityId: communityId,
+    );
+    var communityThreshold =
+        await getNegativeThresholdForCommunity(communityId);
+
+    var creditsNeeded = (credits -
+        (associatedBalanceWithinThisCommunity + communityThreshold.abs()));
+
+    log('credits:  ' + associatedBalanceWithinThisCommunity.toString()); 
+    log('CAB:  ' + associatedBalanceWithinThisCommunity.toString());
+    log('CT:  ' + communityThreshold.toString());
+    log('cNeeded:  ' + creditsNeeded.toString());
+    return creditsNeeded;
   }
 
   static Future<double> getCurrentBalance({String email}) {

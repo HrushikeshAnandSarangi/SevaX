@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -1759,13 +1760,15 @@ class InputDonateDialog extends StatefulWidget {
   /// initial selection for the slider
   final double donateAmount;
   final double maxAmount;
+  final double creditsNeeded;
 
-  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount})
+  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount, this.creditsNeeded})
       : super(key: key);
 
   @override
   _InputDonateDialogState createState() => _InputDonateDialogState();
 }
+
 
 class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
@@ -1781,6 +1784,9 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    String creditsNeededFinal = widget.creditsNeeded.round().toString();
+
     return AlertDialog(
       title: Text(S.of(context).loan_seva_credit_to_user),
       content: Form(
@@ -1791,6 +1797,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             Text('${S.of(context).timebank_seva_credit} ' +
                 widget.maxAmount.toStringAsFixed(2).toString()),
             TextFormField(
+              initialValue: creditsNeededFinal,
               decoration: InputDecoration(
                 hintText: S.of(context).number_of_seva_credit,
               ),

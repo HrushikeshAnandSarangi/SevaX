@@ -313,10 +313,14 @@ class ReportedMemberCard extends StatelessWidget {
     }
   }
 
-  void removeMemberTimebankFn(BuildContext context, String adminEmail,
-      String adminId, String adminName, String adminPhoto, String timebankTitle,
+  void removeMemberTimebankFn(
+      BuildContext context,
+      String adminEmail,
+      String adminId,
+      String adminName,
+      String adminPhoto,
+      String timebankTitle,
       String timebankId) async {
-
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
     progressDialog.hide();
