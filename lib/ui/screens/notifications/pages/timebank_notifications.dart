@@ -60,7 +60,8 @@ class TimebankNotifications extends StatefulWidget {
   final ScrollPhysics physics;
   final UserModel userModel;
 
-  const TimebankNotifications({Key key, this.timebankModel, this.physics, this.userModel})
+  const TimebankNotifications(
+      {Key key, this.timebankModel, this.physics, this.userModel})
       : super(key: key);
   @override
   _TimebankNotificationsState createState() => _TimebankNotificationsState();
@@ -176,8 +177,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           },
                           onDonateClick: () async {
                             Navigator.pop(_context);
-                            await _showFontSizePickerDialog(context, notification.senderUserId,
-                                                            widget.timebankModel, userInsufficientModel.creditsNeeded);
+                            await _showFontSizePickerDialog(
+                                context,
+                                notification.senderUserId,
+                                widget.timebankModel,
+                                userInsufficientModel.creditsNeeded);
                           },
                         );
                       },
@@ -314,7 +318,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () async {
                     checkForReviewBorrowRequests(notification);
 
-                   // subjectBorrow.add(0);
+                    // subjectBorrow.add(0);
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
@@ -338,10 +342,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                   onPressed: () async {
-                   // subjectBorrow.add(0);
+                    // subjectBorrow.add(0);
                     checkForReviewBorrowRequests(notification);
-
-
                   },
                   photoUrl: model.photoUrl,
                   title: '${model.title}', //Label to be created
@@ -473,7 +475,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.JoinRequest:
-                return TimebankJoinRequestWidget(notification: notification, timebankModel: widget.timebankModel);
+                return TimebankJoinRequestWidget(
+                    notification: notification,
+                    timebankModel: widget.timebankModel);
 
               case NotificationType.APPROVE_SPONSORED_GROUP_REQUEST:
                 return SponsorGroupRequestWidget(notification: notification);
@@ -738,11 +742,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         );
       },
     );
-
   }
 
-  void _showFontSizePickerDialog(
-      BuildContext context, String userId, TimebankModel model, double creditsNeeded) async {
+  void _showFontSizePickerDialog(BuildContext context, String userId,
+      TimebankModel model, double creditsNeeded) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -776,7 +779,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     final donateAmount_Received = await showDialog<double>(
       context: context,
       builder: (context) => InputDonateDialog(
-          donateAmount: donateAmount, maxAmount: widget.timebankModel.balance.toDouble(),
+          donateAmount: donateAmount,
+          maxAmount: widget.timebankModel.balance.toDouble(),
           creditsNeeded: creditsNeeded),
     );
 
@@ -786,7 +790,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     // (back button or pressed outside of the dialog)
     if (donateAmount_Received != null) {
       donateAmount = donateAmount_Received;
-      widget.timebankModel.balance = widget.timebankModel.balance - donateAmount_Received;
+      widget.timebankModel.balance =
+          widget.timebankModel.balance - donateAmount_Received;
 
       //from, to, timestamp, credits, isApproved, type, typeid, timebankid
       await TransactionBloc().createNewTransaction(
@@ -799,6 +804,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         null,
         model.id,
         communityId: model.communityId,
+        toEmailORId: userId,
+        fromEmailORId: model.id,
       );
       await showDialog<double>(
         context: context,
@@ -807,6 +814,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       );
     }
   }
+
   Future lenderReceivedBackCheck({
     NotificationsModel notification,
     RequestModel requestModelUpdated,
@@ -814,7 +822,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     showProgressForCreditRetrieval(parentContext);
 
     //Send Receipt Email to Lender & Borrowr
-    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(requestModelUpdated);
+    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
+        requestModelUpdated);
     log('Came to send receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged
@@ -863,11 +872,16 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
       log('after feedback here 1');
       showProgressForCreditRetrieval(parentContext);
 
-      onActivityResult(results, SevaCore.of(context).loggedInUser,notification);
+      onActivityResult(
+          results, SevaCore.of(context).loggedInUser, notification);
     } else {}
   }
 
-  Future<void> onActivityResult(Map results, UserModel loggedInUser, NotificationsModel notification,) async {
+  Future<void> onActivityResult(
+    Map results,
+    UserModel loggedInUser,
+    NotificationsModel notification,
+  ) async {
     // adds review to firestore
     try {
       logger.i('here 1');
@@ -877,7 +891,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         "ratings": results['selection'],
         "device_info": results['device_info'],
         "requestId": requestModelNew.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments"),
+        "comments":
+            (results['didComment'] ? results['comment'] : "No comments"),
       });
       logger.i('here 2');
 
@@ -996,7 +1011,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     }
   }
 
-
   BuildContext creditRequestDialogContext;
   void showProgressForCreditRetrieval(BuildContext parentContext) {
     showDialog(
@@ -1088,9 +1102,4 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
     log('WRITTEN TO DB--------------------->>');
   }
-
-
-}
-
-
 }
