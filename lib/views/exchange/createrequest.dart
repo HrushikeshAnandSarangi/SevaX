@@ -658,9 +658,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
                             HideWidget(
                               hide: AppConfig.isTestCommunity,
-                              child:Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: ConfigurationCheck(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: ConfigurationCheck(
                                   actionType: 'create_virtual_request',
                                   role: memberType(
                                       timebankModel,
@@ -1326,13 +1327,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
-                      instructorAdded = false;
-                      requestModel.selectedInstructor = null;
-                      requestModel.requestType = value;
-                      AppConfig.helpIconContextMember =
-                          HelpContextMemberType.time_requests;
-                      setState(() => {});
-                    },),
+                        instructorAdded = false;
+                        requestModel.selectedInstructor = null;
+                        requestModel.requestType = value;
+                        AppConfig.helpIconContextMember =
+                            HelpContextMemberType.time_requests;
+                        setState(() => {});
+                      },
+                    ),
                   ),
                   TransactionsMatrixCheck(
                     comingFrom: widget.comingFrom,
@@ -1383,24 +1385,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: ConfigurationCheck(
-    actionType: 'create_goods_request',
-    role: memberType(timebankModel,
-    SevaCore.of(context).loggedInUser.sevaUserID),child:_optionRadioButton<RequestType>(
-                      title: 'Borrow', //Label to be created
-                      value: RequestType.BORROW,
-                      isEnabled: !widget.isOfferRequest,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        //requestModel.isRecurring = true;
-                        requestModel.requestType = value;
-                        //By default instructor for One To Many Requests is the creator
-                        instructorAdded = false;
-                        requestModel.selectedInstructor = null;
-                        AppConfig.helpIconContextMember =
-                            HelpContextMemberType.time_requests;
-                        setState(() => {});
-                      },
-                    ),
+                      actionType: 'create_goods_request',
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: _optionRadioButton<RequestType>(
+                        title: 'Borrow', //Label to be created
+                        value: RequestType.BORROW,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          //requestModel.isRecurring = true;
+                          requestModel.requestType = value;
+                          //By default instructor for One To Many Requests is the creator
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.time_requests;
+                          setState(() => {});
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -1462,33 +1465,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           )
         : Container();
-    TransactionsMatrixCheck(
-      upgradeDetails:
-      AppConfig.upgradePlanBannerModel.cash_request,
-      transaction_matrix_type: 'cash_goods_requests',
-      comingFrom: widget.comingFrom,
-      child: _optionRadioButton<RequestType>(
-        title: 'Borrow', //Label to be created
-        value: RequestType.BORROW,
-        isEnabled: !widget.isOfferRequest,
-        groupvalue: requestModel.requestType,
-        onChanged: (value) {
-          //requestModel.isRecurring = true;
-          requestModel.requestType = value;
-          //By default instructor for One To Many Requests is the creator
-          instructorAdded = false;
-          requestModel.selectedInstructor = null;
-          AppConfig.helpIconContextMember =
-              HelpContextMemberType.time_requests;
-          setState(() => {});
-        },
-      ),
-    ),
-    ],
-    )
-    ],
-    )
-        : Container()
   }
 
 // Navigat to skills class and geting data from the class
@@ -1855,7 +1831,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
           Text(
             'Provide the list of Skills that you required for this request',
-          style: TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               fontFamily: 'Europa',
@@ -2902,6 +2878,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.id,
         requestModel.timebankId,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        toEmailORId: requestModel.timebankId,
+        fromEmailORId: FlavorConfig.values.timebankId,
       );
     }
 
