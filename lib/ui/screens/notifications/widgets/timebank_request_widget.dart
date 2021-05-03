@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_w
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
 
 class TimebankRequestWidget extends StatelessWidget {
   final RequestModel model;
@@ -58,12 +59,28 @@ class TimebankRequestWidget extends StatelessWidget {
               photoUrl: user.photoURL,
               entityName: user.fullname,
               onPressed: () {
+                if(model.requestType == RequestType.BORROW) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreatorApproveAcceptorAgreeement(
+                          requestModel: model,
+                          timeBankId: model.timebankId,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          parentContext: context,
+                          acceptorUserModel: user,
+                          notificationId: notification.id,
+                          //onTap: () async {},
+                        ),
+                      ),
+                    );
+                } else {
                 showDialogForApproval(
                   context: context,
                   userModel: user,
                   notificationId: notification.id,
                   requestModel: model,
                 );
+               }
               },
             );
           },

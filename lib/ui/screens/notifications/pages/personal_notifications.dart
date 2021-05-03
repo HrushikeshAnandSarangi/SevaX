@@ -770,8 +770,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: true,
-                        onDismissed: onDismissed,
+                        isDissmissible: false,
+                        //onDismissed: onDismissed,
                         onPressed: () async {
                           showDialog(
                             context: context,
@@ -832,7 +832,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
@@ -854,7 +854,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCard(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
+                        isDissmissible: true,
                         onDismissed: onDismissed,
                         onPressed: () async {
                           subjectBorrow.add(0);
@@ -890,15 +890,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   }) async {
     showProgressForCreditRetrieval();
 
-    //Send Receipt Email to Lender Below
-    await sendReceiptMailToLender(
-        senderEmail: 'noreply@sevaexchange.com',
-        receiverEmail: SevaCore.of(context).loggedInUser.email,
-        communityName: requestModelUpdated.fullName,
-        requestName: requestModelUpdated.title,
-        receiverName: SevaCore.of(context).loggedInUser.fullname,
-        startDate: requestModelUpdated.requestStart,
-        endDate: requestModelUpdated.requestEnd);
+    //Send Receipt Email to Lender & Borrowr
+    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(requestModelUpdated);
+    log('Came to send receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged
     await sendNotificationLenderReceipt(
@@ -1237,32 +1231,32 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     log('SEND FEEDBACK NOTIFICATION TO BORROWER--------------------->>');
   }
 
-  //Send receipt mail to LENDER for end of Borrow Request
-  Future<bool> sendReceiptMailToLender({
-    String senderEmail,
-    String receiverEmail,
-    String communityName,
-    String requestName,
-    String requestCreatorName,
-    String receiverName,
-    int startDate,
-    int endDate,
-  }) async {
-    return await SevaMailer.createAndSendEmail(
-        mailContent: MailContent.createMail(
-      mailSender: senderEmail,
-      mailReciever: receiverEmail,
-      mailSubject: 'Receipt' + ' for ' + requestName + ' from' + communityName,
-      mailContent: requestName +
-          " has completed." +
-          "\n" +
-          "here is the receipt"
-              "\n\n" +
-          "Thanks," +
-          "\n" +
-          "SevaX Team.",
-    ));
-  } //Label to be given by client for email content
+  // //Send receipt mail to LENDER for end of Borrow Request
+  // Future<bool> sendReceiptMailToLender({
+  //   String senderEmail,
+  //   String receiverEmail,
+  //   String communityName,
+  //   String requestName,
+  //   String requestCreatorName,
+  //   String receiverName,
+  //   int startDate,
+  //   int endDate,
+  // }) async {
+  //   return await SevaMailer.createAndSendEmail(
+  //       mailContent: MailContent.createMail(
+  //     mailSender: senderEmail,
+  //     mailReciever: receiverEmail,
+  //     mailSubject: 'Receipt' + ' for ' + requestName + ' from' + communityName,
+  //     mailContent: requestName +
+  //         " has completed." +
+  //         "\n" +
+  //         "here is the receipt"
+  //             "\n\n" +
+  //         "Thanks," +
+  //         "\n" +
+  //         "SevaX Team.",
+  //   ));
+  // } //Label to be given by client for email content
 
   @override
   bool get wantKeepAlive => true;

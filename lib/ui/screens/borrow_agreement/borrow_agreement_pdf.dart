@@ -15,9 +15,16 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class BorrowAgreementPdf {
-  Future<String> borrowAgreementPdf(context, RequestModel requestModel, 
-                                    String documentName, bool isRequest, 
-                                    String roomOrTool) async {
+  Future<String> borrowAgreementPdf(context, RequestModel requestModel,
+      String documentName, bool isRequest, String roomOrTool) async {
+
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+
     log('Comes to START of borrow agreement pdf generation class');
 
     final Document pdf = Document();
@@ -59,7 +66,9 @@ class BorrowAgreementPdf {
                 border:
                     BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
-              isRequest ? 'Borrow Request Agreement' : 'Lending Offer Agreement',
+              isRequest
+                  ? 'Borrow Request Agreement'
+                  : 'Lending Offer Agreement',
               style: Theme.of(context)
                   .defaultTextStyle
                   .copyWith(color: PdfColors.grey),
@@ -90,20 +99,20 @@ class BorrowAgreementPdf {
             ),
           ),
           SizedBox(height: 10),
-          Header(level: 2, text: documentName + ' |  For: ${roomOrTool == 'ROOM' ? 'ROOM' : 'ITEM'}'),
+          Header(
+              level: 2,
+              text: documentName +
+                  ' |  For: ${roomOrTool == 'ROOM' ? 'ROOM' : 'ITEM'}'),
           SizedBox(height: 10),
           Divider(thickness: 1, color: PdfColors.grey),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Text('Vestibulum neque massa, scelerisque sit amet ligula eu, congue molestie mi. Praesent ut varius sem. Nullam at porttitor arcu, nec lacinia nisi. Ut ac dolor vitae odio interdum condimentum. Vivamus dapibus sodales ex, vitae malesuada ipsum cursus convallis. Maecenas sed egestas nulla, ac condimentum orci. Mauris diam felis, vulputate ac suscipit et, iaculis non est. Curabitur semper arcu ac ligula semper, nec luctus nisl blandit.')
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+                'Vestibulum neque massa, scelerisque sit amet ligula eu, congue molestie mi. Praesent ut varius sem. Nullam at porttitor arcu, nec lacinia nisi. Ut ac dolor vitae odio interdum condimentum. Vivamus dapibus sodales ex, vitae malesuada ipsum cursus convallis. Maecenas sed egestas nulla, ac condimentum orci. Mauris diam felis, vulputate ac suscipit et, iaculis non est. Curabitur semper arcu ac ligula semper, nec luctus nisl blandit.')
           ]),
           SizedBox(height: 20),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Additional Form Details: ')
-          ]),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text('Additional Form Details: ')]),
           Divider(thickness: 1, color: PdfColors.grey),
         ],
       ),
@@ -111,17 +120,20 @@ class BorrowAgreementPdf {
 
     //save PDF
     final String dir = (await getApplicationDocumentsDirectory()).path;
-    final String path = '$dir/${documentName != null ? documentName : 'borrow_agreement_sevax'}.pdf';
+    final String path =
+        '$dir/${documentName != null ? documentName : 'borrow_agreement_sevax'}.pdf';
     log("path to pdf file is " + path);
 
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
-    
-    log("requestModel check   " + requestModel.id.toString());
-    borrowAgreementLinkFinal = await uploadDocument(requestModel.id, file);
-   
-    await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
 
+    log("requestModel check   " + requestModel.id.toString());
+    borrowAgreementLinkFinal = await uploadDocument(requestModel.id, file, documentName);
+
+    //await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
+
+    progressDialog.hide();
+    material.Navigator.of(context).pop();
 
     //String borrowAgreementLink =
     //    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/borrow_agreement_docs%2Fsample_pdf.pdf?alt=media&token=094b13b4-dcb2-4303-ad68-3e341227bf00';
@@ -152,12 +164,12 @@ Future openPdfViewer(
   });
 }
 
-Future<String> uploadDocument(String requestId, File _path) async {
+Future<String> uploadDocument(String requestId, File _path, String documentName) async {
   int timestamp = DateTime.now().millisecondsSinceEpoch;
 
   String timestampString = timestamp.toString();
 
-  String name = requestId.toString() + '_' + timestampString;
+  String name = requestId.toString() + '_' + timestampString + '_' + documentName;
 
   StorageReference ref =
       FirebaseStorage.instance.ref().child('borrow_agreement_docs').child(name);

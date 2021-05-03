@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -298,6 +299,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               widget.requestItem.approvedUsers.contains(
                                   SevaCore.of(context).loggedInUser.email)))
                       ? approvedBorrowRequestDetailsComponent
+                      : Container(),
+                  SizedBox(height: 20),
+                  (widget.requestItem.requestType == RequestType.BORROW &&
+                          widget.requestItem.hasBorrowAgreement &&
+                          widget.requestItem.approvedUsers.length > 0 &&
+                          (SevaCore.of(context).loggedInUser.email ==
+                                  widget.requestItem.email ||
+                              widget.requestItem.approvedUsers.contains(
+                                  SevaCore.of(context).loggedInUser.email)))
+                      ? approvedBorrowRequestViewAgreementComponent
                       : Container(),
                   SizedBox(height: 10),
                 ],
@@ -685,7 +696,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for goods'; //Label to be created
+            : 'Borrow Request for item'; //Label to be created
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -950,13 +961,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .loggedInUser
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
-                                    ? 'Request Approved' //Label to hbe created
-                                    : 'Request has been assigned to a member')
+                                    ? 'Request Approved' //Label to be created
+                                    : 'Request has been assigned to a member')   //Label to be created
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
-                                        ? 'Borrow request for place'
-                                        : 'Borrow request for goods'),
+                                        ? 'Borrow request for place'   //Label to be created
+                                        : 'Borrow request for item'),  //Label to be created
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -1035,9 +1046,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
         onPressed: () {
           if (widget.requestItem.requestType == RequestType.BORROW) {
-            widget.requestItem.roomOrTool == 'ROOM'
-                ? borrowApplyAction()
-                : proccedWithCalander();
+            //widget.requestItem.roomOrTool == 'ROOM'
+                //? 
+                borrowApplyAction();
+                //: proccedWithCalander();
           } else {
             applyAction();
           }
@@ -1706,6 +1718,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get approvedBorrowRequestDetailsComponent {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      widget.requestItem.approvedUsers.length > 0 ?
       StreamBuilder(
           stream: Firestore.instance
               .collection('requests')
@@ -1751,7 +1764,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             );
           })
+          :
+          Container(),
     ]);
+  }
+
+  Widget get approvedBorrowRequestViewAgreementComponent {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 5),
+        GestureDetector(
+          child: Row(
+            children: [
+              Text(
+                  (widget.requestItem.borrowAgreementLink == null ||
+                          widget.requestItem.borrowAgreementLink == '')
+                      ? 'Request agreement not available'        //Label to be created
+                      : 'Click to view request agreement',       //Label to be created
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600)), 
+            ],
+          ),
+          onTap: () async {
+            if (widget.requestItem.borrowAgreementLink == null ||
+                widget.requestItem.borrowAgreementLink == '') {
+              return null;
+            } else {
+              await openPdfViewer(widget.requestItem.borrowAgreementLink,
+                  'Request Agreement Document', context);
+            }
+          },
+        ),
+      ],
+    );
   }
 
   Widget get getCashDetailsForCashDonations {

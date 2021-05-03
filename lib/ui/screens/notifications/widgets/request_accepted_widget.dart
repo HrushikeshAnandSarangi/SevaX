@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
   final String userId;
@@ -42,12 +43,28 @@ class RequestAcceptedWidget extends StatelessWidget {
           secondaryActions: <Widget>[],
           child: GestureDetector(
             onTap: () {
-              showDialogForApproval(
-                context: context,
-                userModel: user,
-                notificationId: notificationId,
-                requestModel: model,
-              );
+              if (model.requestType == RequestType.BORROW) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CreatorApproveAcceptorAgreeement(
+                      requestModel: model,
+                      timeBankId: model.timebankId,
+                      userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      parentContext: context,
+                      acceptorUserModel: user,
+                      notificationId: notificationId,
+                      //onTap: () async {},
+                    ),
+                  ),
+                );
+              } else {
+                showDialogForApproval(
+                  context: context,
+                  userModel: user,
+                  notificationId: notificationId,
+                  requestModel: model,
+                );
+              }
             },
             child: Container(
               margin: notificationPadding,
@@ -157,7 +174,6 @@ class RequestAcceptedWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           if (requestModel.requestType == RequestType.BORROW) {
-                            log('ONE');
                             approveMemberForBorrowRequest(
                               model: requestModel,
                               notificationId: notificationId,
@@ -166,6 +182,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                                   .loggedInUser
                                   .currentCommunity,
                             );
+                            log('approved member for borrow request');
                           } else {
                             approveMemberForVolunteerRequest(
                               model: requestModel,
@@ -266,18 +283,18 @@ class RequestAcceptedWidget extends StatelessWidget {
     String notificationId,
     String communityId,
   }) {
-
     log('TWO' + ' ' + model.approvedUsers.length.toString());
 
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
-  
+
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    if (model.numberOfApprovals <= model.approvedUsers.length) {  //approved
+    if (model.numberOfApprovals <= model.approvedUsers.length) {
+      //approved
       log('THREE');
-        model.accepted = true;
+      model.accepted = true;
       FirestoreManager.approveAcceptRequest(
         requestModel: model,
         approvedUserId: user.sevaUserID,

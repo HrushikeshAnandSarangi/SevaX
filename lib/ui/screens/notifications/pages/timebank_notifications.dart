@@ -165,13 +165,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
+                  isDissmissible: false,
+                  // onDismissed: () {
+                  //   FirestoreManager.readTimeBankNotification(
+                  //     notificationId: notification.id,
+                  //     timebankId: notification.timebankId,
+                  //   );
+                  // },
                   onPressed: () async {
                     showDialog(
                       context: context,
@@ -226,7 +226,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: false,
+                  isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
@@ -252,7 +252,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: false,
+                  isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
@@ -668,15 +668,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
   }) async {
     showProgressForCreditRetrieval(parentContext);
 
-    //Send Receipt Email to Lender Below
-    await sendReceiptMailToLender(
-        senderEmail: 'noreply@sevaexchange.com',
-        receiverEmail: SevaCore.of(context).loggedInUser.email,
-        communityName: requestModelNew.fullName,
-        requestName: requestModelNew.title,
-        receiverName: SevaCore.of(context).loggedInUser.fullname,
-        startDate: requestModelNew.requestStart,
-        endDate: requestModelNew.requestEnd);
+    //Send Receipt Email to Lender & Borrowr
+    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(requestModelUpdated);
+    log('Came to send receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged
     await sendNotificationLenderReceipt(
@@ -950,30 +944,5 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     log('WRITTEN TO DB--------------------->>');
   }
 
-  //Send receipt mail to LENDER for end of Borrow Request
-  Future<bool> sendReceiptMailToLender({
-    String senderEmail,
-    String receiverEmail,
-    String communityName,
-    String requestName,
-    String receiverName,
-    int startDate,
-    int endDate,
-  }) async {
-    return await SevaMailer.createAndSendEmail(
-        mailContent: MailContent.createMail(
-      mailSender: senderEmail,
-      mailReciever: receiverEmail,
-      mailSubject: 'Receipt' + ' for ' + requestName + ' from' + communityName,
-      mailContent: requestName +
-          " has completed." +
-          "\n" +
-          "here is the receipt"
-              "\n\n" +
-          "Thanks," +
-          "\n" +
-          "SevaX Team.",
-    ));
-  } //Label to be given by client for email content
 
 }
