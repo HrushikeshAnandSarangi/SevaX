@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -38,57 +39,50 @@ class OneToManyInstructorCard extends StatelessWidget {
   }
 
   Widget makeUserWidget(context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 15, 10, 10),
-      child: Row(
-        children: <Widget>[
-          getUserCard(context),
-        ],
+    return InkWell(
+      onTap: () {
+        onAddClick();
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Container(
+          margin: EdgeInsets.fromLTRB(5, 4, 0, 4),
+          child: Container(
+            height: MediaQuery.of(context).size.width * 0.08,
+            child: Row(
+              children: <Widget>[
+                getUserThumbnail(context),
+                getUserCard(context),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
+  Widget getUserThumbnail(BuildContext context) {
+    return UserProfileImage(
+      photoUrl: (userModel.photoURL != null || userModel.photoURL != '')
+          ? userModel.photoURL
+          : defaultUserImageURL,
+      email: userModel.email,
+      userId: userModel.sevaUserID,
+      height: 35,
+      width: 35,
+      timebankModel: timebankModel,
+    );
+  }
+
   Widget getUserCard(context) {
-    return Container(
-      //height: 40,
-      width: 270,
-      child: Padding(
-        padding: const EdgeInsets.all(0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                UserProfileImage(
-                  photoUrl: userModel.photoURL,
-                  email: userModel.email,
-                  userId: userModel.sevaUserID,
-                  height: 45,
-                  width: 45,
-                  timebankModel: timebankModel,
-                ),
-                SizedBox(width: 9),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        userModel.fullname ?? S.of(context).name_not_available,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      Divider(height: 1, color: Colors.grey,)
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 15),
+      child: Container(
+        height: MediaQuery.of(context).size.width * 0.07,
+        child: Text(
+          userModel.fullname ?? S.of(context).name_not_available,
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
     );

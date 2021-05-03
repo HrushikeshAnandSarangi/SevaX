@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -157,6 +158,7 @@ class RequestModel extends DataModel {
   String description;
   String email;
   String fullName;
+  String requestCreatorName;
   String sevaUserId;
   String photoUrl;
   String roomOrTool;
@@ -175,10 +177,12 @@ class RequestModel extends DataModel {
   List<String> approvedUsers;
   List<String> invitedUsers;
   List<String> categories;
+  List<String> oneToManyRequestAttenders;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
   bool isNotified = false;
+  bool isSpeakerCompleted = false;
   String projectId = "";
   String address;
   bool softDelete;
@@ -199,6 +203,7 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   BasicUserDetails selectedInstructor = new BasicUserDetails();
+  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
   Map<String, dynamic> skills;
   bool liveMode = false;
 
@@ -220,6 +225,7 @@ class RequestModel extends DataModel {
     this.durationOfRequest,
     this.email,
     this.fullName,
+    this.requestCreatorName,
     this.sevaUserId,
     this.photoUrl,
     this.roomOrTool,
@@ -257,6 +263,7 @@ class RequestModel extends DataModel {
     this.recommendedMemberIdsForRequest,
     this.categories,
     this.selectedInstructor,
+    this.selectedSpeakerTimeDetails,
     @required this.communityId,
     this.skills,
     this.public,
@@ -270,6 +277,7 @@ class RequestModel extends DataModel {
     this.minimumCredits,
     this.liveMode,
     this.imageUrls,
+    this.oneToManyRequestAttenders,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -370,6 +378,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('fullname')) {
       this.fullName = map['fullname'];
     }
+    if (map.containsKey('requestCreatorName')) {
+      this.requestCreatorName = map['requestCreatorName'];
+    }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
     }
@@ -419,6 +430,10 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('isNotified')) {
       this.isNotified = map['isNotified'];
+    }
+
+    if (map.containsKey('isSpeakerCompleted')) {
+      this.isSpeakerCompleted = map['isSpeakerCompleted'];
     }
 
     if (map.containsKey('transactions')) {
@@ -500,11 +515,25 @@ class RequestModel extends DataModel {
       this.selectedInstructor = new BasicUserDetails();
     }
 
+    if (map.containsKey('selectedSpeakerTimeDetails')) {
+      this.selectedSpeakerTimeDetails =
+          SelectedSpeakerTimeDetails.fromMap(map['selectedSpeakerTimeDetails']);
+    } else {
+      this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
+    }
+
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('oneToManyRequestAttenders')) {
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      this.oneToManyRequestAttenders = oneToManyRequestAttenders;
+    } else {
+      this.oneToManyRequestAttenders = List();
+    }
+
     if (map.containsKey("skills")) {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
     } else {
@@ -653,6 +682,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('fullname')) {
       this.fullName = map['fullname'];
     }
+    if (map.containsKey('requestCreatorName')) {
+      this.requestCreatorName = map['requestCreatorName'];
+    }
     if (map.containsKey('sevauserid')) {
       this.sevaUserId = map['sevauserid'];
     }
@@ -696,6 +728,10 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('isNotified')) {
       this.isNotified = map['isNotified'];
+    }
+
+    if (map.containsKey('isSpeakerCompleted')) {
+      this.isSpeakerCompleted = map['isSpeakerCompleted'];
     }
 
     if (map.containsKey('transactions')) {
@@ -742,6 +778,13 @@ class RequestModel extends DataModel {
           BasicUserDetails.fromMap(map['selectedInstructor']);
     } else {
       this.selectedInstructor = new BasicUserDetails();
+    }
+
+    if (map.containsKey('selectedSpeakerTimeDetails')) {
+      this.selectedSpeakerTimeDetails =
+          SelectedSpeakerTimeDetails.fromMap(map['selectedSpeakerTimeDetails']);
+    } else {
+      this.selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
     }
 
     if (map.containsKey('occurenceCount')) {
@@ -830,6 +873,13 @@ class RequestModel extends DataModel {
         this.imageUrls = [];
       }
     }
+    if (map.containsKey('oneToManyRequestAttenders')) {
+      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      this.oneToManyRequestAttenders = oneToManyRequestAttenders;
+    } else {
+      this.oneToManyRequestAttenders = List();
+    }
+
   }
 
   @override
@@ -871,6 +921,7 @@ class RequestModel extends DataModel {
         case RequestType.BORROW:
           object['requestType'] = "BORROW";
           break;
+
 
         case RequestType.TIME:
           object['requestType'] = "TIME";
@@ -918,6 +969,9 @@ class RequestModel extends DataModel {
     if (this.fullName != null && this.fullName.isNotEmpty) {
       object['fullname'] = this.fullName;
     }
+    if (this.requestCreatorName != null && this.requestCreatorName.isNotEmpty) {
+      object['requestCreatorName'] = this.requestCreatorName;
+    }
     if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
       object['sevauserid'] = this.sevaUserId;
     }
@@ -931,6 +985,7 @@ class RequestModel extends DataModel {
     if (this.acceptors != null) {
       object['acceptors'] = this.acceptors;
     }
+
     if (this.recommendedMemberIdsForRequest != null) {
       object['recommendedMemberIdsForRequest'] =
           this.recommendedMemberIdsForRequest;
@@ -978,6 +1033,10 @@ class RequestModel extends DataModel {
       object['isNotified'] = this.isNotified;
     }
 
+    if (this.isSpeakerCompleted != null) {
+      object['isSpeakerCompleted'] = this.isSpeakerCompleted;
+    }
+
     if (this.transactions != null) {
       List<Map<String, dynamic>> transactionList =
           this.transactions.map<Map<String, dynamic>>((map) {
@@ -1019,6 +1078,9 @@ class RequestModel extends DataModel {
     if (this.selectedInstructor != null) {
       object['selectedInstructor'] = this.selectedInstructor.toMap();
     }
+    if (this.selectedSpeakerTimeDetails != null) {
+      object['selectedSpeakerTimeDetails'] = this.selectedSpeakerTimeDetails.toMap();
+    }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;
     }
@@ -1042,6 +1104,9 @@ class RequestModel extends DataModel {
     }
     if (this.goodsDonationDetails != null) {
       object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
+    }
+    if (this.oneToManyRequestAttenders != null) {
+      object['oneToManyRequestAttenders'] = this.oneToManyRequestAttenders;
     }
     if (this.skills != null) {
       object['skills'] = this.skills;
@@ -1091,7 +1156,7 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, roomOrTool: $roomOrTool, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, numberOfHours: $numberOfHours, minimumCredits: $minimumCredits, maxCredits: $maxCredits, accepted: $accepted, isFromOfferRequest: $isFromOfferRequest, rejectedReason: $rejectedReason, transactions: $transactions, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers, categories: $categories, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, projectId: $projectId, address: $address, softDelete: $softDelete, isRecurring: $isRecurring, recurringDays: $recurringDays, occurenceCount: $occurenceCount, end: $end, parent_request_id: $parent_request_id, autoGenerated: $autoGenerated, donationInstructionLink: $donationInstructionLink, allowedCalenderUsers: $allowedCalenderUsers, recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, requestMode: $requestMode, requestType: $requestType, cashModel: $cashModel, goodsDonationDetails: $goodsDonationDetails, communityId: $communityId, skills: $skills, liveMode: $liveMode, timebanksPosted: $timebanksPosted, public: $public, virtualRequest: $virtualRequest, hasBorrowAgreement: $hasBorrowAgreement, participantDetails: $participantDetails, imageUrls: $imageUrls}';
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, isSpeakerCompleted: $isSpeakerCompleted}';
   }
 }
 
@@ -1131,8 +1196,8 @@ enum RequestType {
   CASH,
   TIME,
   GOODS,
-  ONE_TO_MANY_REQUEST,
   BORROW,
+  ONE_TO_MANY_REQUEST,
 }
 enum RequestPaymentType {
   ACH,
@@ -1147,6 +1212,7 @@ Map<String, RequestType> requestTypeMapper = {
   "CASH": RequestType.CASH,
   "TIME": RequestType.TIME,
   "GOODS": RequestType.GOODS,
+  "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
   "BORROW": RequestType.BORROW,
 };

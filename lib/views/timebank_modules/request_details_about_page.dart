@@ -9,12 +9,15 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -39,6 +42,8 @@ import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -279,6 +284,103 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               widget.requestItem.sevaUserId)
                       ? requestedByBorrowRequestComponent
                       : Container(),
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                      widget.requestItem.oneToManyRequestAttenders.length >= 1 &&
+                      (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
+                          || userMode == UserMode.TIMEBANK_ADMIN)
+                  )
+                      ? Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.width * 0.24,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                              '${widget.requestItem.oneToManyRequestAttenders.length}/' +
+                                  '${widget.requestItem.numberOfApprovals}' +
+                                  ' people Applied'),
+                          StreamBuilder(
+                              stream: Firestore.instance
+                                  .collection("requests")
+                                  .document(widget.requestItem.id)
+                                  .collection('oneToManyAttendeesDetails')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text(
+                                    'No images available...',
+                                  );
+                                } else {
+                                  return Expanded(
+                                    flex: 1,
+                                    child: ListView.builder(
+                                      reverse: true,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data.documents.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  snapshot.data.documents[
+                                                  index]
+                                                  ['photoURL'] ??
+                                                      defaultUserImageURL),
+                                              minRadius: 23.0),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              }),
+                          SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  )
+                      : Container(),
+
+                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+                      widget.requestItem.selectedInstructor != null &&
+                      (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
+                          || userMode == UserMode.TIMEBANK_ADMIN)
+                  ) ?
+                  Container(child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Speaker', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  widget.requestItem.selectedInstructor.photoURL ??
+                                      defaultUserImageURL),
+                              minRadius: 34.0),
+                          SizedBox(width: 25),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(widget.requestItem.selectedInstructor.fullname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                              SizedBox(height: 7),
+                              widget.requestItem.selectedSpeakerTimeDetails.speakingTime == null ?
+                              Text('hours not updated..', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey))
+                                  :
+                              Text('Session: ' + widget.requestItem.selectedSpeakerTimeDetails.speakingTime.toString() + ' hours', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                    ],
+                  ),
+                  )
+                      : Container(),
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -429,9 +531,329 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       case RequestType.TIME:
         return getBottomFrameForTimeRequest;
 
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return getBottomFrameForOneToManyRequest;
+
       default:
         return getBottomFrameForTimeRequest;
     }
+  }
+
+  Widget get getBottomFrameForOneToManyRequest {
+    if (UserMode == UserMode.TIMEBANK_CREATOR) {
+      return getBottombarForTimebankCreator;
+    } else if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else if (widget.requestItem.acceptors
+        .contains(SevaCore.of(context).loggedInUser.email)) {
+      return getOneToManySpeakerWidget;
+    } else {
+      return getBottombarAttenders;
+    }
+  }
+
+  Widget get getOneToManySpeakerWidget {
+    if (widget.requestItem.acceptors
+            .contains(SevaCore.of(context).loggedInUser.email) &&
+        widget.requestItem.approvedUsers
+            .contains(SevaCore.of(context).loggedInUser.email)) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: (widget.requestItem.acceptors.contains(
+                                SevaCore.of(context).loggedInUser.email) &&
+                            widget.requestItem.isSpeakerCompleted)
+                        ? 'You have requested for completion'
+                        : 'You are the speaker for the request',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Europa',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          speakerWithdrawOneToManyRequest,
+          SizedBox(width: 4),
+          widget.requestItem.isSpeakerCompleted
+              ? Container()
+              : speakerCompleteOneToManyRequest
+        ],
+      );
+    } else {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: widget.requestItem.acceptors
+                            .contains(SevaCore.of(context).loggedInUser.email)
+                        ? 'You are the speaker for the request'
+                        : 'You are the speaker for the request',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Europa',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          rejectOneToManySpeakerRequest,
+          SizedBox(width: 4),
+          acceptOneToManySpeakerRequest,
+        ],
+      );
+    }
+  }
+
+  Widget get acceptOneToManySpeakerRequest {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: FlavorConfig.values.theme.primaryColor,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              S.of(context).accept,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return OneToManySpeakerTimeEntry(
+                  requestModel: widget.requestItem,
+                  onFinish: () async {
+                    await oneToManySpeakerInviteAccepted(
+                        widget.requestItem, context);
+                    // await onDismissed();
+                  },
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget get rejectOneToManySpeakerRequest {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: Theme.of(context).accentColor,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              S.of(context).reject,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title: Text('Are you sure you want to reject invite?'),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(viewContext).pop();
+                        await oneToManySpeakerInviteRejected(
+                            widget.requestItem, context);
+                        // await onDismissed();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
+      ),
+    );
+  }
+
+  Widget get speakerWithdrawOneToManyRequest {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: Theme.of(context).accentColor,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              S.of(context).withdraw,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title: Text('Are you sure you want to withdraw as speaker?'),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(viewContext).pop();
+                        await oneToManySpeakerInviteRejected(
+                            widget.requestItem, context);
+                        // await onDismissed();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
+      ),
+    );
+  }
+
+  Widget get speakerCompleteOneToManyRequest {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.25,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: FlavorConfig.values.theme.primaryColor,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              'Complete', //Label to be created
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title: Text('Are you sure you want to complete the request?'),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(viewContext).pop();
+                        await oneToManySpeakerRequestCompleted(
+                            widget.requestItem, context);
+                        Navigator.of(context).pop();
+                        // await onDismissed();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                      },
+                    ),
+                  ],
+                );
+              });
+        },
+      ),
+    );
   }
 
   Widget get getBottomFrameForGoodRequest {
@@ -649,6 +1071,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottombarForTimebankCreator {
     String textLabel = '';
     Widget actionWidget;
+    Widget actionWidgetTwo;
     var canDelete = false;
     if (widget.requestItem.requestType == RequestType.TIME) {
       canDelete = widget.requestItem.acceptors.length == 0 &&
@@ -705,6 +1128,25 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           : (widget.requestItem.approvedUsers.length >= 1
               ? Container()
               : timeRequestActionWidgetForParticipant);
+    } else if (widget.requestItem.requestType ==
+        RequestType.ONE_TO_MANY_REQUEST) {
+      canDelete = widget.requestItem.acceptors.length == 0 &&
+          widget.requestItem.approvedUsers.length == 0 &&
+          widget.requestItem.invitedUsers.length == 0;
+
+      if (widget.requestItem.sevaUserId ==
+          SevaCore.of(context).loggedInUser.sevaUserID) {
+        actionWidget = Container();
+      } else if (widget.requestItem.acceptors
+          .contains(SevaCore.of(context).loggedInUser.email)) {
+        actionWidget = acceptOneToManySpeakerRequest;
+        actionWidgetTwo = rejectOneToManySpeakerRequest;
+      } else if (widget.requestItem.acceptors
+          .contains(SevaCore.of(context).loggedInUser.email)) {
+        actionWidget = Container();
+      } else {
+        actionWidget = oneToManyRequestActionWidgetForParticipant;
+      }
     } else {
       canDelete = widget.requestItem.cashModel.amountRaised == 0 ||
           widget.requestItem.cashModel.amountRaised == null;
@@ -741,6 +1183,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ? Row(
                 children: [
                   actionWidget,
+                  actionWidgetTwo == null ? Container() : actionWidgetTwo,
                   SizedBox(
                     height: 5,
                   ),
@@ -777,50 +1220,79 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ],
               )
-            : actionWidget,
+            : Column(
+                children: [
+                  actionWidget,
+                  actionWidgetTwo == null ? Container() : actionWidgetTwo,
+                ],
+              ),
       ],
     );
   }
 
   Widget get getBottombarForCreator {
-    if (widget.requestItem.requestType == RequestType.TIME) {
-      canDeleteRequest = utils.isDeletable(
-              contentCreatorId: widget.requestItem.sevaUserId,
-              context: context,
-              communityCreatorId:
-                  widget.timebankModel.managedCreatorIds.isNotEmpty
-                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      :
-                      // BlocProvider.of<HomeDashBoardBloc>(context)
-                      //         .selectedCommunityModel.created_by
-                      isPrimaryTimebank(
-                              parentTimebankId:
-                                  widget.timebankModel.parentTimebankId)
-                          ? widget.timebankModel.creatorId
-                          : widget.timebankModel.managedCreatorIds.first,
-              timebankCreatorId: widget.timebankModel.creatorId) &&
-          widget.requestItem.acceptors.length == 0 &&
-          widget.requestItem.approvedUsers.length == 0 &&
-          widget.requestItem.invitedUsers.length == 0;
-    } else if (widget.requestItem.requestType == RequestType.GOODS) {
-      canDeleteRequest = utils.isDeletable(
-              contentCreatorId: widget.requestItem.sevaUserId,
-              context: context,
-              communityCreatorId:
-                  widget.timebankModel.managedCreatorIds.isNotEmpty
-                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      :
-                      // BlocProvider.of<HomeDashBoardBloc>(context)
-                      //         .selectedCommunityModel.created_by
-                      isPrimaryTimebank(
-                              parentTimebankId:
-                                  widget.timebankModel.parentTimebankId)
-                          ? widget.timebankModel.creatorId
-                          : widget.timebankModel.managedCreatorIds.first,
-              timebankCreatorId: widget.timebankModel.creatorId) &&
-          (widget.requestItem.goodsDonationDetails.donors == null ||
-              widget.requestItem.goodsDonationDetails.donors.length < 1);
-    } else if (widget.requestItem.requestType == RequestType.BORROW) {
+    if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
+        widget.requestItem.isSpeakerCompleted) {
+      return getBottombarForCreatorSpeakerCompleted;
+    } else {
+      if (widget.requestItem.requestType == RequestType.TIME) {
+        canDeleteRequest = utils.isDeletable(
+                contentCreatorId: widget.requestItem.sevaUserId,
+                context: context,
+                communityCreatorId:
+                    widget.timebankModel.managedCreatorIds.isNotEmpty
+                        ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                        :
+                        // BlocProvider.of<HomeDashBoardBloc>(context)
+                        //         .selectedCommunityModel.created_by
+                        isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId)
+                            ? widget.timebankModel.creatorId
+                            : widget.timebankModel.managedCreatorIds.first,
+                timebankCreatorId: widget.timebankModel.creatorId) &&
+            widget.requestItem.acceptors.length == 0 &&
+            widget.requestItem.approvedUsers.length == 0 &&
+            widget.requestItem.invitedUsers.length == 0;
+      } else if (widget.requestItem.requestType == RequestType.GOODS) {
+        canDeleteRequest = utils.isDeletable(
+                contentCreatorId: widget.requestItem.sevaUserId,
+                context: context,
+                communityCreatorId:
+                    widget.timebankModel.managedCreatorIds.isNotEmpty
+                        ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                        :
+                        // BlocProvider.of<HomeDashBoardBloc>(context)
+                        //         .selectedCommunityModel.created_by
+                        isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId)
+                            ? widget.timebankModel.creatorId
+                            : widget.timebankModel.managedCreatorIds.first,
+                timebankCreatorId: widget.timebankModel.creatorId) &&
+            (widget.requestItem.goodsDonationDetails.donors == null ||
+                widget.requestItem.goodsDonationDetails.donors.length < 1);
+      } else if (widget.requestItem.requestType ==
+          RequestType.ONE_TO_MANY_REQUEST) {
+        canDeleteRequest = utils.isDeletable(
+                contentCreatorId: widget.requestItem.sevaUserId,
+                context: context,
+                communityCreatorId:
+                    widget.timebankModel.managedCreatorIds.isNotEmpty
+                        ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                        :
+                        // BlocProvider.of<HomeDashBoardBloc>(context)
+                        //         .selectedCommunityModel.created_by
+                        isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId)
+                            ? widget.timebankModel.creatorId
+                            : widget.timebankModel.managedCreatorIds.first,
+                timebankCreatorId: widget.timebankModel.creatorId) &&
+            widget.requestItem.acceptors.length == 0 &&
+            widget.requestItem.approvedUsers.length == 0 &&
+            widget.requestItem.invitedUsers.length == 0;
+      } else if (widget.requestItem.requestType == RequestType.BORROW) {
       canDeleteRequest = utils.isDeletable(
               contentCreatorId: widget.requestItem.sevaUserId,
               context: context,
@@ -839,23 +1311,87 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.participantDetails == null &&
           widget.requestItem.acceptors.length == 0;
     } else {
-      canDeleteRequest = utils.isDeletable(
-              contentCreatorId: widget.requestItem.sevaUserId,
-              context: context,
-              communityCreatorId:
-                  widget.timebankModel.managedCreatorIds.isNotEmpty
-                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      :
-                      // BlocProvider.of<HomeDashBoardBloc>(context)
-                      //         .selectedCommunityModel.created_by
-                      isPrimaryTimebank(
-                              parentTimebankId:
-                                  widget.timebankModel.parentTimebankId)
-                          ? widget.timebankModel.creatorId
-                          : widget.timebankModel.managedCreatorIds.first,
-              timebankCreatorId: widget.timebankModel.creatorId) &&
-          widget.requestItem.cashModel.amountRaised == 0;
+        canDeleteRequest = utils.isDeletable(
+                contentCreatorId: widget.requestItem.sevaUserId,
+                context: context,
+                communityCreatorId:
+                    widget.timebankModel.managedCreatorIds.isNotEmpty
+                        ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                        :
+                        // BlocProvider.of<HomeDashBoardBloc>(context)
+                        //         .selectedCommunityModel.created_by
+                        isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId)
+                            ? widget.timebankModel.creatorId
+                            : widget.timebankModel.managedCreatorIds.first,
+                timebankCreatorId: widget.timebankModel.creatorId) &&
+            widget.requestItem.cashModel.amountRaised == 0;
+      }
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black),
+                children: [
+                  TextSpan(
+                    text: canDeleteRequest &&
+                            widget.requestItem.sevaUserId !=
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                        ? 'You are the creator of this seva community'
+                        : S.of(context).creator_of_request_message,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Europa',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Offstage(
+            offstage: !canDeleteRequest,
+            child: Container(
+              margin: EdgeInsets.only(right: 5),
+              width: 100,
+              height: 32,
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: EdgeInsets.all(0),
+                color: Colors.red,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(width: 1),
+                    Spacer(),
+                    Text(
+                      S.of(context).delete,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  deleteRequestDialog(widget.requestItem);
+                },
+              ),
+            ),
+          )
+        ],
+      );
     }
+  }
+
+  Widget get getBottombarAttenders {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -865,10 +1401,40 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: canDeleteRequest &&
-                          widget.requestItem.sevaUserId !=
-                              SevaCore.of(context).loggedInUser.sevaUserID
-                      ? 'You are the creator of this seva community'
+                  text: widget.requestItem.oneToManyRequestAttenders.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID)
+                      ? S.of(context).applied_for_request
+                      : S.of(context).particpate_in_request_question,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        widget.requestItem.oneToManyRequestAttenders.length >=
+                widget.requestItem.numberOfApprovals
+            ? Container()
+            : oneToManyRequestActionWidgetForParticipant,
+      ],
+    );
+  }
+
+  Widget get getBottombarForCreatorSpeakerCompleted {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: widget.requestItem.isSpeakerCompleted
+                      ? 'The request is complete by tutor'
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
@@ -880,40 +1446,90 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        Offstage(
-          offstage: !canDeleteRequest,
-          child: Container(
-            margin: EdgeInsets.only(right: 5),
-            width: 100,
-            height: 32,
-            child: FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.all(0),
-              color: Colors.red,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(width: 1),
-                  Spacer(),
-                  Text(
-                    S.of(context).delete,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                ],
-              ),
-              onPressed: () {
-                deleteRequestDialog(widget.requestItem);
-              },
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          width: 100,
+          height: 32,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
+            padding: EdgeInsets.all(0),
+            color: Theme.of(context).accentColor,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  S.of(context).reject,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () async {
+              await oneToManyCreatorRequestCompletionRejected(
+                  widget.requestItem, context);
+
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  duration: Duration(seconds: 3),
+                  content: Text(
+                    'Rejection notification has been sent.',
+                  ),
+                ),
+              );
+            },
           ),
-        )
+        ),
+        SizedBox(width: 2),
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          width: 100,
+          height: 32,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(0),
+            color: Theme.of(context).primaryColor,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  S.of(context).approve,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OneToManyCreatorCompleteRequestPage(
+                    requestModel: widget.requestItem,
+                    onFinish: () async {
+                      // if anything else to be done after creator approves,
+                      //maybe send completetion notification to speaker, attendees?, etc.
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -1005,6 +1621,46 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
+  Widget get oneToManyRequestActionWidgetForParticipant {
+    return Container(
+      margin: EdgeInsets.only(right: 5),
+      width: 100,
+      height: 32,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: EdgeInsets.all(0),
+        color: widget.requestItem.oneToManyRequestAttenders
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+            ? Theme.of(context).accentColor
+            : Colors.green,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 1),
+            Spacer(),
+            Text(
+              widget.requestItem.oneToManyRequestAttenders
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+                  ? S.of(context).withdraw
+                  : 'Attend',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ],
+        ),
+        onPressed: () {
+          applyAction();
+        },
+      ),
+    );
+  }
+
   Widget get timeRequestActionWidgetForParticipant {
     return Container(
       margin: EdgeInsets.only(right: 12),
@@ -1047,7 +1703,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         onPressed: () {
           if (widget.requestItem.requestType == RequestType.BORROW) {
             //widget.requestItem.roomOrTool == 'ROOM'
-                //? 
+                //?
                 borrowApplyAction();
                 //: proccedWithCalander();
           } else {
@@ -1060,7 +1716,58 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void applyAction() async {
-    if (isApplied) {
+    var batch = Firestore.instance.batch();
+    var db = Firestore.instance;
+    if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      if (widget.requestItem.oneToManyRequestAttenders
+          .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        Set<String> attenders =
+            Set.from(widget.requestItem.oneToManyRequestAttenders);
+        attenders.remove(SevaCore.of(context).loggedInUser.sevaUserID);
+
+        widget.requestItem.oneToManyRequestAttenders = attenders.toList();
+        batch.delete(
+          db
+              .collection('requests')
+              .document(widget.requestItem.id)
+              .collection('oneToManyAttendeesDetails')
+              .document(SevaCore.of(context).loggedInUser.email),
+        );
+
+        batch.updateData(
+            db.collection('requests').document(widget.requestItem.id),
+            widget.requestItem.toMap());
+        await batch.commit();
+        Navigator.pop(context);
+      } else {
+        Set<String> attenders =
+            Set.from(widget.requestItem.oneToManyRequestAttenders);
+        attenders.add(SevaCore.of(context).loggedInUser.sevaUserID);
+
+        widget.requestItem.oneToManyRequestAttenders = attenders.toList();
+        BasicUserDetails attendeeObject = BasicUserDetails(
+          fullname: SevaCore.of(context).loggedInUser.fullname,
+          email: SevaCore.of(context).loggedInUser.email,
+          photoURL:
+              SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
+          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+        );
+        batch.setData(
+            db
+                .collection('requests')
+                .document(widget.requestItem.id)
+                .collection('oneToManyAttendeesDetails')
+                .document(SevaCore.of(context).loggedInUser.email),
+            attendeeObject.toMap());
+
+        batch.updateData(
+            db.collection('requests').document(widget.requestItem.id),
+            widget.requestItem.toMap());
+        await batch.commit();
+
+        Navigator.pop(context);
+      }
+    } else if (isApplied) {
       _withdrawRequest();
     } else {
       if (widget.requestItem.projectId != null &&
@@ -1785,7 +2492,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600)), 
+                      fontWeight: FontWeight.w600)),
             ],
           ),
           onTap: () async {

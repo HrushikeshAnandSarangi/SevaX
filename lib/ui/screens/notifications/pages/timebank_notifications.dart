@@ -27,11 +27,14 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/manual_time_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyAccept.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyCompletedApproval.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/oneToManyCreatorApproveCompletionCard.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/sponser_group_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -42,11 +45,13 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
@@ -221,6 +226,163 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           '**fullName**', userAddedModel.addedMemberName),
                 );
                 break;
+
+              //Below is commented out because Community/timebank will not receive Speaker request notification
+
+              // case NotificationType.OneToManyRequestAccept:
+              //   Map<dynamic,dynamic> oneToManyModel = notification.data;
+              //     return NotificationCard(
+              //       timestamp: notification.timestamp,
+              //       entityName: 'NAME',
+              //       isDissmissible: true,
+              //       onDismissed: () {
+              //         FirestoreManager.readTimeBankNotification(
+              //           notificationId: notification.id,
+              //           timebankId: notification.timebankId,
+              //         );
+              //       },
+              //       onPressed: () async {
+
+              //       },
+              //       photoUrl: oneToManyModel['requestorphotourl'],
+              //       title: 'Invited to instruct a session',        //Label to be created
+              //       subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+              //     );
+              //   break;
+
+              case NotificationType.OneToManyRequestInviteAccepted:
+                Map oneToManyRequestModel = notification.data;
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: null,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: null, // TO BE MADE
+                  photoUrl: oneToManyRequestModel['selectedInstructor']
+                      ['photoURL'],
+                  title: oneToManyRequestModel['selectedInstructor']
+                      ['fullname'],
+                  subTitle:
+                      'accepted invite to be Speaker', //Label to be created
+                );
+                break;
+
+              case NotificationType.OneToManyRequestInviteRejected:
+                Map oneToManyRequestModel = notification.data;
+                RequestModel model =
+                    new RequestModel.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: null,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditRequest(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          requestModel: model,
+                        ),
+                      ),
+                    );
+                  },
+                  photoUrl: oneToManyRequestModel['selectedInstructor']
+                      ['photoURL'],
+                  title: oneToManyRequestModel['selectedInstructor']
+                      ['fullname'],
+                  subTitle:
+                      'rejected invite to be Speaker', //Label to be created
+                );
+                break;
+
+              case NotificationType.OneToManyRequestCompleted:
+                Map oneToManyRequestModel = notification.data;
+                RequestModel model = RequestModel.fromMap(notification.data);
+                return NotificationCardOneToManyCompletedApproval(
+                  timestamp: notification.timestamp,
+                  entityName: 'NAME',
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressedApprove: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return OneToManyCreatorCompleteRequestPage(
+                            requestModel: model,
+                            onFinish: () async {
+                              FirestoreManager.readTimeBankNotification(
+                                notificationId: notification.id,
+                                timebankId: notification.timebankId,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  onPressedReject: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext viewContext) {
+                          return AlertDialog(
+                            title:
+                                Text('Are you sure you want to reject request completion?'), //Label to be created
+                            actions: <Widget>[
+                              FlatButton(
+                                color: Theme.of(context).primaryColor,
+                                child: Text(
+                                  S.of(context).yes,
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(viewContext).pop();
+                                  await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
+                                      oneToManyRequestModel, context);
+                                  FirestoreManager.readTimeBankNotification(
+                                notificationId: notification.id,
+                                timebankId: notification.timebankId,
+                              );
+                                },
+                              ),
+                              FlatButton(
+                                color: Theme.of(context).accentColor,
+                                child: Text(
+                                  S.of(context).no,
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(viewContext).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  photoUrl: oneToManyRequestModel['selectedInstructor']['photoURL'],
+                  title: oneToManyRequestModel['selectedInstructor']['fullname'],
+                  subTitle: 'Completed the request', //Label to be created
+                );
+                break;
+
               case NotificationType.OneToManyRequestAccept:
                 Map<dynamic, dynamic> oneToManyModel = notification.data;
                 return NotificationCard(

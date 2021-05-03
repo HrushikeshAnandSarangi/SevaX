@@ -537,6 +537,14 @@ class PersonalNotificationReducerForRequests {
           requestInvitationModel: requestInvitationModel,
         );
 
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return _getNotificationCardForOneToManyInvitationRequest(
+          notification: notification,
+          user: user,
+          context: context,
+          requestInvitationModel: requestInvitationModel,
+        );
+
       default:
         return _getNotificationCardForTimeInvitationRequest(
           notification: notification,
@@ -545,6 +553,47 @@ class PersonalNotificationReducerForRequests {
           requestInvitationModel: requestInvitationModel,
         );
     }
+  }
+
+  static Widget _getNotificationCardForOneToManyInvitationRequest({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+    RequestInvitationModel requestInvitationModel,
+  }) {
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankModel.name,
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      photoUrl: requestInvitationModel.timebankModel.photoUrl,
+      subTitle:
+          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+      title: 'Join Webinar', // Label to be created
+      onPressed: () {
+        if (SevaCore.of(context).loggedInUser.calendarId == null) {
+          _settingModalBottomSheet(context, requestInvitationModel,
+              notification.timebankId, notification.id, user);
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return JoinRejectDialogView(
+                requestInvitationModel: requestInvitationModel,
+                timeBankId: notification.timebankId,
+                notificationId: notification.id,
+                userModel: user,
+              );
+            },
+          );
+        }
+      },
+      timestamp: notification.timestamp,
+    );
   }
 
   static Widget _getNotificationCardForGoodsInvitationRequest({

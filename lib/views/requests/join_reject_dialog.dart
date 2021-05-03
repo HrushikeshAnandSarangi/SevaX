@@ -172,6 +172,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
                         Navigator.of(context).pop();
                       }
+
                     },
                   ),
                 ),
@@ -235,6 +236,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       requestId: model.requestModel.id,
       rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
+      acceptedUserEmail: userModel.email, model: model
     );
 
     FirestoreManager.readUserNotification(notificationId, userModel.email);
@@ -248,6 +250,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     AcceptorModel acceptorModel,
   }) {
     acceptInviteRequest(
+      user: user,
+      model: model,
       requestId: model.requestModel.id,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,
