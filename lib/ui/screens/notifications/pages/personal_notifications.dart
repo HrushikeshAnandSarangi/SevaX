@@ -25,6 +25,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/oneToManyInstructo
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -950,6 +951,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "requestId": "testId",
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
+          'liveMode': AppConfig.isTestCommunity,
         },
       );
       await sendMessageOfferCreator(

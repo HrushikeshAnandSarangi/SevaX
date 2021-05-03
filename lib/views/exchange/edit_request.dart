@@ -26,6 +26,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -55,6 +56,7 @@ import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 import '../../flavor_config.dart';
 
@@ -1243,6 +1245,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   // get data from Category class
   List categories;
   List<CategoryModel> modelList = List();
+  Map<String, dynamic> _selectedSkillsMap = {};
 
   void updateInformation(List category) {
     setState(() => categories = category);
@@ -1415,6 +1418,32 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
             onTap: () => moveToCategory(),
           ),
+          SizedBox(height: 20),
+          Text(
+            'Provide the list of Skills that you required for this request',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SkillsForRequests(
+            languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+            selectedSkills: widget.requestModel.skills,
+            onSelectedSkillsMap: (skillMap) {
+              if (skillMap.values != null && skillMap.values.length > 0) {
+                widget.requestModel.skills = skillMap;
+                _selectedSkillsMap = skillMap;
+                // setState(() {});
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1650,6 +1679,11 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
+          SizedBox(height: 20),
           InkWell(
             child: Column(
               children: [
@@ -1781,6 +1815,12 @@ class RequestEditFormState extends State<RequestEditForm> {
             onTap: () => moveToCategory(),
           ),
           SizedBox(height: 20),
+          AddImagesForRequest(onLinksCreated: (List<String> imageUrls){
+            widget.requestModel.imageUrls=imageUrls;
+          },
+            selectedList: widget.requestModel.imageUrls,),
+          SizedBox(height: 20),
+
           isFromRequest(
             projectId: widget.projectId,
           )

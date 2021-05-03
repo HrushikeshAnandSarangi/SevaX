@@ -9,9 +9,11 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../../app_config.dart';
 import '../resources/repository.dart';
 
 class CommunityFindBloc {
@@ -157,6 +159,8 @@ class CommunityCreateEditController {
         'preventAccedentalDelete', this.timebank.preventAccedentalDelete);
     this.timebank.updateValueByKey('location',
         location == null ? GeoFirePoint(40.754387, -73.984291) : location);
+    this.timebank.updateValueByKey(
+        'timebankConfigurations', getNeighbourhoodPlanConfigurationModel());
   }
 
   updateUserDetails(userdata) {
@@ -216,7 +220,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
         // credit to user
@@ -232,7 +236,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
@@ -266,7 +270,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
@@ -319,7 +323,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       } else if (type == "ADMIN_DONATE_TOUSER") {
@@ -353,7 +357,7 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            'currentBalance':
+            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       }
@@ -370,20 +374,28 @@ class TransactionBloc {
     typeid,
     timebankid, {
     @required String communityId,
+    @required String fromEmailORId,
+    @required String toEmailORId,
   }) async {
     TransactionModel transactionModel = TransactionModel(
-        communityId: communityId,
-        from: from,
-        to: to,
-        timestamp: timestamp,
-        credits: num.parse(credits.toStringAsFixed(2)),
-        isApproved: isApproved,
-        type: type,
-        typeid: typeid,
-        timebankid: timebankid,
-        transactionbetween: [from, to]);
-    await handleApprovedTransaction(isApproved, from, to, timebankid, type,
-        num.parse(credits.toStringAsFixed(2)));
+      communityId: communityId,
+      from: from,
+      to: to,
+      timestamp: timestamp,
+      credits: num.parse(credits.toStringAsFixed(2)),
+      isApproved: isApproved,
+      type: type,
+      typeid: typeid,
+      timebankid: timebankid,
+      transactionbetween: [from, to],
+      toEmail_Id: toEmailORId,
+      fromEmail_Id: fromEmailORId,
+    );
+
+    //commented because transaction and balance handling will be done in backend
+
+//    await handleApprovedTransaction(isApproved, from, to, timebankid, type,
+//        num.parse(credits.toStringAsFixed(2)));
     await Firestore.instance
         .collection('transactions')
         .document()
@@ -401,6 +413,8 @@ class TransactionBloc {
     timebankid,
     id, {
     @required String communityId,
+    @required String fromEmailORId,
+    @required String toEmailORId,
   }) async {
     TransactionModel prevtransactionModel;
     TransactionModel transactionModel = TransactionModel(
@@ -414,6 +428,8 @@ class TransactionBloc {
       timebankid: timebankid,
       transactionbetween: [from, to],
       communityId: communityId,
+      toEmail_Id: toEmailORId,
+      fromEmail_Id: fromEmailORId,
     );
     if (id) {
       var document = await Firestore.instance
@@ -427,8 +443,10 @@ class TransactionBloc {
             .document(document.documentID)
             .setData(transactionModel.toMap(), merge: true);
         if (!prevtransactionModel.isApproved && isApproved) {
-          await handleApprovedTransaction(isApproved, from, to, timebankid,
-              type, num.parse(credits.toStringAsFixed(2)));
+          //commented because transaction and balance handling will be done in backend
+
+//          await handleApprovedTransaction(isApproved, from, to, timebankid,
+//              type, num.parse(credits.toStringAsFixed(2)));
         }
       }
     } else {
@@ -445,8 +463,10 @@ class TransactionBloc {
       if (document != null)
         prevtransactionModel = TransactionModel.fromMap(document.data);
       if (!prevtransactionModel.isApproved && isApproved) {
-        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
-            num.parse(credits.toStringAsFixed(2)));
+        //commented because transaction and balance handling will be done in backend
+
+//        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
+//            num.parse(credits.toStringAsFixed(2)));
       }
       return await Firestore.instance
           .collection('transactions')
@@ -538,8 +558,10 @@ class TimeBankBloc {
 //    _timebankController.add(_timebankController.value);
 //  }
 
-  getRequestsStreamFromTimebankId(String timebankId) async {
-    _repository.getRequestsStreamFromTimebankId(timebankId).listen((requests) {
+  getRequestsStreamFromTimebankId(String timebankId, String userId) async {
+    _repository
+        .getRequestsStreamFromTimebankId(timebankId, userId)
+        .listen((requests) {
       _timebankController.value.setRequestList(requests);
       _timebankController.add(_timebankController.value);
     });

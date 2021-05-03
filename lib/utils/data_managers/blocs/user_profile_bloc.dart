@@ -9,11 +9,10 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
 class UserProfileBloc {
-  final BuildContext context;
   final _communities = BehaviorSubject<List<CommunityModel>>();
   final _communityLoaded = BehaviorSubject<bool>.seeded(false);
 
-  UserProfileBloc(this.context);
+  UserProfileBloc();
 
   Stream<List<CommunityModel>> get communities => _communities.stream;
   Stream<bool> get communityLoaded => _communityLoaded.stream;

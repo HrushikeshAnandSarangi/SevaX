@@ -2,6 +2,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:sevaexchange/models/billing_plan_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,7 @@ class AppConfig {
 
   static BillingPlanModel billing;
   static SharedPreferences prefs;
+  static List<dynamic> testingEmails = [];
 
   static int maxTransactionLimit;
   static int currentTransactionLimit;
@@ -30,10 +32,15 @@ class AppConfig {
   static String appVersion;
   static int buildNumber;
   static String packageName;
+  static String loggedInEmail;
 
   //Platform checks
   static bool isWeb;
   static bool isMobile;
+
+  //isTest Community
+  static bool isTestCommunity;
+  static TimebankConfigurations timebankConfigurations;
 
   //plan check data
   static UpgradePlanBannerModel upgradePlanBannerModel;

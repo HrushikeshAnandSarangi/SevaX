@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -320,6 +321,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );
@@ -332,6 +334,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );
@@ -349,6 +352,7 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
               loggedInMemberUserId:
                   SevaCore.of(context).loggedInUser.sevaUserID,
+              timebankModel: timebankModel,
             ),
           ),
         );
@@ -479,66 +483,72 @@ class OfferDetails extends StatelessWidget {
                   child: Container(
                     width: isAccepted ? 150 : 120,
                     height: 32,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      color: Color.fromRGBO(44, 64, 140, 0.7),
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 1),
-                          Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(44, 64, 140, 1),
-                              shape: BoxShape.circle,
+                    child: ConfigurationCheck(
+                      actionType: 'accept_offers',
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
                             ),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
+                            Spacer(),
+                            Text(
+                              getButtonLabel(context, offerModel, userId),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          Spacer(),
-                          Text(
-                            getButtonLabel(context, offerModel, userId),
-                            style: TextStyle(
-                              color: Colors.white,
+                            Spacer(
+                              flex: 2,
                             ),
-                          ),
-                          Spacer(
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                      onPressed: () async {
-                        bool isAccepted =
-                            getOfferParticipants(offerDataModel: offerModel)
-                                .contains(userId);
-                        if (isAccepted) {
-                          return;
-                        }
-
-                        if (offerModel.type == RequestType.CASH ||
-                            offerModel.type == RequestType.GOODS &&
-                                !isAccepted) {
-                          navigateToDonations(context, offerModel);
-                        } else {
-                          if (offerModel.offerType == OfferType.GROUP_OFFER &&
-                              SevaCore.of(context).loggedInUser.calendarId ==
-                                  null &&
-                              !isAccepted) {
-                            _settingModalBottomSheet(
-                              context,
-                              offerModel,
-                            );
-                          } else {
-                            offerActions(context, offerModel, ComingFrom.Offers)
-                                .then((_) => Navigator.of(context).pop());
+                          ],
+                        ),
+                        onPressed: () async {
+                          bool isAccepted =
+                              getOfferParticipants(offerDataModel: offerModel)
+                                  .contains(userId);
+                          if (isAccepted) {
+                            return;
                           }
-                        }
-                      },
+
+                          if (offerModel.type == RequestType.CASH ||
+                              offerModel.type == RequestType.GOODS &&
+                                  !isAccepted) {
+                            navigateToDonations(context, offerModel);
+                          } else {
+                            if (offerModel.offerType == OfferType.GROUP_OFFER &&
+                                SevaCore.of(context).loggedInUser.calendarId ==
+                                    null &&
+                                !isAccepted) {
+                              _settingModalBottomSheet(
+                                context,
+                                offerModel,
+                              );
+                            } else {
+                              offerActions(
+                                      context, offerModel, ComingFrom.Offers)
+                                  .then((_) => Navigator.of(context).pop());
+                            }
+                          }
+                        },
+                      ),
                     ),
                   ),
                 )

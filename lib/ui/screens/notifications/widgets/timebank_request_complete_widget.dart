@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -608,7 +609,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : S.of(context).no_comments)
+          : S.of(context).no_comments),
+      'liveMode': AppConfig.isTestCommunity,
     });
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       log('inside credit');
@@ -617,16 +619,17 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         return transaction.to == reciever.sevaUserID;
       });
       await TransactionBloc().createNewTransaction(
-        requestModel.timebankId,
-        requestModel.timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        transmodel.credits ?? 0,
-        true,
-        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-        requestModel.id,
-        requestModel.timebankId,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      );
+          requestModel.timebankId,
+          requestModel.timebankId,
+          DateTime.now().millisecondsSinceEpoch,
+          transmodel.credits ?? 0,
+          true,
+          "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+          requestModel.id,
+          requestModel.timebankId,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          fromEmailORId: requestModel.timebankId,
+          toEmailORId: requestModel.timebankId);
       log('success');
     }
     await sendMessageToMember(

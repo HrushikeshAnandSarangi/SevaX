@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -104,17 +105,22 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     timebankId: widget.timebankId,
                     isSoftDeleteRequested:
                         widget.timebankModel.requestedSoftDelete,
-                    child: GestureDetector(
-                      child: Container(
-                        margin: EdgeInsets.only(left: 0),
-                        child: Icon(
-                          Icons.add_circle,
-                          color: FlavorConfig.values.theme.primaryColor,
+                    child: ConfigurationCheck(
+                      actionType: 'create_events',
+                      role: memberType(widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: GestureDetector(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 0),
+                          child: Icon(
+                            Icons.add_circle,
+                            color: FlavorConfig.values.theme.primaryColor,
+                          ),
                         ),
+                        onTap: () {
+                          navigateToCreateProject();
+                        },
                       ),
-                      onTap: () {
-                        navigateToCreateProject();
-                      },
                     ),
                   ),
                 ),

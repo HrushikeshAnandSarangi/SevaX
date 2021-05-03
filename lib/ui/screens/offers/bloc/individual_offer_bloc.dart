@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
@@ -135,6 +136,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
           type: _type.value,
           public: _makePublic.value ?? false,
           virtual: _makeVirtual.value ?? false,
+          liveMode: AppConfig.isTestCommunity,
           cashModel: _cashModel.value,
           goodsDonationDetails: _goodsDonationDetails.value,
           timebanksPosted: _makePublic.value ?? false
@@ -216,7 +218,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
-    } else if (profanityDetector.isProfaneString(_title.value)) {
+    } else if (_title.value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
+    _title.addError(ValidationErrors.char_error );
+     flag = true;
+    }else if (profanityDetector.isProfaneString(_title.value)) {
       _title.addError(ValidationErrors.profanityError);
       flag = true;
     }

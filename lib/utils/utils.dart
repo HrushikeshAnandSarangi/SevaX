@@ -50,8 +50,8 @@ bool isDeletable({
   String contentCreatorId,
 }) =>
     contentCreatorId == SevaCore.of(context).loggedInUser.sevaUserID ||
-        communityCreatorId ==SevaCore.of(context).loggedInUser.sevaUserID ||
-        timebankCreatorId ==SevaCore.of(context).loggedInUser.sevaUserID;
+    communityCreatorId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    timebankCreatorId == SevaCore.of(context).loggedInUser.sevaUserID;
 
 bool isOwnerCreator(TimebankModel timebank, String userId) =>
     timebank.creatorId == userId || timebank.organizers.contains(userId);

@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 class ManualTimeRepository {
   static final String _userCollection = "users";
@@ -99,7 +100,7 @@ class ManualTimeRepository {
     batchWrite.updateData(
       _firestore.document(model.userDetails.email),
       {
-        'currentBalance': FieldValue.increment(model.claimedTime / 60),
+        AppConfig.isTestCommunity ? 'testBalance':'currentBalance': FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -155,7 +156,7 @@ class ManualTimeRepository {
     batchWrite.updateData(
       _firestore.collection('users').document(model.userDetails.email),
       {
-        'currentBalance': FieldValue.increment(model.claimedTime / 60),
+        AppConfig.isTestCommunity ? 'testBalance':'currentBalance': FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -270,6 +271,8 @@ class ManualTimeRepository {
       communityId: model.communityId,
       credits: model.claimedTime / 60,
       from: model.timebankId,
+      fromEmail_Id: model.timebankId,
+      toEmail_Id: model.userDetails.email,
       isApproved: true,
       timebankid: model.timebankId,
       timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -290,6 +293,8 @@ class ManualTimeRepository {
       communityId: model.communityId,
       credits: model.claimedTime / 60,
       from: model.timebankId,
+      fromEmail_Id: model.timebankId,
+      toEmail_Id: model.timebankId,
       isApproved: true,
       timebankid: model.timebankId,
       timestamp: DateTime.now().millisecondsSinceEpoch,

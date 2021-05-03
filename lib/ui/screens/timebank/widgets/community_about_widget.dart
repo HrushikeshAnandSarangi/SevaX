@@ -12,10 +12,13 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../flavor_config.dart';
@@ -23,10 +26,12 @@ import '../../../../flavor_config.dart';
 class CommunityAbout extends StatefulWidget {
   final CommunityModel communityModel;
   final UserModel userModel;
+  final CompareUserStatus joinStatus;
 
   CommunityAbout({
     this.communityModel,
     this.userModel,
+    this.joinStatus,
   });
 
   @override
@@ -46,9 +51,12 @@ class _CommunityAboutState extends State<CommunityAbout>
     'images/icons/projects.png',
     'images/icons/members.png'
   ];
+  UserProfileBloc _profileBloc;
 
   @override
   void initState() {
+    _profileBloc = UserProfileBloc();
+
     var templist = [
       ...widget.communityModel.members,
       ...widget.communityModel.organizers,
@@ -118,13 +126,31 @@ class _CommunityAboutState extends State<CommunityAbout>
                           sliver: SliverAppBar(
                             title: Container(),
                             titleSpacing: 10,
+                            leading: Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.white60,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.black),
+                              ),
+                              // width: 30,
+                              child: IconButton(
+                                color: Colors.black,
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            leadingWidth: 37,
                             backgroundColor: Colors.white,
                             pinned: true,
-                            expandedHeight: 300,
-                            // expandedHeight: timebankModel.sponsors != null &&
-                            //         timebankModel.sponsors.length > 0
-                            //     ? 250 + timebankModel.sponsors.length * 100.0
-                            //     : 300,
+                            expandedHeight: timebankModel.sponsors != null &&
+                                    timebankModel.sponsors.length > 0
+                                ? 250 + timebankModel.sponsors.length * 100.0
+                                : 270,
                             flexibleSpace: FlexibleSpaceBar(
                               collapseMode: CollapseMode.pin,
                               background: Column(
@@ -275,7 +301,6 @@ class _CommunityAboutState extends State<CommunityAbout>
           style: TextStyle(
             fontSize: 16,
             fontFamily: 'Europa',
-            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -334,13 +359,13 @@ class _CommunityAboutState extends State<CommunityAbout>
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
-                              fontWeight: FontWeight.w700,
                               color: Colors.black87)),
                       SizedBox(
                         height: 7,
                       ),
 //                    InkWell(
 //                      onTap:
+
 //                          () {}, //TODO navigate to messaing view on tapping of this text
 //                      child: Text(
 //                        'Message',
@@ -384,7 +409,6 @@ class _CommunityAboutState extends State<CommunityAbout>
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -429,7 +453,6 @@ class _CommunityAboutState extends State<CommunityAbout>
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'Europa',
-                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
@@ -509,7 +532,11 @@ class _CommunityAboutState extends State<CommunityAbout>
               newPostCount: 0,
               subtitle: '',
               onTap: () {
-                showAlertMessage(message: S.of(context).groups.toLowerCase());
+                if (widget.joinStatus == CompareUserStatus.JOINED) {
+                  switchCommunity(message: S.of(context).groups.toLowerCase());
+                } else {
+                  showAlertMessage(message: S.of(context).groups.toLowerCase());
+                }
               },
               sponsoredWidget: timabanksList[index].sponsored
                   ? Align(
@@ -525,6 +552,32 @@ class _CommunityAboutState extends State<CommunityAbout>
                       ))
                   : Offstage(),
             ),
+          );
+        });
+  }
+
+  void switchCommunity({String message}) {
+    showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            content: Text('Please switch seva community to access ' + message),
+            actions: [
+              RaisedButton(
+                color: Colors.orange,
+                onPressed: () {
+                  _profileBloc.setDefaultCommunity(
+                      widget.userModel.email, widget.communityModel, context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SwitchTimebank(),
+                    ),
+                  );
+                },
+                child: Text(S.of(context).switch_timebank),
+              )
+            ],
           );
         });
   }
@@ -616,18 +669,23 @@ class _CommunityAboutState extends State<CommunityAbout>
                       project.completedRequests.length
                   : 0;
               return ProjectsCard(
-                timestamp: project.createdAt,
-                startTime: project.startTime,
-                endTime: project.endTime,
-                title: project.name,
-                description: project.description,
-                photoUrl: project.photoUrl,
-                location: project.address,
-                tasks: totalTask,
-                pendingTask: project.pendingRequests?.length,
-                onTap: () => showAlertMessage(
-                    message: S.of(context).projects.toLowerCase()),
-              );
+                  timestamp: project.createdAt,
+                  startTime: project.startTime,
+                  endTime: project.endTime,
+                  title: project.name,
+                  description: project.description,
+                  photoUrl: project.photoUrl,
+                  location: project.address,
+                  tasks: totalTask,
+                  pendingTask: project.pendingRequests?.length,
+                  onTap: () {
+                    if (widget.joinStatus == CompareUserStatus.JOINED) {
+                      switchCommunity(message: 'Event');
+                    } else {
+                      showAlertMessage(
+                          message: S.of(context).projects.toLowerCase());
+                    }
+                  });
             },
           );
         });

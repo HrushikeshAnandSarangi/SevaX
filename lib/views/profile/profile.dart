@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_pa
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -58,11 +59,11 @@ class _ProfilePageState extends State<ProfilePage> {
   UserProfileBloc _profileBloc;
 
   List<CommunityModel> communities = [];
-
+  double balance=0;
   @override
   void initState() {
     log("profile page init");
-    _profileBloc = UserProfileBloc(context);
+    _profileBloc = UserProfileBloc();
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
     _profileBloc.communityLoaded.listen((value) {
@@ -78,6 +79,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
+        balance=AppConfig.isTestCommunity ?user.testBalance:user.currentBalance;
+
       });
     });
   }
@@ -156,9 +159,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: 20),
                         SevaCoinWidget(
-                          amount: this.user.currentBalance != null
+                          amount: balance != null
                               ? double.parse(
-                                  this.user.currentBalance.toStringAsFixed(2))
+                                  balance.toStringAsFixed(2))
                               : 0.0,
                           onTap: () async {
                             var connResult =

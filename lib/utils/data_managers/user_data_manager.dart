@@ -17,6 +17,7 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../flavor_config.dart';
@@ -153,6 +154,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   } else {
     location = locationVal;
   }
+  AppConfig.loggedInEmail=userEmailId;
   deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail).updateData({
     'deviceDetails': deviceDetails.toMap(),

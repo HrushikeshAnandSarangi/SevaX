@@ -33,8 +33,8 @@ class Repository {
   // functions for request details;
   Future getRequestsFromTimebankId(timebankId) =>
       requestApiProvider.getRequestListFuture(timebankId);
-  Stream getRequestsStreamFromTimebankId(timebankId) =>
-      requestApiProvider.getRequestListStream(timebankId: timebankId);
+  Stream getRequestsStreamFromTimebankId(timebankId, String userId) =>
+      requestApiProvider.getRequestListStream(timebankId: timebankId,userId: userId);
   Future getUsersFromRequest(requestID) =>
       requestApiProvider.getUserFromRequest(requestID);
   Future updateInvitedUsersForRequest(requestID, sevauserid, email) =>

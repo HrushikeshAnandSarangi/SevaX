@@ -144,14 +144,18 @@ class CreateEditCommunityViewFormState
 
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
-
+  bool canTestCommunity = false;
+  bool testCommunity = false;
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
       Future.delayed(Duration.zero, () {
         createEditCommunityBloc.getChildTimeBanks(context);
       });
+    } else {
+      checkTestCommunityStatus();
     }
+
     super.initState();
 
     focusNodes = List.generate(8, (_) => FocusNode());
@@ -194,6 +198,18 @@ class CreateEditCommunityViewFormState
           });
         }
       }
+    });
+  }
+
+  Future<void> checkTestCommunityStatus() async {
+    Future.delayed(Duration(milliseconds: 200), () {
+      FirestoreManager.checkTestCommunityStatus(
+              creatorId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .then((onValue) {
+        setState(() {
+          canTestCommunity = onValue;
+        });
+      });
     });
   }
 
@@ -272,6 +288,7 @@ class CreateEditCommunityViewFormState
                 createEditCommunityBloc.onChange(snapshot.data);
               }
             }
+
             return Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
@@ -358,6 +375,10 @@ class CreateEditCommunityViewFormState
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
+                            } else if (value.substring(0, 1).contains('_') &&
+                                !AppConfig.testingEmails
+                                    .contains(AppConfig.loggedInEmail)) {
+                              return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "").trim();
@@ -583,24 +604,94 @@ class CreateEditCommunityViewFormState
                             ),
                           ],
                         ),
-                        // SponsorsWidget(
-                        //   sponsorsMode: widget.isCreateTimebank
-                        //       ? SponsorsMode.CREATE
-                        //       : SponsorsMode.EDIT,
-                        //   timebankModel: timebankModel,
-                        //   onCreated: (TimebankModel timebank) {
-                        //     snapshot.data.timebank.updateValueByKey(
-                        //       'sponsors',
-                        //       timebank.sponsors,
-                        //     );
-                        //     timebankModel = timebank;
-                        //     setState(() {});
-                        //   },
-                        //   onRemoved: (TimebankModel timebank) {
-                        //     timebankModel = timebank;
-                        //     setState(() {});
-                        //   },
-                        // ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Offstage(
+                          offstage: !widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              headingText('Test Community'),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                                child: infoButton(
+                                  context: context,
+                                  key: GlobalKey(),
+                                  type: InfoType.TestCommunity,
+                                ),
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Divider(),
+                                  Checkbox(
+                                    value: testCommunity,
+                                    onChanged: (bool value) {
+                                      if (!canTestCommunity) {
+                                        if (!testCommunity) {
+                                          _showSanBoxdvisory(
+                                                  title:
+                                                      'Sandbox Seva Community',
+                                                  description:
+                                                      'Is this seva community is Non-Profit community?')
+                                              .then((status) {
+                                            if (status) {
+                                              communityModel.payment = {
+                                                "planId": "grande_plan",
+                                                "payment_success": true,
+                                                "message":
+                                                    "You are on Non-Profit Plan",
+                                                "status": 200,
+                                              };
+                                            } else {
+                                              communityModel.payment = {
+                                                "planId": "venti_plan",
+                                                "payment_success": true,
+                                                "message":
+                                                    "You are on Enterprise Plan",
+                                                "status": 200,
+                                              };
+                                            }
+                                          });
+                                        }
+
+                                        snapshot.data.community
+                                            .updateValueByKey(
+                                          'testCommunity',
+                                          value,
+                                        );
+                                        testCommunity = value;
+                                        setState(() {});
+                                      } else {
+                                        showDialogForSuccess(
+                                            dialogTitle:
+                                                'You already created a test community.',
+                                            err: true);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        SponsorsWidget(
+                          sponsorsMode: widget.isCreateTimebank
+                              ? SponsorsMode.CREATE
+                              : SponsorsMode.EDIT,
+                          timebankModel: timebankModel,
+                          onCreated: (TimebankModel timebank) {
+                            snapshot.data.timebank.updateValueByKey(
+                              'sponsors',
+                              timebank.sponsors,
+                            );
+                            timebankModel = timebank;
+                            setState(() {});
+                          },
+                          onRemoved: (TimebankModel timebank) {
+                            timebankModel = timebank;
+                            setState(() {});
+                          },
+                        ),
                         widget.isCreateTimebank
                             ? Container()
                             : SizedBox(height: 10),
@@ -947,14 +1038,16 @@ class CreateEditCommunityViewFormState
                                               .sevaUserID
                                         ];
 
-                                        //by default every community is on neighbourhood plan
-                                        snapshot.data.community.payment = {
-                                          "planId": "neighbourhood_plan",
-                                          "payment_success": true,
-                                          "message":
-                                              "You are on Neighbourhood plan",
-                                          "status": 200,
-                                        };
+                                        if (testCommunity == false) {
+                                          //by default every community is on neighbourhood plan
+                                          snapshot.data.community.payment = {
+                                            "planId": "neighbourhood_plan",
+                                            "payment_success": true,
+                                            "message":
+                                                "You are on Neighbourhood plan",
+                                            "status": 200,
+                                          };
+                                        }
 
                                         snapshot.data.community.billMe = false;
 
@@ -1165,6 +1258,45 @@ class CreateEditCommunityViewFormState
         );
       },
     );
+  }
+
+  Future<bool> _showSanBoxdvisory({String title, String description}) {
+    return showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext _context) {
+              return AlertDialog(
+                title: Text(title),
+                content: Text(description),
+                actions: <Widget>[
+                  RaisedButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: Text(
+                      S.of(context).yes,
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(true);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      S.of(context).no,
+                      style: TextStyle(
+                          color: Colors.red, fontSize: dialogButtonSize),
+                    ),
+                    onPressed: () {
+                      Navigator.of(_context).pop(false);
+                    },
+                  )
+                ],
+              );
+            }) ??
+        false;
   }
 
   BuildContext dialogContext;

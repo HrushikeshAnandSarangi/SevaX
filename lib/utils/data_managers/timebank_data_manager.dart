@@ -16,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
@@ -291,10 +292,17 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
               (documentSnapshot) {
                 CommunityModel model = CommunityModel(documentSnapshot.data);
                 model.id = documentSnapshot.documentID;
+                if(AppConfig.isTestCommunity){
+                  if(model.testCommunity){
+                    communityList.add(model);
 
-                model.softDelete == true || model.private == true
-                    ? null
-                    : communityList.add(model);
+                  }
+                }else {
+                  model.softDelete == true || model.private == true ||
+                      AppConfig.isTestCommunity
+                      ? null
+                      : communityList.add(model);
+                }
               },
             );
             requestSink.add(communityList);
@@ -446,6 +454,18 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
     communityModel = CommunityModel(dataMap);
   });
   return communityModel;
+}
+
+//check test community status by calling this api
+Future<bool> checkTestCommunityStatus({@required String creatorId}) async {
+  return await Firestore.instance
+      .collection('communities')
+      .where('created_by', isEqualTo: creatorId)
+      .where('testCommunity', isEqualTo: true)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    return querySnapshot.documents.length > 0;
+  }).catchError((value) => false);
 }
 
 /// Get a Timebank data as a Stream

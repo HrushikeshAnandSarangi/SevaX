@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -33,6 +34,8 @@ import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:sevaexchange/widgets/full_screen_widget.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -247,6 +250,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 shrinkWrap: true,
                 children: <Widget>[
+                  requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
@@ -300,8 +304,63 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
             getBottomFrame,
+            HideWidget(
+              hide: widget.requestItem.sevaUserId !=
+                      SevaCore.of(context).loggedInUser.sevaUserID &&
+                  widget.requestItem.accepted == false,
+              child: InkWell(
+                onTap: () async {
+                  await Firestore.instance
+                      .collection('requests')
+                      .document(widget.requestItem.id)
+                      .updateData({'accepted': true});
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  color: FlavorConfig.values.theme.primaryColor,
+                  child: Center(
+                    child: Text(
+                      S.of(context).close + ' ' + S.of(context).request,
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget get requestImages {
+    return Offstage(
+      offstage: widget.requestItem.imageUrls == null &&
+          widget.requestItem.imageUrls.length < 0,
+      child: Container(
+        height: 200,
+        child: ListView.builder(
+            itemCount: widget.requestItem.imageUrls.length,
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return InkWell(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          return FullScreenImage(
+                            imageUrl: widget.requestItem.imageUrls[index],
+                          );
+                        });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    child: Image.network(widget.requestItem.imageUrls[index]),
+                  ));
+            }),
       ),
     );
   }
@@ -940,17 +999,21 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       margin: EdgeInsets.only(right: 12),
       width: 100,
       height: 32,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: EdgeInsets.all(0),
-        color: isApplied ? Theme.of(context).accentColor : Colors.green,
-        child: Row(
-          children: <Widget>[
-            SizedBox(width: 1),
-            Spacer(),
-            widget.requestItem.requestType == RequestType.BORROW
+      child: ConfigurationCheck(
+        actionType: 'accept_offers',
+        role: memberType(
+            widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
+        child: FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(0),
+          color: isApplied ? Theme.of(context).accentColor : Colors.green,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 1),
+              Spacer(),
+              widget.requestItem.requestType == RequestType.BORROW
                 ? Text(
                     isApplied ? S.of(context).cancel : S.of(context).accept,
                     textAlign: TextAlign.center,
@@ -979,6 +1042,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             applyAction();
           }
         },
+        ),
       ),
     );
   }

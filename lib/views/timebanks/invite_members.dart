@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -35,6 +36,7 @@ import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
+import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -47,6 +49,7 @@ class InviteAddMembers extends StatefulWidget {
 
 class InviteAddMembersState extends State<InviteAddMembers> {
   TimebankCodeModel codeModel = TimebankCodeModel();
+  TimebankCodeModel generatedModel;
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
@@ -66,11 +69,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53";
   String _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  final String samplelink =
+      "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Fumesha%40uipep.com15918788235481000%20Sales%20Records.csv?alt=media&token=d1919180-7e97-4f95-b2e3-6cca1c51c688";
 
   @override
   void initState() {
     super.initState();
+
     setup();
 
     _setTimebankModel();
@@ -273,16 +278,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget headingTitle(String label) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
-      child: Container(
-        height: 25,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+    return Container(
+      height: 25,
+      child: Text(
+        label,
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
         ),
       ),
     );
@@ -311,68 +314,74 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             comingFrom: ComingFrom.Members,
             upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
             transaction_matrix_type: "csv_import_users",
-            child: GestureDetector(
-              onTap: () {
-                _openFileExplorer();
-              },
-              child: Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: DashPathBorder.all(
-                    dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+            child: ConfigurationCheck(
+              actionType: 'invite_bulk_members',
+              role: memberType(widget.timebankModel,
+                  SevaCore.of(context).loggedInUser.sevaUserID),
+              child: GestureDetector(
+                onTap: () {
+                  _openFileExplorer();
+                },
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: DashPathBorder.all(
+                      dashArray:
+                          CircularIntervalList<double>(<double>[5.0, 2.5]),
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'images/csv_example.png',
-                      width: 200,
-                    ),
-                    Text(
-                      S.of(context).choose_csv,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    _isDocumentBeingUploaded
-                        ? Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: Center(
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'images/csv_example.png',
+                        width: 200,
+                      ),
+                      Text(
+                        S.of(context).choose_csv,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      _isDocumentBeingUploaded
+                          ? Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Center(
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(),
+                                ),
                               ),
-                            ),
-                          )
-                        : Container(
-                            child: csvFileModel.csvUrl == null
-                                ? Offstage()
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Card(
-                                      color: Colors.grey[100],
-                                      child: ListTile(
-                                        leading: Icon(Icons.attachment),
-                                        title: Text(
-                                          csvFileModel.csvTitle ??
-                                              "Document.csv",
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        trailing: IconButton(
-                                          icon: Icon(Icons.clear),
-                                          onPressed: () => setState(() {
-                                            csvFileModel.csvTitle = null;
-                                            csvFileModel.csvUrl = null;
-                                          }),
+                            )
+                          : Container(
+                              child: csvFileModel.csvUrl == null
+                                  ? Offstage()
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Card(
+                                        color: Colors.grey[100],
+                                        child: ListTile(
+                                          leading: Icon(Icons.attachment),
+                                          title: Text(
+                                            csvFileModel.csvTitle ??
+                                                "Document.csv",
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          trailing: IconButton(
+                                            icon: Icon(Icons.clear),
+                                            onPressed: () => setState(() {
+                                              csvFileModel.csvTitle = null;
+                                              csvFileModel.csvUrl = null;
+                                            }),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                          ),
-                  ],
+                            ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1045,17 +1054,26 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   fontSize: dialogButtonSize,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 var today = DateTime.now();
                 var oneDayFromToday =
                     today.add(Duration(days: 30)).millisecondsSinceEpoch;
-                registerTimebankCode(
+                await registerTimebankCode(
                   timebankCode: timebankCode,
                   timebankId: widget.timebankModel.id,
                   validUpto: oneDayFromToday,
                   communityId: widget.timebankModel.communityId,
                 );
                 Navigator.of(context).pop("completed");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TimebankCodeWidget(
+                      timebankCodeModel: codeModel,
+                      timebankName: widget.timebankModel.name,
+                    ),
+                  ),
+                );
               },
             ),
             FlatButton(

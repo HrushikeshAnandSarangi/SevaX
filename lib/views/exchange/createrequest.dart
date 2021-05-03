@@ -34,6 +34,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -42,6 +43,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
@@ -65,6 +67,7 @@ import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -253,6 +256,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     this.requestModel.public = false;
 
     this.requestModel.timebankId = _selectedTimebankId;
+    this.requestModel.public = false;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
@@ -482,11 +486,19 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return S.of(context).request_subject;
-                                }
-                                if (profanityDetector.isProfaneString(value)) {
+                                } else if (profanityDetector
+                                    .isProfaneString(value)) {
                                   return S.of(context).profanity_text_alert;
+                                } else if (value
+                                        .substring(0, 1)
+                                        .contains('_') &&
+                                    !AppConfig.testingEmails
+                                        .contains(AppConfig.loggedInEmail)) {
+                                  return 'Creating request with "_" is not allowed';
+                                } else {
+                                  requestModel.title = value;
+                                  return null;
                                 }
-                                requestModel.title = value;
                               },
                             ),
 
@@ -644,27 +656,40 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                         : GoodsRequest(
                                             snapshot, projectModelList),
 
-                            Padding(
+                            HideWidget(
+                              hide: AppConfig.isTestCommunity,
+                              child:Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: OpenScopeCheckBox(
-                                  infoType: InfoType.VirtualRequest,
-                                  isChecked: requestModel.virtualRequest,
-                                  checkBoxTypeLabel:
-                                      CheckBoxType.type_VirtualRequest,
-                                  onChangedCB: (bool val) {
-                                    if (requestModel.virtualRequest != val) {
-                                      this.requestModel.virtualRequest = val;
+                              child: ConfigurationCheck(
+                                  actionType: 'create_virtual_request',
+                                  role: memberType(
+                                      timebankModel,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID),
+                                  child: OpenScopeCheckBox(
+                                      infoType: InfoType.VirtualRequest,
+                                      isChecked: requestModel.virtualRequest,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_VirtualRequest,
+                                      onChangedCB: (bool val) {
+                                        if (requestModel.virtualRequest !=
+                                            val) {
+                                          this.requestModel.virtualRequest =
+                                              val;
 
-                                      if (!val) {
-                                        requestModel.public = false;
-                                        isPulicCheckboxVisible = false;
-                                      } else {
-                                        isPulicCheckboxVisible = true;
-                                      }
+                                          if (!val) {
+                                            requestModel.public = false;
+                                            isPulicCheckboxVisible = false;
+                                          } else {
+                                            isPulicCheckboxVisible = true;
+                                          }
 
-                                      setState(() {});
-                                    }
-                                  }),
+                                          setState(() {});
+                                        }
+                                      }),
+                                ),
+                              ),
                             ),
                             HideWidget(
                               hide: !isPulicCheckboxVisible ||
@@ -675,17 +700,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: OpenScopeCheckBox(
-                                    infoType: InfoType.OpenScopeEvent,
-                                    isChecked: requestModel.public,
-                                    checkBoxTypeLabel:
-                                        CheckBoxType.type_Requests,
-                                    onChangedCB: (bool val) {
-                                      if (requestModel.public != val) {
-                                        this.requestModel.public = val;
-                                        setState(() {});
-                                      }
-                                    }),
+                                child: ConfigurationCheck(
+                                  actionType: 'create_public_request',
+                                  role: memberType(
+                                      timebankModel,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID),
+                                  child: OpenScopeCheckBox(
+                                      infoType: InfoType.OpenScopeEvent,
+                                      isChecked: requestModel.public,
+                                      checkBoxTypeLabel:
+                                          CheckBoxType.type_Requests,
+                                      onChangedCB: (bool val) {
+                                        if (requestModel.public != val) {
+                                          this.requestModel.public = val;
+                                          setState(() {});
+                                        }
+                                      }),
+                                ),
                               ),
                             ),
 
@@ -1282,20 +1315,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
               ),
               Column(
                 children: <Widget>[
-                  _optionRadioButton<RequestType>(
-                    title: S.of(context).request_type_time,
-                    isEnabled: !widget.isOfferRequest,
-                    value: RequestType.TIME,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                  ConfigurationCheck(
+                    actionType: 'create_time_request',
+                    role: memberType(timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: _optionRadioButton<RequestType>(
+                      title: S.of(context).request_type_time,
+                      isEnabled: !widget.isOfferRequest,
+                      value: RequestType.TIME,
+                      groupvalue: requestModel.requestType,
+                      onChanged: (value) {
+                        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                       instructorAdded = false;
                       requestModel.selectedInstructor = null;
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
                       setState(() => {});
-                    },
+                    },),
                   ),
                   TransactionsMatrixCheck(
                     comingFrom: widget.comingFrom,
@@ -1321,18 +1358,23 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
-                    child: _optionRadioButton<RequestType>(
-                      title: S.of(context).request_type_cash,
-                      value: RequestType.CASH,
-                      isEnabled: !widget.isOfferRequest,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.isRecurring = false;
-                        requestModel.requestType = value;
-                        AppConfig.helpIconContextMember =
-                            HelpContextMemberType.money_requests;
-                        setState(() => {});
-                      },
+                    child: ConfigurationCheck(
+                      actionType: 'create_money_request',
+                      role: memberType(timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: _optionRadioButton<RequestType>(
+                        title: S.of(context).request_type_cash,
+                        value: RequestType.CASH,
+                        isEnabled: !widget.isOfferRequest,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          requestModel.isRecurring = false;
+                          requestModel.requestType = value;
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.money_requests;
+                          setState(() => {});
+                        },
+                      ),
                     ),
                   ),
                   TransactionsMatrixCheck(
@@ -1340,7 +1382,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         AppConfig.upgradePlanBannerModel.cash_request,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
-                    child: _optionRadioButton<RequestType>(
+                    child: ConfigurationCheck(
+    actionType: 'create_goods_request',
+    role: memberType(timebankModel,
+    SevaCore.of(context).loggedInUser.sevaUserID),child:_optionRadioButton<RequestType>(
                       title: 'Borrow', //Label to be created
                       value: RequestType.BORROW,
                       isEnabled: !widget.isOfferRequest,
@@ -1355,6 +1400,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             HelpContextMemberType.time_requests;
                         setState(() => {});
                       },
+                    ),
                     ),
                   ),
                 ],
@@ -1416,6 +1462,33 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           )
         : Container();
+    TransactionsMatrixCheck(
+      upgradeDetails:
+      AppConfig.upgradePlanBannerModel.cash_request,
+      transaction_matrix_type: 'cash_goods_requests',
+      comingFrom: widget.comingFrom,
+      child: _optionRadioButton<RequestType>(
+        title: 'Borrow', //Label to be created
+        value: RequestType.BORROW,
+        isEnabled: !widget.isOfferRequest,
+        groupvalue: requestModel.requestType,
+        onChanged: (value) {
+          //requestModel.isRecurring = true;
+          requestModel.requestType = value;
+          //By default instructor for One To Many Requests is the creator
+          instructorAdded = false;
+          requestModel.selectedInstructor = null;
+          AppConfig.helpIconContextMember =
+              HelpContextMemberType.time_requests;
+          setState(() => {});
+        },
+      ),
+    ),
+    ],
+    )
+    ],
+    )
+        : Container()
   }
 
 // Navigat to skills class and geting data from the class
@@ -1780,11 +1853,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // Choose Category and Sub Category
           categoryWidget(),
           SizedBox(height: 20),
-
-          // skillsWidget(),
+          Text(
+            'Provide the list of Skills that you required for this request',
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          SkillsForRequests(
+            languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+            selectedSkills: _selectedSkillsMap,
+            onSelectedSkillsMap: (skillMap) {
+              if (skillMap.values != null && skillMap.values.length > 0) {
+                _selectedSkillsMap = skillMap;
+                // setState(() {});
+              }
+            },
+          ),
           SizedBox(height: 20),
 
-          // Choose Category and Sub Category
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              requestModel.imageUrls = imageUrls;
+            },
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1975,6 +2069,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
           categoryWidget(),
           SizedBox(height: 20),
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              requestModel.imageUrls = imageUrls;
+            },
+          ),
+          SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
             style: TextStyle(
@@ -2096,6 +2196,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),
+
+          SizedBox(height: 10),
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              requestModel.imageUrls = imageUrls;
+            },
+          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2372,6 +2479,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       );
+      requestModel.liveMode = AppConfig.isTestCommunity;
       if (requestModel.public) {
         requestModel.timebanksPosted = [
           timebankModel.id,

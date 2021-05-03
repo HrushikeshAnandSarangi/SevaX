@@ -22,6 +22,7 @@ import 'package:sevaexchange/ui/screens/request/pages/requests_tabs.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -521,6 +522,8 @@ class DiscussionListState extends State<DiscussionList> {
   bool isPinned = false;
   NewsModel pinnedNewsModel;
   StreamController<List<NewsModel>> newsStream;
+  List<String> sortOrderArr = ["Latest", "Likes"];
+  String sortOrderVal = "Latest";
 
   @override
   void initState() {
@@ -557,6 +560,38 @@ class DiscussionListState extends State<DiscussionList> {
                 S.of(context).feeds,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
+              Spacer(),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  style: TextStyle(color: Colors.white),
+                  focusColor: Colors.white,
+                  iconEnabledColor: FlavorConfig.values.theme.primaryColor,
+                  value: sortOrderVal,
+                  onChanged: (val) {
+                    if (val != sortOrderVal) {
+                      sortOrderVal = val;
+                      setState(() {});
+                    }
+                  },
+                  items: List.generate(
+                    sortOrderArr.length,
+                    (index) => DropdownMenuItem(
+                      value: sortOrderArr[index],
+                      child: Text(
+                        sortOrderArr[index],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: FlavorConfig.values.theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+              ),
             ],
           ),
         ),
@@ -564,51 +599,56 @@ class DiscussionListState extends State<DiscussionList> {
           color: Colors.white,
           height: 0,
         ),
-        InkWell(
-          onTap: () {
-            if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
-                !isAccessAvailable(widget.timebankModel,
-                    SevaCore.of(context).loggedInUser.sevaUserID)) {
-              showAdminAccessMessage(context: context);
-            } else {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NewsCreate(
-                        timebankId: widget.timebankId,
-                        timebankModel: widget.timebankModel,
-                      )));
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      SevaCore.of(context).loggedInUser.photoURL ??
-                          defaultUserImageURL),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.7),
-                      color: Colors.grey[200],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        S.of(context).start_new_post,
-                        maxLines: 1,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 16),
+        ConfigurationCheck(
+          actionType: 'create_feeds',
+          role: memberType(widget.timebankModel,
+              SevaCore.of(context).loggedInUser.sevaUserID),
+          child: InkWell(
+            onTap: () {
+              if (widget.timebankModel.id == FlavorConfig.values.timebankId &&
+                  !isAccessAvailable(widget.timebankModel,
+                      SevaCore.of(context).loggedInUser.sevaUserID)) {
+                showAdminAccessMessage(context: context);
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => NewsCreate(
+                          timebankId: widget.timebankId,
+                          timebankModel: widget.timebankModel,
+                        )));
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        SevaCore.of(context).loggedInUser.photoURL ??
+                            defaultUserImageURL),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.7),
+                        color: Colors.grey[200],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          S.of(context).start_new_post,
+                          maxLines: 1,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -627,6 +667,13 @@ class DiscussionListState extends State<DiscussionList> {
               );
 
             List<NewsModel> newsList = snapshot.data;
+            if (sortOrderVal.toLowerCase() ==
+                SortOrderClass.LIKES.toLowerCase()) {
+              newsList.sort((a, b) => b.likes.length.compareTo(a.likes.length));
+            } else {
+              newsList
+                  .sort((a, b) => b.postTimestamp.compareTo(a.postTimestamp));
+            }
             newsList = filterBlockedContent(newsList, context);
             newsList = filterPinnedNews(newsList, context);
 

@@ -396,19 +396,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         RaisedButton(
-          onPressed: status == CompareUserStatus.JOIN
+          onPressed: communityModel.id != SevaCore.of(context).loggedInUser.currentCommunity
               ? () {
                   var communityModell = communityModel;
                   createEditCommunityBloc.selectCommunity(communityModell);
                   createEditCommunityBloc
                       .updateUserDetails(SevaCore.of(context).loggedInUser);
-                  // snapshot.data.communities[index].
+                  // snapshot.data.comm
+                  // unities[index].
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (contexts) => CommunityAbout(
                         communityModel: communityModel,
                         userModel: SevaCore.of(context).loggedInUser,
+                        joinStatus: status,
                       ),
                     ),
                   );

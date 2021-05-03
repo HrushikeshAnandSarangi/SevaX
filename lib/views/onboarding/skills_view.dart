@@ -416,10 +416,10 @@ class _SkillViewNewState extends State<SkillViewNew> {
         }
 
         return getSuggestionLayout(
-          suggestion: keyword,
-          suggestionMode: suggestionMode,
-          add: S.of(context).add + ' ',
-        );
+            suggestion: keyword,
+            suggestionMode: suggestionMode,
+            add: S.of(context).add + ' ',
+            context: context);
       },
     );
   }
@@ -430,71 +430,72 @@ class _SkillViewNewState extends State<SkillViewNew> {
       child: LoadingIndicator(),
     );
   }
+}
 
-  Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
-    String add,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-          height: 40,
-          alignment: Alignment.centerLeft,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: add,
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
+Padding getSuggestionLayout({
+  String suggestion,
+  SuggestionMode suggestionMode,
+  String add,
+  BuildContext context,
+}) {
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Container(
+        height: 40,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: add,
+                          style: TextStyle(
+                            color: Colors.blue,
                           ),
-                          TextSpan(
-                            text: "\"${suggestion}\"",
-                            style: suggestionMode == SuggestionMode.SUGGESTED
-                                ? TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  )
-                                : TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.red,
-                                    decorationStyle: TextDecorationStyle.wavy,
-                                    decorationThickness: 1.5,
-                                  ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        TextSpan(
+                          text: "\"${suggestion}\"",
+                          style: suggestionMode == SuggestionMode.SUGGESTED
+                              ? TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                )
+                              : TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.red,
+                                  decorationStyle: TextDecorationStyle.wavy,
+                                  decorationThickness: 1.5,
+                                ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      suggestionMode == SuggestionMode.SUGGESTED
-                          ? S.of(context).suggested
-                          : S.of(context).you_entered,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                  ),
+                  Text(
+                    suggestionMode == SuggestionMode.SUGGESTED
+                        ? S.of(context).suggested
+                        : S.of(context).you_entered,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ],
-          )),
-    );
-  }
+            ),
+            Icon(
+              Icons.add,
+              color: Colors.grey,
+            ),
+          ],
+        )),
+  );
 }

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:developer';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:path/path.dart' as pathExt;
+
 
 import '../../../../flavor_config.dart';
 
@@ -106,15 +110,31 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                       children: [
                                         ListTile(
                                           onTap: () async {
-                                            PickedFile image =
-                                                await ImagePicker().getImage(
-                                                    source:
-                                                        ImageSource.gallery);
                                             indexPosition = index;
+                                            getLogoFile(widget.timebankModel);
+                                            // String _path;
+                                            // // PickedFile image =
+                                            // //     await ImagePicker().getImage(source: ImageSource.gallery);
+                                            // try {
+                                            //   _path = await FilePicker.getFilePath(
+                                            //       type: FileType.custom, allowedExtensions: ['jpg','jpeg','gif','png']);
+                                            // } on PlatformException catch (e) {
+                                            //   throw e;
+                                            // }
+                                            //
+                                            // String _extension =
+                                            //     pathExt.extension(_path).split('?').first;
+                                            // log("exten ${_extension}");
+                                            //
+                                            // if (_extension == 'gif' || _extension == '.gif') {
+                                            //   showProgressDialog(context);
+                                            //   uploadImage(File(_path), widget.timebankModel);
+                                            // } else {
+                                            //   cropImage(_path, widget.timebankModel);
+                                            // }
 
-                                            cropImage(image.path,
-                                                widget.timebankModel);
-                                            Navigator.of(dialogContext).pop();
+
+                                           // Navigator.of(dialogContext).pop();
                                           },
                                           title: Text(S.of(context).edit),
                                           trailing: Icon(Icons.edit),
@@ -175,6 +195,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       ],
     );
   }
+
 
   Widget defaultWidget() {
     return Offstage(
@@ -267,13 +288,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 children: [
                                   ListTile(
                                     onTap: () async {
-                                      PickedFile image = await ImagePicker()
-                                          .getImage(
-                                              source: ImageSource.gallery);
                                       indexPosition = index;
-
-                                      cropImage(
-                                          image.path, widget.timebankModel);
+                                      getLogoFile(widget.timebankModel);
                                     },
                                     title: Text(S.of(context).edit),
                                     trailing: Icon(Icons.edit),
@@ -348,6 +364,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget addIconWidget(TimebankModel timebankModel) {
+
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: IconButton(
@@ -356,15 +373,33 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           color: FlavorConfig.values.theme.primaryColor,
         ),
         onPressed: () async {
-          PickedFile image =
-              await ImagePicker().getImage(source: ImageSource.gallery);
-          cropImage(image.path, timebankModel);
+          getLogoFile(timebankModel);
+          // String _path;
+          // // PickedFile image =
+          // //     await ImagePicker().getImage(source: ImageSource.gallery);
+          // try {
+          //   _path = await FilePicker.getFilePath(
+          //       type: FileType.custom, allowedExtensions: ['jpg','jpeg','gif','png']);
+          // } on PlatformException catch (e) {
+          //   throw e;
+          // }
+          // String _extension =
+          //     pathExt.extension(_path).split('?').first;
+          // log("exten ${_extension}");
+          //
+          // if (_extension == 'gif' || _extension == '.gif') {
+          //   showProgressDialog(context);
+          //   uploadImage(File(_path), timebankModel);
+          // } else {
+          //   cropImage(_path, timebankModel);
+          // }
+
         },
       ),
     );
   }
 
-  Future<String> uploadImage(File file, TimebankModel timebankModel) async {
+  Future<String> uploadImage(dynamic file, TimebankModel timebankModel) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     String imageURL;
@@ -564,7 +599,28 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       },
     );
   }
+  void getLogoFile(TimebankModel timebankModel)async{
+    String _path;
+    // PickedFile image =
+    //     await ImagePicker().getImage(source: ImageSource.gallery);
+    try {
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom, allowedExtensions: ['jpg','jpeg','gif','png','webp']);
+    } on PlatformException catch (e) {
+      throw e;
+    }
 
+    String _extension =
+        pathExt.extension(_path).split('?').first;
+    log("exten ${_extension}");
+
+    if (_extension == 'gif' || _extension == '.gif') {
+      showProgressDialog(context);
+      uploadImage(File(_path), timebankModel);
+    } else {
+      cropImage(_path,timebankModel);
+    }
+  }
   Future cropImage(String path, TimebankModel timebankModel) async {
     File croppedFile;
     ImageCropper.cropImage(

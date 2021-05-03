@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
+import 'package:sevaexchange/ui/screens/members/pages/member_permissions.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/requests_tabs.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -294,6 +295,26 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
+  Widget viewMemberConfigurations({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MemberPermissions(
+            timebankModel: widget.timebankModel,
+          ),
+        ));
+      },
+      child: Text(
+        'Member Permissions',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+
   Widget viewInvoice({BuildContext context}) {
     if (Theme.of(context).platform == TargetPlatform.android ||
         Theme.of(context).platform == TargetPlatform.iOS) {
@@ -363,6 +384,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           //     : Container(),
           viewInvoice(context: context),
           viewReportedMembers(context: context),
+          SizedBox(height: 20),
+
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? viewMemberConfigurations(context: context)
+              : Container(),
+
           SizedBox(height: 20),
           widget.timebankModel.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID

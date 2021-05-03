@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
@@ -104,6 +105,7 @@ class OneToManyOfferBloc extends BlocBase {
               _location.value == null ? null : _location.value.address,
           timestamp: timestamp,
           location: _location.value == null ? null : _location.value.location,
+          liveMode: AppConfig.isTestCommunity,
           public: _makePublic.value ?? false,
           virtual: _makeVirtual.value ?? false,
           timebanksPosted: _makePublic.value ?? false
@@ -244,7 +246,12 @@ class OneToManyOfferBloc extends BlocBase {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
-    } else {
+    } else if (_title.value.substring(0,1).contains('_') && !AppConfig.testingEmails.contains(AppConfig.loggedInEmail)){
+      _title.addError(ValidationErrors.char_error );
+      flag = true;
+
+
+    }else {
       if (profanityDetector.isProfaneString(_title.value)) {
         _title.addError(ValidationErrors.profanityError);
         flag = true;

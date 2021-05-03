@@ -228,6 +228,7 @@ class OfferModel extends DataModel {
   IndividualOfferDataModel individualOfferDataModel;
   List<String> allowedCalenderUsers;
   bool creatorAllowedCalender = false;
+  bool liveMode = false;
   Coordinates currentUserLocation; //to be used locally
   bool public;
   List<String> timebanksPosted;
@@ -266,6 +267,7 @@ class OfferModel extends DataModel {
     this.virtual,
     this.participantDetails,
     this.photoUrlImage,
+    this.liveMode,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -402,6 +404,9 @@ class OfferModel extends DataModel {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
       this.cashModel = new CashModel();
+    }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
     }
 
     if (map.containsKey('public')) {
@@ -543,6 +548,9 @@ class OfferModel extends DataModel {
     } else {
       this.cashModel = new CashModel();
     }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    }
     if (map.containsKey('public')) {
       this.public = map['public'];
     } else {
@@ -626,6 +634,7 @@ class OfferModel extends DataModel {
     if (this.isRecurring != null) {
       map['isRecurring'] = this.isRecurring;
     }
+
     if (this.recurringDays != null) {
       map['recurringDays'] = this.recurringDays;
     }
@@ -681,6 +690,9 @@ class OfferModel extends DataModel {
       map['photoUrlImage'] = this.photoUrlImage;
     }
 
+    if (this.liveMode != null) {
+      map['liveMode'] = this.liveMode;
+    }
     return map;
   }
 

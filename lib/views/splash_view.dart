@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -462,7 +463,13 @@ class _SplashViewState extends State<SplashView> {
         AppConfig.remoteConfig.getString('upgrade_plan_banner_details');
     AppConfig.upgradePlanBannerModel =
         upgradePlanBannerModelFromJson(upgradePlanBannerData);
+    List<dynamic> testingEmails =
+    json.decode(AppConfig.remoteConfig.getString('testing_emails'));
+    AppConfig.testingEmails=testingEmails??[];
 
+    log("emai;s ${AppConfig.testingEmails}");
+    log("email;s ${AppConfig.loggedInEmail}");
+    log("email;s ${AppConfig.loggedInEmail}");
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig.getString('app_version'));
 

@@ -18,6 +18,7 @@ import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/configuaration_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -1287,6 +1288,10 @@ Future<void> approveRequestCompletion({
     model.timebankId,
     false,
     communityId: communityId,
+    fromEmailORId: model.requestMode == RequestMode.PERSONAL_REQUEST
+        ? editedTransaction.fromEmail_Id ?? editedTransaction.from
+        : model.timebankId,
+    toEmailORId: editedTransaction.toEmail_Id ?? editedTransaction.to,
   );
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
@@ -1302,7 +1307,7 @@ Future<void> approveRequestCompletion({
   await utils.processLoans(
     timebankId: model.timebankId,
     userId: userId,
-    to: editedTransaction.to,
+    to: editedTransaction.toEmail_Id ?? editedTransaction.to,
     credits: editedTransaction.credits,
     communityId: communityId,
   );
@@ -1473,7 +1478,7 @@ Future<void> acceptInviteRequest({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap()
+      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
     }, merge: true);
   } else {
     await Firestore.instance
@@ -1482,7 +1487,7 @@ Future<void> acceptInviteRequest({
         .setData({
       'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
       'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails.' + acceptedUserEmail: acceptorModel.toMap(),
+      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
     }, merge: true);
   }
 }
@@ -1738,13 +1743,23 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
   @required String userEmail,
   @required String userId,
 }) async* {
-  var data = Firestore.instance
-      .collection('transactions')
-      .where("isApproved", isEqualTo: true)
-      .where('transactionbetween', arrayContains: userId)
-      .orderBy("timestamp", descending: true)
-      .snapshots();
-
+  var data;
+  if (AppConfig.isTestCommunity) {
+    data = Firestore.instance
+        .collection('transactions')
+        .where("isApproved", isEqualTo: true)
+        .where('transactionbetween', arrayContains: userId)
+        .where('liveMode', isEqualTo: true)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  } else {
+    data = Firestore.instance
+        .collection('transactions')
+        .where("isApproved", isEqualTo: true)
+        .where('transactionbetween', arrayContains: userId)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<TransactionModel>>.fromHandlers(
       handleData: (snapshot, requestSink) {

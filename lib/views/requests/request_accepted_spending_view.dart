@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
@@ -987,7 +988,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : S.of(context).no_comments)
+          : S.of(context).no_comments),
+      'liveMode': AppConfig.isTestCommunity,
     });
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       log('inside credit');
@@ -1005,6 +1007,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         requestModel.id,
         requestModel.timebankId,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        toEmailORId: requestModel.timebankId,
+        fromEmailORId: requestModel.timebankId,
       );
       log('success');
     }

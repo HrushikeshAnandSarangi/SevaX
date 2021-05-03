@@ -46,6 +46,7 @@ class Validators {
 //keys for localisation
 class ValidationErrors {
   static const String titleError = 'title_error';
+  static const String char_error = '_error';
   static const String genericError = 'generic_error';
   static const String classHours = 'class_hours';
   static const String hoursNotInt = 'hours_not_int';
@@ -67,6 +68,9 @@ String getValidationError(BuildContext context, String errorCode) {
   switch (errorCode) {
     case ValidationErrors.titleError:
       return error.validation_error_offer_title;
+      break;
+      case ValidationErrors.char_error:
+      return 'Creating offer with "_" is not allowed';
       break;
     case ValidationErrors.genericError:
       return error.validation_error_general_text;

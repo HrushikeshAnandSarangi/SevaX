@@ -6,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
+import 'dart:convert';
 
 class TimebankModel extends DataModel {
   String id;
@@ -33,6 +34,7 @@ class TimebankModel extends DataModel {
   bool softDelete;
   bool preventAccedentalDelete;
   bool requestedSoftDelete;
+  bool liveMode;
   List<String> managedCreatorIds;
   List<SponsorDataModel> sponsors;
 
@@ -41,6 +43,7 @@ class TimebankModel extends DataModel {
 
   Map<String, NotificationSetting> notificationSetting;
   String associatedParentTimebankId;
+  TimebankConfigurations timebankConfigurations;
   // CompareToTimeBank joinStatus;
 
   // List<String> members;
@@ -68,6 +71,7 @@ class TimebankModel extends DataModel {
     this.protected = map.containsKey("protected") ? map["protected"] : false;
     this.private = map.containsKey("private") ? map["private"] : false;
     this.sponsored = map.containsKey("sponsored") ? map["sponsored"] : false;
+    this.liveMode = map.containsKey("liveMode") ? map["liveMode"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.associatedParentTimebankId =
@@ -116,6 +120,9 @@ class TimebankModel extends DataModel {
         ? List<SponsorDataModel>.from(
             map["sponsors"].map((x) => SponsorDataModel.fromMap(x)))
         : [];
+    this.timebankConfigurations = map.containsKey('timebankConfigurations')
+        ? TimebankConfigurations.fromMap(map['timebankConfigurations'])
+        : TimebankConfigurations();
   }
 
   GeoFirePoint getLocation(map) {
@@ -190,6 +197,7 @@ class TimebankModel extends DataModel {
     if (key == 'private') {
       this.private = value;
     }
+
     if (key == 'sponsored') {
       this.sponsored = value;
     }
@@ -217,6 +225,12 @@ class TimebankModel extends DataModel {
     }
     if (key == 'sponsors') {
       this.sponsors = value;
+    }
+    if (key == 'liveMode') {
+      this.liveMode = value;
+    }
+    if (key == 'timebankConfigurations') {
+      this.timebankConfigurations = value;
     }
   }
 
@@ -326,13 +340,20 @@ class TimebankModel extends DataModel {
     } else {
       map['sponsors'] = [];
     }
-
+    if (this.liveMode != null) {
+      map['liveMode'] = this.liveMode;
+    } else {
+      map['liveMode'] = false;
+    }
+    if (this.timebankConfigurations != null) {
+      map['timebankConfigurations'] = this.timebankConfigurations.toMap();
+    }
     return map;
   }
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored,timebankConfigurations: ${timebankConfigurations.toString()}, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
   }
 }
 
@@ -414,4 +435,49 @@ class SponsorDataModel {
         "created_at": createdAt,
         "created_by": createdBy,
       };
+}
+
+TimebankConfigurations timebankConfigurationsFromMap(String str) =>
+    TimebankConfigurations.fromMap(json.decode(str));
+
+String timebankConfigurationsToMap(TimebankConfigurations data) =>
+    json.encode(data.toMap());
+
+class TimebankConfigurations {
+  TimebankConfigurations({
+    this.admin,
+    this.superAdmin,
+    this.member,
+  });
+
+  List<String> admin;
+  List<String> superAdmin;
+  List<String> member;
+
+  factory TimebankConfigurations.fromMap(Map<dynamic, dynamic> json) =>
+      TimebankConfigurations(
+        admin: json["admin"] == null
+            ? null
+            : List<String>.from(json["admin"].map((x) => x)),
+        superAdmin: json["super_admin"] == null
+            ? null
+            : List<String>.from(json["super_admin"].map((x) => x)),
+        member: json["member"] == null
+            ? null
+            : List<String>.from(json["member"].map((x) => x)),
+      );
+
+  Map<String, dynamic> toMap() => {
+        "admin": admin == null ? null : List<String>.from(admin.map((x) => x)),
+        "super_admin": superAdmin == null
+            ? null
+            : List<String>.from(superAdmin.map((x) => x)),
+        "member":
+            member == null ? null : List<String>.from(member.map((x) => x)),
+      };
+
+  @override
+  String toString() {
+    return 'TimebankConfigurations{admin: $admin, superAdmin: $superAdmin, member: $member}';
+  }
 }

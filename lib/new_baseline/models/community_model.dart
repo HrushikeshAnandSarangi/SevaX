@@ -145,12 +145,16 @@ class CommunityModel extends DataModel {
   Map<String, dynamic> payment;
   String parentTimebankId;
   bool subscriptionCancelled;
-
+  bool testCommunity;
   CommunityModel(Map<String, dynamic> map) {
     this.subscriptionCancelled = map.containsKey('subscriptionCancelled') &&
             map['subscriptionCancelled'] != null
         ? map['subscriptionCancelled']
         : false;
+    this.testCommunity =
+        map.containsKey('testCommunity') && map['testCommunity'] != null
+            ? map['testCommunity']
+            : false;
     this.transactionCount =
         map.containsKey('transactionCount') && map["transactionCount"] != null
             ? map['transactionCount'] ?? 0
@@ -311,6 +315,9 @@ class CommunityModel extends DataModel {
     if (key == 'parentTimebankId') {
       this.parentTimebankId = value;
     }
+    if (key == 'testCommunity') {
+      this.testCommunity = value;
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -405,13 +412,20 @@ class CommunityModel extends DataModel {
       object['billMe'] = false;
     }
 
-    if (this.payment != null) {
-      object['payment'] = this.payment;
+    if (this.testCommunity != null) {
+      object['testCommunity'] = this.testCommunity;
+    } else {
+      object['testCommunity'] = false;
     }
 
     object['softDelete'] = this.softDelete;
     object['parent_timebank_id'] =
         this.parentTimebankId == null ? null : this.parentTimebankId;
+
+    if (this.payment != null) {
+      object['payment'] = Map<String, dynamic>.from(this.payment);
+    }
+
     return object;
   }
 
@@ -442,6 +456,7 @@ class CommunityModel extends DataModel {
         'taxPercentage: $taxPercentage,'
         'private: $private,'
         'billMe: $billMe,'
+        'testCommunity: $testCommunity,'
         'parentTimebankId: $parentTimebankId}';
   }
 }

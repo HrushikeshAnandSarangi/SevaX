@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -331,7 +332,8 @@ class RequestCompleteWidget extends StatelessWidget {
         "requestId": requestId,
         "comments": (results['didComment']
             ? results['comment']
-            : S.of(context).no_comments)
+            : S.of(context).no_comments),
+        'liveMode': AppConfig.isTestCommunity,
       });
       if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
         TransactionModel transmodel =
@@ -348,6 +350,8 @@ class RequestCompleteWidget extends StatelessWidget {
           requestModel.id,
           requestModel.timebankId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          toEmailORId: requestModel.timebankId,
+          fromEmailORId: requestModel.timebankId,
         );
         log('success');
       }

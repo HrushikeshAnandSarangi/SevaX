@@ -31,6 +31,7 @@ class NewsModel extends DataModel {
   String userPhotoURL;
   String imageScraped = "NoData";
   List<String> timebanksPosted = List();
+  bool liveMode;
 
   NewsModel({
     this.id,
@@ -56,6 +57,7 @@ class NewsModel extends DataModel {
     this.softDelete,
     this.timebanksPosted,
     this.comments,
+    this.liveMode,
   });
 
   Map<String, dynamic> toMap() {
@@ -166,6 +168,9 @@ class NewsModel extends DataModel {
     } else {
       map['newsDocumentUrl'] = null;
     }
+    if (this.liveMode != null) {
+      map['liveMode'] = this.liveMode;
+    }
     return map;
   }
 
@@ -216,6 +221,7 @@ class NewsModel extends DataModel {
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
+
     if (map.containsKey('fullname')) {
       this.fullName = map['fullname'];
     }
@@ -285,6 +291,9 @@ class NewsModel extends DataModel {
       }).toList();
 
       this.comments = commentsList;
+    }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
     }
   }
 
@@ -404,11 +413,14 @@ class NewsModel extends DataModel {
 
       this.comments = commentsList;
     }
+    if (map.containsKey('liveMode')) {
+      this.liveMode = map['liveMode'];
+    }
   }
 
   @override
   String toString() {
-    return 'NewsModel{id: $id, title: $title, subheading: $subheading, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, newsImageUrl: $newsImageUrl, photoCredits: $photoCredits, postTimestamp: $postTimestamp, location: $location, entity: $entity, likes: $likes, reports: $reports, comments: $comments, timebanksPosted: $timebanksPosted, root_timebank_id: $root_timebank_id, placeAddress: $placeAddress, isPinned: $isPinned, urlsFromPost: $urlsFromPost, hashTags: $hashTags, userPhotoURL: $userPhotoURL, imageScraped: $imageScraped}';
+    return 'NewsModel{id: $id, title: $title, subheading: $subheading, description: $description, email: $email,liveMode: $liveMode, fullName: $fullName, sevaUserId: $sevaUserId, newsImageUrl: $newsImageUrl, photoCredits: $photoCredits, postTimestamp: $postTimestamp, location: $location, entity: $entity, likes: $likes, reports: $reports, comments: $comments, timebanksPosted: $timebanksPosted, root_timebank_id: $root_timebank_id, placeAddress: $placeAddress, isPinned: $isPinned, urlsFromPost: $urlsFromPost, hashTags: $hashTags, userPhotoURL: $userPhotoURL, imageScraped: $imageScraped}';
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_via_zipcode.dart';
 
 class SearchManager {
@@ -108,8 +109,14 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
-      if (community.private == false) {
-        communityList.add(community);
+      if(AppConfig.isTestCommunity){
+        if(community.testCommunity){
+          communityList.add(community);
+        }
+      }else {
+        if (community.private == false && !community.testCommunity) {
+          communityList.add(community);
+        }
       }
     });
     yield communityList;

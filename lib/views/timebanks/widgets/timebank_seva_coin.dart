@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
-import 'package:sevaexchange/models/manual_time_model.dart';
-import 'package:sevaexchange/utils/utils.dart';
 
 class TimeBankSevaCoin extends StatefulWidget {
   final UserModel loggedInUser;
@@ -84,27 +84,34 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                             isAccessAvailable(
                               timebankModel,
                               SevaCore.of(context).loggedInUser.sevaUserID,
-                            ) ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TransactionsMatrixCheck(
-                                upgradeDetails:
-                                AppConfig.upgradePlanBannerModel.add_manual_time,
-                                transaction_matrix_type: "add_manual_time",
-                                child: AddManualTimeButton(
-                                  typeId: timebankModel.id,
-                                  timebankId: timebankModel.parentTimebankId ==
-                                      FlavorConfig.values.timebankId
-                                      ? timebankModel.id
-                                      : timebankModel.parentTimebankId,
-                                  timeFor: ManualTimeType.Timebank,
-                                  userType: getLoggedInUserRole(
-                                    timebankModel,
-                                    SevaCore.of(context).loggedInUser.sevaUserID,
-                                  ),
-                                  communityName: timebankModel.name,
-                                ),
-                              ),
-                            ) : Container()
+                            )
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TransactionsMatrixCheck(
+                                      upgradeDetails: AppConfig
+                                          .upgradePlanBannerModel
+                                          .add_manual_time,
+                                      transaction_matrix_type:
+                                          "add_manual_time",
+                                      child: AddManualTimeButton(
+                                        typeId: timebankModel.id,
+                                        timebankId: timebankModel
+                                                    .parentTimebankId ==
+                                                FlavorConfig.values.timebankId
+                                            ? timebankModel.id
+                                            : timebankModel.parentTimebankId,
+                                        timeFor: ManualTimeType.Timebank,
+                                        userType: getLoggedInUserRole(
+                                          timebankModel,
+                                          SevaCore.of(context)
+                                              .loggedInUser
+                                              .sevaUserID,
+                                        ),
+                                        communityName: timebankModel.name,
+                                      ),
+                                    ),
+                                  )
+                                : Container()
                           ],
                         ),
                       ]),
@@ -145,7 +152,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       return;
     }
 
-    if (this.widget.loggedInUser.currentBalance <= 0) {
+    if ( AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
@@ -165,7 +172,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
-          maxAmount: this.widget.loggedInUser.currentBalance),
+          maxAmount:AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -175,8 +182,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (donateAmount_Received != null) {
       setState(() {
         donateAmount = donateAmount_Received;
-        SevaCore.of(context).loggedInUser.currentBalance =
-            widget.loggedInUser.currentBalance - donateAmount_Received;
+
+        AppConfig.isTestCommunity ? SevaCore.of(context).loggedInUser.testBalance: SevaCore.of(context).loggedInUser.currentBalance =
+        AppConfig.isTestCommunity ?  widget.loggedInUser.testBalance:  widget.loggedInUser.currentBalance - donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
         this.widget.loggedInUser.sevaUserID,
@@ -188,6 +196,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         null,
         this.widget.timebankData.id,
         communityId: widget.loggedInUser.currentCommunity,
+        fromEmailORId: this.widget.loggedInUser.email,
+        toEmailORId: this.widget.timebankData.id,
       );
       await showDialog<double>(
         context: context,

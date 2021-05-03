@@ -144,6 +144,7 @@ flutter:
     - lib/assets/images/apple-id-outline-yes_2x.png
 
     # card images
+    -
     - images/
     - images/card_provider/
 
@@ -171,6 +172,8 @@ flutter:
     - images/icons/about.png
     - images/icons/projects.png
     - images/icons/members.png
+    - images/icons/link.png
+    - images/icons/multi_image.png
 
     - images/csv_example.png
     - images/icons/empty_widget.png

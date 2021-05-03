@@ -23,6 +23,7 @@ enum InfoType {
   OpenScopeOffer,
   OpenScopeEvent,
   VirtualRequest,
+  TestCommunity,
   VirtualOffers,
 }
 
@@ -42,6 +43,7 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.OpenScopeOffer: "openScopeOffer",
   InfoType.OpenScopeEvent: "openScopeEvent",
   InfoType.VirtualRequest: "virtualRequest",
+  InfoType.TestCommunity: "testCommunity",
   InfoType.VirtualOffers: "virtualOffers",
 };
 
