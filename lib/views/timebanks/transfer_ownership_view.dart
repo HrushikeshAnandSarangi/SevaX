@@ -20,6 +20,7 @@ class TransferOwnerShipView extends StatefulWidget {
   final String memberSevaUserId;
   final String memberPhotUrl;
   final bool isComingFromExit;
+  final String memberEmail;
 
   TransferOwnerShipView(
       {this.timebankId,
@@ -27,7 +28,8 @@ class TransferOwnerShipView extends StatefulWidget {
       this.isComingFromExit,
       this.memberName,
       this.memberSevaUserId,
-      this.memberPhotUrl});
+      this.memberPhotUrl,
+      this.memberEmail});
 
   @override
   _TransferOwnerShipViewState createState() => _TransferOwnerShipViewState();
@@ -198,7 +200,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                       {
                         "creator_id": tbmodel.creatorId,
                         "email_id": tbmodel.emailId,
-                        "organizers": FieldValue.arrayUnion([tbmodel.creatorId]),
+                        "organizers":
+                            FieldValue.arrayUnion([tbmodel.creatorId]),
                         "members": FieldValue.arrayUnion([tbmodel.creatorId]),
                       },
                     ),
@@ -208,6 +211,14 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
                   sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
+              // var responseObj2 = await storeRemoveMemberLog(
+              //     timebankId: tbmodel.id,
+              //     communityId: tbmodel.communityId,
+              //     memberEmail: widget.memberEmail,
+              //     memberUid: widget.memberSevaUserId,
+              //     memberFullName: widget.memberName,
+              //     memberPhotoUrl: widget.memberPhotUrl);
+
               if (responseObj['deletable'] == true) {
                 if (widget.isComingFromExit) {
                   sendNotificationToAdmin();

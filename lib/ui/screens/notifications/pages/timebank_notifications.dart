@@ -395,7 +395,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
 
               case NotificationType.JoinRequest:
-                return TimebankJoinRequestWidget(notification: notification);
+                return TimebankJoinRequestWidget(notification: notification, timebankModel: widget.timebankModel);
 
               case NotificationType.APPROVE_SPONSORED_GROUP_REQUEST:
                 return SponsorGroupRequestWidget(notification: notification);

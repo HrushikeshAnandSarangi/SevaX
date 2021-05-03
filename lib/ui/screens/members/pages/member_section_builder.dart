@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -17,6 +23,7 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -328,6 +335,68 @@ class MemberSectionBuilder extends StatelessWidget {
       isTimebank,
     );
 
+    if (isFromExit) {
+      await Firestore.instance
+          .collection('timebanknew')
+          .document(model.id)
+          .collection('entryExitLogs')
+          .document()
+          .setData({
+        'mode': ExitJoinType.EXIT.readable,
+        'modeType': ExitMode.LEFT_THE_COMMUNITY.readable,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'communityId': member.currentCommunity,
+        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+        'memberDetails': {
+          'email': member.email,
+          'id': member.sevaUserID,
+          'fullName': member.fullname,
+          'photoUrl': member.photoURL,
+        },
+        'adminDetails': {
+          'email': SevaCore.of(context).loggedInUser.email,
+          'id': SevaCore.of(context).loggedInUser.sevaUserID,
+          'fullName': SevaCore.of(context).loggedInUser.fullname,
+          'photoUrl': SevaCore.of(context).loggedInUser.photoURL,
+        },
+        'associatedTimebankDetails': {
+          'timebankId': model.id,
+          'timebankTitle': model.name,
+        },
+      });
+    }
+
+    if (!isFromExit && responseData['deletable'] == true) {
+      await Firestore.instance
+          .collection('timebanknew')
+          .document(timebank.id)
+          .collection('entryExitLogs')
+          .document()
+          .setData({
+        'mode': ExitJoinType.EXIT.readable,
+        'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'communityId': member.currentCommunity,
+        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+        'memberDetails': {
+          'email': member.email,
+          'id': member.sevaUserID,
+          'fullName': member.fullname,
+          'photoUrl': member.photoURL,
+        },
+        'adminDetails': {
+          'email': SevaCore.of(context).loggedInUser.email,
+          'id': SevaCore.of(context).loggedInUser.sevaUserID,
+          'fullName': SevaCore.of(context).loggedInUser.fullname,
+          'photoUrl': SevaCore.of(context).loggedInUser.photoURL,
+        },
+        'associatedTimebankDetails': {
+          'timebankId': model.id,
+          'timebankTitle': model.name,
+        },
+      });
+    }
+
     progress.hide();
 
     if (isTimebank) {
@@ -367,6 +436,7 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
+
         logger.e("user exited");
         Future.delayed(Duration.zero, () {
           Phoenix.rebirth(context);
@@ -411,6 +481,7 @@ class MemberSectionBuilder extends StatelessWidget {
               memberSevaUserId: userModel.sevaUserID,
               memberName: userModel.fullname,
               memberPhotUrl: userModel.photoURL,
+              memberEmail: userModel.email,
             ),
           ),
         );

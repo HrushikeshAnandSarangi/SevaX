@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
@@ -559,6 +560,13 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     communityId: widget.communityModel.id,
                     onBaordingMemberSevaId: widget.user.sevaUserID,
                     onBoardingMemberEmail: widget.user.email,
+                    userModel: widget.user,
+                    adminEmail: SevaCore.of(context).loggedInUser.email,
+                    adminId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    adminFullName: SevaCore.of(context).loggedInUser.fullname,
+                    adminPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                    timebankModel: timebankModel,
+                    timebankTitle: timebankModel.name,
                   ).commit();
 
                   setState(() {
@@ -602,6 +610,13 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     String onBoardingMemberEmail,
     String communityId,
     String onBaordingMemberSevaId,
+    UserModel userModel,
+    String adminEmail,
+    String adminId,
+    String adminFullName,
+    String adminPhotoUrl,
+    TimebankModel timebankModel,
+    String timebankTitle,
   }) {
     var batchUpdate = Firestore.instance.batch();
 
@@ -631,6 +646,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     var notificationRef =
     Firestore.instance.collection("timebanknew").document(timebankModel.id)
         .collection("notifications").document(notificationModel.id);
+    
+    var entryExitLogReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankModel.id)
+        .collection('entryExitLogs')
+        .document();
 
     batchUpdate.setData(notificationRef, notificationModel.toMap());
 
@@ -642,6 +663,30 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
     batchUpdate.updateData(communityMembersRef, {
       'members': FieldValue.arrayUnion([onBaordingMemberSevaId])
+    });
+
+    batchUpdate.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.JOINED_VIA_CODE.readable,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'memberDetails': {
+        'email': onBoardingMemberEmail,
+        'id': onBaordingMemberSevaId,
+        'fullName': userModel.fullname,
+        'photoUrl': userModel.photoURL,
+      },
+      // 'adminDetails': {
+      //   'email': adminEmail,
+      //   'id': adminId,
+      //   'fullName': adminFullName,
+      //   'photoUrl': adminPhotoUrl,
+      // },
+      'associatedTimebankDetails': {
+        'timebankId': timebankModel.id,
+        'timebankTitle': timebankTitle,
+      },
     });
 
     return batchUpdate;

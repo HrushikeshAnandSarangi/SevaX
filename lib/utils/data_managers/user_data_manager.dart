@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -487,6 +488,7 @@ Future<Map<String, dynamic>> removeMemberFromGroup({
 Future<Map<String, dynamic>> removeMemberFromTimebank({
   String sevauserid,
   String timebankId,
+  Timebank
 }) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
@@ -495,6 +497,51 @@ Future<Map<String, dynamic>> removeMemberFromTimebank({
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   var data = json.decode(res.body);
   return data;
+}
+
+Future storeRemoveMemberLog({
+  TimebankModel timebankModel,
+  String communityId,
+  String memberEmail,
+  String memberUid,
+  String memberFullName,
+  String memberPhotoUrl,
+  String adminEmail,
+  String adminId,
+  String adminFullName,
+  String adminPhotoUrl,
+  String timebankTitle,
+}) async {
+  var response = Firestore.instance
+      .collection('timebanknew')
+      .document(timebankModel.id)
+      .collection('entryExitLogs')
+      .document()
+      .setData({
+    'mode': ExitJoinType.EXIT.readable,
+    'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
+    'timestamp': DateTime.now().millisecondsSinceEpoch,
+    'communityId': communityId,
+    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+    'memberDetails': {
+      'email': memberEmail,
+      'id': memberUid,
+      'fullName': memberFullName,
+      'photoUrl': memberPhotoUrl,
+    },
+    'adminDetails': {
+      'email': adminEmail,
+      'id': adminId,
+      'fullName': adminFullName,
+      'photoUrl': adminPhotoUrl,
+    },
+    'associatedTimebankDetails': {
+      'timebankId': timebankModel.id,
+      'timebankTitle': timebankTitle,
+    },
+  });
+  logger.i('storeRemoveMemberLog response: '  + response.toString());
+  return response;
 }
 
 Future<Map<String, dynamic>> checkChangeOwnershipStatus(

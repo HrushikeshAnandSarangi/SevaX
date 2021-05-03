@@ -20,7 +20,7 @@ Future<void> fetchLinkData() async {
   FirebaseDynamicLinks.instance.onLink(
       onError: (_) async {},
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        log(">>>>>>>>>>link is  ${dynamicLink.link.toString()}");
+        log(">>>>>>>>>>LINK IS  ${dynamicLink.link.toString()}");
         log("coming after syncing calendar");
 
         return handleLinkData(
@@ -67,6 +67,7 @@ Future<bool> handleLinkData(
         loggedInUser: localUser,
         invitedMemberEmail: invitedMemberEmail,
         primaryTimebankId: primaryTimebankId,
+        adminCredentials: firebaseUserCred,
       ).then((onValue) => true).catchError((onError) => false);
     }
   }
@@ -103,6 +104,7 @@ Future<bool> registerloggedInUserToCommunity({
   String communityId,
   String invitedMemberEmail,
   String primaryTimebankId,
+  var adminCredentials,
 }) async {
   if (loggedInUser.email != invitedMemberEmail) {
     return false;
@@ -116,7 +118,10 @@ Future<bool> registerloggedInUserToCommunity({
       communityId: communityId,
       memberJoiningSevaUserId: loggedInUser.sevaUserID,
       newMemberJoinedEmail: loggedInUser.email,
+      newMemberFullName: loggedInUser.fullname,
+      newMemberPhotoUrl: loggedInUser.photoURL,
       primaryTimebankId: primaryTimebankId,
+      adminCredentials: adminCredentials,
     ).then((onValue) => true).catchError((onError) => false);
   }
 }
@@ -126,12 +131,18 @@ Future<bool> initRegisterationMemberToCommunity({
   @required String primaryTimebankId,
   @required String memberJoiningSevaUserId,
   @required String newMemberJoinedEmail,
+  @required var adminCredentials,
+  @required String newMemberFullName,
+  @required String newMemberPhotoUrl,
 }) async {
   return await InvitationManager.registerMemberToCommunity(
     communityId: communityId,
     memberJoiningSevaUserId: memberJoiningSevaUserId,
     newMemberJoinedEmail: newMemberJoinedEmail,
     primaryTimebankId: primaryTimebankId,
+    adminCredentials: adminCredentials,
+    newMemberFullName: newMemberFullName,
+    newMemberPhotoUrl: newMemberPhotoUrl,
   ).then((onValue) => true).catchError((onError) => false);
 }
 

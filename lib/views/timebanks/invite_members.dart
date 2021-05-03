@@ -19,10 +19,14 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -872,10 +876,16 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         onPressed: !isJoined
                             ? () async {
                                 await addMemberToTimebank(
+                                        timebankModel: timebankModel,
                                         sevaUserId: user.sevaUserID,
                                         timebankId: timebankModel.id,
                                         communityId: timebankModel.communityId,
-                                        userEmail: user.email)
+                                        userEmail: user.email,
+                                        userFullName: user.fullname,
+                                        userPhotoURL: user.photoURL,
+                                        timebankTitle: timebankModel.name,
+                                        parentTimebankId:
+                                            timebankModel.parentTimebankId)
                                     .commit();
                                 setState(() {
                                   getMembersList();
@@ -1132,21 +1142,39 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  WriteBatch addMemberToTimebank(
-      {String communityId,
-      String sevaUserId,
-      String timebankId,
-      String userEmail}) {
+  WriteBatch addMemberToTimebank({
+    String sevaUserId,
+    String timebankId,
+    String communityId,
+    String userEmail,
+    String userFullName,
+    String userPhotoURL,
+    String timebankTitle,
+    String parentTimebankId,
+    TimebankModel timebankModel,
+  }) {
     WriteBatch batch = Firestore.instance.batch();
+
     var timebankRef =
         Firestore.instance.collection('timebanknew').document(timebankId);
+
     var addToCommunityRef =
         Firestore.instance.collection('communities').document(communityId);
 
     var newMemberDocumentReference =
         Firestore.instance.collection('users').document(userEmail);
 
+    var entryExitLogReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection('entryExitLogs')
+        .document();
+
     batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([sevaUserId]),
+    });
+
+    batch.updateData(addToCommunityRef, {
       'members': FieldValue.arrayUnion([sevaUserId]),
     });
 
@@ -1154,8 +1182,28 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'communities': FieldValue.arrayUnion([communityId]),
     });
 
-    batch.updateData(addToCommunityRef, {
-      'members': FieldValue.arrayUnion([sevaUserId]),
+    batch.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable, 
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'memberDetails': {
+        'email': userEmail,
+        'id': sevaUserId,
+        'fullName': userFullName,
+        'photoUrl': userPhotoURL,
+      },
+      'adminDetails': {
+        'email': SevaCore.of(context).loggedInUser.email,
+        'id': SevaCore.of(context).loggedInUser.sevaUserID,
+        'fullName': SevaCore.of(context).loggedInUser.fullname,
+        'photoUrl': SevaCore.of(context).loggedInUser.photoURL,
+      },
+      'associatedTimebankDetails': {
+        'timebankId': timebankId,
+        'timebankTitle': timebankTitle,
+      },
     });
 
     sendNotificationToMember(

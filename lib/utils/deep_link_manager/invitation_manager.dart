@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
@@ -145,12 +149,18 @@ class InvitationManager {
     @required String primaryTimebankId,
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
+    @required var adminCredentials,
+    @required String newMemberFullName,
+    @required String newMemberPhotoUrl,
   }) async {
     return await _addMemberToTimebank(
       communityId: communityId,
       primaryTimebankId: primaryTimebankId,
       memberJoiningSevaUserId: memberJoiningSevaUserId,
       newMemberJoinedEmail: newMemberJoinedEmail,
+      adminCredentials: adminCredentials,
+      newMemberFullName: newMemberFullName,
+      newMemberPhotoUrl: newMemberPhotoUrl,
     ).commit().then((onValue) => true).catchError((onError) => false);
   }
 
@@ -159,8 +169,14 @@ class InvitationManager {
     @required String primaryTimebankId,
     @required String memberJoiningSevaUserId,
     @required String newMemberJoinedEmail,
+    @required var adminCredentials,
+    @required String newMemberFullName,
+    @required String newMemberPhotoUrl,
+    TimebankModel timebankModel,
   }) {
     //add to timebank members
+
+    log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
 
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef = Firestore.instance
@@ -183,6 +199,36 @@ class InvitationManager {
         Firestore.instance.collection('communities').document(communityId);
     batch.updateData(addToCommunityRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    var entryExitLogReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankModel.id)
+        .collection('entryExitLogs')
+        .document();
+
+    batch.setData(entryExitLogReference, {
+      'mode': ExitJoinType.JOIN.readable,
+      'modeType': JoinMode.JOINED_VIA_LINK.readable,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'communityId': communityId,
+      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'memberDetails': {
+        'email': newMemberJoinedEmail,
+        'id': memberJoiningSevaUserId,
+        'fullName': newMemberFullName,
+        'photoUrl': newMemberPhotoUrl,
+      },
+      'adminDetails': {
+        'email': adminCredentials.email,
+        'id': adminCredentials.uid,
+        'fullName': adminCredentials.displayName,
+        'photoUrl': adminCredentials.photoUrl,
+      },
+      // 'associatedTimebankDetails': {        //Need to check if timebankModel data is correct or null
+      //   'timebankId': timebankModel.id,
+      //   'timebankTitle': timebankModel.name,
+      // },
     });
 
     return batch;
