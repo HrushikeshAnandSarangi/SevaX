@@ -385,7 +385,6 @@ class OneToManyCreatorCompleteRequestPageState
                                                 color: Colors.white),
                                           ),
                                           onPressed: () async {
-
                                             showDialog(
                                                 barrierDismissible: false,
                                                 context: context,
@@ -393,9 +392,8 @@ class OneToManyCreatorCompleteRequestPageState
                                                   viewContext =
                                                       createDialogContext;
                                                   return AlertDialog(
-                                                    title: Text(S
-                                                        .of(context)
-                                                        .loading),
+                                                    title: Text(
+                                                        S.of(context).loading),
                                                     content:
                                                         LinearProgressIndicator(),
                                                   );
@@ -438,24 +436,33 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel.id,
                                               communityId:
                                                   requestModel.communityId,
+                                              toEmailORId:
+                                                  requestModel.timebankId,
+                                              fromEmailORId: FlavorConfig
+                                                  .values.timebankId,
                                             );
 
                                             //to speaker and attendees
                                             await TransactionBloc()
                                                 .createNewTransaction(
-                                              requestModel.timebankId,
-                                              requestModel.selectedInstructor
-                                                  .sevaUserID, //speaker user id
-                                              DateTime.now()
-                                                  .millisecondsSinceEpoch,
-                                              creditsToSpeaker,
-                                              true,
-                                              "TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE",
-                                              null,
-                                              requestModel.id,
-                                              communityId:
-                                                  requestModel.communityId,
-                                            );
+                                                    requestModel.timebankId,
+                                                    requestModel
+                                                        .selectedInstructor
+                                                        .sevaUserID, //speaker user id
+                                                    DateTime.now()
+                                                        .millisecondsSinceEpoch,
+                                                    creditsToSpeaker,
+                                                    true,
+                                                    "TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE",
+                                                    null,
+                                                    requestModel.id,
+                                                    communityId: requestModel
+                                                        .communityId,
+                                                    toEmailORId: requestModel
+                                                        .selectedInstructor
+                                                        .email,
+                                                    fromEmailORId: requestModel
+                                                        .timebankId);
 
                                             for (var attendee
                                                 in tempAttendeesList) {
@@ -473,6 +480,9 @@ class OneToManyCreatorCompleteRequestPageState
                                                 requestModel.id,
                                                 communityId:
                                                     requestModel.communityId,
+                                                toEmailORId: attendee['email'],
+                                                fromEmailORId:
+                                                    requestModel.timebankId,
                                               );
                                               log('Sent credit to:  ' +
                                                   attendee['fullname']);
@@ -484,7 +494,8 @@ class OneToManyCreatorCompleteRequestPageState
                                                 .document(requestModel.id)
                                                 .updateData({
                                               'accepted': true,
-                                              'approvedUsers': [],  //so that we don't see it in pending tasks
+                                              'approvedUsers':
+                                                  [], //so that we don't see it in pending tasks
                                             });
 
                                             Navigator.pop(viewContext);

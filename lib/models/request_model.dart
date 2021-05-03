@@ -203,7 +203,8 @@ class RequestModel extends DataModel {
   GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
   String communityId;
   BasicUserDetails selectedInstructor = new BasicUserDetails();
-  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails = new SelectedSpeakerTimeDetails();
+  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
+      new SelectedSpeakerTimeDetails();
   Map<String, dynamic> skills;
   bool liveMode = false;
 
@@ -528,7 +529,8 @@ class RequestModel extends DataModel {
       this.cashModel = new CashModel();
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
-      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      List<String> oneToManyRequestAttenders =
+          List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
       this.oneToManyRequestAttenders = List();
@@ -874,12 +876,12 @@ class RequestModel extends DataModel {
       }
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
-      List<String> oneToManyRequestAttenders = List.castFrom(map['oneToManyRequestAttenders']);
+      List<String> oneToManyRequestAttenders =
+          List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
       this.oneToManyRequestAttenders = List();
     }
-
   }
 
   @override
@@ -921,7 +923,6 @@ class RequestModel extends DataModel {
         case RequestType.BORROW:
           object['requestType'] = "BORROW";
           break;
-
 
         case RequestType.TIME:
           object['requestType'] = "TIME";
@@ -1079,7 +1080,8 @@ class RequestModel extends DataModel {
       object['selectedInstructor'] = this.selectedInstructor.toMap();
     }
     if (this.selectedSpeakerTimeDetails != null) {
-      object['selectedSpeakerTimeDetails'] = this.selectedSpeakerTimeDetails.toMap();
+      object['selectedSpeakerTimeDetails'] =
+          this.selectedSpeakerTimeDetails.toMap();
     }
     if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;

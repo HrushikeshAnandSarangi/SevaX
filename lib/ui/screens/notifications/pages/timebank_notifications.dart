@@ -342,8 +342,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         context: context,
                         builder: (BuildContext viewContext) {
                           return AlertDialog(
-                            title:
-                                Text('Are you sure you want to reject request completion?'), //Label to be created
+                            title: Text(
+                                'Are you sure you want to reject request completion?'), //Label to be created
                             actions: <Widget>[
                               FlatButton(
                                 color: Theme.of(context).primaryColor,
@@ -357,9 +357,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                   await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
                                       oneToManyRequestModel, context);
                                   FirestoreManager.readTimeBankNotification(
-                                notificationId: notification.id,
-                                timebankId: notification.timebankId,
-                              );
+                                    notificationId: notification.id,
+                                    timebankId: notification.timebankId,
+                                  );
                                 },
                               ),
                               FlatButton(
@@ -377,8 +377,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           );
                         });
                   },
-                  photoUrl: oneToManyRequestModel['selectedInstructor']['photoURL'],
-                  title: oneToManyRequestModel['selectedInstructor']['fullname'],
+                  photoUrl: oneToManyRequestModel['selectedInstructor']
+                      ['photoURL'],
+                  title: oneToManyRequestModel['selectedInstructor']
+                      ['fullname'],
                   subTitle: 'Completed the request', //Label to be created
                 );
                 break;

@@ -20,7 +20,7 @@ class OneToManyInstructorCard extends StatelessWidget {
   final bool isAdmin;
   final String currentCommunity;
   final String loggedUserId;
-  //final VoidCallback onAddClick;
+  final VoidCallback onAddClick;
 
   OneToManyInstructorCard({
     @required this.userModel,
@@ -30,7 +30,7 @@ class OneToManyInstructorCard extends StatelessWidget {
     @required this.addStatus,
     @required this.currentCommunity,
     @required this.loggedUserId,
-    //@required this.onAddClick,
+    @required this.onAddClick,
   });
 
   @override

@@ -284,102 +284,135 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               widget.requestItem.sevaUserId)
                       ? requestedByBorrowRequestComponent
                       : Container(),
-                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                      widget.requestItem.oneToManyRequestAttenders.length >= 1 &&
-                      (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
-                          || userMode == UserMode.TIMEBANK_ADMIN)
-                  )
+                  (widget.requestItem.requestType ==
+                              RequestType.ONE_TO_MANY_REQUEST &&
+                          widget.requestItem.oneToManyRequestAttenders.length >=
+                              1 &&
+                          (userMode == UserMode.TIMEBANK_CREATOR ||
+                              userMode == UserMode.REQUEST_CREATOR ||
+                              userMode == UserMode.TIMEBANK_ADMIN))
                       ? Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.width * 0.24,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                              '${widget.requestItem.oneToManyRequestAttenders.length}/' +
-                                  '${widget.requestItem.numberOfApprovals}' +
-                                  ' people Applied'),
-                          StreamBuilder(
-                              stream: Firestore.instance
-                                  .collection("requests")
-                                  .document(widget.requestItem.id)
-                                  .collection('oneToManyAttendeesDetails')
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Text(
-                                    'No images available...',
-                                  );
-                                } else {
-                                  return Expanded(
-                                    flex: 1,
-                                    child: ListView.builder(
-                                      reverse: true,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: snapshot.data.documents.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  snapshot.data.documents[
-                                                  index]
-                                                  ['photoURL'] ??
-                                                      defaultUserImageURL),
-                                              minRadius: 23.0),
+                          flex: 1,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            height: MediaQuery.of(context).size.width * 0.24,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text('${widget.requestItem.oneToManyRequestAttenders.length}/' +
+                                    '${widget.requestItem.numberOfApprovals}' +
+                                    ' people Applied'),
+                                StreamBuilder(
+                                    stream: Firestore.instance
+                                        .collection("requests")
+                                        .document(widget.requestItem.id)
+                                        .collection('oneToManyAttendeesDetails')
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Text(
+                                          'No images available...',
                                         );
-                                      },
-                                    ),
-                                  );
-                                }
-                              }),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  )
+                                      } else {
+                                        return Expanded(
+                                          flex: 1,
+                                          child: ListView.builder(
+                                            reverse: true,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                                snapshot.data.documents.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        snapshot.data.documents[
+                                                                    index]
+                                                                ['photoURL'] ??
+                                                            defaultUserImageURL),
+                                                    minRadius: 23.0),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    }),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        )
                       : Container(),
-
-                  (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                      widget.requestItem.selectedInstructor != null &&
-                      (userMode == UserMode.TIMEBANK_CREATOR || userMode == UserMode.REQUEST_CREATOR
-                          || userMode == UserMode.TIMEBANK_ADMIN)
-                  ) ?
-                  Container(child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Speaker', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  widget.requestItem.selectedInstructor.photoURL ??
-                                      defaultUserImageURL),
-                              minRadius: 34.0),
-                          SizedBox(width: 25),
-                          Column(
+                  (widget.requestItem.requestType ==
+                              RequestType.ONE_TO_MANY_REQUEST &&
+                          widget.requestItem.selectedInstructor != null &&
+                          (userMode == UserMode.TIMEBANK_CREATOR ||
+                              userMode == UserMode.REQUEST_CREATOR ||
+                              userMode == UserMode.TIMEBANK_ADMIN))
+                      ? Container(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(widget.requestItem.selectedInstructor.fullname, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-                              SizedBox(height: 7),
-                              widget.requestItem.selectedSpeakerTimeDetails.speakingTime == null ?
-                              Text('hours not updated..', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey))
-                                  :
-                              Text('Session: ' + widget.requestItem.selectedSpeakerTimeDetails.speakingTime.toString() + ' hours', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.grey)),
+                              Text('Speaker',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                      backgroundImage: NetworkImage(widget
+                                              .requestItem
+                                              .selectedInstructor
+                                              .photoURL ??
+                                          defaultUserImageURL),
+                                      minRadius: 34.0),
+                                  SizedBox(width: 25),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          widget.requestItem.selectedInstructor
+                                              .fullname,
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500)),
+                                      SizedBox(height: 7),
+                                      widget
+                                                  .requestItem
+                                                  .selectedSpeakerTimeDetails
+                                                  .speakingTime ==
+                                              null
+                                          ? Text('hours not updated..',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey))
+                                          : Text(
+                                              'Session: ' +
+                                                  widget
+                                                      .requestItem
+                                                      .selectedSpeakerTimeDetails
+                                                      .speakingTime
+                                                      .toString() +
+                                                  ' hours',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 15),
                             ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                    ],
-                  ),
-                  )
+                        )
                       : Container(),
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
@@ -1293,24 +1326,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             widget.requestItem.approvedUsers.length == 0 &&
             widget.requestItem.invitedUsers.length == 0;
       } else if (widget.requestItem.requestType == RequestType.BORROW) {
-      canDeleteRequest = utils.isDeletable(
-              contentCreatorId: widget.requestItem.sevaUserId,
-              context: context,
-              communityCreatorId:
-                  widget.timebankModel.managedCreatorIds.isNotEmpty
-                      ? widget.timebankModel.managedCreatorIds.elementAt(0)
-                      :
-                      // BlocProvider.of<HomeDashBoardBloc>(context)
-                      //         .selectedCommunityModel.created_by
-                      isPrimaryTimebank(
-                              parentTimebankId:
-                                  widget.timebankModel.parentTimebankId)
-                          ? widget.timebankModel.creatorId
-                          : widget.timebankModel.managedCreatorIds.first,
-              timebankCreatorId: widget.timebankModel.creatorId) &&
-          widget.requestItem.participantDetails == null &&
-          widget.requestItem.acceptors.length == 0;
-    } else {
+        canDeleteRequest = utils.isDeletable(
+                contentCreatorId: widget.requestItem.sevaUserId,
+                context: context,
+                communityCreatorId:
+                    widget.timebankModel.managedCreatorIds.isNotEmpty
+                        ? widget.timebankModel.managedCreatorIds.elementAt(0)
+                        :
+                        // BlocProvider.of<HomeDashBoardBloc>(context)
+                        //         .selectedCommunityModel.created_by
+                        isPrimaryTimebank(
+                                parentTimebankId:
+                                    widget.timebankModel.parentTimebankId)
+                            ? widget.timebankModel.creatorId
+                            : widget.timebankModel.managedCreatorIds.first,
+                timebankCreatorId: widget.timebankModel.creatorId) &&
+            widget.requestItem.participantDetails == null &&
+            widget.requestItem.acceptors.length == 0;
+      } else {
         canDeleteRequest = utils.isDeletable(
                 contentCreatorId: widget.requestItem.sevaUserId,
                 context: context,
@@ -1578,12 +1611,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
                                     ? 'Request Approved' //Label to be created
-                                    : 'Request has been assigned to a member')   //Label to be created
+                                    : 'Request has been assigned to a member') //Label to be created
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
-                                        ? 'Borrow request for place'   //Label to be created
-                                        : 'Borrow request for item'),  //Label to be created
+                                        ? 'Borrow request for place' //Label to be created
+                                        : 'Borrow request for item'), //Label to be created
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -1681,35 +1714,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               SizedBox(width: 1),
               Spacer(),
               widget.requestItem.requestType == RequestType.BORROW
-                ? Text(
-                    isApplied ? S.of(context).cancel : S.of(context).accept,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
+                  ? Text(
+                      isApplied ? S.of(context).cancel : S.of(context).accept,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      isApplied ? S.of(context).withdraw : S.of(context).apply,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
-                  )
-                : Text(
-                    isApplied ? S.of(context).withdraw : S.of(context).apply,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-            Spacer(
-              flex: 1,
-            ),
-          ],
-        ),
-        onPressed: () {
-          if (widget.requestItem.requestType == RequestType.BORROW) {
-            //widget.requestItem.roomOrTool == 'ROOM'
-                //?
-                borrowApplyAction();
-                //: proccedWithCalander();
-          } else {
-            applyAction();
-          }
-        },
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+          onPressed: () {
+            if (widget.requestItem.requestType == RequestType.BORROW) {
+              //widget.requestItem.roomOrTool == 'ROOM'
+              //?
+              borrowApplyAction();
+              //: proccedWithCalander();
+            } else {
+              applyAction();
+            }
+          },
         ),
       ),
     );
@@ -2425,54 +2458,53 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get approvedBorrowRequestDetailsComponent {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      widget.requestItem.approvedUsers.length > 0 ?
-      StreamBuilder(
-          stream: Firestore.instance
-              .collection('requests')
-              .document(widget.requestItem.id)
-              .collection('borrowRequestAcceptors')
-              .where('acceptorEmail',
-                  isEqualTo: widget.requestItem.approvedUsers[0])
-              .snapshots(),
-          builder: (context, snapshot) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  color: Colors.grey[300],
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 7.0, right: 7, top: 5, bottom: 5),
-                    child: Text(
-                      'Your request has been approved by ' +
-                          snapshot.data.documents[0]['acceptorName'],
+      widget.requestItem.approvedUsers.length > 0
+          ? StreamBuilder(
+              stream: Firestore.instance
+                  .collection('requests')
+                  .document(widget.requestItem.id)
+                  .collection('borrowRequestAcceptors')
+                  .where('acceptorEmail',
+                      isEqualTo: widget.requestItem.approvedUsers[0])
+                  .snapshots(),
+              builder: (context, snapshot) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      color: Colors.grey[300],
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 7.0, right: 7, top: 5, bottom: 5),
+                        child: Text(
+                          'Your request has been approved by ' +
+                              snapshot.data.documents[0]['acceptorName'],
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    addressComponentBorrowRequestForApproved(
+                        snapshot.data.documents[0]['selectedAddress']),
+                    Text(
+                      'Instruction for the stay',
                       style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black,
+                          color: Colors.grey[800],
                           fontWeight: FontWeight.w600),
                     ),
-                  ),
-                ),
-                SizedBox(height: 5),
-                addressComponentBorrowRequestForApproved(
-                    snapshot.data.documents[0]['selectedAddress']),
-                Text(
-                  'Instruction for the stay',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  snapshot.data.documents[0]['doAndDonts'],
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ],
-            );
-          })
-          :
-          Container(),
+                    SizedBox(height: 5),
+                    Text(
+                      snapshot.data.documents[0]['doAndDonts'],
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ],
+                );
+              })
+          : Container(),
     ]);
   }
 
@@ -2487,8 +2519,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? 'Request agreement not available'        //Label to be created
-                      : 'Click to view request agreement',       //Label to be created
+                      ? 'Request agreement not available' //Label to be created
+                      : 'Click to view request agreement', //Label to be created
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,

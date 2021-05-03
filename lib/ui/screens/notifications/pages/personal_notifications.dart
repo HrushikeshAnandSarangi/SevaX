@@ -360,7 +360,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
-
                     case NotificationType.OneToManyCreatorRejectedCompletion:
                       Map oneToManyRequestModel = notification.data;
                       RequestModel model =
@@ -1013,7 +1012,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     showProgressForCreditRetrieval();
 
     //Send Receipt Email to Lender & Borrowr
-    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(requestModelUpdated);
+    await MailBorrowRequestReceipts.sendBorrowRequestReceipts(
+        requestModelUpdated);
     log('Came to send receipts to lender and borrower api');
 
     //Send Notification To Lender to let them know it's acknowledged

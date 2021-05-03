@@ -1554,8 +1554,8 @@ Future<void> acceptInviteRequest({
         'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
-    }, merge: true);
+        'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
+      }, merge: true);
     } else {
       await Firestore.instance
           .collection('requests')
@@ -1563,8 +1563,8 @@ Future<void> acceptInviteRequest({
           .setData({
         'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId]),
-      'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
-    }, merge: true);
+        'participantDetails': {acceptedUserEmail: acceptorModel.toMap()}
+      }, merge: true);
     }
   }
 }
