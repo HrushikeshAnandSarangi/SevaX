@@ -346,7 +346,9 @@ class MemberSectionBuilder extends StatelessWidget {
         'modeType': ExitMode.LEFT_THE_COMMUNITY.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'communityId': member.currentCommunity,
-        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId
+            ? false
+            : true,
         'memberDetails': {
           'email': member.email,
           'id': member.sevaUserID,
@@ -377,7 +379,9 @@ class MemberSectionBuilder extends StatelessWidget {
         'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'communityId': member.currentCommunity,
-        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+        'isGroup': model.parentTimebankId == FlavorConfig.values.timebankId
+            ? false
+            : true,
         'memberDetails': {
           'email': member.email,
           'id': member.sevaUserID,
