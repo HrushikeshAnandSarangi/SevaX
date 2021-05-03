@@ -9,11 +9,14 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/community_by_category_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
@@ -65,6 +68,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       create: (context) => _bloc,
       dispose: (context, bloc) => bloc.dispose(),
       child: ExplorePageViewHolder(
+        appBarTitle: 'Search',
         hideHeader: Provider.of<UserModel>(context) != null,
         hideFooter: Provider.of<UserModel>(context) != null,
         controller: _searchController,
@@ -73,7 +77,52 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           _bloc.onSearchChange(value);
         },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 40,
+              child: TextField(
+                controller: _searchController,
+                onChanged: _bloc.onSearchChange,
+                decoration: InputDecoration(
+                  hintText: 'Try "Oska" "Postal Code"',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: Icon(Icons.search),
+                  suffixIcon: FlatButton(
+                    child: Text('Search'),
+                    textColor: Colors.white,
+                    color: Colors.orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    onPressed: () {},
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 4),
+                ),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -181,7 +230,15 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                           itemBuilder: (context, index) => SimpleCommunityCard(
                             image: snapshot.data[index].logo ??
                                 'https://media.istockphoto.com/photos/group-portrait-of-a-creative-business-team-standing-outdoors-three-picture-id1146473249?k=6&m=1146473249&s=612x612&w=0&h=W1xeAt6XW3evkprjdS4mKWWtmCVjYJnmp-LHvQstitU=',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CommunityByCategoryView(
+                                    model: snapshot.data[index],
+                                  ),
+                                ),
+                              );
+                            },
                             title: snapshot.data[index].getCategoryName(
                               context,
                             ),
@@ -359,7 +416,7 @@ class _CommunitiesView extends StatelessWidget {
                   ),
                 );
               } else {
-                return _ExploreCommunityCard(
+                return ExploreCommunityCard(
                   model: snapshot.data[index >= length ? length ~/ 2 : index],
                 );
               }
@@ -405,6 +462,73 @@ class _RequestsView extends StatelessWidget {
                 userIds: request.approvedUsers,
               ),
             );
+            // return Provider.of<UserModel>(context) != null
+            //     ? FutureBuilder<TimebankModel>(
+            //         future: getTimeBankForId(timebankId: request.timebankId),
+            //         builder: (context, snapshot) {
+            //           if (snapshot.connectionState == ConnectionState.waiting) {
+            //             return LoadingIndicator();
+            //           }
+            //           if (snapshot.hasError) {
+            //             return Container();
+            //           }
+            //           if (snapshot.data == null) {
+            //             return Container();
+            //           }
+            //           return ExploreEventCard(
+            //             onTap: () {
+            //               bool isAdmin = snapshot.data.admins.contains(
+            //                   Provider.of<UserModel>(context).sevaUserID);
+            //               Navigator.push(context,
+            //                   MaterialPageRoute(builder: (context) {
+            //                 return RequestMainTabHolder(
+            //                   requestsPath: RequestRoutePath.RequestsRoute,
+            //                   isAdmin: isAdmin,
+            //                   timebankId: request.timebankId,
+            //                   requestId: request.id,
+            //                   timebankModelStream: getTimebankModelStream(
+            //                     timebankId: request.timebankId,
+            //                   ),
+            //                   favouriteMembers: RequestBloc.getFavouriteMembers(
+            //                     sevaUserId:
+            //                         Provider.of<UserModel>(context).sevaUserID,
+            //                     isAdmin: isAdmin,
+            //                     timebankId: request.timebankId,
+            //                     requestMode: request.requestMode,
+            //                   ),
+            //                 );
+            //               }));
+            //             },
+            //             photoUrl: request.photoUrl ?? defaultProjectImageURL,
+            //             title: request.title,
+            //             description: request.description,
+            //             location: request.address,
+            //             communityName: 'request.communityName ?? ' '',
+            //             date: DateFormat('d MMMM, y').format(date),
+            //             time: DateFormat.jm().format(date),
+            //             memberList: MemberAvatarListWithCount(
+            //               userIds: request.approvedUsers,
+            //             ),
+            //           );
+            //         })
+            //     : ExploreEventCard(
+            //         onTap: () {
+            //           showSignInAlertMessage(
+            //               context: context,
+            //               message:
+            //                   'Please Sign In/Sign up to access ${request.title}');
+            //         },
+            //         photoUrl: request.photoUrl ?? defaultProjectImageURL,
+            //         title: request.title,
+            //         description: request.description,
+            //         location: request.address,
+            //         communityName: request.communityName ?? '',
+            //         date: DateFormat('d MMMM, y').format(date),
+            //         time: DateFormat.jm().format(date),
+            //         memberList: MemberAvatarListWithCount(
+            //           userIds: request.approvedUsers,
+            //         ),
+            //       );
           },
         );
       },
@@ -490,9 +614,9 @@ class _EventsView extends StatelessWidget {
   }
 }
 
-class _ExploreCommunityCard extends StatelessWidget {
+class ExploreCommunityCard extends StatelessWidget {
   final CommunityModel model;
-  const _ExploreCommunityCard({
+  const ExploreCommunityCard({
     Key key,
     @required this.model,
   }) : super(key: key);

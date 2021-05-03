@@ -740,6 +740,9 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
       elevation: 10,
       shadowColor: Colors.grey[200],
       child: TextField(

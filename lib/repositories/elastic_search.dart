@@ -409,4 +409,36 @@ class ElasticSearchApi {
     models.sort((a, b) => a.name.compareTo(b.name));
     return models;
   }
+
+  static Future<List<CommunityModel>> getCommunitiesByCategory(
+      String communityCategoryId) async {
+    String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"communityCategories": communityCategoryId}
+            },
+            {
+              "term": {"private": false}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<CommunityModel> models = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      CommunityModel model = CommunityModel(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.name.compareTo(b.name));
+    return models;
+  }
 }

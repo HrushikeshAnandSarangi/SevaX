@@ -8,6 +8,7 @@ class ExplorePageViewHolder extends StatelessWidget {
   final bool hideHeader;
   final bool hideFooter;
   final bool hideSearchBar;
+  final String appBarTitle;
   final ValueChanged<String> onSearchChanged;
   final EdgeInsets childPadding;
   final TextEditingController controller;
@@ -21,10 +22,19 @@ class ExplorePageViewHolder extends StatelessWidget {
     this.onSearchChanged,
     this.childPadding,
     this.controller,
+    this.appBarTitle,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBarTitle != null
+          ? AppBar(
+              title: Text(
+                appBarTitle,
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : null,
       body: SingleChildScrollView(
         padding: EdgeInsets.zero,
         child: Column(
@@ -36,6 +46,12 @@ class ExplorePageViewHolder extends StatelessWidget {
                 hideSearchBar: hideSearchBar,
                 controller: controller,
               ),
+              secondChild:
+                  appBarTitle == null ? Container(height: 30) : Container(),
+            ),
+            HideWidget(
+              hide: !hideHeader,
+              child: SizedBox(height: 12),
             ),
             Padding(
               padding:
