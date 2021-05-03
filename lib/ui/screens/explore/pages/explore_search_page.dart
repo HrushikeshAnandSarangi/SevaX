@@ -69,6 +69,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       dispose: (context, bloc) => bloc.dispose(),
       child: ExplorePageViewHolder(
         appBarTitle: 'Search',
+        hideSearchBar: true,
         hideHeader: Provider.of<UserModel>(context) != null,
         hideFooter: Provider.of<UserModel>(context) != null,
         controller: _searchController,
