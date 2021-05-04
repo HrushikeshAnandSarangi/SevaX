@@ -15,10 +15,12 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/communities/widgets/community_category_selector.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -428,8 +430,21 @@ class CreateEditCommunityViewFormState
                             }
                           },
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(8),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        CommunityCategorySelector(
+                          selectedCategories:
+                              communityModel.communityCategories ?? [],
+                          onChanged:
+                              (List<CommunityCategoryModel> categoryList) {
+                            communityModel.communityCategories =
+                                categoryList.map((e) => e.id).toList();
+                            snapshot.data.community.updateValueByKey(
+                                'communityCategories',
+                                communityModel.communityCategories.toList());
+                            setState(() {});
+                          },
                         ),
                         // todo:: removed timebank members
                         // Offstage(

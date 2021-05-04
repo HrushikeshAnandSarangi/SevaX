@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
@@ -126,7 +127,7 @@ class CommunityModel extends DataModel {
   String created_at;
   String primary_timebank;
   bool private;
-
+  List<String> communityCategories;
   double taxPercentage;
   double negativeCreditsThreshold;
   List<String> timebanks;
@@ -135,6 +136,7 @@ class CommunityModel extends DataModel {
   List<String> coordinators;
   List<String> members;
   int transactionCount;
+  int ranking;
   GeoFirePoint location;
   bool softDelete;
   bool billMe;
@@ -160,6 +162,12 @@ class CommunityModel extends DataModel {
         map.containsKey('transactionCount') && map["transactionCount"] != null
             ? map['transactionCount'] ?? 0
             : null;
+    this.communityCategories = map.containsKey("communityCategories")
+        ? List.castFrom(map["communityCategories"])
+        : [];
+    this.ranking = map.containsKey('ranking') && map["ranking"] != null
+        ? map['ranking'] ?? 0
+        : null;
     this.taxPercentage =
         map.containsKey('taxPercentage') && map["taxPercentage"] != null
             ? map["taxPercentage"].toDouble()
@@ -261,6 +269,9 @@ class CommunityModel extends DataModel {
     if (key == 'name') {
       this.name = value;
     }
+    if (key == 'ranking') {
+      this.ranking = value;
+    }
     if (key == 'about') {
       this.about = value;
     }
@@ -319,14 +330,20 @@ class CommunityModel extends DataModel {
     if (key == 'testCommunity') {
       this.testCommunity = value;
     }
+    if (key == 'communityCategories') {
+      this.communityCategories = communityCategories;
+    }
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
-
+    if (this.communityCategories != null && communityCategories.isNotEmpty) {
+      object['communityCategories'] = this.communityCategories;
+    }
     if (this.taxPercentage != null) {
       object['taxPercentage'] = this.taxPercentage;
     }
+
     if (this.negativeCreditsThreshold != null) {
       object['negativeCreditsThreshold'] = this.negativeCreditsThreshold;
     }
@@ -422,6 +439,9 @@ class CommunityModel extends DataModel {
     object['softDelete'] = this.softDelete;
     object['parent_timebank_id'] =
         this.parentTimebankId == null ? null : this.parentTimebankId;
+    if (this.ranking != null) {
+      object['ranking'] = this.ranking;
+    }
 
     if (this.payment != null) {
       object['payment'] = Map<String, dynamic>.from(this.payment);
