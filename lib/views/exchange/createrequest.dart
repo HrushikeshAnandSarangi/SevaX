@@ -1895,33 +1895,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       ),
                     ),
                   ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    comingFrom: widget.comingFrom,
-                    child: ConfigurationCheck(
-                      actionType: 'create_goods_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: _optionRadioButton<RequestType>(
-                        title: 'Borrow',
-                        value: RequestType.BORROW,
-                        isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          //requestModel.isRecurring = true;
-                          requestModel.requestType = value;
-                          //By default instructor for One To Many Requests is the creator
-                          instructorAdded = false;
-                          requestModel.selectedInstructor = null;
-                          AppConfig.helpIconContextMember =
-                              HelpContextMemberType.time_requests;
-                          setState(() => {});
-                        },
-                      ),
-                    ),
-                  ),
+                  
+            //BORROW REQUEST MOSTLY PUSHED TO NEXT RELEASE
+
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.cash_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   comingFrom: widget.comingFrom,
+                  //   child: ConfigurationCheck(
+                  //     actionType: 'create_goods_request',
+                  //     role: memberType(timebankModel,
+                  //         SevaCore.of(context).loggedInUser.sevaUserID),
+                  //     child: _optionRadioButton<RequestType>(
+                  //       title: 'Borrow',
+                  //       value: RequestType.BORROW,
+                  //       isEnabled: !widget.isOfferRequest,
+                  //       groupvalue: requestModel.requestType,
+                  //       onChanged: (value) {
+                  //         //requestModel.isRecurring = true;
+                  //         requestModel.requestType = value;
+                  //         //By default instructor for One To Many Requests is the creator
+                  //         instructorAdded = false;
+                  //         requestModel.selectedInstructor = null;
+                  //         AppConfig.helpIconContextMember =
+                  //             HelpContextMemberType.time_requests;
+                  //         setState(() => {});
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.one_to_many_request,
