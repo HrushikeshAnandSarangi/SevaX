@@ -505,9 +505,9 @@ class RequestListItemsState extends State<RequestListItems> {
       case RequestType.GOODS:
         return getTagMainFrame(S.of(context).goods_request);
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request'); // Label to be created
+        return getTagMainFrame('One To Many Request'); 
       case RequestType.BORROW:
-        return getTagMainFrame('Borrow Request'); // Label to be created
+        return getTagMainFrame('Borrow Request'); 
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 

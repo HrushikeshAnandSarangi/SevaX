@@ -173,7 +173,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                 ),
               ),
               Container(
-                child: Text('Kilometer'),
+                child: Text('Kilometre'),
               ),
             ],
           ),

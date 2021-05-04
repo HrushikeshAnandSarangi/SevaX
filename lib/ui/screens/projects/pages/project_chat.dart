@@ -62,7 +62,7 @@ class _ProjectChatViewState extends State<ProjectChatView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('To View and recieve updates join the community'),
+                  Text('To View and receive updates join the community'),
                   RaisedButton(
                     child: Text('Join Chat'),
                     onPressed: () {

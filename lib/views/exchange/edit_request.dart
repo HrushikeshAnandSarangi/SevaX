@@ -574,7 +574,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                     children: [
                                       SizedBox(height: 20),
                                       Text(
-                                        "Selected Speaker", //LABEL TO BE MADE FOR THIS
+                                        "Selected Speaker",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -673,7 +673,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         children: [
                                             SizedBox(height: 20),
                                             Text(
-                                              "Select a Speaker*", //LABEL TO BE MADE FOR THIS
+                                              "Select a Speaker*",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -728,8 +728,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             BorderRadius
                                                                 .circular(
                                                                     15.7)),
-                                                hintText:
-                                                    'Ex: Garry', //Label to be created
+                                                hintText: 'Ex: Garry',
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -1026,11 +1025,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : widget.requestModel.requestType ==
-                                            RequestType.BORROW
-                                        ? BorrowRequest(
+                                            RequestType.ONE_TO_MANY_REQUEST
+                                        ? TimeRequest(
                                             snapshot, projectModelList)
-                                        : GoodsRequest(
-                                            snapshot, projectModelList),
+                                        : widget.requestModel.requestType ==
+                                                RequestType.BORROW
+                                            ? BorrowRequest(
+                                                snapshot, projectModelList)
+                                            : GoodsRequest(
+                                                snapshot, projectModelList),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -1542,7 +1545,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: <Widget>[
   //         Text(
-  //           "Tool Name*",         //Label to be created (need client approval)
+  //           "Tool Name*",
   //           style: TextStyle(
   //             fontSize: 16,
   //             fontWeight: FontWeight.bold,
@@ -2016,7 +2019,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           //             },
           //           ),
           //           Text(
-          //               'Tick to create an event for this request') // Label to be created
+          //               'Tick to create an event for this request')
           //         ],
           //       )
           //     : Container(height: 0, width: 0),
@@ -2055,12 +2058,11 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           // widget.requestModel.borrowRequestToolName != null
           // ? BorrowToolTitleField('Ex: Hammer or Chair...')
-          //     : Container(), //Label to be created (need client approval)
+          //     : Container(),
 
           SizedBox(height: 15),
 
-          RequestDescriptionData(
-              'Please describe what you require'), //Label to be created (need client approval)
+          RequestDescriptionData('Please describe what you require'),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
           InkWell(
@@ -2589,8 +2591,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: 'Select an Instructor'); //Label to be created
+        showDialogForTitle(dialogTitle: 'Select an Instructor');
         return;
       }
 
@@ -2665,15 +2666,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                   sevaUserId: selectedInstructorModel.sevaUserID,
                   userEmail: selectedInstructorModel.email);
               // send sevax global notification for user who is not part of the community for this request
-              // await sendMailToInstructor(
-              //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-              //     receiverEmail: selectedInstructorModel.email,
-              //     communityName: widget.requestModel.fullName,
-              //     requestName: widget.requestModel.title,
-              //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-              //     receiverName: selectedInstructorModel.fullname,
-              //     startDate: widget.requestModel.requestStart,
-              //     endDate: widget.requestModel.requestEnd);
+              await sendMailToInstructor(
+                  senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                  receiverEmail: selectedInstructorModel.email,
+                  communityName: widget.requestModel.fullName,
+                  requestName: widget.requestModel.title,
+                  requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                  receiverName: selectedInstructorModel.fullname,
+                  startDate: widget.requestModel.requestStart,
+                  endDate: widget.requestModel.requestEnd);
             }
           }
 
@@ -2823,15 +2824,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                 timebankId: FlavorConfig.values.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
-            // await sendMailToInstructor(
-            //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-            //     receiverEmail: selectedInstructorModel.email,
-            //     communityName: widget.requestModel.fullName,
-            //     requestName: widget.requestModel.title,
-            //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-            //     receiverName: selectedInstructorModel.fullname,
-            //     startDate: widget.requestModel.requestStart,
-            //     endDate: widget.requestModel.requestEnd);
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: widget.requestModel.fullName,
+                requestName: widget.requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: widget.requestModel.requestStart,
+                endDate: widget.requestModel.requestEnd);
           }
         }
 
@@ -2953,22 +2954,172 @@ class RequestEditFormState extends State<RequestEditForm> {
       mailReciever: receiverEmail,
       mailSubject:
           requestCreatorName + ' from ' + communityName + ' has invited you',
-      mailContent: 'You have been invited to instruct ' +
-          requestName +
-          ' from ' +
-          DateTime.fromMillisecondsSinceEpoch(startDate)
-              .toString()
-              .substring(0, 11) +
-          ' to ' +
-          DateTime.fromMillisecondsSinceEpoch(endDate)
-              .toString()
-              .substring(0, 11) +
-          "\n\n" +
-          'Thanks,' +
-          "\n" +
-          'SevaX Team.',
+      mailContent:
+          """ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    
+    <body>
+        <div dir="ltr">
+    
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;border:0px;background-color:white;font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-serif">
+                <tbody>
+    
+                        <tr>
+                        <td align="center valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateBody" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-left:10px;border-right:10px;border-top:10px;border-bottom:0px;padding:40px 80px 0px 80px;border-style:solid;border-collapse: seperate;border-color:#766FE0;max-width:600px;width:600px">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td align="center valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateHeader" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:19px;padding-bottom:19px">
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;width:600px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="background-image:none;background-repeat:no-repeat;background-position:50% 50%;background-size:cover;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" >
+                                                                            <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:inherit;border:0px;border-color:white;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td valign="top" style="padding:0px;text-align:center"><img align="left" alt="" src="https://ci5.googleusercontent.com/proxy/KMTN5MCNI08J15B09izASZ49J6rqtQf7e39MXu2B9OeOXFLSrmcqMBLGqpRsiuXVXCs5K0VhqORlonSSzigT_LlYKqS9WLljenNftkN5gYij5IKg6WOJ3VGHj2YikF1RrzTnoKPBEXfJl5RtYCqCHQVcmNYZZQ=s0-d-e1-ft#https://mcusercontent.com/18ef8611cb76f33e8a73c9575/images/60fe9519-6fc0-463f-8c67-b6341d56cf6f.jpg"
+                                                                                                width="108" style="margin-right:35px;border-collapse:inherit;border:0px;border-color:white;height:auto;outline:none;vertical-align:bottom;max-width:400px;padding-bottom:0px;display:inline" class="CToWUd"></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+    
+                                    <tr>
+                                        <td valign="top" style="background-image:none;background-repeat:no-repeat;background-position:50% 50%;background-size:cover;border-collapse: inherit;border:0px;padding:0px">
+                                            
+                                        
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;table-layout:fixed">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="min-width:100%;padding:18px 10px 18px 0px">
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;min-width:100%;border-top:2px solid rgb(234, 234, 234)">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="padding-bottom:10px">
+                                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;max-width:100%;min-width:100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" style="font-family:Helvetica;word-break:break-word;font-size:16px;line-height:16px;padding:0px 4px 9px">
+                                                                            <div style="text-align:left;font-size:18px;line-height:20px;font-weight:500;color:#2c2c2d;">Hi ${receiverName},</div>
+                                                                            <div style="text-align:left;font-size:20px;line-height:25px;color:black;font-weight:700;"><br>You have been invited by ${requestCreatorName} to be the speaker \n for: ${requestName} on ${DateFormat('EEEE, d MMM h:mm a').format(DateTime.fromMillisecondsSinceEpoch(startDate))}.</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+    
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                        <td align="center" valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateBody" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-left:0px;border-right:0px;border-top:0px;border-bottom:0px;padding:0px 0px 0px 00px;border-style:solid;border-collapse: seperate;border-color:#766FE0;max-width:777px">
+                                <tbody>
+    
+                                    <tr>
+                                        <td align=" center " valign="top " id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateFooter " style="background:none 50% 50%/cover no-repeat rgb(47,46,46);border:0px;padding-top:45px;padding-bottom:33px;">
+                                            <table align="center " border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="max-width:600px;width:600px ">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top " style="background:none 50% 50%/cover no-repeat transparent;border:0px;padding-top:0px;padding-bottom:0px ">
+                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="min-width:100%;table-layout:fixed;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="">
+                                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:12%;padding-right:15%;border-top: 2px solid rgb(80,80,80) ">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top " style="padding-top:9px;">
+                                                                            <table align="left " border="0" cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:40%;padding-right:50%;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center;padding:0px 18px 9px">
+                                                                                    <em>Copyright Â© 2020 Seva Exchange, All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
+                                                                                        target="_blank ">info@sevaexchange.com</a><br><br><a href="https://sevaxapp.com/PrivacyPolicy.html" target="_blank" style="color:rgb(255,255,255);">Privacy Policy&nbsp;</a>&nbsp;<br>
+                                                                                </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+    
+                                </tbody>
+                            </table>
+                        </td>
+    
+                </tbody>
+            </table>
+        </div>
+    </body>
+  </html> """,
     ));
-  } //Label to be given by client for email content
+  } //Label to be confirmed
+
+  // requestCreatorName + ' from ' + communityName + ' has invited you',
+  //     mailContent: 'You have been invited to instruct ' +
+  //         requestName +
+  //         ' from ' +
+  //         DateTime.fromMillisecondsSinceEpoch(startDate)
+  //             .toString()
+  //             .substring(0, 11) +
+  //         ' to ' +
+  //         DateTime.fromMillisecondsSinceEpoch(endDate)
+  //             .toString()
+  //             .substring(0, 11) +
 
   void showInsufficientBalance() {
     showDialog(

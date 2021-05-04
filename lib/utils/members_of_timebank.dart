@@ -403,7 +403,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
         builder: (context) {
           dialogLoadingContext = context;
           return AlertDialog(
-            title: Text('Please wait...'),
+            title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(),
           );
         });

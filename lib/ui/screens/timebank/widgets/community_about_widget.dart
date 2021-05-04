@@ -288,7 +288,7 @@ class _CommunityAboutState extends State<CommunityAbout>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Member(s)',
+        Text(S.of(context).members,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -436,7 +436,7 @@ class _CommunityAboutState extends State<CommunityAbout>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Location',
+        Text(S.of(context).location,
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,

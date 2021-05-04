@@ -356,7 +356,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         title: oneToManyRequestModel['requestCreatorName'],
                         subTitle: 'added you as Speaker for request: ' +
                             oneToManyRequestModel[
-                                'title'], //Label to be created
+                                'title'],
                       );
                       break;
 
@@ -393,7 +393,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
                         title: oneToManyRequestModel['requestCreatorName'],
                         subTitle:
-                            'Rejected completion of request: ${oneToManyRequestModel['title']}. Please confirm again to close the request.', //Label to be created
+                            'Rejected completion of request: ${oneToManyRequestModel['title']}. Please confirm again to close the request.',
                       );
                       break;
 
@@ -414,7 +414,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: model.photoUrl,
                         title: model.title,
                         subTitle: model.requestType == RequestType.BORROW
-                            ? 'Request has been approved' //Label to be given by client (maybe Request has been approved by 'name of Borrower') (depends if timebank or personal)
+                            ? 'Request has been approved'
                             : '${S.of(context).notifications_approved_by} ${model.fullName}',
                       );
                       break;
@@ -911,9 +911,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           );
                         },
                         photoUrl: model.photoUrl,
-                        title: '${model.title}', //Label to be created
-                        subTitle: //Need final label from client
-                            "This request has now ended. Tap to complete the request.",
+                        title: '${model.title}',
+                        subTitle: "This request has now ended. Tap to complete the request.",
                       );
                       break;
 
@@ -933,8 +932,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               SevaCore.of(context).loggedInUser.email);
                         },
                         photoUrl: model.photoUrl,
-                        title: '${model.title}', //Label to be created
-                        subTitle: //Need final label from client
+                        title: '${model.title}', 
+                        subTitle: 
                             "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                       );
                       break;
@@ -955,8 +954,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               SevaCore.of(context).loggedInUser.email);
                         },
                         photoUrl: model.photoUrl,
-                        title: '${model.title}', //Label to be created
-                        subTitle: //Need final label from client
+                        title: '${model.title}',
+                        subTitle: 
                             "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
                       );
                       break;
@@ -1378,7 +1377,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   //         "\n" +
   //         "SevaX Team.",
   //   ));
-  // } //Label to be given by client for email content
+  // } //to be given by client for email content
 
   @override
   bool get wantKeepAlive => true;

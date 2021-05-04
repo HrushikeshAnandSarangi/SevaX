@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
@@ -145,7 +146,7 @@ class _ResultViewState extends State<ResultView> {
               prefix0.TimebankModel timebankModel = snapshot.data;
               List<String> memberList = timebankModel.members;
               if (memberList.length == 0) {
-                return Center(child: Text('No members'));
+                return Center(child: Text(S.of(context).no_members));
               }
               return Container(
                 padding: EdgeInsets.only(left: 15.0, right: 15.0),

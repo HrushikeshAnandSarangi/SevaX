@@ -179,7 +179,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
                       //Radio Buttons
                       _optionRadioButtonMain<String>(
-                        title: 'Create New', //Label to be created
+                        title: 'Create New',
                         value: AgreementDocumentType.NEW.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -190,7 +190,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                       ),
                       _optionRadioButtonMain<String>(
                         title:
-                            'Choose previous agreement', //Label to be created
+                            'Choose previous agreement',
                         value: AgreementDocumentType.TEMPLATE.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -207,7 +207,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                       buildTemplateWidget(),
 
                       _optionRadioButtonMain<String>(
-                        title: 'No Agreement', //Label to be created
+                        title: 'No Agreement',
                         value: AgreementDocumentType.NO_AGREEMENT.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -230,7 +230,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                  "Usage term*", //Label to be created
+                                  "Usage term*",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -240,7 +240,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 5),
                                 _optionRadioButtonRoomForm<bool>(
-                                  title: 'Fixed', //Label to be created
+                                  title: 'Fixed',
                                   value: true,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -250,7 +250,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 _optionRadioButtonRoomForm<bool>(
                                   title:
-                                      'Long-term (Month to Month)', //Label to be created
+                                      'Long-term (Month to Month)',
                                   value: false,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -269,7 +269,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      "Quiet hours allowed", //Label to be created
+                                      "Quiet hours allowed",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      "Pets allowed", //Label to be created
+                                      "Pets allowed",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -302,7 +302,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Maximum occupants", //Label to be created
+                                  "Maximum occupants",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -326,7 +326,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: 'Ex: 3', //Label to be created
+                                    hintText: 'Ex: 3',
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -334,7 +334,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   keyboardType: TextInputType.number,
                                   // validator: (value) {
                                   //   if (value.isEmpty) {
-                                  //     return "Ex: 3"; //Label to be created
+                                  //     return "Ex: 3";
                                   //   } else {
                                   //     maximumOccupants = int.parse(value);
                                   //     setState(() {});
@@ -344,7 +344,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Security Deposit", //Label to be created
+                                  "Security Deposit",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -369,7 +369,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: "Ex: \$300", //Label to be created
+                                    hintText: "Ex: \$300",
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -377,7 +377,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   keyboardType: TextInputType.number,
                                   // validator: (value) {
                                   //   if (value.isEmpty) {
-                                  //     return "Ex: 3"; //Label to be created
+                                  //     return "Ex: 3"; 
                                   //   } else {
                                   //     maximumOccupants = int.parse(value);
                                   //     setState(() {});
@@ -387,7 +387,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Person of contact details", //Label to be created
+                                  "Person of contact details",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -418,7 +418,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   keyboardType: TextInputType.text,
                                   // validator: (value) {
                                   //   if (value.isEmpty) {
-                                  //     return "Please enter document name"; //Label to be created
+                                  //     return "Please enter document name"; 
                                   //   } else {
                                   //     documentName = value;
                                   //     setState(() {});
@@ -551,7 +551,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         SizedBox(height: 17),
         documentNameTextField,
         Text(
-          "Any specific condition(s)", //Label to be created
+          "Any specific condition(s)",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -573,14 +573,14 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: item must be returned in the same condition.', //Label to be created
+                'Ex: item must be returned in the same condition.',
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
           keyboardType: TextInputType.text,
           // validator: (value) {
           //   if (value.isEmpty) {
-          //     return "Please enter specific conditions"; //Label to be created
+          //     return "Please enter specific conditions";
           //   } else {
           //     specificConditions = value;
           //     return null;
@@ -589,7 +589,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          "Description of item(s)", //Label to be created
+          "Description of item(s)",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -611,14 +611,14 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: Gas-powered lawnmower in mint condition with full tank of gas.', //Label to be created
+                'Ex: Gas-powered lawnmower in mint condition with full tank of gas.',
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
           keyboardType: TextInputType.text,
           // validator: (value) {
           //   if (value.isEmpty) {
-          //     return "Please enter specific conditions"; //Label to be created
+          //     return "Please enter specific conditions"; 
           //   } else {
           //     specificConditions = value;
           //     return null;
@@ -627,7 +627,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          "Stipulations regarding returned item in unsatisfactory condition.", //Label to be created
+          "Stipulations regarding returned item in unsatisfactory condition.",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -649,14 +649,14 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: Lawnmower must be cleaned and operable with a full tank of gas.', //Label to be created
+                'Ex: Lawnmower must be cleaned and operable with a full tank of gas.', 
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
           keyboardType: TextInputType.text,
           // validator: (value) {
           //   if (value.isEmpty) {
-          //     return "Please enter specific conditions"; //Label to be created
+          //     return "Please enter specific conditions";
           //   } else {
           //     specificConditions = value;
           //     return null;
@@ -674,7 +674,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Document Name*", //Label to be created
+          "Document Name*",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -700,7 +700,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return "Please enter document name"; //Label to be created
+              return "Please enter document name";
             } else {
               documentName = value;
               return null;
@@ -716,7 +716,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Other details", //Label to be created
+          "Other details",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -740,14 +740,13 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
             hintMaxLines: 11,
             hintText:
                 "Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.",
-            //Label to be created
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
           keyboardType: TextInputType.text,
           // validator: (value) {
           //   if (value.isEmpty) {
-          //     return "Please enter specific conditions"; //Label to be created
+          //     return "Please enter specific conditions";
           //   } else {
           //     specificConditions = value;
           //     setState(() {});
@@ -772,7 +771,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
             //Radio Buttons
             _optionRadioButtonMain<String>(
-              title: 'Create New', //Label to be created
+              title: 'Create New', 
               value: AgreementDocumentType.NEW.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -782,7 +781,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: 'Choose previous agreement', //Label to be created
+              title: 'Choose previous agreement', 
               value: AgreementDocumentType.TEMPLATE.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -791,7 +790,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: 'No Agreement', //Label to be created
+              title: 'No Agreement', 
               value: AgreementDocumentType.NO_AGREEMENT.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -829,7 +828,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
               child: Text(
-                'Use', //Label to be created
+                'Use',
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {

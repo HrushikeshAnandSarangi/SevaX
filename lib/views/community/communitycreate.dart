@@ -647,7 +647,7 @@ class CreateEditCommunityViewFormState
                                                   title:
                                                       'Sandbox Seva Community',
                                                   description:
-                                                      'Is this seva community is Non-Profit community?')
+                                                      'Is this seva community a Non-Profit community?')
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {

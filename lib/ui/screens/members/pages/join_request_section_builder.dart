@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -67,7 +68,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             ),
                           ),
                           RaisedButton(
-                            child: Text('Approve'),
+                            child: Text(S.of(context).approve),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -105,7 +106,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                           ),
                           SizedBox(width: 12),
                           RaisedButton(
-                            child: Text('Reject'),
+                            child: Text(S.of(context).reject),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),

@@ -425,6 +425,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
+
+      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+      instructorAdded = false;
+      requestModel.selectedInstructor = null;
+
       return Container();
       // return ProjectSelection(
       //   requestModel: requestModel,
@@ -453,6 +458,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      requestModel.requestType = RequestType.TIME;
+
+      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+      setState(() {
+        instructorAdded = false;
+        requestModel.selectedInstructor = null;
+      });
+
       //this.requestModel.requestType = RequestType.TIME;
       return Container();
     }
@@ -532,9 +545,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             RequestType.CASH
                                         ? "Ex: Fundraiser for women’s shelter..."
                                         : requestModel.requestType ==
-                                                RequestType.BORROW
-                                            ? S.of(context).request_title_hint
-                                            : "Ex: Non-perishable goods for Food Bank...",
+                                                RequestType.ONE_TO_MANY_REQUEST
+                                            ? "Ex: Offer a webinar or class to members..."
+                                            : requestModel.requestType ==
+                                                    RequestType.BORROW
+                                                ? S.of(context).request_title_hint
+                                                : "Ex: Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -577,7 +593,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       SizedBox(height: 20),
                                       Text(
                                         "Selected Speaker",
-                                        //LABEL TO BE MADE FOR THIS
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -674,7 +689,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             SizedBox(height: 20),
                                             Text(
                                               "Select a Speaker*",
-                                              //LABEL TO BE MADE FOR THIS
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -730,7 +744,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                                 .circular(
                                                                     15.7)),
                                                 hintText: 'Ex: Garry',
-                                                //Label to be created
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -1070,7 +1083,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             //           children: [
                             //             Text(documentName != ''
                             //                 ? 'view '
-                            //                 : ''), //Label to be created
+                            //                 : ''),
                             //             Text(
                             //                 documentName != ''
                             //                     ? documentName
@@ -1104,7 +1117,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       SizedBox(height: 12),
                                       Text(
                                         "Borrow",
-                                        //Label to be created (client approval)
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -1122,7 +1134,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Need a place', //Label to be created
+                                              'Need a place',
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1130,7 +1142,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Goods', //Label to be created
+                                              'Item',
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1169,6 +1181,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 ? TimeRequest(snapshot, projectModelList)
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
+                                    : requestModel.requestType ==
+                                        RequestType.ONE_TO_MANY_REQUEST
+                                    ? TimeRequest(snapshot, projectModelList)
                                     : requestModel.requestType ==
                                             RequestType.BORROW
                                         ? BorrowRequest(
@@ -1713,7 +1728,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: <Widget>[
   //         Text(
-  //           "Request tools description*", //Label to be created
+  //           "Request tools description*",
   //           style: TextStyle(
   //             fontSize: 16,
   //             fontWeight: FontWeight.bold,
@@ -1871,6 +1886,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         requestModel.requestType = value;
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.goods_requests;
+
+                        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                        instructorAdded = false;
+                        requestModel.selectedInstructor = null;
+                        requestModel.requestType = value;
                         setState(() => {});
                       },
                     ),
@@ -1894,39 +1914,46 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           requestModel.requestType = value;
                           AppConfig.helpIconContextMember =
                               HelpContextMemberType.money_requests;
-                          setState(() => {});
-                        },
-                      ),
-                    ),
-                  ),
-                  TransactionsMatrixCheck(
-                    upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_goods_requests',
-                    comingFrom: widget.comingFrom,
-                    child: ConfigurationCheck(
-                      actionType: 'create_goods_request',
-                      role: memberType(timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: _optionRadioButton<RequestType>(
-                        title: 'Borrow',
-                        //Label to be created
-                        value: RequestType.BORROW,
-                        isEnabled: !widget.isOfferRequest,
-                        groupvalue: requestModel.requestType,
-                        onChanged: (value) {
-                          //requestModel.isRecurring = true;
-                          requestModel.requestType = value;
-                          //By default instructor for One To Many Requests is the creator
+
+                          //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
                           instructorAdded = false;
                           requestModel.selectedInstructor = null;
-                          AppConfig.helpIconContextMember =
-                              HelpContextMemberType.time_requests;
+                          requestModel.requestType = value;
                           setState(() => {});
                         },
                       ),
                     ),
                   ),
+
+                  //BORROW REQUEST MOSTLY PUSHED TO NEXT RELEASE
+
+                  // TransactionsMatrixCheck(
+                  //   upgradeDetails:
+                  //       AppConfig.upgradePlanBannerModel.cash_request,
+                  //   transaction_matrix_type: 'cash_goods_requests',
+                  //   comingFrom: widget.comingFrom,
+                  //   child: ConfigurationCheck(
+                  //     actionType: 'create_goods_request',
+                  //     role: memberType(timebankModel,
+                  //         SevaCore.of(context).loggedInUser.sevaUserID),
+                  //     child: _optionRadioButton<RequestType>(
+                  //       title: 'Borrow',
+                  //       value: RequestType.BORROW,
+                  //       isEnabled: !widget.isOfferRequest,
+                  //       groupvalue: requestModel.requestType,
+                  //       onChanged: (value) {
+                  //         //requestModel.isRecurring = true;
+                  //         requestModel.requestType = value;
+                  //         //By default instructor for One To Many Requests is the creator
+                  //         instructorAdded = false;
+                  //         requestModel.selectedInstructor = null;
+                  //         AppConfig.helpIconContextMember =
+                  //             HelpContextMemberType.time_requests;
+                  //         setState(() => {});
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.one_to_many_request,
@@ -1934,7 +1961,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: 'One To Many (Webinar)',
-                      //Label to be created
                       value: RequestType.ONE_TO_MANY_REQUEST,
                       isEnabled: !widget.isOfferRequest,
                       groupvalue: requestModel.requestType,
@@ -1990,26 +2016,30 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
-                      setState(() => {});
-                    },
-                  ),
-                  _optionRadioButton<RequestType>(
-                    title: 'Borrow',
-                    //Label to be created
-                    value: RequestType.BORROW,
-                    isEnabled: true,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      //requestModel.isRecurring = true;
+
+                      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                      instructorAdded = false;
+                      requestModel.selectedInstructor = null;
                       requestModel.requestType = value;
-                      //By default instructor for One To Many Requests is the creator
-                      //instructorAdded = false;
-                      //requestModel.selectedInstructor = null;
-                      AppConfig.helpIconContextMember = HelpContextMemberType
-                          .time_requests; //need to make for Borrow requests
                       setState(() => {});
                     },
                   ),
+                  // _optionRadioButton<RequestType>(
+                  //   title: 'Borrow',
+                  //   value: RequestType.BORROW,
+                  //   isEnabled: true,
+                  //   groupvalue: requestModel.requestType,
+                  //   onChanged: (value) {
+                  //     //requestModel.isRecurring = true;
+                  //     requestModel.requestType = value;
+                  //     //By default instructor for One To Many Requests is the creator
+                  //     //instructorAdded = false;
+                  //     //requestModel.selectedInstructor = null;
+                  //     AppConfig.helpIconContextMember = HelpContextMemberType
+                  //         .time_requests; //need to make for Borrow requests
+                  //     setState(() => {});
+                  //   },
+                  // ),
                 ],
               )
             ],
@@ -2152,12 +2182,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // roomOrTool == 1
           //     ? BorrowToolTitleField('Ex: Hammer or Chair...')
           //     : Container(),
-          //Label to be created (need client approval)
 
           SizedBox(height: 15),
 
           RequestDescriptionData('Your Request and any #hashtags'),
-          //Label to be created (need client approval)
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2525,294 +2553,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestCreditsMode: TotalCreditseMode.CREATE_MODE,
       ),
 
-      //Instructor to be assigned to One to many requests widget Here
-
-      instructorAdded
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  height: 80,
-                  width: 290,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10.0,
-                        offset: Offset(0.0, 10.0),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        // SizedBox(
-                        //   height: 15,
-                        // ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            UserProfileImage(
-                              photoUrl:
-                                  requestModel.selectedInstructor.photoURL,
-                              email: requestModel.selectedInstructor.email,
-                              userId:
-                                  requestModel.selectedInstructor.sevaUserID,
-                              height: 50,
-                              width: 50,
-                              timebankModel: timebankModel,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Expanded(
-                              child: Text(
-                                requestModel.selectedInstructor.fullname ??
-                                    S.of(context).name_not_available,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Container(
-                              height: 37,
-                              padding: EdgeInsets.only(bottom: 0),
-                              child: RaisedButton(
-                                shape: StadiumBorder(),
-                                disabledColor: Theme.of(context).primaryColor,
-                                elevation: 4,
-                                onPressed: null,
-                                child: Text(
-                                  'Added',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  height: 35,
-                  padding: EdgeInsets.only(bottom: 0),
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.white,
-                    elevation: 5,
-                    onPressed: () {
-                      setState(() {
-                        instructorAdded = false;
-                        requestModel.selectedInstructor.toMap().clear();
-                      });
-                    },
-                    child: Text(
-                      'Remove',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  SizedBox(height: 20),
-                  Text(
-                    "Select an Instructor*", //LABEL TO BE MADE FOR THIS
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    style: TextStyle(color: Colors.black),
-                    controller: searchTextController,
-                    onChanged: _search,
-                    autocorrect: true,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.clear,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () {
-                            searchTextController.clear();
-                          }),
-                      hasFloatingPlaceholder: false,
-                      alignLabelWithHint: true,
-                      isDense: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                      contentPadding:
-                          EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(15.7),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.circular(15.7)),
-                      hintText: S.of(context).type_team_member_name,
-                      hintStyle: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                      child: Column(children: [
-                    StreamBuilder<List<UserModel>>(
-                      stream: SearchManager.searchUserInSevaX(
-                        queryString: searchTextController.text,
-                        //validItems: validItems,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          Text(snapshot.error.toString());
-                        }
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              height: 48,
-                              width: 48,
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-
-                        List<UserModel> userList = snapshot.data;
-                        userList.removeWhere((user) =>
-                            user.sevaUserID ==
-                                SevaCore.of(context).loggedInUser.sevaUserID ||
-                            user.sevaUserID == requestModel.sevaUserId);
-
-                        if (userList.length == 0) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidget('', S.of(context).no_user_found),
-                            ],
-                          );
-                        }
-
-                        if (searchTextController.text.trim().length < 3) {
-                          return Column(
-                            children: [
-                              SizedBox(height: 15),
-                              getEmptyWidget(
-                                  '',
-                                  S
-                                      .of(context)
-                                      .validation_error_search_min_characters),
-                            ],
-                          );
-                        } else {
-                          return Scrollbar(
-                            child: Center(
-                              child: Card(
-                                elevation: 0.4,
-                                child: LimitedBox(
-                                  maxHeight: 270,
-                                  maxWidth: 90,
-                                  child: ListView.builder(
-                                      primary: false,
-                                      //physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.all(10),
-                                      itemCount: userList.length,
-                                      itemBuilder: (context, index) {
-                                        UserModel user = userList[index];
-
-                                        List<String> timeBankIds = snapshot
-                                                .data[index]
-                                                .favoriteByTimeBank ??
-                                            [];
-                                        List<String> memberId =
-                                            user.favoriteByMember ?? [];
-
-                                        return OneToManyInstructorCard(
-                                          userModel: user,
-                                          timebankModel: timebankModel,
-                                          isAdmin: isAdmin,
-                                          //refresh: refresh,
-                                          currentCommunity: SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentCommunity,
-                                          loggedUserId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID,
-                                          isFavorite: isAdmin
-                                              ? timeBankIds.contains(
-                                                  requestModel.timebankId)
-                                              : memberId.contains(
-                                                  SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .sevaUserID),
-                                          addStatus: S.of(context).add,
-                                          onAddClick: () {
-                                            setState(() {
-                                              selectedInstructorModel = user;
-                                              instructorAdded = true;
-                                              requestModel.selectedInstructor =
-                                                  BasicUserDetails(
-                                                fullname: user.fullname,
-                                                email: user.email,
-                                                photoURL: user.photoURL,
-                                                sevaUserID: user.sevaUserID,
-                                              );
-                                            });
-                                          },
-                                        );
-                                      }),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ])),
-                ])
-              : Container(height: 0, width: 0),
-
-      SizedBox(height: 20),
+      SizedBox(height: 5),
 
       requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
           ? Row(
@@ -2828,7 +2569,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   },
                 ),
                 Text('Tick to create an event for this request')
-                // Label to be created
               ],
             )
           : Container(height: 0, width: 0),
@@ -3097,7 +2837,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+
+                  requestModel.requestType = RequestType.TIME;
+                  //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                  setState(() {
+                    instructorAdded = false;
+                    requestModel.selectedInstructor = null;
+                  });
                   //requestModel.requestType = RequestType.TIME;
+
                 }
                 sharedValue = val;
               });
@@ -3208,40 +2956,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
         //create an invitation for the request
       }
 
-      // if (requestModel.isRecurring &&
-      //     (requestModel.requestType == RequestType.TIME ||
-      //         requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
-      //   if (requestModel.recurringDays.length == 0) {
-      //     showDialogForTitle(
-      //         dialogTitle: S.of(context).validation_error_empty_recurring_days);
-      //     return;
-      //   }
-      // }
-
-      // if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-      //   List<String> approvedUsers = [];
-      //   approvedUsers.add(requestModel.selectedInstructor.email);
-      //   requestModel.approvedUsers = approvedUsers;
-      // }
-
-      // if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-      //     (requestModel.selectedInstructor.toMap().isEmpty ||
-      //         requestModel.selectedInstructor == null ||
-      //         instructorAdded == false)) {
-      //   showDialogForTitle(
-      //       dialogTitle: 'Select an Instructor'); //Label to be created
-      //   return;
-      // }
-
-//check for tool title/name field is not empty
-      // if (requestModel.requestType == RequestType.BORROW &&
-      //     roomOrTool == 1 &&
-      //     (requestModel.borrowRequestToolName == '' ||
-      //         requestModel.borrowRequestToolName == null)) {
-      //   showDialogForTitle(
-      //       dialogTitle: 'Please enter Tool/s name'); //Label to be created
-      //   return;
-      // }
+      if (requestModel.isRecurring &&
+          (requestModel.requestType == RequestType.TIME ||
+              requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST)) {
+        if (requestModel.recurringDays.length == 0) {
+          showDialogForTitle(
+              dialogTitle: S.of(context).validation_error_empty_recurring_days);
+          return;
+        }
+      }
 
 //Assigning room or tool for Borrrow Requests
       if (roomOrTool != null &&
@@ -3268,8 +2991,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: 'Select an Instructor'); //Label to be created
+        showDialogForTitle(dialogTitle: 'Select an Instructor');
         return;
       }
 
@@ -3393,15 +3115,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: FlavorConfig.values.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
-            // await sendMailToInstructor(
-            //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-            //     receiverEmail: selectedInstructorModel.email,
-            //     communityName: requestModel.fullName,
-            //     requestName: requestModel.title,
-            //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-            //     receiverName: selectedInstructorModel.fullname,
-            //     startDate: requestModel.requestStart,
-            //     endDate: requestModel.requestEnd);
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: requestModel.fullName,
+                requestName: requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: requestModel.requestStart,
+                endDate: requestModel.requestEnd);
           }
         }
 
@@ -3428,15 +3150,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 timebankId: FlavorConfig.values.timebankId,
                 sevaUserId: selectedInstructorModel.sevaUserID,
                 userEmail: selectedInstructorModel.email);
-            // await sendMailToInstructor(
-            //     senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
-            //     receiverEmail: selectedInstructorModel.email,
-            //     communityName: requestModel.fullName,
-            //     requestName: requestModel.title,
-            //     requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
-            //     receiverName: selectedInstructorModel.fullname,
-            //     startDate: requestModel.requestStart,
-            //     endDate: requestModel.requestEnd);
+            await sendMailToInstructor(
+                senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
+                receiverEmail: selectedInstructorModel.email,
+                communityName: requestModel.fullName,
+                requestName: requestModel.title,
+                requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                receiverName: selectedInstructorModel.fullname,
+                startDate: requestModel.requestStart,
+                endDate: requestModel.requestEnd);
           }
         }
 
@@ -3570,31 +3292,181 @@ class RequestCreateFormState extends State<RequestCreateForm>
     String requestName,
     String requestCreatorName,
     String receiverName,
-    int startDate,
-    int endDate,
+    var startDate,
+    var endDate,
   }) async {
     return await SevaMailer.createAndSendEmail(
-        mailContent: MailContent.createMail(
+      mailContent: MailContent.createMail(
       mailSender: senderEmail,
       mailReciever: receiverEmail,
-      mailSubject:
-          requestCreatorName + ' from ' + communityName + ' has invited you',
-      mailContent: 'You have been invited to instruct ' +
-          requestName +
-          ' from ' +
-          DateTime.fromMillisecondsSinceEpoch(startDate)
-              .toString()
-              .substring(0, 11) +
-          ' to ' +
-          DateTime.fromMillisecondsSinceEpoch(endDate)
-              .toString()
-              .substring(0, 11) +
-          "\n\n" +
-          'Thanks,' +
-          "\n" +
-          'SevaX Team.',
+      mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailContent: """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+    
+    <body>
+        <div dir="ltr">
+    
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;border:0px;background-color:white;font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-serif">
+                <tbody>
+    
+                        <tr>
+                        <td align="center valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateBody" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-left:10px;border-right:10px;border-top:10px;border-bottom:0px;padding:40px 80px 0px 80px;border-style:solid;border-collapse: seperate;border-color:#766FE0;max-width:600px;width:600px">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td align="center valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateHeader" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:19px;padding-bottom:19px">
+                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;width:600px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="background-image:none;background-repeat:no-repeat;background-position:50% 50%;background-size:cover;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" >
+                                                                            <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" style="border-collapse:inherit;border:0px;border-color:white;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td valign="top" style="padding:0px;text-align:center"><img align="left" alt="" src="https://ci5.googleusercontent.com/proxy/KMTN5MCNI08J15B09izASZ49J6rqtQf7e39MXu2B9OeOXFLSrmcqMBLGqpRsiuXVXCs5K0VhqORlonSSzigT_LlYKqS9WLljenNftkN5gYij5IKg6WOJ3VGHj2YikF1RrzTnoKPBEXfJl5RtYCqCHQVcmNYZZQ=s0-d-e1-ft#https://mcusercontent.com/18ef8611cb76f33e8a73c9575/images/60fe9519-6fc0-463f-8c67-b6341d56cf6f.jpg"
+                                                                                                width="108" style="margin-right:35px;border-collapse:inherit;border:0px;border-color:white;height:auto;outline:none;vertical-align:bottom;max-width:400px;padding-bottom:0px;display:inline" class="CToWUd"></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+    
+                                    <tr>
+                                        <td valign="top" style="background-image:none;background-repeat:no-repeat;background-position:50% 50%;background-size:cover;border-collapse: inherit;border:0px;padding:0px">
+                                            
+                                        
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;table-layout:fixed">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="min-width:100%;padding:18px 10px 18px 0px">
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;min-width:100%;border-top:2px solid rgb(234, 234, 234)">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top" style="padding-bottom:10px">
+                                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;max-width:100%;min-width:100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" style="font-family:Helvetica;word-break:break-word;font-size:16px;line-height:16px;padding:0px 4px 9px">
+                                                                            <div style="text-align:left;font-size:18px;line-height:20px;font-weight:500;color:#2c2c2d;">Hi ${receiverName},</div>
+                                                                            <div style="text-align:left;font-size:20px;line-height:25px;color:black;font-weight:700;"><br>You have been invited by ${requestCreatorName} to be the speaker \n for: ${requestName} on ${DateFormat('EEEE, d MMM h:mm a').format(DateTime.fromMillisecondsSinceEpoch(startDate))}.</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+    
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                        <td align="center" valign="top" id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateBody" style="background:none 50% 50%/cover no-repeat white;border-collapse:inherit;border:0px;border-color:white;padding-top:0px;padding-bottom:0px">
+                            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-left:0px;border-right:0px;border-top:0px;border-bottom:0px;padding:0px 0px 0px 00px;border-style:solid;border-collapse: seperate;border-color:#766FE0;max-width:777px">
+                                <tbody>
+    
+                                    <tr>
+                                        <td align=" center " valign="top " id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateFooter " style="background:none 50% 50%/cover no-repeat rgb(47,46,46);border:0px;padding-top:45px;padding-bottom:33px;">
+                                            <table align="center " border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="max-width:600px;width:600px ">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="top " style="background:none 50% 50%/cover no-repeat transparent;border:0px;padding-top:0px;padding-bottom:0px ">
+                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="min-width:100%;table-layout:fixed;">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="">
+                                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:12%;padding-right:15%;border-top: 2px solid rgb(80,80,80) ">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top " style="padding-top:9px;">
+                                                                            <table align="left " border="0" cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:40%;padding-right:50%;">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center;padding:0px 18px 9px">
+                                                                                    <em>Copyright Â© 2020 Seva Exchange, All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
+                                                                                        target="_blank ">info@sevaexchange.com</a><br><br><a href="https://sevaxapp.com/PrivacyPolicy.html" target="_blank" style="color:rgb(255,255,255);">Privacy Policy&nbsp;</a>&nbsp;<br>
+                                                                                </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+    
+                                </tbody>
+                            </table>
+                        </td>
+    
+                </tbody>
+            </table>
+        </div>
+    </body>
+  </html> """,
+      // mailContent: 'You have been invited to be the speaker for' +
+      //     requestName +
+      //     ' from ' +
+      //     DateTime.fromMillisecondsSinceEpoch(startDate)
+      //         .toString()
+      //         .substring(0, 11) +
+      //     ' to ' +
+      //     DateTime.fromMillisecondsSinceEpoch(endDate)
+      //         .toString()
+      //         .substring(0, 11) +
+      //     "\n\n" +
+      //     'Thanks,' +
+      //     "\n" +
+      //     'SevaX Team.',
     ));
-  } //Label to be given by client for email content
+  }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
     linearProgressForCreatingRequest();

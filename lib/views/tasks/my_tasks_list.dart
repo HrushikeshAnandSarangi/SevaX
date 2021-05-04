@@ -471,7 +471,7 @@ class MyTasksListState extends State<MyTaskList> {
                             padding: EdgeInsets.zero,
                             color: FlavorConfig.values.theme.primaryColor,
                             child: Text(
-                              'Complete', //Label to be created
+                              'Complete',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Europa',

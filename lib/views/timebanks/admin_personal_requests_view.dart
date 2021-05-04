@@ -75,7 +75,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Somthing went wrong!');
+                  return Text('Something went wrong!');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return LoadingIndicator();
@@ -206,7 +206,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
         );
 
       default:
-        return Text("DEFAULT");
+        return Text(S.of(context).default_text);
     }
   }
 
