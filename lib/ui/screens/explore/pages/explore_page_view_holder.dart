@@ -27,7 +27,7 @@ class ExplorePageViewHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarTitle != null
+      appBar: appBarTitle != null && hideHeader
           ? AppBar(
               title: Text(
                 appBarTitle,

@@ -51,6 +51,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         return ExplorePageViewHolder(
           hideHeader: Provider.of<UserModel>(context) != null,
           hideFooter: true,
+          hideSearchBar: true,
           appBarTitle: community.name,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,19 +112,20 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ],
                         ),
                         Spacer(),
+                        // FlatButton(
+                        //   color: Colors.grey[300],
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(8),
+                        //   ),
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(12.0),
+                        //     child: Text('Message'),
+                        //   ),
+                        //   onPressed: () {},
+                        // ),
                         FlatButton(
                           color: Colors.grey[300],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(S.of(context).message),
-                          ),
-                          onPressed: () {},
-                        ),
-                        FlatButton(
-                          color: Colors.grey[300],
+                          textColor: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -132,7 +134,9 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                             child: Text(S.of(context).join),
                           ),
                           onPressed: () {
-                            if (Provider.of<UserModel>(context) != null) {
+                            if (Provider.of<UserModel>(context,
+                                    listen: false) !=
+                                null) {
                             } else {
                               showSignInAlertMessage(
                                 context: context,
