@@ -728,8 +728,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             BorderRadius
                                                                 .circular(
                                                                     15.7)),
-                                                hintText:
-                                                    'Ex: Garry',
+                                                hintText: 'Ex: Garry',
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -1026,11 +1025,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : widget.requestModel.requestType ==
-                                            RequestType.BORROW
-                                        ? BorrowRequest(
+                                            RequestType.ONE_TO_MANY_REQUEST
+                                        ? TimeRequest(
                                             snapshot, projectModelList)
-                                        : GoodsRequest(
-                                            snapshot, projectModelList),
+                                        : widget.requestModel.requestType ==
+                                                RequestType.BORROW
+                                            ? BorrowRequest(
+                                                snapshot, projectModelList)
+                                            : GoodsRequest(
+                                                snapshot, projectModelList),
 
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -1542,7 +1545,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: <Widget>[
   //         Text(
-  //           "Tool Name*",        
+  //           "Tool Name*",
   //           style: TextStyle(
   //             fontSize: 16,
   //             fontWeight: FontWeight.bold,
@@ -2059,8 +2062,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           SizedBox(height: 15),
 
-          RequestDescriptionData(
-              'Please describe what you require'),
+          RequestDescriptionData('Please describe what you require'),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
           InkWell(
@@ -2589,8 +2591,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: 'Select an Instructor');
+        showDialogForTitle(dialogTitle: 'Select an Instructor');
         return;
       }
 
