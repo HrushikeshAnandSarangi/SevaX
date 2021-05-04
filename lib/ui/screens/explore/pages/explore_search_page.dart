@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -621,18 +622,87 @@ class _EventsView extends StatelessWidget {
           itemBuilder: (context, index) {
             var event = snapshot.data[index];
             var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
-            return ExploreEventCard(
-              photoUrl: event.photoUrl ?? defaultProjectImageURL,
-              title: event.name,
-              description: event.description,
-              location: event.address,
-              communityName: "event.communityName ?? ''",
-              date: DateFormat('d MMMM, y').format(date),
-              time: DateFormat.jm().format(date),
-              memberList: MemberAvatarListWithCount(
-                userIds: event.associatedmembers.keys.toList(),
-              ),
-            );
+            var userModel = Provider.of<UserModel>(context, listen: false);
+            return userModel != null
+                ? FutureBuilder<TimebankModel>(
+                    future: getTimeBankForId(timebankId: event.timebankId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return LoadingIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Container();
+                      }
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      return ExploreEventCard(
+                        onTap: () {
+                          if (userModel != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ProjectRequests(
+                                    ComingFrom.Projects,
+                                    timebankId: event.timebankId,
+                                    projectModel: event,
+                                    timebankModel: snapshot.data,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            showSignInAlertMessage(
+                              context: context,
+                              message:
+                                  'Please Sign In/Sign up to access ${event.name}',
+                            );
+                          }
+                        },
+                        photoUrl: event.photoUrl ?? defaultProjectImageURL,
+                        title: event.name,
+                        description: event.description,
+                        location: event.address,
+                        communityName: "event.communityName ?? ''",
+                        date: DateFormat('d MMMM, y').format(date),
+                        time: DateFormat.jm().format(date),
+                        memberList: MemberAvatarListWithCount(
+                          userIds: event.associatedmembers.keys.toList(),
+                        ),
+                      );
+                    })
+                : ExploreEventCard(
+                    onTap: () {
+                      showSignInAlertMessage(
+                          context: context,
+                          message:
+                              'Please Sign In/Sign up to access ${event.name}');
+                    },
+                    photoUrl: event.photoUrl ?? defaultProjectImageURL,
+                    title: event.name,
+                    description: event.description,
+                    location: event.address,
+                    communityName: "event.communityName ?? ''",
+                    date: DateFormat('d MMMM, y').format(date),
+                    time: DateFormat.jm().format(date),
+                    memberList: MemberAvatarListWithCount(
+                      userIds: event.associatedmembers.keys.toList(),
+                    ),
+                  );
+
+            // return ExploreEventCard(
+            //   photoUrl: event.photoUrl ?? defaultProjectImageURL,
+            //   title: event.name,
+            //   description: event.description,
+            //   location: event.address,
+            //   communityName: "event.communityName ?? ''",
+            //   date: DateFormat('d MMMM, y').format(date),
+            //   time: DateFormat.jm().format(date),
+            //   memberList: MemberAvatarListWithCount(
+            //     userIds: event.associatedmembers.keys.toList(),
+            //   ),
+            // );
           },
         );
       },
