@@ -15,17 +15,28 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class BorrowAgreementPdf {
-  Future<String> borrowAgreementPdf(context, RequestModel requestModel,
-      String documentName, bool isRequest, String roomOrTool) async {
-
+  Future<String> borrowAgreementPdf(
+      context,
+      RequestModel requestModel,
+      String documentName,
+      bool isRequest,
+      String roomOrTool,
+      String otherDetails,
+      String specificConditions,
+      String itemDescription,
+      String additionalConditions,
+      bool isFixedTerm,
+      bool isQuietHoursAllowed,
+      bool isPetsAllowed,
+      int maximumOccupants,
+      int securityDeposit,
+      String contactDetails) async {
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
       isDismissible: false,
     );
     progressDialog.show();
-
-    log('Comes to START of borrow agreement pdf generation class');
 
     final Document pdf = Document();
 
@@ -118,7 +129,20 @@ class BorrowAgreementPdf {
       ),
     );
 
+//Below fields to be added under 'Additional Form Details if not empty string ''
+    // String otherDetails
+    // String specificConditions
+    // String itemDescription
+    // String additionalConditions
+////ROOM specific fields variables below
+    // bool isFixedTerm //if false then its long term
+    // bool isQuietHoursAllowed
+    // bool isPetsAllowed
+    // int maximumOccupants
+    // int securityDeposit
+    // String contactDetails
     //save PDF
+
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path =
         '$dir/${documentName != null ? documentName : 'borrow_agreement_sevax'}.pdf';
@@ -128,7 +152,8 @@ class BorrowAgreementPdf {
     await file.writeAsBytes(pdf.save());
 
     log("requestModel check   " + requestModel.id.toString());
-    borrowAgreementLinkFinal = await uploadDocument(requestModel.id, file, documentName);
+    borrowAgreementLinkFinal =
+        await uploadDocument(requestModel.id, file, documentName);
 
     //await openPdfViewer(borrowAgreementLinkFinal, 'test document', context);
 
@@ -164,12 +189,14 @@ Future openPdfViewer(
   });
 }
 
-Future<String> uploadDocument(String requestId, File _path, String documentName) async {
+Future<String> uploadDocument(
+    String requestId, File _path, String documentName) async {
   int timestamp = DateTime.now().millisecondsSinceEpoch;
 
   String timestampString = timestamp.toString();
 
-  String name = requestId.toString() + '_' + timestampString + '_' + documentName;
+  String name =
+      requestId.toString() + '_' + timestampString + '_' + documentName;
 
   StorageReference ref =
       FirebaseStorage.instance.ref().child('borrow_agreement_docs').child(name);
