@@ -8,8 +8,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_drawing/path_drawing.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
@@ -19,6 +21,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -1025,8 +1029,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
 
-  void logOut() {
-    showDialog(
+  Future<void> logOut() async {
+    var result = await showDialog<bool>(
       context: context,
       builder: (BuildContext _context) {
         // return object of type Dialog
@@ -1052,10 +1056,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                       FCMNotificationManager.removeDeviceRegisterationForMember(
                           email: SevaCore.of(context).loggedInUser.email);
 
-                      Navigator.of(_context).pop();
+                      Navigator.of(_context).pop(true);
 
-                      _signOut(
-                          context, SevaCore.of(context).loggedInUser.email);
+                      // _signOut(
+                      //     context, SevaCore.of(context).loggedInUser.email);
                     },
                   ),
                   FlatButton(
@@ -1064,7 +1068,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
-                      Navigator.of(_context).pop();
+                      Navigator.of(_context).pop(false);
                     },
                   ),
                 ],
@@ -1074,24 +1078,38 @@ class _EditProfilePageState extends State<EditProfilePage>
         );
       },
     );
+
+    if (result ?? false) {
+      var auth = AuthProvider.of(context).auth;
+      await auth.signOut();
+      await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ExplorePage(),
+        ),
+        (Route<dynamic> route) => false,
+      );
+      Provider.of<UserBloc>(context, listen: false).clearUserData;
+      await Phoenix.rebirth(context);
+    }
   }
 
-  Future<void> _signOut(
-    BuildContext context,
-    String email,
-  ) async {
-    // Navigator.pop(context);
-    var auth = AuthProvider.of(context).auth;
-    await auth.signOut();
+//   Future<void> _signOut(
+//     BuildContext context,
+//   ) async {
+//     Navigator.pop(context);
+//     var auth = AuthProvider.of(context).auth;
+//     await auth.signOut();
+//     Provider.of<UserBloc>(context, listen: false).clearUserData;
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => SplashView(),
-      ),
-      (Route<dynamic> route) => false,
-    );
-  }
+//     Navigator.popUntil(
+//       context,
+//       // MaterialPageRoute(
+//       //   builder: (BuildContext context) => ExplorePage(),
+//       // ),
+//       (Route<dynamic> route) => false,
+//     );
+//   }
 }
 
 getAlertDialog(BuildContext context) {

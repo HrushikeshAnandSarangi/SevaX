@@ -464,8 +464,8 @@ class _SplashViewState extends State<SplashView> {
     AppConfig.upgradePlanBannerModel =
         upgradePlanBannerModelFromJson(upgradePlanBannerData);
     List<dynamic> testingEmails =
-    json.decode(AppConfig.remoteConfig.getString('testing_emails'));
-    AppConfig.testingEmails=testingEmails??[];
+        json.decode(AppConfig.remoteConfig.getString('testing_emails'));
+    AppConfig.testingEmails = testingEmails ?? [];
 
     log("emai;s ${AppConfig.testingEmails}");
     log("email;s ${AppConfig.loggedInEmail}");
@@ -713,13 +713,14 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
           child: HomePageRouter(),
         ),
       ),
+      (Route<dynamic> route) => false,
     );
   }
 

@@ -22,6 +22,8 @@ class UserBloc {
     );
   }
 
+  void get clearUserData => _user.add(null);
+
   void dispose() {
     _user.close();
   }
