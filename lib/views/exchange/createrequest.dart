@@ -425,6 +425,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
+      
+      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+      instructorAdded = false;
+      requestModel.selectedInstructor = null;
+
       return Container();
       // return ProjectSelection(
       //   requestModel: requestModel,
@@ -453,6 +458,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      requestModel.requestType = RequestType.TIME;
+
+      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+      setState(() {
+        instructorAdded = false;
+        requestModel.selectedInstructor = null;
+      });
+
       //this.requestModel.requestType = RequestType.TIME;
       return Container();
     }
@@ -1067,7 +1080,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             //           children: [
                             //             Text(documentName != ''
                             //                 ? 'view '
-                            //                 : ''), 
+                            //                 : ''),
                             //             Text(
                             //                 documentName != ''
                             //                     ? documentName
@@ -1118,7 +1131,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Need a place', 
+                                              'Need a place',
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1126,7 +1139,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Item', 
+                                              'Item',
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1867,6 +1880,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         requestModel.requestType = value;
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.goods_requests;
+
+                        //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                        instructorAdded = false;
+                        requestModel.selectedInstructor = null;
+                        requestModel.requestType = value;
                         setState(() => {});
                       },
                     ),
@@ -1890,13 +1908,18 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           requestModel.requestType = value;
                           AppConfig.helpIconContextMember =
                               HelpContextMemberType.money_requests;
+
+                          //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                          instructorAdded = false;
+                          requestModel.selectedInstructor = null;
+                          requestModel.requestType = value;
                           setState(() => {});
                         },
                       ),
                     ),
                   ),
-                  
-            //BORROW REQUEST MOSTLY PUSHED TO NEXT RELEASE
+
+                  //BORROW REQUEST MOSTLY PUSHED TO NEXT RELEASE
 
                   // TransactionsMatrixCheck(
                   //   upgradeDetails:
@@ -1987,25 +2010,30 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       requestModel.requestType = value;
                       AppConfig.helpIconContextMember =
                           HelpContextMemberType.time_requests;
-                      setState(() => {});
-                    },
-                  ),
-                  _optionRadioButton<RequestType>(
-                    title: 'Borrow',
-                    value: RequestType.BORROW,
-                    isEnabled: true,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      //requestModel.isRecurring = true;
+
+                      //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                      instructorAdded = false;
+                      requestModel.selectedInstructor = null;
                       requestModel.requestType = value;
-                      //By default instructor for One To Many Requests is the creator
-                      //instructorAdded = false;
-                      //requestModel.selectedInstructor = null;
-                      AppConfig.helpIconContextMember = HelpContextMemberType
-                          .time_requests; //need to make for Borrow requests
                       setState(() => {});
                     },
                   ),
+                  // _optionRadioButton<RequestType>(
+                  //   title: 'Borrow',
+                  //   value: RequestType.BORROW,
+                  //   isEnabled: true,
+                  //   groupvalue: requestModel.requestType,
+                  //   onChanged: (value) {
+                  //     //requestModel.isRecurring = true;
+                  //     requestModel.requestType = value;
+                  //     //By default instructor for One To Many Requests is the creator
+                  //     //instructorAdded = false;
+                  //     //requestModel.selectedInstructor = null;
+                  //     AppConfig.helpIconContextMember = HelpContextMemberType
+                  //         .time_requests; //need to make for Borrow requests
+                  //     setState(() => {});
+                  //   },
+                  // ),
                 ],
               )
             ],
@@ -3090,7 +3118,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+
+                  requestModel.requestType = RequestType.TIME;
+                  //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
+                  setState(() {
+                    instructorAdded = false;
+                    requestModel.selectedInstructor = null;
+                  });
                   //requestModel.requestType = RequestType.TIME;
+                  
                 }
                 sharedValue = val;
               });
@@ -3222,7 +3258,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       //         requestModel.selectedInstructor == null ||
       //         instructorAdded == false)) {
       //   showDialogForTitle(
-      //       dialogTitle: 'Select an Instructor'); 
+      //       dialogTitle: 'Select an Instructor');
       //   return;
       // }
 
@@ -3232,7 +3268,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       //     (requestModel.borrowRequestToolName == '' ||
       //         requestModel.borrowRequestToolName == null)) {
       //   showDialogForTitle(
-      //       dialogTitle: 'Please enter Tool/s name'); 
+      //       dialogTitle: 'Please enter Tool/s name');
       //   return;
       // }
 
@@ -3261,8 +3297,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: 'Select an Instructor');
+        showDialogForTitle(dialogTitle: 'Select an Instructor');
         return;
       }
 
