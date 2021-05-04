@@ -483,7 +483,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get requestImages {
     return Offstage(
-      offstage: widget.requestItem.imageUrls == null &&
+      offstage: widget.requestItem.imageUrls == null ||
           widget.requestItem.imageUrls.length < 0,
       child: Container(
         height: 200,
@@ -839,7 +839,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             SizedBox(width: 1),
             Spacer(),
             Text(
-              'Complete', //Label to be created
+              'Complete',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -1141,18 +1141,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       if (widget.requestItem.approvedUsers.length >= 1) {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
-            ? 'Request Approved' //Label to hbe created
+            ? 'Request Approved'
             : 'Request has been assigned to a member';
       } else if (widget.requestItem.roomOrTool == 'ROOM') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for place'; //Label to be created
+            : 'Borrow Request for place';
       } else {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for item'; //Label to be created
+            : 'Borrow Request for item';
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -1610,13 +1610,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .loggedInUser
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
-                                    ? 'Request Approved' //Label to be created
-                                    : 'Request has been assigned to a member') //Label to be created
+                                    ? 'Request Approved'
+                                    : 'Request has been assigned to a member') 
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
-                                        ? 'Borrow request for place' //Label to be created
-                                        : 'Borrow request for item'), //Label to be created
+                                        ? 'Borrow request for place'
+                                        : 'Borrow request for item'),
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -2044,7 +2044,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       children: [
         SizedBox(height: 10),
         Text(
-          "Requested by", //Label To Be Created
+          "Requested by",
           style: titleStyle,
           maxLines: 1,
         ),
@@ -2519,8 +2519,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? 'Request agreement not available' //Label to be created
-                      : 'Click to view request agreement', //Label to be created
+                      ? 'Request agreement not available' 
+                      : 'Click to view request agreement', 
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,

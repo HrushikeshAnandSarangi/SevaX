@@ -577,7 +577,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       SizedBox(height: 20),
                                       Text(
                                         "Selected Speaker",
-                                        //LABEL TO BE MADE FOR THIS
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -674,7 +673,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             SizedBox(height: 20),
                                             Text(
                                               "Select a Speaker*",
-                                              //LABEL TO BE MADE FOR THIS
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -730,7 +728,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                                 .circular(
                                                                     15.7)),
                                                 hintText: 'Ex: Garry',
-                                                //Label to be created
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -1070,7 +1067,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             //           children: [
                             //             Text(documentName != ''
                             //                 ? 'view '
-                            //                 : ''), //Label to be created
+                            //                 : ''), 
                             //             Text(
                             //                 documentName != ''
                             //                     ? documentName
@@ -1104,7 +1101,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       SizedBox(height: 12),
                                       Text(
                                         "Borrow",
-                                        //Label to be created (client approval)
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -1122,7 +1118,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Need a place', //Label to be created
+                                              'Need a place', 
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1130,7 +1126,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             padding: EdgeInsets.only(
                                                 left: 14, right: 14),
                                             child: Text(
-                                              'Goods', //Label to be created
+                                              'Item', 
                                               style: TextStyle(fontSize: 12.0),
                                             ),
                                           ),
@@ -1713,7 +1709,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: <Widget>[
   //         Text(
-  //           "Request tools description*", //Label to be created
+  //           "Request tools description*",
   //           style: TextStyle(
   //             fontSize: 16,
   //             fontWeight: FontWeight.bold,
@@ -1910,7 +1906,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: _optionRadioButton<RequestType>(
                         title: 'Borrow',
-                        //Label to be created
                         value: RequestType.BORROW,
                         isEnabled: !widget.isOfferRequest,
                         groupvalue: requestModel.requestType,
@@ -1934,7 +1929,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
                       title: 'One To Many (Webinar)',
-                      //Label to be created
                       value: RequestType.ONE_TO_MANY_REQUEST,
                       isEnabled: !widget.isOfferRequest,
                       groupvalue: requestModel.requestType,
@@ -1995,7 +1989,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   ),
                   _optionRadioButton<RequestType>(
                     title: 'Borrow',
-                    //Label to be created
                     value: RequestType.BORROW,
                     isEnabled: true,
                     groupvalue: requestModel.requestType,
@@ -2152,12 +2145,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
           // roomOrTool == 1
           //     ? BorrowToolTitleField('Ex: Hammer or Chair...')
           //     : Container(),
-          //Label to be created (need client approval)
 
           SizedBox(height: 15),
 
           RequestDescriptionData('Your Request and any #hashtags'),
-          //Label to be created (need client approval)
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2533,7 +2524,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               children: [
                 SizedBox(height: 20),
                 Text(
-                  "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                  "Select an Instructor*",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -2647,7 +2638,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   SizedBox(height: 20),
                   Text(
-                    "Select an Instructor*", //LABEL TO BE MADE FOR THIS
+                    "Select an Instructor*",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -2828,7 +2819,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   },
                 ),
                 Text('Tick to create an event for this request')
-                // Label to be created
               ],
             )
           : Container(height: 0, width: 0),
@@ -3229,7 +3219,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       //         requestModel.selectedInstructor == null ||
       //         instructorAdded == false)) {
       //   showDialogForTitle(
-      //       dialogTitle: 'Select an Instructor'); //Label to be created
+      //       dialogTitle: 'Select an Instructor'); 
       //   return;
       // }
 
@@ -3239,7 +3229,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       //     (requestModel.borrowRequestToolName == '' ||
       //         requestModel.borrowRequestToolName == null)) {
       //   showDialogForTitle(
-      //       dialogTitle: 'Please enter Tool/s name'); //Label to be created
+      //       dialogTitle: 'Please enter Tool/s name'); 
       //   return;
       // }
 
@@ -3269,7 +3259,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
-            dialogTitle: 'Select an Instructor'); //Label to be created
+            dialogTitle: 'Select an Instructor');
         return;
       }
 

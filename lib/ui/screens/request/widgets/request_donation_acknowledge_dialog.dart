@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
   return AlertDialog(
@@ -23,7 +24,7 @@ AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
             ),
             RaisedButton(
               color: Colors.red,
-              child: Text('Cancel'),
+              child: Text(S.of(context).cancel),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
               },

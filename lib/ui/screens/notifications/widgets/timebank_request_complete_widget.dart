@@ -75,14 +75,13 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           isDissmissible: false,
           title: model.title,
           subTitle: model.requestType == RequestType.BORROW
-              ? '${user.fullname} has reviewed this request. \nTap to share feedback.' //Label to be given
+              ? '${user.fullname} has reviewed this request. \nTap to share feedback.'
               : '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour(transactionModel.credits)}, ${S.of(context).notifications_waiting_for_approval}.',
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
             //How to Integrate for borrow request from here, check and complete
-            //
-
+            
             showMemberClaimConfirmation(
               context: parentContext,
               notificationId: notificationId,
@@ -160,7 +159,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          //Label to be provied for below text
                           'Click button below to review ${userModel.fullname} and complete the task',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -278,7 +276,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       child: Center(
                         child: requestModel.requestType == RequestType.BORROW
                             ? Text(
-                                ///////Label to be provied for below text
                                 userModel.fullname +
                                     ' has reviewed you for this request. Click button below to review and complete the task',
                                 textAlign: TextAlign.center,

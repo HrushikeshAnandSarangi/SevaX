@@ -58,7 +58,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         title: Text(
           widget.requestModel.roomOrTool == 'ROOM'
               ? 'Approve Room Borrow Request'
-              : 'Approve Item Borrow request', //Label to be created
+              : 'Approve Item Borrow request',
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -79,7 +79,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20),
-            Text("Guests can do and don't*", //Label to be created
+            Text("Guests can do and don't*",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -96,14 +96,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               },
               decoration: InputDecoration(
                 hintText:
-                    "Tell your borrower do and dont's", //Label to be created
+                    "Tell your borrower do and dont's", 
                 hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                 // labelText: 'No. of volunteers',
               ),
               keyboardType: TextInputType.text,
               validator: (value) {
                 if (value.isEmpty) {
-                  return "Please enter the do's and dont's"; //Label to be created
+                  return "Please enter the do's and dont's"; 
                 } else {
                   doAndDonts = value;
                   setState(() {});
@@ -141,7 +141,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             //SizedBox(height: 20),
-            // Text("Guests can do and don't*", //Label to be created
+            // Text("Guests can do and don't*",
             //     style: TextStyle(
             //       fontSize: 20,
             //       fontWeight: FontWeight.w600,
@@ -158,14 +158,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             //   },
             //   decoration: InputDecoration(
             //     hintText:
-            //         "Tell your borrower do and dont's", //Label to be created
+            //         "Tell your borrower do and dont's", 
             //     hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             //     // labelText: 'No. of volunteers',
             //   ),
             //   keyboardType: TextInputType.text,
             //   validator: (value) {
             //     if (value.isEmpty) {
-            //       return "Please enter the do's and dont's"; //Label to be created
+            //       return "Please enter the do's and dont's";
             //     } else {
             //       doAndDonts = value;
             //       setState(() {});
@@ -203,8 +203,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 20),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? "I acknowledge that you can use the room on the mentioned dates." //Label to be created
-                : "I acknowledge that you can use the item on the mentioned dates.", //Label to be created
+                ? "I acknowledge that you can use the room on the mentioned dates." 
+                : "I acknowledge that you can use the item on the mentioned dates.", 
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -214,8 +214,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 15),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? "Note: Please instruct on how to reach the location and do and don't accordingly." //Label to be created
-                : "Note: Please create an agreement if you have specific instructions and/or requirements.", //Label to be created
+                ? "Note: Please instruct on how to reach the location and do and don't accordingly." 
+                : "Note: Please create an agreement if you have specific instructions and/or requirements.",
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -341,7 +341,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 15),
         Text(
-          'Agreement', //Label to be created
+          'Agreement',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 10),
@@ -353,7 +353,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               child: Text(
                 'Create/Use agreement between you and borrower on how your item/place can be used.',
                 style: TextStyle(fontSize: 15),
-                softWrap: true, //Label to be created
+                softWrap: true,
               ),
             ),
             Image(
@@ -372,7 +372,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(documentName != '' ? 'view ' : ''), //Label to be created
+                Text(documentName != '' ? 'view ' : ''), 
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.topLeft,
@@ -380,7 +380,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       child: Text(
                         documentName != ''
                             ? documentName
-                            : 'No Agreement Selected', //Label to be created
+                            : 'No Agreement Selected',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: documentName != ''

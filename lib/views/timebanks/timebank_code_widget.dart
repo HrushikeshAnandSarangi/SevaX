@@ -197,7 +197,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                     SizedBox(
                       width: 20,
                     ),
-                    Center(child: Text('You can share the code to invite them to your timebank timebank',style: TextStyle(fontSize: 20,),)),
+                    Center(child: Text('You can share the code to invite them to your timebank',style: TextStyle(fontSize: 20,),)),
                     SizedBox(
                       width: 30,
                     ),

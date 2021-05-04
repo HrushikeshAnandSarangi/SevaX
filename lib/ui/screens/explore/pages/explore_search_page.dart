@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -111,7 +112,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: FlatButton(
-                    child: Text('Search'),
+                    child: Text(S.of(context).search),
                     textColor: Colors.white,
                     color: Colors.orange,
                     shape: RoundedRectangleBorder(

@@ -574,7 +574,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                     children: [
                                       SizedBox(height: 20),
                                       Text(
-                                        "Selected Speaker", //LABEL TO BE MADE FOR THIS
+                                        "Selected Speaker",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -673,7 +673,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         children: [
                                             SizedBox(height: 20),
                                             Text(
-                                              "Select a Speaker*", //LABEL TO BE MADE FOR THIS
+                                              "Select a Speaker*",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -729,7 +729,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                                 .circular(
                                                                     15.7)),
                                                 hintText:
-                                                    'Ex: Garry', //Label to be created
+                                                    'Ex: Garry',
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -1542,7 +1542,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: <Widget>[
   //         Text(
-  //           "Tool Name*",         //Label to be created (need client approval)
+  //           "Tool Name*",        
   //           style: TextStyle(
   //             fontSize: 16,
   //             fontWeight: FontWeight.bold,
@@ -2016,7 +2016,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           //             },
           //           ),
           //           Text(
-          //               'Tick to create an event for this request') // Label to be created
+          //               'Tick to create an event for this request')
           //         ],
           //       )
           //     : Container(height: 0, width: 0),
@@ -2055,12 +2055,12 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           // widget.requestModel.borrowRequestToolName != null
           // ? BorrowToolTitleField('Ex: Hammer or Chair...')
-          //     : Container(), //Label to be created (need client approval)
+          //     : Container(),
 
           SizedBox(height: 15),
 
           RequestDescriptionData(
-              'Please describe what you require'), //Label to be created (need client approval)
+              'Please describe what you require'),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
           InkWell(
@@ -2590,7 +2590,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
-            dialogTitle: 'Select an Instructor'); //Label to be created
+            dialogTitle: 'Select an Instructor');
         return;
       }
 

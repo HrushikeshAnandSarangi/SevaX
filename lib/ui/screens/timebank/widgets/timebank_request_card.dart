@@ -176,7 +176,7 @@ class TimebankRequestCard extends StatelessWidget {
         return getTagMainFrame(S.of(context).time_request, context);
 
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request', context);        // Label to be created
+        return getTagMainFrame('One To Many Request', context);
 
       default:
         return Container();

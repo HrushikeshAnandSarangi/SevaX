@@ -921,7 +921,7 @@ class NewsCardViewState extends State<NewsCardView> {
                                       index,
                                       widget.timebankModel)));
                             },
-                            child: Text('Reply',
+                            child: Text(S.of(context).reply,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -1405,7 +1405,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                       index,
                                       widget.timebankModel)));
                             },
-                            child: Text('Reply',
+                            child: Text(S.of(context).reply,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,

@@ -107,7 +107,7 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                     child: RaisedButton(
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
-                        'Acknowledge',
+                        S.of(context).acknowledge,
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Europa',

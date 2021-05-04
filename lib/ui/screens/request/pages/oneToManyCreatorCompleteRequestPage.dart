@@ -166,8 +166,6 @@ class OneToManyCreatorCompleteRequestPageState
 
                                             SizedBox(height: 13),
 
-                                            //Label to be created for below hard coded texts
-
                                             Text(
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
@@ -238,7 +236,6 @@ class OneToManyCreatorCompleteRequestPageState
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              //Label to be created for below
 
                               Text(
                                 'Attended by',
@@ -374,7 +371,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   builder: (BuildContext viewContext) {
                                     return AlertDialog(
                                       title: Text(
-                                          'Are you sure you want to accept and complete this request?'), //Label to be created
+                                          'Are you sure you want to accept and complete this request?'), 
                                       actions: <Widget>[
                                         FlatButton(
                                           color: Theme.of(context).primaryColor,

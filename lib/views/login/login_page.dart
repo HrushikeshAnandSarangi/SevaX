@@ -769,7 +769,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 30,
               child: Image.asset('lib/assets/images/g.png'),
             ),
-            title: Text('Sign in with Google'),
+            title: Text(S.of(context).sign_in_with_google),
           ),
         ),
       ),

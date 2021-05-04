@@ -143,7 +143,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                 Center(
                   child: model.requestType == RequestType.BORROW
                       ? Text(
-                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} will be added to the request.", //Label to be created
+                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} will be added to the request.",
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                           ),

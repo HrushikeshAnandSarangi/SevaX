@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -101,7 +102,7 @@ class ExplorePageAppBar extends PreferredSize {
                         fillColor: Colors.white,
                         prefixIcon: Icon(Icons.search),
                         suffixIcon: FlatButton(
-                          child: Text('Search'),
+                          child: Text(S.of(context).search),
                           textColor: Colors.white,
                           color: Colors.orange,
                           shape: RoundedRectangleBorder(

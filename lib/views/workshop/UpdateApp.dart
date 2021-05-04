@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:store_redirect/store_redirect.dart';
 // import 'package:open_appstore/open_appstore.dart';
 
@@ -35,7 +36,7 @@ class UpdateAppState extends State<UpdateView> {
                     onPressed: () {
                       widget.onSkipped();
                     },
-                    child: Text('Skip'),
+                    child: Text(S.of(context).skip),
                   )
                 : Offstage(),
             RaisedButton(

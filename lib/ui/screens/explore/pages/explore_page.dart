@@ -176,7 +176,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 padding: EdgeInsets.only(left: 8, right: 8),
                                 color: Color.fromRGBO(245, 166, 35, 1),
                                 child: Text(
-                                  'Search',
+                                  S.of(context).search,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -273,7 +273,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Events',
+                                    S.of(context).projects,
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
@@ -347,7 +347,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Requests',
+                                S.of(context).requests,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
@@ -474,7 +474,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Offers',
+                                S.of(context).offers,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
@@ -528,7 +528,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Seva Communites near you.',
+                    Text('Seva Communities near you.',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -710,7 +710,7 @@ class SeeAllButton extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              'See all  ',
+              S.of(context).see_all,
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,

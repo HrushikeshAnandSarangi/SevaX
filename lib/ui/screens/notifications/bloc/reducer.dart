@@ -573,7 +573,7 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-      title: 'Join Webinar', // Label to be created
+      title: 'Join Webinar',
       onPressed: () {
         if (SevaCore.of(context).loggedInUser.calendarId == null) {
           _settingModalBottomSheet(context, requestInvitationModel,

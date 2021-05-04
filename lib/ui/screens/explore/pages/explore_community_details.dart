@@ -118,7 +118,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text('Message'),
+                            child: Text(S.of(context).message),
                           ),
                           onPressed: () {},
                         ),
@@ -149,7 +149,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      "Location",
+                      S.of(context).location,
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).primaryColor,
@@ -164,7 +164,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
-                      "About us",
+                      S.of(context).help_about_us,
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).primaryColor,

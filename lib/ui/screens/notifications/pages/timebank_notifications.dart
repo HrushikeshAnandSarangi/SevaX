@@ -245,7 +245,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               //       },
               //       photoUrl: oneToManyModel['requestorphotourl'],
-              //       title: 'Invited to instruct a session',        //Label to be created
+              //       title: 'Invited to instruct a session',
               //       subTitle: '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
               //     );
               //   break;
@@ -268,7 +268,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   title: oneToManyRequestModel['selectedInstructor']
                       ['fullname'],
                   subTitle:
-                      'accepted invite to be Speaker', //Label to be created
+                      'accepted invite to be Speaker',
                 );
                 break;
 
@@ -303,7 +303,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   title: oneToManyRequestModel['selectedInstructor']
                       ['fullname'],
                   subTitle:
-                      'rejected invite to be Speaker', //Label to be created
+                      'rejected invite to be Speaker',
                 );
                 break;
 
@@ -343,7 +343,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         builder: (BuildContext viewContext) {
                           return AlertDialog(
                             title: Text(
-                                'Are you sure you want to reject request completion?'), //Label to be created
+                                'Are you sure you want to reject request completion?'),
                             actions: <Widget>[
                               FlatButton(
                                 color: Theme.of(context).primaryColor,
@@ -381,7 +381,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ['photoURL'],
                   title: oneToManyRequestModel['selectedInstructor']
                       ['fullname'],
-                  subTitle: 'Completed the request', //Label to be created
+                  subTitle: 'Completed the request',
                 );
                 break;
 
@@ -399,7 +399,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () async {},
                   photoUrl: oneToManyModel['requestorphotourl'],
-                  title: 'Invited to instruct a session', //Label to be created
+                  title: 'Invited to instruct a session',
                   subTitle:
                       '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                 );
@@ -460,8 +460,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                   photoUrl: model.photoUrl,
-                  title: '${model.title}', //Label to be created
-                  subTitle: //Need final label from client
+                  title: '${model.title}',
+                  subTitle:
                       "This request has now ended. Tap to complete the request.",
                 );
                 break;
@@ -485,8 +485,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     // subjectBorrow.add(0);
                   },
                   photoUrl: model.photoUrl,
-                  title: '${model.title}', //Label to be created
-                  subTitle: //Need final label from client
+                  title: '${model.title}',
+                  subTitle:
                       "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                 );
                 break;
@@ -510,8 +510,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     checkForReviewBorrowRequests(notification);
                   },
                   photoUrl: model.photoUrl,
-                  title: '${model.title}', //Label to be created
-                  subTitle: //Need final label from client
+                  title: '${model.title}', 
+                  subTitle: 
                       "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
                 );
                 break;
@@ -668,7 +668,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     creatorName: oneToManyModel['selectedInstructor']
                         ['fullname'],
                     title:
-                        ' Completed the request', //Label to be created (pending client say)
+                        ' Completed the request',
                     //subTitle:
                     //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                   );
@@ -701,7 +701,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: model.photoUrl,
                   title: model.title,
                   subTitle: model.requestType == RequestType.BORROW
-                      ? 'Request has been approved' //Label to be given by client (maybe Request has been approved by 'name of Borrower') (depends if timebank or personal)
+                      ? 'Request has been approved' //maybe Request has been approved by 'name of Borrower' (depends if timebank or personal)
                       : '${S.of(context).notifications_approved_by} ${model.fullName}',
                 );
                 break;

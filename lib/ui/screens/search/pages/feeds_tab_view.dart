@@ -177,8 +177,8 @@ class _FeedsTabViewState extends State<FeedsTabView>
         builder: (BuildContext viewContextS) {
           // return object of type Dialog
           return AlertDialog(
-            title: Text('Already reported!'),
-            content: Text('You already reported this feed'),
+            title: Text(S.of(context).already_reported),
+            content: Text(S.of(context).feed_reported),
             actions: <Widget>[
               FlatButton(
                 child: Text(

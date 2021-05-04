@@ -67,8 +67,8 @@ class _CreatorApproveAcceptorAgreeementState
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'ROOM'
-              ? 'Accept Room Borrow Request' //Label to be created
-              : 'Accept Item Borrow request', //Label to be created
+              ? 'Accept Room Borrow Request' 
+              : 'Accept Item Borrow request', 
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -121,7 +121,7 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: 250,
               child: Text(
-                  "I accept the terms of use as per the agreement", //Label to be created
+                  "I accept the terms of use as per the agreement",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -241,7 +241,7 @@ class _CreatorApproveAcceptorAgreeementState
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Agreement', //Label to be created
+              'Agreement',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ],
@@ -257,7 +257,7 @@ class _CreatorApproveAcceptorAgreeementState
                     ? 'Please review the agreement below before proceeding.'
                     : 'Lender has not created an agreement for this request.',
                 style: TextStyle(fontSize: 15),
-                softWrap: true, //Label to be created
+                softWrap: true, 
               ),
             ),
             Image(
@@ -297,7 +297,7 @@ class _CreatorApproveAcceptorAgreeementState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        'Review Agreement', //Label to be created
+                        'Review Agreement',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
