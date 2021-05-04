@@ -68,8 +68,6 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       BorrowAgreementTemplateModel();
   Color primaryColor = FlavorConfig.values.theme.primaryColor;
 
-  //save as template boolean, templateName variable and checkbox???
-
   //TOOLS specific fields variables below
   String specificConditions = '';
   String itemDescription = '';
@@ -885,7 +883,10 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
                     borrowAgreementLinkFinal = await BorrowAgreementPdf()
                         .borrowAgreementPdf(context, widget.requestModel,
-                            documentName, widget.isRequest, widget.roomOrTool);
+                            documentName, widget.isRequest, widget.roomOrTool,
+                            otherDetails,specificConditions,itemDescription, additionalConditions,
+                            isFixedTerm, isQuietHoursAllowed, isPetsAllowed, maximumOccupants, 
+                            securityDeposit, contactDetails);
 
                     widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
 
