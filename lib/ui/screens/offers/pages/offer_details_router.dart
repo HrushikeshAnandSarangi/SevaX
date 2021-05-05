@@ -35,7 +35,6 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 
   @override
   void initState() {
-    log("-----offerid---------------> ${widget.offerModel.id} - ${widget.offerModel.occurenceCount}");
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getTimebank();
     });

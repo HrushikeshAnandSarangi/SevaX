@@ -3,6 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 
 import 'offer_earnings.dart';
 import 'offer_participants.dart';
@@ -18,7 +19,7 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
     List<Widget> tabslist;
     offerModel.type == RequestType.TIME
         ? tabslist = [
-            OfferParticipants(
+            TimeOfferParticipants(
               offerModel: offerModel,
               timebankModel: timebankModel,
             ),

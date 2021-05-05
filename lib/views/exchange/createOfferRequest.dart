@@ -392,22 +392,28 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     var acceptorEmail = SevaCore.of(context).loggedInUser.email;
     var acceptorSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     var acceptorBio = SevaCore.of(context).loggedInUser.bio;
-    var acceptorDocumentId = '';
 
     await Firestore.instance
         .collection('offers')
         .document(offerId)
-        .collection('offerParticipants')
+        .collection('offerAcceptors')
         .document(notifictionId)
         .setData({
       'status': status,
+      'offerId': offerId,
       'timebankId': timebankId,
       'acceptorNotificationId': notifictionId,
-      'acceptorDocumentId': acceptorDocumentId,
+      'id': notifictionId,
       'communityId': communityId,
-      'acceptorDetails': {
-        'fullName': fullName,
-        'photoURL': photoURL,
+      'mode': requestModel.requestMode.toString(),
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'participantDetails': {
+        'fullname': requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? fullName
+            : timebankModel.name,
+        'photourl': requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? photoURL
+            : timebankModel.photoUrl,
         'email': acceptorEmail,
         'sevauserid': acceptorSevaUserId,
         'bio': acceptorBio,
