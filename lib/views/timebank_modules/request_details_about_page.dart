@@ -256,7 +256,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 shrinkWrap: true,
                 children: <Widget>[
-                  requestImages,
+                  (widget.requestItem.imageUrls == null ||
+                          widget.requestItem.imageUrls.length < 1)
+                      ? Container()
+                      : requestImages,
                   SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
@@ -482,32 +485,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get requestImages {
-    return Offstage(
-      offstage: widget.requestItem.imageUrls == null ||
-          widget.requestItem.imageUrls.length < 0,
-      child: Container(
-        height: 200,
-        child: ListView.builder(
-            itemCount: widget.requestItem.imageUrls.length,
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return InkWell(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext dialogContext) {
-                          return FullScreenImage(
-                            imageUrl: widget.requestItem.imageUrls[index],
-                          );
-                        });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 1),
-                    child: Image.network(widget.requestItem.imageUrls[index]),
-                  ));
-            }),
-      ),
+    return Container(
+      height: 200,
+      child: ListView.builder(
+          itemCount: widget.requestItem.imageUrls.length,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return FullScreenImage(
+                          imageUrl: widget.requestItem.imageUrls[index],
+                        );
+                      });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1),
+                  child: Image.network(widget.requestItem.imageUrls[index]),
+                ));
+          }),
     );
   }
 
@@ -1611,7 +1610,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
                                     ? 'Request Approved'
-                                    : 'Request has been assigned to a member') 
+                                    : 'Request has been assigned to a member')
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
@@ -2519,8 +2518,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? 'Request agreement not available' 
-                      : 'Click to view request agreement', 
+                      ? 'Request agreement not available'
+                      : 'Click to view request agreement',
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,

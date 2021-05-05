@@ -27,7 +27,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
     // TODO: implement initState
     super.initState();
     if (widget.selectedList != null) {
-      imageUrls = widget.selectedList;
+      imageUrls.addAll(widget.selectedList);
       setState(() {
 
       });
