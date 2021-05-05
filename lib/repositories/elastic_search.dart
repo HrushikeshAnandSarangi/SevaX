@@ -397,8 +397,8 @@ class ElasticSearchApi {
                 "term": {"softDelete": false}
               },
               {
-                "term": {"categories": typeId}
-              }
+                "match": {"categories": typeId}
+              },
             ]
           }
         }

@@ -8,11 +8,21 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
+import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class RequestsByCategoryView extends StatefulWidget {
@@ -42,7 +52,9 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       hideSearchBar: true,
       hideHeader: Provider.of<UserModel>(context, listen: false) != null,
       hideFooter: Provider.of<UserModel>(context, listen: false) != null,
-      appBarTitle: 'Title Test', //widget.model.getCategoryName(context),
+      appBarTitle: widget.model.title_en != null
+          ? widget.model.title_en
+          : '', //widget.model.getCategoryName(context),
       child: FutureBuilder(
         future: requests,
         builder: (context, snapshot) {
@@ -75,18 +87,97 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
               var request = snapshot.data[index];
               var date =
                   DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-              return ExploreEventCard(
-                photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                title: request.title,
-                description: request.description,
-                location: request.address,
-                communityName: "request.communityName ?? ''",
-                date: DateFormat('d MMMM, y').format(date),
-                time: DateFormat.jm().format(date),
-                memberList: MemberAvatarListWithCount(
-                  userIds: request.approvedUsers,
-                ),
-              );
+              return Provider.of<UserModel>(context, listen: false)
+                          ?.sevaUserID !=
+                      null
+                  ? FutureBuilder<TimebankModel>(
+                      future: getTimeBankForId(timebankId: request.timebankId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return LoadingIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Container();
+                        }
+                        if (snapshot.data == null) {
+                          return Container();
+                        }
+                        return ExploreEventCard(
+                          onTap: () {
+                            bool isAdmin = snapshot.data.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID);
+
+                            if (request.sevaUserId ==
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID ||
+                                isAccessAvailable(
+                                    snapshot.data,
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID)) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: RequestTabHolder(
+                                      //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                      isAdmin: true,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: RequestDetailsAboutPage(
+                                      requestItem: request,
+                                      timebankModel: snapshot.data,
+                                      isAdmin: false,
+                                      //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                          title: request.title,
+                          description: request.description,
+                          location: request.address,
+                          communityName: request.fullName ?? '',
+                          date: DateFormat('d MMMM, y').format(date),
+                          time: DateFormat.jm().format(date),
+                          memberList: MemberAvatarListWithCount(
+                            userIds: request.approvedUsers,
+                          ),
+                        );
+                      })
+                  : ExploreEventCard(
+                      onTap: () {
+                        showSignInAlertMessage(
+                            context: context,
+                            message:
+                                'Please Sign In/Sign up to access ${request.title}');
+                      },
+                      photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                      title: request.title,
+                      description: request.description,
+                      location: request.address,
+                      communityName: request.fullName ?? '',
+                      date: DateFormat('d MMMM, y').format(date),
+                      time: DateFormat.jm().format(date),
+                      memberList: MemberAvatarListWithCount(
+                        userIds: request.approvedUsers,
+                      ),
+                    );
             },
           );
         },
