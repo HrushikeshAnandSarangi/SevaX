@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/members/pages/member_permissions.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/requests_tabs.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -188,8 +189,8 @@ class _ManageGroupView extends State<ManageGroupView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RequestsModule.of(
-              timebankId: widget.timebankModel.id,
+            builder: (context) => RequestListingPage(
+              // timebankId: widget.timebankModel.id,
               timebankModel: widget.timebankModel,
               isFromSettings: true,
             ),
