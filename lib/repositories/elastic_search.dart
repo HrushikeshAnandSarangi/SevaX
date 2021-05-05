@@ -400,8 +400,8 @@ class ElasticSearchApi {
                 "term": {"softDelete": false}
               },
               {
-                "match": {"categories": typeId}
-              },
+                "terms": {"categories.keyword": [typeId]}
+              }
             ]
           }
         }
