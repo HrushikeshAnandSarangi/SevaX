@@ -386,23 +386,23 @@ class ElasticSearchApi {
   static Future<List<RequestModel>> getRequestsByCategory(typeId) async {
     String endPoint = '//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "term": {"public": true}
-            },
-            {
-              "term": {"softDelete": false}
-            },
-            {
-              "terms": {
-                "categories.keyword": [typeId]
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "term": {"public": true}
+              },
+              {
+                "term": {"softDelete": false}
+              },
+              {
+                "terms": {"categories.keyword": [typeId]}
               }
-            }
-          ]
+            ]
+          }
         }
-      }
+      },
     );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
