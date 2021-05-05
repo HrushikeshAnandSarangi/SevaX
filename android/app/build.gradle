@@ -55,20 +55,9 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-<<<<<<< HEAD
-<<<<<<< HEAD
-         storeFile file('Keystore')
-        //storeFile file(keystoreProperties['storeFile'])
-        storePassword keystoreProperties['storePassword']
-=======
             //storeFile file(keystoreProperties['storeFile'])
             storeFile file('Keystore')
-=======
-            storeFile file(keystoreProperties['storeFile'])
-            //storeFile file('Keystore')
->>>>>>> origin/v_1.6.3_mobile_registrationLink_Events
             storePassword keystoreProperties['storePassword']
->>>>>>> origin/1.6.2_release_mobile_vertical_dots_Text&Icons_fix
         }
     }
 
