@@ -144,11 +144,15 @@ class IndividualOfferDataModel extends DataModel {
   String schedule;
   String title;
   int minimumCredits;
+  String timeOfferType;
 
   IndividualOfferDataModel();
 
   @override
   IndividualOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey('timeOfferType')) {
+      this.timeOfferType = map['timeOfferType'];
+    }
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -179,6 +183,9 @@ class IndividualOfferDataModel extends DataModel {
 
     if (description != null) {
       map['description'] = description;
+    }
+    if (timeOfferType != null) {
+      map['timeOfferType'] = timeOfferType;
     }
 
     if (schedule != null) {

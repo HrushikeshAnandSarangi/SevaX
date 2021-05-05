@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
@@ -286,6 +289,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
     fontFamily: 'Europa',
   );
 
+  int timeTypeSelection = 0;
+
   Widget GoodsRequest() {
     return StreamBuilder<GoodsDonationDetails>(
         stream: _bloc.goodsDonationDetails,
@@ -422,6 +427,46 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       : GoodsRequest();
                             }),
                         SizedBox(height: 10),
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          child: CupertinoSegmentedControl<int>(
+                            unselectedColor: Colors.grey[200],
+                            selectedColor: Theme.of(context).primaryColor,
+                            children: {
+                              0: Padding(
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                                child: Text(
+                                  'Spot On', //Label to be created
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              ),
+                              1: Padding(
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                                child: Text(
+                                  'One time', //Label to be created
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              ),
+                            },
+                            borderColor: Colors.grey,
+                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                            groupValue: _bloc.timeOfferType,
+                            onValueChanged: (int val) {
+                              if (val != _bloc.timeOfferType) {
+                                setState(() {
+                                  if (val == 0) {
+                                    _bloc.timeOfferType = 0;
+                                  } else {
+                                    _bloc.timeOfferType = 1;
+                                  }
+                                  _bloc.timeOfferType = val;
+                                });
+                              }
+                            },
+                            //groupValue: sharedValue,
+                          ),
+                        ),
+                        SizedBox(height: 25),
                         StreamBuilder<CustomLocation>(
                             stream: _bloc.location,
                             builder: (context, snapshot) {
