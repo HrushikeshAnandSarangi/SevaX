@@ -51,6 +51,7 @@ class ProjectModel extends DataModel {
   bool public;
    bool virtualProject;
   List<String> timebanksPosted;
+  String registrationLink;
 
   ProjectModel({
     this.id,
@@ -79,6 +80,7 @@ class ProjectModel extends DataModel {
     this.public,
     this.virtualProject,
     this.timebanksPosted,
+    this.registrationLink,
   });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => ProjectModel(
@@ -95,6 +97,7 @@ class ProjectModel extends DataModel {
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         address: json["address"] == null ? null : json["address"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+        registrationLink: json["registrationLink"] == null ? null : json["registrationLink"],
         associatedMessaginfRoomId: json["associatedMessaginfRoomId"] == null
             ? null
             : json["associatedMessaginfRoomId"],
@@ -159,6 +162,7 @@ class ProjectModel extends DataModel {
       "creator_id": creatorId == null ? null : creatorId,
       "address": address == null ? null : address,
       "photo_url": photoUrl == null ? null : photoUrl,
+      "registrationLink": registrationLink == null ? null : registrationLink,
       "mode": mode == null ? null : mode.readable,
       "created_at": createdAt == null ? null : createdAt,
       "start_time": startTime == null ? null : startTime,
@@ -185,6 +189,6 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber,liveMode: $liveMode, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
+    return 'ProjectModel{id: $id, name: $name, registrationLink: $registrationLink, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber,liveMode: $liveMode, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
   }
 }

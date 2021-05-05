@@ -75,7 +75,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool isDataLoaded = false;
   int sharedValue = 0;
   ScrollController _controller = ScrollController();
-  var focusNodes = List.generate(4, (_) => FocusNode());
+  var focusNodes = List.generate(5, (_) => FocusNode());
   final _textUpdates = StreamController<String>();
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
@@ -405,6 +405,50 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   return null;
                 },
               ),
+
+              Padding(
+                padding: EdgeInsets.all(8),
+              ),
+
+              headingText('Registration link'), //Label to be created
+              TextFormField(
+                decoration: InputDecoration(
+                  errorMaxLines: 2,
+                  hintText: "Ex: Eventbrite link, etc.", //Label to be created
+                ),
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(focusNodes[3]);
+                },
+                textInputAction: TextInputAction.next,
+                focusNode: focusNodes[2],
+                initialValue: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.registrationLink
+                        : ""
+                    : projectModel.registrationLink ?? "",
+                keyboardType: TextInputType.text,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                onSaved: (value) {
+                    projectModel.registrationLink = value;
+                },
+                onChanged: (value) {
+                  ExitWithConfirmation.of(context).fieldValues[3] = value;
+
+                  projectModel.registrationLink = value;
+                },
+                validator: (value) {
+                        if (value.isEmpty) {
+                          return null;
+                        } else {
+                          projectModel.registrationLink = value;
+                        }
+                        return null;
+                      },
+
+              ),
+
               Padding(
                 padding: EdgeInsets.all(8),
               ),
@@ -413,14 +457,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ),
               TextFormField(
                 onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(focusNodes[3]);
+                  FocusScope.of(context).requestFocus(focusNodes[4]);
                 },
                 textInputAction: TextInputAction.next,
-                focusNode: focusNodes[2],
+                focusNode: focusNodes[3],
                 cursorColor: Colors.black54,
                 validator: _validateEmailId,
                 onSaved: (value) {
-                  ExitWithConfirmation.of(context).fieldValues[3] = value;
+                  ExitWithConfirmation.of(context).fieldValues[4] = value;
                   projectModel.emailId = value;
                 },
                 onChanged: (value) {
@@ -449,9 +493,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).unfocus();
                 },
-
                 cursorColor: Colors.black54,
-                focusNode: focusNodes[3],
+                focusNode: focusNodes[4],
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.phone,
                 //  validator: _validateEmailId,
@@ -459,7 +502,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.phoneNumber = '+' + value;
                 },
                 onChanged: (value) {
-                  ExitWithConfirmation.of(context).fieldValues[4] = value;
+                  ExitWithConfirmation.of(context).fieldValues[5] = value;
                   projectModel.phoneNumber = '+' + value;
                 },
                 inputFormatters: [
@@ -771,6 +814,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 projectModel.photoUrl;
                             projectTemplateModel.description =
                                 projectModel.description;
+                            projectTemplateModel.registrationLink =
+                                projectModel.registrationLink;
                             projectTemplateModel.creatorId =
                                 projectModel.creatorId;
                             projectTemplateModel.createdAt =
