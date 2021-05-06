@@ -218,6 +218,7 @@ class RequestModel extends DataModel {
   bool isFromOfferRequest;
   int minimumCredits;
   List<String> imageUrls = [];
+  String communityName;
 
   RequestModel({
     this.id,
@@ -279,6 +280,7 @@ class RequestModel extends DataModel {
     this.liveMode,
     this.imageUrls,
     this.oneToManyRequestAttenders,
+    this.communityName,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -527,6 +529,9 @@ class RequestModel extends DataModel {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
       this.cashModel = new CashModel();
+    }
+    if (map.containsKey('communityName')) {
+      this.communityName = map['communityName'];
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
       List<String> oneToManyRequestAttenders =
@@ -882,6 +887,9 @@ class RequestModel extends DataModel {
     } else {
       this.oneToManyRequestAttenders = List();
     }
+    if (map.containsKey('communityName')) {
+      this.communityName = map['communityName'];
+    }
   }
 
   @override
@@ -953,6 +961,9 @@ class RequestModel extends DataModel {
 
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
+    }
+    if (this.communityName != null && this.communityName.isNotEmpty) {
+      object['communityName'] = this.communityName;
     }
     if (this.softDelete != null) {
       object['softDelete'] = this.softDelete;

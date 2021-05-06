@@ -1,5 +1,6 @@
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
@@ -13,11 +14,13 @@ class ExplorePageBloc {
   final _requests = BehaviorSubject<List<RequestModel>>();
   final _offers = BehaviorSubject<List<OfferModel>>();
   final _communities = BehaviorSubject<List<CommunityModel>>();
+  final _categories = BehaviorSubject<List<CategoryModel>>();
 
   Stream<List<ProjectModel>> get events => _events.stream;
   Stream<List<RequestModel>> get requests => _requests.stream;
   Stream<List<OfferModel>> get offers => _offers.stream;
   Stream<List<CommunityModel>> get communities => _communities.stream;
+  Stream<List<CategoryModel>> get categories => _categories.stream;
 
   Stream<bool> get isDataLoaded => CombineLatestStream.combine4(
         events,
@@ -53,6 +56,9 @@ class ExplorePageBloc {
       ElasticSearchApi.getPublicRequests().then((value) {
         _requests.add(value);
       });
+      ElasticSearchApi.getAllCategories().then((value) {
+        _categories.add(value);
+      });
     }
   }
 
@@ -61,5 +67,6 @@ class ExplorePageBloc {
     _requests.close();
     _offers.close();
     _communities.close();
+    _categories.close();
   }
 }

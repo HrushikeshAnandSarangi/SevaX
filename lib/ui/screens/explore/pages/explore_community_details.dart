@@ -12,6 +12,8 @@ import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.d
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/login/login_page.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -137,6 +139,18 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                             if (Provider.of<UserModel>(context,
                                     listen: false) !=
                                 null) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => OnBoardWithTimebank(
+                                    user: SevaCore.of(context).loggedInUser,
+                                    communityModel: community,
+                                    isFromExplore: true,
+                                    sevauserId: SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID,
+                                  ),
+                                ),
+                              );
                             } else {
                               showSignInAlertMessage(
                                 context: context,
@@ -376,7 +390,14 @@ void showSignInAlertMessage({BuildContext context, String message}) {
         content: Text(message),
         actions: [
           FlatButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
               child: Text(S.of(context).ok)),
         ],
       );

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -122,7 +123,7 @@ class Searches {
       {@required queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    List<String> timebanksIdArr = List();
+    List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await Firestore.instance
         .collection("timebanknew")
         .where('members', arrayContains: loggedInUser.sevaUserID)
@@ -300,6 +301,225 @@ class Searches {
     yield projectsList;
   }
 
+  static Stream<List<ProjectModel>> searchProjectsToAssignRequest(
+      {@required String queryString,
+      @required UserModel loggedInUser,
+      @required String mode,
+      @required String timebankId}) async* {
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/sevaxprojects/_doc/_search';
+    dynamic body = json.encode(
+      {
+        "size": 3000,
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "term": {"timebank_id.keyword": timebankId}
+              },
+              {
+                "term": {"mode.keyword": mode}
+              },
+              {
+                "multi_match": {
+                  "query": queryString,
+                  "fields": ["address", "description", "email_id", "name"],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<ProjectModel> projectsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        ProjectModel model = ProjectModel.fromMap(sourceMap);
+        projectsList.add(model);
+      }
+    });
+    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    yield projectsList;
+  }
+//get public projects for explre
+
+  static Stream<List<ProjectModel>> getPublicProjects() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/sevaxprojects/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {'public': true}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<ProjectModel> projectsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        ProjectModel model = ProjectModel.fromMap(sourceMap);
+        projectsList.add(model);
+      }
+    });
+    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    yield projectsList;
+  }
+
+  //get public requests
+  static Stream<List<RequestModel>> getPublicRequests() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/requests/request/_search';
+    dynamic body = json.encode({
+      "query": {
+        "match": {'public': true}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<RequestModel> requestsList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        RequestModel model = RequestModel.fromMap(sourceMap);
+        requestsList.add(model);
+      }
+    });
+    requestsList.sort((a, b) => a.title.compareTo(b.title));
+    yield requestsList;
+  }
+
+  static Future<List<RequestModel>> getRequestsByCategory(typeId) async {
+    String endPoint = FlavorConfig.values.elasticSearchBaseURL +
+        '//elasticsearch/requests/request/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"public": true}
+            },
+            {
+              "term": {"softDelete": false}
+            },
+            {
+              "terms": {
+                "categories.keyword": [typeId]
+              }
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<RequestModel> models = [];
+
+    log('Returned Requests Length: ' + hitList.length.toString());
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      RequestModel model = RequestModel.fromMap(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.title.compareTo(b.title));
+    return models;
+  }
+
+  //get public communties
+  //get public requests
+
+  //get public requests
+  static Stream<List<CommunityModel>> getNearBYCommunities(
+      {GeoPoint geoPoint}) async* {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": {"match_all": {}},
+          "filter": {
+            "geo_distance": {
+              "distance": "100km",
+              "location_elastic": {
+                "lat": geoPoint.latitude.toString(),
+                "lon": geoPoint.longitude.toString()
+              }
+            }
+          }
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+
+    List<CommunityModel> communityList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      log('sourceMap ${sourceMap.toString()}');
+
+      if (sourceMap['softDelete'] == false) {
+        CommunityModel model = CommunityModel(sourceMap);
+
+        communityList.add(model);
+        log('len ${communityList.length}');
+      }
+    });
+    communityList.sort((a, b) => a.name.compareTo(b.name));
+    yield communityList;
+  }
+
+  //get public offers
+  static Stream<List<OfferModel>> getPublicOffers() async* {
+    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "match": {'public': true}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<OfferModel> offersList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if (sourceMap['softDelete'] == false) {
+        OfferModel model = OfferModel.fromMap(sourceMap);
+        offersList.add(model);
+      }
+    });
+    yield offersList;
+  }
+
+  //get all categories
+  static Stream<List<CategoryModel>> getAllCategories() async* {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}/elasticsearch/request_categories/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {"match_all": {}}
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<CategoryModel> categoryList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      CategoryModel model = CategoryModel.fromMap(sourceMap);
+      categoryList.add(model);
+    });
+    yield categoryList;
+  }
   // Requests DONE
 
   static Stream<List<RequestModel>> searchRequests(
@@ -557,36 +777,6 @@ class Searches {
     return skillsInterestsConsolidated;
   }
 
-  static Stream<List<OfferModel>> getPublicOffers() async* {
-    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
-    String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/_doc/_search';
-
-    dynamic body = json.encode({
-      "query": {
-        "match": {'private': false}
-      }
-    });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-    List<OfferModel> communityList = [];
-
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      if (sourceMap['softDelete'] == false) {
-        OfferModel model = OfferModel.fromMap(sourceMap);
-        communityList.add(model);
-      } else {
-        if (sourceMap['softDelete'] == false) {
-          OfferModel model = OfferModel.fromMap(sourceMap);
-          communityList.add(model);
-        }
-      }
-    });
-    communityList.sort((a, b) => a.fullName.compareTo(b.fullName));
-    yield communityList;
-  }
-
   static Stream<List<CommunityModel>> getPublicCommunities() async* {
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
     String url =
@@ -615,62 +805,5 @@ class Searches {
     });
     communityList.sort((a, b) => a.name.compareTo(b.name));
     yield communityList;
-  }
-
-  static Stream<List<RequestModel>> getPublicRequests() async* {
-    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        '//elasticsearch/requests/request/_search';
-    dynamic body = json.encode({
-      "query": {
-        "match": {'public': true}
-      }
-    });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-    List<RequestModel> requestsList = [];
-
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      if (sourceMap['softDelete'] == false) {
-        RequestModel model = RequestModel.fromMap(sourceMap);
-        requestsList.add(model);
-      } else {
-        if (sourceMap['softDelete'] == false) {
-          RequestModel model = RequestModel.fromMap(sourceMap);
-          requestsList.add(model);
-        }
-      }
-    });
-    requestsList.sort((a, b) => a.title.compareTo(b.title));
-    yield requestsList;
-  }
-
-  static Stream<List<ProjectModel>> getPublicProjects() async* {
-    // List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        '//elasticsearch/sevaxprojects/_doc/_search';
-    dynamic body = json.encode({
-      "query": {
-        "match": {'public': true}
-      }
-    });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-    List<ProjectModel> projectsList = [];
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      if (sourceMap['softDelete'] == false) {
-        ProjectModel model = ProjectModel.fromMap(sourceMap);
-        projectsList.add(model);
-      } else {
-        if (sourceMap['softDelete'] == false) {
-          ProjectModel model = ProjectModel.fromMap(sourceMap);
-          projectsList.add(model);
-        }
-      }
-    });
-    projectsList.sort((a, b) => a.name.compareTo(b.name));
-    yield projectsList;
   }
 }

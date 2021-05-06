@@ -49,8 +49,9 @@ class ProjectModel extends DataModel {
   bool liveMode;
   String associatedMessaginfRoomId;
   bool public;
-   bool virtualProject;
+  bool virtualProject;
   List<String> timebanksPosted;
+  String communityName;
   String registrationLink;
 
   ProjectModel({
@@ -80,6 +81,7 @@ class ProjectModel extends DataModel {
     this.public,
     this.virtualProject,
     this.timebanksPosted,
+    this.communityName,
     this.registrationLink,
   });
 
@@ -87,7 +89,7 @@ class ProjectModel extends DataModel {
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
         public: json['public'] == null ? false : json['public'],
-         virtualProject:
+        virtualProject:
             json['virtualProject'] == null ? false : json['virtualProject'],
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
         communityId: json["communityId"] == null ? null : json["communityId"],
@@ -97,7 +99,8 @@ class ProjectModel extends DataModel {
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         address: json["address"] == null ? null : json["address"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        registrationLink: json["registrationLink"] == null ? null : json["registrationLink"],
+        registrationLink:
+            json["registrationLink"] == null ? null : json["registrationLink"],
         associatedMessaginfRoomId: json["associatedMessaginfRoomId"] == null
             ? null
             : json["associatedMessaginfRoomId"],
@@ -139,11 +142,10 @@ class ProjectModel extends DataModel {
             : List<String>.from(
                 json["completedRequests"].map((x) => x),
               ),
-        associatedmembers: json["associatedmembers"] == null
-            ? {}
-            : Map<String, dynamic>.from(
-                json["associatedmembers"],
-              ),
+        associatedmembers:
+            json["associatedmembers"] == null ? {} : json["associatedmembers"],
+        communityName:
+            json["communityName"] == null ? null : json["communityName"],
       );
 
   Map<String, dynamic> toMap() {
@@ -155,7 +157,7 @@ class ProjectModel extends DataModel {
       "timebank_id": timebankId == null ? null : timebankId,
       "communityId": communityId == null ? null : communityId,
       "public": public == null ? false : public,
-       "virtualProject": virtualProject == null ? false : virtualProject,
+      "virtualProject": virtualProject == null ? false : virtualProject,
       "description": description == null ? null : description,
       "email_id": emailId == null ? null : emailId,
       "phone_number": phoneNumber == null ? null : phoneNumber,
@@ -180,6 +182,7 @@ class ProjectModel extends DataModel {
           : List<dynamic>.from(timebanksPosted.map((x) => x)),
       "associatedMessaginfRoomId":
           associatedMessaginfRoomId == null ? null : associatedMessaginfRoomId,
+      "communityName": communityName == null ? null : communityName
     };
     if (location != null) {
       projectDetails['location'] = location?.data;
@@ -189,6 +192,6 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, registrationLink: $registrationLink, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber,liveMode: $liveMode, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
+    return 'ProjectModel{id: $id, name: $name,registrationLink: $registrationLink,virtualProject : $virtualProject ,communityName: $communityName, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber,liveMode: $liveMode, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, location: $location, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests, associatedmembers: $associatedmembers, requestedSoftDelete: $requestedSoftDelete, softDelete: $softDelete, associatedMessaginfRoomId: $associatedMessaginfRoomId, public: $public, timebanksPosted: $timebanksPosted}';
   }
 }

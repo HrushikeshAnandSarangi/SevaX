@@ -18,7 +18,6 @@ import 'offer_details.dart';
 class OfferDetailsRouter extends StatefulWidget {
   final OfferModel offerModel;
   final ComingFrom comingFrom;
-
   const OfferDetailsRouter({
     Key key,
     this.offerModel,

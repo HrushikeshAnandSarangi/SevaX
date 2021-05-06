@@ -41,12 +41,13 @@ class CommunityCard extends StatelessWidget {
               width: 80,
             ),
           ),
-          SizedBox(width: 12),
+          SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 name ?? '',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14),
               ),
               Text(

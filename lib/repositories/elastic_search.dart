@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -386,6 +387,26 @@ class ElasticSearchApi {
     return models;
   }
 
+  //get all categories
+  static Future<List<CategoryModel>> getAllCategories() async {
+    String endPoint =
+        '//elasticsearch/request_categories/_doc/_search?size=300';
+
+    dynamic body = json.encode({
+      "query": {"match_all": {}}
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<CategoryModel> categoryList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      CategoryModel model = CategoryModel.fromMap(sourceMap);
+      categoryList.add(model);
+    });
+    return categoryList;
+  }
+
   static Future<List<RequestModel>> getRequestsByCategory(typeId) async {
     String endPoint = '//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
@@ -400,7 +421,9 @@ class ElasticSearchApi {
                 "term": {"softDelete": false}
               },
               {
-                "terms": {"categories.keyword": [typeId]}
+                "terms": {
+                  "categories.keyword": [typeId]
+                }
               }
             ]
           }

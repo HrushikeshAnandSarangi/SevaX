@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,12 +9,14 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 
 import 'package:sevaexchange/models/category_model.dart';
+import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/explore_cards_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/requests_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/find_communities_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/community_by_category_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
@@ -25,13 +28,22 @@ import 'package:sevaexchange/ui/screens/explore/widgets/explore_featured_card.da
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_find_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_offers_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_requests_card.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
@@ -96,7 +108,7 @@ class _ExplorePageState extends State<ExplorePage> {
   List<CategoryModel> categories = [];
   bool dataLoaded = false;
   bool isSignedUser = false;
-
+  GeoPoint geoPoint = GeoPoint(12.87428, 77.6688899);
   void initState() {
     super.initState();
     _bloc = FindCommunitiesBloc();
@@ -287,6 +299,16 @@ class _ExplorePageState extends State<ExplorePage> {
                                   ),
                                   SeeAllButton(
                                     hideButton: snapshot.data.length < 6,
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ExploreSearchPage(
+                                            tabIndex: 1,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
                               ),
@@ -313,17 +335,72 @@ class _ExplorePageState extends State<ExplorePage> {
                                     }
                                     return Row(
                                       children: [
-                                        ExploreEventsCard(
-                                          imageUrl: projectModel.photoUrl ??
-                                              defaultGroupImageURL,
-                                          communityName:
-                                              'projectModel.communityName',
-                                          city: landMark ?? '',
-                                          description: projectModel.name,
-                                          participantsImageList:
-                                              participantsImageList1,
-                                          onTap: () {},
-                                        ),
+                                        isSignedUser
+                                            ? FutureBuilder<TimebankModel>(
+                                                future: getTimeBankForId(
+                                                    timebankId: projectModel
+                                                        .timebankId),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return LoadingIndicator();
+                                                  }
+                                                  if (snapshot.hasError) {
+                                                    return Container();
+                                                  }
+                                                  if (snapshot.data == null) {
+                                                    return Container();
+                                                  }
+                                                  return ExploreEventsCard(
+                                                    participantsImageList:
+                                                        participantsImageList1,
+                                                    imageUrl: projectModel
+                                                            .photoUrl ??
+                                                        defaultGroupImageURL,
+                                                    communityName: projectModel
+                                                            .communityName ??
+                                                        '',
+                                                    city: landMark ?? '',
+                                                    description:
+                                                        projectModel.name,
+                                                    onTap: () {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return ProjectRequests(
+                                                          ComingFrom.Projects,
+                                                          timebankId:
+                                                              projectModel
+                                                                  .timebankId,
+                                                          projectModel:
+                                                              projectModel,
+                                                          timebankModel:
+                                                              snapshot.data,
+                                                        );
+                                                      }));
+                                                    },
+                                                  );
+                                                })
+                                            : ExploreEventsCard(
+                                                participantsImageList:
+                                                    participantsImageList1,
+                                                imageUrl:
+                                                    projectModel.photoUrl ??
+                                                        defaultGroupImageURL,
+                                                communityName: projectModel
+                                                        .communityName ??
+                                                    '',
+                                                city: landMark ?? '',
+                                                description: projectModel.name,
+                                                onTap: () {
+                                                  showSignInAlertMessage(
+                                                      context: context,
+                                                      message:
+                                                          'Please Sign In/Sign up to access ${projectModel.name}');
+                                                },
+                                              ),
                                       ],
                                     );
                                   },
@@ -362,6 +439,15 @@ class _ExplorePageState extends State<ExplorePage> {
                               // requestList.length > 4
                               SeeAllButton(
                                 hideButton: snapshot.data.length < 6,
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ExploreSearchPage(
+                                        tabIndex: 2,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -387,17 +473,105 @@ class _ExplorePageState extends State<ExplorePage> {
                                 }
                                 return Row(
                                   children: [
-                                    ExploreRequestsCard(
-                                      imageUrl: model.photoUrl ??
-                                          defaultGroupImageURL,
-                                      communityName:
-                                          "model.communityName ?? ''",
-                                      city: landMark ?? '',
-                                      description: model.title,
-                                      participantsImageList:
-                                          participantsImageList2,
-                                      onTap: () {},
-                                    ),
+                                    isSignedUser
+                                        ? FutureBuilder<TimebankModel>(
+                                            future: getTimeBankForId(
+                                                timebankId: model.timebankId),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return LoadingIndicator();
+                                              }
+                                              if (snapshot.hasError) {
+                                                return Container();
+                                              }
+                                              if (snapshot.data == null) {
+                                                return Container();
+                                              }
+                                              return ExploreRequestsCard(
+                                                imageUrl: model.photoUrl ??
+                                                    defaultGroupImageURL,
+                                                communityName:
+                                                    model.communityName ?? '',
+                                                city: landMark ?? '',
+                                                description: model.title,
+                                                onTap: () {
+                                                  bool isAdmin = snapshot
+                                                      .data.admins
+                                                      .contains(
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID);
+                                                  if (model.sevaUserId ==
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID ||
+                                                      isAccessAvailable(
+                                                          snapshot.data,
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID)) {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_context) =>
+                                                            BlocProvider(
+                                                          bloc: BlocProvider.of<
+                                                                  HomeDashBoardBloc>(
+                                                              context),
+                                                          child:
+                                                              RequestTabHolder(
+                                                            communityModel: BlocProvider
+                                                                    .of<HomeDashBoardBloc>(
+                                                                        context)
+                                                                .selectedCommunityModel,
+                                                            isAdmin: true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_context) =>
+                                                            BlocProvider(
+                                                          bloc: BlocProvider.of<
+                                                                  HomeDashBoardBloc>(
+                                                              context),
+                                                          child:
+                                                              RequestDetailsAboutPage(
+                                                            requestItem: model,
+                                                            timebankModel:
+                                                                snapshot.data,
+                                                            isAdmin: false,
+                                                            //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                participantsImageList:
+                                                    participantsImageList2,
+                                              );
+                                            })
+                                        : ExploreRequestsCard(
+                                            participantsImageList:
+                                                participantsImageList2,
+                                            imageUrl: model.photoUrl ??
+                                                defaultGroupImageURL,
+                                            communityName:
+                                                model.communityName ?? '',
+                                            city: landMark ?? '',
+                                            description: model.title,
+                                            onTap: () {
+                                              showSignInAlertMessage(
+                                                  context: context,
+                                                  message:
+                                                      'Please Sign In/Sign up to access ${model.title}');
+                                            },
+                                          ),
                                   ],
                                 );
                               },
@@ -441,24 +615,20 @@ class _ExplorePageState extends State<ExplorePage> {
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 CommunityModel community = snapshot.data[index];
-                                if (index > 5) {
-                                  return null;
-                                } else {
-                                  return ExploreFeaturedCard(
-                                    imageUrl: community.logo_url,
-                                    communityName: community.name,
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ExploreCommunityDetails(
-                                            communityId: community.id,
-                                          ),
+                                return ExploreFeaturedCard(
+                                  imageUrl: community.logo_url,
+                                  communityName: community.name,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ExploreCommunityDetails(
+                                          communityId: community.id,
                                         ),
-                                      );
-                                    },
-                                  );
-                                }
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                             );
                           }),
@@ -492,6 +662,15 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                               SeeAllButton(
                                 hideButton: snapshot.data.length < 6,
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ExploreSearchPage(
+                                        tabIndex: 3,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -519,13 +698,60 @@ class _ExplorePageState extends State<ExplorePage> {
                                 }
                                 return Row(
                                   children: [
-                                    ExploreOffersCard(
-                                      imageUrl: defaultGroupImageURL,
-                                      offerName: "offer.communityName ?? ''",
-                                      city: landMark ?? '',
-                                      description: offer.fullName,
-                                      onTap: () {},
-                                    ),
+                                    isSignedUser
+                                        ? FutureBuilder<TimebankModel>(
+                                            future: getTimeBankForId(
+                                                timebankId: offer.timebankId),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return LoadingIndicator();
+                                              }
+                                              if (snapshot.hasError) {
+                                                return Container();
+                                              }
+                                              if (snapshot.data == null) {
+                                                return Container();
+                                              }
+                                              return ExploreOffersCard(
+                                                imageUrl: defaultGroupImageURL,
+                                                offerName: getOfferTitle(
+                                                        offerDataModel:
+                                                            offer) ??
+                                                    '',
+                                                city: landMark ?? '',
+                                                description:
+                                                    getOfferDescription(
+                                                        offerDataModel: offer),
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return OfferDetailsRouter(
+                                                      offerModel: offer,
+                                                      comingFrom:
+                                                          ComingFrom.Home,
+                                                      //TODO : fix the timebank model
+                                                    );
+                                                  }));
+                                                },
+                                              );
+                                            })
+                                        : ExploreOffersCard(
+                                            imageUrl: defaultGroupImageURL,
+                                            offerName: getOfferTitle(
+                                                    offerDataModel: offer) ??
+                                                '',
+                                            city: landMark ?? '',
+                                            description: getOfferDescription(
+                                                offerDataModel: offer),
+                                            onTap: () {
+                                              showSignInAlertMessage(
+                                                  context: context,
+                                                  message:
+                                                      'Please Sign In/Sign up to access ${offer.individualOfferDataModel != null ? offer.individualOfferDataModel.title : offer.groupOfferDataModel.classTitle}');
+                                            },
+                                          ),
                                   ],
                                 );
                               },
@@ -535,89 +761,109 @@ class _ExplorePageState extends State<ExplorePage> {
                       );
                     }),
                 SizedBox(height: screenWidth * 0.02),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Seva Communities near you.',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    SizedBox(height: 7),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: StreamBuilder<bool>(
-                        stream: _bloc.seeAllBool,
-                        builder: (context, snapshotSeeAll) {
-                          return StreamBuilder<List<CommunityModel>>(
-                            stream: _bloc.nearyByCommunities,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(snapshot.error);
-                              }
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: StreamBuilder<List<CommunityModel>>(
+                    stream: isSignedUser
+                        ? _bloc.nearyByCommunities
+                        : Searches.getNearBYCommunities(geoPoint: geoPoint),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error);
+                      }
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return LoadingIndicator();
-                              }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return LoadingIndicator();
+                      }
 
-                              return GridView.count(
-                                shrinkWrap: true,
-                                crossAxisCount: 1,
-                                childAspectRatio: 3 / 1,
-                                crossAxisSpacing: 0.1,
-                                mainAxisSpacing: 0.2,
-                                physics: NeverScrollableScrollPhysics(),
-                                children: List.generate(
-                                  snapshot.data.length,
-                                  (index) {
-                                    var status = _bloc.compareUserStatus(
-                                      snapshot.data[index],
-                                      Provider.of<UserModel>(context)
-                                          ?.sevaUserID,
-                                    );
-                                    return CommunityCard(
-                                      memberIds:
-                                          snapshot.data[index].members.length >
-                                                  20
-                                              ? snapshot.data[index].members
-                                                  .sublist(0, 20)
-                                              : snapshot.data[index].members
-                                                  .sublist(
-                                                      0,
-                                                      snapshot.data[index]
-                                                          .members.length),
-                                      imageUrl: snapshot.data[index].logo_url,
-                                      name: snapshot.data[index].name,
-                                      memberCount: snapshot
-                                          .data[index].members.length
-                                          .toString(),
-                                      buttonLabel:
-                                          status == CompareUserStatus.JOINED
-                                              ? S.of(context).joined
-                                              : S.of(context).join,
-                                      buttonColor:
-                                          status == CompareUserStatus.JOINED
-                                              ? HexColor("#D2D2D2")
-                                              : Theme.of(context).accentColor,
-                                      textColor:
-                                          status == CompareUserStatus.JOINED
-                                              ? Colors.white
-                                              : Colors.black87,
-                                      onbuttonPress:
-                                          status == CompareUserStatus.JOINED
-                                              ? null
-                                              : () {},
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Seva Communities near you.',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                              SeeAllButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CommunityByCategoryView(
+                                        isFromNearby: true,
+                                        model: CommunityCategoryModel(),
+                                        geoPoint: geoPoint,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                hideButton: snapshot.data.length <= 4,
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 7),
+                          GridView.count(
+                            shrinkWrap: true,
+                            crossAxisCount: 1,
+                            childAspectRatio: 3 / 1,
+                            crossAxisSpacing: 0.1,
+                            mainAxisSpacing: 0.2,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: List.generate(
+                              snapshot.data.length,
+                              (index) {
+                                var status = isSignedUser
+                                    ? _bloc.compareUserStatus(
+                                        snapshot.data[index],
+                                        Provider.of<UserModel>(context)
+                                            ?.sevaUserID,
+                                      )
+                                    : CompareUserStatus.JOIN;
+                                CommunityModel community = snapshot.data[index];
+                                return CommunityCard(
+                                  memberIds: community.members.length > 20
+                                      ? community.members.sublist(0, 20)
+                                      : community.members
+                                          .sublist(0, community.members.length),
+                                  imageUrl: community.logo_url,
+                                  name: community.name,
+                                  memberCount:
+                                      community.members.length.toString(),
+                                  buttonLabel:
+                                      status == CompareUserStatus.JOINED
+                                          ? S.of(context).joined
+                                          : S.of(context).join,
+                                  buttonColor:
+                                      status == CompareUserStatus.JOINED
+                                          ? HexColor("#D2D2D2")
+                                          : Theme.of(context).accentColor,
+                                  textColor: status == CompareUserStatus.JOINED
+                                      ? Colors.white
+                                      : Colors.black87,
+                                  onbuttonPress:
+                                      status == CompareUserStatus.JOINED
+                                          ? null
+                                          : () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ExploreCommunityDetails(
+                                                    communityId: community.id,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(height: screenWidth * 0.02),
                 Column(
@@ -629,8 +875,22 @@ class _ExplorePageState extends State<ExplorePage> {
                           fontWeight: FontWeight.w600,
                         )),
                     SizedBox(height: 10),
-                    dataLoaded
-                        ? Container(
+                    StreamBuilder<List<CategoryModel>>(
+                        stream: isSignedUser
+                            ? FirestoreManager.getAllCategoriesStream()
+                            : _exploreBloc.categories,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+                          if (snapshot.data == null) {
+                            return Center(
+                              child: Text('No Categories available'),
+                            );
+                          }
+                          List<CategoryModel> categories = snapshot.data;
+                          return Container(
                             child: GridView(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -661,8 +921,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                 ),
                               ),
                             ),
-                          )
-                        : LoadingIndicator(),
+                          );
+                        }),
                   ],
                 ),
               ],
@@ -680,6 +940,7 @@ class _ExplorePageState extends State<ExplorePage> {
       Location templocation = Location();
       bool _serviceEnabled;
       PermissionStatus _permissionGranted;
+      LocationData locationData;
 
       _serviceEnabled = await templocation.serviceEnabled();
       if (!_serviceEnabled) {
@@ -689,6 +950,11 @@ class _ExplorePageState extends State<ExplorePage> {
         if (!_serviceEnabled) {
           return;
         } else {
+          locationData = await templocation.getLocation();
+
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          geoPoint = GeoPoint(lat, lng);
           setState(() {});
         }
       }
@@ -700,8 +966,21 @@ class _ExplorePageState extends State<ExplorePage> {
         if (_permissionGranted != PermissionStatus.granted) {
           return;
         } else {
+          locationData = await templocation.getLocation();
+
+          double lat = locationData?.latitude;
+          double lng = locationData?.longitude;
+          geoPoint = GeoPoint(lat, lng);
+
           setState(() {});
         }
+      } else {
+        locationData = await templocation.getLocation();
+
+        double lat = locationData?.latitude;
+        double lng = locationData?.longitude;
+        geoPoint = GeoPoint(lat, lng);
+        setState(() {});
       }
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {

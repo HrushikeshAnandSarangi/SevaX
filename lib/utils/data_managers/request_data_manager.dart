@@ -2049,3 +2049,24 @@ Future oneToManyCreatorRequestCompletionRejected(
 
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
+
+//getALl the categories
+Stream<List<CategoryModel>> getAllCategoriesStream() async* {
+  var data = Firestore.instance.collection('requestCategories').snapshots();
+
+  log('returned categories from firestore length: ' + data.length.toString());
+
+  yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
+    handleData: (snapshot, sink) {
+      List<CategoryModel> categories = [];
+      snapshot.documents.forEach((element) {
+        CategoryModel model = CategoryModel.fromMap(element.data);
+        model.typeId = element.documentID;
+        log('${model.title_en}');
+        categories.add(model);
+      });
+      sink.add(categories);
+    },
+  ));
+}

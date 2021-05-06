@@ -109,11 +109,11 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
-      if(AppConfig.isTestCommunity){
-        if(community.testCommunity){
+      if (AppConfig.isTestCommunity) {
+        if (community.testCommunity) {
           communityList.add(community);
         }
-      }else {
+      } else {
         if (community.private == false && !community.testCommunity) {
           communityList.add(community);
         }
@@ -224,9 +224,7 @@ class SearchManager {
     List<BorrowAgreementTemplateModel> templatesList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      log('source ${sourceMap}');
       var template = BorrowAgreementTemplateModel.fromMap(sourceMap);
-      log('temp ${template}');
 
       if (template.softDelete == false) {
         templatesList.add(template);
@@ -548,7 +546,6 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
-      log('data ${sourceMap}');
       skillList.add(sourceMap['id']);
     });
     return skillList;
@@ -577,7 +574,6 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
-      log('data ${sourceMap}');
       skillList.add(sourceMap[languageCode]);
     });
     return skillList;
@@ -606,7 +602,6 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
-      log('data ${sourceMap}');
       interestsList.add(sourceMap[languageCode]);
     });
     return interestsList;
@@ -629,7 +624,6 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
-      log('data sowurce inter${sourceMap}');
       interestsList.add(sourceMap['id']);
     });
     return interestsList;
