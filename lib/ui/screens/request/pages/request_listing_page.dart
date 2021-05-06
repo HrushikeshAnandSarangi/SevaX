@@ -432,6 +432,9 @@ Widget getAppropriateTag(BuildContext context, RequestType requestType) {
     case RequestType.TIME:
       return getTagMainFrame(S.of(context).time_request);
 
+    case RequestType.ONE_TO_MANY_REQUEST:
+      return getTagMainFrame(S.of(context).one_to_many);
+
     default:
       return Container();
   }

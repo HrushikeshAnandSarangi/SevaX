@@ -251,8 +251,10 @@ class RequestEditFormState extends State<RequestEditForm> {
     initialRequestDescription = widget.requestModel.description;
     tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
 
-//will be true because a One to many request when editing should have an instructor
-    instructorAdded = true;
+    //will be true because a One to many request when editing should have an instructor
+    if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
+      instructorAdded = true;
+    }
 
     log('Instructor Data:  ' +
         widget.requestModel.selectedInstructor.toString());
@@ -2671,7 +2673,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                   receiverEmail: selectedInstructorModel.email,
                   communityName: widget.requestModel.fullName,
                   requestName: widget.requestModel.title,
-                  requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
+                  requestCreatorName:
+                      SevaCore.of(context).loggedInUser.fullname,
                   receiverName: selectedInstructorModel.fullname,
                   startDate: widget.requestModel.requestStart,
                   endDate: widget.requestModel.requestEnd);
