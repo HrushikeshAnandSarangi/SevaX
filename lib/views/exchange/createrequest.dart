@@ -1970,10 +1970,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                         //By default instructor for One To Many Requests is the creator
                         instructorAdded = true;
                         requestModel.selectedInstructor = BasicUserDetails(
-                          fullname: widget.userModel.fullname,
-                          email: widget.userModel.email,
-                          photoURL: widget.userModel.photoURL,
-                          sevaUserID: widget.userModel.sevaUserID,
+                          fullname: SevaCore.of(context).loggedInUser.fullname,
+                          email: SevaCore.of(context).loggedInUser.email,
+                          photoURL: SevaCore.of(context).loggedInUser.photoURL,
+                          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
                         );
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.one_to_many_requests;
