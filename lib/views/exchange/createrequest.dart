@@ -2941,7 +2941,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
-
+      communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      );
       if (widget.isOfferRequest && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 
@@ -2952,7 +2954,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.participantDetails = {};
         requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
           communityId: widget.offer.communityId,
-          communityName: communityModel.name,
+          communityName: communityModel.name ?? '',
           memberEmail: widget.userModel.email,
           memberName: widget.userModel.fullname,
           memberPhotoUrl: widget.userModel.photoURL,
@@ -3044,9 +3046,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       } else {
         requestModel.parent_request_id = null;
       }
-      communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      );
+
       requestModel.liveMode = AppConfig.isTestCommunity;
       if (requestModel.public) {
         requestModel.timebanksPosted = [
