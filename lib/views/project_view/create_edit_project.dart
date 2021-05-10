@@ -77,6 +77,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   int sharedValue = 0;
   ScrollController _controller = ScrollController();
   var focusNodes = List.generate(5, (_) => FocusNode());
+
   final _textUpdates = StreamController<String>();
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
@@ -807,7 +808,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.address = selectedAddress;
                           projectModel.id = Utils.getUuid();
                           projectModel.softDelete = false;
-                          projectModel.communityName = communityModel.name;
+                          projectModel.communityName =
+                              communityModel.name ?? timebankModel.name;
 
                           if (saveAsTemplate) {
                             projectTemplateModel.communityId =
