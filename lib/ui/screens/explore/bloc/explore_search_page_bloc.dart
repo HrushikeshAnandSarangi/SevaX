@@ -56,14 +56,14 @@ class ExploreSearchPageBloc {
         ElasticSearchApi.getPublicCommunities().then((value) {
           _communities.add(value);
         });
-        FirestoreManager.getPublicOffers().listen((event) {
-          _offers.add(event);
+        ElasticSearchApi.getPublicOffers().then((value) {
+          _offers.add(value);
         });
-        FirestoreManager.getPublicProjects().listen((event) {
-          _events.add(event);
+        ElasticSearchApi.getPublicProjects().then((value) {
+          _events.add(value);
         });
-        FirestoreManager.getPublicRequests().listen((event) {
-          _requests.add(event);
+        ElasticSearchApi.getPublicRequests().then((value) {
+          _requests.add(value);
         });
       } else {
         ElasticSearchApi.searchPublicRequests(queryString: searchText).then(

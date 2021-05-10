@@ -317,8 +317,12 @@ class ElasticSearchApi {
     List<OfferModel> models = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      OfferModel model = OfferModel.fromMap(sourceMap);
-      models.add(model);
+      OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (!model.liveMode) models.add(model);
+      } else {
+        models.add(model);
+      }
     });
     models.sort((a, b) => a.fullName.compareTo(b.fullName));
     return models;
@@ -388,7 +392,11 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       RequestModel model = RequestModel.fromMap(sourceMap);
-      models.add(model);
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (!model.liveMode) models.add(model);
+      } else {
+        models.add(model);
+      }
     });
     models.sort((a, b) => a.title.compareTo(b.title));
     return models;
@@ -474,7 +482,11 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       ProjectModel model = ProjectModel.fromMap(sourceMap);
-      models.add(model);
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (!model.liveMode) models.add(model);
+      } else {
+        models.add(model);
+      }
     });
     models.sort((a, b) => a.name.compareTo(b.name));
     return models;
