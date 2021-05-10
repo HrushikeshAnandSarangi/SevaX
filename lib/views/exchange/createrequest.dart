@@ -2954,7 +2954,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.participantDetails = {};
         requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
           communityId: widget.offer.communityId,
-          communityName: communityModel.name ?? '',
+          communityName: timebankModel.name ?? '',
           memberEmail: widget.userModel.email,
           memberName: widget.userModel.fullname,
           memberPhotoUrl: widget.userModel.photoURL,
