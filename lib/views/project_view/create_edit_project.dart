@@ -16,6 +16,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -81,6 +82,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final profanityDetector = ProfanityDetector();
   bool makePublicBool = false;
   bool isPulicCheckboxVisible = false;
+  CommunityModel communityModel;
 
   @override
   void initState() {
@@ -102,10 +104,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       });
     }
 
-    getTimebankAdminStatus = getTimebankDetailsbyFuture(
-      timebankId: widget.timebankId,
-    );
-
+    getCommunity();
     setState(() {});
 
     searchTextController
@@ -133,6 +132,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         }
       }
     });
+  }
+
+  Future<void> getCommunity() async {
+    timebankModel = await getTimebankDetailsbyFuture(
+      timebankId: widget.timebankId,
+    );
+    communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+        communityId: timebankModel.communityId);
   }
 
   void getData() async {
@@ -431,7 +438,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 textCapitalization: TextCapitalization.sentences,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onSaved: (value) {
-                    projectModel.registrationLink = value;
+                  projectModel.registrationLink = value;
                 },
                 onChanged: (value) {
                   ExitWithConfirmation.of(context).fieldValues[3] = value;
@@ -439,14 +446,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.registrationLink = value;
                 },
                 validator: (value) {
-                        if (value.isEmpty) {
-                          return null;
-                        } else {
-                          projectModel.registrationLink = value;
-                        }
-                        return null;
-                      },
-
+                  if (value.isEmpty) {
+                    return null;
+                  } else {
+                    projectModel.registrationLink = value;
+                  }
+                  return null;
+                },
               ),
 
               Padding(
@@ -801,6 +807,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.address = selectedAddress;
                           projectModel.id = Utils.getUuid();
                           projectModel.softDelete = false;
+                          projectModel.communityName = communityModel.name;
 
                           if (saveAsTemplate) {
                             projectTemplateModel.communityId =

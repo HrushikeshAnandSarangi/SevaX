@@ -236,6 +236,7 @@ class OfferModel extends DataModel {
   bool virtual;
   Map<String, dynamic> participantDetails = {};
 
+  String communityName;
   OfferModel({
     this.isRecurring,
     this.recurringDays,
@@ -269,6 +270,7 @@ class OfferModel extends DataModel {
     this.participantDetails,
     this.photoUrlImage,
     this.liveMode,
+    this.communityName,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -410,6 +412,9 @@ class OfferModel extends DataModel {
     } else {
       this.public = false;
     }
+    if (map.containsKey('communityName')) {
+      this.communityName = map['communityName'];
+    }
     if (map.containsKey('photoUrlImage')) {
       this.photoUrlImage = map['photoUrlImage'];
     }
@@ -539,6 +544,9 @@ class OfferModel extends DataModel {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
       this.cashModel = new CashModel();
+    }
+    if (map.containsKey('communityName')) {
+      this.communityName = map['communityName'];
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
@@ -685,6 +693,9 @@ class OfferModel extends DataModel {
     if (this.liveMode != null) {
       map['liveMode'] = this.liveMode;
     }
+    if (this.communityName != null && this.communityName.isNotEmpty) {
+      map['communityName'] = this.communityName;
+    }
     return map;
   }
 
@@ -745,6 +756,9 @@ class OfferModel extends DataModel {
       map['public'] = this.public;
     }
 
+    if (this.communityName != null && this.communityName.isNotEmpty) {
+      map['communityName'] = this.communityName;
+    }
     return map;
   }
 

@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
@@ -21,6 +22,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -43,9 +45,9 @@ class IndividualOffer extends StatefulWidget {
 class _IndividualOfferState extends State<IndividualOffer> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
+  CommunityModel communityModel;
   String selectedAddress;
   CustomLocation customLocation;
-
   // String title = '';
   String title_hint;
   String description_hint;
@@ -77,8 +79,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                   ? HelpContextMemberType.money_offers
                   : HelpContextMemberType.goods_offers;
     }
-    super.initState();
 
+    super.initState();
+    getCommunity();
     _bloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
@@ -86,6 +89,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
             event == 'goods' ? S.of(context).select_goods_category : null);
       }
     });
+  }
+
+  Future<void> getCommunity() async {
+    communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+        communityId: widget.timebankModel.communityId);
+    setState(() {});
   }
 
   void showScaffold(String message) {
@@ -576,15 +585,19 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         null) {
                                       _bloc.allowedCalenderEvent = true;
                                       await _bloc.createOrUpdateOffer(
-                                        user: SevaCore.of(context).loggedInUser,
-                                        timebankId: widget.timebankId,
-                                      );
+                                          user:
+                                              SevaCore.of(context).loggedInUser,
+                                          timebankId: widget.timebankId,
+                                          communityName:
+                                              communityModel.name ?? '');
                                     } else {
                                       _bloc.allowedCalenderEvent = true;
                                       await _bloc.createOrUpdateOffer(
-                                        user: SevaCore.of(context).loggedInUser,
-                                        timebankId: widget.timebankId,
-                                      );
+                                          user:
+                                              SevaCore.of(context).loggedInUser,
+                                          timebankId: widget.timebankId,
+                                          communityName:
+                                              communityModel.name ?? '');
                                       if (_bloc.offerCreatedBool) {
                                         Navigator.pushReplacement(
                                           context,

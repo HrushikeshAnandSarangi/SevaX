@@ -549,7 +549,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                             ? "Ex: Offer a webinar or class to members..."
                                             : requestModel.requestType ==
                                                     RequestType.BORROW
-                                                ? S.of(context).request_title_hint
+                                                ? S
+                                                    .of(context)
+                                                    .request_title_hint
                                                 : "Ex: Non-perishable goods for Food Bank...",
                                 hintStyle: hintTextStyle,
                               ),
@@ -1182,14 +1184,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 : requestModel.requestType == RequestType.CASH
                                     ? CashRequest(snapshot, projectModelList)
                                     : requestModel.requestType ==
-                                        RequestType.ONE_TO_MANY_REQUEST
-                                    ? TimeRequest(snapshot, projectModelList)
-                                    : requestModel.requestType ==
-                                            RequestType.BORROW
-                                        ? BorrowRequest(
+                                            RequestType.ONE_TO_MANY_REQUEST
+                                        ? TimeRequest(
                                             snapshot, projectModelList)
-                                        : GoodsRequest(
-                                            snapshot, projectModelList),
+                                        : requestModel.requestType ==
+                                                RequestType.BORROW
+                                            ? BorrowRequest(
+                                                snapshot, projectModelList)
+                                            : GoodsRequest(
+                                                snapshot, projectModelList),
 
                             HideWidget(
                               hide: AppConfig.isTestCommunity,
@@ -1973,7 +1976,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           fullname: SevaCore.of(context).loggedInUser.fullname,
                           email: SevaCore.of(context).loggedInUser.email,
                           photoURL: SevaCore.of(context).loggedInUser.photoURL,
-                          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                          sevaUserID:
+                              SevaCore.of(context).loggedInUser.sevaUserID,
                         );
                         AppConfig.helpIconContextMember =
                             HelpContextMemberType.one_to_many_requests;
@@ -2397,198 +2401,199 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   Widget TimeRequest(snapshot, projectModelList) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      RepeatWidget(),
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RepeatWidget(),
 
-      SizedBox(height: 20),
+          SizedBox(height: 20),
 
-      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? RequestDescriptionData('You Request and any #hashtags')
-          : RequestDescriptionData(S.of(context).request_description_hint),
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? RequestDescriptionData('You Request and any #hashtags')
+              : RequestDescriptionData(S.of(context).request_description_hint),
 
-      SizedBox(height: 20),
-      // Choose Category and Sub Category
-      categoryWidget(),
-      SizedBox(height: 20),
-      Text(
-        'Provide the list of Skills that you required for this request',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      SkillsForRequests(
-        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
-        selectedSkills: _selectedSkillsMap,
-        onSelectedSkillsMap: (skillMap) {
-          if (skillMap.values != null && skillMap.values.length > 0) {
-            _selectedSkillsMap = skillMap;
-            // setState(() {});
-          }
-        },
-      ),
-      SizedBox(height: 20),
-
-      AddImagesForRequest(
-        onLinksCreated: (List<String> imageUrls) {
-          requestModel.imageUrls = imageUrls;
-        },
-      ),
-      SizedBox(height: 20),
-      isFromRequest(
-        projectId: widget.projectId,
-      )
-          ? addToProjectContainer(
-              snapshot,
-              projectModelList,
-              requestModel,
-            )
-          : Container(),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).max_credits,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: TextFormField(
-              focusNode: focusNodes[1],
-              onFieldSubmitted: (v) {
-                FocusScope.of(context).requestFocus(focusNodes[2]);
-              },
-              onChanged: (v) {
-                updateExitWithConfirmationValue(context, 10, v);
-                if (v.isNotEmpty && int.parse(v) >= 0) {
-                  requestModel.maxCredits = int.parse(v);
-                  setState(() {});
-                }
-              },
-              decoration: InputDecoration(
-                hintText: S.of(context).max_credit_hint,
-                hintStyle: hintTextStyle,
-                // labelText: 'No. of volunteers',
-              ),
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return S.of(context).enter_max_credits;
-                } else if (int.parse(value) < 0) {
-                  return S.of(context).enter_max_credits;
-                } else if (int.parse(value) == 0) {
-                  return S.of(context).enter_max_credits;
-                } else {
-                  requestModel.maxCredits = int.parse(value);
-                  setState(() {});
-                  return null;
-                }
-              },
+          SizedBox(height: 20),
+          // Choose Category and Sub Category
+          categoryWidget(),
+          SizedBox(height: 20),
+          Text(
+            'Provide the list of Skills that you required for this request',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
             ),
           ),
-          infoButton(
-            context: context,
-            key: GlobalKey(),
-            type: InfoType.MAX_CREDITS,
+          SkillsForRequests(
+            languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
+            selectedSkills: _selectedSkillsMap,
+            onSelectedSkillsMap: (skillMap) {
+              if (skillMap.values != null && skillMap.values.length > 0) {
+                _selectedSkillsMap = skillMap;
+                // setState(() {});
+              }
+            },
           ),
-        ],
-      ),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).number_of_volunteers,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Europa',
-          color: Colors.black,
-        ),
-      ),
-      TextFormField(
-        focusNode: focusNodes[2],
-        onFieldSubmitted: (v) {
-          FocusScope.of(context).unfocus();
-        },
-        onChanged: (v) {
-          updateExitWithConfirmationValue(context, 11, v);
-          if (v.isNotEmpty && int.parse(v) >= 0) {
-            requestModel.numberOfApprovals = int.parse(v);
-            setState(() {});
-          }
-        },
-        decoration: InputDecoration(
-          hintText: S.of(context).number_of_volunteers,
-          hintStyle: hintTextStyle,
-          // labelText: 'No. of volunteers',
-        ),
-        keyboardType: TextInputType.number,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_volunteer_count;
-          } else if (int.parse(value) < 0) {
-            return S.of(context).validation_error_volunteer_count_negative;
-          } else if (int.parse(value) == 0) {
-            return S.of(context).validation_error_volunteer_count_zero;
-          } else {
-            requestModel.numberOfApprovals = int.parse(value);
-            setState(() {});
-            return null;
-          }
-        },
-      ),
+          SizedBox(height: 20),
 
-      SizedBox(height: 10),
-
-      CommonUtils.TotalCredits(
-        context: context,
-        requestModel: requestModel,
-        requestCreditsMode: TotalCreditseMode.CREATE_MODE,
-      ),
-
-      SizedBox(height: 5),
-
-      requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? Row(
-              children: [
-                Checkbox(
-                  activeColor: Theme.of(context).primaryColor,
-                  checkColor: Colors.white,
-                  value: createEvent,
-                  onChanged: (val) {
-                    setState(() {
-                      createEvent = val;
-                    });
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              requestModel.imageUrls = imageUrls;
+            },
+          ),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).max_credits,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  focusNode: focusNodes[1],
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(focusNodes[2]);
+                  },
+                  onChanged: (v) {
+                    updateExitWithConfirmationValue(context, 10, v);
+                    if (v.isNotEmpty && int.parse(v) >= 0) {
+                      requestModel.maxCredits = int.parse(v);
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: S.of(context).max_credit_hint,
+                    hintStyle: hintTextStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return S.of(context).enter_max_credits;
+                    } else if (int.parse(value) < 0) {
+                      return S.of(context).enter_max_credits;
+                    } else if (int.parse(value) == 0) {
+                      return S.of(context).enter_max_credits;
+                    } else {
+                      requestModel.maxCredits = int.parse(value);
+                      setState(() {});
+                      return null;
+                    }
                   },
                 ),
-                Text('Tick to create an event for this request')
-              ],
-            )
-          : Container(height: 0, width: 0),
+              ),
+              infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.MAX_CREDITS,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).number_of_volunteers,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            focusNode: focusNodes[2],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            onChanged: (v) {
+              updateExitWithConfirmationValue(context, 11, v);
+              if (v.isNotEmpty && int.parse(v) >= 0) {
+                requestModel.numberOfApprovals = int.parse(v);
+                setState(() {});
+              }
+            },
+            decoration: InputDecoration(
+              hintText: S.of(context).number_of_volunteers,
+              hintStyle: hintTextStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_volunteer_count;
+              } else if (int.parse(value) < 0) {
+                return S.of(context).validation_error_volunteer_count_negative;
+              } else if (int.parse(value) == 0) {
+                return S.of(context).validation_error_volunteer_count_zero;
+              } else {
+                requestModel.numberOfApprovals = int.parse(value);
+                setState(() {});
+                return null;
+              }
+            },
+          ),
 
-      SizedBox(height: 15),
+          SizedBox(height: 10),
 
-      Center(
-        child: LocationPickerWidget(
-          selectedAddress: selectedAddress,
-          location: location,
-          onChanged: (LocationDataModel dataModel) {
-            log("received data model");
-            setState(() {
-              location = dataModel.geoPoint;
-              this.selectedAddress = dataModel.location;
-            });
-          },
-        ),
-      )
-    ]);
+          CommonUtils.TotalCredits(
+            context: context,
+            requestModel: requestModel,
+            requestCreditsMode: TotalCreditseMode.CREATE_MODE,
+          ),
+
+          SizedBox(height: 5),
+
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? Row(
+                  children: [
+                    Checkbox(
+                      activeColor: Theme.of(context).primaryColor,
+                      checkColor: Colors.white,
+                      value: createEvent,
+                      onChanged: (val) {
+                        setState(() {
+                          createEvent = val;
+                        });
+                      },
+                    ),
+                    Text('Tick to create an event for this request')
+                  ],
+                )
+              : Container(height: 0, width: 0),
+
+          SizedBox(height: 15),
+
+          Center(
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
+            ),
+          )
+        ]);
   }
 
   void _search(String queryString) {
@@ -2947,7 +2952,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.participantDetails = {};
         requestModel.participantDetails[widget.userModel.email] = AcceptorModel(
           communityId: widget.offer.communityId,
-          communityName: '',
+          communityName: communityModel.name,
           memberEmail: widget.userModel.email,
           memberName: widget.userModel.fullname,
           memberPhotoUrl: widget.userModel.photoURL,
@@ -3067,7 +3072,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.softDelete = false;
       requestModel.creatorName = SevaCore.of(context).loggedInUser.fullname;
       requestModel.minimumCredits = 0;
-
+      requestModel.communityName = communityModel.name;
       if (selectedInstructorModel != null &&
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
         //speaker put in acceptors array, later when accepts through notification put into approved users
@@ -3118,7 +3123,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
-                communityName: requestModel.fullName,
+                communityName: communityModel.name,
                 requestName: requestModel.title,
                 requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
                 receiverName: selectedInstructorModel.fullname,
@@ -3153,7 +3158,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
-                communityName: requestModel.fullName,
+                communityName: communityModel.name,
                 requestName: requestModel.title,
                 requestCreatorName: SevaCore.of(context).loggedInUser.fullname,
                 receiverName: selectedInstructorModel.fullname,
@@ -3296,11 +3301,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     var endDate,
   }) async {
     return await SevaMailer.createAndSendEmail(
-      mailContent: MailContent.createMail(
+        mailContent: MailContent.createMail(
       mailSender: senderEmail,
       mailReciever: receiverEmail,
-      mailSubject: requestCreatorName + ' from ' + communityName + ' has invited you',
-      mailContent: """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      mailSubject:
+          requestCreatorName + ' from ' + communityName + ' has invited you',
+      mailContent:
+          """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>

@@ -10,6 +10,7 @@ import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
@@ -25,6 +26,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -51,6 +53,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   String title = '';
   CustomLocation customLocation;
   bool closePage = true;
+  CommunityModel communityModel;
 
   List<FocusNode> focusNodes;
 
@@ -77,6 +80,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           widget.offerModel.groupOfferDataModel.classDescription;
     }
     super.initState();
+    getCommunity();
+
     _bloc.classSizeError.listen((error) {
       if (error != null) {
         log(error);
@@ -86,6 +91,12 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
         );
       }
     });
+  }
+
+  Future<void> getCommunity() async {
+    communityModel = await FirestoreManager.getCommunityDetailsByCommunityId(
+        communityId: widget.timebankModel.communityId);
+    setState(() {});
   }
 
   @override
@@ -618,13 +629,15 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
-          timebankId: widget.timebankId);
+          timebankId: widget.timebankId,
+          communityName: communityModel.name ?? '');
     } else {
       _bloc.allowedCalenderEvent = false;
 
       await _bloc.createOneToManyOffer(
           user: SevaCore.of(context).loggedInUser,
-          timebankId: widget.timebankId);
+          timebankId: widget.timebankId,
+          communityName: communityModel.name ?? '');
       log("creation statusss - ${_bloc.offerCreatedBool}");
       if (_bloc.offerCreatedBool) {
         log("inside if with ${_bloc.offerCreatedBool}");

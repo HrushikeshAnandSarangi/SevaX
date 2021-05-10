@@ -590,7 +590,7 @@ class _OffersView extends StatelessWidget {
               title: getOfferTitle(offerDataModel: offer),
               description: getOfferDescription(offerDataModel: offer),
               location: offer.selectedAdrress,
-              communityName: "offer.communityName ?? ''",
+              communityName: offer.communityName ?? '',
               date: DateFormat('d MMMM, y').format(date),
               time: DateFormat.jm().format(date),
             );
