@@ -206,7 +206,7 @@ class RequestModel extends DataModel {
   SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
       new SelectedSpeakerTimeDetails();
   Map<String, dynamic> skills;
-  bool liveMode = false;
+  bool liveMode = true;
 
   List<String> timebanksPosted;
   bool public;
@@ -429,6 +429,8 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
 
     if (map.containsKey('isNotified')) {
@@ -545,9 +547,6 @@ class RequestModel extends DataModel {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
     } else {
       this.skills = {};
-    }
-    if (map.containsKey('liveMode')) {
-      this.liveMode = map['liveMode'];
     }
     if (map.containsKey('public')) {
       this.public = map['public'];
@@ -872,6 +871,8 @@ class RequestModel extends DataModel {
       }
       if (map.containsKey('liveMode')) {
         this.liveMode = map['liveMode'];
+      } else {
+        this.liveMode = true;
       }
       if (map.containsKey('imageUrls')) {
         List<String> imageUrls = List.castFrom(map['imageUrls']);

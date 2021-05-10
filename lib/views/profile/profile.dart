@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
   UserProfileBloc _profileBloc;
 
   List<CommunityModel> communities = [];
-  double balance=0;
+  double balance = 0;
   @override
   void initState() {
     log("profile page init");
@@ -79,8 +79,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
-        balance=AppConfig.isTestCommunity ?user.testBalance:user.currentBalance;
-
+        balance = AppConfig.isTestCommunity
+            ? user.testBalance ?? 0
+            : user.currentBalance;
       });
     });
   }
@@ -160,8 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(height: 20),
                         SevaCoinWidget(
                           amount: balance != null
-                              ? double.parse(
-                                  balance.toStringAsFixed(2))
+                              ? double.parse(balance.toStringAsFixed(2))
                               : 0.0,
                           onTap: () async {
                             var connResult =

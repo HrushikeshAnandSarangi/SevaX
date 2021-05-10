@@ -689,7 +689,13 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            projectsList.add(model);
+            if (AppConfig.isTestCommunity) {
+              if (model.liveMode == false) {
+                projectsList.add(model);
+              }
+            } else {
+              projectsList.add(model);
+            }
           },
         );
         projectSink.add(projectsList);
@@ -714,7 +720,13 @@ Stream<List<RequestModel>> getPublicRequests() async* {
           (documentSnapshot) {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            requestList.add(model);
+            if (AppConfig.isTestCommunity) {
+              if (model.liveMode == false) {
+                requestList.add(model);
+              }
+            } else {
+              requestList.add(model);
+            }
           },
         );
         requestSink.add(requestList);
@@ -738,7 +750,13 @@ Stream<List<OfferModel>> getPublicOffers() async* {
           (documentSnapshot) {
             OfferModel model = OfferModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            offerList.add(model);
+            if (AppConfig.isTestCommunity) {
+              if (model.liveMode == false) {
+                offerList.add(model);
+              }
+            } else {
+              offerList.add(model);
+            }
           },
         );
         offerSink.add(offerList);
@@ -1832,7 +1850,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         .collection('transactions')
         .where("isApproved", isEqualTo: true)
         .where('transactionbetween', arrayContains: userId)
-        .where('liveMode', isEqualTo: true)
+        .where('liveMode', isEqualTo: false)
         .orderBy("timestamp", descending: true)
         .snapshots();
   } else {
@@ -1840,6 +1858,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         .collection('transactions')
         .where("isApproved", isEqualTo: true)
         .where('transactionbetween', arrayContains: userId)
+        .where('liveMode', isEqualTo: true)
         .orderBy("timestamp", descending: true)
         .snapshots();
   }

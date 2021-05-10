@@ -777,7 +777,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             );
                             return;
                           }
-                          projectModel.liveMode = AppConfig.isTestCommunity;
+                          projectModel.liveMode = !AppConfig.isTestCommunity;
                           if (projectModel.public) {
                             projectModel.timebanksPosted = [
                               widget.timebankId,

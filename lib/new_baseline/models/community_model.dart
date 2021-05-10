@@ -155,9 +155,7 @@ class CommunityModel extends DataModel {
         ? map['subscriptionCancelled']
         : false;
     this.testCommunity =
-        map.containsKey('testCommunity') && map['testCommunity'] != null
-            ? map['testCommunity']
-            : false;
+        map.containsKey('testCommunity') ? map['testCommunity'] : false;
     this.transactionCount =
         map.containsKey('transactionCount') && map["transactionCount"] != null
             ? map['transactionCount'] ?? 0

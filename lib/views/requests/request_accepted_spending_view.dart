@@ -989,7 +989,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "comments": (results['didComment']
           ? results['comment']
           : S.of(context).no_comments),
-      'liveMode': AppConfig.isTestCommunity,
+      'liveMode': !AppConfig.isTestCommunity,
     });
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       log('inside credit');

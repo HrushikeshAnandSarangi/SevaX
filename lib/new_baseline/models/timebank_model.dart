@@ -71,7 +71,7 @@ class TimebankModel extends DataModel {
     this.protected = map.containsKey("protected") ? map["protected"] : false;
     this.private = map.containsKey("private") ? map["private"] : false;
     this.sponsored = map.containsKey("sponsored") ? map["sponsored"] : false;
-    this.liveMode = map.containsKey("liveMode") ? map["liveMode"] : false;
+    this.liveMode = map.containsKey("liveMode") ? map["liveMode"] : true;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.associatedParentTimebankId =
@@ -343,7 +343,7 @@ class TimebankModel extends DataModel {
     if (this.liveMode != null) {
       map['liveMode'] = this.liveMode;
     } else {
-      map['liveMode'] = false;
+      map['liveMode'] = true;
     }
     if (this.timebankConfigurations != null) {
       map['timebankConfigurations'] = this.timebankConfigurations.toMap();

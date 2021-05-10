@@ -229,7 +229,7 @@ class OfferModel extends DataModel {
   IndividualOfferDataModel individualOfferDataModel;
   List<String> allowedCalenderUsers;
   bool creatorAllowedCalender = false;
-  bool liveMode = false;
+  bool liveMode = true;
   Coordinates currentUserLocation; //to be used locally
   bool public;
   List<String> timebanksPosted;
@@ -405,6 +405,8 @@ class OfferModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
 
     if (map.containsKey('public')) {
@@ -550,6 +552,8 @@ class OfferModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
     if (map.containsKey('public')) {
       this.public = map['public'];

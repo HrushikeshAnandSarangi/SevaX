@@ -113,7 +113,7 @@ class ProjectModel extends DataModel {
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
-        liveMode: json["liveMode"] == null ? false : json["liveMode"],
+        liveMode: json["liveMode"] == null ? true : json["liveMode"],
         requestedSoftDelete: json["requestedSoftDelete"] == null
             ? false
             : json["requestedSoftDelete"],
@@ -170,7 +170,7 @@ class ProjectModel extends DataModel {
       "start_time": startTime == null ? null : startTime,
       "end_time": endTime == null ? null : endTime,
       "softDelete": softDelete ?? false,
-      "liveMode": liveMode ?? false,
+      "liveMode": liveMode ?? true,
       "requestedSoftDelete": requestedSoftDelete ?? false,
       "members":
           members == null ? null : List<dynamic>.from(members.map((x) => x)),

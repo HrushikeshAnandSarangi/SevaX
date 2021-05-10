@@ -103,7 +103,7 @@ class OneToManyOfferBloc extends BlocBase {
                 _location.value == null ? null : _location.value.address,
             timestamp: timestamp,
             location: _location.value == null ? null : _location.value.location,
-            liveMode: AppConfig.isTestCommunity,
+            liveMode: !AppConfig.isTestCommunity,
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
             timebanksPosted: _makePublic.value ?? false

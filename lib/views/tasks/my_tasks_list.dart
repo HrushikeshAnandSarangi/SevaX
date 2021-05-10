@@ -1213,7 +1213,7 @@ class TaskCardViewState extends State<TaskCardView> {
         "requestId": requestModel.id,
         "comments":
             (results['didComment'] ? results['comment'] : "No comments"),
-        'liveMode': AppConfig.isTestCommunity,
+        'liveMode': !AppConfig.isTestCommunity,
       });
       logger.i('here 2');
       await sendMessageToMember(

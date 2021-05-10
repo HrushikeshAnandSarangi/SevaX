@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -116,7 +118,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
 }
 
 class EarningListItem extends StatefulWidget {
-  final model;
+  final TransactionModel model;
   final viewtype;
   final usertimezone;
   const EarningListItem({Key key, this.model, this.usertimezone, this.viewtype})
@@ -128,15 +130,10 @@ class EarningListItem extends StatefulWidget {
 class _EarningListItemState extends State<EarningListItem> {
   @override
   Widget build(BuildContext context) {
-    var type = (widget.model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
-            widget.model.type != 'RequestMode.TIMEBANK_REQUEST' &&
-            widget.model.from != widget.model.timebankid)
-        ? 'user'
-        : S.of(context).timebank;
     return FutureBuilder(
-        future: type == 'user'
-            ? FirestoreManager.getUserForId(sevaUserId: widget.model.from)
-            : FirestoreManager.getTimeBankForId(timebankId: widget.model.from),
+        future: widget.model.from.contains('-')
+            ? FirestoreManager.getTimeBankForId(timebankId: widget.model.from)
+            : FirestoreManager.getUserForId(sevaUserId: widget.model.from),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('');
@@ -174,15 +171,9 @@ class _EarningListItemState extends State<EarningListItem> {
                 );
               }(),
               subtitle: EarningItem(
-                  name: type == 'user'
-                      ? snapshot.data.fullname == null
-                          ? S.of(context).anonymous
-                          : widget.model.type == "USER_PAYLOAN_TOTIMEBANK"
-                              ? snapshot.data.fullname + ' - Loan Repayment'
-                              : snapshot.data.fullname
-                      : widget.model.type == "ADMIN_DONATE_TOUSER"
-                          ? snapshot.data.name + " (Seva Community) Loan"
-                          : snapshot.data.name + " (Seva Community)",
+                  name: widget.model.from.contains('-')
+                      ? snapshot.data.name
+                      : snapshot.data.fullname ?? '',
                   timestamp: widget.model.timestamp,
                   usertimezone: widget.usertimezone));
         });
@@ -203,7 +194,7 @@ class EarningItem extends StatelessWidget {
           height: 2,
         ),
         Text(
-          '${name}',
+          '${name ?? ''}',
           textAlign: TextAlign.start,
         ),
         SizedBox(
@@ -229,7 +220,7 @@ class EarningItem extends StatelessWidget {
 }
 
 class EarningImageItem extends StatelessWidget {
-  final model;
+  final TransactionModel model;
   final snapshot;
   EarningImageItem({this.model, this.snapshot});
   @override

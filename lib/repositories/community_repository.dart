@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 mixin CommunityRepository {
@@ -151,7 +152,12 @@ mixin CommunityRepository {
 
     List<CommunityModel> models = [];
     data.documents.forEach((element) {
-      models.add(CommunityModel(element.data));
+      CommunityModel model = CommunityModel(element.data);
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (model.testCommunity) models.add(model);
+      } else {
+        models.add(model);
+      }
     });
     return models;
   }

@@ -294,6 +294,8 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
   }
 
@@ -415,6 +417,8 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
   }
 

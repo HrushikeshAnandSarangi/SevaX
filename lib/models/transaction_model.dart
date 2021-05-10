@@ -75,6 +75,8 @@ class TransactionModel extends DataModel {
     }
     if (map.containsKey('liveMode')) {
       this.liveMode = map['liveMode'];
+    } else {
+      this.liveMode = true;
     }
   }
 
@@ -118,7 +120,7 @@ class TransactionModel extends DataModel {
     if (this.communityId != null) {
       map['communityId'] = this.communityId;
     }
-    map['liveMode'] = AppConfig.isTestCommunity;
+    map['liveMode'] = !AppConfig.isTestCommunity;
 
     return map;
   }

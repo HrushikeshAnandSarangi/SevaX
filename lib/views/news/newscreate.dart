@@ -128,7 +128,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.newsDocumentName = globals.newsDocumentName ?? '';
     newsObject.softDelete = false;
     newsObject.timebanksPosted = selectedTimebanks;
-    newsObject.liveMode = AppConfig.isTestCommunity;
+    newsObject.liveMode = !AppConfig.isTestCommunity;
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,

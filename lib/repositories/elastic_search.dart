@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
@@ -347,7 +348,13 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       CommunityModel model = CommunityModel(sourceMap);
-      models.add(model);
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (model.testCommunity) {
+          models.add(model);
+        }
+      } else {
+        models.add(model);
+      }
     });
     models.sort((a, b) => a.name.compareTo(b.name));
     return models;

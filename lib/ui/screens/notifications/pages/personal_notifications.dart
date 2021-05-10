@@ -355,8 +355,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
                         title: oneToManyRequestModel['requestCreatorName'],
                         subTitle: 'added you as Speaker for request: ' +
-                            oneToManyRequestModel[
-                                'title'],
+                            oneToManyRequestModel['title'],
                       );
                       break;
 
@@ -912,7 +911,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
-                        subTitle: "This request has now ended. Tap to complete the request.",
+                        subTitle:
+                            "This request has now ended. Tap to complete the request.",
                       );
                       break;
 
@@ -932,8 +932,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               SevaCore.of(context).loggedInUser.email);
                         },
                         photoUrl: model.photoUrl,
-                        title: '${model.title}', 
-                        subTitle: 
+                        title: '${model.title}',
+                        subTitle:
                             "The request has completed and an email has been sent to you. Tap to leave a feedback.",
                       );
                       break;
@@ -955,7 +955,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
-                        subTitle: 
+                        subTitle:
                             "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
                       );
                       break;
@@ -1066,7 +1066,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           "requestId": "testId",
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
-          'liveMode': AppConfig.isTestCommunity,
+          'liveMode': !AppConfig.isTestCommunity,
         },
       );
       await sendMessageOfferCreator(

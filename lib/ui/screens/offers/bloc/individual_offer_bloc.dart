@@ -138,7 +138,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
             type: _type.value,
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
-            liveMode: AppConfig.isTestCommunity,
+            liveMode: !AppConfig.isTestCommunity,
             cashModel: _cashModel.value,
             goodsDonationDetails: _goodsDonationDetails.value,
             timebanksPosted: _makePublic.value ?? false

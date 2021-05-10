@@ -3047,7 +3047,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.parent_request_id = null;
       }
 
-      requestModel.liveMode = AppConfig.isTestCommunity;
+      requestModel.liveMode = !AppConfig.isTestCommunity;
       if (requestModel.public) {
         requestModel.timebanksPosted = [
           timebankModel.id,
