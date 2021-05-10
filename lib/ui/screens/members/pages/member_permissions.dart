@@ -6,7 +6,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/configuaration_model.dart';
+import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
@@ -22,11 +22,33 @@ class MemberPermissions extends StatefulWidget {
   _MemberPermissionsState createState() => _MemberPermissionsState();
 }
 
+enum Role {
+  SUPER_ADMIN,
+  ADMIN,
+  MEMBER,
+}
+
+extension Label on Role {
+  String getLabel(BuildContext context) {
+    String label = '';
+    switch (this) {
+      case Role.SUPER_ADMIN:
+        label = S.of(context).super_admin;
+        break;
+      case Role.ADMIN:
+        label = S.of(context).admin;
+        break;
+      case Role.MEMBER:
+        label = S.of(context).members;
+        break;
+    }
+    return label;
+  }
+}
+
 class _MemberPermissionsState extends State<MemberPermissions> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  String selectedRole = '';
-  String selectedRoleId = '';
-  List<String> roles = [];
+  Role selectedRole = Role.SUPER_ADMIN;
   List<String> all_permissions = [];
   bool isNotGroup = false;
   List<ConfigurationModel> configurationsList = [];
@@ -48,10 +70,6 @@ class _MemberPermissionsState extends State<MemberPermissions> {
     Future.delayed(Duration.zero, () async {
       configurationsList = ConfigurationsList().getData();
       filterPermissions(configurationsList);
-      roles = [S.of(context).super_admin, S.of(context).admin, 'Member'];
-
-      selectedRole = S.of(context).super_admin;
-      selectedRoleId = 'super_admin';
       if (widget.timebankModel.timebankConfigurations != null &&
           widget.timebankModel.timebankConfigurations.superAdmin != null) {
         all_permissions =
@@ -175,39 +193,53 @@ class _MemberPermissionsState extends State<MemberPermissions> {
 
   Widget roleWidget() {
     return GridView.count(
-        shrinkWrap: true,
-        crossAxisCount: 2,
-        childAspectRatio: 4 / 1,
-        crossAxisSpacing: 0.0,
-        mainAxisSpacing: 0.2,
-        children: List.generate(
-          roles.length,
-          (index) => _optionRadioButton<String>(
-            groupvalue: selectedRole,
-            onChanged: (value) async {
-              await updateConfigurations();
-              selectedRole = value;
-              if (value == 'Member') {
-                all_permissions =
-                    widget.timebankModel.timebankConfigurations.member ?? [];
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      childAspectRatio: 4 / 1,
+      crossAxisSpacing: 0.0,
+      mainAxisSpacing: 0.2,
+      children: Role.values
+          .map(
+            (role) => _optionRadioButton<Role>(
+              groupvalue: selectedRole,
+              onChanged: (Role value) async {
+                await updateConfigurations();
+                selectedRole = value;
+                switch (value) {
+                  case Role.SUPER_ADMIN:
+                    configurationsList = ConfigurationsList().getData();
 
-                selectedRoleId = 'member';
-              } else if (value == S.of(context).admin) {
-                all_permissions =
-                    widget.timebankModel.timebankConfigurations.admin ?? [];
-                selectedRoleId = 'admin';
-              } else {
-                all_permissions =
-                    widget.timebankModel.timebankConfigurations.superAdmin ??
+                    filterPermissions(configurationsList);
+
+                    all_permissions = widget
+                            .timebankModel.timebankConfigurations.superAdmin ??
                         [];
-                selectedRoleId = 'super_admin';
-              }
-              setState(() {});
-            },
-            title: roles[index],
-            value: roles[index],
-          ),
-        ));
+                    break;
+                  case Role.ADMIN:
+                    configurationsList = ConfigurationsList().getData();
+
+                    filterPermissions(configurationsList);
+                    all_permissions =
+                        widget.timebankModel.timebankConfigurations.admin ?? [];
+                    break;
+                  case Role.MEMBER:
+                    configurationsList = ConfigurationsList().getMemberData();
+
+                    filterPermissions(configurationsList);
+                    all_permissions =
+                        widget.timebankModel.timebankConfigurations.member ??
+                            [];
+                    break;
+                }
+
+                setState(() {});
+              },
+              title: role.getLabel(context),
+              value: role,
+            ),
+          )
+          .toList(),
+    );
   }
 
   Widget generalPermissionsWidget() {
@@ -370,22 +402,19 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   }
 
   Future<void> updateConfigurations() async {
-    if (selectedRoleId == 'super_admin' &&
-        widget.timebankModel.timebankConfigurations.superAdmin.length !=
-            all_permissions) {
-      updateQuery();
-      widget.timebankModel.timebankConfigurations.superAdmin = all_permissions;
-    } else if (selectedRoleId == 'admin' &&
-        widget.timebankModel.timebankConfigurations.admin.length !=
-            all_permissions) {
-      updateQuery();
-      widget.timebankModel.timebankConfigurations.admin = all_permissions;
-    } else if (widget.timebankModel.timebankConfigurations.member.length !=
-        all_permissions) {
-      updateQuery();
-      widget.timebankModel.timebankConfigurations.member = all_permissions;
-    } else {
-      //nothing
+    updateQuery();
+    switch (selectedRole) {
+      case Role.SUPER_ADMIN:
+        widget.timebankModel.timebankConfigurations.superAdmin =
+            all_permissions;
+        break;
+      case Role.ADMIN:
+        widget.timebankModel.timebankConfigurations.admin = all_permissions;
+        break;
+
+        break;
+      case Role.MEMBER:
+        widget.timebankModel.timebankConfigurations.member = all_permissions;
     }
   }
 
@@ -393,9 +422,15 @@ class _MemberPermissionsState extends State<MemberPermissions> {
     await Firestore.instance
         .collection('timebanknew')
         .document(widget.timebankModel.id)
-        .updateData({
-      'timebankConfigurations.' +
-          selectedRoleId.toLowerCase().replaceAll(' ', '_'): all_permissions
-    });
+        .updateData(
+      {
+        'timebankConfigurations.' +
+            selectedRole
+                .toString()
+                .toLowerCase()
+                .split('.')[1]
+                .replaceAll(' ', '_'): all_permissions
+      },
+    );
   }
 }
