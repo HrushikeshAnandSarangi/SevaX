@@ -153,10 +153,15 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               SizedBox(
                 height: 10,
               ),
-              titleText(
-                title: 'Events Permissions',
+              HideWidget(
+                hide: selectedRole == Role.MEMBER,
+                child: titleText(
+                  title: 'Events Permissions',
+                ),
               ),
-              eventPermissionsWidget(),
+              HideWidget(
+                  hide: selectedRole == Role.MEMBER,
+                  child: eventPermissionsWidget()),
               SizedBox(
                 height: 10,
               ),

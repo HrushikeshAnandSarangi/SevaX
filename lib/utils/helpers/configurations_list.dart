@@ -98,23 +98,13 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
-        id: 'create_events', title_en: 'Create Events', type: 'events'),
-    ConfigurationModel(
         id: 'create_goods_offers',
         title_en: 'Create Goods Offers',
         type: 'offer'),
     ConfigurationModel(
-        id: 'create_goods_request',
-        title_en: 'Create Goods Request',
-        type: 'request'),
-    ConfigurationModel(
         id: 'create_money_offers',
         title_en: 'Create Money Offers',
         type: 'offer'),
-    ConfigurationModel(
-        id: 'create_money_request',
-        title_en: 'Create Money Request',
-        type: 'request'),
     ConfigurationModel(
         id: 'create_time_offers',
         title_en: 'Create Time Offers',
@@ -130,10 +120,6 @@ class ConfigurationsList {
         title_en: 'Create virtual Request',
         type: 'request'),
     ConfigurationModel(
-        id: 'create_public_request',
-        title_en: 'Create public request',
-        type: 'request'),
-    ConfigurationModel(
         id: 'create_virtual_offer',
         title_en: 'Create Virtual offer',
         type: 'offer'),
@@ -141,14 +127,6 @@ class ConfigurationsList {
         id: 'create_public_offer',
         title_en: 'Create public offer',
         type: 'offer'),
-    ConfigurationModel(
-        id: 'create_virtual_event',
-        title_en: 'Create virtual event',
-        type: 'events'),
-    ConfigurationModel(
-        id: 'create_public_event',
-        title_en: 'Create public event',
-        type: 'events'),
     ConfigurationModel(
         id: 'create_endorsed_group',
         title_en: 'Create endorsed group',
