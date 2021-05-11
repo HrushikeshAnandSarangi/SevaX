@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/member_card_with_single_a
 import 'package:sevaexchange/ui/screens/offers/widgets/seva_coin_star.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -42,9 +43,8 @@ class TimeOfferEarnings extends StatelessWidget {
                       title: S.of(context).your_earnings,
                       amount:
                           (offerModel.individualOfferDataModel.minimumCredits *
-                                      snapshot.data.length)
-                                  .toString() ??
-                              '0',
+                                  snapshot.data.length)
+                              .toString(),
                     ),
                     Divider(),
                   ],
@@ -61,8 +61,8 @@ class TimeOfferEarnings extends StatelessWidget {
                     SevaCoinStarWidget(
                       title: S.of(context).your_earnings,
                       amount:
-                          (offerModel.individualOfferDataModel.minimumCredits *
-                                      snapshot.data.length)
+                          (offerModel.individualOfferDataModel.minimumCredits ??
+                                      0 * snapshot.data.length)
                                   .toString() ??
                               '0',
                     ),

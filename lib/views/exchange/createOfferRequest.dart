@@ -141,7 +141,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                                   child: Text(
                                     S
                                         .of(context)
-                                        .create_request
+                                        .accept_offer
                                         .padLeft(10)
                                         .padRight(10),
                                     style: Theme.of(context)
@@ -361,13 +361,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       //create invitation if its from offer only for cash and goods
       try {
         await sendNotification(
-            offerModel: widget.offer,
-            timebankModel: timebankModel,
-            currentCommunity: widget.offer.communityId,
-            requestModel: requestModel,
-            sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-            targetUserId: widget.offer.sevaUserId,
-            targetUserEmail: widget.offer.email);
+          offerModel: widget.offer,
+          timebankModel: timebankModel,
+          currentCommunity: widget.offer.communityId,
+          requestModel: requestModel,
+          sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+          targetUserId: widget.offer.sevaUserId,
+          targetUserEmail: widget.offer.email,
+        );
       } on Exception catch (exception) {
         //Log to crashlytics
 

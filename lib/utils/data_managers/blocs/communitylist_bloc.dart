@@ -77,10 +77,10 @@ class VolunteerFindBloc {
 
   fetchUsers(name) async {
     UserListModel userListModel = UserListModel();
-    userListModel.loading = true;
+    // userListModel.loading = true;
     _usersFetcher.sink.add(userListModel);
     userListModel = await _repository.searchUserByName(name, userListModel);
-    userListModel.loading = false;
+    // userListModel.loading = false;
     _usersFetcher.sink.add(userListModel);
   }
 

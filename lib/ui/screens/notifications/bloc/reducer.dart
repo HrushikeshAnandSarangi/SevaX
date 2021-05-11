@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/requests/offer_join_request.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -820,30 +821,20 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
-          '${requestInvitationModel.requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-      title: S.of(context).join +
-          ' ' +
-          S.of(context).time_offer +
-          ' ' +
-          S.of(context).request,
+          '${requestInvitationModel.requestModel.fullName} has accepted your offer and has shared an invitation.',
+      title: S.of(context).accepted_offer,
       onPressed: () {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,
-                timeBankId: notification.timebankId,
-                notificationId: notification.id,
-                userModel: user,
-                isFromOfferRequest: true,
-              );
-            },
-          );
-        }
+        showDialog(
+          context: context,
+          builder: (context) {
+            return OfferJoinRequestDialog(
+              requestInvitationModel: requestInvitationModel,
+              timeBankId: notification.timebankId,
+              notificationId: notification.id,
+              userModel: user,
+            );
+          },
+        );
       },
       timestamp: notification.timestamp,
     );

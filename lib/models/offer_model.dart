@@ -141,6 +141,7 @@ class GroupOfferDataModel {
 class IndividualOfferDataModel extends DataModel {
   String description;
   List<String> offerAcceptors;
+  List<String> offerInvites;
   String schedule;
   String title;
   int minimumCredits;
@@ -169,6 +170,14 @@ class IndividualOfferDataModel extends DataModel {
     } else {
       this.offerAcceptors = [];
     }
+
+    if (map.containsKey("offerInvites")) {
+      List<String> offerInvites = List.castFrom(map['offerInvites']);
+      this.offerInvites = offerInvites;
+    } else {
+      this.offerInvites = [];
+    }
+
     if (map.containsKey('minimumCredits')) {
       this.minimumCredits = map['minimumCredits'];
     }
@@ -191,7 +200,15 @@ class IndividualOfferDataModel extends DataModel {
     if (schedule != null) {
       map['schedule'] = schedule;
     }
-    map['offerAcceptors'] = [];
+
+    if (offerAcceptors == null) {
+      map['offerAcceptors'] = [];
+    }
+
+    if (offerInvites == null) {
+      map['offerInvites'] = [];
+    }
+
     if (this.minimumCredits != null) {
       map['minimumCredits'] = this.minimumCredits;
     }

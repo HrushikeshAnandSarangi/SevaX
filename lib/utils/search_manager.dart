@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+// import 'dart:html';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,8 @@ import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/search_via_zipcode.dart';
+
+import 'log_printer/log_printer.dart';
 
 class SearchManager {
   static Future<http.Response> makeGetRequest({

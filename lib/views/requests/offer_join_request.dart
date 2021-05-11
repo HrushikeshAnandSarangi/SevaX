@@ -12,26 +12,25 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
-class JoinRejectDialogView extends StatefulWidget {
+class OfferJoinRequestDialog extends StatefulWidget {
   final RequestInvitationModel requestInvitationModel;
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
-  bool isFromOfferRequest;
-  JoinRejectDialogView({
+
+  OfferJoinRequestDialog({
     this.requestInvitationModel,
     this.timeBankId,
     this.notificationId,
     this.userModel,
-    this.isFromOfferRequest = false,
   });
 
   @override
-  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState();
+  _OfferJoinRequestDialogState createState() => _OfferJoinRequestDialogState();
 }
 
-class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
-  _JoinRejectDialogViewState();
+class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
+  _OfferJoinRequestDialogState();
 
   BuildContext progressContext;
 
@@ -87,9 +86,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  widget.isFromOfferRequest
-                      ? "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}"
-                      : "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
+                  "By acceting this invitation, a task will be added in your tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -161,8 +158,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                             );
                           },
                         );
-
-                        //  calenderConfirmation(context);
                       } else {
                         approveInvitationForVolunteerRequest(
                             allowedCalender: false,
@@ -189,9 +184,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      // request declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
-
                       declineInvitationbRequest(
                           model: widget.requestInvitationModel,
                           notificationId: widget.notificationId,
@@ -266,23 +258,10 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     Firestore.instance
         .collection('offers')
         .document(offerId)
-        .collection('offerId')
-        .document(uuid)
-        .setData({
-      'acceptorNotificationId': notificationId,
-      'communityId': acceptorModel.communityId,
-      'id': uuid,
-      'mode': offerMode,
-      'offerId': offerId,
+        .collection('offerAcceptors')
+        .document(notificationId)
+        .updateData({
       'status': 'ACCEPTED',
-      'timebankId': timebankId,
-      'timestamp': new DateTime.now().millisecondsSinceEpoch,
-      'participantDetails': {
-        'bio': user.bio,
-        'email': user.email,
-        'photourl': user.photoURL,
-        'sevauserid': user.sevaUserID,
-      }
     });
 
     FirestoreManager.readUserNotification(notificationId, user.email);

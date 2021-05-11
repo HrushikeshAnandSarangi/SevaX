@@ -190,7 +190,8 @@ enum NotificationType {
   MEMBER_REMOVED_FROM_MESSAGE_ROOM,
 
   //offer request invite
-  OfferRequestInvite
+  OfferRequestInvite,
+  TimeOfferInvitationFromCreator
 }
 
 //Check the method
