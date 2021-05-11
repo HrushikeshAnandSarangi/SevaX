@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 enum ClaimStatus { NoAction, Approved, Rejected }
 enum ManualTimeType { Project, Timebank, Group }
@@ -21,6 +22,7 @@ class ManualTimeModel {
     @required this.timestamp,
     @required this.timebankId,
     @required this.communityName,
+    @required this.liveMode,
   });
 
   String id;
@@ -37,7 +39,7 @@ class ManualTimeModel {
   int timestamp;
   String timebankId;
   String communityName;
-
+  bool liveMode;
   factory ManualTimeModel.fromSnapshot(DocumentSnapshot snapshot) =>
       ManualTimeModel(
         id: snapshot.documentID,
@@ -56,6 +58,9 @@ class ManualTimeModel {
         timestamp: snapshot.data["timestamp"],
         claimedBy: _claimedByMap[snapshot.data['claimedBy']],
         timebankId: snapshot.data['timebankId'],
+        liveMode: snapshot.data.containsKey('liveMode')
+            ? snapshot.data['liveMode']
+            : true,
       );
 
   factory ManualTimeModel.fromMap(Map<String, dynamic> map) => ManualTimeModel(
@@ -77,6 +82,7 @@ class ManualTimeModel {
         timestamp: map["timestamp"],
         claimedBy: _claimedByMap[map['claimedBy']],
         timebankId: map["timebankId"],
+        liveMode: map.containsKey('liveMode') ? map['liveMode'] : true,
       );
 
   Map<String, dynamic> toMap() => {
@@ -94,6 +100,7 @@ class ManualTimeModel {
         "relatedNotificationId": relatedNotificationId,
         "timestamp": timestamp,
         "timebankId": timebankId,
+        "liveMode": !AppConfig.isTestCommunity,
       };
 
   @override

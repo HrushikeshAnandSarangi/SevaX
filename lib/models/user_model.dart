@@ -27,7 +27,7 @@ class UserModel extends DataModel {
   String sevaUserID;
   List<String> invitedRequests;
   double currentBalance;
-  double testBalance;
+  double sandboxCurrentBalance;
   double trustworthinessscore;
   double reliabilityscore;
   int totalReviews;
@@ -92,7 +92,7 @@ class UserModel extends DataModel {
       this.sevaUserID,
       this.skills,
       this.currentBalance,
-      this.testBalance,
+      this.sandboxCurrentBalance,
       this.reliabilityscore,
       this.trustworthinessscore,
       this.totalReviews,
@@ -119,8 +119,7 @@ class UserModel extends DataModel {
       this.cvName,
       this.deviceDetails,
       this.curatedRequestIds,
-      this.creationSource
-      });
+      this.creationSource});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if (map.containsKey('calendarScope')) {
@@ -291,10 +290,10 @@ class UserModel extends DataModel {
       this.currentBalance = 0.0;
     }
 
-    if (map.containsKey('testBalance')) {
-      this.testBalance = map['testBalance'].toDouble();
+    if (map.containsKey('sandboxCurrentBalance')) {
+      this.sandboxCurrentBalance = map['sandboxCurrentBalance'].toDouble();
     } else {
-      this.testBalance = 0.0;
+      this.sandboxCurrentBalance = 0.0;
     }
     if (map.containsKey('trustworthinessscore')) {
       this.trustworthinessscore = map['trustworthinessscore'].toDouble();
@@ -490,10 +489,10 @@ class UserModel extends DataModel {
     } else {
       object['currentBalance'] = 0;
     }
-    if (this.testBalance != null) {
-      object['testBalance'] = this.testBalance;
+    if (this.sandboxCurrentBalance != null) {
+      object['sandboxCurrentBalance'] = this.sandboxCurrentBalance;
     } else {
-      object['testBalance'] = 0;
+      object['sandboxCurrentBalance'] = 0;
     }
     if (this.trustworthinessscore != null) {
       object['trustworthinessscore'] = this.trustworthinessscore;
@@ -578,7 +577,7 @@ class UserModel extends DataModel {
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},
-      ${this.testBalance.toString()},
+      ${this.sandboxCurrentBalance.toString()},
       ${this.reliabilityscore.toString()},
       ${this.totalReviews.toString()}, 
       ${this.trustworthinessscore.toString()},

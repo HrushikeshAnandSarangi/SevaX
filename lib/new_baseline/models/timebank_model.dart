@@ -30,6 +30,7 @@ class TimebankModel extends DataModel {
   String rootTimebankId;
   List<String> children;
   num balance;
+  num sandboxBalance;
   GeoFirePoint location;
   bool softDelete;
   bool preventAccedentalDelete;
@@ -85,6 +86,8 @@ class TimebankModel extends DataModel {
     this.children =
         map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0.0;
+    this.sandboxBalance =
+        map.containsKey("sandboxBalance") ? map["sandboxBalance"] : 0.0;
     this.location = getLocation(map);
     this.softDelete = map.containsKey("softDelete") ? map["softDelete"] : false;
     this.preventAccedentalDelete = map.containsKey("preventAccedentalDelete")
@@ -217,6 +220,9 @@ class TimebankModel extends DataModel {
     if (key == 'balance') {
       this.balance = value;
     }
+    if (key == 'sandboxBalance') {
+      this.sandboxBalance = value;
+    }
     if (key == 'community_id') {
       this.communityId = value;
     }
@@ -300,6 +306,7 @@ class TimebankModel extends DataModel {
       "children":
           children == null ? null : List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
+      "sandboxBalance": sandboxBalance == null ? null : sandboxBalance,
       'softDelete': false,
       "lastMessageTimestamp": null,
     };
@@ -353,7 +360,7 @@ class TimebankModel extends DataModel {
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored,timebankConfigurations: ${timebankConfigurations.toString()}, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address,liveMode: $liveMode, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins,organizers: $organizers, coordinators: $coordinators, members: $members, protected: $protected,sponsored: $sponsored,timebankConfigurations: ${timebankConfigurations.toString()}, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, sandboxBalance: $sandboxBalance, location: $location, private: $private}';
   }
 }
 

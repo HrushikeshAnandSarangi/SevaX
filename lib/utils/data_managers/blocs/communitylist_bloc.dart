@@ -220,7 +220,9 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
+            AppConfig.isTestCommunity
+                    ? 'sandboxCurrentBalance'
+                    : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
         // credit to user
@@ -236,7 +238,9 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
+            AppConfig.isTestCommunity
+                    ? 'sandboxCurrentBalance'
+                    : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
@@ -270,7 +274,9 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
+            AppConfig.isTestCommunity
+                    ? 'sandboxCurrentBalance'
+                    : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
           }, merge: true);
       } else if (type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
@@ -323,7 +329,9 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
+            AppConfig.isTestCommunity
+                    ? 'sandboxCurrentBalance'
+                    : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       } else if (type == "ADMIN_DONATE_TOUSER") {
@@ -357,7 +365,9 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({
-            AppConfig.isTestCommunity ? 'testBalance' : 'currentBalance':
+            AppConfig.isTestCommunity
+                    ? 'sandboxCurrentBalance'
+                    : 'currentBalance':
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       }

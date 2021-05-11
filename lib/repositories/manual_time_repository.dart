@@ -100,7 +100,8 @@ class ManualTimeRepository {
     batchWrite.updateData(
       _firestore.document(model.userDetails.email),
       {
-        AppConfig.isTestCommunity ? 'testBalance':'currentBalance': FieldValue.increment(model.claimedTime / 60),
+        AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
+            FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -156,7 +157,8 @@ class ManualTimeRepository {
     batchWrite.updateData(
       _firestore.collection('users').document(model.userDetails.email),
       {
-        AppConfig.isTestCommunity ? 'testBalance':'currentBalance': FieldValue.increment(model.claimedTime / 60),
+        AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
+            FieldValue.increment(model.claimedTime / 60),
       },
     );
 
@@ -268,44 +270,44 @@ class ManualTimeRepository {
     ManualTimeModel model,
   ) {
     return TransactionModel(
-      communityId: model.communityId,
-      credits: model.claimedTime / 60,
-      from: model.timebankId,
-      fromEmail_Id: model.timebankId,
-      toEmail_Id: model.userDetails.email,
-      isApproved: true,
-      timebankid: model.timebankId,
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      to: model.userDetails.id,
-      transactionbetween: [
-        model.userDetails.id,
-        model.timebankId,
-      ],
-      type: 'MANNUAL_TIME',
-      typeid: model.typeId,
-    );
+        communityId: model.communityId,
+        credits: model.claimedTime / 60,
+        from: model.timebankId,
+        fromEmail_Id: model.timebankId,
+        toEmail_Id: model.userDetails.email,
+        isApproved: true,
+        timebankid: model.timebankId,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        to: model.userDetails.id,
+        transactionbetween: [
+          model.userDetails.id,
+          model.timebankId,
+        ],
+        type: 'MANNUAL_TIME',
+        typeid: model.typeId,
+        liveMode: !AppConfig.isTestCommunity);
   }
 
   static TransactionModel getTimebankTransactionModel(
     ManualTimeModel model,
   ) {
     return TransactionModel(
-      communityId: model.communityId,
-      credits: model.claimedTime / 60,
-      from: model.timebankId,
-      fromEmail_Id: model.timebankId,
-      toEmail_Id: model.timebankId,
-      isApproved: true,
-      timebankid: model.timebankId,
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      to: model.timebankId,
-      transactionbetween: [
-        model.timebankId,
-        model.timebankId,
-      ],
-      type: 'MANNUAL_TIME',
-      typeid: model.typeId,
-    );
+        communityId: model.communityId,
+        credits: model.claimedTime / 60,
+        from: model.timebankId,
+        fromEmail_Id: model.timebankId,
+        toEmail_Id: model.timebankId,
+        isApproved: true,
+        timebankid: model.timebankId,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        to: model.timebankId,
+        transactionbetween: [
+          model.timebankId,
+          model.timebankId,
+        ],
+        type: 'MANNUAL_TIME',
+        typeid: model.typeId,
+        liveMode: !AppConfig.isTestCommunity);
   }
 
   static DocumentReference getNotificationDocumentReference({

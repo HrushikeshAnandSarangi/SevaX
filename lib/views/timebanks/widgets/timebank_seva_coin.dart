@@ -54,7 +54,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
-          balance = snapshot.data['balance'].toDouble();
+          balance = AppConfig.isTestCommunity
+              ? snapshot.data['sandboxBalance']
+              : snapshot.data['balance'].toDouble();
           timebankModel = TimebankModel.fromMap(snapshot.data.data);
           return widget.isAdmin
               ? Container(
@@ -152,7 +154,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       return;
     }
 
-    if ( AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance <= 0) {
+    if (AppConfig.isTestCommunity
+        ? this.widget.loggedInUser.sandboxCurrentBalance
+        : this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
@@ -172,7 +176,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
-          maxAmount:AppConfig.isTestCommunity ? this.widget.loggedInUser.testBalance: this.widget.loggedInUser.currentBalance),
+          maxAmount: AppConfig.isTestCommunity
+              ? this.widget.loggedInUser.sandboxCurrentBalance
+              : this.widget.loggedInUser.currentBalance),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -182,9 +188,13 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (donateAmount_Received != null) {
       setState(() {
         donateAmount = donateAmount_Received;
-
-        AppConfig.isTestCommunity ? SevaCore.of(context).loggedInUser.testBalance: SevaCore.of(context).loggedInUser.currentBalance =
-        AppConfig.isTestCommunity ?  widget.loggedInUser.testBalance:  widget.loggedInUser.currentBalance - donateAmount_Received;
+        if (AppConfig.isTestCommunity) {
+          SevaCore.of(context).loggedInUser.sandboxCurrentBalance =
+              widget.loggedInUser.sandboxCurrentBalance - donateAmount_Received;
+        } else {
+          SevaCore.of(context).loggedInUser.currentBalance =
+              widget.loggedInUser.currentBalance - donateAmount_Received;
+        }
       });
       await TransactionBloc().createNewTransaction(
         this.widget.loggedInUser.sevaUserID,

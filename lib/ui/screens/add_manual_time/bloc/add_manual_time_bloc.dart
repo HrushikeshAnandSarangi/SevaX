@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/manual_time_repository.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:usage/uuid/uuid.dart';
 
@@ -71,6 +72,7 @@ class AddManualTimeBloc {
         claimedBy: userType,
         timebankId: timebankId,
         communityName: communityName,
+        liveMode: !AppConfig.isTestCommunity,
       );
 
       NotificationsModel notificationsModel = NotificationsModel()

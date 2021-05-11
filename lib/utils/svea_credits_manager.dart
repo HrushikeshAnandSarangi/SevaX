@@ -82,7 +82,9 @@ class SevaCreditLimitManager {
       sevaUserId: userId,
     );
 
-    sevaCoins =  AppConfig.isTestCommunity ? userModel.testBalance: userModel.currentBalance;
+    sevaCoins = AppConfig.isTestCommunity
+        ? userModel.sandboxCurrentBalance
+        : userModel.currentBalance;
     return double.parse(sevaCoins.toStringAsFixed(2));
   }
 
@@ -93,7 +95,7 @@ class SevaCreditLimitManager {
     @required String communityId,
   }) async {
     logger.i("COmmunity Id being apssed " + communityId);
-    if(AppConfig.isTestCommunity){
+    if (AppConfig.isTestCommunity) {
       return true;
     }
     var currentGlobalBalance = await getCurrentBalance(email: email);
@@ -115,9 +117,7 @@ class SevaCreditLimitManager {
         return (currentGlobalBalance > 0
                     ? currentGlobalBalance -
                         associatedBalanceWithinThisCommunity
-                    : 0
-                    ) 
-                    +
+                    : 0) +
                 (communityThreshold.abs() +
                     associatedBalanceWithinThisCommunity) >=
             credits;
@@ -144,7 +144,7 @@ class SevaCreditLimitManager {
     var creditsNeeded = (credits -
         (associatedBalanceWithinThisCommunity + communityThreshold.abs()));
 
-    log('credits:  ' + associatedBalanceWithinThisCommunity.toString()); 
+    log('credits:  ' + associatedBalanceWithinThisCommunity.toString());
     log('CAB:  ' + associatedBalanceWithinThisCommunity.toString());
     log('CT:  ' + communityThreshold.toString());
     log('cNeeded:  ' + creditsNeeded.toString());
@@ -154,7 +154,9 @@ class SevaCreditLimitManager {
   static Future<double> getCurrentBalance({String email}) {
     int FALLBACK_BALANCE = 0;
     return FirestoreManager.getUserForEmail(emailAddress: email)
-        .then((value) => AppConfig.isTestCommunity ? value.testBalance:  value.currentBalance)
+        .then((value) => AppConfig.isTestCommunity
+            ? value.sandboxCurrentBalance
+            : value.currentBalance)
         .catchError((onError) => FALLBACK_BALANCE);
   }
 }

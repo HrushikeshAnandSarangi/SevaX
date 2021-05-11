@@ -80,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
         balance = AppConfig.isTestCommunity
-            ? user.testBalance ?? 0
+            ? user.sandboxCurrentBalance ?? 0
             : user.currentBalance;
       });
     });

@@ -79,13 +79,12 @@ class ElasticSearchApi {
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
+      RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
 
-      if (!(user != null && isMemberBlocked(user, sourceMap["sevauserid"]))) {
-        try {
-          requestsList.add(RequestModel.fromMapElasticSearch(sourceMap));
-        } on Exception catch (e) {
-          logger.e(e);
-        }
+      if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+        if (!model.liveMode) requestsList.add(model);
+      } else {
+        requestsList.add(model);
       }
     });
     return requestsList;
@@ -129,12 +128,16 @@ class ElasticSearchApi {
     List<ProjectModel> projectsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (!(user != null && isMemberBlocked(user, sourceMap["creator_id"]))) {
-        try {
-          projectsList.add(ProjectModel.fromMap(sourceMap));
-        } on Exception catch (e) {
-          logger.e(e);
+      ProjectModel model = ProjectModel.fromMap(sourceMap);
+
+      try {
+        if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+          if (!model.liveMode) projectsList.add(model);
+        } else {
+          projectsList.add(model);
         }
+      } on Exception catch (e) {
+        logger.e(e);
       }
     });
     projectsList.sort((a, b) => a.name.compareTo(b.name));
@@ -228,13 +231,16 @@ class ElasticSearchApi {
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
+      OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
 
-      if (!(user != null && isMemberBlocked(user, sourceMap["sevauserid"]))) {
-        try {
-          offersList.add(OfferModel.fromMapElasticSearch(sourceMap));
-        } on Exception catch (e) {
-          logger.e(e);
+      try {
+        if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+          if (!model.liveMode) offersList.add(model);
+        } else {
+          offersList.add(model);
         }
+      } on Exception catch (e) {
+        logger.e(e);
       }
     });
     return offersList;
@@ -284,7 +290,13 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       try {
         Map<String, dynamic> sourceMap = map['_source'];
-        communityList.add(CommunityModel(sourceMap));
+        CommunityModel model = CommunityModel(sourceMap);
+
+        if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+          if (model.testCommunity) communityList.add(model);
+        } else {
+          communityList.add(model);
+        }
       } on Exception catch (e) {
         logger.e(e);
       }
@@ -301,7 +313,7 @@ class ElasticSearchApi {
         "bool": {
           "must": [
             {
-              "term": {"public": false}
+              "term": {"public": true}
             },
             {
               "term": {"softDelete": false}
@@ -372,7 +384,7 @@ class ElasticSearchApi {
           "bool": {
             "must": [
               {
-                "term": {"public": false}
+                "term": {"public": true}
               },
               {
                 "term": {"softDelete": false}
