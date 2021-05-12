@@ -4,6 +4,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import 'models.dart';
 
@@ -146,6 +147,7 @@ class IndividualOfferDataModel extends DataModel {
   String title;
   int minimumCredits;
   String timeOfferType;
+  bool isAccepted;
 
   IndividualOfferDataModel();
 
@@ -157,6 +159,14 @@ class IndividualOfferDataModel extends DataModel {
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
+    if (map.containsKey('isAccepted')) {
+      this.isAccepted = map['isAccepted'];
+      logger.i("Logger from map if");
+    } else {
+      logger.i("Logger from map " + map.toString());
+      this.isAccepted = false;
+    }
+
     if (map.containsKey('description')) {
       this.description = map['description'];
     }

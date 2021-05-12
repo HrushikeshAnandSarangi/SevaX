@@ -205,6 +205,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         requestId: widget.requestId,
                         notificationId: widget.notificationId,
                         userModel: widget.userModel,
+                        offerId: widget.offerId,
                       );
 
                       if (progressContext != null) {
@@ -241,6 +242,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
     String notificationId,
     UserModel userModel,
     String requestId,
+    String offerId,
   }) {
     rejectInviteRequest(
       requestId: requestId,
@@ -248,6 +250,14 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       notificationId: notificationId,
     );
 
+    Firestore.instance
+        .collection('offers')
+        .document(offerId)
+        .collection('offerAcceptors')
+        .document(notificationId)
+        .updateData({
+      'status': 'REJECTED',
+    });
     FirestoreManager.readUserNotification(notificationId, userModel.email);
   }
 
@@ -276,6 +286,10 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
         .document(notificationId)
         .updateData({
       'status': 'ACCEPTED',
+    });
+
+    Firestore.instance.collection('offers').document(offerId).updateData({
+      'individualOfferDataModel.isAccepted': true,
     });
 
     FirestoreManager.readUserNotification(notificationId, user.email);
