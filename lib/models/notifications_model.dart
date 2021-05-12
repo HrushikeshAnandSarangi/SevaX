@@ -291,6 +291,8 @@ Map<String, NotificationType> typeMapper = {
   "APPROVE_SPONSORED_GROUP_REQUEST":
       NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
   "OfferRequestInvite": NotificationType.OfferRequestInvite,
+  "TimeOfferInvitationFromCreator":
+      NotificationType.TimeOfferInvitationFromCreator,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

@@ -278,6 +278,7 @@ class _ElasticSearchResultsHolderState
                 memberInvited: false,
                 offerAcceptors: offerAcceptors,
                 offerInvites: offerInvites,
+                offerModel: offerModel,
               );
             },
           );

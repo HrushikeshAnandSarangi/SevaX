@@ -15,6 +15,7 @@ class OfferCardWidget extends StatelessWidget {
   final TimebankModel timebankModel;
   final List<String> offerAcceptors;
   final List<String> offerInvites;
+  final OfferModel offerModel;
 
   OfferCardWidget({
     this.offerId,
@@ -23,6 +24,7 @@ class OfferCardWidget extends StatelessWidget {
     this.timebankModel,
     this.offerAcceptors,
     this.offerInvites,
+    this.offerModel,
   });
 
   @override
@@ -146,11 +148,7 @@ class OfferCardWidget extends StatelessWidget {
                                 NotificationType.TimeOfferInvitationFromCreator
                             ..senderUserId =
                                 SevaCore.of(context).loggedInUser.sevaUserID
-                            ..data = {
-                              'offerId': offerId,
-                              'inviteFullname':
-                                  SevaCore.of(context).loggedInUser.fullname,
-                            };
+                            ..data = offerModel.toMap();
 
                           Firestore.instance
                               .collection('users')

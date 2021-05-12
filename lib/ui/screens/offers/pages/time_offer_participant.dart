@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/requests/offer_join_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
@@ -83,6 +84,9 @@ class TimeOfferParticipants extends StatelessWidget {
                           notificationId:
                               snapshot.data[index].acceptorNotificationId,
                           hostEmail: snapshot.data[index].hostEmail,
+                          timeOfferParticipantsModel: snapshot.data[index],
+                          context: context,
+                          user: SevaCore.of(context).loggedInUser,
                         ),
                       ),
                     ),
@@ -103,6 +107,9 @@ class TimeOfferParticipants extends StatelessWidget {
     String acceptorDoumentId,
     String notificationId,
     String hostEmail,
+    TimeOfferParticipantsModel timeOfferParticipantsModel,
+    BuildContext context,
+    UserModel user,
   }) {
     switch (status) {
       case OfferAcceptanceStatus.ACCEPTED:
@@ -137,13 +144,31 @@ class TimeOfferParticipants extends StatelessWidget {
           RaisedButton(
             color: Colors.green,
             onPressed: () {
-              bloc.updateOfferAcceptorAction(
-                notificationId: notificationId,
-                acceptorDocumentId: acceptorDoumentId,
-                offerId: offerId,
-                action: OfferAcceptanceStatus.ACCEPTED,
-                hostEmail: hostEmail,
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return OfferJoinRequestDialog(
+                    offerId: timeOfferParticipantsModel.offerId,
+                    requestId: timeOfferParticipantsModel.requestId,
+                    requestStartDate:
+                        timeOfferParticipantsModel.requestStartDate,
+                    requestEndDate: timeOfferParticipantsModel.requestEndDate,
+                    requestTitle: timeOfferParticipantsModel.requestTitle,
+                    timeBankId: timeOfferParticipantsModel.timebankId,
+                    notificationId: notificationId,
+                    userModel: user,
+                    timeOfferParticipantsModel: timeOfferParticipantsModel,
+                  );
+                },
               );
+
+              // bloc.updateOfferAcceptorAction(
+              //   notificationId: notificationId,
+              //   acceptorDocumentId: acceptorDoumentId,
+              //   offerId: offerId,
+              //   action: OfferAcceptanceStatus.ACCEPTED,
+              //   hostEmail: hostEmail,
+              // );
             },
             child: Text(
               'Approve',
@@ -278,7 +303,16 @@ class TimeOfferParticipantsModel {
   String offerId;
   String hostEmail;
 
+  String requestId;
+  String requestTitle;
+  int requestStartDate;
+  int requestEndDate;
+
   TimeOfferParticipantsModel({
+    this.requestId,
+    this.requestTitle,
+    this.requestStartDate,
+    this.requestEndDate,
     this.id,
     this.timebankId,
     this.status,
@@ -293,6 +327,10 @@ class TimeOfferParticipantsModel {
 
   factory TimeOfferParticipantsModel.fromJSON(Map<String, dynamic> json) =>
       TimeOfferParticipantsModel(
+        requestEndDate: json["requestEndDate"],
+        requestStartDate: json["requestStartDate"],
+        requestTitle: json["requestTitle"],
+        requestId: json["requestId"],
         communityId: json["communityId"],
         status: ReadableOfferAcceptanceStatus.getValue(json["status"]),
         timebankId: json["timebankId"],
@@ -305,4 +343,22 @@ class TimeOfferParticipantsModel {
         offerId: json['offerId'],
         hostEmail: json['hostEmail'],
       );
+
+  // Map<String, dynamic> toMap() {
+
+  //     TimeOfferParticipantsModel(
+  //       communityId: json["communityId"],
+  //       status: ReadableOfferAcceptanceStatus.getValue(json["status"]),
+  //       timebankId: json["timebankId"],
+  //       participantDetails: ParticipantDetails.fromJson(
+  //           Map<String, dynamic>.from(json["participantDetails"])),
+  //       timestamp: json["timestamp"],
+  //       acceptorDocumentId: json["acceptorDocumentId"],
+  //       acceptorNotificationId: json["acceptorNotificationId"],
+  //       id: json["id"],
+  //       offerId: json['offerId'],
+  //       hostEmail: json['hostEmail'],
+  //     );
+  // }
+
 }

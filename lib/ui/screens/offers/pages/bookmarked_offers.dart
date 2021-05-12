@@ -235,7 +235,7 @@ class BookmarkedOffers extends StatelessWidget {
                                 builder: (parentContext) => CreateOfferRequest(
                                   offer: model,
                                   timebankId: model.timebankId,
-                                  userModel: userModel,
+                                  // userModel: userModel,
                                 ),
                               ),
                             );

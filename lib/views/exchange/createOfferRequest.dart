@@ -9,6 +9,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -32,13 +34,11 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 class CreateOfferRequest extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
-  final UserModel userModel;
 
   CreateOfferRequest({
     Key key,
     this.offer,
     this.timebankId,
-    this.userModel,
   }) : super(key: key);
 
   @override
@@ -296,7 +296,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         communityName: '',
         memberEmail: widget.offer.email,
         memberName: widget.offer.fullName,
-        memberPhotoUrl: widget.offer.photoUrlImage ?? widget.userModel.photoURL,
+        memberPhotoUrl: widget.offer.photoUrlImage ?? defaultUserImageURL,
         timebankId: widget.offer.timebankId,
       ).toMap();
 
@@ -308,8 +308,8 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           var onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
-            // credits: requestModel.numberOfHours.toDouble(),
-            credits: 1,
+            credits:
+                widget.offer.individualOfferDataModel.minimumCredits.toDouble(),
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
@@ -378,11 +378,11 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     }
   }
 
-  Future<void> createOfferAcceptorDocument({
+  Map<String, Object> getOfferAcceptorDocument({
     TimebankModel timebankModel,
     String offerId,
     String notifictionId,
-  }) async {
+  }) {
     var status = 'REQUESTED';
 
     var timebankId = timebankModel.id;
@@ -394,12 +394,11 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     var acceptorSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     var acceptorBio = SevaCore.of(context).loggedInUser.bio;
 
-    await Firestore.instance
-        .collection('offers')
-        .document(offerId)
-        .collection('offerAcceptors')
-        .document(notifictionId)
-        .setData({
+    return {
+      'requestId': requestModel.id,
+      'requestStartDate': requestModel.requestStart,
+      'requestEndDate': requestModel.requestEnd,
+      'requestTitle': requestModel.title,
       'status': status,
       'offerId': offerId,
       'timebankId': timebankId,
@@ -419,8 +418,14 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         'sevauserid': acceptorSevaUserId,
         'bio': acceptorBio,
       }
-    });
+    };
   }
+
+  // Future<void> createOfferAcceptorDocument({
+
+  // }) async {
+
+  // }
 
   void linearProgressForCreatingRequest() {
     showDialog(
@@ -519,16 +524,24 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         timebankModel: timebankModel,
         offerModel: offerModel);
 
+    var offerAcceptorDocument = getOfferAcceptorDocument(
+      timebankModel: timebankModel,
+      offerId: widget.offer.id,
+      notifictionId: notificationId,
+    );
+
     NotificationsModel notification = NotificationsModel(
-        id: notificationId,
-        timebankId: offerModel.timebankId,
-        data: requestInvitationModel.toMap(),
-        isRead: false,
-        type: NotificationType.OfferRequestInvite,
-        communityId: currentCommunity,
-        senderUserId: sevaUserID,
-        targetUserId: targetUserId,
-        isTimebankNotification: false);
+      id: notificationId,
+      timebankId: offerModel.timebankId,
+      data: offerAcceptorDocument,
+      isRead: false,
+      type: NotificationType.OfferRequestInvite,
+      communityId: currentCommunity,
+      senderUserId: sevaUserID,
+      targetUserId: targetUserId,
+      isTimebankNotification: false,
+    );
+
     batchWrite.updateData(
         Firestore.instance.collection('requests').document(requestModel.id), {
       'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
@@ -542,11 +555,19 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       notification.toMap(),
     );
 
-    await createOfferAcceptorDocument(
-      timebankModel: timebankModel,
-      offerId: widget.offer.id,
-      notifictionId: notificationId,
-    );
+    batchWrite.setData(
+        Firestore.instance
+            .collection('offers')
+            .document(widget.offer.id)
+            .collection('offerAcceptors')
+            .document(notificationId),
+        offerAcceptorDocument);
+
+    // await createOfferAcceptorDocument(
+    //   timebankModel: timebankModel,
+    //   offerId: widget.offer.id,
+    //   notifictionId: notificationId,
+    // );
     return await batchWrite
         .commit()
         .then((value) => true)
