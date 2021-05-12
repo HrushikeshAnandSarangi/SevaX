@@ -15,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -643,10 +644,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         targetUserId: timebankModel.id,
         isTimebankNotification: true);
 
-    var notificationRef =
-    Firestore.instance.collection("timebanknew").document(timebankModel.id)
-        .collection("notifications").document(notificationModel.id);
-    
+    var notificationRef = Firestore.instance
+        .collection("timebanknew")
+        .document(timebankModel.id)
+        .collection("notifications")
+        .document(notificationModel.id);
+
     var entryExitLogReference = Firestore.instance
         .collection('timebanknew')
         .document(timebankModel.id)
@@ -665,12 +668,16 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       'members': FieldValue.arrayUnion([onBaordingMemberSevaId])
     });
 
+    logger.e('JOINED VIA CODE START');
     batchUpdate.setData(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.JOINED_VIA_CODE.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': onBoardingMemberEmail,
         'id': onBaordingMemberSevaId,
@@ -686,6 +693,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       'associatedTimebankDetails': {
         'timebankId': timebankModel.id,
         'timebankTitle': timebankTitle,
+        'missionStatement': timebankModel.missionStatement,
       },
     });
 

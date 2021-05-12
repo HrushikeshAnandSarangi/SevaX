@@ -37,7 +37,6 @@ class JoinRequestBloc {
     String memberId,
     TimebankModel timebankModel,
   }) {
-
     log('REJECT COMES HERE!');
 
     WriteBatch batch = Firestore.instance.batch();
@@ -66,7 +65,10 @@ class JoinRequestBloc {
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': memberEmail,
         'id': memberId,
@@ -156,7 +158,10 @@ class JoinRequestBloc {
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -172,6 +177,7 @@ class JoinRequestBloc {
       'associatedTimebankDetails': {
         'timebankId': timebankId,
         'timebankTitle': timebankTitle,
+        'missionStatement': timebankModel.missionStatement,
       },
     });
 

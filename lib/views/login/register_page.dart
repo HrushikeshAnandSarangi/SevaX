@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -93,7 +95,6 @@ class _RegisterPageState extends State<RegisterPage>
     );
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
-
   }
 
   @override
@@ -317,6 +318,7 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
   }
+
   Future<void> gpsCheck() async {
     Location templocation = Location();
     bool _serviceEnabled;
@@ -788,9 +790,42 @@ class _RegisterPageState extends State<RegisterPage>
         user.cvName = cvName;
         user.cvUrl = cvUrl;
       }
-     await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+      await FirestoreManager.addCreationSourceOfUser(
+          locationVal: location, userEmailId: user.email);
 
       await FirestoreManager.updateUser(user: user);
+
+      logger.i('----- START OF JOINED SEVAX GLOBAL LOG CODE -------');
+
+      await Firestore.instance
+          .collection('timebanknew')
+          .document(FlavorConfig.values.timebankId)
+          .collection('entryExitLogs')
+          .add({
+        'mode': ExitJoinType.JOIN.readable,
+        'modeType': JoinMode.JOINED_SEVAX_GLOBAL.readable,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'communityId': FlavorConfig.values.timebankId,
+        'isGroup': false,
+        'memberDetails': {
+          'email': email,
+          'id': user.sevaUserID,
+          'fullName': user.fullname,
+          'photoUrl': user.photoURL,
+        },
+        // 'adminDetails': {
+        //   'email': adminEmail,
+        //   'id': adminId,
+        //   'fullName': adminFullName,
+        //   'photoUrl': adminPhotoUrl,
+        // },
+        'associatedTimebankDetails': {
+          'timebankId': FlavorConfig.values.timebankId,
+          'timebankTitle': 'SevaX Global Community',
+          'missionStatement':
+              'Welcome to our global community for all SevaX members. You will be able to see virtual offers and requests here that were made public within local Seva communities. Events that are made public also will be displayed within SevaX Global.',
+        }
+      });
 
       Navigator.pop(dialogContext);
       Navigator.pop(context, user);
@@ -1132,7 +1167,8 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(
+        locationVal: location, userEmailId: user.email);
 
     isLoading = false;
     _processLogin(user);
@@ -1185,7 +1221,8 @@ class _RegisterPageState extends State<RegisterPage>
     } on Exception catch (error) {
       logger.e(error);
     }
-    await FirestoreManager.addCreationSourceOfUser(locationVal: location,userEmailId: user.email);
+    await FirestoreManager.addCreationSourceOfUser(
+        locationVal: location, userEmailId: user.email);
 
     isLoading = false;
     _processLogin(user);
