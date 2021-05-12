@@ -279,8 +279,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: null,
                   isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
@@ -309,7 +309,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ),
                     );
 
-                    FirestoreManager.readTimeBankNotification(
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
@@ -342,7 +342,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           return OneToManyCreatorCompleteRequestPage(
                             requestModel: model,
                             onFinish: () async {
-                              FirestoreManager.readTimeBankNotification(
+                              await FirestoreManager.readTimeBankNotification(
                                 notificationId: notification.id,
                                 timebankId: notification.timebankId,
                               );
@@ -372,7 +372,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                   await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
                                       oneToManyRequestModel,
                                       context,
-                                      SevaCore.of(context).loggedInUser);
+                                      SevaCore.of(context).loggedInUser,
+                                      true);
                                   FirestoreManager.readTimeBankNotification(
                                     notificationId: notification.id,
                                     timebankId: notification.timebankId,

@@ -1568,4 +1568,11 @@ Future oneToManySpeakerRequestCompleted(
       .updateData({
     'isSpeakerCompleted': true,
   });
+
+  await FirestoreManager
+      .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 }
