@@ -1535,7 +1535,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
                                 widget.requestItem.toMap(),
                                 context,
-                                SevaCore.of(context).loggedInUser);
+                                SevaCore.of(context).loggedInUser,
+                                false);
                           },
                         ),
                         FlatButton(

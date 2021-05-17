@@ -1479,6 +1479,13 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
 
 Future oneToManySpeakerInviteAccepted(
     RequestModel requestModel, BuildContext context) async {
+  //make the relevant notification is read true
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
+
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,
       targetUserId: requestModel.sevaUserId,
@@ -1538,6 +1545,15 @@ Future oneToManySpeakerInviteRejected(
       .collection('requests')
       .document(requestModel.id)
       .updateData(requestModel.toMap());
+
+  logger.e(
+      '-------------COMES HERE TO CLEAR NOTIFICATION Rejected Scenario--------------');
+  //make the relevant notification is read true
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 
   log('sends timebank notif to 1 to many creator abt rejection!');
 }

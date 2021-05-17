@@ -235,13 +235,17 @@ Future<List<String>> createRecurringEvents({
       return [];
     }
   } else {
-    log("inside Seva Community req " + requestModel.requestMode.toString());
-    eventsIdsArr.add(requestModel.id);
-    temparr.forEach((tempobj) {
-      batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-      eventsIdsArr.add(tempobj['id']);
-      log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
-    });
+    if (requestModel.requestType == RequestType.TIME ||
+        requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      //requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+      //if (balanceVar - sevaCreditsCount >= 0) {
+      eventsIdsArr.add(requestModel.id);
+      temparr.forEach((tempobj) {
+        batch.setData(
+            db.collection("requests").document(tempobj['id']), tempobj);
+        eventsIdsArr.add(tempobj['id']);
+      });
+    }
   }
 
   DocumentSnapshot timebankDoc = await db
