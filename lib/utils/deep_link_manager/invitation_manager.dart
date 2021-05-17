@@ -212,7 +212,10 @@ class InvitationManager {
       'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -225,10 +228,12 @@ class InvitationManager {
         'fullName': adminCredentials.displayName,
         'photoUrl': adminCredentials.photoUrl,
       },
-      // 'associatedTimebankDetails': {        //Need to check if timebankModel data is correct or null
-      //   'timebankId': timebankModel.id,
-      //   'timebankTitle': timebankModel.name,
-      // },
+      'associatedTimebankDetails': {
+        //Need to check if timebankModel data is correct or null
+        'timebankId': timebankModel.id,
+        'timebankTitle': timebankModel.name,
+        'missionStatement': timebankModel.missionStatement,
+      }
     });
 
     return batch;

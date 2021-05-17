@@ -1,4 +1,3 @@
-
 enum ExitJoinType {
   JOIN,
   EXIT,
@@ -17,34 +16,36 @@ extension ExitJoinLabel on ExitJoinType {
   }
 }
 
-
 enum JoinMode {
   ADDED_MANUALLY_BY_ADMIN,
   APPROVED_BY_ADMIN,
   JOINED_VIA_CODE,
   JOINED_VIA_LINK,
   REJECTED_BY_ADMIN,
+  JOINED_SEVAX_GLOBAL,
 }
 
 extension JoinModeLabel on JoinMode {
   String get readable {
     switch (this) {
       case JoinMode.ADDED_MANUALLY_BY_ADMIN:
-        return 'ADDED_MANUALLY_BY_ADMIN';    //tested (Members Page / Search Bar)
+        return 'ADDED_MANUALLY_BY_ADMIN'; //Members Page / Search Bar
       case JoinMode.APPROVED_BY_ADMIN:
-        return 'APPROVED_BY_ADMIN';          //tested (Through Notifications & Members Page)
+        return 'APPROVED_BY_ADMIN'; //Through Notifications & Members Page
       case JoinMode.REJECTED_BY_ADMIN:
-        return 'REJECTED_BY_ADMIN';          //tested (Through Notifications & Members Page)
+        return 'REJECTED_BY_ADMIN'; //Through Notifications & Members Page
       case JoinMode.JOINED_VIA_CODE:
-        return 'JOINED_VIA_CODE';            //tested (will not have adminDetails map)
+        return 'JOINED_VIA_CODE'; //will not have adminDetails map
       case JoinMode.JOINED_VIA_LINK:
-        return 'JOINED_VIA_LINK';            //
+        return 'JOINED_VIA_LINK';
+      case JoinMode.JOINED_SEVAX_GLOBAL:
+        return 'JOINED_SEVAX_GLOBAL';
+      //
       default:
         return 'DEFAULT_CASE_JOIN_MODE';
     }
   }
 }
-
 
 enum ExitMode {
   REMOVED_BY_ADMIN,
@@ -56,11 +57,11 @@ extension ExitModeLabel on ExitMode {
   String get readable {
     switch (this) {
       case ExitMode.REMOVED_BY_ADMIN:
-        return 'REMOVED_BY_ADMIN';            //tested
+        return 'REMOVED_BY_ADMIN'; //tested
       case ExitMode.LEFT_THE_COMMUNITY:
-        return 'LEFT_THE_COMMUNITY';          //tested
+        return 'LEFT_THE_COMMUNITY'; //tested
       case ExitMode.REPORTED_IN_COMMUNITY:
-        return 'REPORTED_IN_COMMUNITY';       //tested
+        return 'REPORTED_IN_COMMUNITY'; //tested
       default:
         return 'DEFAULT_CASE_EXIT_MODE';
     }

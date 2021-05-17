@@ -24,7 +24,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   final NotificationsModel notification;
   final TimebankModel timebankModel;
 
-  const TimebankJoinRequestWidget({Key key, this.notification, this.timebankModel})
+  const TimebankJoinRequestWidget(
+      {Key key, this.notification, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -78,8 +79,10 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                         isFromGroup: model.isFromGroup,
                         adminEmail: SevaCore.of(context).loggedInUser.email,
                         adminId: SevaCore.of(context).loggedInUser.sevaUserID,
-                        adminFullName: SevaCore.of(context).loggedInUser.fullname,
-                        adminPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                        adminFullName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        adminPhotoUrl:
+                            SevaCore.of(context).loggedInUser.photoURL,
                       ).commit();
                     } else {
                       await showProgressForOnboardingUser(context);
@@ -95,8 +98,10 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                         user: user,
                         adminEmail: SevaCore.of(context).loggedInUser.email,
                         adminId: SevaCore.of(context).loggedInUser.sevaUserID,
-                        adminFullName: SevaCore.of(context).loggedInUser.fullname,
-                        adminPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
+                        adminFullName:
+                            SevaCore.of(context).loggedInUser.fullname,
+                        adminPhotoUrl:
+                            SevaCore.of(context).loggedInUser.photoURL,
                         timebankTitle: model.timebankTitle,
                       ).commit();
 
@@ -223,7 +228,6 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Navigator.pop(viewContext, false);
-
                         },
                       ),
                     ),
@@ -262,7 +266,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String newMemberJoinedEmail,
     String notificaitonId,
     bool isFromGroup,
-    String adminEmail, 
+    String adminEmail,
     String adminId,
     String adminFullName,
     String adminPhotoUrl,
@@ -322,7 +326,10 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-        'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -352,7 +359,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     String newMemberJoinedEmail,
     String memberJoiningSevaUserId,
     UserModel user,
-    String adminEmail, 
+    String adminEmail,
     String adminId,
     String adminFullName,
     String adminPhotoUrl,
@@ -370,7 +377,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         .document(timebankId)
         .collection("notifications")
         .document(notificaitonId);
-    
+
     var entryExitLogReference = Firestore.instance
         .collection('timebanknew')
         .document(timebankId)
@@ -387,7 +394,10 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup':  timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': newMemberJoinedEmail,
         'id': memberJoiningSevaUserId,
@@ -403,6 +413,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       'associatedTimebankDetails': {
         'timebankId': timebankId,
         'timebankTitle': timebankTitle,
+        'missionStatement': timebankModel.missionStatement,
       },
     });
 

@@ -1184,10 +1184,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
     batch.setData(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
-      'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable, 
+      'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'communityId': communityId,
-      'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+      'isGroup':
+          timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+              ? false
+              : true,
       'memberDetails': {
         'email': userEmail,
         'id': sevaUserId,
@@ -1203,6 +1206,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'associatedTimebankDetails': {
         'timebankId': timebankId,
         'timebankTitle': timebankTitle,
+        'missionStatement': timebankModel.missionStatement,
       },
     });
 
