@@ -4,7 +4,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/helpers/location_helper.dart';
 
 import 'models.dart';
 
@@ -142,17 +141,31 @@ class GroupOfferDataModel {
 class IndividualOfferDataModel extends DataModel {
   String description;
   List<String> offerAcceptors;
+  List<String> offerInvites;
   String schedule;
   String title;
   int minimumCredits;
+  String timeOfferType;
+  bool isAccepted;
 
   IndividualOfferDataModel();
 
   @override
   IndividualOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey('timeOfferType')) {
+      this.timeOfferType = map['timeOfferType'];
+    }
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
+    if (map.containsKey('isAccepted')) {
+      this.isAccepted = map['isAccepted'];
+      logger.i("Logger from map if");
+    } else {
+      logger.i("Logger from map " + map.toString());
+      this.isAccepted = false;
+    }
+
     if (map.containsKey('description')) {
       this.description = map['description'];
     }
@@ -166,6 +179,14 @@ class IndividualOfferDataModel extends DataModel {
     } else {
       this.offerAcceptors = [];
     }
+
+    if (map.containsKey("offerInvites")) {
+      List<String> offerInvites = List.castFrom(map['offerInvites']);
+      this.offerInvites = offerInvites;
+    } else {
+      this.offerInvites = [];
+    }
+
     if (map.containsKey('minimumCredits')) {
       this.minimumCredits = map['minimumCredits'];
     }
@@ -181,11 +202,22 @@ class IndividualOfferDataModel extends DataModel {
     if (description != null) {
       map['description'] = description;
     }
+    if (timeOfferType != null) {
+      map['timeOfferType'] = timeOfferType;
+    }
 
     if (schedule != null) {
       map['schedule'] = schedule;
     }
-    map['offerAcceptors'] = [];
+
+    if (offerAcceptors == null) {
+      map['offerAcceptors'] = [];
+    }
+
+    if (offerInvites == null) {
+      map['offerInvites'] = [];
+    }
+
     if (this.minimumCredits != null) {
       map['minimumCredits'] = this.minimumCredits;
     }

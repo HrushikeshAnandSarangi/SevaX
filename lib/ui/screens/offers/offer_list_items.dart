@@ -42,7 +42,10 @@ class OfferListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     logger.i("in offerlist build $timebankId");
     return StreamBuilder<List<OfferModel>>(
-      stream: getOffersStream(timebankId: timebankId),
+      stream: getOffersStream(
+        timebankId: timebankId,
+        loggedInMemberSevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ),
       builder:
           (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
         if (snapshot.hasError) {
@@ -53,11 +56,13 @@ class OfferListItems extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
+
         List<OfferModel> offersList = snapshot.data;
         offersList = filterBlockedOffersContent(
           context: context,
           requestModelList: offersList,
         );
+
         if (offersList.length == 0) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
