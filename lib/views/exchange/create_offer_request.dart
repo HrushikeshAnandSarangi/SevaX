@@ -308,12 +308,11 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           var onBalanceCheckResult =
               await SevaCreditLimitManager.hasSufficientCredits(
             email: SevaCore.of(context).loggedInUser.email,
-            // credits: requestModel.numberOfHours.toDouble(),
-            credits: 1,
+            credits: requestModel.minimumCredits.toDouble(),
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
-          if (!onBalanceCheckResult) {
+          if (!onBalanceCheckResult.hasSuffiientCredits) {
             showInsufficientBalance();
             return;
           }

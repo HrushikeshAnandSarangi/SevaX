@@ -461,12 +461,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.requestType = RequestType.TIME;
 
       //making false and clearing map because TIME and ONE_TO_MANY_REQUEST use same widget
-      setState(() {
-        instructorAdded = false;
-        requestModel.selectedInstructor = null;
-      });
+      // setState(() {
+      //   instructorAdded = false;
+      //   requestModel.selectedInstructor = null;
+      // });
 
-      //this.requestModel.requestType = RequestType.TIME;
+      // this.requestModel.requestType = RequestType.TIME;
       return Container();
     }
   }
@@ -492,6 +492,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
           return FutureBuilder<List<ProjectModel>>(
               future: getProjectsByFuture,
               builder: (projectscontext, projectListSnapshot) {
+                if (!projectListSnapshot.hasData) {
+                  return Container();
+                }
+
                 List<ProjectModel> projectModelList = projectListSnapshot.data;
                 return Form(
                   key: _formKey,
@@ -504,14 +508,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             headerContainer(snapshot),
-//                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
-
                             RequestTypeWidgetCommunityRequests(),
-
-                            RequestTypeWidgetPersonalRequests(),
-
+                            // RequestTypeWidgetPersonalRequests(),
                             SizedBox(height: 14),
-
                             Text(
                               "${S.of(context).request_title}",
                               style: TextStyle(
@@ -2435,13 +2434,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               }
             },
           ),
-          SizedBox(height: 20),
 
-          AddImagesForRequest(
-            onLinksCreated: (List<String> imageUrls) {
-              requestModel.imageUrls = imageUrls;
-            },
-          ),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2549,17 +2542,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
               }
             },
           ),
-
-          SizedBox(height: 10),
-
           CommonUtils.TotalCredits(
             context: context,
             requestModel: requestModel,
             requestCreditsMode: TotalCreditseMode.CREATE_MODE,
           ),
-
           SizedBox(height: 5),
-
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
               ? Row(
                   children: [
@@ -2579,7 +2567,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
               : Container(height: 0, width: 0),
 
           SizedBox(height: 15),
-
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              requestModel.imageUrls = imageUrls;
+            },
+          ),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
@@ -3016,17 +3008,18 @@ class RequestCreateFormState extends State<RequestCreateForm>
             userId: myDetails.sevaUserID,
             communityId: timebankModel.communityId,
           );
-          double creditsNeeded =
-              await SevaCreditLimitManager.checkCreditsNeeded(
-            email: SevaCore.of(context).loggedInUser.email,
-            credits: requestModel.numberOfHours.toDouble(),
-            userId: myDetails.sevaUserID,
-            communityId: timebankModel.communityId,
-          );
-          if (!onBalanceCheckResult) {
+          // double creditsNeeded =
+          //     await SevaCreditLimitManager.checkCreditsNeeded(
+          //   email: SevaCore.of(context).loggedInUser.email,
+          //   credits: requestModel.numberOfHours.toDouble(),
+          //   userId: myDetails.sevaUserID,
+          //   communityId: timebankModel.communityId,
+          // );
+          if (!onBalanceCheckResult.hasSuffiientCredits) {
             showInsufficientBalance();
             await sendInsufficentNotificationToAdmin(
-                creditsNeeded: creditsNeeded);
+              creditsNeeded: onBalanceCheckResult.credits,
+            );
             return;
           }
           break;

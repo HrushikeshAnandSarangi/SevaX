@@ -29,6 +29,13 @@ class RequestBloc {
             requestLists.addRequest(userId, model);
             continue;
           }
+
+          if (filter.oneToManyrequest &&
+              model.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+            requestLists.addRequest(userId, model);
+            continue;
+          }
+
           if (filter.goodsRequest && model.requestType == RequestType.GOODS) {
             requestLists.addRequest(userId, model);
             continue;
@@ -83,6 +90,7 @@ class RequestFilter {
   final bool cashRequest;
   final bool publicRequest;
   final bool virtualRequest;
+  final bool oneToManyrequest;
 
   RequestFilter({
     this.timeRequest = false,
@@ -90,6 +98,7 @@ class RequestFilter {
     this.cashRequest = false,
     this.publicRequest = false,
     this.virtualRequest = false,
+    this.oneToManyrequest = false,
   });
 
   RequestFilter copyWith({
@@ -98,6 +107,7 @@ class RequestFilter {
     bool cashRequest,
     bool publicRequest,
     bool virtualRequest,
+    bool oneToManyrequest,
   }) =>
       RequestFilter(
         timeRequest: timeRequest ?? this.timeRequest,
@@ -105,6 +115,7 @@ class RequestFilter {
         cashRequest: cashRequest ?? this.cashRequest,
         publicRequest: publicRequest ?? this.publicRequest,
         virtualRequest: virtualRequest ?? this.virtualRequest,
+        oneToManyrequest: oneToManyrequest ?? this.oneToManyrequest,
       );
 
   bool get isFilterSelected =>
@@ -112,6 +123,7 @@ class RequestFilter {
       goodsRequest ||
       cashRequest ||
       publicRequest ||
+      oneToManyrequest ||
       virtualRequest;
 
   bool operator ==(Object other) {
@@ -120,7 +132,8 @@ class RequestFilter {
           this.goodsRequest == other.goodsRequest &&
           this.cashRequest == other.cashRequest &&
           this.publicRequest == other.publicRequest &&
-          this.virtualRequest == other.virtualRequest;
+          this.virtualRequest == other.virtualRequest &&
+          this.oneToManyrequest == other.oneToManyrequest;
     } else {
       return false;
     }

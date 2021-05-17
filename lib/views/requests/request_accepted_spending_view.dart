@@ -454,7 +454,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       );
                       // Navigator.pop(linearProgressForBalanceCheck);
 
-                      if (!canApproveTransaction) {
+                      if (!canApproveTransaction.hasSuffiientCredits) {
                         showDiologForMessage(
                           S.of(context).notifications_insufficient_credits,
                           context,
