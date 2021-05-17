@@ -253,6 +253,8 @@ class RequestCard extends StatelessWidget {
                               model.email != user.email &&
                                       (model.acceptors.contains(user.email) ||
                                           model.approvedUsers
+                                              .contains(user.email) ||
+                                          model.oneToManyRequestAttenders
                                               .contains(user.email))
                                   ? Container(
                                       margin:
