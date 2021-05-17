@@ -624,6 +624,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                         builder: (context) =>
                                             ExploreCommunityDetails(
                                           communityId: community.id,
+                                          isSignedUser:
+                                              Provider.of<UserModel>(context) !=
+                                                  null,
                                         ),
                                       ),
                                     );
@@ -852,6 +855,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   builder: (context) =>
                                                       ExploreCommunityDetails(
                                                     communityId: community.id,
+                                                    isSignedUser:
+                                                        Provider.of<UserModel>(
+                                                                context) !=
+                                                            null,
                                                   ),
                                                 ),
                                               );

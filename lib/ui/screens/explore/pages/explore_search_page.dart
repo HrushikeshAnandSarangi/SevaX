@@ -405,6 +405,10 @@ class _CommunitiesView extends StatelessWidget {
                                             builder: (context) =>
                                                 ExploreCommunityDetails(
                                               communityId: community.id,
+                                              isSignedUser:
+                                                  Provider.of<UserModel>(
+                                                          context) !=
+                                                      null,
                                             ),
                                           ),
                                         );
@@ -728,6 +732,7 @@ class ExploreCommunityCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ExploreCommunityDetails(
                 communityId: model.id,
+                isSignedUser: Provider.of<UserModel>(context) != null,
               ),
             ),
           );

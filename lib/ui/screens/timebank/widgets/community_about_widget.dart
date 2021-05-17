@@ -601,7 +601,7 @@ class _CommunityAboutState extends State<CommunityAbout>
 
   Widget get allProjectsUnderCommunity {
     return FutureBuilder<List<ProjectModel>>(
-        future: FirestoreManager.getAllPublicProjectsStream(
+        future: FirestoreManager.getAllPublicProjects(
             timebankid: widget.communityModel.primary_timebank),
         builder: (context, snapshot) {
           if (snapshot.hasError) {

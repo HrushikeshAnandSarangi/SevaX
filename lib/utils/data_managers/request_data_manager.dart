@@ -626,8 +626,7 @@ Stream<List<RequestModel>> getAllVirtualRequestListStream(
 }
 
 //get all public projects
-Future<List<ProjectModel>> getAllPublicProjectsStream(
-    {String timebankid}) async {
+Future<List<ProjectModel>> getAllPublicProjects({String timebankid}) async {
   List<ProjectModel> projectsList = [];
   await Firestore.instance
       .collection('projects')
