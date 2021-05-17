@@ -267,8 +267,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ['photoURL'],
                   title: oneToManyRequestModel['selectedInstructor']
                       ['fullname'],
-                  subTitle:
-                      'accepted invite to be Speaker',
+                  subTitle: 'accepted invite to be Speaker',
                 );
                 break;
 
@@ -286,24 +285,40 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       timebankId: notification.timebankId,
                     );
                   },
-                  onPressed: () {
+                  onPressed: () async {
+                    RequestModel newRequestModel;
+                    await Firestore.instance
+                        .collection('requests')
+                        .document(model.id)
+                        .get()
+                        .then((returnedModel) {
+                      newRequestModel =
+                          RequestModel.fromMap(returnedModel.data);
+                      log("request returned is: ${returnedModel.data['title']}");
+                      setState(() {});
+                    });
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => EditRequest(
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
-                          requestModel: model,
+                          requestModel: newRequestModel,
                         ),
                       ),
+                    );
+
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
                     );
                   },
                   photoUrl: oneToManyRequestModel['selectedInstructor']
                       ['photoURL'],
                   title: oneToManyRequestModel['selectedInstructor']
                       ['fullname'],
-                  subTitle:
-                      'rejected invite to be Speaker',
+                  subTitle: 'rejected invite to be Speaker',
                 );
                 break;
 
@@ -355,7 +370,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                 onPressed: () async {
                                   Navigator.of(viewContext).pop();
                                   await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-                                      oneToManyRequestModel, context);
+                                      oneToManyRequestModel,
+                                      context,
+                                      SevaCore.of(context).loggedInUser);
                                   FirestoreManager.readTimeBankNotification(
                                     notificationId: notification.id,
                                     timebankId: notification.timebankId,
@@ -510,8 +527,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     checkForReviewBorrowRequests(notification);
                   },
                   photoUrl: model.photoUrl,
-                  title: '${model.title}', 
-                  subTitle: 
+                  title: '${model.title}',
+                  subTitle:
                       "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
                 );
                 break;
@@ -667,8 +684,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     photoUrl: oneToManyModel['requestorphotourl'],
                     creatorName: oneToManyModel['selectedInstructor']
                         ['fullname'],
-                    title:
-                        ' Completed the request',
+                    title: ' Completed the request',
                     //subTitle:
                     //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                   );

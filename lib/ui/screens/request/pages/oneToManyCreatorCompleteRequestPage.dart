@@ -11,6 +11,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -144,7 +145,6 @@ class OneToManyCreatorCompleteRequestPageState
                                               CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(height: 12),
-
                                             Text(
                                                 (requestModel.selectedInstructor
                                                                 .fullname ==
@@ -163,9 +163,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                         FontWeight.w600),
                                                 overflow:
                                                     TextOverflow.ellipsis),
-
                                             SizedBox(height: 13),
-
                                             Text(
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
@@ -182,9 +180,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.grey),
                                             ),
-
                                             SizedBox(height: 5),
-
                                             Text(
                                               requestModel.selectedSpeakerTimeDetails
                                                           .prepTime ==
@@ -236,13 +232,11 @@ class OneToManyCreatorCompleteRequestPageState
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-
                               Text(
                                 'Attended by',
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
-
                               GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -371,7 +365,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   builder: (BuildContext viewContext) {
                                     return AlertDialog(
                                       title: Text(
-                                          'Are you sure you want to accept and complete this request?'), 
+                                          'Are you sure you want to accept and complete this request?'),
                                       actions: <Widget>[
                                         FlatButton(
                                           color: Theme.of(context).primaryColor,
@@ -458,8 +452,8 @@ class OneToManyCreatorCompleteRequestPageState
                                                     toEmailORId: requestModel
                                                         .selectedInstructor
                                                         .email,
-                                                    fromEmailORId: requestModel
-                                                        .timebankId);
+                                                    fromEmailORId:
+                                                        requestModel.email);
 
                                             for (var attendee
                                                 in tempAttendeesList) {
@@ -479,7 +473,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                     requestModel.communityId,
                                                 toEmailORId: attendee['email'],
                                                 fromEmailORId:
-                                                    requestModel.timebankId,
+                                                    requestModel.email,
                                               );
                                               log('Sent credit to:  ' +
                                                   attendee['fullname']);
@@ -494,6 +488,35 @@ class OneToManyCreatorCompleteRequestPageState
                                               'approvedUsers':
                                                   [], //so that we don't see it in pending tasks
                                             });
+
+                                            NotificationsModel notification =
+                                                NotificationsModel(
+                                                    id: Utils.getUuid(),
+                                                    timebankId: FlavorConfig
+                                                        .values.timebankId,
+                                                    data: requestModel.toMap(),
+                                                    isRead: false,
+                                                    isTimebankNotification:
+                                                        false,
+                                                    type: NotificationType
+                                                        .OneToManyRequestDoneForSpeaker,
+                                                    communityId: requestModel
+                                                        .communityId,
+                                                    senderUserId:
+                                                        SevaCore.of(context)
+                                                            .loggedInUser
+                                                            .sevaUserID,
+                                                    targetUserId: requestModel
+                                                        .selectedInstructor
+                                                        .sevaUserID);
+
+                                            await Firestore.instance
+                                                .collection('users')
+                                                .document(requestModel
+                                                    .selectedInstructor.email)
+                                                .collection("notifications")
+                                                .document(notification.id)
+                                                .setData(notification.toMap());
 
                                             Navigator.pop(viewContext);
                                             Navigator.of(viewContext).pop();
