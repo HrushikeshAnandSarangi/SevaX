@@ -188,7 +188,7 @@ Future<bool> offerActions(
 
   if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
     //Check balance here
-    var hasSufficientCredits =
+    var hasSufficientCreditsResult =
         await SevaCreditLimitManager.hasSufficientCredits(
       email: SevaCore.of(context).loggedInUser.email,
       credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
@@ -205,7 +205,7 @@ Future<bool> offerActions(
       communityMoel = CommunityModel(value.data);
     });
 
-    if (hasSufficientCredits) {
+    if (hasSufficientCreditsResult.hasSuffiientCredits) {
       var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
       var email = SevaCore.of(context).loggedInUser.email;
 

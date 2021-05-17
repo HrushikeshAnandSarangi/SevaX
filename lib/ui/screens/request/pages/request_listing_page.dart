@@ -153,66 +153,88 @@ class _RequestListingPageState extends State<RequestListingPage> {
       stream: _bloc.filter,
       builder: (context, snapshot) {
         var filter = snapshot.data;
-        return Wrap(
-          crossAxisAlignment: WrapCrossAlignment.start,
-          spacing: 4.0,
-          children: [
-            CustomChip(
-              label: 'Time Request',
-              isSelected: filter.timeRequest,
-              onTap: () {
-                _bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    timeRequest: !snapshot.data.timeRequest,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Money',
-              isSelected: filter.cashRequest,
-              onTap: () {
-                _bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    cashRequest: !snapshot.data.cashRequest,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Goods',
-              isSelected: filter.goodsRequest,
-              onTap: () {
-                _bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    goodsRequest: !snapshot.data.goodsRequest,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Public',
-              isSelected: filter.publicRequest,
-              onTap: () {
-                _bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    publicRequest: !snapshot.data.publicRequest,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Virtual',
-              isSelected: filter.virtualRequest,
-              onTap: () {
-                _bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    virtualRequest: !snapshot.data.virtualRequest,
-                  ),
-                );
-              },
-            ),
-          ],
+        return Container(
+          height: 50,
+          child: ListView(
+            // crossAxisAlignment: WrapCrossAlignment.start,
+            // spacing: 4.0,
+            scrollDirection: Axis.horizontal,
+            children: [
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Time Request',
+                isSelected: filter.timeRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      timeRequest: !snapshot.data.timeRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Money',
+                isSelected: filter.cashRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      cashRequest: !snapshot.data.cashRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Goods',
+                isSelected: filter.goodsRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      goodsRequest: !snapshot.data.goodsRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Public',
+                isSelected: filter.publicRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      publicRequest: !snapshot.data.publicRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Virtual',
+                isSelected: filter.virtualRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      virtualRequest: !snapshot.data.virtualRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'One to many request',
+                isSelected: filter.oneToManyrequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      oneToManyrequest: !snapshot.data.oneToManyrequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
         );
       },
     );

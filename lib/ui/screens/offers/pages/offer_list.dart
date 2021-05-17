@@ -205,76 +205,86 @@ class _OfferListState extends State<OfferList> {
       stream: bloc.filter,
       builder: (context, snapshot) {
         var filter = snapshot.data;
-        return Wrap(
-          spacing: 8.0,
-          children: [
-            CustomChip(
-              label: 'Time Offers',
-              isSelected: filter.timeOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    timeOffer: !snapshot.data.timeOffer,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Money',
-              isSelected: filter.cashOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    cashOffer: !snapshot.data.cashOffer,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Goods',
-              isSelected: filter.goodsOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    goodsOffer: !snapshot.data.goodsOffer,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Public',
-              isSelected: filter.publicOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    publicOffer: !snapshot.data.publicOffer,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'Virtual',
-              isSelected: filter.virtualOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    virtualOffer: !snapshot.data.virtualOffer,
-                  ),
-                );
-              },
-            ),
-            CustomChip(
-              label: 'One to many offer',
-              isSelected: filter.oneToManyOffer,
-              onTap: () {
-                bloc.onFilterChange(
-                  snapshot.data.copyWith(
-                    oneToManyOffer: !snapshot.data.oneToManyOffer,
-                  ),
-                );
-              },
-            ),
-          ],
+        return Container(
+          height: 50,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Time Offers',
+                isSelected: filter.timeOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      timeOffer: !snapshot.data.timeOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Money',
+                isSelected: filter.cashOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      cashOffer: !snapshot.data.cashOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Goods',
+                isSelected: filter.goodsOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      goodsOffer: !snapshot.data.goodsOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Public',
+                isSelected: filter.publicOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      publicOffer: !snapshot.data.publicOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'Virtual',
+                isSelected: filter.virtualOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      virtualOffer: !snapshot.data.virtualOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: 'One to many offer',
+                isSelected: filter.oneToManyOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      oneToManyOffer: !snapshot.data.oneToManyOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
         );
       },
     );
