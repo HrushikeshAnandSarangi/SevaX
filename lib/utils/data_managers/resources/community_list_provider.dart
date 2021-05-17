@@ -80,7 +80,8 @@ class RequestApiProvider {
     return requestList;
   }
 
-  Stream<List<RequestModel>> getRequestListStream({String timebankId,String userId}) async* {
+  Stream<List<RequestModel>> getRequestListStream(
+      {String timebankId, String userId}) async* {
     var query = timebankId == null || timebankId == 'All'
         ? Firestore.instance
             .collection('requests')
@@ -104,17 +105,19 @@ class RequestApiProvider {
             (documentSnapshot) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
-              if (model.approvedUsers.length <= model.numberOfApprovals &&
-                  model.isFromOfferRequest == false) {
-                requestList.add(model);
-
+              if (model.accepted) {
+                if (model.sevaUserId == userId) {
+                  requestList.add(model);
+                }
+              } else {
+                if (!model.isFromOfferRequest) {
+                  requestList.add(model);
+                }
               }
-
             },
           );
 
           requestSink.add(requestList);
-
         },
       ),
     );
