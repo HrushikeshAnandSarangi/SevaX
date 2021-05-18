@@ -124,7 +124,8 @@ class MyTasksListState extends State<MyTaskList> {
             requestModelNew = model;
 
             if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                model.accepted == false) {
+                model.accepted == false &&
+                model.isSpeakerCompleted == false) {
               return getOneToManyTaskWidget(
                   model, SevaCore.of(context).loggedInUser.timezone, context);
             } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -310,7 +311,9 @@ class MyTasksListState extends State<MyTaskList> {
         "ratings": results['selection'],
         "device_info": results['device_info'],
         "requestId": requestModelNew.id,
-        "comments": (results['didComment'] ? results['comment'] : "No comments")
+        "comments":
+            (results['didComment'] ? results['comment'] : "No comments"),
+        "liveMode": !AppConfig.isTestCommunity,
       });
       logger.i('here 2');
       await sendMessageToMember(

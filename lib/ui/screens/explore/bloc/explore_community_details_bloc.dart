@@ -15,7 +15,7 @@ class ExploreCommunityDetailsBloc {
   Stream<List<RequestModel>> get requests => _requests.stream;
   Stream<List<ProjectModel>> get events => _events.stream;
 
-  void init(String communityId) {
+  void init(String communityId, bool isSignedUser) {
     //get community details
     CommunityRepository.getCommunity(communityId).then(
       (community) {

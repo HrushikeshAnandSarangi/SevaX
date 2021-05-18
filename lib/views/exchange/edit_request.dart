@@ -252,7 +252,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
 
     //will be true because a One to many request when editing should have an instructor
-    if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST){
+    if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       instructorAdded = true;
     }
 
@@ -697,8 +697,10 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                       color: Colors.black54,
                                                     ),
                                                     onPressed: () {
-                                                      searchTextController
-                                                          .clear();
+                                                      setState(() {
+                                                        searchTextController
+                                                            .clear();
+                                                      });
                                                     }),
                                                 hasFloatingPlaceholder: false,
                                                 alignLabelWithHint: true,
@@ -2593,7 +2595,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(dialogTitle: 'Select an Instructor');
+        showDialogForTitle(
+            dialogTitle: 'Select a speaker'); //Label to be created
         return;
       }
 
@@ -2958,7 +2961,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       mailSubject:
           requestCreatorName + ' from ' + communityName + ' has invited you',
       mailContent:
-          """ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+          """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
@@ -3054,17 +3057,17 @@ class RequestEditFormState extends State<RequestEditForm> {
                             <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-left:0px;border-right:0px;border-top:0px;border-bottom:0px;padding:0px 0px 0px 00px;border-style:solid;border-collapse: seperate;border-color:#766FE0;max-width:777px">
                                 <tbody>
     
-                                    <tr>
+                                    <tr >
                                         <td align=" center " valign="top " id="m_-637120832348245336m_6644406718029751392gmail-m_-5513227398159991865templateFooter " style="background:none 50% 50%/cover no-repeat rgb(47,46,46);border:0px;padding-top:45px;padding-bottom:33px;">
-                                            <table align="center " border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="max-width:600px;width:600px ">
+                                            <table align="center " border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="max-width:777px;width:777px ">
                                                 <tbody>
-                                                    <tr>
-                                                        <td valign="top " style="background:none 50% 50%/cover no-repeat transparent;border:0px;padding-top:0px;padding-bottom:0px ">
+                                                    <tr style="text-align: center;">
+                                                        <td valign="top " style="background:none 50% 50%/cover no-repeat transparent;border:0px;padding-top:0px;padding-bottom:0px;padding-left:8%;padding-right: 8%;">
                                                             <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="min-width:100%;table-layout:fixed;">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td style="">
-                                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:12%;padding-right:15%;border-top: 2px solid rgb(80,80,80) ">
+                                                                        <td style="text-align: center;">
+                                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100% " style="border-top: 2px solid rgb(80,80,80) ">
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td></td>
@@ -3075,14 +3078,14 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            <table border="0 " cellpadding="0 " cellspacing="0 " width="100%">
+                                                            <table  border="0 " cellpadding="0 " cellspacing="0 " width="100%">
                                                                 <tbody>
                                                                     <tr>
                                                                         <td valign="top " style="padding-top:9px;">
-                                                                            <table align="left " border="0" cellpadding="0 " cellspacing="0 " width="100% " style="margin-left:40%;padding-right:50%;">
+                                                                            <table align="center " border="0" cellpadding="0 " cellspacing="0 " width="100% " style="text-align: center !important;">
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center;padding:0px 18px 9px">
+                                                                                <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center !important;padding:0px 18px 9px">
                                                                                     <em>Copyright Â© 2020 Seva Exchange, All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
                                                                                         target="_blank ">info@sevaexchange.com</a><br><br><a href="https://sevaxapp.com/PrivacyPolicy.html" target="_blank" style="color:rgb(255,255,255);">Privacy Policy&nbsp;</a>&nbsp;<br>
                                                                                 </td>

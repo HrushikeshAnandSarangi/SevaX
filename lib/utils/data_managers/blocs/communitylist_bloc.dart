@@ -400,6 +400,7 @@ class TransactionBloc {
       transactionbetween: [from, to],
       toEmail_Id: toEmailORId,
       fromEmail_Id: fromEmailORId,
+      liveMode: !AppConfig.isTestCommunity,
     );
 
     //commented because transaction and balance handling will be done in backend
