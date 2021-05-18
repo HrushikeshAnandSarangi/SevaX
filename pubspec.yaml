@@ -94,6 +94,8 @@ dependencies:
   url_launcher: 5.0.2
   usage: ^3.4.1
   webview_flutter: ^0.3.22+1
+  date_time_picker:
+    path: ./packages/date_time_picker
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
