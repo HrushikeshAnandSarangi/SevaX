@@ -4,7 +4,7 @@ import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class UserBloc {
-  final _user = BehaviorSubject<UserModel>();
+  final _user = PublishSubject<UserModel>();
 
   Stream<UserModel> get user => _user.stream;
 
@@ -25,6 +25,7 @@ class UserBloc {
   void get clearUserData => _user.add(null);
 
   void dispose() {
+    _user.add(null);
     _user.close();
   }
 }

@@ -1343,13 +1343,13 @@ Future<void> approveRequestCompletion({
   );
 
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
-  await utils.processLoans(
-    timebankId: model.timebankId,
-    userId: userId,
-    to: editedTransaction.toEmail_Id ?? editedTransaction.to,
-    credits: editedTransaction.credits,
-    communityId: communityId,
-  );
+  // await utils.processLoans(
+  //   timebankId: model.timebankId,
+  //   userId: userId,
+  //   to: editedTransaction.toEmail_Id ?? editedTransaction.to,
+  //   credits: editedTransaction.credits,
+  //   communityId: communityId,
+  // );
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
@@ -1486,6 +1486,19 @@ Future<void> rejectAcceptRequest({
     notificationId: notificationId,
   );
   await utils.createRequestApprovalNotification(model: model);
+}
+
+Future<void> rejectInviteRequestForOffer({
+  @required String requestId,
+  @required String rejectedUserId,
+  @required String notificationId,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(requestId)
+      .updateData({
+    'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
+  });
 }
 
 Future<void> rejectInviteRequest(

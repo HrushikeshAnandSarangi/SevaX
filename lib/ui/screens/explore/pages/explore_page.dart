@@ -52,6 +52,9 @@ import '../../../../new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ExplorePage extends StatefulWidget {
+  final bool isUserSignedIn;
+
+  const ExplorePage({Key key, this.isUserSignedIn = false}) : super(key: key);
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
@@ -107,19 +110,14 @@ class _ExplorePageState extends State<ExplorePage> {
   int members = 4000;
   List<CategoryModel> categories = [];
   bool dataLoaded = false;
-  bool isSignedUser = false;
+
   GeoPoint geoPoint = GeoPoint(12.87428, 77.6688899);
   void initState() {
     super.initState();
     _bloc = FindCommunitiesBloc();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      isSignedUser =
-          Provider.of<UserModel>(context, listen: false)?.sevaUserID != null;
-      logger.wtf(Provider.of<UserModel>(context, listen: false)?.toMap());
-      logger.wtf(isSignedUser);
-
-      _exploreBloc.load(isUserLoggedIn: isSignedUser);
+      _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
       // if (isSignedUser) {
       gpsCheck().then((_) {
         _bloc.init(
@@ -141,12 +139,10 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
-
     return ExplorePageViewHolder(
       hideSearchBar: true,
-      hideHeader: Provider.of<UserModel>(context, listen: false) != null,
-      hideFooter: Provider.of<UserModel>(context, listen: false) != null,
+      hideHeader: widget.isUserSignedIn,
+      hideFooter: widget.isUserSignedIn,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -207,6 +203,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                       MaterialPageRoute(
                                         builder: (context) => ExploreSearchPage(
                                           searchText: _searchController.text,
+                                          isUserSignedIn: widget.isUserSignedIn,
                                         ),
                                       ),
                                     );
@@ -256,6 +253,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     MaterialPageRoute(
                                       builder: (context) => ExploreSearchPage(
                                         tabIndex: index,
+                                        isUserSignedIn: widget.isUserSignedIn,
                                       ),
                                     ),
                                   );
@@ -335,7 +333,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     }
                                     return Row(
                                       children: [
-                                        isSignedUser
+                                        widget.isUserSignedIn
                                             ? FutureBuilder<TimebankModel>(
                                                 future: getTimeBankForId(
                                                     timebankId: projectModel
@@ -444,6 +442,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     MaterialPageRoute(
                                       builder: (context) => ExploreSearchPage(
                                         tabIndex: 2,
+                                        isUserSignedIn: widget.isUserSignedIn,
                                       ),
                                     ),
                                   );
@@ -473,7 +472,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 }
                                 return Row(
                                   children: [
-                                    isSignedUser
+                                    widget.isUserSignedIn
                                         ? FutureBuilder<TimebankModel>(
                                             future: getTimeBankForId(
                                                 timebankId: model.timebankId),
@@ -624,9 +623,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                         builder: (context) =>
                                             ExploreCommunityDetails(
                                           communityId: community.id,
-                                          isSignedUser:
-                                              Provider.of<UserModel>(context) !=
-                                                  null,
+                                          isSignedUser: widget.isUserSignedIn,
                                         ),
                                       ),
                                     );
@@ -670,6 +667,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     MaterialPageRoute(
                                       builder: (context) => ExploreSearchPage(
                                         tabIndex: 3,
+                                        isUserSignedIn: widget.isUserSignedIn,
                                       ),
                                     ),
                                   );
@@ -701,7 +699,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 }
                                 return Row(
                                   children: [
-                                    isSignedUser
+                                    widget.isUserSignedIn
                                         ? FutureBuilder<TimebankModel>(
                                             future: getTimeBankForId(
                                                 timebankId: offer.timebankId),
@@ -767,7 +765,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: StreamBuilder<List<CommunityModel>>(
-                    stream: isSignedUser
+                    stream: widget.isUserSignedIn
                         ? _bloc.nearyByCommunities
                         : Searches.getNearBYCommunities(geoPoint: geoPoint),
                     builder: (context, snapshot) {
@@ -818,7 +816,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             children: List.generate(
                               snapshot.data.length,
                               (index) {
-                                var status = isSignedUser
+                                var status = widget.isUserSignedIn
                                     ? _bloc.compareUserStatus(
                                         snapshot.data[index],
                                         Provider.of<UserModel>(context)
@@ -856,9 +854,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                       ExploreCommunityDetails(
                                                     communityId: community.id,
                                                     isSignedUser:
-                                                        Provider.of<UserModel>(
-                                                                context) !=
-                                                            null,
+                                                        widget.isUserSignedIn,
                                                   ),
                                                 ),
                                               );
@@ -883,7 +879,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         )),
                     SizedBox(height: 10),
                     StreamBuilder<List<CategoryModel>>(
-                        stream: isSignedUser
+                        stream: widget.isUserSignedIn
                             ? FirestoreManager.getAllCategoriesStream()
                             : _exploreBloc.categories,
                         builder: (context, snapshot) {

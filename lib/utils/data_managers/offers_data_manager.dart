@@ -14,7 +14,8 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 Location loc = Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
 
-Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
+Stream<List<OfferModel>> getOffersStream(
+    {String timebankId, String loggedInMemberSevaUserId}) async* {
   logger.i("offer list request started");
   // Stopwatch sw = Stopwatch();
   // sw.start();
@@ -59,7 +60,22 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
               !model.groupOfferDataModel.isCanceled) {
             offerList.add(model);
           } else if (model.offerType == OfferType.INDIVIDUAL_OFFER) {
-            offerList.add(model);
+            logger.i("====INDI");
+            if (model.individualOfferDataModel.timeOfferType == 'ONE_TIME' &&
+                model.individualOfferDataModel.isAccepted) {
+              logger.i("====INSIDE IF");
+
+              if (model.sevaUserId == loggedInMemberSevaUserId) {
+                logger.i("====CREATOR");
+                offerList.add(model);
+              } else {
+                logger.i("Exemtion reported!!");
+              }
+            } else {
+              logger.i(model.individualOfferDataModel.isAccepted.toString() + "====NOT ACCEPTED/ SPOT ON " + model.individualOfferDataModel.title);
+
+              offerList.add(model);
+            }
           }
         });
 

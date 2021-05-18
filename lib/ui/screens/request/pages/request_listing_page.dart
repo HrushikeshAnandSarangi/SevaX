@@ -223,11 +223,11 @@ class _RequestListingPageState extends State<RequestListingPage> {
               SizedBox(width: 10),
               CustomChip(
                 label: 'One to many request',
-                isSelected: filter.oneToManyrequest,
+                isSelected: filter.oneToManyRequest,
                 onTap: () {
                   _bloc.onFilterChange(
                     snapshot.data.copyWith(
-                      oneToManyrequest: !snapshot.data.oneToManyrequest,
+                      oneToManyRequest: !snapshot.data.oneToManyRequest,
                     ),
                   );
                 },

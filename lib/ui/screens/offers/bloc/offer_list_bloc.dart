@@ -146,4 +146,26 @@ class OfferFilter {
       return false;
     }
   }
+
+  bool checkFilter(OfferModel model) {
+    if (isFilterSelected) {
+      if (oneToManyOffer && model.offerType == OfferType.GROUP_OFFER) {
+        return true;
+      } else if (timeOffer && model.type == RequestType.TIME) {
+        return true;
+      } else if (cashOffer && model.type == RequestType.CASH) {
+        return true;
+      } else if (goodsOffer && model.type == RequestType.GOODS) {
+        return true;
+      } else if (publicOffer && model.public) {
+        return true;
+      } else if (virtualOffer && model.virtual) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
 }

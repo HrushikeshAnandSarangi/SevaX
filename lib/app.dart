@@ -90,7 +90,7 @@ class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
   final AppLanguage appLanguage = AppLanguage()..fetchLocale();
   MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
-  UserBloc userBloc = UserBloc();
+  final UserBloc userBloc = UserBloc();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

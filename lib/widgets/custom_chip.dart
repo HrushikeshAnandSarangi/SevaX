@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class CustomChip extends StatelessWidget {
   final String title;
@@ -35,6 +36,38 @@ class CustomChip extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomChipWithTap extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback onTap;
+  final String label;
+  final bool isHidden;
+
+  const CustomChipWithTap({
+    Key key,
+    this.isSelected,
+    this.onTap,
+    this.label,
+    this.isHidden = false,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return HideWidget(
+      hide: isHidden,
+      child: InkWell(
+        onTap: onTap,
+        child: Chip(
+          label: Text(label),
+          side: BorderSide(
+            color:
+                isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
+          ),
+          backgroundColor: Colors.transparent,
         ),
       ),
     );
