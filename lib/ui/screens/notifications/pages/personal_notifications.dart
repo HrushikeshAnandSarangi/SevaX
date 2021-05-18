@@ -158,6 +158,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         notification: notification,
                       );
 
+                    case NotificationType.TimeOfferInvitationFromCreator:
+                      return PersonalNotificationsReducerForOffer
+                          .getNotificationFromOfferCreator(
+                        notification: notification,
+                        context: context,
+                        user: user,
+                      );
+
                     case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                       return PersonalNotificationsRedcerForDonations
                           .getWidgetNotificationForAcknowlegeDonorDonation(

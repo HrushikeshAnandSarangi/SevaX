@@ -1488,6 +1488,19 @@ Future<void> rejectAcceptRequest({
   await utils.createRequestApprovalNotification(model: model);
 }
 
+Future<void> rejectInviteRequestForOffer({
+  @required String requestId,
+  @required String rejectedUserId,
+  @required String notificationId,
+}) async {
+  await Firestore.instance
+      .collection('requests')
+      .document(requestId)
+      .updateData({
+    'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
+  });
+}
+
 Future<void> rejectInviteRequest(
     {@required String requestId,
     @required String rejectedUserId,

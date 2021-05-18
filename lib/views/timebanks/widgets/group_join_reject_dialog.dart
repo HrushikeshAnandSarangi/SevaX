@@ -7,7 +7,6 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class GroupJoinRejectDialogView extends StatefulWidget {
   final GroupInviteUserModel groupInviteUserModel;
@@ -185,10 +184,11 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
   }) async {
     QuerySnapshot invitationSnap = await Firestore.instance
         .collection('invitations')
-        .where('data.notificationId',isEqualTo: widget.notificationId).getDocuments();
+        .where('data.notificationId', isEqualTo: widget.notificationId)
+        .getDocuments();
     String invitationId;
-    invitationSnap.documents.forEach((doc){
-        invitationId = doc.documentID;
+    invitationSnap.documents.forEach((doc) {
+      invitationId = doc.documentID;
     });
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;

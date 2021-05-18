@@ -16,19 +16,21 @@ class ParticipantCard extends StatelessWidget {
   final Function onMessageTapped;
   final Function onTap;
   final Function onImageTap;
+  final Widget buttonsContainer;
 
-  const ParticipantCard({
-    Key key,
-    this.padding,
-    this.radius = 8,
-    this.imageUrl,
-    this.name,
-    this.bio,
-    this.onMessageTapped,
-    this.onTap,
-    this.rating,
-    this.onImageTap,
-  })  : assert(name != null),
+  const ParticipantCard(
+      {Key key,
+      this.padding,
+      this.radius = 8,
+      this.imageUrl,
+      this.name,
+      this.bio,
+      this.onMessageTapped,
+      this.onTap,
+      this.rating,
+      this.onImageTap,
+      this.buttonsContainer = const SizedBox()})
+      : assert(name != null),
         super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -99,6 +101,8 @@ class ParticipantCard extends StatelessWidget {
                       Text(
                         bio ?? S.of(context).bio_not_updated,
                       ),
+                      SizedBox(height: 8),
+                      buttonsContainer
                     ],
                   ),
                 ),

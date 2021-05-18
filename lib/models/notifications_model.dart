@@ -196,7 +196,8 @@ enum NotificationType {
   MEMBER_REMOVED_FROM_MESSAGE_ROOM,
 
   //offer request invite
-  OfferRequestInvite
+  OfferRequestInvite,
+  TimeOfferInvitationFromCreator
 }
 
 //Check the method
@@ -307,6 +308,8 @@ Map<String, NotificationType> typeMapper = {
   "APPROVE_SPONSORED_GROUP_REQUEST":
       NotificationType.APPROVE_SPONSORED_GROUP_REQUEST,
   "OfferRequestInvite": NotificationType.OfferRequestInvite,
+  "TimeOfferInvitationFromCreator":
+      NotificationType.TimeOfferInvitationFromCreator,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>
