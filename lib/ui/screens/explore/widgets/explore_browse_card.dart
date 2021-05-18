@@ -20,31 +20,45 @@ class ExploreBrowseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(12),
       onTap: onTap,
-      child: Container(
-        height: 40,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Card(
-            elevation: 1,
-            child: Row(
-              children: [
-                Image.network(imageUrl),
-                const SizedBox(width: 2),
-                Container(
-                  padding: const EdgeInsets.only(left: 14, right: 14),
-                  child: Text(
-                    title,
-                    style: style ??
-                        const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 1,
+        child: Container(
+          height: 40,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: Image.network(
+                    imageUrl,
+                    height: 40,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(width: 12),
-              ],
-            ),
+              ),
+              const SizedBox(width: 2),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Text(
+                  title,
+                  style: style ??
+                      const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ),
+              const SizedBox(width: 12),
+            ],
           ),
         ),
       ),

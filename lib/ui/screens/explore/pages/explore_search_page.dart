@@ -261,7 +261,7 @@ class ExploreCommunityCard extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        model.logo_url,
+                        model.logo_url ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
