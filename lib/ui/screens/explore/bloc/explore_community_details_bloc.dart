@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -9,7 +6,9 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/project_repository.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -46,12 +45,21 @@ class ExploreCommunityDetailsBloc {
         },
       );
 
-      ProjectRepository.getAllProjectsOfCommunity(communityId)
-          .then((List<ProjectModel> models) {
-        models.isNotEmpty
-            ? _events.add(models)
-            : _events.addError("Something went wrong");
-      });
+      ProjectRepository.getAllProjectsOfCommunity(communityId).then(
+        (List<ProjectModel> models) {
+          models.isNotEmpty
+              ? _events.add(models)
+              : _events.addError("Something went wrong");
+        },
+      );
+
+      Searches.getGroupsUnderCommunity(communityId: communityId).then(
+        (List<TimebankModel> models) {
+          models.isNotEmpty
+              ? _groups.add(models)
+              : _groups.addError("Something went wrong");
+        },
+      );
     } else {
       Searches.getCommunityDetails(communityId: communityId).then(
         (CommunityModel model) {
@@ -85,8 +93,8 @@ class ExploreCommunityDetailsBloc {
   }
 
   TimebankModel primaryTimebankModel() {
-    return _groups.value.firstWhere(
-      (model) => model.parentTimebankId == FlavorConfig.values.timebankId,
+    return _groups?.value?.firstWhere(
+      (model) => isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
       orElse: null,
     );
   }
