@@ -410,6 +410,7 @@ class OfferDetails extends StatelessWidget {
         padding:
             const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
@@ -451,8 +452,9 @@ class OfferDetails extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Wrap(
+              alignment: WrapAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 canDeleteOffer ||
                         utils.isDeletable(

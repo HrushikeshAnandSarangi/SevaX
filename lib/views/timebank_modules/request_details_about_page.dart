@@ -1687,7 +1687,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         children: [
                           TextSpan(
                             text: isApplied
-                                ? S.of(context).applied_for_request
+                                ? 'You have accepted this request.'
                                 : S.of(context).particpate_in_request_question,
                             style: TextStyle(
                               fontSize: 16,
