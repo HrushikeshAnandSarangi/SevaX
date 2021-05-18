@@ -62,7 +62,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                     .push(
                       MaterialPageRoute(
                         builder: (context) => NearByFiltersView(
-                          SevaCore.of(context).loggedInUser,
+                          userModel: SevaCore.of(context).loggedInUser,
                         ),
                       ),
                     )

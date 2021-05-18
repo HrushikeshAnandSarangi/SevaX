@@ -9,6 +9,8 @@ import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.da
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
+import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -20,100 +22,136 @@ class RequestsSearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
-    return StreamBuilder<List<RequestModel>>(
-      stream: _bloc.requests,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        if (snapshot.data == null || snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        StreamBuilder<List<RequestModel>>(
+          stream: _bloc.requests,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            if (snapshot.data == null || snapshot.data.isEmpty) {
+              return Text('No result found');
+            }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            var request = snapshot.data[index];
-            var date =
-                DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-            // return ExploreEventCard(
-            //   photoUrl: request.photoUrl ?? defaultProjectImageURL,
-            //   title: request.title,
-            //   description: request.description,
-            //   location: request.address,
-            //   communityName: "request.communityName ?? ''",
-            //   date: DateFormat('d MMMM, y').format(date),
-            //   time: DateFormat.jm().format(date),
-            //   memberList: MemberAvatarListWithCount(
-            //     userIds: request.approvedUsers,
-            //   ),
-            // );
-            return isUserSignedIn
-                ? FutureBuilder<TimebankModel>(
-                    future: getTimeBankForId(timebankId: request.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Container();
-                      }
-                      if (snapshot.data == null) {
-                        return Container();
-                      }
-                      return ExploreEventCard(
-                        onTap: () {
-                          bool isAdmin = snapshot.data.admins.contains(
-                            Provider.of<UserModel>(context).sevaUserID,
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return RequestDetailsAboutPage(
-                                  isAdmin: isAdmin,
-                                  timebankModel: snapshot.data,
-                                  requestItem: request,
-                                );
-                              },
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                var request = snapshot.data[index];
+                var date =
+                    DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+
+                return isUserSignedIn
+                    ? FutureBuilder<TimebankModel>(
+                        future:
+                            getTimeBankForId(timebankId: request.timebankId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+                          if (snapshot.hasError) {
+                            return Container();
+                          }
+                          if (snapshot.data == null) {
+                            return Container();
+                          }
+                          return ExploreEventCard(
+                            onTap: () {
+                              bool isAdmin = snapshot.data.admins.contains(
+                                Provider.of<UserModel>(context).sevaUserID,
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return RequestDetailsAboutPage(
+                                      isAdmin: isAdmin,
+                                      timebankModel: snapshot.data,
+                                      requestItem: request,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            photoUrl:
+                                request.photoUrl ?? defaultProjectImageURL,
+                            title: request.title,
+                            description: request.description,
+                            location: request.address,
+                            communityName: request.communityName ?? ' ',
+                            date: DateFormat('d MMMM, y').format(date),
+                            time: DateFormat.jm().format(date),
+                            memberList: MemberAvatarListWithCount(
+                              userIds: request.approvedUsers,
                             ),
+                            tagsToShow: TagBuilder(
+                              isPublic: request.public,
+                              isVirtual: request.virtualRequest,
+                              isMoneyRequest:
+                                  request.requestType == RequestType.CASH,
+                              isGoodsRequest:
+                                  request.requestType == RequestType.GOODS,
+                              isTimeRequest:
+                                  request.requestType == RequestType.TIME,
+                              isOneToManyRequest: request.requestType ==
+                                  RequestType.ONE_TO_MANY_REQUEST,
+                            ).getTags(context),
                           );
+                        })
+                    : ExploreEventCard(
+                        onTap: () {
+                          showSignInAlertMessage(
+                              context: context,
+                              message:
+                                  'Please Sign In/Sign up to access ${request.title}');
                         },
                         photoUrl: request.photoUrl ?? defaultProjectImageURL,
                         title: request.title,
                         description: request.description,
                         location: request.address,
-                        communityName: 'request.communityName ?? ' '',
+                        communityName: request.communityName ?? ' ',
                         date: DateFormat('d MMMM, y').format(date),
                         time: DateFormat.jm().format(date),
                         memberList: MemberAvatarListWithCount(
                           userIds: request.approvedUsers,
                         ),
-                      );
-                    })
-                : ExploreEventCard(
-                    onTap: () {
-                      showSignInAlertMessage(
-                          context: context,
-                          message:
-                              'Please Sign In/Sign up to access ${request.title}');
-                    },
-                    photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                    title: request.title,
-                    description: request.description,
-                    location: request.address,
-                    communityName: 'request.communityName ?? ' '',
-                    date: DateFormat('d MMMM, y').format(date),
-                    time: DateFormat.jm().format(date),
-                    memberList: MemberAvatarListWithCount(
-                      userIds: request.approvedUsers,
-                    ),
-                  );
+                        tagsToShow: TagBuilder(
+                          isPublic: request.public,
+                          isVirtual: request.virtualRequest,
+                          isMoneyRequest:
+                              request.requestType == RequestType.CASH,
+                          isGoodsRequest:
+                              request.requestType == RequestType.GOODS,
+                          isTimeRequest:
+                              request.requestType == RequestType.TIME,
+                          isOneToManyRequest: request.requestType ==
+                              RequestType.ONE_TO_MANY_REQUEST,
+                        ).getTags(context));
+              },
+            );
           },
-        );
-      },
+        ),
+        Text(
+          'Browse Requests by category',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 12),
+        RequestCategories(
+          onTap: (value) {
+            _bloc.onRequestCategoryChanged(value.typeId);
+            Provider.of<ScrollController>(context, listen: false)?.animateTo(
+              0,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          },
+          stream: _bloc.requestCategory,
+        ),
+      ],
     );
   }
 }
