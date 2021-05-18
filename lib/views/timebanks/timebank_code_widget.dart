@@ -18,7 +18,7 @@ class TimebankCodeWidget extends StatefulWidget {
   _TimebankCodeWidgetState createState() => _TimebankCodeWidgetState();
 }
 
-class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
+class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
@@ -27,6 +27,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +48,6 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                 onPressed: () => Navigator.of(context).pop(),
               ),
               SizedBox(width: 10),
-
             ],
           ),
           Container(
@@ -117,7 +117,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                               ),
                               Text(
                                 DateTime.now().millisecondsSinceEpoch >
-                                    widget.timebankCodeModel.validUpto
+                                        widget.timebankCodeModel.validUpto
                                     ? S.of(context).expired
                                     : S.of(context).active,
                                 style: TextStyle(
@@ -126,22 +126,31 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Tooltip(
                                     message: "Copy Community Code",
                                     child: InkWell(
                                       onTap: () {
+                                        ClipboardData data = ClipboardData(
+                                            text: shareText(
+                                                widget.timebankCodeModel));
+                                        Clipboard.setData(data);
 
-
-                                          Share.share(shareText(widget.timebankCodeModel));
-
+                                        SnackBar snackbar = SnackBar(
+                                          content: Text(S
+                                              .of(context)
+                                              .copied_to_clipboard),
+                                        );
+                                        _scaffoldKey.currentState
+                                            .showSnackBar(snackbar);
                                       },
                                       child: Text(
-                                        S.of(context).share_code,
+                                        'Copy code',
                                         style: TextStyle(
-                                          color:
-                                          FlavorConfig.values.theme.primaryColor,
+                                          color: FlavorConfig
+                                              .values.theme.primaryColor,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -154,8 +163,9 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                                         color: Colors.black,
                                       ),
                                       iconSize: 25,
-                                      onPressed: ()async {
-                                       await deleteShareCode(widget.timebankCodeModel.timebankCodeId);
+                                      onPressed: () async {
+                                        await deleteShareCode(widget
+                                            .timebankCodeModel.timebankCodeId);
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -167,37 +177,34 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
                         ),
                       ),
                     ),
-                    SizedBox(height: 30,),
-                    Center(child: Text(widget.timebankCodeModel.timebankCode,style: TextStyle(fontSize: 36,color: Colors.black54),)),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RaisedButton(onPressed: (){
-
-                              Share.share(shareText(widget.timebankCodeModel));
-
-                          },color:FlavorConfig.values.theme.primaryColor,textColor:Colors.white,child: Text('Share'),),
-                          RaisedButton(onPressed: (){
-                              ClipboardData data = ClipboardData(
-                                  text: shareText(widget.timebankCodeModel));
-                              Clipboard.setData(data);
-
-                              SnackBar snackbar = SnackBar(
-                                content: Text("Copied Community Code"),
-                              );
-                              _scaffoldKey.currentState
-                                  .showSnackBar(snackbar);
-
-                          },color:FlavorConfig.values.theme.primaryColor,textColor:Colors.white,child: Text('Copy to clipboard'),)
-
-                        ],
+                        child: Text(
+                      widget.timebankCodeModel.timebankCode,
+                      style: TextStyle(fontSize: 36, color: Colors.black54),
+                    )),
+                    Center(
+                      child: RaisedButton(
+                        onPressed: () {
+                          Share.share(shareText(widget.timebankCodeModel));
+                        },
+                        color: FlavorConfig.values.theme.primaryColor,
+                        textColor: Colors.white,
+                        child: Text('Share'),
                       ),
                     ),
                     SizedBox(
                       width: 20,
                     ),
-                    Center(child: Text('You can share the code to invite them to your timebank',style: TextStyle(fontSize: 20,),)),
+                    Center(
+                        child: Text(
+                      'You can share the code to invite them to your seva community',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    )),
                     SizedBox(
                       width: 30,
                     ),
@@ -209,8 +216,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
         ],
       ),
     );
-
   }
+
   String shareText(TimebankCodeModel timebankCode) {
     return '''${SevaCore.of(context).loggedInUser.fullname} has invited you to join their 
     "${widget.timebankName}" Seva Community. Seva means "selfless service" in Sanskrit.
@@ -228,12 +235,14 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
            if you have any questions or issues joining with the link given.
     ''';
   }
-  Future<void> deleteShareCode(String timebankCodeId) async{
-   await Firestore.instance
+
+  Future<void> deleteShareCode(String timebankCodeId) async {
+    await Firestore.instance
         .collection("timebankCodes")
         .document(timebankCodeId)
         .delete();
   }
+
   Widget headingTitle(String label) {
     return Container(
       height: 25,
@@ -247,5 +256,4 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget>{
       ),
     );
   }
-
 }
