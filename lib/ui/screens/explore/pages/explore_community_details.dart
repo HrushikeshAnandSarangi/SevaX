@@ -64,469 +64,478 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<CommunityModel>(
-      stream: _bloc.community,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    return Scaffold(
+      body: StreamBuilder<CommunityModel>(
+        stream: _bloc.community,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-        if (snapshot.hasError || snapshot.data == null) {
-          return Center(
-            child: Text('something went wrong'),
-          );
-        }
-        community = snapshot.data;
-        return FutureBuilder<TimebankModel>(
-            future: getTimeBankForId(timebankId: community.primary_timebank),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return LoadingIndicator();
-              }
-              timebankModel = snapshot.data;
-              templist = [
-                ...timebankModel.members,
-                ...timebankModel.admins,
-                ...timebankModel.organizers
-              ];
-              isUserJoined = Provider.of<UserModel>(context) != null &&
-                      templist.contains(
-                          SevaCore.of(context).loggedInUser.sevaUserID)
-                  ? true
-                  : false;
-              return ExplorePageViewHolder(
-                hideHeader: Provider.of<UserModel>(context) != null,
-                hideFooter: true,
-                hideSearchBar: true,
-                appBarTitle: community.name,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 40.0),
-                      child: AspectRatio(
-                        aspectRatio: 4 / 2,
-                        child: Image.network(
-                          community.logo_url,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Part of SevaX Global Network of Communities',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        Text(
-                          community.name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+          if (snapshot.hasError || snapshot.data == null) {
+            return Center(
+              child: Text('something went wrong'),
+            );
+          }
+          community = snapshot.data;
+          return FutureBuilder<TimebankModel>(
+              future: getTimeBankForId(timebankId: community.primary_timebank),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return LoadingIndicator();
+                }
+                timebankModel = snapshot.data;
+                templist = [
+                  ...timebankModel.members,
+                  ...timebankModel.admins,
+                  ...timebankModel.organizers
+                ];
+                isUserJoined = Provider.of<UserModel>(context) != null &&
+                        templist.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID)
+                    ? true
+                    : false;
+                return ExplorePageViewHolder(
+                  hideHeader: Provider.of<UserModel>(context) != null,
+                  hideFooter: true,
+                  hideSearchBar: true,
+                  appBarTitle: community.name,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 40.0),
+                        child: AspectRatio(
+                          aspectRatio: 4 / 2,
+                          child: Image.network(
+                            community.logo_url,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(height: 30),
-                        SizedBox(
-                          height: 50,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Part of SevaX Global Network of Communities',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                          Text(
+                            community.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          SizedBox(
+                            height: 50,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage: NetworkImage(
+                                    "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/landscape-photography/CODERED_B1_landscape_P2d_714x348.jpg.img.jpg",
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Tania Richerdson',
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Organizer',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Spacer(),
+                                // FlatButton(
+                                //   color: Colors.grey[300],
+                                //   shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadius.circular(8),
+                                //   ),
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.all(12.0),
+                                //     child: Text('Message'),
+                                //   ),
+                                //   onPressed: () {},
+                                // ),
+                                FlatButton(
+                                  color: Colors.grey[300],
+                                  textColor: Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(0.0),
+                                    child: Text(isUserJoined
+                                        ? 'Joined'
+                                        : 'Request to join'),
+                                  ),
+                                  onPressed: () {
+                                    if (Provider.of<UserModel>(context,
+                                                listen: false) !=
+                                            null &&
+                                        !isUserJoined) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              OnBoardWithTimebank(
+                                            user: SevaCore.of(context)
+                                                .loggedInUser,
+                                            communityModel: community,
+                                            isFromExplore: true,
+                                            sevauserId: SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      showSignInAlertMessage(
+                                        context: context,
+                                        message:
+                                            'Please Sign In/Sign up to access ${community.name}',
+                                      );
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              S.of(context).location,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(community.billing_address.city ?? ''),
+                          ),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              S.of(context).help_about_us,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              community.about,
+                              maxLines: 5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: MemberAvatarListWithCount(
+                          userIds: community.members,
+                          radius: 22,
+                        ),
+                      ),
+                      FutureBuilder<List<ProjectModel>>(
+                        future: FirestoreManager.getAllPublicProjects(
+                            timebankid: timebankModel.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              snapshot.data.isEmpty) {
+                            return Container();
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(
-                                  "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/landscape-photography/CODERED_B1_landscape_P2d_714x348.jpg.img.jpg",
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text(
+                                  "Upcoming Events",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Tania Richerdson',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Organizer',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              // FlatButton(
-                              //   color: Colors.grey[300],
-                              //   shape: RoundedRectangleBorder(
-                              //     borderRadius: BorderRadius.circular(8),
-                              //   ),
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.all(12.0),
-                              //     child: Text('Message'),
-                              //   ),
-                              //   onPressed: () {},
-                              // ),
-                              FlatButton(
-                                color: Colors.grey[300],
-                                textColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(isUserJoined
-                                      ? 'Join'
-                                      : S.of(context).join),
-                                ),
-                                onPressed: () {
-                                  if (Provider.of<UserModel>(context,
-                                          listen: false) !=
-                                      null) {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            OnBoardWithTimebank(
-                                          user:
-                                              SevaCore.of(context).loggedInUser,
-                                          communityModel: community,
-                                          isFromExplore: true,
-                                          sevauserId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID,
+                              SizedBox(
+                                height: 300,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    var event = snapshot.data[index];
+                                    return InkWell(
+                                      onTap: () {
+                                        if (Provider.of<UserModel>(context,
+                                                listen: false) !=
+                                            null) {
+                                          showSignInAlertMessage(
+                                              context: context,
+                                              message:
+                                                  'Please Sign In/Sign up to access ${event.name}');
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            isUserJoined &&
+                                            community.id ==
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .currentCommunity) {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ProjectRequests(
+                                              ComingFrom.Projects,
+                                              timebankId: event.timebankId,
+                                              projectModel: event,
+                                              timebankModel: timebankModel,
+                                            );
+                                          }));
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            isUserJoined) {
+                                          switchCommunity(
+                                            message: 'Event',
+                                          );
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            !isUserJoined) {
+                                          showAlertMessage(message: event.name);
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 250,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Image.network(
+                                                event.photoUrl ??
+                                                    defaultProjectImageURL,
+                                                fit: BoxFit.cover,
+                                                width: 250,
+                                                height: 180,
+                                              ),
+                                              Text(
+                                                event.address ?? '',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                event.description,
+                                              ),
+                                              SizedBox(height: 4),
+                                              MemberAvatarListWithCount(
+                                                userIds: event
+                                                    .associatedmembers.keys
+                                                    .toList(),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                DateFormat('EEEE, d MMM h:mm a')
+                                                    .format(
+                                                  DateTime
+                                                      .fromMillisecondsSinceEpoch(
+                                                    event.startTime,
+                                                  ),
+                                                ),
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
-                                  } else {
-                                    showSignInAlertMessage(
-                                      context: context,
-                                      message:
-                                          'Please Sign In/Sign up to access ${community.name}',
-                                    );
-                                  }
-                                },
-                              )
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: 20),
                             ],
-                          ),
-                        ),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            S.of(context).location,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text("asbdkjab"),
-                        ),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            S.of(context).help_about_us,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            community.about,
-                            maxLines: 5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: MemberAvatarListWithCount(
-                        userIds: community.members,
-                        radius: 22,
+                          );
+                        },
                       ),
-                    ),
-                    FutureBuilder<List<ProjectModel>>(
-                      future: FirestoreManager.getAllPublicProjects(
-                          timebankid: timebankModel.id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
+                      allGroupsUnderCommunity,
+                      StreamBuilder<List<RequestModel>>(
+                        stream: _bloc.requests,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                        if (snapshot.hasError ||
-                            snapshot.data == null ||
-                            snapshot.data.isEmpty) {
-                          return Container();
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Text(
-                                "Upcoming Events",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
+                          if (snapshot.hasError ||
+                              snapshot.data == null ||
+                              snapshot.data.isEmpty) {
+                            return Container();
+                          }
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Text(
+                                  "Latest Requests",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 300,
-                              child: ListView.builder(
-                                itemCount: snapshot.data.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  var event = snapshot.data[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      if (Provider.of<UserModel>(context,
-                                              listen: false) !=
-                                          null) {
-                                        showSignInAlertMessage(
-                                            context: context,
-                                            message:
-                                                'Please Sign In/Sign up to access ${event.name}');
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          isUserJoined &&
-                                          community.id ==
-                                              SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentCommunity) {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ProjectRequests(
-                                            ComingFrom.Projects,
-                                            timebankId: event.timebankId,
-                                            projectModel: event,
-                                            timebankModel: timebankModel,
+                              SizedBox(
+                                height: 300,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (context, index) {
+                                    var request = snapshot.data[index];
+                                    return InkWell(
+                                      onTap: () {
+                                        if (Provider.of<UserModel>(context,
+                                                listen: false) !=
+                                            null) {
+                                          showSignInAlertMessage(
+                                              context: context,
+                                              message:
+                                                  'Please Sign In/Sign up to access ${request.title}');
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            isUserJoined &&
+                                            community.id ==
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .currentCommunity) {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return RequestDetailsAboutPage(
+                                              requestItem: request,
+                                              timebankModel: timebankModel,
+                                              isAdmin: false,
+                                              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                            );
+                                          }));
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            isUserJoined) {
+                                          switchCommunity(
+                                            message: 'Event',
                                           );
-                                        }));
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          isUserJoined) {
-                                        switchCommunity(
-                                          message: 'Event',
-                                        );
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          !isUserJoined) {
-                                        showAlertMessage(message: event.name);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 250,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.network(
-                                              event.photoUrl ??
-                                                  defaultProjectImageURL,
-                                              fit: BoxFit.cover,
-                                              width: 250,
-                                              height: 180,
-                                            ),
-                                            Text(
-                                              event.address ?? '',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              event.description,
-                                            ),
-                                            SizedBox(height: 4),
-                                            MemberAvatarListWithCount(
-                                              userIds: event
-                                                  .associatedmembers.keys
-                                                  .toList(),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              DateFormat('EEEE, d MMM h:mm a')
-                                                  .format(
-                                                DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                  event.startTime,
+                                        } else if (Provider.of<UserModel>(
+                                                    context,
+                                                    listen: false) !=
+                                                null &&
+                                            !isUserJoined) {
+                                          showAlertMessage(
+                                              message: request.title);
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 250,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Image.network(
+                                                "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/landscape-photography/CODERED_B1_landscape_P2d_714x348.jpg.img.jpg",
+                                                fit: BoxFit.cover,
+                                                width: 250,
+                                                height: 180,
+                                              ),
+                                              Text(
+                                                request.address ?? '',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(request.title),
+                                              SizedBox(height: 4),
+                                              MemberAvatarListWithCount(
+                                                userIds: request.approvedUsers,
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                DateFormat('EEEE, d MMM h:mm a')
+                                                    .format(
+                                                  DateTime
+                                                      .fromMillisecondsSinceEpoch(
+                                                    request.requestStart,
+                                                  ),
+                                                ),
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .accentColor,
                                                 ),
                                               ),
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        );
-                      },
-                    ),
-                    allGroupsUnderCommunity,
-                    StreamBuilder<List<RequestModel>>(
-                      stream: _bloc.requests,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        if (snapshot.hasError ||
-                            snapshot.data == null ||
-                            snapshot.data.isEmpty) {
-                          return Container();
-                        }
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Text(
-                                "Latest Requests",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).primaryColor,
+                                    );
+                                  },
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 300,
-                              child: ListView.builder(
-                                itemCount: snapshot.data.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  var request = snapshot.data[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      if (Provider.of<UserModel>(context,
-                                              listen: false) !=
-                                          null) {
-                                        showSignInAlertMessage(
-                                            context: context,
-                                            message:
-                                                'Please Sign In/Sign up to access ${request.title}');
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          isUserJoined &&
-                                          community.id ==
-                                              SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentCommunity) {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return RequestDetailsAboutPage(
-                                            requestItem: request,
-                                            timebankModel: timebankModel,
-                                            isAdmin: false,
-                                            //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
-                                          );
-                                        }));
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          isUserJoined) {
-                                        switchCommunity(
-                                          message: 'Event',
-                                        );
-                                      } else if (Provider.of<UserModel>(context,
-                                                  listen: false) !=
-                                              null &&
-                                          !isUserJoined) {
-                                        showAlertMessage(
-                                            message: request.title);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 250,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.network(
-                                              "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/landscape-photography/CODERED_B1_landscape_P2d_714x348.jpg.img.jpg",
-                                              fit: BoxFit.cover,
-                                              width: 250,
-                                              height: 180,
-                                            ),
-                                            Text(
-                                              request.address ?? '',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(request.title),
-                                            SizedBox(height: 4),
-                                            MemberAvatarListWithCount(
-                                              userIds: request.approvedUsers,
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              DateFormat('EEEE, d MMM h:mm a')
-                                                  .format(
-                                                DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                  request.requestStart,
-                                                ),
-                                              ),
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            });
-      },
+                              SizedBox(height: 20),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              });
+        },
+      ),
     );
   }
 
@@ -543,99 +552,101 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
             return LoadingIndicator();
           }
           if (snapshot.data == null) {
-            return Center(
-              child: Text(
-                S.of(context).no_groups_found,
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            );
+            return Container();
           }
           List<TimebankModel> timabanksList = filterGroupsOfUser(snapshot.data);
           if (timabanksList.isEmpty) {
-            return Center(
-              child: Text(
-                S.of(context).no_groups_found,
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            );
+            return Container();
             // Text(S.of(context).no_groups_found);
           }
-          return ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: timabanksList.length,
-            itemBuilder: (context, index) => ShortGroupCard(
-              isSelected: false,
-              imageUrl: timabanksList[index].photoUrl ??
-                  'https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18823.jpg?size=338&ext=jpg',
-              title: timabanksList[index].name,
-              newPostCount: 0,
-              subtitle: '',
-              onTap: () {
-                if (!widget.isSignedUser) {
-                  showSignInAlertMessage(
-                      context: context,
-                      message:
-                          'Please Sign In/Sign up to access ${timabanksList[index].name}');
-                } else if (widget.isSignedUser &&
-                    isUserJoined &&
-                    community.id ==
-                        SevaCore.of(context).loggedInUser.currentCommunity) {
-                  try {
-                    Provider.of<HomePageBloc>(context, listen: false)
-                        .changeTimebank(timabanksList[index]);
-                  } on Exception catch (e) {
-                    log(e.toString());
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider<UserDataBloc>(
-                        bloc: BlocProvider.of<UserDataBloc>(context),
-                        child: TabarView(
-                          userModel: SevaCore.of(context).loggedInUser,
-                          timebankModel: timabanksList[index],
-                        ),
-                      ),
-                    ),
-                  ).then((_) {
-                    try {
-                      Provider.of<HomePageBloc>(context, listen: false)
-                          .switchToPreviousTimebank();
-                    } on Exception catch (e) {
-                      log(e.toString());
-                    }
-                  });
-                } else if (SevaCore.of(context).loggedInUser != null &&
-                    isUserJoined) {
-                  switchCommunity(message: 'Event');
-                } else if (SevaCore.of(context).loggedInUser != null &&
-                    !isUserJoined) {
-                  showAlertMessage(message: timabanksList[index].name);
-                }
-              },
-              sponsoredWidget: timabanksList[index].sponsored
-                  ? Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 3, right: 3),
-                        child: Image.asset(
-                          'images/icons/verified.png',
-                          color: Colors.orange,
-                          height: 12,
-                          width: 12,
-                        ),
-                      ))
-                  : Offstage(),
-            ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Text(
+                  "Groups",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: timabanksList.length,
+                  itemBuilder: (context, index) => ShortGroupCard(
+                    isSelected: false,
+                    imageUrl: timabanksList[index].photoUrl ??
+                        'https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18823.jpg?size=338&ext=jpg',
+                    title: timabanksList[index].name,
+                    newPostCount: 0,
+                    subtitle: '',
+                    onTap: () {
+                      if (!widget.isSignedUser) {
+                        showSignInAlertMessage(
+                            context: context,
+                            message:
+                                'Please Sign In/Sign up to access ${timabanksList[index].name}');
+                      } else if (widget.isSignedUser &&
+                          isUserJoined &&
+                          community.id ==
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity) {
+                        try {
+                          Provider.of<HomePageBloc>(context, listen: false)
+                              .changeTimebank(timabanksList[index]);
+                        } on Exception catch (e) {
+                          log(e.toString());
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider<UserDataBloc>(
+                              bloc: BlocProvider.of<UserDataBloc>(context),
+                              child: TabarView(
+                                userModel: SevaCore.of(context).loggedInUser,
+                                timebankModel: timabanksList[index],
+                              ),
+                            ),
+                          ),
+                        ).then((_) {
+                          try {
+                            Provider.of<HomePageBloc>(context, listen: false)
+                                .switchToPreviousTimebank();
+                          } on Exception catch (e) {
+                            log(e.toString());
+                          }
+                        });
+                      } else if (SevaCore.of(context).loggedInUser != null &&
+                          isUserJoined) {
+                        switchCommunity(message: 'Event');
+                      } else if (SevaCore.of(context).loggedInUser != null &&
+                          !isUserJoined) {
+                        showAlertMessage(message: timabanksList[index].name);
+                      }
+                    },
+                    sponsoredWidget: timabanksList[index].sponsored
+                        ? Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 3, right: 3),
+                              child: Image.asset(
+                                'images/icons/verified.png',
+                                color: Colors.orange,
+                                height: 12,
+                                width: 12,
+                              ),
+                            ))
+                        : Offstage(),
+                  ),
+                ),
+              ),
+            ],
           );
         });
   }

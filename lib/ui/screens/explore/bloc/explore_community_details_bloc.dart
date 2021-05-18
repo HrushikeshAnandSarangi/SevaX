@@ -16,32 +16,30 @@ class ExploreCommunityDetailsBloc {
   Stream<List<ProjectModel>> get events => _events.stream;
 
   void init(String communityId, bool isSignedUser) {
-    if (isSignedUser) {
-      //get community details
-      CommunityRepository.getCommunity(communityId).then(
-        (community) {
-          community != null
-              ? _community.add(community)
-              : _community.addError("something went wrong");
-        },
-      );
+    //get community details
+    CommunityRepository.getCommunity(communityId).then(
+      (community) {
+        community != null
+            ? _community.add(community)
+            : _community.addError("something went wrong");
+      },
+    );
 
-      //get all requests of community
-      RequestRepository.getAllRequestsOfCommunity(communityId).then(
-        (List<RequestModel> models) {
-          models.isNotEmpty
-              ? _requests.add(models)
-              : _requests.addError("Something went wrong");
-        },
-      );
-
-      ProjectRepository.getAllProjectsOfCommunity(communityId)
-          .then((List<ProjectModel> models) {
+    //get all requests of community
+    RequestRepository.getAllRequestsOfCommunity(communityId).then(
+      (List<RequestModel> models) {
         models.isNotEmpty
-            ? _events.add(models)
-            : _events.addError("Something went wrong");
-      });
-    } else {}
+            ? _requests.add(models)
+            : _requests.addError("Something went wrong");
+      },
+    );
+
+    ProjectRepository.getAllProjectsOfCommunity(communityId)
+        .then((List<ProjectModel> models) {
+      models.isNotEmpty
+          ? _events.add(models)
+          : _events.addError("Something went wrong");
+    });
   }
 
   void dispose() {
