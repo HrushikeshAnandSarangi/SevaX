@@ -540,8 +540,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
   }
 
   Widget get allGroupsUnderCommunity {
-    return FutureBuilder<List<TimebankModel>>(
-        future: FirestoreManager.getAllTheGroups(timebankModel.communityId),
+    return StreamBuilder<List<TimebankModel>>(
+        stream: _bloc.groups,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             log(snapshot.error);
@@ -583,7 +583,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                     imageUrl: timabanksList[index].photoUrl ??
                         'https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18823.jpg?size=338&ext=jpg',
                     title: timabanksList[index].name,
-                    newPostCount: 0,
+                    membersCount: timabanksList[index].members.length ?? 0,
                     subtitle: '',
                     onTap: () {
                       if (!widget.isSignedUser) {
