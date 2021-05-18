@@ -269,6 +269,46 @@ class _IndividualOfferState extends State<IndividualOffer> {
               );
             },
           ),
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: CupertinoSegmentedControl<int>(
+              unselectedColor: Colors.grey[200],
+              selectedColor: Theme.of(context).primaryColor,
+              children: {
+                0: Padding(
+                  padding: EdgeInsets.only(left: 14, right: 14),
+                  child: Text(
+                    L.of(context).option_one, //Label to be created
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ),
+                1: Padding(
+                  padding: EdgeInsets.only(left: 14, right: 14),
+                  child: Text(
+                    L.of(context).option_two, //Label to be created
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ),
+              },
+
+              borderColor: Colors.grey,
+              padding: EdgeInsets.only(left: 0.0, right: 0.0),
+              groupValue: _bloc.timeOfferType,
+              onValueChanged: (int val) {
+                if (val != _bloc.timeOfferType) {
+                  setState(() {
+                    if (val == 0) {
+                      _bloc.timeOfferType = 0;
+                    } else {
+                      _bloc.timeOfferType = 1;
+                    }
+                    _bloc.timeOfferType = val;
+                  });
+                }
+              },
+              //groupValue: sharedValue,
+            ),
+          ),
         ]);
   }
 
@@ -477,50 +517,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       : GoodsRequest();
                             }),
                         SizedBox(height: 10),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          child: CupertinoSegmentedControl<int>(
-                            unselectedColor: Colors.grey[200],
-                            selectedColor: Theme.of(context).primaryColor,
-                            children: {
-                              0: Padding(
-                                padding: EdgeInsets.only(left: 14, right: 14),
-                                child: Text(
-                                  L
-                                      .of(context)
-                                      .option_one, //Label to be created
-                                  style: TextStyle(fontSize: 12.0),
-                                ),
-                              ),
-                              1: Padding(
-                                padding: EdgeInsets.only(left: 14, right: 14),
-                                child: Text(
-                                  L
-                                      .of(context)
-                                      .option_two, //Label to be created
-                                  style: TextStyle(fontSize: 12.0),
-                                ),
-                              ),
-                            },
-
-                            borderColor: Colors.grey,
-                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                            groupValue: _bloc.timeOfferType,
-                            onValueChanged: (int val) {
-                              if (val != _bloc.timeOfferType) {
-                                setState(() {
-                                  if (val == 0) {
-                                    _bloc.timeOfferType = 0;
-                                  } else {
-                                    _bloc.timeOfferType = 1;
-                                  }
-                                  _bloc.timeOfferType = val;
-                                });
-                              }
-                            },
-                            //groupValue: sharedValue,
-                          ),
-                        ),
                         SizedBox(height: 25),
                         StreamBuilder<CustomLocation>(
                             stream: _bloc.location,

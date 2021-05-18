@@ -184,17 +184,16 @@ class BookmarkedOffers extends StatelessWidget {
                         ),
                       ),
                     getBio(context, userModel),
-                    Center(
-                      child: Text(
-                          S
-                              .of(context)
-                              .will_be_added_to_request
-                              .replaceFirst('***', userModel.fullname),
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
-                          textAlign: TextAlign.center),
-                    ),
+                    // Center(
+                    //   child: Text(
+                    //       userModel.fullname +
+                    //           " " +
+                    //           S.of(context).will_be_added_to_request,
+                    //       style: TextStyle(
+                    //         fontStyle: FontStyle.italic,
+                    //       ),
+                    //       textAlign: TextAlign.center),
+                    // ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
                     ),
@@ -288,7 +287,7 @@ class BookmarkedOffers extends StatelessWidget {
                           },
                         ),
                         RaisedButton(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).primaryColor,
                           child: Container(
                               width: double.infinity,
                               child: Center(
