@@ -1799,7 +1799,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
         Padding(
-          padding: const EdgeInsets.only(right: 5, bottom: 5),
+          padding: const EdgeInsets.only(right: 7, bottom: 7),
           child: Container(
             height: 30,
             decoration: BoxDecoration(
@@ -1807,23 +1807,13 @@ class RequestEditFormState extends State<RequestEditForm> {
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text("${item.title_en.toString()}",
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                  SizedBox(width: 7),
+                  Text("${item.title_en.toString()}",
+                      style: TextStyle(color: Colors.white)),
+                  SizedBox(width: 10),
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -1834,7 +1824,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                       });
                     },
                     child:
-                        Icon(Icons.cancel, color: Colors.grey[200], size: 17),
+                        Icon(Icons.cancel, color: Colors.grey[200], size: 19),
                   ),
                 ],
               ),
@@ -2627,8 +2617,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: L.of(context).select_a_speaker);
+        showDialogForTitle(dialogTitle: L.of(context).select_a_speaker);
         return;
       }
 

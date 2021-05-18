@@ -2181,35 +2181,36 @@ class RequestCreateFormState extends State<RequestCreateForm>
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
         Padding(
-          padding: const EdgeInsets.only(right: 5, bottom: 5),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: Text("${item.title_en.toString()}",
+          padding: const EdgeInsets.only(right: 7, bottom: 7),
+          child: Container(
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("${item.title_en.toString()}",
                       style: TextStyle(color: Colors.white)),
-                ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedCategoryIds.remove(item.typeId);
+                        selectedSubCategories.remove(item.typeId);
+                        subCategories.removeWhere(
+                            (category) => category.typeId == item.typeId);
+                      });
+                    },
+                    child:
+                        Icon(Icons.cancel, color: Colors.grey[200], size: 19),
+                  ),
+                ],
               ),
-              SizedBox(width: 7),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedCategoryIds.remove(item.typeId);
-                    selectedSubCategories.remove(item.typeId);
-                    subCategories.removeWhere(
-                        (category) => category.typeId == item.typeId);
-                  });
-                },
-                child: Icon(Icons.cancel, color: Colors.grey[200], size: 17),
-              ),
-            ],
+            ),
           ),
         ),
       );
