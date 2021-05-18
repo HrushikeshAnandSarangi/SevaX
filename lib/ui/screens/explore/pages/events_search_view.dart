@@ -5,6 +5,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/communities/widgets/communities_categories.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
@@ -22,59 +23,82 @@ class EventsSearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
 
-    return StreamBuilder<List<ProjectModel>>(
-      stream: _bloc.events,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        if (snapshot.data == null || snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        StreamBuilder<List<ProjectModel>>(
+          stream: _bloc.events,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            if (snapshot.data == null || snapshot.data.isEmpty) {
+              return Text('No result found');
+            }
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            var event = snapshot.data[index];
-            var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
-            return isUserSignedIn
-                ? FutureBuilder<TimebankModel>(
-                    future: getTimeBankForId(timebankId: event.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Container();
-                      }
-                      if (snapshot.data == null) {
-                        return Container();
-                      }
-                      return ExploreEventCard(
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                var event = snapshot.data[index];
+                var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
+                return isUserSignedIn
+                    ? FutureBuilder<TimebankModel>(
+                        future: getTimeBankForId(timebankId: event.timebankId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+                          if (snapshot.hasError) {
+                            return Container();
+                          }
+                          if (snapshot.data == null) {
+                            return Container();
+                          }
+                          return ExploreEventCard(
+                            onTap: () {
+                              if (isUserSignedIn != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ProjectRequests(
+                                        ComingFrom.Projects,
+                                        timebankId: event.timebankId,
+                                        projectModel: event,
+                                        timebankModel: snapshot.data,
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else {
+                                showSignInAlertMessage(
+                                  context: context,
+                                  message:
+                                      'Please Sign In/Sign up to access ${event.name}',
+                                );
+                              }
+                            },
+                            photoUrl: event.photoUrl ?? defaultProjectImageURL,
+                            title: event.name,
+                            description: event.description,
+                            location: event.address,
+                            communityName: "event.communityName ?? ''",
+                            date: DateFormat('d MMMM, y').format(date),
+                            time: DateFormat.jm().format(date),
+                            memberList: MemberAvatarListWithCount(
+                              userIds: event.associatedmembers.keys.toList(),
+                            ),
+                          );
+                        })
+                    : ExploreEventCard(
                         onTap: () {
-                          if (isUserSignedIn != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ProjectRequests(
-                                    ComingFrom.Projects,
-                                    timebankId: event.timebankId,
-                                    projectModel: event,
-                                    timebankModel: snapshot.data,
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            showSignInAlertMessage(
+                          showSignInAlertMessage(
                               context: context,
                               message:
-                                  'Please Sign In/Sign up to access ${event.name}',
-                            );
-                          }
+                                  'Please Sign In/Sign up to access ${event.name}');
                         },
                         photoUrl: event.photoUrl ?? defaultProjectImageURL,
                         title: event.name,
@@ -87,41 +111,40 @@ class EventsSearchView extends StatelessWidget {
                           userIds: event.associatedmembers.keys.toList(),
                         ),
                       );
-                    })
-                : ExploreEventCard(
-                    onTap: () {
-                      showSignInAlertMessage(
-                          context: context,
-                          message:
-                              'Please Sign In/Sign up to access ${event.name}');
-                    },
-                    photoUrl: event.photoUrl ?? defaultProjectImageURL,
-                    title: event.name,
-                    description: event.description,
-                    location: event.address,
-                    communityName: "event.communityName ?? ''",
-                    date: DateFormat('d MMMM, y').format(date),
-                    time: DateFormat.jm().format(date),
-                    memberList: MemberAvatarListWithCount(
-                      userIds: event.associatedmembers.keys.toList(),
-                    ),
-                  );
 
-            // return ExploreEventCard(
-            //   photoUrl: event.photoUrl ?? defaultProjectImageURL,
-            //   title: event.name,
-            //   description: event.description,
-            //   location: event.address,
-            //   communityName: "event.communityName ?? ''",
-            //   date: DateFormat('d MMMM, y').format(date),
-            //   time: DateFormat.jm().format(date),
-            //   memberList: MemberAvatarListWithCount(
-            //     userIds: event.associatedmembers.keys.toList(),
-            //   ),
-            // );
+                // return ExploreEventCard(
+                //   photoUrl: event.photoUrl ?? defaultProjectImageURL,
+                //   title: event.name,
+                //   description: event.description,
+                //   location: event.address,
+                //   communityName: "event.communityName ?? ''",
+                //   date: DateFormat('d MMMM, y').format(date),
+                //   time: DateFormat.jm().format(date),
+                //   memberList: MemberAvatarListWithCount(
+                //     userIds: event.associatedmembers.keys.toList(),
+                //   ),
+                // );
+              },
+            );
           },
-        );
-      },
+        ),
+        SizedBox(height: 22),
+        Text(
+          'Browse community by category',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        CommunitiesCategory(
+          stream: _bloc.communityCategory,
+          onTap: (value) {
+            _bloc.onCommunityCategoryChanged(value.id);
+            Provider.of<ScrollController>(context, listen: false)?.animateTo(
+              0,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          },
+        ),
+      ],
     );
   }
 }

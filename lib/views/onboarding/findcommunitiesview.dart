@@ -120,7 +120,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         .push(
                           MaterialPageRoute(
                             builder: (context1) => NearByFiltersView(
-                              SevaCore.of(context).loggedInUser,
+                              userModel: SevaCore.of(context).loggedInUser,
                               // widget.loggedInUser,
                             ),
                           ),
@@ -396,7 +396,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         RaisedButton(
-          onPressed: communityModel.id != SevaCore.of(context).loggedInUser.currentCommunity
+          onPressed: communityModel.id !=
+                  SevaCore.of(context).loggedInUser.currentCommunity
               ? () {
                   var communityModell = communityModel;
                   createEditCommunityBloc.selectCommunity(communityModell);

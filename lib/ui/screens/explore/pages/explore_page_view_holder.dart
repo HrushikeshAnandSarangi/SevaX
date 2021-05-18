@@ -12,6 +12,7 @@ class ExplorePageViewHolder extends StatelessWidget {
   final ValueChanged<String> onSearchChanged;
   final EdgeInsets childPadding;
   final TextEditingController controller;
+  final ScrollController scrollController;
 
   const ExplorePageViewHolder({
     Key key,
@@ -23,6 +24,7 @@ class ExplorePageViewHolder extends StatelessWidget {
     this.childPadding,
     this.controller,
     this.appBarTitle,
+    this.scrollController,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class ExplorePageViewHolder extends StatelessWidget {
             )
           : null,
       body: SingleChildScrollView(
+        controller: scrollController,
         padding: EdgeInsets.zero,
         child: Column(
           children: [
