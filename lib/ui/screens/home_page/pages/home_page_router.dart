@@ -47,7 +47,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   MessageBloc _messageBloc = MessageBloc();
   NotificationsBloc _notificationsBloc = NotificationsBloc();
   List<Widget> pages = [
-    ExplorePage(),
+    ExplorePage(
+      isUserSignedIn: true,
+    ),
     // ExploreTabView(),
     CombinedNotificationsPage(),
     HomeDashBoard(),
@@ -90,7 +92,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         });
       },
     );
-
   }
 
   @override
