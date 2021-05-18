@@ -244,10 +244,11 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
     String requestId,
     String offerId,
   }) {
-    rejectInviteRequest(
+    rejectInviteRequestForOffer(
       requestId: requestId,
       rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
+      
     );
 
     Firestore.instance
