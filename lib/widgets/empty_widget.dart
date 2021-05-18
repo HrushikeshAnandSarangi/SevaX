@@ -13,39 +13,42 @@ class EmptyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logger.i(MediaQuery.of(context).size);
-    return Center(
-      child: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
-          ),
-          Image.asset(
-            'images/icons/empty_widget.png',
-            height: MediaQuery.of(context).size.height * 0.2,
-            width: MediaQuery.of(context).size.width * 0.5,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: titleFontSize ?? 22,
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
+    return Container(
+      padding: EdgeInsets.all(15),
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            sub_title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black54,
+            Image.asset(
+              'images/icons/empty_widget.png',
+              height: MediaQuery.of(context).size.height * 0.2,
+              width: MediaQuery.of(context).size.width * 0.5,
             ),
-          ),
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: titleFontSize ?? 22,
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              sub_title,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

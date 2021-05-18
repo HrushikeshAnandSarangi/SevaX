@@ -106,7 +106,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            'Create Offer Request',
+            S.of(context).accept_offer,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -434,7 +434,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(S.of(context).creating_request),
+            title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(),
           );
         });

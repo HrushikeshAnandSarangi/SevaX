@@ -13,6 +13,8 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../../labels.dart';
+
 class OfferJoinRequestDialog extends StatefulWidget {
   // final RequestInvitationModel requestInvitationModel;
   final String offerId;
@@ -99,8 +101,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
             //   ),
             // ),
             Center(
-              child: Text(
-                  "By acceting this invitation, a task will be added in your tasks.",
+              child: Text(L.of(context).accept_offer_invitation_confirmation,
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -248,7 +249,6 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       requestId: requestId,
       rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
-      
     );
 
     Firestore.instance

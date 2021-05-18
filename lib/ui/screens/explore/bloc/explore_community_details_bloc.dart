@@ -10,12 +10,16 @@ import 'package:sevaexchange/repositories/project_repository.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 
+import '../../../../flavor_config.dart';
+
 class ExploreCommunityDetailsBloc {
   final _community = BehaviorSubject<CommunityModel>();
+  final _timebank = BehaviorSubject<TimebankModel>();
   final _requests = BehaviorSubject<List<RequestModel>>();
   final _groups = BehaviorSubject<List<TimebankModel>>();
   final _events = BehaviorSubject<List<ProjectModel>>();
 
+  Stream<TimebankModel> get timebank => _timebank.stream;
   Stream<CommunityModel> get community => _community.stream;
   Stream<List<RequestModel>> get requests => _requests.stream;
   Stream<List<TimebankModel>> get groups => _groups.stream;
@@ -79,9 +83,17 @@ class ExploreCommunityDetailsBloc {
     }
   }
 
+  TimebankModel primaryTimebankModel() {
+    return _groups.value.firstWhere(
+        (model) => model.parentTimebankId == FlavorConfig.values.timebankId,
+        orElse: null);
+  }
+
   void dispose() {
     _community.close();
     _requests.close();
     _events.close();
+    _timebank.close();
+    _groups.close();
   }
 }
