@@ -1584,11 +1584,13 @@ Future<void> acceptInviteRequest({
         //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserEmail]),
+        'participantDetails': {acceptedUserEmail: acceptorModel.toMap()},
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
       });
     } else {
       batch.updateData(db.collection('requests').document(requestId), {
         'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserEmail]),
+        'participantDetails': {acceptedUserEmail: acceptorModel.toMap()},
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
       });
     }
