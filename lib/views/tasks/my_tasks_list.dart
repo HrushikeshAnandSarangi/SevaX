@@ -127,8 +127,9 @@ class MyTasksListState extends State<MyTaskList> {
             requestModelNew = model;
 
             if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                model.accepted == false &&
-                model.isSpeakerCompleted == false) {
+                model.accepted == false 
+                //&& model.isSpeakerCompleted == false
+                ) {
               return getOneToManyTaskWidget(
                   model, SevaCore.of(context).loggedInUser.timezone, context);
             } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
