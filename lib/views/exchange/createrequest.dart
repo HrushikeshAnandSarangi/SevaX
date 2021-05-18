@@ -1953,7 +1953,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ),
                   ),
 
-                  //BORROW REQUEST MOSTLY PUSHED TO NEXT RELEASE
+                  //BORROW REQUEST PUSHED TO NEXT RELEASE
 
                   // TransactionsMatrixCheck(
                   //   upgradeDetails:
@@ -1984,7 +1984,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   // ),
                   TransactionsMatrixCheck(
                     upgradeDetails:
-                        AppConfig.upgradePlanBannerModel.one_to_many_request,
+                        AppConfig.upgradePlanBannerModel.onetomany_requests,
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
@@ -3034,8 +3034,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: L.of(context).select_a_speaker);
+        showDialogForTitle(dialogTitle: L.of(context).select_a_speaker);
         return;
       }
 
