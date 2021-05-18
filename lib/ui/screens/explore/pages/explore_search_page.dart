@@ -1,39 +1,30 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
-import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/community_by_category_view.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/events_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
-import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/offers_search_view.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/requests_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
-import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
-import 'package:sevaexchange/views/requests/project_request.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ExploreSearchPage extends StatefulWidget {
   final String searchText;
   final int tabIndex;
+  final bool isUserSignedIn;
 
-  const ExploreSearchPage({Key key, this.searchText, this.tabIndex = 0})
+  const ExploreSearchPage(
+      {Key key, this.searchText, this.tabIndex = 0, this.isUserSignedIn})
       : assert(tabIndex <= 4),
         super(key: key);
   @override
@@ -76,8 +67,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       child: ExplorePageViewHolder(
         appBarTitle: 'Search',
         hideSearchBar: true,
-        hideHeader: Provider.of<UserModel>(context) != null,
-        hideFooter: Provider.of<UserModel>(context) != null,
+        hideHeader: widget.isUserSignedIn,
+        hideFooter: widget.isUserSignedIn,
         controller: _searchController,
         onSearchChanged: (value) {
           logger.i(value);
@@ -137,7 +128,6 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 SizedBox(height: 12),
                 Builder(
                   builder: (context) {
-                    var user = Provider.of<UserModel>(context);
                     return Row(
                       children: [
                         Container(
@@ -188,20 +178,29 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                     // return _EventsView();
                     switch (snapshot.data) {
                       case 0:
-                        return _CommunitiesView();
-                        break;
+                        return CommunitiesSearchView(
+                          isUserSignedIn: widget.isUserSignedIn,
+                        );
+
                       case 1:
-                        return _EventsView();
-                        break;
+                        return EventsSearchView(
+                          isUserSignedIn: widget.isUserSignedIn,
+                        );
+
                       case 2:
-                        return _RequestsView();
-                        break;
+                        return RequestsSearchView(
+                          isUserSignedIn: widget.isUserSignedIn,
+                        );
+
                       case 3:
-                        return _OffersView();
-                        break;
+                        return OffersSearchView(
+                          isUserSignedIn: widget.isUserSignedIn,
+                        );
+
                       default:
-                        return _CommunitiesView();
-                        break;
+                        return CommunitiesSearchView(
+                          isUserSignedIn: widget.isUserSignedIn,
+                        );
                     }
                   },
                 ),
@@ -347,370 +346,6 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   }
 }
 
-class _CommunitiesView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
-    return StreamBuilder<List<CommunityModel>>(
-      initialData: null,
-      stream: _bloc.communities,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-
-        if (snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
-
-        int length = snapshot.data.length;
-        return Column(
-          children: List.generate(
-            length + 1,
-            (index) {
-              if (length ~/ 2 == index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Featured Communities',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 12),
-                      Container(
-                        height: 360,
-                        child: StreamBuilder<List<CommunityModel>>(
-                            stream: _bloc.featuredCommunities,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return LoadingIndicator();
-                              }
-                              return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  var community = snapshot.data[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ExploreCommunityDetails(
-                                              communityId: community.id,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 200,
-                                            height: 320,
-                                            child: Image.network(
-                                              community.logo_url,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          SizedBox(height: 3),
-                                          Text(community.name),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                return ExploreCommunityCard(
-                  model: snapshot.data[index >= length ? length ~/ 2 : index],
-                );
-              }
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _RequestsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
-    return StreamBuilder<List<RequestModel>>(
-      stream: _bloc.requests,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        if (snapshot.data == null || snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            var request = snapshot.data[index];
-            var date =
-                DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-            // return ExploreEventCard(
-            //   photoUrl: request.photoUrl ?? defaultProjectImageURL,
-            //   title: request.title,
-            //   description: request.description,
-            //   location: request.address,
-            //   communityName: "request.communityName ?? ''",
-            //   date: DateFormat('d MMMM, y').format(date),
-            //   time: DateFormat.jm().format(date),
-            //   memberList: MemberAvatarListWithCount(
-            //     userIds: request.approvedUsers,
-            //   ),
-            // );
-            return Provider.of<UserModel>(context, listen: false) != null
-                ? FutureBuilder<TimebankModel>(
-                    future: getTimeBankForId(timebankId: request.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Container();
-                      }
-                      if (snapshot.data == null) {
-                        return Container();
-                      }
-                      return ExploreEventCard(
-                        onTap: () {
-                          bool isAdmin = snapshot.data.admins.contains(
-                              Provider.of<UserModel>(context).sevaUserID);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return RequestDetailsAboutPage(
-                              isAdmin: isAdmin,
-                              timebankModel: snapshot.data,
-                              requestItem: request,
-                            );
-                          }));
-                        },
-                        photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                        title: request.title,
-                        description: request.description,
-                        location: request.address,
-                        communityName: 'request.communityName ?? ' '',
-                        date: DateFormat('d MMMM, y').format(date),
-                        time: DateFormat.jm().format(date),
-                        memberList: MemberAvatarListWithCount(
-                          userIds: request.approvedUsers,
-                        ),
-                      );
-                    })
-                : ExploreEventCard(
-                    onTap: () {
-                      showSignInAlertMessage(
-                          context: context,
-                          message:
-                              'Please Sign In/Sign up to access ${request.title}');
-                    },
-                    photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                    title: request.title,
-                    description: request.description,
-                    location: request.address,
-                    communityName: 'request.communityName ?? ' '',
-                    date: DateFormat('d MMMM, y').format(date),
-                    time: DateFormat.jm().format(date),
-                    memberList: MemberAvatarListWithCount(
-                      userIds: request.approvedUsers,
-                    ),
-                  );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _OffersView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
-    return StreamBuilder<List<OfferModel>>(
-      stream: _bloc.offers,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        if (snapshot.data == null || snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            var offer = snapshot.data[index];
-            var date = DateTime.fromMillisecondsSinceEpoch(offer.timestamp);
-            return ExploreEventCard(
-              onTap: () {
-                if (Provider.of<UserModel>(context, listen: false) != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return OfferDetailsRouter(
-                          offerModel: offer,
-                          comingFrom: ComingFrom.Home,
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  showSignInAlertMessage(
-                      context: context,
-                      message:
-                          'Please Sign In/Sign up to access ${offer.individualOfferDataModel != null ? offer.individualOfferDataModel.title : offer.groupOfferDataModel.classTitle}');
-                }
-              },
-              photoUrl: /*offer.photoUrl ??*/ defaultProjectImageURL,
-              title: getOfferTitle(offerDataModel: offer),
-              description: getOfferDescription(offerDataModel: offer),
-              location: offer.selectedAdrress,
-              communityName: offer.communityName ?? '',
-              date: DateFormat('d MMMM, y').format(date),
-              time: DateFormat.jm().format(date),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _EventsView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
-
-    return StreamBuilder<List<ProjectModel>>(
-      stream: _bloc.events,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        }
-        if (snapshot.data == null || snapshot.data.isEmpty) {
-          return Text('No result found');
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            var event = snapshot.data[index];
-            var date = DateTime.fromMillisecondsSinceEpoch(event.startTime);
-            var userModel = Provider.of<UserModel>(context, listen: false);
-            return userModel != null
-                ? FutureBuilder<TimebankModel>(
-                    future: getTimeBankForId(timebankId: event.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
-                      }
-                      if (snapshot.hasError) {
-                        return Container();
-                      }
-                      if (snapshot.data == null) {
-                        return Container();
-                      }
-                      return ExploreEventCard(
-                        onTap: () {
-                          if (userModel != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ProjectRequests(
-                                    ComingFrom.Projects,
-                                    timebankId: event.timebankId,
-                                    projectModel: event,
-                                    timebankModel: snapshot.data,
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            showSignInAlertMessage(
-                              context: context,
-                              message:
-                                  'Please Sign In/Sign up to access ${event.name}',
-                            );
-                          }
-                        },
-                        photoUrl: event.photoUrl ?? defaultProjectImageURL,
-                        title: event.name,
-                        description: event.description,
-                        location: event.address,
-                        communityName: "event.communityName ?? ''",
-                        date: DateFormat('d MMMM, y').format(date),
-                        time: DateFormat.jm().format(date),
-                        memberList: MemberAvatarListWithCount(
-                          userIds: event.associatedmembers.keys.toList(),
-                        ),
-                      );
-                    })
-                : ExploreEventCard(
-                    onTap: () {
-                      showSignInAlertMessage(
-                          context: context,
-                          message:
-                              'Please Sign In/Sign up to access ${event.name}');
-                    },
-                    photoUrl: event.photoUrl ?? defaultProjectImageURL,
-                    title: event.name,
-                    description: event.description,
-                    location: event.address,
-                    communityName: "event.communityName ?? ''",
-                    date: DateFormat('d MMMM, y').format(date),
-                    time: DateFormat.jm().format(date),
-                    memberList: MemberAvatarListWithCount(
-                      userIds: event.associatedmembers.keys.toList(),
-                    ),
-                  );
-
-            // return ExploreEventCard(
-            //   photoUrl: event.photoUrl ?? defaultProjectImageURL,
-            //   title: event.name,
-            //   description: event.description,
-            //   location: event.address,
-            //   communityName: "event.communityName ?? ''",
-            //   date: DateFormat('d MMMM, y').format(date),
-            //   time: DateFormat.jm().format(date),
-            //   memberList: MemberAvatarListWithCount(
-            //     userIds: event.associatedmembers.keys.toList(),
-            //   ),
-            // );
-          },
-        );
-      },
-    );
-  }
-}
-
 class ExploreCommunityCard extends StatelessWidget {
   final CommunityModel model;
   const ExploreCommunityCard({
@@ -728,6 +363,7 @@ class ExploreCommunityCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ExploreCommunityDetails(
                 communityId: model.id,
+                isSignedUser: Provider.of<UserModel>(context) != null,
               ),
             ),
           );

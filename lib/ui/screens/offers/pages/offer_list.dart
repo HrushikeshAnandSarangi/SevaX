@@ -92,6 +92,7 @@ class _OfferListState extends State<OfferList> {
                       MaterialPageRoute(
                         builder: (context) => CreateOffer(
                           timebankId: widget.timebankModel.id,
+                          timebankModel: widget.timebankModel,
                         ),
                       ),
                     );

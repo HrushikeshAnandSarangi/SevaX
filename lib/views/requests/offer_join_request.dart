@@ -8,30 +8,42 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
-class JoinRejectDialogView extends StatefulWidget {
-  final RequestInvitationModel requestInvitationModel;
+class OfferJoinRequestDialog extends StatefulWidget {
+  // final RequestInvitationModel requestInvitationModel;
+  final String offerId;
+  final String requestId;
+  final int requestStartDate;
+  final int requestEndDate;
+  final String requestTitle;
+
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
-  bool isFromOfferRequest;
-  JoinRejectDialogView({
-    this.requestInvitationModel,
+  final TimeOfferParticipantsModel timeOfferParticipantsModel;
+
+  OfferJoinRequestDialog({
     this.timeBankId,
     this.notificationId,
     this.userModel,
-    this.isFromOfferRequest = false,
+    this.offerId,
+    this.requestId,
+    this.timeOfferParticipantsModel,
+    this.requestStartDate,
+    this.requestEndDate,
+    this.requestTitle,
   });
 
   @override
-  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState();
+  _OfferJoinRequestDialogState createState() => _OfferJoinRequestDialogState();
 }
 
-class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
-  _JoinRejectDialogViewState();
+class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
+  _OfferJoinRequestDialogState();
 
   BuildContext progressContext;
 
@@ -50,9 +62,9 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    widget.requestInvitationModel.timebankModel.photoUrl ??
-                        defaultUserImageURL),
+                backgroundImage: NetworkImage(widget.timeOfferParticipantsModel
+                        .participantDetails.photourl ??
+                    defaultUserImageURL),
               ),
             ),
             Padding(
@@ -61,7 +73,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.requestInvitationModel.requestModel.title ?? "Anonymous",
+                widget.timeOfferParticipantsModel.participantDetails.fullname,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -71,25 +83,24 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                widget.requestInvitationModel.requestModel.fullName ??
+                widget.timeOfferParticipantsModel.participantDetails.bio ??
                     "${S.of(context).timebank} name not updated",
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                widget.requestInvitationModel.requestModel.description ??
-                    "Description not yet updated",
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.all(8.0),
+            //   child: Text(
+            //     widget.requestStartDate.toString() +
+            //         ' to ' +
+            //         widget.requestEndDate.toString(),
+            //     maxLines: 5,
+            //     overflow: TextOverflow.ellipsis,
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
             Center(
               child: Text(
-                  widget.isFromOfferRequest
-                      ? "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}"
-                      : "${S.of(context).by_accepting}${widget.requestInvitationModel.requestModel.title} ${S.of(context).will_be_added_to_request}",
+                  "By acceting this invitation, a task will be added in your tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -135,23 +146,25 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                           context: context,
                           builder: (_context) {
                             return CalenderEventConfirmationDialog(
-                              title: widget
-                                  .requestInvitationModel.requestModel.title,
+                              title: widget.requestTitle,
                               isrequest: true,
                               cancelled: () async {
                                 approveInvitationForVolunteerRequest(
-                                    allowedCalender: false,
-                                    model: widget.requestInvitationModel,
-                                    notificationId: widget.notificationId,
-                                    user: widget.userModel,
-                                    acceptorModel: acceptorModel);
+                                  allowedCalender: false,
+                                  notificationId: widget.notificationId,
+                                  user: widget.userModel,
+                                  acceptorModel: acceptorModel,
+                                  offerId: widget.offerId,
+                                  requestId: widget.requestId,
+                                );
                                 Navigator.pop(_context);
                                 Navigator.of(context).pop();
                               },
                               addToCalender: () async {
                                 approveInvitationForVolunteerRequest(
+                                    offerId: widget.offerId,
+                                    requestId: widget.requestId,
                                     allowedCalender: true,
-                                    model: widget.requestInvitationModel,
                                     notificationId: widget.notificationId,
                                     user: widget.userModel,
                                     acceptorModel: acceptorModel);
@@ -161,19 +174,17 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                             );
                           },
                         );
-
-                        //  calenderConfirmation(context);
                       } else {
                         approveInvitationForVolunteerRequest(
                             allowedCalender: false,
-                            model: widget.requestInvitationModel,
+                            offerId: widget.offerId,
+                            requestId: widget.requestId,
                             notificationId: widget.notificationId,
                             user: widget.userModel,
                             acceptorModel: acceptorModel);
 
                         Navigator.of(context).pop();
                       }
-
                     },
                   ),
                 ),
@@ -190,13 +201,12 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      // request declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
-
                       declineInvitationbRequest(
-                          model: widget.requestInvitationModel,
-                          notificationId: widget.notificationId,
-                          userModel: widget.userModel);
+                        requestId: widget.requestId,
+                        notificationId: widget.notificationId,
+                        userModel: widget.userModel,
+                        offerId: widget.offerId,
+                      );
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -229,31 +239,39 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
   }
 
   void declineInvitationbRequest({
-    RequestInvitationModel model,
     String notificationId,
     UserModel userModel,
+    String requestId,
+    String offerId,
   }) {
-    rejectInviteRequest(
-      requestId: model.requestModel.id,
+    rejectInviteRequestForOffer(
+      requestId: requestId,
       rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
-      acceptedUserEmail: userModel.email, model: model
+      
     );
 
+    Firestore.instance
+        .collection('offers')
+        .document(offerId)
+        .collection('offerAcceptors')
+        .document(notificationId)
+        .updateData({
+      'status': 'REJECTED',
+    });
     FirestoreManager.readUserNotification(notificationId, userModel.email);
   }
 
   void approveInvitationForVolunteerRequest({
-    RequestInvitationModel model,
+    String requestId,
+    String offerId,
     String notificationId,
     UserModel user,
     bool allowedCalender,
     AcceptorModel acceptorModel,
   }) {
     acceptInviteRequest(
-      user: user,
-      model: model,
-      requestId: model.requestModel.id,
+      requestId: requestId,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
@@ -261,32 +279,18 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       acceptorModel: acceptorModel,
     );
 
-    var offerId = widget.requestInvitationModel.offerModel.id;
-    var offerMode = widget.requestInvitationModel.requestModel.requestMode;
-    var timebankId = widget.requestInvitationModel.offerModel.timebankId;
-    var uuid = utils.Utils.getUuid();
-
-    //Create accetor document
+    //Update accetor document
     Firestore.instance
         .collection('offers')
         .document(offerId)
-        .collection('offerId')
-        .document(uuid)
-        .setData({
-      'acceptorNotificationId': notificationId,
-      'communityId': acceptorModel.communityId,
-      'id': uuid,
-      'mode': offerMode,
-      'offerId': offerId,
+        .collection('offerAcceptors')
+        .document(notificationId)
+        .updateData({
       'status': 'ACCEPTED',
-      'timebankId': timebankId,
-      'timestamp': new DateTime.now().millisecondsSinceEpoch,
-      'participantDetails': {
-        'bio': user.bio,
-        'email': user.email,
-        'photourl': user.photoURL,
-        'sevauserid': user.sevaUserID,
-      }
+    });
+
+    Firestore.instance.collection('offers').document(offerId).updateData({
+      'individualOfferDataModel.isAccepted': true,
     });
 
     FirestoreManager.readUserNotification(notificationId, user.email);

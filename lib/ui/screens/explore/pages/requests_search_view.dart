@@ -1,0 +1,119 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
+import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
+import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+
+class RequestsSearchView extends StatelessWidget {
+  final bool isUserSignedIn;
+
+  const RequestsSearchView({Key key, this.isUserSignedIn}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    var _bloc = Provider.of<ExploreSearchPageBloc>(context);
+    return StreamBuilder<List<RequestModel>>(
+      stream: _bloc.requests,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        if (snapshot.data == null || snapshot.data.isEmpty) {
+          return Text('No result found');
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, index) {
+            var request = snapshot.data[index];
+            var date =
+                DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+            // return ExploreEventCard(
+            //   photoUrl: request.photoUrl ?? defaultProjectImageURL,
+            //   title: request.title,
+            //   description: request.description,
+            //   location: request.address,
+            //   communityName: "request.communityName ?? ''",
+            //   date: DateFormat('d MMMM, y').format(date),
+            //   time: DateFormat.jm().format(date),
+            //   memberList: MemberAvatarListWithCount(
+            //     userIds: request.approvedUsers,
+            //   ),
+            // );
+            return isUserSignedIn
+                ? FutureBuilder<TimebankModel>(
+                    future: getTimeBankForId(timebankId: request.timebankId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return LoadingIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Container();
+                      }
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      return ExploreEventCard(
+                        onTap: () {
+                          bool isAdmin = snapshot.data.admins.contains(
+                            Provider.of<UserModel>(context).sevaUserID,
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return RequestDetailsAboutPage(
+                                  isAdmin: isAdmin,
+                                  timebankModel: snapshot.data,
+                                  requestItem: request,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                        title: request.title,
+                        description: request.description,
+                        location: request.address,
+                        communityName: 'request.communityName ?? ' '',
+                        date: DateFormat('d MMMM, y').format(date),
+                        time: DateFormat.jm().format(date),
+                        memberList: MemberAvatarListWithCount(
+                          userIds: request.approvedUsers,
+                        ),
+                      );
+                    })
+                : ExploreEventCard(
+                    onTap: () {
+                      showSignInAlertMessage(
+                          context: context,
+                          message:
+                              'Please Sign In/Sign up to access ${request.title}');
+                    },
+                    photoUrl: request.photoUrl ?? defaultProjectImageURL,
+                    title: request.title,
+                    description: request.description,
+                    location: request.address,
+                    communityName: 'request.communityName ?? ' '',
+                    date: DateFormat('d MMMM, y').format(date),
+                    time: DateFormat.jm().format(date),
+                    memberList: MemberAvatarListWithCount(
+                      userIds: request.approvedUsers,
+                    ),
+                  );
+          },
+        );
+      },
+    );
+  }
+}

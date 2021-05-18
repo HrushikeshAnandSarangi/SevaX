@@ -205,7 +205,7 @@ class BookmarkedOffers extends StatelessWidget {
                           child: Container(
                             width: double.infinity,
                             child: Text(
-                              S.of(context).create_request,
+                              S.of(context).accept_offer,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.white),
                             ),
@@ -235,7 +235,7 @@ class BookmarkedOffers extends StatelessWidget {
                                 builder: (parentContext) => CreateOfferRequest(
                                   offer: model,
                                   timebankId: model.timebankId,
-                                  userModel: userModel,
+                                  // userModel: userModel,
                                 ),
                               ),
                             );

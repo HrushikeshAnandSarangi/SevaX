@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -21,12 +22,16 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/create_offer_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/requests/offer_join_request.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -493,13 +498,14 @@ class PersonalNotificationReducerForRequests {
     UserModel user,
     BuildContext context,
   }) {
-    RequestInvitationModel requestInvitationModel =
-        RequestInvitationModel.fromMap(notification.data);
+    TimeOfferParticipantsModel timeOfferParticipantsModel =
+        TimeOfferParticipantsModel.fromJSON(notification.data);
+
     return _getNotificationCardForOfferRequestInvitationRequest(
       notification: notification,
       user: user,
       context: context,
-      requestInvitationModel: requestInvitationModel,
+      timeOfferParticipantsModel: timeOfferParticipantsModel,
     );
   }
 
@@ -860,10 +866,10 @@ class PersonalNotificationReducerForRequests {
     NotificationsModel notification,
     UserModel user,
     BuildContext context,
-    RequestInvitationModel requestInvitationModel,
+    TimeOfferParticipantsModel timeOfferParticipantsModel,
   }) {
     return NotificationCard(
-      entityName: requestInvitationModel.timebankModel.name,
+      entityName: timeOfferParticipantsModel.participantDetails.fullname,
       isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
@@ -871,34 +877,64 @@ class PersonalNotificationReducerForRequests {
           user.email,
         );
       },
-      photoUrl: requestInvitationModel.timebankModel.photoUrl,
-      subTitle:
-          '${requestInvitationModel.requestModel.fullName} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-      title: S.of(context).join +
-          ' ' +
-          S.of(context).time_offer +
-          ' ' +
-          S.of(context).request,
+      photoUrl: timeOfferParticipantsModel.participantDetails.photourl,
+      subTitle: timeOfferParticipantsModel.participantDetails.fullname +
+          ' has accepted your offer and has shared an invitation.',
+      title: S.of(context).accepted_offer,
       onPressed: () {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,
-                timeBankId: notification.timebankId,
-                notificationId: notification.id,
-                userModel: user,
-                isFromOfferRequest: true,
-              );
-            },
-          );
-        }
+        showDialog(
+          context: context,
+          builder: (context) {
+            return OfferJoinRequestDialog(
+              offerId: timeOfferParticipantsModel.offerId,
+              requestId: timeOfferParticipantsModel.requestId,
+              requestStartDate: timeOfferParticipantsModel.requestStartDate,
+              requestEndDate: timeOfferParticipantsModel.requestEndDate,
+              requestTitle: timeOfferParticipantsModel.requestTitle,
+              timeBankId: notification.timebankId,
+              notificationId: notification.id,
+              userModel: user,
+              timeOfferParticipantsModel: timeOfferParticipantsModel,
+            );
+          },
+        );
       },
       timestamp: notification.timestamp,
+    );
+  }
+}
+
+class PersonalNotificationsReducerForOffer {
+  static Widget getNotificationFromOfferCreator({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+  }) {
+    OfferModel model = OfferModel.fromMap(notification.data);
+    return NotificationCard(
+      isDissmissible: true,
+      timestamp: notification.timestamp,
+      entityName: model.fullName,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      onPressed: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (parentContext) => CreateOfferRequest(
+              offer: model,
+              timebankId: model.timebankId,
+            ),
+          ),
+        );
+      },
+      photoUrl: model.photoUrlImage ?? defaultUserImageURL,
+      subTitle: "${model.fullName} has invited you to accept his offer.",
+      title: 'Offer Invitation',
     );
   }
 }

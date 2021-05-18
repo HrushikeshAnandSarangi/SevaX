@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
@@ -17,12 +20,15 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
+import '../../../../labels.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -255,9 +261,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return CustomTextField(
                 currentNode: _minimumCredits,
                 value: snapshot.data,
-                heading: 'Minimum Credits',
+                heading: L.of(context).minimum_credit_title,
                 onChanged: _bloc.onMinimumCreditsChanged,
-                hint: 'Provide minimum credits you require',
+                hint: L.of(context).minimum_credit_hint,
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
               );
@@ -329,6 +335,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
     color: Colors.grey,
     fontFamily: 'Europa',
   );
+
+  int timeTypeSelection = 0;
 
   Widget GoodsRequest() {
     return StreamBuilder<GoodsDonationDetails>(
@@ -411,6 +419,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         SizedBox(height: 20),
                         widget.offerModel == null
                             ? RequestTypeWidget()
+                            // ? Container()
                             : Container(),
                         StreamBuilder<String>(
                           stream: _bloc.title,
@@ -468,6 +477,51 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       : GoodsRequest();
                             }),
                         SizedBox(height: 10),
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          child: CupertinoSegmentedControl<int>(
+                            unselectedColor: Colors.grey[200],
+                            selectedColor: Theme.of(context).primaryColor,
+                            children: {
+                              0: Padding(
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                                child: Text(
+                                  L
+                                      .of(context)
+                                      .option_one, //Label to be created
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              ),
+                              1: Padding(
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                                child: Text(
+                                  L
+                                      .of(context)
+                                      .option_two, //Label to be created
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                              ),
+                            },
+
+                            borderColor: Colors.grey,
+                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                            groupValue: _bloc.timeOfferType,
+                            onValueChanged: (int val) {
+                              if (val != _bloc.timeOfferType) {
+                                setState(() {
+                                  if (val == 0) {
+                                    _bloc.timeOfferType = 0;
+                                  } else {
+                                    _bloc.timeOfferType = 1;
+                                  }
+                                  _bloc.timeOfferType = val;
+                                });
+                              }
+                            },
+                            //groupValue: sharedValue,
+                          ),
+                        ),
+                        SizedBox(height: 25),
                         StreamBuilder<CustomLocation>(
                             stream: _bloc.location,
                             builder: (context, snapshot) {

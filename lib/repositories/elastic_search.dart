@@ -27,8 +27,6 @@ class ElasticSearchApi {
       },
     );
 
-    logger.i(response.body);
-
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);

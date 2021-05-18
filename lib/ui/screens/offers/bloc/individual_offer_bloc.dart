@@ -16,6 +16,7 @@ import '../../../../flavor_config.dart';
 class IndividualOfferBloc extends BlocBase with Validators {
   bool allowedCalenderEvent = false;
   bool offerCreatedBool = false;
+  var timeOfferType = 0;
 
   List<String> offerIds = [];
 
@@ -53,6 +54,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
+
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(RequestType) get onTypeChanged => _type.sink.add;
@@ -78,6 +80,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<String> get offerDescription => _offerDescription.stream;
   Stream<String> get availability => _availabilty.stream;
   Stream<String> get minimumCredits => _minimumCredits.stream;
+
   Stream<CustomLocation> get location => _location.stream;
   Stream<Status> get status => _status.stream;
   Stream<bool> get isVisible => _isVisible.stream;
@@ -111,6 +114,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
         individualOfferDataModel.minimumCredits =
             int.parse(_minimumCredits.value);
 
+        individualOfferDataModel.timeOfferType =
+            timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
+
         OfferModel offerModel = OfferModel(
             id: id,
             email: user.email,
@@ -133,8 +139,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
               ..title = _title.value
               ..description = _offerDescription.value
               ..schedule = _availabilty.value
-              ..minimumCredits = int.parse(_minimumCredits.value),
-            offerType: OfferType.INDIVIDUAL_OFFER,
+              ..minimumCredits = int.parse(_minimumCredits.value)
+            ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME',offerType: OfferType.INDIVIDUAL_OFFER,
             type: _type.value,
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
@@ -174,6 +180,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
         offer.individualOfferDataModel = IndividualOfferDataModel()
           ..title = _title.value
           ..description = _offerDescription.value
+          ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME'
           ..schedule = _availabilty.value != null ? _availabilty.value : '';
 
         updateOfferWithRequest(offer: offerModel).then((_) {
