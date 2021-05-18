@@ -19,5 +19,8 @@ class L {
       " has accepted your offer and has shared an invitation.";
   String get accept_offer_invitation_confirmation =>
       "By acceting, a task will be added to your pending tasks.";
+  String get entered_credits_less_than_minimum_credits =>
+      "Entered credits should be greater than minimum credits";
+
   //OFFERS LABELS ENDS HERE
 }
