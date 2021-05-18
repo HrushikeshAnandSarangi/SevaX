@@ -39,7 +39,7 @@ class AppConfig {
   static bool isMobile;
 
   //isTest Community
-  static bool isTestCommunity;
+  static bool isTestCommunity = false;
   static TimebankConfigurations timebankConfigurations;
 
   //plan check data

@@ -13,8 +13,9 @@ class RequestBloc {
   Function(RequestFilter) get onFilterChange => _filter.sink.add;
 
   void init(String timebankId, String userId) {
-    var _allRequests = RequestRepository.getAllRequestOfTimebank(timebankId)
-        .asBroadcastStream();
+    var _allRequests =
+        RequestRepository.getAllRequestOfTimebank(timebankId, userId)
+            .asBroadcastStream();
 
     CombineLatestStream.combine2<List<RequestModel>, RequestFilter,
         RequestLists>(_allRequests, filter, (models, filter) {
