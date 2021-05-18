@@ -413,78 +413,78 @@ class TransactionBloc {
         .setData(transactionModel.toMap(), merge: true);
   }
 
-  updateNewTransaction(
-    from,
-    to,
-    timestamp,
-    credits,
-    isApproved,
-    type,
-    typeid,
-    timebankid,
-    id, {
-    @required String communityId,
-    @required String fromEmailORId,
-    @required String toEmailORId,
-  }) async {
-    TransactionModel prevtransactionModel;
-    TransactionModel transactionModel = TransactionModel(
-      from: from,
-      to: to,
-      timestamp: timestamp,
-      credits: num.parse(credits.toStringAsFixed(2)),
-      isApproved: isApproved,
-      type: type.toString(),
-      typeid: typeid,
-      timebankid: timebankid,
-      transactionbetween: [from, to],
-      communityId: communityId,
-      toEmail_Id: toEmailORId,
-      fromEmail_Id: fromEmailORId,
-    );
-    if (id) {
-      var document = await Firestore.instance
-          .collection('transactions')
-          .document(id)
-          .get();
-      prevtransactionModel = TransactionModel.fromMap(document.data);
-      if (document.data != null) {
-        await Firestore.instance
-            .collection('transactions')
-            .document(document.documentID)
-            .setData(transactionModel.toMap(), merge: true);
-        if (!prevtransactionModel.isApproved && isApproved) {
-          //commented because transaction and balance handling will be done in backend
+//   updateNewTransaction(
+//     from,
+//     to,
+//     timestamp,
+//     credits,
+//     isApproved,
+//     type,
+//     typeid,
+//     timebankid,
+//     id, {
+//     @required String communityId,
+//     @required String fromEmailORId,
+//     @required String toEmailORId,
+//   }) async {
+//     TransactionModel prevtransactionModel;
+//     TransactionModel transactionModel = TransactionModel(
+//       from: from,
+//       to: to,
+//       timestamp: timestamp,
+//       credits: num.parse(credits.toStringAsFixed(2)),
+//       isApproved: isApproved,
+//       type: type.toString(),
+//       typeid: typeid,
+//       timebankid: timebankid,
+//       transactionbetween: [from, to],
+//       communityId: communityId,
+//       toEmail_Id: toEmailORId,
+//       fromEmail_Id: fromEmailORId,
+//     );
+//     if (id) {
+//       var document = await Firestore.instance
+//           .collection('transactions')
+//           .document(id)
+//           .get();
+//       prevtransactionModel = TransactionModel.fromMap(document.data);
+//       if (document.data != null) {
+//         await Firestore.instance
+//             .collection('transactions')
+//             .document(document.documentID)
+//             .setData(transactionModel.toMap(), merge: true);
+//         if (!prevtransactionModel.isApproved && isApproved) {
+//           //commented because transaction and balance handling will be done in backend
 
-//          await handleApprovedTransaction(isApproved, from, to, timebankid,
-//              type, num.parse(credits.toStringAsFixed(2)));
-        }
-      }
-    } else {
-      Query query = Firestore.instance
-          .collection('transactions')
-          .where('typeid', isEqualTo: typeid)
-          .where('from', isEqualTo: from)
-          .where('to', isEqualTo: to);
-      QuerySnapshot snapshot = await query.getDocuments();
-      DocumentSnapshot document =
-          snapshot.documents?.length > 0 && snapshot.documents != null
-              ? snapshot.documents.first
-              : null;
-      if (document != null)
-        prevtransactionModel = TransactionModel.fromMap(document.data);
-      if (!prevtransactionModel.isApproved && isApproved) {
-        //commented because transaction and balance handling will be done in backend
+// //          await handleApprovedTransaction(isApproved, from, to, timebankid,
+// //              type, num.parse(credits.toStringAsFixed(2)));
+//         }
+//       }
+//     } else {
+//       Query query = Firestore.instance
+//           .collection('transactions')
+//           .where('typeid', isEqualTo: typeid)
+//           .where('from', isEqualTo: from)
+//           .where('to', isEqualTo: to);
+//       QuerySnapshot snapshot = await query.getDocuments();
+//       DocumentSnapshot document =
+//           snapshot.documents?.length > 0 && snapshot.documents != null
+//               ? snapshot.documents.first
+//               : null;
+//       if (document != null)
+//         prevtransactionModel = TransactionModel.fromMap(document.data);
+//       if (!prevtransactionModel.isApproved && isApproved) {
+//         //commented because transaction and balance handling will be done in backend
 
-//        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
-//            num.parse(credits.toStringAsFixed(2)));
-      }
-      return await Firestore.instance
-          .collection('transactions')
-          .document(document.documentID)
-          .setData(transactionModel.toMap(), merge: true);
-    }
-  }
+// //        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
+// //            num.parse(credits.toStringAsFixed(2)));
+//       }
+//       return await Firestore.instance
+//           .collection('transactions')
+//           .document(document.documentID)
+//           .setData(transactionModel.toMap(), merge: true);
+//     }
+//   }
 
   dispose() {
     _transactionController.close();

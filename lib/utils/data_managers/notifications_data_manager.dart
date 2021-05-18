@@ -383,31 +383,31 @@ Future<void> createTaskCompletedApprovedNotification({
       .setData(model.toMap());
 }
 
-Future<void> createTransactionNotification({
-  NotificationsModel model,
-}) async {
-  var requestModel = RequestModel.fromMap(model.data);
+// Future<void> createTransactionNotification({
+//   NotificationsModel model,
+// }) async {
+//   var requestModel = RequestModel.fromMap(model.data);
 
-  switch (requestModel.requestMode) {
-    case RequestMode.TIMEBANK_REQUEST:
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
-      break;
-    case RequestMode.PERSONAL_REQUEST:
-      UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-      await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
-      break;
-  }
-}
+//   switch (requestModel.requestMode) {
+//     case RequestMode.TIMEBANK_REQUEST:
+//       await Firestore.instance
+//           .collection('timebanknew')
+//           .document(model.timebankId)
+//           .collection('notifications')
+//           .document(model.id)
+//           .setData(model.toMap());
+//       break;
+//     case RequestMode.PERSONAL_REQUEST:
+//       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+//       await Firestore.instance
+//           .collection('users')
+//           .document(user.email)
+//           .collection('notifications')
+//           .document(model.id)
+//           .setData(model.toMap());
+//       break;
+//   }
+// }
 
 Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
   try {

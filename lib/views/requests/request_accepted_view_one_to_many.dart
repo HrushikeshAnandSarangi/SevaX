@@ -988,27 +988,27 @@ class _RequestAcceptedSpendingViewOneToManyState
           : S.of(context).no_comments),
       'liveMode': !AppConfig.isTestCommunity,
     });
-    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      log('inside credit');
-      TransactionModel transmodel =
-          requestModel.transactions.firstWhere((transaction) {
-        return transaction.to == reciever.sevaUserID;
-      });
-      await TransactionBloc().createNewTransaction(
-        requestModel.timebankId,
-        requestModel.timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        transmodel.credits ?? 0,
-        true,
-        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-        requestModel.id,
-        requestModel.timebankId,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        toEmailORId: requestModel.timebankId,
-        fromEmailORId: requestModel.timebankId,
-      );
-      log('success');
-    }
+    // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    //   log('inside credit');
+    //   TransactionModel transmodel =
+    //       requestModel.transactions.firstWhere((transaction) {
+    //     return transaction.to == reciever.sevaUserID;
+    //   });
+    //   await TransactionBloc().createNewTransaction(
+    //     requestModel.timebankId,
+    //     requestModel.timebankId,
+    //     DateTime.now().millisecondsSinceEpoch,
+    //     transmodel.credits ?? 0,
+    //     true,
+    //     "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+    //     requestModel.id,
+    //     requestModel.timebankId,
+    //     communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    //     toEmailORId: requestModel.timebankId,
+    //     fromEmailORId: requestModel.timebankId,
+    //   );
+    //   log('success');
+    // }
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,

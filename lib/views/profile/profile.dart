@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -79,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
+        logger.i("_____>> " + AppConfig.isTestCommunity.toString());
         balance = AppConfig.isTestCommunity
             ? user.sandboxCurrentBalance ?? 0
             : user.currentBalance;
