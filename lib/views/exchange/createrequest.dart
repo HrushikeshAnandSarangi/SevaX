@@ -3145,10 +3145,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
+            //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.communities
-                  .contains(requestModel.communityId) &&
-              selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
+              .contains(requestModel.communityId)) {
             await sendNotificationToMemberOneToManyRequest(
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
@@ -3180,10 +3180,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
+            //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.communities
-                  .contains(requestModel.communityId) &&
-              selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
+              .contains(requestModel.communityId)) {
             await sendNotificationToMemberOneToManyRequest(
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
