@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/requests/request_accepted_spending_view.dart';
 import 'package:sevaexchange/views/requests/request_participants_view.dart';
+import 'package:sevaexchange/views/requests/request_accepted_view_one_to_many.dart';
 
 class RequestAcceptedTabsViewHolder extends StatelessWidget {
   final RequestModel requestItem;
@@ -61,14 +62,20 @@ class TabarView extends StatelessWidget {
                 requestModel: requestItem,
                 timebankModel: timebankModel,
               ),
-              requestItem.requestType == RequestType.BORROW ?
-              //'UI TO BE MADE FOR BORROW REQUEST'
-              Center(child: Text(''))
-              :
-              RequestAcceptedSpendingView(
-                requestModel: requestItem,
-                timebankModel: timebankModel,
-              ),
+              requestItem.requestType == RequestType.BORROW
+                  ?
+                  //'UI TO BE MADE FOR BORROW REQUEST'
+                  Center(child: Text(''))
+                  : requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST
+                      ? RequestAcceptedSpendingViewOneToMany(
+                          requestModel: requestItem,
+                          timebankModel: timebankModel,
+                        ) //<--------- 'One to many completed page' ------------>
+
+                      : RequestAcceptedSpendingView(
+                          requestModel: requestItem,
+                          timebankModel: timebankModel,
+                        ),
             ],
           ),
         ),

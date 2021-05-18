@@ -34,6 +34,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   List<String> approvedMembers;
   List<String> newList;
   RequestModel requestModel;
+  List<String> oneToManyRequestAttenders;
   // RequestModel requestModel;
   HashMap<String, AcceptorItem> filteredList = HashMap();
 
@@ -71,7 +72,13 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     futures.clear();
     acceptors = requestModel.acceptors ?? [];
     approvedMembers = requestModel.approvedUsers ?? [];
-    newList = acceptors + approvedMembers;
+    if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      oneToManyRequestAttenders =
+          widget.requestModel.oneToManyRequestAttenders ?? [];
+      newList = acceptors + approvedMembers + oneToManyRequestAttenders;
+    } else {
+      newList = acceptors + approvedMembers;
+    }
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
 
@@ -208,75 +215,77 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   ),
                 ),
               ),
-              ifUserIsNotApproved(userModel)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          height: 40,
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            color: Colors.indigo,
-                            textColor: Colors.white,
-                            elevation: 5,
-                            onPressed: () async {
-                              approveMemberForVolunteerRequest(
-                                model: requestModel,
-                                notificationId: Utils.getUuid(),
-                                user: userModel,
-                                context: context,
-                              );
-                            },
-                            child: Text(S.of(context).approve,
-                                style: TextStyle(fontSize: 12)),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 40,
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            color: Colors.redAccent,
-                            textColor: Colors.white,
-                            elevation: 5,
-                            onPressed: () async {
-                              declineRequestedMember(
-                                  model: requestModel,
-                                  notificationId: "sampleID",
-                                  user: userModel);
-                            },
-                            child: Text(
-                              S.of(context).reject,
-                              style: TextStyle(fontSize: 12),
+              widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+                  ? oneToManyParticipantsWidget(userModel)
+                  : ifUserIsNotApproved(userModel)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: RaisedButton(
+                                shape: StadiumBorder(),
+                                color: Colors.indigo,
+                                textColor: Colors.white,
+                                elevation: 5,
+                                onPressed: () async {
+                                  approveMemberForVolunteerRequest(
+                                    model: requestModel,
+                                    notificationId: Utils.getUuid(),
+                                    user: userModel,
+                                    context: context,
+                                  );
+                                },
+                                child: Text(S.of(context).approve,
+                                    style: TextStyle(fontSize: 12)),
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              height: 40,
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: RaisedButton(
+                                shape: StadiumBorder(),
+                                color: Colors.redAccent,
+                                textColor: Colors.white,
+                                elevation: 5,
+                                onPressed: () async {
+                                  declineRequestedMember(
+                                      model: requestModel,
+                                      notificationId: "sampleID",
+                                      user: userModel);
+                                },
+                                child: Text(
+                                  S.of(context).reject,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: RaisedButton(
+                                shape: StadiumBorder(),
+                                color: Colors.green,
+                                textColor: Colors.white,
+                                elevation: 5,
+                                onPressed: () {},
+                                child: Text(S.of(context).approved,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    )),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          height: 40,
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            color: Colors.green,
-                            textColor: Colors.white,
-                            elevation: 5,
-                            onPressed: () {},
-                            child: Text(S.of(context).approved,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                )),
-                          ),
-                        ),
-                      ],
-                    ),
             ],
           ),
         ),
@@ -286,6 +295,90 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   bool ifUserIsNotApproved(UserModel user) {
     return !requestModel.approvedUsers.contains(user.email);
+  }
+
+  Widget oneToManyParticipantsWidget(userModel) {
+    return (widget.requestModel.oneToManyRequestAttenders
+            .contains(userModel.email))
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(bottom: 10, right: 10),
+                height: 40,
+                //width: 120,
+                padding: EdgeInsets.only(bottom: 10),
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: HexColor('#64C328'),
+                  textColor: Colors.white,
+                  // elevation: 5,
+                  onPressed: () {},
+                  child: Text('Attending',
+                      style: TextStyle(
+                        fontSize: 14,
+                      )),
+                ),
+              ),
+            ],
+          )
+        : (widget.requestModel.approvedUsers.contains(userModel.email))
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10, right: 10),
+                    height: 40,
+                    //width: 120,
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: HexColor('#64C328'),
+                      textColor: Colors.white,
+                      // elevation: 5,
+                      onPressed: () {},
+                      child: Text('Speaker',
+                          style: TextStyle(
+                            fontSize: 14,
+                          )),
+                    ),
+                  ),
+                ],
+              )
+            : (widget.requestModel.acceptors.contains(userModel.email))
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10, right: 10),
+                        height: 45,
+                        //width: 120,
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: RaisedButton(
+                          shape: StadiumBorder(),
+                          color: HexColor('#64C328'),
+                          textColor: Colors.white,
+                          // elevation: 5,
+                          onPressed: () {},
+                          //checking if speaker is the creator then we can directly show as speaker
+                          child: userModel.email == widget.requestModel.email
+                              ? Text(
+                                  'Speaker',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                )
+                              : Text(
+                                  'Invited Speaker',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container();
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {

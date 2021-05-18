@@ -183,6 +183,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   var endDate;
   int tempCredits = 0;
   int tempNoOfVolunteers = 0;
+  String tempProjectId = '';
 
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
@@ -234,7 +235,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-    this.requestModel.projectId = widget.projectId;
+    //this.requestModel.projectId = widget.projectId;
     if (widget.requestModel.categories != null &&
         widget.requestModel.categories.length > 0) {
       getCategoryModels(widget.requestModel.categories, 'Selected Categories');
@@ -250,6 +251,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     initialRequestTitle = widget.requestModel.title;
     initialRequestDescription = widget.requestModel.description;
     tempNoOfVolunteers = widget.requestModel.numberOfApprovals;
+    tempProjectId = widget.requestModel.projectId;
 
     //will be true because a One to many request when editing should have an instructor
     if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
@@ -351,13 +353,14 @@ class RequestEditFormState extends State<RequestEditForm> {
       return ProjectSelection(
           requestModel: requestModel,
           projectModelList: projectModelList,
-          selectedProject: widget.requestModel.projectId != null
+          selectedProject: tempProjectId != null
               ? projectModelList.firstWhere(
                   (element) => element.id == widget.requestModel.projectId,
                   orElse: () => null)
               : null,
           updateProjectIdCallback: (String projectid) {
-            widget.requestModel.projectId = projectid;
+            //widget.requestModel.projectId = projectid;
+            tempProjectId = projectid;
           },
           admin: isAccessAvailable(
               snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
@@ -1804,8 +1807,36 @@ class RequestEditFormState extends State<RequestEditForm> {
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: Text("${item.title_en.toString()}",
-                  style: TextStyle(color: Colors.white)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                      child: Text("${item.title_en.toString()}",
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(width: 7),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedCategoryIds.remove(item.typeId);
+                        selectedSubCategories.remove(item.typeId);
+                        subCategories.removeWhere(
+                            (category) => category.typeId == item.typeId);
+                      });
+                    },
+                    child:
+                        Icon(Icons.cancel, color: Colors.grey[200], size: 17),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -2481,9 +2512,9 @@ class RequestEditFormState extends State<RequestEditForm> {
   BuildContext dialogContext;
 
   void editRequest() async {
-    log('Project ID:  ' + widget.requestModel.projectId.toString());
+    log('Project ID:  ' + tempProjectId.toString());
     // verify f the start and end date time is not same
-    log('while updating:  ' + widget.requestModel.projectId);
+    log('while updating:  ' + tempProjectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -2619,11 +2650,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             widget.requestModel.description != initialRequestDescription ||
             tempCredits != widget.requestModel.maxCredits ||
             tempNoOfVolunteers != widget.requestModel.numberOfApprovals ||
-            location != widget.requestModel.location) {
+            location != widget.requestModel.location ||
+            widget.requestModel.projectId != tempProjectId ||
+            !widget.requestModel.acceptors
+                .contains(selectedInstructorModel.email)) {
           //setState(() {
           widget.requestModel.title = initialRequestTitle;
           widget.requestModel.description = initialRequestDescription;
           widget.requestModel.location = location;
+          widget.requestModel.projectId = tempProjectId;
           widget.requestModel.address = selectedAddress;
           widget.requestModel.categories = selectedCategoryIds.toList();
 
@@ -2683,6 +2718,16 @@ class RequestEditFormState extends State<RequestEditForm> {
                   endDate: widget.requestModel.requestEnd);
             }
           }
+
+          //MIGRATE BELOW TO MOBILE
+          widget.requestModel.isRecurring = EditRepeatWidgetState.isRecurring;
+          widget.requestModel.end.after =
+              int.parse(EditRepeatWidgetState.after);
+          widget.requestModel.end.endType = tempSelectedEndType;
+          widget.requestModel.recurringDays =
+              EditRepeatWidgetState.recurringDays;
+          widget.requestModel.end.on =
+              EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
 
           return showDialog(
             barrierDismissible: false,
@@ -2846,6 +2891,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.description = initialRequestDescription;
         widget.requestModel.location = location;
         widget.requestModel.address = selectedAddress;
+        widget.requestModel.projectId = tempProjectId;
         widget.requestModel.categories = selectedCategoryIds.toList();
         startDate.millisecondsSinceEpoch !=
                 OfferDurationWidgetState.starttimestamp

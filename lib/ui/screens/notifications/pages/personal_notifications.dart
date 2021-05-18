@@ -383,7 +383,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCardOneToManySpeakerRecalims(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: false,
+                        isDissmissible: true,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
                             notification.id,
@@ -1503,6 +1503,15 @@ Future oneToManySpeakerInviteAccepted(
       .collection('notifications')
       .document(notificationModel.id)
       .setData(notificationModel.toMap());
+
+  logger.e(
+      '-------------COMES HERE TO CLEAR NOTIFICATION Accepted Scenario--------------');
+  //make the relevant notification is read true
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 }
 
 Future oneToManySpeakerInviteRejected(
@@ -1534,11 +1543,15 @@ Future oneToManySpeakerInviteRejected(
   requestModel.selectedSpeakerTimeDetails.prepTime = null;
   requestModel.selectedSpeakerTimeDetails.speakingTime = null;
 
+  //below is to fetch creator of request details and set as speaker by default
+  var creatorUserModel =
+      await FirestoreManager.getUserForEmail(emailAddress: requestModel.email);
+
   requestModel.selectedInstructor = BasicUserDetails(
-    fullname: requestModel.fullName,
-    email: requestModel.email,
-    photoURL: requestModel.photoUrl,
-    sevaUserID: requestModel.sevaUserId,
+    fullname: creatorUserModel.fullname,
+    email: creatorUserModel.email,
+    photoURL: creatorUserModel.photoURL,
+    sevaUserID: creatorUserModel.sevaUserID,
   );
 
   await Firestore.instance

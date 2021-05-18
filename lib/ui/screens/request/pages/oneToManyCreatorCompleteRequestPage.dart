@@ -518,6 +518,13 @@ class OneToManyCreatorCompleteRequestPageState
                                                 .document(notification.id)
                                                 .setData(notification.toMap());
 
+                                            //make the relevant notification is read true
+                                            await FirestoreManager
+                                                .readTimeBankNotificationOneToManyCreatorRejectedCompletion(
+                                              requestModel: requestModel,
+                                              fromNotification: false,
+                                            );
+
                                             Navigator.pop(viewContext);
                                             Navigator.of(viewContext).pop();
                                             Navigator.of(context).pop();

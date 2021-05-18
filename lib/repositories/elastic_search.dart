@@ -272,7 +272,12 @@ class ElasticSearchApi {
             {
               "multi_match": {
                 "query": queryString,
-                "fields": ["name"],
+                "fields": [
+                  "name",
+                  "billing_address.country",
+                  "billing_address.city",
+                  "billing_address.state",
+                ],
                 "type": "phrase_prefix"
               }
             }

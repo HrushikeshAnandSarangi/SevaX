@@ -265,7 +265,7 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-      log('User Email to Notify : '  + user.email);
+      log('User Email to Notify : ' + user.email);
       await Firestore.instance
           .collection('users')
           .document(user.email)
@@ -275,8 +275,8 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
       break;
 
     case RequestMode.TIMEBANK_REQUEST:
-        log('Timabank ID:  '  + model.timebankId);
-        log('Model ID: ' + model.id);
+      log('Timabank ID:  ' + model.timebankId);
+      log('Model ID: ' + model.id);
       await Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
@@ -491,7 +491,7 @@ Future<void> unreadUserNotification(
   });
 }
 
-Future<void>  readTimeBankNotification({
+Future<void> readTimeBankNotification({
   String notificationId,
   String timebankId,
 }) async {

@@ -162,27 +162,25 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                     ),
                     SizedBox(height: 10),
                     Text(projectModel.description ?? ""),
-
-                    (projectModel.registrationLink == null
-                        || projectModel.registrationLink == '') ?
-                    Container()
-                    :
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      headingText('Registration Link'), //Label to be created
-                      SizedBox(height: 10),
-                      Umeshify(
-                        text: projectModel.registrationLink,
-                        onOpen: (link) async {
-                          if (await canLaunch(link)) {
-                            await launch(link);
-                          }
-                        },
-                      ),
-                     ],
-                    ),
-
+                    (projectModel.registrationLink == null ||
+                            projectModel.registrationLink == '')
+                        ? Container()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headingText(
+                                  'Registration Link'), //Label to be created
+                              SizedBox(height: 10),
+                              Umeshify(
+                                text: projectModel.registrationLink,
+                                onOpen: (link) async {
+                                  if (await canLaunch(link)) {
+                                    await launch(link);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                     headingText(S.of(context).organizer),
                     SizedBox(height: 10),
                     Row(
@@ -224,14 +222,16 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         utils.isDeletable(
                           contentCreatorId: projectModel.creatorId,
                           context: context,
-                          communityCreatorId:
-                              widget.timebankModel.managedCreatorIds.isNotEmpty
-                                  ? widget.timebankModel.managedCreatorIds
-                                      .elementAt(0)
-                                  : isPrimaryTimebank(
-                                    parentTimebankId: widget.timebankModel.parentTimebankId)
-                                    ? widget.timebankModel.creatorId
-                                    : widget.timebankModel.managedCreatorIds.first,
+                          communityCreatorId: widget
+                                  .timebankModel.managedCreatorIds.isNotEmpty
+                              ? widget.timebankModel.managedCreatorIds
+                                  .elementAt(0)
+                              : isPrimaryTimebank(
+                                      parentTimebankId:
+                                          widget.timebankModel.parentTimebankId)
+                                  ? widget.timebankModel.creatorId
+                                  : widget
+                                      .timebankModel.managedCreatorIds.first,
                           timebankCreatorId: widget.timebankModel.creatorId,
                         )
                             ? deleteProject

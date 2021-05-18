@@ -235,16 +235,33 @@ Future<List<String>> createRecurringEvents({
       return [];
     }
   } else {
-    if (requestModel.requestType == RequestType.TIME ||
-        requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-      //requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-      //if (balanceVar - sevaCreditsCount >= 0) {
-      eventsIdsArr.add(requestModel.id);
-      temparr.forEach((tempobj) {
-        batch.setData(
-            db.collection("requests").document(tempobj['id']), tempobj);
-        eventsIdsArr.add(tempobj['id']);
-      });
+    if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+      log("inside personal req check");
+      if (balanceVar - sevaCreditsCount >= negativeThresholdTimebank) {
+        log("yup balance");
+        eventsIdsArr.add(requestModel.id);
+        temparr.forEach((tempobj) {
+          batch.setData(
+              db.collection("requests").document(tempobj['id']), tempobj);
+          eventsIdsArr.add(tempobj['id']);
+          log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
+        });
+      } else {
+        log("oops no balance");
+        return [];
+      }
+    } else {
+      if (requestModel.requestType == RequestType.TIME ||
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        //requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+        //if (balanceVar - sevaCreditsCount >= 0) {
+        eventsIdsArr.add(requestModel.id);
+        temparr.forEach((tempobj) {
+          batch.setData(
+              db.collection("requests").document(tempobj['id']), tempobj);
+          eventsIdsArr.add(tempobj['id']);
+        });
+      }
     }
   }
 
@@ -1554,12 +1571,12 @@ Future<void> acceptInviteRequest({
       batch.updateData(db.collection('requests').document(requestId), {
         //'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
         'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
+        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserEmail]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
       });
     } else {
       batch.updateData(db.collection('requests').document(requestId), {
-        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserId]),
+        'oneToManyRequestAttenders': FieldValue.arrayUnion([acceptedUserEmail]),
         'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
       });
     }
@@ -1953,8 +1970,6 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
     requestModel, context, UserModel userModel, bool fromNotification) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
-
-  log('HERE HERE!');
 
   UserModel speakerModel = await FirestoreManager.getUserForId(
       sevaUserId: requestModel.selectedInstructor.sevaUserID);
