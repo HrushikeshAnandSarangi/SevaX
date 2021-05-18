@@ -30,7 +30,7 @@ class RequestBloc {
             continue;
           }
 
-          if (filter.oneToManyrequest &&
+          if (filter.oneToManyRequest &&
               model.requestType == RequestType.ONE_TO_MANY_REQUEST) {
             requestLists.addRequest(userId, model);
             continue;
@@ -88,42 +88,42 @@ class RequestFilter {
   final bool timeRequest;
   final bool goodsRequest;
   final bool cashRequest;
+  final bool oneToManyRequest;
   final bool publicRequest;
   final bool virtualRequest;
-  final bool oneToManyrequest;
 
   RequestFilter({
     this.timeRequest = false,
     this.goodsRequest = false,
     this.cashRequest = false,
+    this.oneToManyRequest = false,
     this.publicRequest = false,
     this.virtualRequest = false,
-    this.oneToManyrequest = false,
   });
 
   RequestFilter copyWith({
     bool timeRequest,
     bool goodsRequest,
     bool cashRequest,
+    bool oneToManyRequest,
     bool publicRequest,
     bool virtualRequest,
-    bool oneToManyrequest,
   }) =>
       RequestFilter(
         timeRequest: timeRequest ?? this.timeRequest,
         goodsRequest: goodsRequest ?? this.goodsRequest,
         cashRequest: cashRequest ?? this.cashRequest,
+        oneToManyRequest: oneToManyRequest ?? this.oneToManyRequest,
         publicRequest: publicRequest ?? this.publicRequest,
         virtualRequest: virtualRequest ?? this.virtualRequest,
-        oneToManyrequest: oneToManyrequest ?? this.oneToManyrequest,
       );
 
   bool get isFilterSelected =>
       timeRequest ||
       goodsRequest ||
       cashRequest ||
+      oneToManyRequest ||
       publicRequest ||
-      oneToManyrequest ||
       virtualRequest;
 
   bool operator ==(Object other) {
@@ -131,11 +131,34 @@ class RequestFilter {
       return this.timeRequest == other.timeRequest &&
           this.goodsRequest == other.goodsRequest &&
           this.cashRequest == other.cashRequest &&
+          this.oneToManyRequest == other.oneToManyRequest &&
           this.publicRequest == other.publicRequest &&
-          this.virtualRequest == other.virtualRequest &&
-          this.oneToManyrequest == other.oneToManyrequest;
+          this.virtualRequest == other.virtualRequest;
     } else {
       return false;
+    }
+  }
+
+  bool checkFilter(RequestModel model) {
+    if (isFilterSelected) {
+      if (timeRequest && model.requestType == RequestType.TIME) {
+        return true;
+      } else if (cashRequest && model.requestType == RequestType.CASH) {
+        return true;
+      } else if (oneToManyRequest &&
+          model.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        return true;
+      } else if (goodsRequest && model.requestType == RequestType.GOODS) {
+        return true;
+      } else if (publicRequest && model.public) {
+        return true;
+      } else if (virtualRequest && model.virtualRequest) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
     }
   }
 }

@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
+
+/// [hideFilters] Pass bool to hide in order
+/// Time Request
+/// Money
+/// Goods
+/// One to many
+/// Public
+/// Virtual
+class RequestFilters extends StatelessWidget {
+  final Stream<RequestFilter> stream;
+  final ValueChanged<RequestFilter> onTap;
+  final List<bool> hideFilters;
+
+  const RequestFilters({
+    Key key,
+    this.stream,
+    @required this.onTap,
+    this.hideFilters,
+  })  : assert(hideFilters.length == 6),
+        super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<RequestFilter>(
+      initialData: RequestFilter(),
+      stream: stream,
+      builder: (context, snapshot) {
+        var filter = snapshot.data;
+        return Wrap(
+          spacing: 8.0,
+          children: [
+            CustomChipWithTap(
+              isHidden: hideFilters[0],
+              label: 'Time Request',
+              isSelected: filter.timeRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    timeRequest: !snapshot.data.timeRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipWithTap(
+              isHidden: hideFilters[1],
+              label: 'Money',
+              isSelected: filter.cashRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    cashRequest: !snapshot.data.cashRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipWithTap(
+              isHidden: hideFilters[2],
+              label: 'Goods',
+              isSelected: filter.goodsRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    goodsRequest: !snapshot.data.goodsRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipWithTap(
+              isHidden: hideFilters[3],
+              label: 'One to many',
+              isSelected: filter.oneToManyRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    oneToManyRequest: !snapshot.data.oneToManyRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipWithTap(
+              isHidden: hideFilters[4],
+              label: 'Public',
+              isSelected: filter.publicRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    publicRequest: !snapshot.data.publicRequest,
+                  ),
+                );
+              },
+            ),
+            CustomChipWithTap(
+              isHidden: hideFilters[5],
+              label: 'Virtual',
+              isSelected: filter.virtualRequest,
+              onTap: () {
+                onTap(
+                  snapshot.data.copyWith(
+                    virtualRequest: !snapshot.data.virtualRequest,
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
