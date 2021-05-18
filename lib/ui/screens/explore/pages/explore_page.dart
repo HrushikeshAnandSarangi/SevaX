@@ -30,6 +30,7 @@ import 'package:sevaexchange/ui/screens/explore/widgets/explore_offers_card.dart
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_requests_card.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -872,60 +873,28 @@ class _ExplorePageState extends State<ExplorePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Browse requests by category',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        )),
+                    Text(
+                      'Browse requests by category',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     SizedBox(height: 10),
-                    StreamBuilder<List<CategoryModel>>(
-                        stream: widget.isUserSignedIn
-                            ? FirestoreManager.getAllCategoriesStream()
-                            : _exploreBloc.categories,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return LoadingIndicator();
-                          }
-                          if (snapshot.data == null) {
-                            return Center(
-                              child: Text('No Categories available'),
-                            );
-                          }
-                          List<CategoryModel> categories = snapshot.data;
-                          return Container(
-                            child: GridView(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 1,
-                                mainAxisSpacing: 1,
-                                crossAxisSpacing: 0.5,
-                                childAspectRatio: 6,
-                              ),
-                              children: List.generate(
-                                categories.length,
-                                (index) => ExploreBrowseCard(
-                                  imageUrl:
-                                      'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore%20browse%20card%20image.JPG?alt=media&token=48eda7bf-0089-40f4-8b04-0efcb3a881bd',
-                                  title: categories[index].title_en,
-                                  onTap: () {
-                                    log('Category id: ' +
-                                        categories[index].categoryId);
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            RequestsByCategoryView(
-                                                model: categories[index]),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
+                    RequestCategories(
+                      stream: widget.isUserSignedIn
+                          ? FirestoreManager.getAllCategoriesStream()
+                          : _exploreBloc.categories,
+                      onTap: (value) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RequestsByCategoryView(
+                              model: value,
                             ),
-                          );
-                        }),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ],

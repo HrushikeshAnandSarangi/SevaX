@@ -882,6 +882,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               },
             ),
           );
+
           // showDialog(
           //     context: context,
           //     builder: (BuildContext viewContext) {
@@ -1305,6 +1306,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               .contains(SevaCore.of(context).loggedInUser.email))
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Expanded(
                   child: RichText(
@@ -1326,7 +1328,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ),
                 Container(
-                  width: 100,
+                  margin: EdgeInsets.only(right: 7),
+                  width: 95,
                   height: 32,
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
@@ -1365,6 +1368,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           },
                         ),
                       );
+
                       // showDialog(
                       //     context: context,
                       //     builder: (BuildContext viewContext) {
@@ -1628,7 +1632,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     children: [
                       TextSpan(
                         text: isApplied
-                            ? 'You are the tutor for the request'
+                            ? 'You are the speaker for the request'
                             : S.of(context).particpate_in_request_question,
                         style: TextStyle(
                           fontSize: 16,
