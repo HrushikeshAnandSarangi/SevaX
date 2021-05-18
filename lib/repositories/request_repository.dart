@@ -7,7 +7,7 @@ class RequestRepository {
   static CollectionReference ref = Firestore.instance.collection('requests');
 
   static Stream<List<RequestModel>> getAllRequestOfTimebank(
-      String timebankId) async* {
+      String timebankId, String userId) async* {
     var data = ref
         .where('timebanksPosted', arrayContains: timebankId)
         .where('softDelete', isEqualTo: false)
@@ -24,7 +24,15 @@ class RequestRepository {
             (documentSnapshot) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
-              models.add(model);
+              if (model.accepted) {
+                if (model.sevaUserId == userId) {
+                  models.add(model);
+                }
+              } else {
+                if (!model.isFromOfferRequest) {
+                  models.add(model);
+                }
+              }
             },
           );
           sink.add(models);

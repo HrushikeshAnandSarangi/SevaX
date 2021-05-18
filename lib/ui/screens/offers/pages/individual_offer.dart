@@ -20,12 +20,15 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
+import '../../../../labels.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -258,9 +261,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return CustomTextField(
                 currentNode: _minimumCredits,
                 value: snapshot.data,
-                heading: 'Minimum Credits',
+                heading: L.of(context).minimum_credit_title,
                 onChanged: _bloc.onMinimumCreditsChanged,
-                hint: 'Provide minimum credits you require',
+                hint: L.of(context).minimum_credit_hint,
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
               );
@@ -416,6 +419,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         SizedBox(height: 20),
                         widget.offerModel == null
                             ? RequestTypeWidget()
+                            // ? Container()
                             : Container(),
                         StreamBuilder<String>(
                           stream: _bloc.title,
@@ -482,18 +486,23 @@ class _IndividualOfferState extends State<IndividualOffer> {
                               0: Padding(
                                 padding: EdgeInsets.only(left: 14, right: 14),
                                 child: Text(
-                                  'Spot On', //Label to be created
+                                  L
+                                      .of(context)
+                                      .option_one,
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),
                               1: Padding(
                                 padding: EdgeInsets.only(left: 14, right: 14),
                                 child: Text(
-                                  'One time', //Label to be created
+                                  L
+                                      .of(context)
+                                      .option_two,
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),
                             },
+
                             borderColor: Colors.grey,
                             padding: EdgeInsets.only(left: 0.0, right: 0.0),
                             groupValue: _bloc.timeOfferType,

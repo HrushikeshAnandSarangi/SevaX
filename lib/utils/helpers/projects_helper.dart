@@ -139,10 +139,14 @@ class ProjectMessagingRoomHelper {
   }
 
   static Future<bool> createProjectWithMessagingOneToManyRequest({
-    @required Map<dynamic, dynamic> projectModel,
-    @required Map<dynamic, dynamic> projectCreator,
+    @required ProjectModel projectModel,
+    @required UserModel projectCreator,
   }) async {
-    log('------THIS DATA 1-----' + projectModel['id'] + '*' + projectModel['timebankId'] + '----');
+    log('------THIS DATA 1-----' +
+        projectModel.id +
+        '*' +
+        projectModel.timebankId +
+        '----');
     return await _createProjectWithMessagingRoomBatchOneToManyRequest(
       projectCreator: projectCreator,
       projectModel: projectModel,
@@ -202,51 +206,55 @@ class ProjectMessagingRoomHelper {
     return batch;
   }
 
-
   static WriteBatch _createProjectWithMessagingRoomBatchOneToManyRequest({
-    Map<dynamic, dynamic> projectModel,
-    Map<dynamic, dynamic> projectCreator,
+    @required ProjectModel projectModel,
+    @required UserModel projectCreator,
   }) {
     var batch = DBHelper.batch;
 
-    log('------THIS DATA 2-----' + projectModel['id'] + '*' + projectModel['timebankId'] + '----');
+    log('------THIS DATA 2-----' +
+        projectModel.id +
+        '*' +
+        projectModel.timebankId +
+        '----');
 
     ChatModel chatModel = ChatModel();
     chatModel
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..communityId = projectModel['communityId']
+      ..communityId = projectModel.communityId
+      ..interCommunity = projectModel.public
       ..groupDetails = MultiUserMessagingModel(
-        admins: [projectModel['creatorId']],
-        imageUrl: projectModel['photoUrl'],
-        name: projectModel['name'],
+        admins: [projectModel.creatorId],
+        imageUrl: projectModel.photoUrl,
+        name: projectModel.name,
         timestamp: DateTime.now().millisecondsSinceEpoch,
       )
-      ..isTimebankMessage = projectModel['mode'] == ProjectMode.TIMEBANK_PROJECT
-      ..id = projectModel['id'] + '*' + projectModel['timebankId']
+      ..isTimebankMessage = projectModel.mode == ProjectMode.TIMEBANK_PROJECT
+      ..id = projectModel.id + '*' + projectModel.timebankId
       ..lastMessage = DBHelper.NO_MESSAGE
       ..participantInfo = [
         ParticipantInfo(
-          id: projectCreator['sevaUserID'],
-          name: projectCreator['fullname'],
-          photoUrl: projectCreator['photoURL'],
+          id: projectCreator.sevaUserID,
+          name: projectCreator.fullname,
+          photoUrl: projectCreator.photoURL,
           type: ChatType.TYPE_MULTI_USER_MESSAGING,
         )
       ]
       ..isGroupMessage = true
       ..timestamp = DateTime.now().millisecondsSinceEpoch
-      ..participants = [projectCreator['sevaUserID']]
+      ..participants = [projectCreator.sevaUserID]
       ..unreadStatus = {
-        projectCreator['sevaUserID']: 0,
+        projectCreator.sevaUserID: 0,
       }
       ..chatContext = ChatContext(
         chatContext: 'Project',
-        contextId: projectModel['id'],
+        contextId: projectModel.id,
       );
-    projectModel['associatedMessaginfRoomId'] = chatModel.id;
+    projectModel.associatedMessaginfRoomId = chatModel.id;
 
     batch.setData(
-      DBHelper.projectsRef.document(projectModel['id']),
-      projectModel,
+      DBHelper.projectsRef.document(projectModel.id),
+      projectModel.toMap(),
     );
     batch.setData(
       DBHelper.chatsRef.document(chatModel.id),
@@ -255,7 +263,6 @@ class ProjectMessagingRoomHelper {
 
     return batch;
   }
-
 
   static WriteBatch _addMemberToAssociatedMessagingRoomBatch({
     String associatedMessagingRoomId,

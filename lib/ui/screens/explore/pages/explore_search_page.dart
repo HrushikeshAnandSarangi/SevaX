@@ -2,21 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/community_by_category_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/events_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/offers_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/requests_search_view.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreSearchPage extends StatefulWidget {
   final String searchText;
@@ -36,7 +38,12 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   TabController _controller;
   TextEditingController _searchController = TextEditingController();
   ExploreSearchPageBloc _bloc = ExploreSearchPageBloc();
-  StreamController _tabIndex = StreamController<int>();
+  StreamController _tabIndex = StreamController<int>.broadcast();
+  ScrollController _scrollController = ScrollController();
+  final searchBorder = OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey),
+    borderRadius: BorderRadius.circular(40),
+  );
 
   @override
   void initState() {
@@ -56,15 +63,25 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   void dispose() {
     _tabIndex.close();
     _bloc.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Provider<ExploreSearchPageBloc>(
-      create: (context) => _bloc,
-      dispose: (context, bloc) => bloc.dispose(),
+    return MultiProvider(
+      providers: [
+        Provider<ExploreSearchPageBloc>(
+          create: (context) => _bloc,
+          dispose: (context, bloc) => bloc.dispose(),
+        ),
+        InheritedProvider<ScrollController>(
+          create: (c) => _scrollController,
+          dispose: (_, __) => _scrollController.dispose(),
+        ),
+      ],
       child: ExplorePageViewHolder(
+        scrollController: _scrollController,
         appBarTitle: 'Search',
         hideSearchBar: true,
         hideHeader: widget.isUserSignedIn,
@@ -89,22 +106,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
+                  enabledBorder: searchBorder,
+                  focusedBorder: searchBorder,
+                  disabledBorder: searchBorder,
+                  errorBorder: searchBorder,
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
@@ -121,140 +126,12 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _tabBar,
-                SizedBox(height: 12),
-                Builder(
-                  builder: (context) {
-                    return Row(
-                      children: [
-                        Container(
-                          height: 30,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: InkWell(
-                            onTap: () async {
-                              await Navigator.of(context)
-                                  .push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NearByFiltersView(
-                                        Provider.of<UserModel>(context),
-                                      ),
-                                    ),
-                                  )
-                                  .then(
-                                    (value) => setState(() {}),
-                                  );
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "here", // "Within ${user.nearBySettings.radius} ${user.nearBySettings.isMiles ? 'Miles' : 'Km'}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        getDropDownButton(),
-                      ],
-                    );
-                  },
-                ),
-                SizedBox(height: 12),
-                StreamBuilder<int>(
-                  initialData: 0,
-                  stream: _tabIndex.stream,
-                  builder: (context, snapshot) {
-                    // return _EventsView();
-                    switch (snapshot.data) {
-                      case 0:
-                        return CommunitiesSearchView(
-                          isUserSignedIn: widget.isUserSignedIn,
-                        );
-
-                      case 1:
-                        return EventsSearchView(
-                          isUserSignedIn: widget.isUserSignedIn,
-                        );
-
-                      case 2:
-                        return RequestsSearchView(
-                          isUserSignedIn: widget.isUserSignedIn,
-                        );
-
-                      case 3:
-                        return OffersSearchView(
-                          isUserSignedIn: widget.isUserSignedIn,
-                        );
-
-                      default:
-                        return CommunitiesSearchView(
-                          isUserSignedIn: widget.isUserSignedIn,
-                        );
-                    }
-                  },
-                ),
-                SizedBox(height: 12),
-                Text(
-                  'Browse community by category',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 12),
-                // FindCommunitiesView(),
-                // SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: StreamBuilder<List<CommunityCategoryModel>>(
-                    stream: _bloc.communityCategory,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<CommunityCategoryModel>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      return LayoutBuilder(
-                        builder: (context, constraints) => GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1,
-                            childAspectRatio: 4 / 0.5,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 8,
-                          ),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) => SimpleCommunityCard(
-                            image: snapshot.data[index].logo ??
-                                'https://media.istockphoto.com/photos/group-portrait-of-a-creative-business-team-standing-outdoors-three-picture-id1146473249?k=6&m=1146473249&s=612x612&w=0&h=W1xeAt6XW3evkprjdS4mKWWtmCVjYJnmp-LHvQstitU=',
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => CommunityByCategoryView(
-                                    model: snapshot.data[index],
-                                  ),
-                                ),
-                              );
-                            },
-                            title: snapshot.data[index].getCategoryName(
-                              context,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+            ExploreSearchTabBar(
+              tabBar: _tabBar,
+              bloc: _bloc,
+              tabIndex: _tabIndex,
+              initialTabIndex: widget.tabIndex,
+              isUserSignedIn: widget.isUserSignedIn,
             ),
           ],
         ),
@@ -460,6 +337,262 @@ class SimpleCommunityCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ExploreSearchTabBar extends StatelessWidget {
+  const ExploreSearchTabBar({
+    Key key,
+    @required TabBar tabBar,
+    @required ExploreSearchPageBloc bloc,
+    @required StreamController<int> tabIndex,
+    @required int initialTabIndex,
+    @required bool isUserSignedIn,
+  })  : _tabBar = tabBar,
+        _bloc = bloc,
+        _tabIndex = tabIndex,
+        _initialTabIndex = initialTabIndex,
+        _isUserSignedIn = isUserSignedIn,
+        super(key: key);
+
+  final TabBar _tabBar;
+  final ExploreSearchPageBloc _bloc;
+  final StreamController _tabIndex;
+  final int _initialTabIndex;
+  final bool _isUserSignedIn;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _tabBar,
+        SizedBox(height: 12),
+        StreamBuilder<int>(
+          initialData: _initialTabIndex,
+          stream: _tabIndex.stream,
+          builder: (context, snapshot) {
+            return Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: [
+                Container(
+                  height: 30,
+                  width: 90,
+                  child: StreamBuilder<int>(
+                    initialData: 0,
+                    stream: _bloc.distance,
+                    builder: (context, snapshot) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: snapshot.data != 0
+                              ? Theme.of(context).primaryColor
+                              : Colors.white,
+                          border: Border.all(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: InkWell(
+                          onTap: () async {
+                            if (snapshot.data == 0) {
+                              await Navigator.of(context)
+                                  .push<int>(
+                                MaterialPageRoute(
+                                  builder: (context) => NearByFiltersView(),
+                                ),
+                              )
+                                  .then(
+                                (value) {
+                                  if (value != null) {
+                                    _bloc.distanceChanged(value);
+                                  } else {
+                                    _bloc.distanceChanged(0);
+                                  }
+                                },
+                              );
+                            } else {
+                              _bloc.distanceChanged(0);
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                snapshot.data == 0
+                                    ? 'Anywhere'
+                                    : 'Within ${snapshot.data} Miles',
+                                style: TextStyle(
+                                  color: snapshot.data == 0
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                StreamBuilder<SelectedCommunityCategoryWithData>(
+                  stream: CombineLatestStream.combine2(
+                    _bloc.communityCategory,
+                    _bloc.selectedCommunityCategoryId,
+                    (a, b) => SelectedCommunityCategoryWithData(a, b),
+                  ),
+                  builder: (context, selectedCommunityCategoryWithData) {
+                    if (selectedCommunityCategoryWithData.data == null ||
+                        snapshot.data != 0) {
+                      return Container();
+                    }
+                    return Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          onChanged: (String value) {
+                            _bloc.onCommunityCategoryChanged(value);
+                          },
+                          value: selectedCommunityCategoryWithData
+                                  .data.selectedId ??
+                              '_',
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconEnabledColor: Theme.of(context).primaryColor,
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          items: <DropdownMenuItem<String>>[
+                            DropdownMenuItem(
+                              value: '_',
+                              child: Text('Any Category'),
+                            ),
+                            ...selectedCommunityCategoryWithData.data.data.map(
+                              (e) => DropdownMenuItem(
+                                value: e.id,
+                                child: Text(
+                                  e.getCategoryName(context),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                StreamBuilder<SelectedRequestCategoryWithData>(
+                  stream: CombineLatestStream.combine2(
+                    _bloc.requestCategory,
+                    _bloc.selectedRequestCategoryId,
+                    (a, b) => SelectedRequestCategoryWithData(a, b),
+                  ),
+                  builder: (context, selectedRequestCategoryWithData) {
+                    if (selectedRequestCategoryWithData.data == null ||
+                        snapshot.data != 2) {
+                      return Container();
+                    }
+                    return Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          onChanged: (String value) {
+                            _bloc.onRequestCategoryChanged(value);
+                          },
+                          value:
+                              selectedRequestCategoryWithData.data.selectedId ??
+                                  '_',
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          iconEnabledColor: Theme.of(context).primaryColor,
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          items: <DropdownMenuItem<String>>[
+                            DropdownMenuItem(
+                              value: '_',
+                              child: Text('Any Category'),
+                            ),
+                            ...selectedRequestCategoryWithData.data.data.map(
+                              (e) => DropdownMenuItem(
+                                value: e.typeId,
+                                child: Text(
+                                  e.title_en,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                HideWidget(
+                  hide: snapshot.data != 2,
+                  child: RequestFilters(
+                    stream: _bloc.requestFilter,
+                    onTap: _bloc.onRequestFilterChange,
+                    hideFilters: [false, false, false, false, true, true],
+                  ),
+                ),
+                HideWidget(
+                  hide: snapshot.data != 3,
+                  child: OfferFilters(
+                    stream: _bloc.offerFilter,
+                    onTap: _bloc.onOfferFilterChange,
+                    hideFilters: [false, false, false, false, true, true],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        SizedBox(height: 12),
+        StreamBuilder<int>(
+          initialData: _initialTabIndex,
+          stream: _tabIndex.stream,
+          builder: (context, snapshot) {
+            logger.wtf("tabIndex", snapshot.data);
+            switch (snapshot.data) {
+              case 0:
+                return CommunitiesSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
+                break;
+              case 1:
+                return EventsSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
+                break;
+              case 2:
+                return RequestsSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
+                break;
+              case 3:
+                return OffersSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
+                break;
+              default:
+                logger.wtf("default case");
+                return CommunitiesSearchView(
+                  isUserSignedIn: _isUserSignedIn,
+                );
+                break;
+            }
+          },
+        ),
+      ],
     );
   }
 }

@@ -16,7 +16,7 @@ class CreateOffer extends StatefulWidget {
   final String timebankId;
   final TimebankModel timebankModel;
 
-  const CreateOffer({Key key, this.timebankId, this.timebankModel})
+  const CreateOffer({Key key, this.timebankId, @required this.timebankModel})
       : super(key: key);
   @override
   _CreateOfferState createState() => _CreateOfferState();
@@ -29,7 +29,6 @@ class _CreateOfferState extends State<CreateOffer> {
     return ExitWithConfirmation(
       child: Scaffold(
         appBar: AppBar(
-          // iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             S.of(context).create_offer,

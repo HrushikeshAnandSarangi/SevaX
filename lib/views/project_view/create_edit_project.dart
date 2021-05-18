@@ -37,6 +37,7 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
@@ -418,11 +419,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 padding: EdgeInsets.all(8),
               ),
 
-              headingText('Registration link'), //Label to be created
+              headingText(L.of(context).registration_link),
               TextFormField(
                 decoration: InputDecoration(
                   errorMaxLines: 2,
-                  hintText: "Ex: Eventbrite link, etc.", //Label to be created
+                  hintText: L.of(context).registration_link_hint,
                 ),
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(focusNodes[3]);

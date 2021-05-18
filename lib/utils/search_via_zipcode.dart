@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,13 +10,14 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/zip_code_model.dart';
+import 'package:http/http.dart' as http;
 
 import 'log_printer/log_printer.dart';
 
 class SearchCommunityViaZIPCode {
   static Future<List<CommunityModel>> getCommunitiesViaZIPCode(
-      String searchTerm,
-      ) async {
+    String searchTerm,
+  ) async {
     return await _searchViaGeoCode(searchTerm)
         .then((location) => _getNearCommunitiesListStream(location))
         .then((nearbyCommunitiesList) => nearbyCommunitiesList)
@@ -27,27 +29,36 @@ class SearchCommunityViaZIPCode {
   }
 
   static Future<Location> _searchViaGeoCode(searchTerm) async {
-    GeoCode geoCode = GeoCode();
-    log('tiggeres');
+    //GeoCode geoCode = GeoCode();
     try {
-      var coordinates = await geoCode.forwardGeocoding(address: searchTerm);
-      log('lat ${coordinates.latitude}');
-      log('lon ${coordinates.longitude}');
+      //var coordinates = await geoCode.forwardGeocoding(address: searchTerm);
+
+      var response = await http.get(
+          'https://maps.googleapis.com/maps/api/geocode/json?address=${searchTerm}&key=AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU');
+
+      var resultsBody = jsonDecode(response.body);
+
+      Map<String, dynamic> finalResult =
+          resultsBody['results'][0]['geometry']['location'];
+
       return Location(
-        lat: coordinates.latitude,
-        lng: coordinates.longitude,
+        lat: double.parse(finalResult['lat'].toString()), //40.7127753,
+        //coordinates.latitude,
+        lng: double.parse(finalResult['lng'].toString()), //-74.0059728,
+        //coordinates.longitude,
       );
     } catch (e) {
+      logger.e(e);
       return Future.error(NoNearByCommunitesFoundException());
     }
   }
 
   @Deprecated('Using Internal Library')
   static Future<Location> _searchViaZipCodeAPI(
-      String zipCode,
-      ) async {
+    String zipCode,
+  ) async {
     Response response =
-    await SearchManager.makeGetRequest(url: _getZipCodeURL(zipCode));
+        await SearchManager.makeGetRequest(url: _getZipCodeURL(zipCode));
     var latLngFromZip = latLngFromZipCodeFromJson(response.body);
 
     if (response.statusCode != 200 || latLngFromZip == null) {
@@ -65,9 +76,8 @@ class SearchCommunityViaZIPCode {
   }
 
   static Future<List<CommunityModel>> _getNearCommunitiesListStream(
-      Location location,
-      ) async {
-
+    Location location,
+  ) async {
     log('near ');
     log('lat ${location.lat}');
     log('lon ${location.lng}');
@@ -82,11 +92,11 @@ class SearchCommunityViaZIPCode {
     return await geo
         .collection(collectionRef: query)
         .within(
-      center: center,
-      radius: radius.toDouble(),
-      field: 'location',
-      strictMode: true,
-    )
+          center: center,
+          radius: radius.toDouble(),
+          field: 'location',
+          strictMode: true,
+        )
         .first
         .then((_) => _addToList(_))
         .catchError((onError) {
@@ -96,22 +106,22 @@ class SearchCommunityViaZIPCode {
   }
 
   static List<CommunityModel> _addToList(
-      List<DocumentSnapshot> communitiesMatched,
-      ) {
+    List<DocumentSnapshot> communitiesMatched,
+  ) {
     List<CommunityModel> communityList = [];
 
     logger.i(communitiesMatched.length.toString() + "  Matched");
 
     communitiesMatched.forEach(
-          (documentSnapshot) {
+      (documentSnapshot) {
         CommunityModel model = CommunityModel(documentSnapshot.data);
-        if(AppConfig.isTestCommunity){
-          if(model.testCommunity){
+        if (AppConfig.isTestCommunity ?? false) {
+          if (model.testCommunity && model.softDelete == false) {
             communityList.add(model);
-
           }
-        }else {
-          if (!model.softDelete || !model.private) communityList.add(model);
+        } else {
+          if ((model.softDelete == false) && (model.private == false))
+            communityList.add(model);
         }
       },
     );
