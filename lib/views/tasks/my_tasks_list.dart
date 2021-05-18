@@ -29,6 +29,7 @@ import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../../flavor_config.dart';
 import '../../labels.dart';
@@ -464,7 +465,18 @@ class MyTasksListState extends State<MyTaskList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(model.fullName),
-                SizedBox(height: 4),
+                // SizedBox(height: 4),
+                // Text(
+                //   timeAgo.format(
+                //     DateTime.fromMillisecondsSinceEpoch(
+                //       model.requestStart,
+                //     ),
+                //     locale: S.of(context).localeName == 'sn'
+                //         ? 'en'
+                //         : S.of(context).localeName,
+                //   ),
+                // ),
+                SizedBox(height: 8),
                 Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   //runAlignment: WrapAlignment.center,
@@ -472,35 +484,39 @@ class MyTasksListState extends State<MyTaskList> {
                   children: <Widget>[
                     model.isSpeakerCompleted
                         ? Text('You have requested completion.')
-                        : RaisedButton(
-                            padding: EdgeInsets.zero,
-                            color: FlavorConfig.values.theme.primaryColor,
-                            child: Text(
-                              'Complete',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Europa',
-                                  fontSize: 12),
+                        : Container(
+                            height: 35,
+                            child: RaisedButton(
+                              padding: EdgeInsets.zero,
+                              color: FlavorConfig.values.theme.primaryColor,
+                              child: Text(
+                                'Complete',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Europa',
+                                    fontSize: 12),
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return OneToManySpeakerTimeEntryComplete(
+                                        requestModel: model,
+                                        onFinish: () async {
+                                          await oneToManySpeakerCompletesRequest(
+                                              context, model);
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
                             ),
-                            onPressed: () async {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return OneToManySpeakerTimeEntryComplete(
-                                      requestModel: model,
-                                      onFinish: () async {
-                                        await oneToManySpeakerCompletesRequest(
-                                            context, model);
-                                      },
-                                    );
-                                  },
-                                ),
-                              );
-                            },
                           ),
                     SizedBox(height: 4),
                   ],
                 ),
+                SizedBox(height: 5),
               ],
             ),
             leading: CircleAvatar(

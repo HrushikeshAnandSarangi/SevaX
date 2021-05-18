@@ -1801,19 +1801,22 @@ class RequestEditFormState extends State<RequestEditForm> {
         Padding(
           padding: const EdgeInsets.only(right: 7, bottom: 7),
           child: Container(
-            height: 30,
+            height: 35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+              padding:
+                  const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("${item.title_en.toString()}",
                       style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 10),
+                  SizedBox(width: 3),
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -1823,8 +1826,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                             (category) => category.typeId == item.typeId);
                       });
                     },
-                    child:
-                        Icon(Icons.cancel, color: Colors.grey[200], size: 19),
+                    child: Icon(Icons.cancel_rounded,
+                        color: Colors.grey[100], size: 28),
                   ),
                 ],
               ),
@@ -2683,7 +2686,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             log('ADDED ACCEPTOR');
 
             if (selectedInstructorModel.communities
-                .contains(widget.requestModel.communityId)) {
+                    .contains(widget.requestModel.communityId) &&
+                selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
               await sendNotificationToMemberOneToManyRequest(
                   communityId: widget.requestModel.communityId,
                   timebankId: widget.requestModel.timebankId,
@@ -2852,7 +2856,8 @@ class RequestEditFormState extends State<RequestEditForm> {
           log('ADDED ACCEPTOR');
 
           if (selectedInstructorModel.communities
-              .contains(widget.requestModel.communityId)) {
+                  .contains(widget.requestModel.communityId) &&
+              selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
             await sendNotificationToMemberOneToManyRequest(
                 communityId: widget.requestModel.communityId,
                 timebankId: widget.requestModel.timebankId,

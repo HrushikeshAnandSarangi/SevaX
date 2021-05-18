@@ -2183,19 +2183,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
         Padding(
           padding: const EdgeInsets.only(right: 7, bottom: 7),
           child: Container(
-            height: 30,
+            height: 35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 4, 20, 4),
+              padding:
+                  const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("${item.title_en.toString()}",
                       style: TextStyle(color: Colors.white)),
-                  SizedBox(width: 10),
+                  SizedBox(width: 3),
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -2205,8 +2208,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             (category) => category.typeId == item.typeId);
                       });
                     },
-                    child:
-                        Icon(Icons.cancel, color: Colors.grey[200], size: 19),
+                    child: Icon(Icons.cancel_rounded,
+                        color: Colors.grey[100], size: 28),
                   ),
                 ],
               ),
@@ -3142,10 +3145,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
-            //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.communities
-              .contains(requestModel.communityId)) {
+                  .contains(requestModel.communityId) &&
+              selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
             await sendNotificationToMemberOneToManyRequest(
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
@@ -3177,10 +3180,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await createProjectOneToManyRequest();
 
         if (selectedInstructorModel != null &&
-            //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
           if (selectedInstructorModel.communities
-              .contains(requestModel.communityId)) {
+                  .contains(requestModel.communityId) &&
+              selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
             await sendNotificationToMemberOneToManyRequest(
                 communityId: requestModel.communityId,
                 timebankId: requestModel.timebankId,
@@ -3708,7 +3711,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       try {
         await OfferInvitationManager
             .handleInvitationNotificationForRequestCreatedFromOffer(
-          currentCommunity: widget.userModel.currentCommunity,
+          currentCommunity: SevaCore.of(context).loggedInUser.currentCommunity,
           offerModel: widget.offer,
           requestModel: requestModel,
           senderSevaUserID: requestModel.sevaUserId,
