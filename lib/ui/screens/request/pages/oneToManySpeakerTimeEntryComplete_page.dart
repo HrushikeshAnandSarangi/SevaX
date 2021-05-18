@@ -72,8 +72,8 @@ class OneToManySpeakerTimeEntryCompleteState
               SingleChildScrollView(
             child: Container(
               alignment: Alignment.topCenter,
-              width: MediaQuery.of(context).size.width * 0.90,
-              padding: EdgeInsets.only(top: 25.0, left: 32),
+              width: MediaQuery.of(context).size.width * 0.9,
+              padding: EdgeInsets.only(top: 25.0, left: 35),
               color: requestModel.color,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class OneToManySpeakerTimeEntryCompleteState
                   Form(
                     key: _formKey,
                     child: Container(
-                      width: constraints.maxWidth * 0.5,
+                      width: constraints.maxWidth * 0.9,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -89,7 +89,7 @@ class OneToManySpeakerTimeEntryCompleteState
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                width: constraints.maxWidth * 0.4,
+                                width: constraints.maxWidth * 0.7,
                                 child: Text(
                                   'How much prep time did you need for the request?',
                                   style: TextStyle(
@@ -103,7 +103,7 @@ class OneToManySpeakerTimeEntryCompleteState
                           SizedBox(height: 15),
                           Container(
                             alignment: Alignment.centerLeft,
-                            width: constraints.maxWidth * 0.7,
+                            width: constraints.maxWidth * 9,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -169,7 +169,7 @@ class OneToManySpeakerTimeEntryCompleteState
                           SizedBox(height: 15),
                           Container(
                             alignment: Alignment.centerLeft,
-                            width: constraints.maxWidth * 0.7,
+                            width: constraints.maxWidth * 0.9,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -221,7 +221,7 @@ class OneToManySpeakerTimeEntryCompleteState
                           Row(
                             children: [
                               Container(
-                                width: constraints.maxWidth * 0.8,
+                                width: constraints.maxWidth * 0.7,
                                 child: Text(
                                   'I acknowledge that I have completed the session for the request.',
                                   style: TextStyle(
@@ -237,7 +237,7 @@ class OneToManySpeakerTimeEntryCompleteState
                           Row(
                             children: [
                               Container(
-                                width: constraints.maxWidth * 0.55,
+                                width: constraints.maxWidth * 0.72,
                                 child: Text(
                                   'Note: Based on the preparation hours and time to fulfill the request combined hours will be added upon completing the request.',
                                   style: TextStyle(
@@ -255,9 +255,9 @@ class OneToManySpeakerTimeEntryCompleteState
                   ),
                   SizedBox(height: 30),
                   Container(
-                    width: constraints.maxWidth * 0.55,
+                    width: constraints.maxWidth * 0.62,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
                           alignment: Alignment.center,
