@@ -614,7 +614,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
           ),
-          speakerWithdrawOneToManyRequest,
+          widget.requestItem.isSpeakerCompleted
+              ? Container()
+              : speakerWithdrawOneToManyRequest,
           SizedBox(width: 4),
           widget.requestItem.isSpeakerCompleted
               ? Container()
@@ -1436,7 +1438,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   text: widget.requestItem.oneToManyRequestAttenders.contains(
                           SevaCore.of(context).loggedInUser.sevaUserID)
                       ? S.of(context).applied_for_request
-                      : S.of(context).particpate_in_request_question,
+                      : widget.requestItem.isSpeakerCompleted == true
+                          ? 'This request has now ended' //Label to be created
+                          : widget.requestItem.oneToManyRequestAttenders
+                                      .length >=
+                                  widget.requestItem.numberOfApprovals
+                              ? 'Maximum number of participants reached' //Label to be created
+                              : S.of(context).particpate_in_request_question,
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
@@ -1447,8 +1455,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        widget.requestItem.oneToManyRequestAttenders.length >=
-                widget.requestItem.numberOfApprovals
+        (widget.requestItem.oneToManyRequestAttenders.length >=
+                    widget.requestItem.numberOfApprovals ||
+                widget.requestItem.isSpeakerCompleted == true)
             ? Container()
             : oneToManyRequestActionWidgetForParticipant,
       ],
@@ -1466,7 +1475,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               children: [
                 TextSpan(
                   text: widget.requestItem.isSpeakerCompleted
-                      ? 'The request is complete by tutor'
+                      ? 'The request is complete by speaker'
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
@@ -1508,14 +1517,50 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               await oneToManyCreatorRequestCompletionRejected(
                   widget.requestItem, context);
 
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  duration: Duration(seconds: 3),
-                  content: Text(
-                    'Rejection notification has been sent.',
-                  ),
-                ),
-              );
+              showDialog(
+                  context: context,
+                  builder: (BuildContext viewContext) {
+                    return AlertDialog(
+                      title: Text(
+                          'Are you sure you want to reject request completion?'), //Label to be created
+                      actions: <Widget>[
+                        FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          child: Text(
+                            S.of(context).yes,
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            Navigator.of(viewContext).pop();
+                            await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
+                                widget.requestItem.toMap(),
+                                context,
+                                SevaCore.of(context).loggedInUser,
+                                false);
+                          },
+                        ),
+                        FlatButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            S.of(context).no,
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          onPressed: () {
+                            Navigator.of(viewContext).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+
+              // Scaffold.of(context).showSnackBar(
+              //   SnackBar(
+              //     duration: Duration(seconds: 3),
+              //     content: Text(
+              //       'Rejection notification has been sent.',
+              //     ),
+              //   ),
+              // );
             },
           ),
         ),

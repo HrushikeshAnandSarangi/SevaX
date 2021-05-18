@@ -71,7 +71,7 @@ class RequestCompleteWidget extends StatelessWidget {
                       SevaCore.of(context).loggedInUser.currentCommunity,
                 );
 
-                if (!canApproveTransaction) {
+                if (!canApproveTransaction.hasSuffiientCredits) {
                   showDiologForMessage(
                     context,
                     S.of(context).notifications_insufficient_credits,

@@ -124,6 +124,7 @@ enum NotificationType {
   OneToManyRequestInviteRejected,
   OneToManyRequestCompleted,
   OneToManyCreatorRejectedCompletion,
+  OneToManyRequestDoneForSpeaker,
   RequestApprove,
   RequestInvite,
   RequestReject,
@@ -220,10 +221,15 @@ Map<String, NotificationType> typeMapper = {
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
   "OneToManyRequestAccept": NotificationType.OneToManyRequestAccept,
-  "OneToManyRequestInviteAccepted": NotificationType.OneToManyRequestInviteAccepted,
-  "OneToManyRequestInviteRejected": NotificationType.OneToManyRequestInviteRejected,
+  "OneToManyRequestInviteAccepted":
+      NotificationType.OneToManyRequestInviteAccepted,
+  "OneToManyRequestInviteRejected":
+      NotificationType.OneToManyRequestInviteRejected,
   "OneToManyRequestCompleted": NotificationType.OneToManyRequestCompleted,
-  "OneToManyCreatorRejectedCompletion": NotificationType.OneToManyCreatorRejectedCompletion,
+  "OneToManyCreatorRejectedCompletion":
+      NotificationType.OneToManyCreatorRejectedCompletion,
+  "OneToManyRequestDoneForSpeaker":
+      NotificationType.OneToManyRequestDoneForSpeaker,
   "RequestReject": NotificationType.RequestReject,
   "RequestCompleted": NotificationType.RequestCompleted,
   "RequestCompletedApproved": NotificationType.RequestCompletedApproved,
@@ -241,7 +247,8 @@ Map<String, NotificationType> typeMapper = {
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
   "ACKNOWLEDGE_DONOR_DONATION": NotificationType.ACKNOWLEDGE_DONOR_DONATION,
   "GOODS_DONATION_REQUEST": NotificationType.GOODS_DONATION_REQUEST,
-  "TYPE_MEMBER_HAS_INSUFFICENT_CREDITS": NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
+  "TYPE_MEMBER_HAS_INSUFFICENT_CREDITS":
+      NotificationType.TYPE_MEMBER_HAS_INSUFFICENT_CREDITS,
   "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
   "TYPE_CREDIT_FROM_OFFER_ON_HOLD":
       NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,

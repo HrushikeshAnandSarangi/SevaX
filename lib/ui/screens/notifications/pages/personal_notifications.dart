@@ -193,6 +193,23 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         parentContext: parentContext,
                       );
 
+                    case NotificationType.OneToManyRequestDoneForSpeaker:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return NotificationCard(
+                        isDissmissible: true,
+                        timestamp: notification.timestamp,
+                        title: model.title + ' ' + 'request has now ended',
+                        subTitle: '',
+                        //entityName: '',
+                        onDismissed: () {
+                          NotificationsRepository.readUserNotification(
+                            notification.id,
+                            user.email,
+                          );
+                        },
+                      );
+
                     case NotificationType.RequestCompletedApproved:
                       return PersonalNotificationReducerForRequests
                           .getWidgetForRequestCompletedApproved(
@@ -366,7 +383,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       return NotificationCardOneToManySpeakerRecalims(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: true,
+                        isDissmissible: false,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
                             notification.id,
@@ -1462,6 +1479,13 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
 
 Future oneToManySpeakerInviteAccepted(
     RequestModel requestModel, BuildContext context) async {
+  //make the relevant notification is read true
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
+
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,
       targetUserId: requestModel.sevaUserId,
@@ -1504,6 +1528,12 @@ Future oneToManySpeakerInviteRejected(
   Set<String> acceptorsList = Set.from(requestModel.acceptors);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
   requestModel.acceptors = acceptorsList.toList();
+
+  //So that if a speaker withdraws and a new speaker is invited, before they accept,
+  //it will show previously invited speakers time details
+  requestModel.selectedSpeakerTimeDetails.prepTime = null;
+  requestModel.selectedSpeakerTimeDetails.speakingTime = null;
+
   requestModel.selectedInstructor = BasicUserDetails(
     fullname: requestModel.fullName,
     email: requestModel.email,
@@ -1515,6 +1545,15 @@ Future oneToManySpeakerInviteRejected(
       .collection('requests')
       .document(requestModel.id)
       .updateData(requestModel.toMap());
+
+  logger.e(
+      '-------------COMES HERE TO CLEAR NOTIFICATION Rejected Scenario--------------');
+  //make the relevant notification is read true
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 
   log('sends timebank notif to 1 to many creator abt rejection!');
 }
@@ -1545,4 +1584,11 @@ Future oneToManySpeakerRequestCompleted(
       .updateData({
     'isSpeakerCompleted': true,
   });
+
+  await FirestoreManager
+      .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
+    requestModel: requestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 }

@@ -333,9 +333,19 @@ class _LoginPageState extends State<LoginPage> {
             child: FadeAnimation(
               1.4,
               Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 100.0),
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 0.0),
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(top: 20, bottom: 60.0),
+                      child: BackButton(
+                        color: Colors.black,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
                     logo,
                     SizedBox(
                       height: 60,
@@ -862,8 +872,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       user = await auth.signInWithApple();
       await getAndUpdateDeviceDetailsOfUser(
-        locationVal: location,userEmailId: user.email
-      );
+          locationVal: location, userEmailId: user.email);
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -898,7 +907,8 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.handleGoogleSignIn();
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location,userEmailId: user.email);
+      await getAndUpdateDeviceDetailsOfUser(
+          locationVal: location, userEmailId: user.email);
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -920,7 +930,8 @@ class _LoginPageState extends State<LoginPage> {
         email: emailId.trim(),
         password: password,
       );
-      await getAndUpdateDeviceDetailsOfUser(locationVal: location,userEmailId: user.email)
+      await getAndUpdateDeviceDetailsOfUser(
+              locationVal: location, userEmailId: user.email)
           .timeout(Duration(seconds: 3));
       logger.i('device details fixed');
     } on TimeoutException catch (e) {

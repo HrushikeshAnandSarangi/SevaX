@@ -88,21 +88,23 @@ class SevaCreditLimitManager {
     return double.parse(sevaCoins.toStringAsFixed(2));
   }
 
-  static Future<bool> hasSufficientCredits({
+  static Future<CreditResult> hasSufficientCredits({
     @required String email,
     @required String userId,
     @required double credits,
     @required String communityId,
   }) async {
-    logger.i("COmmunity Id being apssed " + communityId);
     if (AppConfig.isTestCommunity) {
-      return true;
+      return new CreditResult(
+        hasSuffiientCredits: true,
+      );
     }
-    var currentGlobalBalance = await getCurrentBalance(email: email);
-    log('currentGlobalBalance:  ' + currentGlobalBalance.toString());
 
+    var currentGlobalBalance = await getCurrentBalance(email: email);
     if (currentGlobalBalance >= credits) {
-      return true;
+      return CreditResult(
+        hasSuffiientCredits: true,
+      );
     } else {
       var associatedBalanceWithinThisCommunity =
           await getMemberBalancePerTimebank(
@@ -114,15 +116,30 @@ class SevaCreditLimitManager {
           await getNegativeThresholdForCommunity(communityId);
 
       if (associatedBalanceWithinThisCommunity > communityThreshold) {
-        return (currentGlobalBalance > 0
-                    ? currentGlobalBalance -
-                        associatedBalanceWithinThisCommunity
-                    : 0) +
-                (communityThreshold.abs() +
-                    associatedBalanceWithinThisCommunity) >=
-            credits;
+        var actualCredits = currentGlobalBalance > 0
+            ? currentGlobalBalance - associatedBalanceWithinThisCommunity
+            : 0;
+
+        var maxCredit =
+            (communityThreshold.abs() + associatedBalanceWithinThisCommunity);
+
+        var canCreate = actualCredits + maxCredit >= credits;
+
+        if (!canCreate) {
+          return CreditResult(
+            hasSuffiientCredits: false,
+            credits: (credits - (actualCredits + maxCredit)),
+          );
+        }
+
+        return CreditResult(
+          hasSuffiientCredits: canCreate,
+        );
       } else {
-        return false;
+        return CreditResult(
+          hasSuffiientCredits: false,
+          credits: credits,
+        );
       }
     }
   }
@@ -159,4 +176,11 @@ class SevaCreditLimitManager {
             : value.currentBalance)
         .catchError((onError) => FALLBACK_BALANCE);
   }
+}
+
+class CreditResult {
+  final bool hasSuffiientCredits;
+  final double credits;
+
+  CreditResult({this.credits = 0, this.hasSuffiientCredits = true});
 }

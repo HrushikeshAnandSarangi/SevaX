@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../utils.dart';
 
@@ -502,6 +503,111 @@ Future<void>  readTimeBankNotification({
       .updateData({
     'isRead': true,
   });
+}
+
+//to remove the notification if creator completes from request about page
+//or approves from completion page instead
+Future<void> readTimeBankNotificationOneToManyCreatorRejectedCompletion({
+  @required RequestModel requestModel,
+  @required bool fromNotification,
+}) async {
+  if (!fromNotification) {
+    logger
+        .e('-------------RequestModel id 1: ${requestModel.id}--------------');
+    logger.e(
+        '-------------Timebank ID 1: ${requestModel.timebankId}--------------');
+    QuerySnapshot snapshotQuery = await Firestore.instance
+        .collection('timebanknew')
+        .document(requestModel.timebankId)
+        .collection('notifications')
+        .where('isRead', isEqualTo: false)
+        .where('type', isEqualTo: 'OneToManyRequestCompleted')
+        .where('data.id', isEqualTo: requestModel.id)
+        .getDocuments();
+    snapshotQuery.documents.forEach(
+      (document) async {
+        await Firestore.instance
+            .collection('timebanknew')
+            .document(requestModel.timebankId)
+            .collection('notifications')
+            .document(document.documentID)
+            .updateData({
+          'isRead': true,
+        });
+      },
+    );
+  } else {
+    return null;
+  }
+}
+
+//to remove the notification if speaker accepts from request about page instead
+Future<void> readUserNotificationOneToManyWhenSpeakerIsInvited({
+  @required RequestModel requestModel,
+  @required String userEmail,
+  @required bool fromNotification,
+}) async {
+  if (!fromNotification) {
+    logger.e('-------------User Email: ${userEmail}--------------');
+    logger.e('-------------RequestModel id: ${requestModel.id}--------------');
+    QuerySnapshot snapshotQuery = await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection('notifications')
+        .where('isRead', isEqualTo: false)
+        .where('type', isEqualTo: 'OneToManyRequestAccept')
+        .where('data.id', isEqualTo: requestModel.id)
+        .getDocuments();
+    snapshotQuery.documents.forEach(
+      (document) async {
+        await Firestore.instance
+            .collection('users')
+            .document(userEmail)
+            .collection('notifications')
+            .document(document.documentID)
+            .updateData({
+          'isRead': true,
+        });
+      },
+    );
+  } else {
+    return null;
+  }
+}
+
+//to remove the notification if speaker gets rejected notification and
+//accepts from tasks or request about
+Future<void> readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion({
+  @required RequestModel requestModel,
+  @required String userEmail,
+  @required bool fromNotification,
+}) async {
+  if (!fromNotification) {
+    logger.e('-------------User Email: ${userEmail}--------------');
+    logger.e('-------------RequestModel id: ${requestModel.id}--------------');
+    QuerySnapshot snapshotQuery = await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection('notifications')
+        .where('isRead', isEqualTo: false)
+        .where('type', isEqualTo: 'OneToManyCreatorRejectedCompletion')
+        .where('data.id', isEqualTo: requestModel.id)
+        .getDocuments();
+    snapshotQuery.documents.forEach(
+      (document) async {
+        await Firestore.instance
+            .collection('users')
+            .document(userEmail)
+            .collection('notifications')
+            .document(document.documentID)
+            .updateData({
+          'isRead': true,
+        });
+      },
+    );
+  } else {
+    return null;
+  }
 }
 
 Stream<List<NotificationsModel>> getNotifications({

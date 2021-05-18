@@ -235,13 +235,17 @@ Future<List<String>> createRecurringEvents({
       return [];
     }
   } else {
-    log("inside Seva Community req " + requestModel.requestMode.toString());
-    eventsIdsArr.add(requestModel.id);
-    temparr.forEach((tempobj) {
-      batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-      eventsIdsArr.add(tempobj['id']);
-      log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
-    });
+    if (requestModel.requestType == RequestType.TIME ||
+        requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      //requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+      //if (balanceVar - sevaCreditsCount >= 0) {
+      eventsIdsArr.add(requestModel.id);
+      temparr.forEach((tempobj) {
+        batch.setData(
+            db.collection("requests").document(tempobj['id']), tempobj);
+        eventsIdsArr.add(tempobj['id']);
+      });
+    }
   }
 
   DocumentSnapshot timebankDoc = await db
@@ -1945,32 +1949,32 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-    requestModel, context) async {
+    requestModel, context, UserModel userModel, bool fromNotification) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
   log('HERE HERE!');
 
   UserModel speakerModel = await FirestoreManager.getUserForId(
-      sevaUserId: requestModel['selectedInstructor']['sevaUserID']);
+      sevaUserId: requestModel.selectedInstructor.sevaUserID);
 
-  if (speakerModel.communities.contains(requestModel['communityId'])) {
+  if (speakerModel.communities.contains(requestModel.communityId)) {
     log('in community');
 
     NotificationsModel notificationModel = NotificationsModel(
-        timebankId: requestModel['timebankId'],
-        targetUserId: requestModel['selectedInstructor']['sevaUserID'],
-        data: requestModel,
+        timebankId: requestModel.timebankId,
+        targetUserId: requestModel.selectedInstructor.sevaUserID,
+        data: requestModel.toMap(),
         type: NotificationType.OneToManyCreatorRejectedCompletion,
         id: utils.Utils.getUuid(),
         isRead: false,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        communityId: requestModel['communityId'],
+        communityId: requestModel.communityId,
         isTimebankNotification: false);
 
     await Firestore.instance
         .collection('users')
-        .document(requestModel['selectedInstructor']['email'])
+        .document(requestModel.selectedInstructor.email)
         .collection('notifications')
         .document(notificationModel.id)
         .setData(notificationModel.toMap());
@@ -1979,8 +1983,8 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
 
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: FlavorConfig.values.timebankId,
-        targetUserId: requestModel['selectedInstructor']['sevaUserID'],
-        data: requestModel,
+        targetUserId: requestModel.selectedInstructor.sevaUserID,
+        data: requestModel.toMap(),
         type: NotificationType.OneToManyCreatorRejectedCompletion,
         id: utils.Utils.getUuid(),
         isRead: false,
@@ -1990,7 +1994,7 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
 
     await Firestore.instance
         .collection('users')
-        .document(requestModel['selectedInstructor']['email'])
+        .document(requestModel.selectedInstructor.email)
         .collection('notifications')
         .document(notificationModel.id)
         .setData(notificationModel.toMap());
@@ -1998,10 +2002,15 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
 
   await Firestore.instance
       .collection('requests')
-      .document(requestModel['id'])
+      .document(requestModel.id)
       .updateData({
     'isSpeakerCompleted': false,
   });
+
+  //make the relevant notification is read true
+  await FirestoreManager
+      .readTimeBankNotificationOneToManyCreatorRejectedCompletion(
+          requestModel: requestModel, fromNotification: fromNotification);
 
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }
