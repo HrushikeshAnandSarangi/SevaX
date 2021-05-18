@@ -826,9 +826,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: "${S.of(context).notifications_credited_msg}",
-                        subTitle:
-                            "${notification.data.containsKey('credits') ? notification.data['credits'] : ''} ${S.of(context).notifications_credited_msg} ",
+                        title: "Seva Credits Credited",
+                        subTitle: notification.data['credits'].toString() +
+                            " Seva Credits have been credited to your account.",
                         onDismissed: onDismissed,
                       );
 
@@ -837,8 +837,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: "${S.of(context).notifications_debited_msg}",
-                        subTitle: "${S.of(context).notifications_debited_msg} ",
+                        title: "Seva Credits debited",
+                        subTitle: notification.data['credits'].toString() +
+                            " Seva Credits have been debited from your account.",
                         onDismissed: onDismissed,
                       );
 

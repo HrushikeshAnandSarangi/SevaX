@@ -72,9 +72,8 @@ class OneToManySpeakerTimeEntryCompleteState
               SingleChildScrollView(
             child: Container(
               alignment: Alignment.topCenter,
-              width: constraints.maxWidth * 0.84,
-              padding:
-                  EdgeInsets.only(top: 50.0, left: constraints.maxWidth * 0.07),
+              width: MediaQuery.of(context).size.width * 0.90,
+              padding: EdgeInsets.only(top: 25.0, left: 32),
               color: requestModel.color,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,7 +288,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                 widget.onFinish();
 
                                 Navigator.of(context).pop();
-                                Navigator.of(context).pop();
+                                //Navigator.of(context).pop();
                               }
                             },
                             child: Text(

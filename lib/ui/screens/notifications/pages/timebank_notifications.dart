@@ -887,6 +887,35 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                 );
 
+              case NotificationType.SEVA_COINS_CREDITED:
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva Credits Credited",
+                  subTitle: notification.data['credits'].toString() +
+                      " Seva Credits have been credited to your account.",
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                );
+
+              case NotificationType.SEVA_COINS_DEBITED:
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva Credits debited",
+                  subTitle: notification.data['credits'].toString() +
+                      " Seva Credits have been debited from your account.",
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                );
               case NotificationType.MANUAL_TIME_CLAIM:
                 var body = ManualTimeModel.fromMap(
                     Map<String, dynamic>.from(notification.data));
