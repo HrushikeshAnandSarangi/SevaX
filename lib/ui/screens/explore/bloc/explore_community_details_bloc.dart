@@ -85,8 +85,9 @@ class ExploreCommunityDetailsBloc {
 
   TimebankModel primaryTimebankModel() {
     return _groups.value.firstWhere(
-        (model) => model.parentTimebankId == FlavorConfig.values.timebankId,
-        orElse: null);
+      (model) => model.parentTimebankId == FlavorConfig.values.timebankId,
+      orElse: null,
+    );
   }
 
   void dispose() {

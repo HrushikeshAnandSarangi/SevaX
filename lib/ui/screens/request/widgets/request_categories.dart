@@ -25,8 +25,9 @@ class RequestCategories extends StatelessWidget {
         }
         return GridView(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
+            crossAxisCount: 1,
             mainAxisSpacing: 1,
             crossAxisSpacing: 0.5,
             childAspectRatio: 6,

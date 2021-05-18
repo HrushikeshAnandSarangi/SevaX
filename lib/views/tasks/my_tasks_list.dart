@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
 
@@ -1154,17 +1155,26 @@ class TaskCardViewState extends State<TaskCardView> {
       if (hoursController.text == null || hoursController.text.length == 0) {
         return;
       }
-
-      int totalMinutes = int.parse(selectedMinuteValue) +
-          (int.parse(hoursController.text) * 60);
     }
 
+    totalMinutes =
+        int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
     creditRequest = totalMinutes / 60;
     //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
     maxClaim =
         (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
 
-    if (creditRequest > maxClaim) {
+    if (requestModel.isFromOfferRequest &&
+            creditRequest < requestModel.minimumCredits ??
+        0) {
+      showDialogFoInfo(
+        title: S.of(context).enter_hours,
+        content: L.of(context).entered_credits_less_than_minimum_credits,
+      );
+      return;
+    }
+
+    if (!requestModel.isFromOfferRequest && creditRequest > maxClaim) {
       showDialogFoInfo(
         title: S.of(context).limit_exceeded,
         content:

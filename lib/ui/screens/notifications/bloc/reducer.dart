@@ -38,6 +38,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
+import '../../../../labels.dart';
 import 'notifications_bloc.dart';
 
 class PersonalNotificationReducerForRequests {
@@ -879,8 +880,8 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: timeOfferParticipantsModel.participantDetails.photourl,
       subTitle: timeOfferParticipantsModel.participantDetails.fullname +
-          ' has accepted your offer and has shared an invitation.',
-      title: S.of(context).accepted_offer,
+          L.of(context).invitation_accepted_subtitle,
+      title: L.of(context).invitation_accepted,
       onPressed: () {
         showDialog(
           context: context,
@@ -933,8 +934,9 @@ class PersonalNotificationsReducerForOffer {
         );
       },
       photoUrl: model.photoUrlImage ?? defaultUserImageURL,
-      subTitle: "${model.fullName} has invited you to accept his offer.",
-      title: 'Offer Invitation',
+      subTitle: "${model.fullName} " +
+          L.of(context).offer_invitation_notification_subtitle,
+      title: L.of(context).offer_invitation_notification_title,
     );
   }
 }
