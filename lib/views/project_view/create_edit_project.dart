@@ -374,7 +374,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   fontSize: 12,
                 ),
               ),
-              headingText("${S.of(context).mission_statement} *"),
+              headingText("Event Description *"),
               TextFormField(
                 decoration: InputDecoration(
                   errorMaxLines: 2,

@@ -111,8 +111,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
         individualOfferDataModel.title = _title.value;
         individualOfferDataModel.description = _offerDescription.value;
         individualOfferDataModel.schedule = _availabilty.value;
-        individualOfferDataModel.minimumCredits =
-            int.parse(_minimumCredits.value);
+        individualOfferDataModel.minimumCredits = _minimumCredits.value != null
+            ? int.parse(_minimumCredits.value)
+            : 0;
 
         individualOfferDataModel.timeOfferType =
             timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME';
@@ -139,8 +140,11 @@ class IndividualOfferBloc extends BlocBase with Validators {
               ..title = _title.value
               ..description = _offerDescription.value
               ..schedule = _availabilty.value
-              ..minimumCredits = int.parse(_minimumCredits.value)
-            ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME',offerType: OfferType.INDIVIDUAL_OFFER,
+              ..minimumCredits = _minimumCredits.value != null
+                  ? int.parse(_minimumCredits.value)
+                  : 0
+              ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME',
+            offerType: OfferType.INDIVIDUAL_OFFER,
             type: _type.value,
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
@@ -181,7 +185,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..title = _title.value
           ..description = _offerDescription.value
           ..timeOfferType = timeOfferType == 0 ? 'SPOT_ON' : 'ONE_TIME'
-          ..schedule = _availabilty.value != null ? _availabilty.value : '';
+          ..schedule = _availabilty.value != null ? _availabilty.value : ''
+          ..minimumCredits = _minimumCredits.value != null
+              ? int.parse(_minimumCredits.value)
+              : 0;
 
         updateOfferWithRequest(offer: offerModel).then((_) {
           _status.add(Status.COMPLETE);
@@ -251,8 +258,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
         } else if (profanityDetector.isProfaneString(_availabilty.value)) {
           _availabilty.addError(ValidationErrors.profanityError);
           flag = true;
-        } else if (_availabilty.value == null || _availabilty.value == 0) {
-          _availabilty.addError(ValidationErrors.minimumCreditsError);
+        } else if (_minimumCredits.value == null ||
+            _minimumCredits.value == 0) {
+          _minimumCredits.addError(ValidationErrors.minimumCreditsError);
           flag = true;
         }
       } else if (_type.value == RequestType.CASH) {
@@ -288,5 +296,6 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _cashModel.close;
     _goodsDonationDetails.close();
     _type.close();
+    _minimumCredits.close();
   }
 }
