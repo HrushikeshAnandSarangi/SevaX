@@ -1343,13 +1343,13 @@ Future<void> approveRequestCompletion({
   );
 
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
-  await utils.processLoans(
-    timebankId: model.timebankId,
-    userId: userId,
-    to: editedTransaction.toEmail_Id ?? editedTransaction.to,
-    credits: editedTransaction.credits,
-    communityId: communityId,
-  );
+  // await utils.processLoans(
+  //   timebankId: model.timebankId,
+  //   userId: userId,
+  //   to: editedTransaction.toEmail_Id ?? editedTransaction.to,
+  //   credits: editedTransaction.credits,
+  //   communityId: communityId,
+  // );
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
