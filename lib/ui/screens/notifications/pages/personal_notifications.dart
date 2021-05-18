@@ -208,7 +208,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         isDissmissible: true,
                         timestamp: notification.timestamp,
                         title: model.title + ' ' + 'request has now ended',
-                        subTitle: '',
+                        subTitle:
+                            S.of(context).hosted_by + ': ' + model.fullName,
                         //entityName: '',
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(

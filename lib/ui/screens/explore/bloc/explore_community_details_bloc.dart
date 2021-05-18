@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';

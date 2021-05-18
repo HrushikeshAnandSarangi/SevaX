@@ -1799,31 +1799,24 @@ class RequestEditFormState extends State<RequestEditForm> {
       selectedCategoryIds.add(item.typeId);
       selectedSubCategories.add(
         Padding(
-          padding: const EdgeInsets.only(right: 5, bottom: 5),
+          padding: const EdgeInsets.only(right: 7, bottom: 7),
           child: Container(
-            height: 30,
+            height: 35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+              padding:
+                  const EdgeInsets.only(top: 3.5, bottom: 5, left: 9, right: 9),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Text("${item.title_en.toString()}",
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                  SizedBox(width: 7),
+                  Text("${item.title_en.toString()}",
+                      style: TextStyle(color: Colors.white)),
+                  SizedBox(width: 3),
                   InkWell(
                     onTap: () {
                       setState(() {
@@ -1833,8 +1826,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                             (category) => category.typeId == item.typeId);
                       });
                     },
-                    child:
-                        Icon(Icons.cancel, color: Colors.grey[200], size: 17),
+                    child: Icon(Icons.cancel_rounded,
+                        color: Colors.grey[100], size: 28),
                   ),
                 ],
               ),
@@ -2627,8 +2620,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(
-            dialogTitle: L.of(context).select_a_speaker);
+        showDialogForTitle(dialogTitle: L.of(context).select_a_speaker);
         return;
       }
 

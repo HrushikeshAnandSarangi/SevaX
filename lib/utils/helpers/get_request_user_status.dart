@@ -5,7 +5,8 @@ String getRequestUserStatus(
     {RequestModel requestModel, String userId, String email, context}) {
   if (requestModel.acceptors != null &&
           requestModel.acceptors.contains(email) ||
-      requestModel.invitedUsers.contains(userId)) {
+      requestModel.invitedUsers.contains(userId) ||
+      requestModel.oneToManyRequestAttenders.contains(email)) {
     return S.of(context).invited;
   } else if (requestModel != null &&
       requestModel.approvedUsers != null &&

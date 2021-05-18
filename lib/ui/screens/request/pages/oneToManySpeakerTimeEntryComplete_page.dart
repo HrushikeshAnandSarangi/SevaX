@@ -289,6 +289,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                 widget.onFinish();
 
                                 Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               }
                             },
                             child: Text(
