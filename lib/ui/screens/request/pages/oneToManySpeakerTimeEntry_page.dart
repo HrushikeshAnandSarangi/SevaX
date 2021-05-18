@@ -28,7 +28,8 @@ class OneToManySpeakerTimeEntry extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onFinish;
   // TODO needs flow correction to tasks model
-  OneToManySpeakerTimeEntry({@required this.requestModel, @required this.onFinish});
+  OneToManySpeakerTimeEntry(
+      {@required this.requestModel, @required this.onFinish});
 
   @override
   OneToManySpeakerTimeEntryState createState() =>
@@ -252,7 +253,6 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                         child: RaisedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
-
                               LinearProgressIndicator();
                               //store form input to map in requestModel
                               requestModel.selectedSpeakerTimeDetails.prepTime =
@@ -260,9 +260,12 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                               requestModel.selectedSpeakerTimeDetails
                                   .speakingTime = speakingTime;
 
-                              Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
-                              approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
-                              requestModel.approvedUsers = approvedUsersList.toList();
+                              Set<String> approvedUsersList =
+                                  Set.from(requestModel.approvedUsers);
+                              approvedUsersList
+                                  .add(SevaCore.of(context).loggedInUser.email);
+                              requestModel.approvedUsers =
+                                  approvedUsersList.toList();
 
                               await Firestore.instance
                                   .collection('requests')
@@ -273,7 +276,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
 
                               //Navigator.of(creditRequestDialogContext).pop();
                               Navigator.of(context).pop();
-
+                              Navigator.of(context).pop();
                             }
                           },
                           child: Text(
