@@ -16,10 +16,12 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
+import 'package:sevaexchange/models/enums/plan_ids.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/payment_repository.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/community_category_selector.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
@@ -1053,17 +1055,6 @@ class CreateEditCommunityViewFormState
                                               .sevaUserID
                                         ];
 
-                                        if (testCommunity == false) {
-                                          //by default every community is on neighbourhood plan
-                                          snapshot.data.community.payment = {
-                                            "planId": "neighbourhood_plan",
-                                            "payment_success": true,
-                                            "message":
-                                                "You are on Neighbourhood plan",
-                                            "status": 200,
-                                          };
-                                        }
-
                                         snapshot.data.community.billMe = false;
 
                                         await createEditCommunityBloc
@@ -1071,6 +1062,27 @@ class CreateEditCommunityViewFormState
                                           snapshot.data,
                                           SevaCore.of(context).loggedInUser,
                                         );
+
+                                        if (testCommunity == false) {
+                                          //by default every community is on neighbourhood plan
+                                          var result =
+                                              await PaymentRepository.subscribe(
+                                            communityId:
+                                                snapshot.data.community.id,
+                                            paymentMethodId: 'sample',
+                                            planId: PlanIds.neighbourhood_plan,
+                                            isPrivate: false,
+                                            isBundlePricingEnabled: false,
+                                          );
+
+                                          // snapshot.data.community.payment = {
+                                          //   "planId": "neighbourhood_plan",
+                                          //   "payment_success": true,
+                                          //   "message":
+                                          //       "You are on Neighbourhood plan",
+                                          //   "status": 200,
+                                          // };
+                                        }
 
                                         await Firestore.instance
                                             .collection("users")
