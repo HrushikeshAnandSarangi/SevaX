@@ -1209,21 +1209,7 @@ Future<void> approveRequestCompletion({
       model.transactions.map((t) => t).toList();
   TransactionModel editedTransaction;
 
-  double taxPercentage;
-
-  DocumentSnapshot data = await Firestore.instance
-      .collection('communities')
-      .document(communityId)
-      .get();
-  Map<String, dynamic> dataMap = data.data;
-  CommunityModel communityModel = CommunityModel(dataMap);
-  taxPercentage = communityModel.taxPercentage ?? 0;
-  //
-
   double transactionvalue = (model.durationOfRequest / 60);
-
-  double tax = transactionvalue * taxPercentage;
-  transactionvalue = transactionvalue - tax;
 
   model.transactions = transactions.map((t) {
     if (t.to == userId) {
@@ -1235,9 +1221,6 @@ Future<void> approveRequestCompletion({
     return t;
   }).toList();
 
-  if (model.transactions.where((model) => model.isApproved).length ==
-      model.numberOfApprovals) {}
-
   var approvalCount = 0;
   if (model.transactions != null) {
     for (var i = 0; i < model.transactions.length; i++) {
@@ -1246,6 +1229,7 @@ Future<void> approveRequestCompletion({
       }
     }
   }
+
   model.accepted = approvalCount >= model.numberOfApprovals;
 
   TimeBankBalanceTransactionModel balanceTransactionModel;
@@ -1256,7 +1240,7 @@ Future<void> approveRequestCompletion({
       communityId: communityId,
       userId: userId,
       requestId: model.id,
-      amount: tax,
+      amount: transactionvalue,
       timestamp: FieldValue.serverTimestamp(),
     );
 
@@ -1266,6 +1250,49 @@ Future<void> approveRequestCompletion({
       originalModel: model.transactions,
       userAmout: transactionvalue,
       userIdToBeCredited: userId,
+    );
+
+    TransactionBloc().createNewTransaction(
+      FlavorConfig.values.timebankId,
+      model.timebankId,
+      DateTime.now().millisecondsSinceEpoch,
+      transactionvalue ?? 0,
+      true,
+      "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+      FlavorConfig.values.timebankId,
+      model.timebankId,
+      communityId: communityId,
+      fromEmailORId: model.timebankId,
+      toEmailORId: model.timebankId,
+    );
+
+    TransactionBloc().createNewTransaction(
+      model.timebankId,
+      userId,
+      DateTime.now().millisecondsSinceEpoch,
+      transactionvalue,
+      true,
+      "TIME_REQUEST",
+      model.id,
+      model.timebankId,
+      communityId: communityId,
+      fromEmailORId: model.timebankId,
+      toEmailORId: model.timebankId,
+    );
+    // adds review to firestore
+  } else if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+    TransactionBloc().createNewTransaction(
+      model.sevaUserId,
+      userId,
+      DateTime.now().millisecondsSinceEpoch,
+      transactionvalue,
+      true,
+      "TIME_REQUEST",
+      model.id,
+      model.timebankId,
+      communityId: communityId,
+      fromEmailORId: model.timebankId,
+      toEmailORId: model.timebankId,
     );
   }
 
@@ -1312,15 +1339,8 @@ Future<void> approveRequestCompletion({
       data: transactionData,
     );
 
-    await utils.createTransactionNotification(model: debitnotification);
+    // await utils.createTransactionNotification(model: debitnotification);
   }
-
-  // }
-
-  // await Firestore.instance
-  //     .collection('users')
-  //     .document(user.email)
-  //     .updateData({'currentBalance': FieldValue.increment(userAmount)});
 
   //User gets a notification with amount after tax deducation
   transactionData["credits"] = transactionvalue;
@@ -1331,45 +1351,36 @@ Future<void> approveRequestCompletion({
             : updatedRequestModel.toMap(),
         merge: true,
       );
-  await transactionBloc.updateNewTransaction(
-    model.requestMode == RequestMode.PERSONAL_REQUEST
-        ? editedTransaction.from
-        : model.timebankId,
-    editedTransaction.to,
-    editedTransaction.timestamp,
-    editedTransaction.credits,
-    editedTransaction.isApproved,
-    model.requestMode,
-    model.id,
-    model.timebankId,
-    false,
-    communityId: communityId,
-    fromEmailORId: model.requestMode == RequestMode.PERSONAL_REQUEST
-        ? editedTransaction.fromEmail_Id ?? editedTransaction.from
-        : model.timebankId,
-    toEmailORId: editedTransaction.toEmail_Id ?? editedTransaction.to,
-  );
-  NotificationsModel creditnotification = NotificationsModel(
-    timebankId: model.timebankId,
-    id: utils.Utils.getUuid(),
-    targetUserId: userId,
-    senderUserId: model.sevaUserId,
-    communityId: memberCommunityId,
-    type: NotificationType.TransactionCredit,
-    data: transactionData,
-  );
-
-  // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
-  // await utils.processLoans(
-  //   timebankId: model.timebankId,
-  //   userId: userId,
-  //   to: editedTransaction.toEmail_Id ?? editedTransaction.to,
-  //   credits: editedTransaction.credits,
+  // await transactionBloc.updateNewTransaction(
+  //   model.requestMode == RequestMode.PERSONAL_REQUEST
+  //       ? editedTransaction.from
+  //       : model.timebankId,
+  //   editedTransaction.to,
+  //   editedTransaction.timestamp,
+  //   editedTransaction.credits,
+  //   editedTransaction.isApproved,
+  //   model.requestMode,
+  //   model.id,
+  //   model.timebankId,
+  //   false,
   //   communityId: communityId,
+  //   fromEmailORId: model.requestMode == RequestMode.PERSONAL_REQUEST
+  //       ? editedTransaction.fromEmail_Id ?? editedTransaction.from
+  //       : model.timebankId,
+  //   toEmailORId: editedTransaction.toEmail_Id ?? editedTransaction.to,
+  // );
+  // NotificationsModel creditnotification = NotificationsModel(
+  //   timebankId: model.timebankId,
+  //   id: utils.Utils.getUuid(),
+  //   targetUserId: userId,
+  //   senderUserId: model.sevaUserId,
+  //   communityId: memberCommunityId,
+  //   type: NotificationType.TransactionCredit,
+  //   data: transactionData,
   // );
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
-  await utils.createTransactionNotification(model: creditnotification);
+  // await utils.createTransactionNotification(model: creditnotification);
 }
 
 Future<void> approveAcceptRequest({
@@ -1455,9 +1466,7 @@ Future<void> approveAcceptRequestForTimebank({
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,
-    communityId: requestModel.requestType == RequestType.BORROW
-        ? requestModel.participantDetails['communityId']
-        : communityId,
+    communityId: communityId,
     senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempTimebankModel.toMap(),

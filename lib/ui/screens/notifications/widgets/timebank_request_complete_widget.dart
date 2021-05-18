@@ -457,8 +457,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       );
     }
 
-    // return;
-
     FirestoreManager.readTimeBankNotification(
       notificationId: notificationId,
       timebankId: model.timebankId,
