@@ -62,6 +62,7 @@ import 'package:usage/uuid/uuid.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -2627,7 +2628,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
-            dialogTitle: 'Select a speaker'); //Label to be created
+            dialogTitle: L.of(context).select_a_speaker);
         return;
       }
 

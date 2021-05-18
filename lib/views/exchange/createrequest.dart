@@ -74,6 +74,8 @@ import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../../labels.dart';
+
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
@@ -3033,7 +3035,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
         showDialogForTitle(
-            dialogTitle: 'Select a speaker'); //Label to be created
+            dialogTitle: L.of(context).select_a_speaker);
         return;
       }
 

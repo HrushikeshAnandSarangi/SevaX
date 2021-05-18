@@ -488,7 +488,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 child: Text(
                                   L
                                       .of(context)
-                                      .option_one, //Label to be created
+                                      .option_one,
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),
@@ -497,7 +497,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 child: Text(
                                   L
                                       .of(context)
-                                      .option_two, //Label to be created
+                                      .option_two,
                                   style: TextStyle(fontSize: 12.0),
                                 ),
                               ),

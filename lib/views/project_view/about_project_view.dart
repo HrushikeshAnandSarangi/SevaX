@@ -22,6 +22,7 @@ import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../labels.dart';
 import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
@@ -169,7 +170,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               headingText(
-                                  'Registration Link'), //Label to be created
+                                  L.of(context).registration_link),
                               SizedBox(height: 10),
                               Umeshify(
                                 text: projectModel.registrationLink,

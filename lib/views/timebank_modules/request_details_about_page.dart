@@ -47,6 +47,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 // import 'package:timezone/browser.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -570,7 +571,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Request closed', //Label to be created
+                    L.of(context).request_closed,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -1338,7 +1339,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         SizedBox(width: 1),
                         Spacer(),
                         Text(
-                          'Complete', //Label to be created
+                          L.of(context).complete,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -1443,11 +1444,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           .contains(SevaCore.of(context).loggedInUser.email)
                       ? S.of(context).applied_for_request
                       : widget.requestItem.isSpeakerCompleted == true
-                          ? 'This request has now ended' //Label to be created
+                          ? L.of(context).this_request_has_now_ended
                           : widget.requestItem.oneToManyRequestAttenders
                                       .length >=
                                   widget.requestItem.numberOfApprovals
-                              ? 'Maximum number of participants reached' //Label to be created
+                              ? L.of(context).maximum_no_of_participants_reached
                               : S.of(context).particpate_in_request_question,
                   style: TextStyle(
                     fontSize: 16,
@@ -1526,8 +1527,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   context: context,
                   builder: (BuildContext viewContext) {
                     return AlertDialog(
-                      title: Text(
-                          'Are you sure you want to reject request completion?'), //Label to be created
+                      title: Text(L.of(context).reject_request_completion),
                       actions: <Widget>[
                         FlatButton(
                           color: Theme.of(context).primaryColor,
