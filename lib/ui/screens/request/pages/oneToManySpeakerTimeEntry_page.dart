@@ -276,7 +276,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
 
                               //Navigator.of(creditRequestDialogContext).pop();
                               Navigator.of(context).pop();
-                              Navigator.of(context).pop();
+                              //Navigator.of(context).pop();
                             }
                           },
                           child: Text(
