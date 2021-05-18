@@ -96,27 +96,27 @@ class ManualTimeRepository {
       timebankTransaction.toMap(),
     );
 
-    //Update Balance
-    batchWrite.updateData(
-      _firestore.document(model.userDetails.email),
-      {
-        AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
-            FieldValue.increment(model.claimedTime / 60),
-      },
-    );
+    // //Update Balance
+    // batchWrite.updateData(
+    //   _firestore.document(model.userDetails.email),
+    //   {
+    //     AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
+    //         FieldValue.increment(model.claimedTime / 60),
+    //   },
+    // );
 
     //create credit notification
-    var notificationsModel = _getCreditNotification(
-      model: model,
-    );
-    batchWrite.setData(
-      _firestore
-          .collection('users')
-          .document(model.userDetails.email)
-          .collection('notifications')
-          .document(notificationsModel.id),
-      notificationsModel.toMap(),
-    );
+    // var notificationsModel = _getCreditNotification(
+    //   model: model,
+    // );
+    // batchWrite.setData(
+    //   _firestore
+    //       .collection('users')
+    //       .document(model.userDetails.email)
+    //       .collection('notifications')
+    //       .document(notificationsModel.id),
+    //   notificationsModel.toMap(),
+    // );
 
     return batchWrite;
   }
@@ -176,17 +176,17 @@ class ManualTimeRepository {
     );
 
     //create credit notification
-    var notificationsModel = _getCreditNotification(
-      model: model,
-    );
-    batchWrite.setData(
-      _firestore
-          .collection('users')
-          .document(model.userDetails.email)
-          .collection('notifications')
-          .document(notificationsModel.id),
-      notificationsModel.toMap(),
-    );
+    // var notificationsModel = _getCreditNotification(
+    //   model: model,
+    // );
+    // batchWrite.setData(
+    //   _firestore
+    //       .collection('users')
+    //       .document(model.userDetails.email)
+    //       .collection('notifications')
+    //       .document(notificationsModel.id),
+    //   notificationsModel.toMap(),
+    // );
 
     //Clear notification
     if (notificationId != null && notificationId != '') {

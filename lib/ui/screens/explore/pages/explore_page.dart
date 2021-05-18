@@ -1024,6 +1024,9 @@ class SearchBar extends StatelessWidget {
           fillColor: Colors.white,
           prefixIcon: Icon(Icons.search),
           hintText: hintText,
+          hintStyle: TextStyle(
+            fontSize: 12,
+          ),
           contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
           border: border,
           enabledBorder: border,

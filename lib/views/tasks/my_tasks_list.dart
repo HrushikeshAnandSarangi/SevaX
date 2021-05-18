@@ -1213,7 +1213,7 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           return ReviewFeedback(
             feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
-            requestModel: requestModel,
+            // requestModel: requestModel,
           );
         },
       ),
@@ -1360,25 +1360,25 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
       // END OF CODE correction mentioned above
-      await transactionBloc.createNewTransaction(
-        requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? requestModel.sevaUserId
-            : requestModel.timebankId,
-        SevaCore.of(context).loggedInUser.sevaUserID,
-        DateTime.now().millisecondsSinceEpoch,
-        totalMinutes / 60,
-        false,
-        this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
-            ? RequestMode.TIMEBANK_REQUEST.toString()
-            : RequestMode.PERSONAL_REQUEST.toString(),
-        this.requestModel.id,
-        this.requestModel.timebankId,
-        communityId: requestModel.communityId,
-        toEmailORId: SevaCore.of(context).loggedInUser.email,
-        fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? requestModel.email
-            : requestModel.timebankId,
-      );
+      // await transactionBloc.createNewTransaction(
+      //   requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+      //       ? requestModel.sevaUserId
+      //       : requestModel.timebankId,
+      //   SevaCore.of(context).loggedInUser.sevaUserID,
+      //   DateTime.now().millisecondsSinceEpoch,
+      //   totalMinutes / 60,
+      //   false,
+      //   this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+      //       ? RequestMode.TIMEBANK_REQUEST.toString()
+      //       : RequestMode.PERSONAL_REQUEST.toString(),
+      //   this.requestModel.id,
+      //   this.requestModel.timebankId,
+      //   communityId: requestModel.communityId,
+      //   toEmailORId: SevaCore.of(context).loggedInUser.email,
+      //   fromEmailORId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+      //       ? requestModel.email
+      //       : requestModel.timebankId,
+      // );
 
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
@@ -1449,7 +1449,7 @@ class BorrowRequestFeedBackViewState extends State<BorrowRequestFeedBackView> {
             ? FeedbackType.FOR_BORROW_REQUEST_BORROWER
             : FeedbackType.FOR_BORROW_REQUEST_LENDER,
         //FeedbackType.FOR_REQUEST_CREATOR
-        requestModel: requestModel,
+        // requestModel: requestModel,
       ),
     );
   }

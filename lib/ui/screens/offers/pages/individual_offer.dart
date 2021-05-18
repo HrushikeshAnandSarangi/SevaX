@@ -542,7 +542,6 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         //         ),
                         //       ),
                         //     },
-
                         //     borderColor: Colors.grey,
                         //     padding: EdgeInsets.only(left: 0.0, right: 0.0),
                         //     groupValue: _bloc.timeOfferType,

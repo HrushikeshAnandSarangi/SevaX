@@ -75,7 +75,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               count: chatCount.toString(),
             ),
             CustomNavigationItem(
-              primaryIcon: Icons.settings,
+              primaryIcon: Icons.account_circle_sharp,
               title: S.of(context).bottom_nav_profile,
               isSelected: selected == 4,
             ),

@@ -457,8 +457,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       );
     }
 
-    // return;
-
     FirestoreManager.readTimeBankNotification(
       notificationId: notificationId,
       timebankId: model.timebankId,
@@ -550,7 +548,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         builder: (BuildContext context) {
           return ReviewFeedback(
             feedbackType: FeedbackType.FOR_BORROW_REQUEST_BORROWER,
-            requestModel: model,
+            // requestModel: model,
           );
         },
       ));
@@ -606,26 +604,26 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           : S.of(context).no_comments),
       'liveMode': !AppConfig.isTestCommunity,
     });
-    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      log('inside credit');
-      TransactionModel transmodel =
-          requestModel.transactions.firstWhere((transaction) {
-        return transaction.to == reciever.sevaUserID;
-      });
-      await TransactionBloc().createNewTransaction(
-          requestModel.timebankId,
-          requestModel.timebankId,
-          DateTime.now().millisecondsSinceEpoch,
-          transmodel.credits ?? 0,
-          true,
-          "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-          requestModel.id,
-          requestModel.timebankId,
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-          fromEmailORId: requestModel.timebankId,
-          toEmailORId: requestModel.timebankId);
-      log('success');
-    }
+    // if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    //   log('inside credit');
+    //   TransactionModel transmodel =
+    //       requestModel.transactions.firstWhere((transaction) {
+    //     return transaction.to == reciever.sevaUserID;
+    //   });
+    //   await TransactionBloc().createNewTransaction(
+    //       requestModel.timebankId,
+    //       requestModel.timebankId,
+    //       DateTime.now().millisecondsSinceEpoch,
+    //       transmodel.credits ?? 0,
+    //       true,
+    //       "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+    //       requestModel.id,
+    //       requestModel.timebankId,
+    //       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    //       fromEmailORId: requestModel.timebankId,
+    //       toEmailORId: requestModel.timebankId);
+    //   log('success');
+    // }
     await sendMessageToMember(
         context: context,
         loggedInUser: sevaCore.loggedInUser,

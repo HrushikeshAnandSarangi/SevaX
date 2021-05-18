@@ -76,9 +76,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   final String samplelink =
       "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Fumesha%40uipep.com15918788235481000%20Sales%20Records.csv?alt=media&token=d1919180-7e97-4f95-b2e3-6cca1c51c688";
 
+  PageController pageController;
+  ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
+    pageController = PageController(initialPage: 0);
 
     setup();
 
@@ -88,7 +92,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       setState(() {});
     });
     initDynamicLinks(context);
-
+    _scrollController = ScrollController()..addListener(() {});
     // setState(() {});
   }
 
@@ -100,6 +104,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         validItems = onValue.listOfElement;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose(); // dispose the controller
+    super.dispose();
+  }
+
+  // This function is triggered when the user presses the back-to-top button
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(seconds: 1), curve: Curves.easeOut);
   }
 
   Future<Null> setup() async {

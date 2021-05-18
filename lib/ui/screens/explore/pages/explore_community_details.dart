@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -67,8 +68,9 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<CommunityModel>(
-        stream: _bloc.community,
+      body: StreamBuilder<List>(
+        stream: CombineLatestStream.combine2(
+            _bloc.community, _bloc.groups, (a, b) => [a, b]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -81,7 +83,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
               child: Text(S.of(context).general_stream_error),
             );
           }
-          community = snapshot.data;
+          community = snapshot.data[0];
           timebankModel = _bloc.primaryTimebankModel();
           templist = [
             ...timebankModel.members,
@@ -112,7 +114,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 }
                 UserModel userModel = snapshot.data;
                 return ExplorePageViewHolder(
-                  hideHeader: Provider.of<UserModel>(context) != null,
+                  hideHeader: widget.isSignedUser,
                   hideFooter: true,
                   hideSearchBar: true,
                   appBarTitle: community.name,

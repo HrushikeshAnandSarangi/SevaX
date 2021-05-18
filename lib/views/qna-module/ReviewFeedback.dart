@@ -26,9 +26,11 @@ enum FeedbackType {
 class ReviewFeedback extends StatefulWidget {
   // final bool forVolunteer;
   final FeedbackType feedbackType;
-  final RequestModel requestModel;
+  // final RequestModel requestModel;
 
-  ReviewFeedback({this.feedbackType, this.requestModel});
+  ReviewFeedback({
+    this.feedbackType,
+  });
   @override
   State<StatefulWidget> createState() => ReviewFeedbackState();
 }
@@ -88,7 +90,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -441,17 +443,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                           : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
-                  hintText: (widget.requestModel.requestType ==
-                              RequestType.BORROW &&
-                          widget.requestModel.sevaUserId !=
-                              SevaCore.of(context).loggedInUser.sevaUserID)
-                      ? 'Please share your appreciation for the borrower or let them know how they can improve next time.'
-                      : (widget.requestModel.requestType ==
-                                  RequestType.BORROW &&
-                              widget.requestModel.sevaUserId ==
-                                  SevaCore.of(context).loggedInUser.sevaUserID)
-                          ? 'Please share your appreciation for the lender or let them know how they can improve next time.'
-                          : S.of(context).review_feedback_message,
+                  hintText: S.of(context).review_feedback_message,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red, //this has no effect
