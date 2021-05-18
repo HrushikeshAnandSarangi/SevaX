@@ -336,14 +336,28 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 0.0),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.only(top: 20, bottom: 60.0),
-                      child: BackButton(
-                        color: Colors.black,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        padding: EdgeInsets.only(top: 35, bottom: 50.0),
+                        child: Row(
+                          children: [
+                            BackButton(
+                              color: Theme.of(context).accentColor,
+                              onPressed: () {},
+                            ),
+                            Text(
+                              'Go Back',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     logo,
