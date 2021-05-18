@@ -4,6 +4,15 @@ class L {
   L.of(BuildContext context) {}
 
   //OFFERS LABELS STARTS HERE
+
+  String get invitation_accepted => "Invitation Accepted";
+  String get invitation_accepted_subtitle =>
+      " has accepted your offer and has shared an invitation.";
+  String get accept_offer_invitation_confirmation =>
+      "By acceting, a task will be added to your pending tasks.";
+  String get entered_credits_less_than_minimum_credits =>
+      "Entered credits should be greater than minimum credits";
+
   String get option_one => "Spot On";
   String get option_two => "One Time";
 
@@ -13,14 +22,16 @@ class L {
   String get offer_invitation_notification_title => "Offer Invitation";
   String get offer_invitation_notification_subtitle =>
       " has invited you to accept its offer.";
-
-  String get invitation_accepted => "Invitation Accepted";
-  String get invitation_accepted_subtitle =>
-      " has accepted your offer and has shared an invitation.";
-  String get accept_offer_invitation_confirmation =>
-      "By acceting, a task will be added to your pending tasks.";
-  String get entered_credits_less_than_minimum_credits =>
-      "Entered credits should be greater than minimum credits";
+  String get select_a_speaker => "Select a speaker";
+  String get registration_link => "Registration Link";
+  String get registration_link_hint => "Ex: Eventbrite link, etc.";
+  String get request_closed => "Request closed";
+  String get complete => "Complete";
+  String get this_request_has_now_ended => "This request has now ended";
+  String get maximum_no_of_participants_reached =>
+      "Maximum number of participants reached";
+  String get reject_request_completion =>
+      "Are you sure you want to reject request completion?";
 
   //OFFERS LABELS ENDS HERE
 }

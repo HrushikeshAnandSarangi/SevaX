@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ExploreEventCard extends StatelessWidget {
-  const ExploreEventCard({
-    Key key,
-    this.photoUrl,
-    this.title,
-    this.description,
-    this.location,
-    this.communityName,
-    this.time,
-    this.date,
-    this.memberList,
-    this.onTap,
-  }) : super(key: key);
+  const ExploreEventCard(
+      {Key key,
+      this.photoUrl,
+      this.title,
+      this.description,
+      this.location,
+      this.communityName,
+      this.time,
+      this.date,
+      this.memberList,
+      this.onTap,
+      this.tagsToShow})
+      : super(key: key);
 
   final String photoUrl;
   final String title;
@@ -23,11 +24,12 @@ class ExploreEventCard extends StatelessWidget {
   final String date;
   final Widget memberList;
   final VoidCallback onTap;
+  final List<String> tagsToShow;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 440,
       child: InkWell(
         onTap: onTap,
         child: Card(
@@ -78,9 +80,31 @@ class ExploreEventCard extends StatelessWidget {
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: tagsToShow
+                      .map(
+                        (label) => Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Chip(
+                            label: Text(
+                              label,
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
                 const Spacer(),
+                const SizedBox(height: 8),
                 memberList ?? Container(),
-                SizedBox(height: 12),
+                const SizedBox(height: 8),
               ],
             ),
           ),

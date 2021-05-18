@@ -12,6 +12,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -485,11 +486,11 @@ class MyTasksListState extends State<MyTaskList> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return OneToManySpeakerTimeEntry(
+                                    return OneToManySpeakerTimeEntryComplete(
                                       requestModel: model,
                                       onFinish: () async {
                                         await oneToManySpeakerCompletesRequest(
-                                            model);
+                                            context, model);
                                       },
                                     );
                                   },
@@ -603,7 +604,8 @@ class MyTasksListState extends State<MyTaskList> {
     }
   }
 
-  Future oneToManySpeakerCompletesRequest(RequestModel requestModel) async {
+  Future oneToManySpeakerCompletesRequest(
+      BuildContext context, RequestModel requestModel) async {
     NotificationsModel notificationModel = NotificationsModel(
         timebankId: requestModel.timebankId,
         targetUserId: requestModel.sevaUserId,
@@ -628,6 +630,12 @@ class MyTasksListState extends State<MyTaskList> {
         .updateData({
       'isSpeakerCompleted': true,
     });
+
+    await FirestoreManager
+        .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
+            requestModel: requestModel,
+            userEmail: SevaCore.of(context).loggedInUser.email,
+            fromNotification: false);
   }
 }
 

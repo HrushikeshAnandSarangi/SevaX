@@ -128,6 +128,13 @@ class TransactionModel extends DataModel {
   String debitCreditSymbol(id, timebankid, viewtype) {
     if (this.type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
       return "+";
+    } else if (this.type == 'TIMEBANK_TO_SPEAKER_ONETOMANY_COMPLETE' ||
+        this.type == 'TIMEBANK_TO_ATTENDEES_ONETOMANY_COMPLETE') {
+      if (viewtype == 'user') {
+        return "+";
+      } else {
+        return "-";
+      }
     } else if (viewtype == 'user') {
       return this.from == id ? "-" : "+";
     } else if (viewtype == 'timebank') {

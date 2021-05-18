@@ -46,10 +46,9 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage:
-                  userInsufficientModel.senderPhotoUrl == null ?  
-                  NetworkImage(defaultUserImageURL) :
-                  NetworkImage(userInsufficientModel.senderPhotoUrl),
+                backgroundImage: NetworkImage(
+                    userInsufficientModel.senderPhotoUrl ??
+                        defaultUserImageURL),
               ),
             ),
             Padding(

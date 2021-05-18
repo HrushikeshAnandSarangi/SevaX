@@ -7,7 +7,6 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
 
 class NearbySettingsWidget extends StatefulWidget {
   final UserModel loggedInUser;
@@ -53,131 +52,135 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   @override
   void initState() {
     super.initState();
-    log("nearby settings im getting here ${widget.loggedInUser.nearBySettings}");
-    if(widget.loggedInUser.nearBySettings==null){
-      widget.loggedInUser.nearBySettings = NearBySettings()
+    if (widget.loggedInUser?.nearBySettings == null) {
+      widget.loggedInUser?.nearBySettings = NearBySettings()
         ..isMiles = true
         ..radius = 10;
     }
-    log("nearby settings im getting here after setting ${widget.loggedInUser.nearBySettings}");
 
     selectedRadio =
-        NearbySettingsWidget.isInMiles(widget.loggedInUser.nearBySettings);
+        NearbySettingsWidget.isInMiles(widget.loggedInUser?.nearBySettings);
     rating = NearbySettingBloc.valueForSeekBar(
-            widget.loggedInUser.nearBySettings, selectedRadio)
+            widget.loggedInUser?.nearBySettings, selectedRadio)
         .toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
-    log(rating.toString() + "<<<<<<<<<<<<<<<<<");
-    return Container(
-      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          titleAndSubTitle(),
-          Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            double value = rating;
+            bool isKm = NearbySettingBloc.KILOMETERS_SELECTION == selectedRadio;
+
+            if (isKm) {
+              value = value / 1.609;
+            }
+            Navigator.of(context).pop(
+              value.toInt(),
+            );
+          },
+        ),
+        title: Text('Filters'),
+      ),
+      body: Container(
+        margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            titleAndSubTitle(),
+            Container(
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    selectedRadio == NearbySettingBloc.MILES_SELECTION
+                        ? '$minMi M'
+                        : '$minKM Kms',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    selectedRadio == NearbySettingBloc.MILES_SELECTION
+                        ? '$maxMi M'
+                        : '$maxKM Kms',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.height,
+              child: CupertinoSlider(
+                min: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                    ? minMi
+                    : minKM,
+                max: selectedRadio == NearbySettingBloc.MILES_SELECTION
+                    ? maxMi
+                    : maxKM,
+                // divisions:
+                //     selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
+                thumbColor: Theme.of(context).primaryColor,
+                activeColor: Theme.of(context).primaryColor,
+                value: rating,
+                onChanged: (newRating) {
+                  if (widget.loggedInUser != null) {
+                    _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
+                        email: widget.loggedInUser?.email,
+                        radius: newRating.toInt(),
+                        selectedRadioVal: selectedRadio));
+                  }
+                  setState(() => rating = newRating);
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  selectedRadio == NearbySettingBloc.MILES_SELECTION
-                      ? '$minMi M'
-                      : '$minKM Kms',
-                  style: TextStyle(fontSize: 12),
+                Container(
+                  child: Radio(
+                    activeColor: Theme.of(context).primaryColor,
+                    value: NearbySettingBloc.MILES_SELECTION,
+                    groupValue: selectedRadio,
+                    onChanged: (val) async {
+                      setSelectedRadio(val);
+                      if (widget.loggedInUser != null) {
+                        await NearbySettingBloc.isMiles(
+                          email: widget.loggedInUser.email,
+                          val: true,
+                        );
+                      }
+                    },
+                  ),
                 ),
-                Text(
-                  selectedRadio == NearbySettingBloc.MILES_SELECTION
-                      ? '$maxMi M'
-                      : '$maxKM Kms',
-                  style: TextStyle(fontSize: 12),
+                Container(
+                  child: Text('Miles'),
+                ),
+                Container(
+                  child: Radio(
+                    activeColor: Theme.of(context).primaryColor,
+                    value: NearbySettingBloc.KILOMETERS_SELECTION,
+                    groupValue: selectedRadio,
+                    onChanged: (val) async {
+                      setSelectedRadio(val);
+                      if (widget.loggedInUser != null) {
+                        await NearbySettingBloc.isMiles(
+                          email: widget.loggedInUser.email,
+                          val: false,
+                        );
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  child: Text('Kilometer'),
                 ),
               ],
             ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.height,
-            child: CupertinoSlider(
-              min: selectedRadio == NearbySettingBloc.MILES_SELECTION
-                  ? minMi
-                  : minKM,
-              max: selectedRadio == NearbySettingBloc.MILES_SELECTION
-                  ? maxMi
-                  : maxKM,
-              // divisions:
-              //     selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
-              thumbColor: Theme.of(context).primaryColor,
-              activeColor: Theme.of(context).primaryColor,
-              value: rating,
-              onChanged: (newRating) => {
-                _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
-                  email: widget.loggedInUser.email,
-                  radius: newRating.toInt(),
-                    selectedRadioVal: selectedRadio
-                )),
-                setState(() {
-                    rating = newRating;
-                    widget.loggedInUser.nearBySettings.radius = rating.toInt();
-                }),
-              },
-            ),
-              // onChanged: (newRating) {
-              //   _debouncer.run(() => NearbySettingBloc.udpateNearbyRadius(
-              //         email: widget.loggedInUser.email,
-              //         radius: newRating.toInt(),
-              //         selectedRadioVal: selectedRadio
-//       ));
-              //   rating = newRating;
-              //   widget.loggedInUser.nearBySettings.radius = rating.toInt();
-              //   setState(() {});
-              // },
-            ),
-          // ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                child: Radio(
-                  activeColor: Theme.of(context).primaryColor,
-                  value: NearbySettingBloc.MILES_SELECTION,
-                  groupValue: selectedRadio,
-                  onChanged: (val) async {
-                    setSelectedRadio(val);
-                    widget.loggedInUser.nearBySettings.isMiles = true;
-                    await NearbySettingBloc.isMiles(
-                      email: widget.loggedInUser.email,
-                      val: true,
-                    );
-                  },
-                ),
-              ),
-              Container(
-                child: Text('Miles'),
-              ),
-              Container(
-                child: Radio(
-                  activeColor: Theme.of(context).primaryColor,
-                  value: NearbySettingBloc.KILOMETERS_SELECTION,
-                  groupValue: selectedRadio,
-                  onChanged: (val) async {
-                    setSelectedRadio(val);
-                    widget.loggedInUser.nearBySettings.isMiles = false;
-                    await NearbySettingBloc.isMiles(
-                      email: widget.loggedInUser.email,
-                      val: false,
-                    );
-                  },
-                ),
-              ),
-              Container(
-                child: Text('Kilometre'),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -225,23 +228,28 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
     if (value == NearbySettingBloc.MILES_SELECTION) {
       rating = rating / 1.6;
       // rating = rating >= minMi && rating <= maxMi ? rating : minMi;
-      rating = rating >= minMi && rating <= maxMi ? rating :
-      rating < minMi ? minMi : maxMi;
+      rating = rating >= minMi && rating <= maxMi
+          ? rating
+          : rating < minMi
+              ? minMi
+              : maxMi;
     } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {
       rating = rating * 1.6;
       // rating = rating >= minKM && rating <= maxKM ? rating : minKM;
-      rating = rating >= minKM && rating <= maxKM ? rating :
-      rating < minKM ? minKM : maxKM;
+      rating = rating >= minKM && rating <= maxKM
+          ? rating
+          : rating < minKM
+              ? minKM
+              : maxKM;
     }
-    NearbySettingBloc.udpateNearbyRadius(
-      email: widget.loggedInUser.email,
-      radius: rating.toInt(),
-      selectedRadioVal: selectedRadio
-      // radius: rating.c,
-    );
+    if (widget.loggedInUser != null) {
+      NearbySettingBloc.udpateNearbyRadius(
+        email: widget.loggedInUser.email,
+        radius: rating.toInt(),
+      );
+    }
 
     setState(() {
-      widget.loggedInUser.nearBySettings.radius = rating.toInt();
       selectedRadio = value;
     });
   }
@@ -274,14 +282,12 @@ class NearbySettingBloc {
         : DEFAULT_RADIUS_IN_KILOMETERS;
   }
 
-  static udpateNearbyRadius({
-    String email,
-    int radius,
-    int selectedRadioVal
-  }) async {
+  static udpateNearbyRadius(
+      {String email, int radius, int selectedRadioVal}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       'nearbySettings.radius': radius,
-      'nearbySettings.isMiles': selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,
+      'nearbySettings.isMiles':
+          selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,
     });
   }
 }

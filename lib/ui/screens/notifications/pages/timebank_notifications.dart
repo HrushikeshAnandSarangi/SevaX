@@ -329,8 +329,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
                   isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
@@ -374,7 +374,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                       context,
                                       SevaCore.of(context).loggedInUser,
                                       true);
-                                  FirestoreManager.readTimeBankNotification(
+                                  await FirestoreManager
+                                      .readTimeBankNotification(
                                     notificationId: notification.id,
                                     timebankId: notification.timebankId,
                                   );
@@ -409,8 +410,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
                   isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
@@ -491,8 +492,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
                   isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
@@ -517,8 +518,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
                   isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
+                  onDismissed: () async {
+                    await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
