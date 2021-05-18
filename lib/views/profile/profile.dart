@@ -498,7 +498,7 @@ class _ProfilePageState extends State<ProfilePage> {
       actions: <Widget>[
         IconButton(
           color: Colors.black,
-          icon: Icon(Icons.settings),
+          icon: Icon(Icons.edit),
           onPressed: navigateToSettings,
         ),
       ],

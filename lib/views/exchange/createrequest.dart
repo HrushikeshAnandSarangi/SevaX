@@ -3687,22 +3687,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
   Future<List<String>> _writeToDB() async {
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
-    if (requestModel.requestType != RequestType.BORROW) {
-      log('Comes Here');
-      await TransactionBloc().createNewTransaction(
-        requestModel.timebankId,
-        requestModel.timebankId,
-        DateTime.now().millisecondsSinceEpoch,
-        requestModel.numberOfHours ?? 0,
-        true,
-        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
-        requestModel.id,
-        requestModel.timebankId,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        toEmailORId: requestModel.timebankId,
-        fromEmailORId: FlavorConfig.values.timebankId,
-      );
-    }
+    // if (requestModel.requestType != RequestType.BORROW) {
+    //   log('Comes Here');
+    //   await TransactionBloc().createNewTransaction(
+    //     requestModel.timebankId,
+    //     requestModel.timebankId,
+    //     DateTime.now().millisecondsSinceEpoch,
+    //     requestModel.numberOfHours ?? 0,
+    //     true,
+    //     "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+    //     requestModel.id,
+    //     requestModel.timebankId,
+    //     communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    //     toEmailORId: requestModel.timebankId,
+    //     fromEmailORId: FlavorConfig.values.timebankId,
+    //   );
+    // }
 
     List<String> resultVar = [];
     if (!requestModel.isRecurring) {
