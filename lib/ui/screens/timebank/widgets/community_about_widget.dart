@@ -529,7 +529,7 @@ class _CommunityAboutState extends State<CommunityAbout>
               imageUrl: timabanksList[index].photoUrl ??
                   'https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18823.jpg?size=338&ext=jpg',
               title: timabanksList[index].name,
-              newPostCount: 0,
+              membersCount: timabanksList[index].members ?? 0,
               subtitle: '',
               onTap: () {
                 if (widget.joinStatus == CompareUserStatus.JOINED) {
@@ -706,7 +706,7 @@ class ShortGroupCard extends StatelessWidget {
     this.imageUrl,
     this.title,
     this.subtitle,
-    this.newPostCount,
+    this.membersCount,
     this.padding,
     this.onTap,
     this.sponsoredWidget,
@@ -716,7 +716,7 @@ class ShortGroupCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String subtitle;
-  final int newPostCount;
+  final int membersCount;
   final bool isSelected;
   final EdgeInsetsGeometry padding;
   final VoidCallback onTap;
@@ -762,11 +762,11 @@ class ShortGroupCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 4),
-                  newPostCount != null && newPostCount != 0
+                  membersCount != null && membersCount != 0
                       ? Text(
-                          '• $newPostCount new posts',
+                          '$membersCount ${S.of(context).members}',
                           style: const TextStyle(
-                            color: Colors.blue,
+                            color: Colors.grey,
                             fontSize: 12,
                           ),
                         )

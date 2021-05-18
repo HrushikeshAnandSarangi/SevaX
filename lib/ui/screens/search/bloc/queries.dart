@@ -463,13 +463,11 @@ class Searches {
     List<CommunityModel> communityList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      log('sourceMap ${sourceMap.toString()}');
 
       if (sourceMap['softDelete'] == false) {
         CommunityModel model = CommunityModel(sourceMap);
 
         communityList.add(model);
-        log('len ${communityList.length}');
       }
     });
     communityList.sort((a, b) => a.name.compareTo(b.name));
@@ -805,5 +803,128 @@ class Searches {
     });
     communityList.sort((a, b) => a.name.compareTo(b.name));
     yield communityList;
+  }
+
+  static Future<List<TimebankModel>> getGroupsUnderCommunity(
+      {@required communityId}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxtimebanks/sevaxtimebank/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"community_id.keyword": communityId}
+            },
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<TimebankModel> timeBankList = [];
+
+    for (var map in hitList) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var timeBank = TimebankModel.fromMap(sourceMap);
+
+      timeBankList.add(timeBank);
+    }
+    return timeBankList;
+  }
+
+  static Future<List<RequestModel>> getPublicRequestsUnderTimebank(
+      {@required communityId}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"communityId.keyword": communityId}
+            },
+            {
+              "term": {"public": true}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<RequestModel> requestList = [];
+
+    for (var map in hitList) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var request = RequestModel.fromMapElasticSearch(sourceMap);
+
+      requestList.add(request);
+    }
+    return requestList;
+  }
+
+  static Future<List<ProjectModel>> getPublicEventsUnderTimebank(
+      {@required communityId}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxprojects/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"communityId.keyword": communityId}
+            },
+            {
+              "term": {"public": true}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<ProjectModel> projectList = [];
+
+    for (var map in hitList) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var project = ProjectModel.fromMap(sourceMap);
+
+      projectList.add(project);
+    }
+    return projectList;
+  }
+
+  static Future<CommunityModel> getCommunityDetails(
+      {@required communityId}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"id.keyword": communityId}
+            },
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    CommunityModel communityModel;
+
+    for (var map in hitList) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      communityModel = CommunityModel(sourceMap);
+    }
+    return communityModel;
   }
 }
