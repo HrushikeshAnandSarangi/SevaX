@@ -106,22 +106,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
+                  enabledBorder: searchBorder,
+                  focusedBorder: searchBorder,
+                  disabledBorder: searchBorder,
+                  errorBorder: searchBorder,
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
@@ -386,7 +374,7 @@ class ExploreSearchTabBar extends StatelessWidget {
           stream: _tabIndex.stream,
           builder: (context, snapshot) {
             return Wrap(
-              spacing: 0,
+              spacing: 4,
               runSpacing: 4,
               children: [
                 Container(

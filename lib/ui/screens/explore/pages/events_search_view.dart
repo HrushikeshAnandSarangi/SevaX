@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.da
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
@@ -58,40 +59,44 @@ class EventsSearchView extends StatelessWidget {
                             return Container();
                           }
                           return ExploreEventCard(
-                            onTap: () {
-                              if (isUserSignedIn != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ProjectRequests(
-                                        ComingFrom.Projects,
-                                        timebankId: event.timebankId,
-                                        projectModel: event,
-                                        timebankModel: snapshot.data,
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else {
-                                showSignInAlertMessage(
-                                  context: context,
-                                  message:
-                                      'Please Sign In/Sign up to access ${event.name}',
-                                );
-                              }
-                            },
-                            photoUrl: event.photoUrl ?? defaultProjectImageURL,
-                            title: event.name,
-                            description: event.description,
-                            location: event.address,
-                            communityName: "event.communityName ?? ''",
-                            date: DateFormat('d MMMM, y').format(date),
-                            time: DateFormat.jm().format(date),
-                            memberList: MemberAvatarListWithCount(
-                              userIds: event.associatedmembers.keys.toList(),
-                            ),
-                          );
+                              onTap: () {
+                                if (isUserSignedIn != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ProjectRequests(
+                                          ComingFrom.Projects,
+                                          timebankId: event.timebankId,
+                                          projectModel: event,
+                                          timebankModel: snapshot.data,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  showSignInAlertMessage(
+                                    context: context,
+                                    message:
+                                        'Please Sign In/Sign up to access ${event.name}',
+                                  );
+                                }
+                              },
+                              photoUrl:
+                                  event.photoUrl ?? defaultProjectImageURL,
+                              title: event.name,
+                              description: event.description,
+                              location: event.address,
+                              communityName: event.communityName ?? '',
+                              date: DateFormat('d MMMM, y').format(date),
+                              time: DateFormat.jm().format(date),
+                              memberList: MemberAvatarListWithCount(
+                                userIds: event.associatedmembers.keys.toList(),
+                              ),
+                              tagsToShow: TagBuilder(
+                                isPublic: event.public,
+                                isVirtual: event.virtualProject,
+                              ).getTags(context));
                         })
                     : ExploreEventCard(
                         onTap: () {
@@ -104,26 +109,17 @@ class EventsSearchView extends StatelessWidget {
                         title: event.name,
                         description: event.description,
                         location: event.address,
-                        communityName: "event.communityName ?? ''",
+                        communityName: event.communityName ?? '',
                         date: DateFormat('d MMMM, y').format(date),
                         time: DateFormat.jm().format(date),
                         memberList: MemberAvatarListWithCount(
                           userIds: event.associatedmembers.keys.toList(),
                         ),
+                        tagsToShow: TagBuilder(
+                          isPublic: event.public,
+                          isVirtual: event.virtualProject,
+                        ).getTags(context),
                       );
-
-                // return ExploreEventCard(
-                //   photoUrl: event.photoUrl ?? defaultProjectImageURL,
-                //   title: event.name,
-                //   description: event.description,
-                //   location: event.address,
-                //   communityName: "event.communityName ?? ''",
-                //   date: DateFormat('d MMMM, y').format(date),
-                //   time: DateFormat.jm().format(date),
-                //   memberList: MemberAvatarListWithCount(
-                //     userIds: event.associatedmembers.keys.toList(),
-                //   ),
-                // );
               },
             );
           },

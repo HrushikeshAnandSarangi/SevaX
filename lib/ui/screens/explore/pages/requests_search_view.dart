@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
+import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -42,18 +43,7 @@ class RequestsSearchView extends StatelessWidget {
                 var request = snapshot.data[index];
                 var date =
                     DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-                // return ExploreEventCard(
-                //   photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                //   title: request.title,
-                //   description: request.description,
-                //   location: request.address,
-                //   communityName: "request.communityName ?? ''",
-                //   date: DateFormat('d MMMM, y').format(date),
-                //   time: DateFormat.jm().format(date),
-                //   memberList: MemberAvatarListWithCount(
-                //     userIds: request.approvedUsers,
-                //   ),
-                // );
+
                 return isUserSignedIn
                     ? FutureBuilder<TimebankModel>(
                         future:
@@ -92,12 +82,24 @@ class RequestsSearchView extends StatelessWidget {
                             title: request.title,
                             description: request.description,
                             location: request.address,
-                            communityName: 'request.communityName ?? ' '',
+                            communityName: request.communityName ?? ' ',
                             date: DateFormat('d MMMM, y').format(date),
                             time: DateFormat.jm().format(date),
                             memberList: MemberAvatarListWithCount(
                               userIds: request.approvedUsers,
                             ),
+                            tagsToShow: TagBuilder(
+                              isPublic: request.public,
+                              isVirtual: request.virtualRequest,
+                              isMoneyRequest:
+                                  request.requestType == RequestType.CASH,
+                              isGoodsRequest:
+                                  request.requestType == RequestType.GOODS,
+                              isTimeRequest:
+                                  request.requestType == RequestType.TIME,
+                              isOneToManyRequest: request.requestType ==
+                                  RequestType.ONE_TO_MANY_REQUEST,
+                            ).getTags(context),
                           );
                         })
                     : ExploreEventCard(
@@ -111,13 +113,24 @@ class RequestsSearchView extends StatelessWidget {
                         title: request.title,
                         description: request.description,
                         location: request.address,
-                        communityName: 'request.communityName ?? ' '',
+                        communityName: request.communityName ?? ' ',
                         date: DateFormat('d MMMM, y').format(date),
                         time: DateFormat.jm().format(date),
                         memberList: MemberAvatarListWithCount(
                           userIds: request.approvedUsers,
                         ),
-                      );
+                        tagsToShow: TagBuilder(
+                          isPublic: request.public,
+                          isVirtual: request.virtualRequest,
+                          isMoneyRequest:
+                              request.requestType == RequestType.CASH,
+                          isGoodsRequest:
+                              request.requestType == RequestType.GOODS,
+                          isTimeRequest:
+                              request.requestType == RequestType.TIME,
+                          isOneToManyRequest: request.requestType ==
+                              RequestType.ONE_TO_MANY_REQUEST,
+                        ).getTags(context));
               },
             );
           },
