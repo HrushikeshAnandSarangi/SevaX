@@ -2594,24 +2594,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
             requestModel: requestModel,
             requestCreditsMode: TotalCreditseMode.CREATE_MODE,
           ),
-          SizedBox(height: 5),
-          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? Row(
-                  children: [
-                    Checkbox(
-                      activeColor: Theme.of(context).primaryColor,
-                      checkColor: Colors.white,
-                      value: createEvent,
-                      onChanged: (val) {
-                        setState(() {
-                          createEvent = val;
-                        });
-                      },
-                    ),
-                    Text('Tick to create an event for this request')
-                  ],
-                )
-              : Container(height: 0, width: 0),
+          // SizedBox(height: 5),
+          // requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          //     ? Row(
+          //         children: [
+          //           Checkbox(
+          //             activeColor: Theme.of(context).primaryColor,
+          //             checkColor: Colors.white,
+          //             value: createEvent,
+          //             onChanged: (val) {
+          //               setState(() {
+          //                 createEvent = val;
+          //               });
+          //             },
+          //           ),
+          //           Text('Tick to create an event for this request')
+          //         ],
+          //       )
+          //     : Container(height: 0, width: 0),
 
           SizedBox(height: 15),
           AddImagesForRequest(

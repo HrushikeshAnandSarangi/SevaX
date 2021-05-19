@@ -418,9 +418,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   onPressed: () async {},
                   photoUrl: oneToManyModel['requestorphotourl'],
-                  title: 'Invited to instruct a session',
-                  subTitle:
-                      '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
+                  title: oneToManyModel['requestCreatorName'],
+                  subTitle: 'added you as Speaker for request: ' +
+                      oneToManyModel['title'],
                 );
                 break;
 
