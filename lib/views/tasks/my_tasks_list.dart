@@ -127,7 +127,7 @@ class MyTasksListState extends State<MyTaskList> {
             requestModelNew = model;
 
             if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                model.accepted == false 
+                    model.accepted == false
                 //&& model.isSpeakerCompleted == false
                 ) {
               return getOneToManyTaskWidget(
@@ -484,7 +484,7 @@ class MyTasksListState extends State<MyTaskList> {
                   spacing: 8,
                   children: <Widget>[
                     model.isSpeakerCompleted
-                        ? Text('You have requested completion.')
+                        ? Text('You have requested for completion.')
                         : Container(
                             height: 35,
                             child: RaisedButton(

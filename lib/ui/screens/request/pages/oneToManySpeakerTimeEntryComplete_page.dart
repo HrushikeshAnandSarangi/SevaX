@@ -274,7 +274,8 @@ class OneToManySpeakerTimeEntryCompleteState
 
                                 Set<String> approvedUsersList =
                                     Set.from(requestModel.approvedUsers);
-                                approvedUsersList.add(widget.userModel.email);
+                                approvedUsersList.add(
+                                    SevaCore.of(context).loggedInUser.email);
                                 requestModel.approvedUsers =
                                     approvedUsersList.toList();
 

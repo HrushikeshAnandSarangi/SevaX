@@ -1990,7 +1990,10 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-    requestModel, context, UserModel userModel, bool fromNotification) async {
+    RequestModel requestModel,
+    context,
+    UserModel userModel,
+    bool fromNotification) async {
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 

@@ -1485,7 +1485,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               children: [
                 TextSpan(
                   text: widget.requestItem.isSpeakerCompleted
-                      ? 'The request is complete by speaker'
+                      ? 'The request is completed by speaker'
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
@@ -1542,7 +1542,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           onPressed: () async {
                             Navigator.of(viewContext).pop();
                             await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-                                widget.requestItem.toMap(),
+                                widget.requestItem,
                                 context,
                                 SevaCore.of(context).loggedInUser,
                                 false);
