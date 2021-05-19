@@ -12,6 +12,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -405,13 +406,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       .updateUserDetails(SevaCore.of(context).loggedInUser);
                   // snapshot.data.comm
                   // unities[index].
-                  Navigator.push(
-                    context,
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (contexts) => CommunityAbout(
-                        communityModel: communityModel,
-                        userModel: SevaCore.of(context).loggedInUser,
-                        joinStatus: status,
+                      builder: (context) => ExploreCommunityDetails(
+                        communityId: communityModell.id,
+                        isSignedUser: true,
                       ),
                     ),
                   );

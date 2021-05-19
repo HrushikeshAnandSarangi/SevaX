@@ -273,9 +273,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           radius: 22,
                         ),
                       ),
-                      FutureBuilder<List<ProjectModel>>(
-                        future: FirestoreManager.getAllPublicProjects(
-                            timebankid: timebankModel.id),
+                      StreamBuilder<List<ProjectModel>>(
+                        stream: _bloc.events,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -312,16 +311,12 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     var event = snapshot.data[index];
                                     return InkWell(
                                       onTap: () {
-                                        if (Provider.of<UserModel>(context,
-                                                listen: false) !=
-                                            null) {
+                                        if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
                                               context: context,
                                               message:
                                                   'Please Sign In/Sign up to access ${event.name}');
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
+                                        } else if (widget.isSignedUser !=
                                                 null &&
                                             isUserJoined &&
                                             community.id ==
@@ -338,20 +333,6 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               timebankModel: timebankModel,
                                             );
                                           }));
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
-                                                null &&
-                                            isUserJoined) {
-                                          switchCommunity(
-                                            message: 'Event',
-                                          );
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
-                                                null &&
-                                            !isUserJoined) {
-                                          showAlertMessage(message: event.name);
                                         }
                                       },
                                       child: Padding(
@@ -451,22 +432,12 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     var request = snapshot.data[index];
                                     return InkWell(
                                       onTap: () {
-                                        if (Provider.of<UserModel>(context,
-                                                listen: false) !=
-                                            null) {
+                                        if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
                                               context: context,
                                               message:
                                                   'Please Sign In/Sign up to access ${request.title}');
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
-                                                null &&
-                                            isUserJoined &&
-                                            community.id ==
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .currentCommunity) {
+                                        } else if (widget.isSignedUser) {
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -477,21 +448,6 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
                                             );
                                           }));
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
-                                                null &&
-                                            isUserJoined) {
-                                          switchCommunity(
-                                            message: S.of(context).request,
-                                          );
-                                        } else if (Provider.of<UserModel>(
-                                                    context,
-                                                    listen: false) !=
-                                                null &&
-                                            !isUserJoined) {
-                                          showAlertMessage(
-                                              message: request.title);
                                         }
                                       },
                                       child: Padding(

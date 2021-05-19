@@ -19,7 +19,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:path/path.dart' as pathExt;
 
-
 import '../../../../flavor_config.dart';
 
 enum SponsorsMode { ABOUT, CREATE, EDIT }
@@ -133,10 +132,23 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                             //   cropImage(_path, widget.timebankModel);
                                             // }
 
-
-                                           // Navigator.of(dialogContext).pop();
+                                            // Navigator.of(dialogContext).pop();
                                           },
                                           title: Text(S.of(context).edit),
+                                          trailing: Icon(Icons.edit),
+                                        ),
+                                        ListTile(
+                                          onTap: () {
+                                            indexPosition = index;
+
+                                            showUploadImageDialog(
+                                                context: context,
+                                                imageUrl: widget.timebankModel
+                                                    .sponsors[index].logo,
+                                                timebankModel:
+                                                    widget.timebankModel);
+                                          },
+                                          title: Text('Edit Name'),
                                           trailing: Icon(Icons.edit),
                                         ),
                                         ListTile(
@@ -195,7 +207,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       ],
     );
   }
-
 
   Widget defaultWidget() {
     return Offstage(
@@ -364,7 +375,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget addIconWidget(TimebankModel timebankModel) {
-
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: IconButton(
@@ -393,7 +403,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           // } else {
           //   cropImage(_path, timebankModel);
           // }
-
         },
       ),
     );
@@ -599,28 +608,30 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       },
     );
   }
-  void getLogoFile(TimebankModel timebankModel)async{
+
+  void getLogoFile(TimebankModel timebankModel) async {
     String _path;
     // PickedFile image =
     //     await ImagePicker().getImage(source: ImageSource.gallery);
     try {
       _path = await FilePicker.getFilePath(
-          type: FileType.custom, allowedExtensions: ['jpg','jpeg','gif','png','webp']);
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'jpeg', 'gif', 'png', 'webp']);
     } on PlatformException catch (e) {
       throw e;
     }
 
-    String _extension =
-        pathExt.extension(_path).split('?').first;
+    String _extension = pathExt.extension(_path).split('?').first;
     log("exten ${_extension}");
 
     if (_extension == 'gif' || _extension == '.gif') {
       showProgressDialog(context);
       uploadImage(File(_path), timebankModel);
     } else {
-      cropImage(_path,timebankModel);
+      cropImage(_path, timebankModel);
     }
   }
+
   Future cropImage(String path, TimebankModel timebankModel) async {
     File croppedFile;
     ImageCropper.cropImage(

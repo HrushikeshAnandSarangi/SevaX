@@ -54,11 +54,12 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
             width: 800,
             margin: EdgeInsets.only(
               left: 25,
+              right: 25,
               top: 10,
             ),
             child: Card(
               child: Container(
-                margin: const EdgeInsets.only(left: 30, bottom: 20),
+                margin: const EdgeInsets.only(left: 10, bottom: 20, right: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
