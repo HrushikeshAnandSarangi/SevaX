@@ -370,7 +370,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                 onPressed: () async {
                                   Navigator.of(viewContext).pop();
                                   await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-                                      oneToManyRequestModel,
+                                      model,
                                       context,
                                       SevaCore.of(context).loggedInUser,
                                       true);

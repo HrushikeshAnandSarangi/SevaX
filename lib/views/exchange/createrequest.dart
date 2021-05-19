@@ -3028,11 +3028,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
         requestModel.lenderReviewed = false;
         requestModel.borrowerReviewed = false;
       }
-      if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-        List<String> approvedUsers = [];
-        approvedUsers.add(requestModel.selectedInstructor.email);
-        requestModel.approvedUsers = approvedUsers;
-      }
+      // if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+      //   List<String> approvedUsers = [];
+      //   approvedUsers.add(requestModel.selectedInstructor.email);
+      //   requestModel.approvedUsers = approvedUsers;
+      // }
 
       if (requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
           (requestModel.selectedInstructor.toMap().isEmpty ||

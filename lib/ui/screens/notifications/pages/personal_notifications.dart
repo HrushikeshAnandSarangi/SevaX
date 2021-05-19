@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -403,7 +404,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return OneToManySpeakerTimeEntry(
+                                return OneToManySpeakerTimeEntryComplete(
                                   requestModel: model,
                                   onFinish: () async {
                                     await oneToManySpeakerReclaimRejection(
@@ -1547,6 +1548,11 @@ Future oneToManySpeakerInviteRejected(
   Set<String> acceptorsList = Set.from(requestModel.acceptors);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
   requestModel.acceptors = acceptorsList.toList();
+
+  //if already approved
+  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
+  approvedUsersList.remove(SevaCore.of(context).loggedInUser.email);
+  requestModel.approvedUsers = approvedUsersList.toList();
 
   //So that if a speaker withdraws and a new speaker is invited, before they accept,
   //it will show previously invited speakers time details
