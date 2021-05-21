@@ -15,21 +15,23 @@ class ProjectTemplateModel extends DataModel {
   int createdAt;
   bool softDelete;
   String registrationLink;
-
-  ProjectTemplateModel({
-    this.id,
-    this.name,
-    this.templateName,
-    this.timebankId,
-    this.communityId,
-    this.description,
-    this.creatorId,
-    this.photoUrl,
-    this.mode,
-    this.createdAt,
-    this.softDelete,
-    this.registrationLink
-  });
+  String emailId;
+  String phoneNumber;
+  ProjectTemplateModel(
+      {this.id,
+      this.name,
+      this.templateName,
+      this.timebankId,
+      this.emailId,
+      this.phoneNumber,
+      this.communityId,
+      this.description,
+      this.creatorId,
+      this.photoUrl,
+      this.mode,
+      this.createdAt,
+      this.softDelete,
+      this.registrationLink});
 
   factory ProjectTemplateModel.fromMap(Map<String, dynamic> json) =>
       ProjectTemplateModel(
@@ -40,7 +42,10 @@ class ProjectTemplateModel extends DataModel {
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
         communityId: json["communityId"] == null ? null : json["communityId"],
         description: json["description"] == null ? null : json["description"],
-        registrationLink: json["registrationLink"] == null ? null : json["registrationLink"],
+        emailId: json["email_id"] == null ? null : json["email_id"],
+        phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
+        registrationLink:
+            json["registrationLink"] == null ? null : json["registrationLink"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
         mode: json["mode"] == null
@@ -64,11 +69,13 @@ class ProjectTemplateModel extends DataModel {
         "photo_url": photoUrl == null ? null : photoUrl,
         "mode": mode == null ? null : mode.readable,
         "softDelete": softDelete ?? false,
+        "email_id": emailId == null ? null : emailId,
+        "phone_number": phoneNumber == null ? null : phoneNumber,
         "created_at": createdAt == null ? null : createdAt,
       };
 
   @override
   String toString() {
-    return 'ProjectTemplateModel{id: $id, name: $name, registrationLink: $registrationLink, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt,  softDelete: $softDelete}';
+    return 'ProjectTemplateModel{id: $id, name: $name, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, description: $description, creatorId: $creatorId, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, softDelete: $softDelete, registrationLink: $registrationLink, emailId: $emailId, phoneNumber: $phoneNumber}';
   }
 }
