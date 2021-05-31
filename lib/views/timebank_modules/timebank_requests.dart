@@ -94,7 +94,9 @@ class RequestsState extends State<RequestsModule> {
                               child: Text(
                                 S.of(context).my_requests,
                                 style: (TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                )),
                               ),
                             ),
                           ),
@@ -203,13 +205,12 @@ class RequestsState extends State<RequestsModule> {
             height: 0,
           ),
           RequestListItems(
-            parentContext: context,
-            timebankId: timebankId,
-            timebankModel: widget.timebankModel,
-            isProjectRequest: false,
-            isFromSettings: widget.isFromSettings,
-              sevaUserId:SevaCore.of(context).loggedInUser.sevaUserID
-          )
+              parentContext: context,
+              timebankId: timebankId,
+              timebankModel: widget.timebankModel,
+              isProjectRequest: false,
+              isFromSettings: widget.isFromSettings,
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
         ],
       ),
     );
@@ -288,7 +289,8 @@ class RequestListItems extends StatefulWidget {
       this.isProjectRequest,
       this.projectId,
       this.isFromSettings,
-      this.currentCoords, this.sevaUserId});
+      this.currentCoords,
+      this.sevaUserId});
 
   @override
   State<StatefulWidget> createState() {
@@ -300,20 +302,19 @@ class RequestListItemsState extends State<RequestListItems> {
   Future<Coordinates> currentCoords;
   @override
   void initState() {
-   // currentCoords = findcurrentLocation();
+    // currentCoords = findcurrentLocation();
     super.initState();
 
     if (!widget.isFromSettings) {
-      timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId,widget.sevaUserId);
+      timeBankBloc.getRequestsStreamFromTimebankId(
+          widget.timebankId, widget.sevaUserId);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Coordinates>(
-      future: findcurrentLocation(
-
-      ),
+      future: findcurrentLocation(),
       builder: (context, currentLocation) {
         if (currentLocation.connectionState == ConnectionState.waiting) {
           log(' set true');
@@ -331,7 +332,6 @@ class RequestListItemsState extends State<RequestListItems> {
                 return Text('${S.of(context).general_stream_error}');
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-
                 return LoadingIndicator();
               }
               if (snapshot.hasData) {
@@ -505,9 +505,9 @@ class RequestListItemsState extends State<RequestListItems> {
       case RequestType.GOODS:
         return getTagMainFrame(S.of(context).goods_request);
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request'); 
+        return getTagMainFrame('One To Many Request');
       case RequestType.BORROW:
-        return getTagMainFrame('Borrow Request'); 
+        return getTagMainFrame('Borrow Request');
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 
