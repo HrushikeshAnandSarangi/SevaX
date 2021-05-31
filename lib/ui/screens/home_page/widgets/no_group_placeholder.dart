@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 
@@ -25,18 +24,24 @@ class NoGroupPlaceHolder extends StatelessWidget {
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              children: <TextSpan>[
+              children: <InlineSpan>[
                 TextSpan(
                   style: TextStyle(color: Colors.grey, fontSize: 14),
-                  text: S.of(context).no_group_message + ' ',
+                  text: S.of(context).no_group_message ,
                 ),
-                TextSpan(
-                  text: S.of(context).creating_one,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                WidgetSpan(
+                  child: InkWell(
+                    onTap: navigateToCreateGroup,
+                    child: Text(
+                      S.of(context).creating_one,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = navigateToCreateGroup,
+                  // recognizer: TapGestureRecognizer()
+                  //   ..onTap = navigateToCreateGroup,
                 ),
               ],
             ),
