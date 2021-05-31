@@ -877,6 +877,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   onFinish: () async {
                     await oneToManySpeakerRequestCompleted(
                         widget.requestItem, context);
+
+                    // Navigator.of(context).pop();
                   },
                 );
               },
@@ -1363,6 +1365,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               onFinish: () async {
                                 await oneToManySpeakerRequestCompleted(
                                     widget.requestItem, context);
+
+                                // Navigator.of(context).pop();
                               },
                             );
                           },

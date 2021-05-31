@@ -3,7 +3,7 @@ import 'package:sevaexchange/models/models.dart';
 
 class SelectedSpeakerTimeDetails {
   int prepTime;
-  int speakingTime;
+  double speakingTime;
 
   SelectedSpeakerTimeDetails({
     this.prepTime,
@@ -13,7 +13,8 @@ class SelectedSpeakerTimeDetails {
   factory SelectedSpeakerTimeDetails.fromMap(Map<dynamic, dynamic> json) =>
       SelectedSpeakerTimeDetails(
         prepTime: json["prepTime"] == null ? null : json["prepTime"],
-        speakingTime: json["speakingTime"] == null ? null : json["speakingTime"],
+        speakingTime:
+            json["speakingTime"] == null ? null : json["speakingTime"],
       );
 
   Map<String, dynamic> toMap() => {
