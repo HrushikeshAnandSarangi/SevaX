@@ -10,9 +10,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_community_details_bloc.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
@@ -21,6 +19,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
@@ -30,7 +29,6 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -690,7 +688,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
         actions: [
           FlatButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
               child: Text(
                 S.of(context).cancel,
@@ -698,7 +696,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
               )),
           FlatButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => LoginPage(),
@@ -708,7 +706,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
               child: Text(
                 'Continue to Sign in',
                 style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
-              )),
+              ),),
         ],
       );
     },
