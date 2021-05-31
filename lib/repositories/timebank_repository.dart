@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -25,8 +27,26 @@ class TimebankRepository {
     return timebanks;
   }
 
-  static Stream<QuerySnapshot> getAllTimebanksOfCommunity(String communityId) {
-    return _ref.where("community_id", isEqualTo: communityId).snapshots();
+  Stream<List<TimebankModel>> getAllTimebanksOfCommunity(
+      String communityId) async* {
+    var data = _ref.where("community_id", isEqualTo: communityId).snapshots();
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+        handleData: (data, sink) {
+          List<TimebankModel> timebanks = [];
+          try {
+            data.documents.forEach((element) {
+              var timebank = TimebankModel.fromMap(element.data);
+              timebanks.add(timebank);
+            });
+            sink.add(timebanks);
+          } catch (e) {
+            sink.addError(e);
+            logger.e(sink);
+          }
+        },
+      ),
+    );
   }
 
   static Stream<List<TimebankModel>> getAllTimebanksUserIsAdminOf(
@@ -73,6 +93,32 @@ class TimebankRepository {
         },
       ),
     );
+  }
+
+  Stream<List<JoinRequestModel>> getJoinRequestsCretedByUserStream({
+    @required String userID,
+  }) async* {
+    var query = Firestore.instance
+        .collection('join_requests')
+        .where('user_id', isEqualTo: userID)
+        .snapshots();
+
+    yield* query.transform(
+        StreamTransformer<QuerySnapshot, List<JoinRequestModel>>.fromHandlers(
+            handleData: (data, sink) {
+      List<JoinRequestModel> joinRequests = [];
+      try {
+        data.documents.forEach((element) {
+          JoinRequestModel joinRequest = JoinRequestModel.fromMap(element.data);
+          if (joinRequest.userId == userID) {
+            joinRequests.add(joinRequest);
+          }
+        });
+        sink.add(joinRequests);
+      } catch (e) {
+        sink.addError(e);
+      }
+    }));
   }
 
   // static Stream<QuerySnapshot> getAllTimebanksUserIsAdminOf(

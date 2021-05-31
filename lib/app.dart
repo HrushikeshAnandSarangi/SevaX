@@ -13,8 +13,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -100,12 +99,16 @@ class MainApplication extends StatelessWidget {
           dispose: (_, b) => b.dispose(),
         ),
         Provider(
-          create: (context) => HomePageBloc(),
+          create: (context) => HomePageBaseBloc(),
           dispose: (_, b) => b.dispose(),
         ),
         Provider(
           create: (context) => userBloc,
           dispose: (_, b) => b.dispose(),
+        ),
+        Provider(
+          create: (context)=>HomePageBaseBloc(),
+          dispose: (_,b)=>b.dispose(),
         ),
         StreamProvider<UserModel>.value(
           value: userBloc.user,

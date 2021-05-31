@@ -13,7 +13,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_community_details_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
@@ -568,7 +568,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                   .loggedInUser
                                   .currentCommunity) {
                         try {
-                          Provider.of<HomePageBloc>(context, listen: false)
+                          Provider.of<HomePageBaseBloc>(context, listen: false)
                               .changeTimebank(timabanksList[index]);
                         } on Exception catch (e) {
                           log(e.toString());
@@ -586,7 +586,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ),
                         ).then((_) {
                           try {
-                            Provider.of<HomePageBloc>(context, listen: false)
+                            Provider.of<HomePageBaseBloc>(context, listen: false)
                                 .switchToPreviousTimebank();
                           } on Exception catch (e) {
                             log(e.toString());

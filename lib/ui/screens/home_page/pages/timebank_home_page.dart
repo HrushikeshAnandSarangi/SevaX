@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
@@ -62,7 +62,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       }
     });
     _homeDashBoardBloc = BlocProvider.of<HomeDashBoardBloc>(context);
-    Provider.of<HomePageBloc>(context, listen: false)
+    Provider.of<HomePageBaseBloc>(context, listen: false)
         .changeTimebank(widget.primaryTimebankModel);
     super.initState();
   }
