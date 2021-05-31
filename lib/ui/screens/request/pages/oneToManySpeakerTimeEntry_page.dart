@@ -113,7 +113,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                                     TextFormField(
                                       controller:
                                           selectedHoursPrepTimeController,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       inputFormatters: [
                                         BlacklistingTextInputFormatter(
                                           RegExp('[\\.|\\,|\\ |\\-]'),
@@ -173,7 +173,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                                     TextFormField(
                                       controller:
                                           selectedHoursDeliveryTimeController,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       inputFormatters: [
                                         BlacklistingTextInputFormatter(
                                           RegExp('[\\.|\\,|\\ |\\-]'),
