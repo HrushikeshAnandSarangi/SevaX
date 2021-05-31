@@ -930,14 +930,14 @@ class Searches {
 
   static Future<UserModel> getUserElastic({@required userId}) async {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/users/user/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
           "must": [
             {
               "term": {"sevauserid.keyword": userId}
-            },
+            }
           ]
         }
       }
