@@ -198,10 +198,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
     var auth = AuthProvider.of(context).auth;
     auth.signOut().then(
           (_) => Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => LoginPage(),),
-                          (route) => false,
-                        )
-,
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ),
+            (route) => false,
+          ),
         );
   }
 
