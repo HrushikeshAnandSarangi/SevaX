@@ -69,7 +69,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
             onPressed: () {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
-                widget.onLinkCreated(imageUrls[0]);
+                widget.onLinkCreated?.call(imageUrls[0]);
 
                 Navigator.of(context).pop();
               } else {
