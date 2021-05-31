@@ -1762,13 +1762,16 @@ class InputDonateDialog extends StatefulWidget {
   final double maxAmount;
   final double creditsNeeded;
 
-  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount, this.creditsNeeded})
-      : super(key: key);
+  const InputDonateDialog({
+    Key key,
+    this.donateAmount,
+    this.maxAmount,
+    this.creditsNeeded = 0,
+  }) : super(key: key);
 
   @override
   _InputDonateDialogState createState() => _InputDonateDialogState();
 }
-
 
 class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
@@ -1784,7 +1787,6 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
 
   @override
   Widget build(BuildContext context) {
-
     String creditsNeededFinal = widget.creditsNeeded.round().toString();
 
     return AlertDialog(

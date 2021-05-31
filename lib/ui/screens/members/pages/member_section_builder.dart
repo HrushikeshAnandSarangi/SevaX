@@ -104,7 +104,8 @@ class MemberSectionBuilder extends StatelessWidget {
             .contains(type)) {
       items.add(
         PopupMenuItem(
-          child: textAndImageIconWidget("images/donate.png", S.of(context).donate, context),
+          child: textAndImageIconWidget(
+              "images/donate.png", S.of(context).donate, context),
           value: ActionType.DONATE,
         ),
       );
@@ -115,7 +116,8 @@ class MemberSectionBuilder extends StatelessWidget {
           if ([MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
-                child: textAndImageIconWidgetDemote("images/user_icon.png", 0xFFFE86C60, S.of(context).demote, context),
+                child: textAndImageIconWidgetDemote("images/user_icon.png",
+                    0xFFFE86C60, S.of(context).demote, context),
                 //0xFFFE86C60 (red)
                 value: ActionType.DEMOTE,
               ),
@@ -126,7 +128,8 @@ class MemberSectionBuilder extends StatelessWidget {
           if ([MemberType.SUPER_ADMIN, MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
-                child: textAndImageIconWidget("images/user_icon.png", S.of(context).promote, context),
+                child: textAndImageIconWidget(
+                    "images/user_icon.png", S.of(context).promote, context),
                 value: ActionType.PROMOTE,
               ),
             );
@@ -134,7 +137,8 @@ class MemberSectionBuilder extends StatelessWidget {
           if ([MemberType.SUPER_ADMIN, MemberType.CREATOR].contains(type)) {
             items.add(
               PopupMenuItem(
-                child: textAndImageIconWidgetDemote("images/user_icon.png", 0xFFFE86C60, S.of(context).demote, context),
+                child: textAndImageIconWidgetDemote("images/user_icon.png",
+                    0xFFFE86C60, S.of(context).demote, context),
                 value: ActionType.DEMOTE,
               ),
             );
@@ -146,13 +150,15 @@ class MemberSectionBuilder extends StatelessWidget {
               .contains(type)) {
             items.add(
               PopupMenuItem(
-                child: textAndImageIconWidget("images/user_icon.png", S.of(context).promote, context),
+                child: textAndImageIconWidget(
+                    "images/user_icon.png", S.of(context).promote, context),
                 value: ActionType.PROMOTE,
               ),
             );
             items.add(
               PopupMenuItem(
-                child: textAndImageIconWidget("images/delete.png", S.of(context).remove, context),
+                child: textAndImageIconWidget(
+                    "images/delete.png", S.of(context).remove, context),
                 value: ActionType.REMOVE,
               ),
             );
@@ -163,7 +169,8 @@ class MemberSectionBuilder extends StatelessWidget {
       if (section == UsersSection.MEMBERS) {
         items.add(
           PopupMenuItem(
-            child: textAndIconWidget(Icons.exit_to_app, S.of(context).exit, context),
+            child: textAndIconWidget(
+                Icons.exit_to_app, S.of(context).exit, context),
             value: ActionType.EXIT,
           ),
         );
