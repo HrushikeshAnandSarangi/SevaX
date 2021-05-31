@@ -6,7 +6,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
@@ -197,12 +197,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Future<void> _signOut(BuildContext context) async {
     var auth = AuthProvider.of(context).auth;
     auth.signOut().then(
-          (_) => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => SplashView(),
-            ),
-          ),
+          (_) => Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => LoginPage(),),
+                          (route) => false,
+                        )
+,
         );
   }
 
