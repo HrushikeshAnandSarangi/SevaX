@@ -30,7 +30,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -1010,7 +1009,16 @@ class CreateEditCommunityViewFormState
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
+    
                                       });
+                                      if (!hasRegisteredLocation()) {
+                                      showDialogForSuccess(
+                                          dialogTitle: S
+                                              .of(context)
+                                              .timebank_location_error,
+                                          err: true);
+                                      return;
+                                    }
                                       if (globals.timebankAvatarURL == null) {
                                         setState(() {
                                           this.communityImageError =
@@ -1122,35 +1130,14 @@ class CreateEditCommunityViewFormState
                                         // _billingInformationKey.currentState.reset();
                                         Navigator.of(context)
                                             .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SevaCore(
-                                                    loggedInUser: user,
-                                                    child: HomePageRouter(),
-                                                  ),
-                                                ),
-                                                (Route<dynamic> route) =>
-                                                    false);
-
-                                        // Navigator.of(context).pushReplacement(
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           HomePageRouter()),
-                                        // );
-
-                                        // Navigator.pushReplacement(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) =>
-                                        //         BillingPlanDetails(
-                                        //       user: user,
-                                        //       isPlanActive: false,
-                                        //       activePlanId: "",
-                                        //       isPrivateTimebank:
-                                        //           timebankModel.private,
-                                        //     ),
-                                        //   ),
-                                        // );
+                                          MaterialPageRoute(
+                                            builder: (context) => SevaCore(
+                                              loggedInUser: user,
+                                              child: HomePageRouter(),
+                                            ),
+                                          ),
+                                          (Route<dynamic> route) => false,
+                                        );
                                       }
                                     } else {
                                       setState(() {
@@ -1159,7 +1146,7 @@ class CreateEditCommunityViewFormState
                                             .timebank_account_error;
                                       });
                                     }
-                                  } else {}
+                                  }
                                 } else {
                                   if (_formKey.currentState.validate()) {
                                     if (!hasRegisteredLocation()) {
