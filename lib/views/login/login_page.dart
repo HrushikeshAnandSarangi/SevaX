@@ -347,7 +347,9 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             BackButton(
                               color: Theme.of(context).accentColor,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                             ),
                             Text(
                               'Go Back',
