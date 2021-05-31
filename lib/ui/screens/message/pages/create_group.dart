@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -134,16 +135,20 @@ class CreateGroupPage extends StatelessWidget {
                       StreamBuilder<String>(
                         stream: bloc.groupName,
                         builder: (context, snapshot) {
-                          _controller.value = _controller.value.copyWith(
-                            text: snapshot.data,
-                            composing: TextRange(start: 0, end: 0),
-                          );
+                          // _controller.value = _controller.value.copyWith(
+                          //   text: snapshot.data,
+                          //   composing: TextRange(start: 0, end: 0),
+                          // );
 
-                          return TextField(
-                            controller: _controller,
-                            onChanged: bloc.onGroupNameChanged,
-                            decoration: InputDecoration(
+                          return CustomTextField(
+                            value: snapshot.data != null
+                                    ? snapshot.data
+                                    : null,
+                                controller: _controller,
+                                onChanged: bloc.onGroupNameChanged, 
+                                decoration: InputDecoration(
                               errorMaxLines: 2,
+                              
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -157,8 +162,9 @@ class CreateGroupPage extends StatelessWidget {
                                 fontSize: 18,
                                 color: Colors.grey,
                               ),
-                            ),
+                            ),   
                           );
+                          
                         },
                       ),
                       Divider(),

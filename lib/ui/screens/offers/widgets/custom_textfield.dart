@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
   final int errorMaxLines;
   final void Function(String) onSaved;
+  final InputDecoration decoration;
   CustomTextField({
     Key key,
     this.heading,
@@ -40,7 +41,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.errorMaxLines,
     this.onSaved,
-    this.controller,
+    this.controller, this.decoration,
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
@@ -86,7 +87,7 @@ class CustomTextField extends StatelessWidget {
           inputFormatters: formatters,
           textCapitalization:
               textCapitalization ?? TextCapitalization.sentences,
-          decoration: InputDecoration(
+          decoration: decoration??InputDecoration(
             hintText: hint ?? '',
             errorText: error,
             errorMaxLines: errorMaxLines,
