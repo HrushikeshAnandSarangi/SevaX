@@ -155,7 +155,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   } else {
     location = locationVal;
   }
-  AppConfig.loggedInEmail=userEmailId;
+  AppConfig.loggedInEmail = userEmailId;
   deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail).updateData({
     'deviceDetails': deviceDetails.toMap(),
@@ -485,11 +485,8 @@ Future<Map<String, dynamic>> removeMemberFromGroup({
   return data;
 }
 
-Future<Map<String, dynamic>> removeMemberFromTimebank({
-  String sevauserid,
-  String timebankId,
-  Timebank
-}) async {
+Future<Map<String, dynamic>> removeMemberFromTimebank(
+    {String sevauserid, String timebankId, Timebank}) async {
   String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
 
@@ -522,7 +519,9 @@ Future storeRemoveMemberLog({
     'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
     'timestamp': DateTime.now().millisecondsSinceEpoch,
     'communityId': communityId,
-    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+        ? false
+        : true,
     'memberDetails': {
       'email': memberEmail,
       'id': memberUid,
@@ -540,7 +539,7 @@ Future storeRemoveMemberLog({
       'timebankTitle': timebankTitle,
     },
   });
-  logger.i('storeRemoveMemberLog response: '  + response.toString());
+  logger.i('storeRemoveMemberLog response: ' + response.toString());
   return response;
 }
 
@@ -560,7 +559,7 @@ Future<ProfanityImageModel> checkProfanityForImage(
 
   var result = await http.post(
     "https://proxy.sevaexchange.com/" +
-        "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
+        "https://us-central1-sevaxproject4sevax.cloudfunctions.net/visionApi",
     headers: {
       "Content-Type": "application/json",
       "Access-Control": "Allow-Headers",
