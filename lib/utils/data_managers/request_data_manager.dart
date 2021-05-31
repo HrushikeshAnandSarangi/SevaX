@@ -659,9 +659,9 @@ Future<List<ProjectModel>> getAllPublicProjects({String timebankid}) async {
       .then((data) {
     data.documents.forEach(
       (documentSnapshot) {
-        ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
-        model.id = documentSnapshot.documentID;
-        projectsList.add(model);
+        // ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+        // model.id = documentSnapshot.documentID;
+        // projectsList.add(model);
       },
     );
   });
@@ -683,6 +683,7 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
         List<ProjectModel> projectsList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
+            // var a = Map<String, dynamic>.from(documentSnapshot.data);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
             projectsList.add(model);
