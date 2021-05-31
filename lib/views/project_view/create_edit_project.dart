@@ -479,9 +479,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   projectModel.emailId = value;
                 },
                 initialValue: widget.isCreateProject
-                    ? SevaCore.of(context).loggedInUser.email
-                    : projectModel.emailId ??
-                        SevaCore.of(context).loggedInUser.email,
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.emailId ??
+                            SevaCore.of(context).loggedInUser.email
+                        : projectModel.emailId ??
+                            SevaCore.of(context).loggedInUser.email
+                    : SevaCore.of(context).loggedInUser.email,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black54),
@@ -527,10 +530,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 },
                 maxLength: 15,
                 initialValue: widget.isCreateProject
-                    ? ""
-                    : projectModel.phoneNumber != null
-                        ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
-                        : '',
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.phoneNumber ?? ""
+                        : projectModel.phoneNumber != null
+                            ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
+                            : ''
+                    : '',
                 decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
@@ -797,7 +802,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.pendingRequests = [];
                           projectModel.timebankId = widget.timebankId;
                           projectModel.photoUrl = globals.projectsAvtaarURL;
-                          projectModel.emailId =
+                          projectModel.emailId = projectModel.emailId ??
                               SevaCore.of(context).loggedInUser.email;
                           projectModel.location = location;
                           int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -832,7 +837,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 projectModel.createdAt;
                             projectTemplateModel.mode = projectModel.mode;
                             projectTemplateModel.softDelete = false;
-
+                            projectTemplateModel.emailId = projectModel.emailId;
+                            projectTemplateModel.phoneNumber =
+                                projectModel.phoneNumber;
                             await FirestoreManager.createProjectTemplate(
                                 projectTemplateModel: projectTemplateModel);
                           }
