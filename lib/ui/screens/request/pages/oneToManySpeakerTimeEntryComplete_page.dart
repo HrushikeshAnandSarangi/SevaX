@@ -116,7 +116,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                       TextFormField(
                                         controller:
                                             selectedHoursPrepTimeController,
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         inputFormatters: [
                                           BlacklistingTextInputFormatter(
                                             RegExp('[\\.|\\,|\\ |\\-]'),
@@ -182,7 +182,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                       TextFormField(
                                         controller:
                                             selectedHoursDeliveryTimeController,
-                                        keyboardType: TextInputType.text,
+                                        keyboardType: TextInputType.number,
                                         inputFormatters: [
                                           BlacklistingTextInputFormatter(
                                             RegExp('[\\.|\\,|\\ |\\-]'),
