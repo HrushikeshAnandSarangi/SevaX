@@ -316,10 +316,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       );
                       return;
                     }
-                    if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
-
                         showDialog(
                             barrierDismissible: false,
                             context: context,
@@ -344,13 +342,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
                         writeToDB();
                       }
-                    } else {
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context).location_not_added),
-                        ),
-                      );
-                    }
+                    
                   },
                   child: Text(
                     S.of(context).update_feed,
