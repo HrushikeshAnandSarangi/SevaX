@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,10 +43,10 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   double rating;
   int selectedRadio;
   final _debouncer = Debouncer(milliseconds: 700);
-  static const double minKM = 3;
-  static const double maxKM = 100;
-  static const double minMi = 2;
-  static const double maxMi = 50;
+  static const double minKM = 1.6;
+  static const double maxKM = 160;
+  static const double minMi = 1;
+  static const double maxMi = 100;
 
   @override
   void initState() {
