@@ -29,7 +29,7 @@ Future<String> createDynamicLinkFor({
   final DynamicLinkParameters parameters = DynamicLinkParameters(
     uriPrefix: FlavorConfig.values.dynamicLinkUriPrefix,
     link: Uri.parse(
-        'https://www.sevaexchange.com?invitedMemberEmail=$inviteeEmail&communityId=$communityId&primaryTimebankId=$primaryTimebankId'),
+        'http://web.sevaxapp.com?invitedMemberEmail=$inviteeEmail&communityId=$communityId&primaryTimebankId=$primaryTimebankId'),
     androidParameters: AndroidParameters(
       packageName: FlavorConfig.values.packageName,
       minimumVersion: 0,
