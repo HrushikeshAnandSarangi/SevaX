@@ -13,7 +13,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -260,7 +260,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     return InkWell(
       onTap: () {
         try {
-          Provider.of<HomePageBloc>(context, listen: false)
+          Provider.of<HomePageBaseBloc>(context, listen: false)
               .changeTimebank(timebank);
         } on Exception catch (e) {
           logger.e(e);
@@ -278,7 +278,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           ),
         ).then((_) {
           try {
-            Provider.of<HomePageBloc>(context, listen: false)
+            Provider.of<HomePageBaseBloc>(context, listen: false)
                 .switchToPreviousTimebank();
           } on Exception catch (e) {
             logger.e(e);

@@ -391,7 +391,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                 });
 
                                             //give credits to timebank, then to speaker and attendees
-                                            int totalCredits = ((requestModel
+                                            double totalCredits = ((requestModel
                                                         .maxCredits *
                                                     tempAttendeesList.length) +
                                                 requestModel
@@ -404,7 +404,7 @@ class OneToManyCreatorCompleteRequestPageState
                                             log('Total Credits: ' +
                                                 totalCredits.toString());
 
-                                            int creditsToSpeaker = requestModel
+                                            double creditsToSpeaker = requestModel
                                                     .selectedSpeakerTimeDetails
                                                     .prepTime +
                                                 requestModel

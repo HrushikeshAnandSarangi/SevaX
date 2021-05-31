@@ -269,8 +269,8 @@ class OneToManySpeakerTimeEntryCompleteState
                                 //store form input to map in requestModel
                                 requestModel.selectedSpeakerTimeDetails
                                     .prepTime = prepTime;
-                                requestModel.selectedSpeakerTimeDetails
-                                    .speakingTime = speakingTime;
+                                // requestModel.selectedSpeakerTimeDetails
+                                //     .speakingTime = speakingTime;
 
                                 Set<String> approvedUsersList =
                                     Set.from(requestModel.approvedUsers);

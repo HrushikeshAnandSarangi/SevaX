@@ -7,24 +7,24 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/groups/pages/group_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
-import 'package:sevaexchange/ui/screens/request/pages/requests_tabs.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -42,7 +42,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
   List<Widget> pages = [];
   bool isAdmin = false;
-  int tabLength = 7;
+  int tabLength = 8;
 
   @override
   void initState() {
@@ -86,6 +86,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       S.of(context).projects,
       S.of(context).requests,
       S.of(context).offers,
+      S.of(context).groups.firstWordUpperCase(),
       S.of(context).about,
       S.of(context).members,
       S.of(context).manage,
@@ -236,6 +237,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                           AppConfig.helpIconContextMember =
                               HelpContextMemberType.offers;
                           break;
+                        case 5:
+                          AppConfig.helpIconContextMember =
+                              HelpContextMemberType.groups;
+                          break;
                         default:
                           AppConfig.helpIconContextMember =
                               HelpContextMemberType.seva_community;
@@ -279,6 +284,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         OfferRouter(
                           timebankId: primaryTimebank.id,
                           timebankModel: primaryTimebank,
+                        ),
+                        GroupPage(
+                          communityId: primaryTimebank.communityId,
                         ),
                         TimeBankAboutView.of(
                           timebankModel: primaryTimebank,

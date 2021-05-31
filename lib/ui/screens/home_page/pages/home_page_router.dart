@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
@@ -22,7 +21,6 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../flavor_config.dart';
@@ -69,6 +67,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
+        Provider.of<HomePageBaseBloc>(context, listen: false).init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
           Provider.of<MembersBloc>(context, listen: false)
               .init(user.currentCommunity);
@@ -77,6 +76,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               await Provider.of<MembersBloc>(context, listen: false)
                   .members
                   .first;
+          
 
           _messageBloc.fetchAllMessage(
             user.currentCommunity,
