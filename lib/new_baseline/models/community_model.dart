@@ -353,7 +353,7 @@ class CommunityModel extends DataModel {
       object['id'] = this.id;
     }
     if (this.name != null && this.name.isNotEmpty) {
-      object['name'] = this.name;
+      object['name'] = this.name.trim();
     }
     if (this.billingStmtNo != null || this.billingStmtNo.isNotEmpty) {
       object['billingStmtNo'] = this.billingStmtNo;

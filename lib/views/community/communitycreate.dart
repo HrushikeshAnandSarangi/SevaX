@@ -186,7 +186,10 @@ class CreateEditCommunityViewFormState
         if (communitynName != s) {
           setState(() {});
           SearchManager.searchCommunityForDuplicate(queryString: s.trim())
-              .then((commFound) {
+              .catchError((onError) {
+            communityFound = false;
+            errTxt = null;
+          }).then((commFound) {
             if (commFound) {
               setState(() {
                 communityFound = true;
@@ -1009,16 +1012,15 @@ class CreateEditCommunityViewFormState
                                     if (isBillingDetailsProvided) {
                                       setState(() {
                                         this._billingDetailsError = '';
-    
                                       });
                                       if (!hasRegisteredLocation()) {
-                                      showDialogForSuccess(
-                                          dialogTitle: S
-                                              .of(context)
-                                              .timebank_location_error,
-                                          err: true);
-                                      return;
-                                    }
+                                        showDialogForSuccess(
+                                            dialogTitle: S
+                                                .of(context)
+                                                .timebank_location_error,
+                                            err: true);
+                                        return;
+                                      }
                                       if (globals.timebankAvatarURL == null) {
                                         setState(() {
                                           this.communityImageError =
