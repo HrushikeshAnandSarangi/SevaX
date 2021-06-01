@@ -312,15 +312,17 @@ class _InterestViewNewState extends State<InterestViewNew> {
                           children: _selectedInterests.values
                               .toList()
                               .map(
-                                (value) => CustomChip(
-                                  title: value,
-                                  onDelete: () {
-                                    String id = interests.keys.firstWhere(
-                                        (k) => interests[k] == value);
-                                    _selectedInterests.remove(id);
-                                    setState(() {});
-                                  },
-                                ),
+                                (value) => value != null && value != ''
+                                    ? CustomChip(
+                                        title: value,
+                                        onDelete: () {
+                                          String id = interests.keys.firstWhere(
+                                              (k) => interests[k] == value);
+                                          _selectedInterests.remove(id);
+                                          setState(() {});
+                                        },
+                                      )
+                                    : Container(),
                               )
                               .toList(),
                         ),
