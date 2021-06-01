@@ -27,7 +27,6 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
@@ -49,6 +48,7 @@ import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.da
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -59,7 +59,6 @@ import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
-import 'package:sevaexchange/widgets/add_images_for_request.dart';
 
 import '../../flavor_config.dart';
 import '../../labels.dart';
@@ -1918,6 +1917,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                   requestModel,
                 )
               : Container(),
+          SizedBox(height: 20),
+          AddImagesForRequest(
+            onLinksCreated: (List<String> imageUrls) {
+              widget.requestModel.imageUrls = imageUrls;
+            },
+            selectedList: widget.requestModel.imageUrls,
+          ),
           SizedBox(height: 20),
           Text(
             S.of(context).max_credits,
