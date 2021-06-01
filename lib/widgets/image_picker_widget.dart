@@ -54,8 +54,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          {FocusScope.of(context).unfocus(), imagePicker.showDialog(context)},
+      onTap: () => {
+        FocusScope.of(context).requestFocus(new FocusNode()),
+        imagePicker.showDialog(context)
+      },
       child: widget.child,
     );
   }

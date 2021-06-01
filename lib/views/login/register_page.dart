@@ -274,6 +274,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get _imagePicker {
     return GestureDetector(
       onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
         imagePicker.showDialog(context);
       },
       child: SizedBox(
@@ -653,6 +654,8 @@ class _RegisterPageState extends State<RegisterPage>
                               ),
                               onPressed: () {
                                 Navigator.pop(viewContext);
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
                                 imagePicker.showDialog(context);
                                 isLoading = false;
                                 return;
