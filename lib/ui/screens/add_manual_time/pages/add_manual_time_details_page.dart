@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/bloc/add_manual_time_bloc.dart';
@@ -109,6 +110,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                           children: <Widget>[
                             TextField(
                               keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$"))],
                               onChanged: _bloc.onHoursChanged,
                             ),
                             Text(S.of(context).hour(3)),
