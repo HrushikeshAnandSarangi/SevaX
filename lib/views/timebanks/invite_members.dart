@@ -12,21 +12,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -38,9 +34,9 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
-import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -285,7 +281,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     ),
                   ),
                   onTap: () async {
-                    _asyncInputDialog(context);
+                    _asyncInputDialog(context,SevaCore.of(context).loggedInUser);
                   },
                 ),
               )
@@ -1052,7 +1048,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  Future<String> _asyncInputDialog(BuildContext context) async {
+  Future<String> _asyncInputDialog(BuildContext context,UserModel user) async {
     String timebankCode = createCryptoRandomString();
 
     return showDialog<String>(
@@ -1097,6 +1093,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     builder: (context) => TimebankCodeWidget(
                       timebankCodeModel: codeModel,
                       timebankName: widget.timebankModel.name,
+                      user:user,
                     ),
                   ),
                 );
