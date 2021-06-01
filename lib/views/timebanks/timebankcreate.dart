@@ -189,7 +189,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.liveMode = !AppConfig.isTestCommunity;
     timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
-    timebankModel.timebankConfigurations = getGroupConfigurationModel();
+    timebankModel.timebankConfigurations =
+        parentTimebankModel.timebankConfigurations ??
+            getNeighbourhoodPlanConfigurationModel();
     if (sponsored == true &&
         !isAccessAvailable(parentTimebankModel,
             SevaCore.of(context).loggedInUser.sevaUserID) &&

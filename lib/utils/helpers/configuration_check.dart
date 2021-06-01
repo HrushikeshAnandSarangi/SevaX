@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -25,7 +27,8 @@ class ConfigurationCheck extends StatelessWidget {
   }
 
   static bool checkAllowedConfiguartions(MemberType role, String actionType) {
-    TimebankConfigurations configurations = AppConfig.timebankConfigurations;
+    TimebankConfigurations configurations =
+        AppConfig.timebankConfigurations ?? getConfigurationModel();
     switch (role) {
       case MemberType.MEMBER:
         return configurations.member != null &&
@@ -59,27 +62,32 @@ void actionNotAllowedDialog(BuildContext context) {
   showDialog(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(S.of(context).alert),
-          content: Text(
-              'This action is Restricted for you by owner the of the seva Community.'),
-          actions: [
-            FlatButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(
-                S.of(context).ok,
-              ),
-              textColor: Colors.deepOrange,
-            )
-          ],
-        );
+        return permissionsAlertDialog(dialogContext);
       });
+}
+
+Widget permissionsAlertDialog(BuildContext context) {
+  return AlertDialog(
+    title: Text(S.of(context).alert),
+    content: Text(
+        'This action is Restricted for you by owner the of the seva Community.'),
+    actions: [
+      FlatButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(
+          S.of(context).ok,
+        ),
+        textColor: Colors.deepOrange,
+      )
+    ],
+  );
 }
 
 TimebankConfigurations getConfigurationModel() {
   return TimebankConfigurations(
     admin: [
       "create_feeds",
+      "billing_access",
       "accept_offers",
       "accept_requests",
       //"create_borrow_request",
@@ -104,6 +112,7 @@ TimebankConfigurations getConfigurationModel() {
       "create_public_event",
       "create_endorsed_group",
       "create_private_group"
+          "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -119,9 +128,11 @@ TimebankConfigurations getConfigurationModel() {
       "create_public_offer",
       "create_endorsed_group",
       "create_private_group"
+          "one_to_many_offer"
     ],
     superAdmin: [
       "create_feeds",
+      "billing_access",
       "accept_offers",
       "accept_requests",
       //"create_borrow_request",
@@ -146,6 +157,7 @@ TimebankConfigurations getConfigurationModel() {
       "create_public_event",
       "create_endorsed_group",
       "create_private_group"
+          "one_to_many_offer"
     ],
   );
 }
@@ -231,7 +243,54 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "billing_access",
       "accept_offers",
       "accept_requests",
-      //"create_borrow_request",
+      "create_events",
+      "create_time_offers",
+      "create_time_request",
+      "create_group",
+      "promote_user",
+      "demote_user",
+      "create_virtual_request",
+      "create_public_request",
+      "create_virtual_offer",
+      "create_public_offer",
+    ],
+    member: [
+      "create_feeds",
+      "accept_offers",
+      "accept_requests",
+      "create_time_offers",
+      "create_time_request",
+      "create_group",
+      "create_virtual_request",
+      "create_virtual_offer",
+      "create_public_offer",
+    ],
+    superAdmin: [
+      "create_feeds",
+      "billing_access",
+      "accept_offers",
+      "accept_requests",
+      "create_events",
+      "create_time_offers",
+      "create_time_request",
+      "create_group",
+      "promote_user",
+      "demote_user",
+      "create_virtual_request",
+      "create_public_request",
+      "create_virtual_offer",
+      "create_public_offer",
+    ],
+  );
+}
+
+TimebankConfigurations getGroupConfigurationModel() {
+  return TimebankConfigurations(
+    admin: [
+      "create_feeds",
+      "billing_access",
+      "accept_offers",
+      "accept_requests",
       "create_events",
       "create_goods_offers",
       "create_goods_request",
@@ -239,11 +298,8 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "create_money_request",
       "create_time_offers",
       "create_time_request",
-      "invite_bulk_members",
-      "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -270,6 +326,7 @@ TimebankConfigurations getNeighbourhoodPlanConfigurationModel() {
       "create_private_group"
     ],
     superAdmin: [
+      "billing_access",
       "create_feeds",
       "billing_access",
       "accept_offers",
@@ -328,7 +385,8 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -343,7 +401,8 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     superAdmin: [
       "create_feeds",
@@ -371,7 +430,8 @@ TimebankConfigurations getNonProfitConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
   );
 }
@@ -404,7 +464,8 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -419,7 +480,8 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     superAdmin: [
       "create_feeds",
@@ -447,7 +509,8 @@ TimebankConfigurations getEnterpriseConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
   );
 }
@@ -480,7 +543,8 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -495,7 +559,8 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     superAdmin: [
       "create_feeds",
@@ -523,7 +588,8 @@ TimebankConfigurations getCommunityPlanConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
   );
 }
@@ -556,7 +622,8 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -571,7 +638,8 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     superAdmin: [
       "create_feeds",
@@ -599,31 +667,28 @@ TimebankConfigurations getCommunityPlusPlanConfigurationModel() {
       "create_virtual_event",
       "create_public_event",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
   );
 }
 
-TimebankConfigurations getGroupConfigurationModel() {
+TimebankConfigurations getPrivateConfigurationModel() {
   return TimebankConfigurations(
     admin: [
       "create_feeds",
       "billing_access",
       "accept_offers",
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
-      "create_goods_request",
       "create_money_offers",
-      "create_money_request",
       "create_time_offers",
       "create_time_request",
       "invite_bulk_members",
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -631,8 +696,8 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_public_offer",
       "create_virtual_event",
       "create_public_event",
-      "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     member: [
       "create_feeds",
@@ -647,26 +712,23 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_virtual_offer",
       "create_public_offer",
       "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
     superAdmin: [
-      "billing_access",
       "create_feeds",
+      "billing_access",
       "accept_offers",
       "accept_requests",
-      //"create_borrow_request",
       "create_events",
       "create_goods_offers",
-      "create_goods_request",
       "create_money_offers",
-      "create_money_request",
       "create_time_offers",
       "create_time_request",
       "invite_bulk_members",
       "create_group",
       "promote_user",
       "demote_user",
-      //"create_borrow_request",
       "create_onetomany_request",
       "create_virtual_request",
       "create_public_request",
@@ -674,8 +736,8 @@ TimebankConfigurations getGroupConfigurationModel() {
       "create_public_offer",
       "create_virtual_event",
       "create_public_event",
-      "create_endorsed_group",
-      "create_private_group"
+      "create_private_group",
+      "one_to_many_offer"
     ],
   );
 }

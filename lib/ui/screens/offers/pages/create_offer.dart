@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -57,12 +58,17 @@ class _CreateOfferState extends State<CreateOffer> {
                   ),
                   TransactionsMatrixCheck.checkAllowedTransaction(
                           'onetomany_offers')
-                      ? OneToManyOffer(
-                          timebankId: widget.timebankId,
-                          loggedInMemberUserId:
-                              SevaCore.of(context).loggedInUser.sevaUserID,
-                          timebankModel: widget.timebankModel,
-                        )
+                      ? ConfigurationCheck.checkAllowedConfiguartions(
+                              memberType(widget.timebankModel,
+                                  SevaCore.of(context).loggedInUser.sevaUserID),
+                              'one_to_many_offer')
+                          ? OneToManyOffer(
+                              timebankId: widget.timebankId,
+                              loggedInMemberUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              timebankModel: widget.timebankModel,
+                            )
+                          : permissionsAlertDialog(context)
                       : UpgradePlanBanner(
                           activePlanName: AppConfig.paymentStatusMap['planId'],
                           details:

@@ -87,7 +87,11 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'create_private_group',
         title_en: 'Create private group',
-        type: 'group')
+        type: 'group'),
+    ConfigurationModel(
+        id: 'one_to_many_offer',
+        title_en: 'Create One To Many Offer',
+        type: 'offer')
   ];
 
   final List<ConfigurationModel> memberConfigurationsList = [
@@ -134,7 +138,11 @@ class ConfigurationsList {
     ConfigurationModel(
         id: 'create_private_group',
         title_en: 'Create private group',
-        type: 'group')
+        type: 'group'),
+    ConfigurationModel(
+        id: 'one_to_many_offer',
+        title_en: 'Create One To Many Offer',
+        type: 'offer')
   ];
 
   List<ConfigurationModel> getMemberData() {

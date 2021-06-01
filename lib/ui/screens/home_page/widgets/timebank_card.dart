@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart'
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 
@@ -23,7 +24,11 @@ class TimeBankCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        AppConfig.timebankConfigurations = timebank.timebankConfigurations;
+        AppConfig.timebankConfigurations =
+            Provider.of<HomePageBaseBloc>(context, listen: false)
+                    .primaryTimebankModel()
+                    .timebankConfigurations ??
+                getConfigurationModel();
         Provider.of<HomePageBaseBloc>(context, listen: false)
             .changeTimebank(timebank);
         Navigator.push(
