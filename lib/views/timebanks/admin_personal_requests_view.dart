@@ -255,7 +255,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   return AlertDialog(
                     title: Text(S.of(context).add_to_request),
                     content: Text(
-                        '${S.of(context).are_you_sure}  ${widget.userModel.fullname} ${S.of(context).add_to_request}'),
+                        '${S.of(context).are_you_sure} add ${widget.userModel.fullname} to ${S.of(context).request}'),
                     actions: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
