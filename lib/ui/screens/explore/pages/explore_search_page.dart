@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -26,7 +25,10 @@ class ExploreSearchPage extends StatefulWidget {
   final bool isUserSignedIn;
 
   const ExploreSearchPage(
-      {Key key, this.searchText, this.tabIndex = 0, this.isUserSignedIn})
+      {Key key,
+      this.searchText,
+      this.tabIndex = 0,
+      @required this.isUserSignedIn})
       : assert(tabIndex <= 4),
         super(key: key);
   @override
@@ -225,9 +227,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
 
 class ExploreCommunityCard extends StatelessWidget {
   final CommunityModel model;
+  final bool isSignedUser;
   const ExploreCommunityCard({
     Key key,
-    @required this.model,
+    @required this.model, @required this.isSignedUser,
   }) : super(key: key);
 
   @override
@@ -240,7 +243,7 @@ class ExploreCommunityCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => ExploreCommunityDetails(
                 communityId: model.id,
-                isSignedUser: Provider.of<UserModel>(context) != null,
+                isSignedUser: isSignedUser,
               ),
             ),
           );

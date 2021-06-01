@@ -10,7 +10,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class CommunitiesSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
-  const CommunitiesSearchView({Key key, this.isUserSignedIn}) : super(key: key);
+  const CommunitiesSearchView({Key key, @required this.isUserSignedIn}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
@@ -106,6 +106,7 @@ class CommunitiesSearchView extends StatelessWidget {
                     return ExploreCommunityCard(
                       model:
                           snapshot.data[index >= length ? length ~/ 2 : index],
+                          isSignedUser:isUserSignedIn,
                     );
                   }
                 },

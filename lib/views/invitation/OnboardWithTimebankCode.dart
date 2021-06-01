@@ -576,6 +576,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     widget.user.currentTimebank =
                         widget.communityModel.primary_timebank;
                   });
+                  // Phoenix.rebirth(context);
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(

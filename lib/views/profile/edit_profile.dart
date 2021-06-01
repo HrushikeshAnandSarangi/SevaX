@@ -25,7 +25,6 @@ import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -33,7 +32,6 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../globals.dart' as globals;
@@ -1085,7 +1083,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       await Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => ExplorePage(),
+          builder: (BuildContext context) => ExplorePage(isUserSignedIn: false),
         ),
         (Route<dynamic> route) => false,
       );

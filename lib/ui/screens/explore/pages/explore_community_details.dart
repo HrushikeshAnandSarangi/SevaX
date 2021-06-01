@@ -17,7 +17,9 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart'
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -59,7 +61,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
     _profileBloc = UserProfileBloc();
 
     _bloc.init(widget.communityId, widget.isSignedUser);
-    setState(() {});
+    // setState(() {});
     super.initState();
   }
 
@@ -82,13 +84,18 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
             );
           }
           community = snapshot.data[0];
-          timebankModel = _bloc.primaryTimebankModel();
+
+          timebankModel = snapshot.data[1].firstWhere(
+            (model) =>
+                isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
+            orElse: () => TimebankModel({}),
+          );
           templist = [
             ...timebankModel.members,
             ...timebankModel.admins,
             ...timebankModel.organizers
           ];
-          isUserJoined = Provider.of<UserModel>(context) != null &&
+          isUserJoined = widget.isSignedUser &&
                   templist
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID)
               ? true
@@ -199,10 +206,10 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                         : 'Request to join'),
                                   ),
                                   onPressed: () {
-                                    if (Provider.of<UserModel>(context,
-                                                listen: false) !=
-                                            null &&
-                                        !isUserJoined) {
+                                    if (widget.isSignedUser && !isUserJoined) {
+                                      createEditCommunityBloc.selectCommunity(community);
+                  createEditCommunityBloc
+                      .updateUserDetails(SevaCore.of(context).loggedInUser);
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
@@ -586,7 +593,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                           ),
                         ).then((_) {
                           try {
-                            Provider.of<HomePageBaseBloc>(context, listen: false)
+                            Provider.of<HomePageBaseBloc>(context,
+                                    listen: false)
                                 .switchToPreviousTimebank();
                           } on Exception catch (e) {
                             log(e.toString());
@@ -695,18 +703,19 @@ void showSignInAlertMessage({BuildContext context, String message}) {
                 style: TextStyle(color: Colors.deepOrange),
               )),
           FlatButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
-              },
-              child: Text(
-                'Continue to Sign in',
-                style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
-              ),),
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ),
+              );
+            },
+            child: Text(
+              'Continue to Sign in',
+              style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
+            ),
+          ),
         ],
       );
     },
