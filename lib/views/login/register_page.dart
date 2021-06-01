@@ -11,6 +11,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:path_drawing/path_drawing.dart';
@@ -832,6 +833,7 @@ class _RegisterPageState extends State<RegisterPage>
 
       Navigator.pop(dialogContext);
       Navigator.pop(context, user);
+      Phoenix.rebirth(context);
     } on PlatformException catch (error) {
       if (dialogContext != null) {
         Navigator.pop(dialogContext);

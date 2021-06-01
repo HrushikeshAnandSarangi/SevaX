@@ -95,8 +95,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     return isDataLoaded
         ? Scaffold(
             key: _scaffold,
-            appBar: !widget.isFromExplore
-                ? AppBar(
+            appBar: AppBar(
                     centerTitle: true,
                     title: Text(
                       S.of(context).join + ' ' + S.of(context).timebank,
@@ -107,7 +106,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       ),
                     ),
                   )
-                : null,
+                ,
             body: SingleChildScrollView(
               child: Container(child: timebankStreamBuilder(context)),
             ),
