@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
+import 'package:sevaexchange/utils/strings.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class NearbySettingsWidget extends StatefulWidget {
@@ -81,7 +82,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             );
           },
         ),
-        title: Text('Filters'),
+        title: Text(Strings.filters,style:TextStyle(fontSize:18),),
       ),
       body: Container(
         margin: EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -97,14 +98,14 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                 children: [
                   Text(
                     selectedRadio == NearbySettingBloc.MILES_SELECTION
-                        ? '$minMi M'
-                        : '$minKM Kms',
+                        ? '$minMi ${Strings.mi}'
+                        : '$minKM ${Strings.kms}',
                     style: TextStyle(fontSize: 12),
                   ),
                   Text(
                     selectedRadio == NearbySettingBloc.MILES_SELECTION
-                        ? '$maxMi M'
-                        : '$maxKM Kms',
+                        ? '$maxMi ${Strings.mi}'
+                        : '$maxKM ${Strings.kms}',
                     style: TextStyle(fontSize: 12),
                   ),
                 ],
@@ -155,7 +156,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                   ),
                 ),
                 Container(
-                  child: Text('Miles'),
+                  child: Text(Strings.miles),
                 ),
                 Container(
                   child: Radio(
@@ -174,7 +175,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                   ),
                 ),
                 Container(
-                  child: Text('Kilometer'),
+                  child: Text(Strings.kilometers),
                 ),
               ],
             ),
