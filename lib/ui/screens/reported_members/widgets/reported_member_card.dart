@@ -323,7 +323,7 @@ class ReportedMemberCard extends StatelessWidget {
       String timebankId) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
-    progressDialog.hide();
+    progressDialog?.hide();
 
     if (responseData['deletable'] == true) {
       showDialog(

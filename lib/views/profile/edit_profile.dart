@@ -726,11 +726,12 @@ class _EditProfilePageState extends State<EditProfilePage>
     });
   }
 
-  Future updateBio() async {
+  Future updateBio(String bio) async {
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.bio = widget.userModel.bio;
+    widget.userModel.bio = bio;
+    SevaCore.of(context).loggedInUser.bio = bio;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
@@ -900,6 +901,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   void _updateBio() {
+    String bio = '';
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
@@ -936,7 +938,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     } else if (value.length > 250) {
                       return '* max 250 characters';
                     } else {
-                      widget.userModel.bio = value;
+                      bio = value;
                       return null;
                     }
                   },
@@ -975,7 +977,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                         return;
                       }
                       Navigator.pop(viewContext);
-                      updateBio();
+                      updateBio(bio);
                       isLoading = false;
 //                            setState(() {
 //                              widget.userModel.bio = this.usermodel.bio;
