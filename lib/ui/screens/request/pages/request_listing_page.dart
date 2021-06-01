@@ -76,73 +76,77 @@ class _RequestListingPageState extends State<RequestListingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<RequestBloc>(
-      create: (context) => _bloc,
-      dispose: (c, b) => b.dispose(),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  S.of(context).requests,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
+    return Scaffold(
+      appBar: AppBar(),
+      body: Provider<RequestBloc>(
+        create: (context) => _bloc,
+        dispose: (c, b) => b.dispose(),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    S.of(context).requests,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-              ),
-              infoButton(
-                context: context,
-                key: GlobalKey(),
-                type: InfoType.REQUESTS,
-              ),
-              HideWidget(
-                hide: widget.isFromSettings,
-                child: TransactionLimitCheck(
-                  comingFrom: ComingFrom.Requests,
-                  timebankId: widget.timebankModel.id,
-                  isSoftDeleteRequested:
-                      widget.timebankModel.requestedSoftDelete,
-                  child: GestureDetector(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 0),
-                      child: Icon(
-                        Icons.add_circle,
-                        color: Theme.of(context).primaryColor,
+                infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.REQUESTS,
+                ),
+                HideWidget(
+                  hide: widget.isFromSettings,
+                  child: TransactionLimitCheck(
+                    comingFrom: ComingFrom.Requests,
+                    timebankId: widget.timebankModel.id,
+                    isSoftDeleteRequested:
+                        widget.timebankModel.requestedSoftDelete,
+                    child: GestureDetector(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 0),
+                        child: Icon(
+                          Icons.add_circle,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      onTap: () => onCreateButtonTap(widget.timebankModel),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            buildFilterView(),
+            SizedBox(height: 8),
+            FutureBuilder<Coordinates>(
+              future: currentCoords,
+              builder: (context, AsyncSnapshot<Coordinates> currentLocation) {
+                if (currentLocation.connectionState ==
+                    ConnectionState.waiting) {
+                  return LoadingIndicator();
+                }
+
+                if (!widget.isFromSettings) {
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      child: RequestListBuilder(
+                        coords: currentLocation.data,
+                        timebankModel: widget.timebankModel,
                       ),
                     ),
-                    onTap: () => onCreateButtonTap(widget.timebankModel),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          buildFilterView(),
-          SizedBox(height: 8),
-          FutureBuilder<Coordinates>(
-            future: currentCoords,
-            builder: (context, AsyncSnapshot<Coordinates> currentLocation) {
-              if (currentLocation.connectionState == ConnectionState.waiting) {
-                return LoadingIndicator();
-              }
-
-              if (!widget.isFromSettings) {
-                return Expanded(
-                  child: SingleChildScrollView(
-                    child: RequestListBuilder(
-                      coords: currentLocation.data,
-                      timebankModel: widget.timebankModel,
-                    ),
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
-        ],
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
