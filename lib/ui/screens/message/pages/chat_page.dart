@@ -355,6 +355,11 @@ class _ChatPageState extends State<ChatPage> {
                       isProfane = false;
                       errorText = '';
                     });
+                    if (widget.isFromRejectCompletion &&
+                        (messageContent == null || messageContent.isEmpty)) {
+                      messageContent =
+                          '${S.of(context).reject_task_completion} ';
+                    }
                     pushNewMessage(
                       messageContent: messageContent,
                       type: MessageType.MESSAGE,
