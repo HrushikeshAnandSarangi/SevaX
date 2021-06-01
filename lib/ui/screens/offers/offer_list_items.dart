@@ -202,7 +202,9 @@ class OfferListItems extends StatelessWidget {
         if (model.type != RequestType.TIME &&
             model.email != SevaCore.of(context).loggedInUser.email &&
             !isAccessAvailable(
-                timebankModel, SevaCore.of(context).loggedInUser.sevaUserID)) {
+              timebankModel,
+              SevaCore.of(context).loggedInUser.sevaUserID,
+            )) {
           adminCheckToAcceptOfferDialog(context);
           return;
         }
