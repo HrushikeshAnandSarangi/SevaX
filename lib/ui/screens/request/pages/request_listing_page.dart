@@ -68,7 +68,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.isFromSettings?AppBar():null,
+      appBar: widget.isFromSettings ? AppBar() : null,
       body: Provider<RequestBloc>(
         create: (context) => _bloc,
         dispose: (c, b) => b.dispose(),

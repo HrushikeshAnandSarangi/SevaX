@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -19,9 +21,11 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -530,6 +534,21 @@ class OfferDetails extends StatelessWidget {
                             return;
                           }
 
+                          //ClubHouse
+                          if (offerModel.type != RequestType.TIME &&
+                              !isAccessAvailable(
+                                  Provider.of<HomePageBaseBloc>(context,
+                                          listen: false)
+                                      .primaryTimebankModel(),
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID)) {
+                            adminCheckToAcceptOfferDialog(
+                              context,
+                            );
+                            return;
+                          }
+
                           if (offerModel.type == RequestType.CASH ||
                               offerModel.type == RequestType.GOODS &&
                                   !isAccepted) {
@@ -559,6 +578,15 @@ class OfferDetails extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<bool> adminCheckToAcceptOfferDialog(BuildContext context) async {
+    return CustomDialogs.generalDialogWithCloseButton(
+      context,
+      // 'Only admin can accept Goods/Cash offers',
+      // 'Only Community admins can accept offers of money / goods',
+      S.of(context).only_community_admins_can_accept,
     );
   }
 
