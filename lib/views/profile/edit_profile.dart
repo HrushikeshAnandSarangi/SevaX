@@ -159,7 +159,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             detailsBuilder(
               title: S.of(context).name,
               text: widget.userModel.fullname,
-              onTap: _updateName,
+              onTap: () => _updateName(),
             ),
             detailsBuilder(
               title: S.of(context).bio,
@@ -715,11 +715,12 @@ class _EditProfilePageState extends State<EditProfilePage>
     }
   }
 
-  Future updateName() async {
+  Future updateName(String name) async {
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.fullname = widget.userModel.fullname;
+    SevaCore.of(context).loggedInUser.fullname = name;
+    
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
@@ -804,6 +805,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   void _updateName() {
+    String name = widget.userModel.fullname;
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
@@ -830,13 +832,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
+                  onChanged: (value)=>name = value,
                   validator: (value) {
                     if (value.isEmpty) {
                       return S.of(context).enter_name_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return S.of(context).profanity_text_alert;
                     } else {
-                      widget.userModel.fullname = value;
                       return null;
                     }
                   },
@@ -876,8 +878,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
+                      widget.userModel.fullname = name;
+                      updateName(name);
                       Navigator.pop(viewContext);
-                      updateName();
                       isLoading = false;
                     },
                   ),
