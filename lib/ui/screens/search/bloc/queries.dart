@@ -683,14 +683,13 @@ class Searches {
                     },
                     {
                       "terms": {
-                        "skills.keyword": []
+                        "skills.keyword": allSkillsInterestsConsolidated['skills']
                         // allSkillsInterestsConsolidated['skills']
                       }
                     },
                     {
                       "terms": {
-                        "interests.keyword": []
-                        // allSkillsInterestsConsolidated['interests']
+                      "interests.keyword": allSkillsInterestsConsolidated['interests']
                       }
                     }
                   ]
