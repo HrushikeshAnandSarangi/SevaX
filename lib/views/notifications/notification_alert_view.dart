@@ -163,8 +163,8 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     },
                   ),
 
-                  //feeds
                   lineDivider,
+                  //feeds
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
                     title: "Feeds notification",

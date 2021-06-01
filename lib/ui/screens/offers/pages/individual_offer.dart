@@ -1,8 +1,8 @@
-import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -12,21 +12,18 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
-import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../../../../labels.dart';
 
@@ -61,6 +58,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _availabilityController = TextEditingController();
+  TextEditingController _minimumCreditsController = TextEditingController();
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
@@ -76,6 +74,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
       _titleController.text = widget.offerModel.individualOfferDataModel.title;
       _descriptionController.text =
           widget.offerModel.individualOfferDataModel.description;
+      _minimumCreditsController.text =
+          widget.offerModel.individualOfferDataModel.minimumCredits.toString();
       _availabilityController.text =
           widget.offerModel.individualOfferDataModel.schedule;
       AppConfig.helpIconContextMember =
@@ -124,6 +124,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
     _titleController.dispose();
     _descriptionController.dispose();
     _availabilityController.dispose();
+    _minimumCreditsController.dispose();
 
     super.dispose();
   }
@@ -259,6 +260,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.minimumCredits,
             builder: (context, snapshot) {
               return CustomTextField(
+                controller:_minimumCreditsController,
                 currentNode: _minimumCredits,
                 value: snapshot.data,
                 heading: L.of(context).minimum_credit_title,
@@ -266,6 +268,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 hint: L.of(context).minimum_credit_hint,
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
+                formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
               );
             },
           ),

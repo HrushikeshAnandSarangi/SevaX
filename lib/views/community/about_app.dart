@@ -26,78 +26,80 @@ class AboutApp extends StatelessWidget {
           style: TextStyle(fontSize: 18),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          getHelpButton(
-            context,
-            () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => Intro(
-                    onSkip: () => Navigator.of(context).pop(),
+      body: SingleChildScrollView(
+              child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            getHelpButton(
+              context,
+              () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Intro(
+                      onSkip: () => Navigator.of(context).pop(),
+                    ),
                   ),
-                ),
-              );
-            },
-            'Intro',
-          ),
-          getHelpButton(
-            context,
-            getOnTap(
+                );
+              },
+              'Intro',
+            ),
+            getHelpButton(
               context,
+              getOnTap(
+                context,
+                S.of(context).about + ' ' + AppConfig.appName,
+                'aboutSeva',
+              ),
               S.of(context).about + ' ' + AppConfig.appName,
-              'aboutSeva',
             ),
-            S.of(context).about + ' ' + AppConfig.appName,
-          ),
-          getHelpButton(
-            context,
-            getOnTap(
+            getHelpButton(
               context,
+              getOnTap(
+                context,
+                S.of(context).help_about_us,
+                'aboutUsLink',
+              ),
               S.of(context).help_about_us,
-              'aboutUsLink',
             ),
-            S.of(context).help_about_us,
-          ),
-          getHelpButton(
-            context,
-            () {
-              navigateToWebView(
-                aboutMode: AboutMode(
-                    title: S.of(context).help,
-                    urlToHit:
-                        AppConfig.remoteConfig.getString('help_videos_admin')),
-                context: context,
-              );
-            },
-            S.of(context).help_training_video,
-          ),
-          getHelpButton(
-            context,
-            contactUsOnTap(context),
-            S.of(context).help_contact_us,
-          ),
-          getHelpButton(
-            context,
-            getOnTap(
+            getHelpButton(
               context,
-              'Glossaries',
-              'glossariesLink',
+              () {
+                navigateToWebView(
+                  aboutMode: AboutMode(
+                      title: S.of(context).help,
+                      urlToHit:
+                          AppConfig.remoteConfig.getString('help_videos_admin')),
+                  context: context,
+                );
+              },
+              S.of(context).help_training_video,
             ),
-           'Glossaries',
-          ),
-          getHelpButton(
-            context,
-            getOnTap(
+            getHelpButton(
               context,
+              contactUsOnTap(context),
+              S.of(context).help_contact_us,
+            ),
+            getHelpButton(
+              context,
+              getOnTap(
+                context,
+                'Glossaries',
+                'glossariesLink',
+              ),
+             'Glossaries',
+            ),
+            getHelpButton(
+              context,
+              getOnTap(
+                context,
+                'FAQ',
+                'faqLink',
+              ),
               'FAQ',
-              'faqLink',
             ),
-            'FAQ',
-          ),
-        ],
+          ],
+        ),
       ),
       bottomSheet: Container(
         color: Colors.white,

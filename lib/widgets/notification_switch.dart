@@ -59,35 +59,35 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            title: Text(
-              widget.title,
-              style: TextStyle(
-                fontFamily: 'Europa',
-                // fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            trailing: Transform.scale(
-              scale: 0.8,
-              child: Transform(
-                transform: Matrix4.diagonal3Values(0.9, 0.9, 0),
-                child: CupertinoSwitch(
-                  activeColor: Theme.of(context).primaryColor,
-                  value: switchStatus,
-                  onChanged: (value) {
-                    switchStatus = value;
-                    widget.onPressed(value);
-                    setState(() {});
-                  },
-                ),
-              ),
-            ),
-          )
-        ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ListTile(
+      title: Text(
+        widget.title,
+        style: TextStyle(
+          fontFamily: 'Europa',
+          // fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
       ),
+      trailing: Transform.scale(
+        scale: 0.8,
+        child: Transform(
+          transform: Matrix4.diagonal3Values(0.9, 0.9, 0),
+          child: CupertinoSwitch(
+            activeColor: Theme.of(context).primaryColor,
+            value: switchStatus,
+            onChanged: (value) {
+              switchStatus = value;
+              widget.onPressed(value);
+              setState(() {});
+            },
+          ),
+        ),
+      ),
+            )
+          ],
+        ),
     );
   }
 }
