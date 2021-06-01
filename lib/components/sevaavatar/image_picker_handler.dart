@@ -85,6 +85,7 @@ class ImagePickerHandler {
   }
 
   void showDialog(BuildContext context, {bool isOnboarding = false}) {
+    FocusScope.of(context).requestFocus(new FocusNode());
     imagePicker.getImage(context, isOnboarding: isOnboarding);
   }
 }

@@ -101,6 +101,7 @@ class NewsImagePickerHandler {
   }
 
   void showDialog(BuildContext context) {
+    FocusScope.of(context).requestFocus(new FocusNode());
     imagePicker.getImage(context);
   }
 }

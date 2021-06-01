@@ -144,6 +144,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                           ),
                           backgroundColor: Colors.white,
                           onPressed: () {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
                             imagePicker.showDialog(context);
                             isLoading = false;
                           },

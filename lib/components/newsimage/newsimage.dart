@@ -236,7 +236,7 @@ class NewsImageState extends State<NewsImage>
     parentContext = context;
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        FocusScope.of(context).requestFocus(new FocusNode());
         imagePicker.showDialog(context);
       },
       child: Column(
@@ -373,7 +373,7 @@ class NewsImageState extends State<NewsImage>
               ),
             ),
             onPressed: () {
-              FocusScope.of(context).unfocus();
+              FocusScope.of(context).requestFocus(new FocusNode());
               imagePicker.showDialog(context);
             },
           ),
