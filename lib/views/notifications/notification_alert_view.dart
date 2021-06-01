@@ -57,123 +57,126 @@ class _NotificationAlertState extends State<NotificationAlert> {
               return LoadingIndicator();
             }
             notificationSetting = snapshot.data.notificationSetting;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus('RequestAccept'),
-                  title: S.of(context).request_accepted,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'RequestAccept',
-                      status: status,
-                    );
-                  },
-                ),
-                lineDivider,
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus('RequestCompleted'),
-                  title: S.of(context).request_completed,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'RequestCompleted',
-                      status: status,
-                    );
-                  },
-                ),
-                lineDivider,
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus('TYPE_DEBIT_FROM_OFFER'),
-                  title: S.of(context).offer_debit,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'TYPE_DEBIT_FROM_OFFER',
-                      status: status,
-                    );
-                  },
-                ),
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus(
-                      'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK'),
-                  title: S.of(context).recieved_credits_one_to_many,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType:
-                          'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK',
-                      status: status,
-                    );
-                  },
-                ),
-                lineDivider,
-                NotificationWidgetSwitch(
-                  isTurnedOn:
-                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: S.of(context).feedback_one_to_many_offer,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'TYPE_FEEDBACK_FROM_SIGNUP_MEMBER',
-                      status: status,
-                    );
-                  },
-                ),
-                lineDivider,
-                NotificationWidgetSwitch(
-                  isTurnedOn:
-                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: S.of(context).promotion_to_admin_from_member,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'MEMBER_PROMOTED_AS_ADMIN',
-                      status: status,
-                    );
-                  },
-                ),
-                lineDivider,
-                NotificationWidgetSwitch(
-                  isTurnedOn:
-                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: S.of(context).demotion_from_admin_to_member,
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'MEMBER_DEMOTED_FROM_ADMIN',
-                      status: status,
-                    );
-                  },
-                ),
+            return SingleChildScrollView(
+                          child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus('RequestAccept'),
+                    title: S.of(context).request_accepted,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'RequestAccept',
+                        status: status,
+                      );
+                    },
+                  ),
+                  lineDivider,
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus('RequestCompleted'),
+                    title: S.of(context).request_completed,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'RequestCompleted',
+                        status: status,
+                      );
+                    },
+                  ),
+                  lineDivider,
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus('TYPE_DEBIT_FROM_OFFER'),
+                    title: S.of(context).offer_debit,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'TYPE_DEBIT_FROM_OFFER',
+                        status: status,
+                      );
+                    },
+                  ),
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus(
+                        'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK'),
+                    title: S.of(context).recieved_credits_one_to_many,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType:
+                            'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK',
+                        status: status,
+                      );
+                    },
+                  ),
+                  lineDivider,
+                  NotificationWidgetSwitch(
+                    isTurnedOn:
+                        getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                    title: S.of(context).feedback_one_to_many_offer,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'TYPE_FEEDBACK_FROM_SIGNUP_MEMBER',
+                        status: status,
+                      );
+                    },
+                  ),
+                  lineDivider,
+                  NotificationWidgetSwitch(
+                    isTurnedOn:
+                        getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                    title: S.of(context).promotion_to_admin_from_member,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'MEMBER_PROMOTED_AS_ADMIN',
+                        status: status,
+                      );
+                    },
+                  ),
+                  lineDivider,
+                  NotificationWidgetSwitch(
+                    isTurnedOn:
+                        getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                    title: S.of(context).demotion_from_admin_to_member,
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'MEMBER_DEMOTED_FROM_ADMIN',
+                        status: status,
+                      );
+                    },
+                  ),
 
-                //messages
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
-                  title: "Notification for new messages.",
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'TYPE_MESSAGING_NOTIFICATION',
-                      status: status,
-                    );
-                  },
-                ),
+                  //messages
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
+                    title: "Notification for new messages.",
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'TYPE_MESSAGING_NOTIFICATION',
+                        status: status,
+                      );
+                    },
+                  ),
 
-                //feeds
-                NotificationWidgetSwitch(
-                  isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
-                  title: "Feeds notification",
-                  onPressed: (bool status) {
-                    NotificationWidgetSwitch.updatePersonalNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                      notificationType: 'TYPE_FEEDS_NOTIFICATION',
-                      status: status,
-                    );
-                  },
-                ),
-              ],
+                  //feeds
+                  NotificationWidgetSwitch(
+                    isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),
+                    title: "Feeds notification",
+                    onPressed: (bool status) {
+                      NotificationWidgetSwitch.updatePersonalNotifications(
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        notificationType: 'TYPE_FEEDS_NOTIFICATION',
+                        status: status,
+                      );
+                    },
+                  ),
+                ],
+              ),
             );
           }),
     );
