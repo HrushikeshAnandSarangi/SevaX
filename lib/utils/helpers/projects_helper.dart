@@ -7,7 +7,6 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import 'projects_helper_util.dart';
 
@@ -200,7 +199,7 @@ class ProjectMessagingRoomHelper {
     );
     batch.setData(
       DBHelper.chatsRef.document(chatModel.id),
-      chatModel.shareMessage(),
+      chatModel.toMap(),
     );
 
     return batch;
