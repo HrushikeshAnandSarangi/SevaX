@@ -214,7 +214,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
               ),
               SizedBox(width: 10),
               CustomChip(
-                label: 'Virtual',
+                label: S.of(context).virtual,
                 isSelected: filter.virtualRequest,
                 onTap: () {
                   _bloc.onFilterChange(

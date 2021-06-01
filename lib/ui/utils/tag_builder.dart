@@ -32,7 +32,7 @@ class TagBuilder {
       tags.add('Public');
     }
     if (isVirtual) {
-      tags.add('Virtual');
+      tags.add(S.of(context).virtual);
     }
     if (isOneToManyOffer) {
       tags.add('One to many');

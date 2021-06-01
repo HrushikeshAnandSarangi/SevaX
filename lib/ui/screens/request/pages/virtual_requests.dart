@@ -356,7 +356,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
-                                    tagTitle: 'Virtual',
+                                    tagTitle: S.of(context).virtual,
                                   ),
                                 ),
                               ),

@@ -261,7 +261,7 @@ class _OfferListState extends State<OfferList> {
               ),
               SizedBox(width: 10),
               CustomChip(
-                label: 'Virtual',
+                label: S.of(context).virtual,
                 isSelected: filter.virtualOffer,
                 onTap: () {
                   bloc.onFilterChange(

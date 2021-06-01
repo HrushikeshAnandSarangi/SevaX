@@ -826,7 +826,6 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           minRadius: 40.0,
                         ),
                       ),
-                     
                       Container(
                         child: Expanded(
                           child: Column(
@@ -842,7 +841,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                         child: Container(
                                           margin: EdgeInsets.only(right: 10),
                                           child: TagView(
-                                            tagTitle: 'Virtual',
+                                            tagTitle: S.of(context).virtual,
                                           ),
                                         ),
                                       ),

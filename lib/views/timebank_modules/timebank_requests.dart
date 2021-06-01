@@ -643,7 +643,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
-                                    tagTitle: 'Virtual',
+                                    tagTitle: S.of(context).virtual,
                                   ),
                                 ),
                               ),
