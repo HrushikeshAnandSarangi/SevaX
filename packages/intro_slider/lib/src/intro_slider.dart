@@ -32,7 +32,6 @@ class _IntroSliderState extends State<IntroSlider> {
               //   curve: Curves.easeInOut,
               // );
               if (_controller.hasClients) {
-
                 if (_controller.page >= widget.data.length - 1) {
                   setState(() {
                     reachedEnd = true;
