@@ -860,8 +860,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           );
                           // await FirestoreManager.createProject(
                           //     projectModel: projectModel);
-                          // globals.projectsAvtaarURL = null;
-                          // globals.webImageUrl = null;
+                          globals.projectsAvtaarURL = null;
+                          globals.webImageUrl = null;
 
                           if (dialogContext != null) {
                             Navigator.pop(dialogContext);

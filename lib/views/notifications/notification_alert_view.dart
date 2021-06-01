@@ -58,10 +58,9 @@ class _NotificationAlertState extends State<NotificationAlert> {
             }
             notificationSetting = snapshot.data.notificationSetting;
             return SingleChildScrollView(
-                          child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('RequestAccept'),
                     title: S.of(context).request_accepted,
@@ -151,6 +150,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   ),
 
                   //messages
+                  lineDivider,
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_MESSAGING_NOTIFICATION'),
                     title: "Notification for new messages.",
@@ -163,6 +163,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     },
                   ),
 
+                  lineDivider,
                   //feeds
                   NotificationWidgetSwitch(
                     isTurnedOn: getCurrentStatus('TYPE_FEEDS_NOTIFICATION'),

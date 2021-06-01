@@ -2474,8 +2474,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 S.of(context).edit,
                 style: TextStyle(color: Colors.white, fontSize: 13),
               ),
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => EditRequest(
@@ -2484,7 +2484,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       requestModel: widget.requestItem,
                     ),
                   ),
-                );
+                ).then((value) => Navigator.pop(context));
               },
             )
           : Container(),
