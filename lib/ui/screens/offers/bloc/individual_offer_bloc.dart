@@ -211,9 +211,10 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _cashModel.add(offerModel.cashModel);
-    if (offerModel.individualOfferDataModel != null) {
+    if (offerModel.individualOfferDataModel != null) { 
       _minimumCredits
           .add(offerModel.individualOfferDataModel.minimumCredits.toString());
+          timeOfferType = offerModel.individualOfferDataModel.timeOfferType == 'SPOT_ON'?0:1;
     }
     if (offerModel.individualOfferDataModel.schedule != null) {
       _availabilty.add(

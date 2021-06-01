@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 
+class Regex {
+  static RegExp numericRegex = RegExp(r"^[0-9]+$");
+}
+
 class Validators {
   var titleValidator = StreamTransformer<String, String>.fromHandlers(
     handleData: (title, sink) {
@@ -69,7 +73,7 @@ String getValidationError(BuildContext context, String errorCode) {
     case ValidationErrors.titleError:
       return error.validation_error_offer_title;
       break;
-      case ValidationErrors.char_error:
+    case ValidationErrors.char_error:
       return 'Creating offer with "_" is not allowed';
       break;
     case ValidationErrors.genericError:
