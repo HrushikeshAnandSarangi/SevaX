@@ -3,43 +3,34 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
-
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/cutom_chip.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_card.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/requests/request_tab_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
-import 'package:sevaexchange/widgets/empty_widget.dart';
-
-import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-
-import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
-
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
-
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-
+import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
-
 import 'package:sevaexchange/widgets/tag_view.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 class RequestListingPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -77,7 +68,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: widget.isFromSettings?AppBar():null,
       body: Provider<RequestBloc>(
         create: (context) => _bloc,
         dispose: (c, b) => b.dispose(),
