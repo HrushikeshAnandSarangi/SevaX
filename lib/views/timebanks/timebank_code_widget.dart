@@ -2,17 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:share/share.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
 
 class TimebankCodeWidget extends StatefulWidget {
   final TimebankCodeModel timebankCodeModel;
   final String timebankName;
+  final UserModel user;
 
-  TimebankCodeWidget({this.timebankCodeModel, this.timebankName});
+  TimebankCodeWidget(
+      {this.timebankCodeModel, this.timebankName, @required this.user});
 
   @override
   _TimebankCodeWidgetState createState() => _TimebankCodeWidgetState();
@@ -136,7 +138,9 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                       onTap: () {
                                         ClipboardData data = ClipboardData(
                                             text: shareText(
-                                                widget.timebankCodeModel));
+                                          widget.timebankCodeModel,
+                                          widget.user.fullname,
+                                        ));
                                         Clipboard.setData(data);
 
                                         SnackBar snackbar = SnackBar(
@@ -189,7 +193,12 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                     Center(
                       child: RaisedButton(
                         onPressed: () {
-                          Share.share(shareText(widget.timebankCodeModel));
+                          Share.share(
+                            shareText(
+                              widget.timebankCodeModel,
+                              widget.user.fullname,
+                            ),
+                          );
                         },
                         color: FlavorConfig.values.theme.primaryColor,
                         textColor: Colors.white,
@@ -219,8 +228,8 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
     );
   }
 
-  String shareText(TimebankCodeModel timebankCode) {
-    return '''${SevaCore.of(context).loggedInUser.fullname} has invited you to join their 
+  String shareText(TimebankCodeModel timebankCode, String name) {
+    return '''$name has invited you to join their 
     "${widget.timebankName}" Seva Community. Seva means "selfless service" in Sanskrit.
      Seva Communities are based on a mutual-reciprocity system,
       where community members help each other out in exchange for Seva Credits that can be redeemed for services they need.
@@ -230,7 +239,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
           the link will either take you to our main https://www.sevaxapp.com web page where you can register on the web directly or it will take you from your mobile phone to the App or Google Play Stores, 
           where you can download our SevaX App. Once you have registered on the SevaX mobile app or the website,
            you can explore Seva Communities near you. Type in the "${widget.timebankName}" and enter code "${timebankCode.timebankCode}" when prompted.
-           \n\nClick to Join ${SevaCore.of(context).loggedInUser.fullname} 
+           \n\nClick to Join $name 
            and their Seva Community via this dynamic link at https://sevaexchange.page.link/sevaxapp.
            \n\nThank you for being a part of our Seva Exchange movement!\n-the Seva Exchange team\n\nPlease email us at support@sevaexchange.com 
            if you have any questions or issues joining with the link given.
