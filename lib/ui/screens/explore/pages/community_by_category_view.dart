@@ -16,12 +16,13 @@ class CommunityByCategoryView extends StatefulWidget {
   final CommunityCategoryModel model;
   final bool isFromNearby;
   final GeoPoint geoPoint;
+  final bool isUserSignedIn;
 
   const CommunityByCategoryView({
     Key key,
     @required this.model,
     this.isFromNearby = false,
-    this.geoPoint,
+    this.geoPoint, @required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _CommunityByCategoryViewState createState() =>
@@ -78,7 +79,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
 
-                return communitiesWidget(snapshot.data);
+                return communitiesWidget(snapshot.data,widget.isUserSignedIn,);
               },
             )
           : FutureBuilder(
@@ -108,6 +109,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
 
                 return communitiesWidget(
                   snapshot.data,
+                  widget.isUserSignedIn,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
@@ -130,7 +132,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
   }
 }
 
-Widget communitiesWidget(List<CommunityModel> communityList, {Widget child}) {
+Widget communitiesWidget(List<CommunityModel> communityList, bool isUserSignedIn,{Widget child}) {
   return Column(
     children: [
       child ?? Container(),
@@ -139,6 +141,7 @@ Widget communitiesWidget(List<CommunityModel> communityList, {Widget child}) {
         (index) {
           return ExploreCommunityCard(
             model: communityList[index],
+            isSignedUser: isUserSignedIn, //to be updated
           );
         },
       ),

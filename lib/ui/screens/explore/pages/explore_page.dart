@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,22 +6,19 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/explore_cards_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/requests_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/find_communities_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/community_by_category_view.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/requests_by_category_view.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/community_card.dart';
-import 'package:sevaexchange/ui/screens/explore/widgets/explore_browse_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_events_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_featured_card.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_find_card.dart';
@@ -33,13 +29,11 @@ import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -50,12 +44,11 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
 
-  const ExplorePage({Key key, this.isUserSignedIn = false}) : super(key: key);
+  const ExplorePage({Key key, @required this.isUserSignedIn}) : super(key: key);
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
@@ -304,6 +297,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                           builder: (context) =>
                                               ExploreSearchPage(
                                             tabIndex: 1,
+                                            isUserSignedIn: widget.isUserSignedIn,
                                           ),
                                         ),
                                       );
@@ -798,6 +792,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                         isFromNearby: true,
                                         model: CommunityCategoryModel(),
                                         geoPoint: geoPoint,
+                                        isUserSignedIn:widget.isUserSignedIn,
                                       ),
                                     ),
                                   );
