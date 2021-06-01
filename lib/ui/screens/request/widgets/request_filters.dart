@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
@@ -93,7 +94,7 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[5],
-              label: 'Virtual',
+              label: S.of(context).virtual,
               isSelected: filter.virtualRequest,
               onTap: () {
                 onTap(

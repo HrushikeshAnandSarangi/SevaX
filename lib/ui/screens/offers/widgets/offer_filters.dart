@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_list_bloc.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
@@ -90,7 +91,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[5],
-              label: 'Virtual',
+              label: S.of(context).virtual,
               isSelected: filter.virtualOffer,
               onTap: () {
                 onTap(
