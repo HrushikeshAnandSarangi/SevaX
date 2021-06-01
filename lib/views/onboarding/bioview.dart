@@ -128,7 +128,7 @@ class _BioViewState extends State<BioView> {
                 ),
                 // Spacer(),
                 SizedBox(
-                  height: 100,
+                  height: MediaQuery.of(context).size.height * 0.35,
                 ),
                 SizedBox(
                   width: 134,
