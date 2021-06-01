@@ -155,7 +155,6 @@ Widget createAdminTabBar(
   return Scaffold(
     appBar: AppBar(
       leading: BackButton(
-        
         onPressed: () {
           AppConfig.helpIconContextMember =
               HelpContextMemberType.seva_community;
@@ -652,6 +651,9 @@ class DiscussionListState extends State<DiscussionList> {
         StreamBuilder<List<NewsModel>>(
           stream: newsStream.stream,
           builder: (context, snapshot) {
+            // logger.i("Stream Updated==================================<<" +
+            //     DateTime.now().toString());
+
             if (snapshot.hasError)
               return Text(
                 S.of(context).gps_on_reminder,
@@ -664,6 +666,7 @@ class DiscussionListState extends State<DiscussionList> {
               );
 
             List<NewsModel> newsList = snapshot.data;
+
             if (sortOrderVal.toLowerCase() ==
                 SortOrderClass.LIKES.toLowerCase()) {
               newsList.sort((a, b) => b.likes.length.compareTo(a.likes.length));

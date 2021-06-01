@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../app_config.dart';
 import '../location_utility.dart';
@@ -46,9 +47,13 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 
     querySnapshot.documents.forEach((document) {
       var newsModel = NewsModel.fromMap(document.data);
-      //futures.add(getUserInfo(newsModel.email));
       modelList.add(newsModel);
     });
+
+    logger.d("Stream Updated================================== Handler" +
+        modelList.length.toString() +
+        " =======  " +
+        DateTime.now().toString());
 
     newsSink.add(modelList);
   }));
