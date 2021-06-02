@@ -383,8 +383,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            widget.requestItem.selectedInstructor
-                                                .fullname,
+                                            widget.requestItem
+                                                .selectedInstructor.fullname,
                                             style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w500)),
@@ -710,21 +710,57 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return OneToManySpeakerTimeEntry(
-                  requestModel: widget.requestItem,
-                  onFinish: () async {
-                    await oneToManySpeakerInviteAccepted(
-                        widget.requestItem, context);
-                    // await onDismissed();
-                  },
+        onPressed: () async {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title:
+                      Text(L.of(context).oneToManyRequestSpeakerAcceptRequest),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        await oneToManySpeakerInviteAccepted(
+                            widget.requestItem, context);
+
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
-              },
-            ),
-          );
+              });
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return OneToManySpeakerTimeEntry(
+          //         requestModel: widget.requestItem,
+          //         onFinish: () async {
+          //           await oneToManySpeakerInviteAccepted(
+          //               widget.requestItem, context);
+          //           // await onDismissed();
+          //         },
+          //       );
+          //     },
+          //   ),
+          // );
         },
       ),
     );

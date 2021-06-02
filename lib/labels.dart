@@ -39,5 +39,8 @@ class L {
   String get reject_request_completion =>
       "Are you sure you want to reject request completion?";
 
+  String get oneToManyRequestSpeakerAcceptRequest =>
+      'Are you sure you want to accept this request?';
+
   //OFFERS LABELS ENDS HERE
 }
