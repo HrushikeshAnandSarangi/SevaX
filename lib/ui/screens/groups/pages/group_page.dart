@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
+import '../../../../labels.dart';
 
 class GroupPage extends StatefulWidget {
   final String communityId;
@@ -135,8 +136,10 @@ class _GroupPageState extends State<GroupPage> {
                                         bloc.primaryTimebankModel(),
                                         user.sevaUserID,
                                       )
-                                        ? navigateToCreateGroup(primaryTimebankModel:
-                                            bloc.primaryTimebankModel(),)
+                                        ? navigateToCreateGroup(
+                                            primaryTimebankModel:
+                                                bloc.primaryTimebankModel(),
+                                          )
                                         : showProtctedTImebankDialog(context)
                                     : navigateToCreateGroup(
                                         primaryTimebankModel:
@@ -160,7 +163,7 @@ class _GroupPageState extends State<GroupPage> {
                 ),
                 myGroups.isNotEmpty
                     ? Text(
-                        'My Groups', //label to be created
+                        L.of(context).my_groups,
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -179,8 +182,8 @@ class _GroupPageState extends State<GroupPage> {
                         buttonText: S.of(context).joined,
                         onButtonPressed: null,
                         timebank: timebank,
-                        onTap: (){
-                           navigateToGroup(timebank);
+                        onTap: () {
+                          navigateToGroup(timebank);
                         },
                       ),
                     );
@@ -227,7 +230,7 @@ class _GroupPageState extends State<GroupPage> {
                                       }
                                     : null,
                                 timebank: timebank,
-                                onTap: ()  {
+                                onTap: () {
                                   navigateToGroup(timebank);
                                 },
                               ),

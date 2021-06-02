@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import '../../../../labels.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -207,9 +208,10 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                   ),
                                   onPressed: () {
                                     if (widget.isSignedUser && !isUserJoined) {
-                                      createEditCommunityBloc.selectCommunity(community);
-                  createEditCommunityBloc
-                      .updateUserDetails(SevaCore.of(context).loggedInUser);
+                                      createEditCommunityBloc
+                                          .selectCommunity(community);
+                                      createEditCommunityBloc.updateUserDetails(
+                                          SevaCore.of(context).loggedInUser);
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
@@ -227,8 +229,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     } else {
                                       showSignInAlertMessage(
                                         context: context,
-                                        message:
-                                            'Please Sign In/Sign up to access ${community.name}',
+                                        message: L.of(context).sign_in_alert,
+                                        //'Please Sign In/Sign up to access ${community.name}',
                                       );
                                     }
                                   },
@@ -318,9 +320,11 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                       onTap: () {
                                         if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
-                                              context: context,
-                                              message:
-                                                  'Please Sign In/Sign up to access ${event.name}');
+                                            context: context,
+                                            message:
+                                                L.of(context).sign_in_alert,
+                                            // 'Please Sign In/Sign up to access ${event.name}'
+                                          );
                                         } else if (widget.isSignedUser !=
                                                 null &&
                                             isUserJoined &&
@@ -439,9 +443,11 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                       onTap: () {
                                         if (!widget.isSignedUser) {
                                           showSignInAlertMessage(
-                                              context: context,
-                                              message:
-                                                  'Please Sign In/Sign up to access ${request.title}');
+                                            context: context,
+                                            message:
+                                                L.of(context).sign_in_alert,
+                                            // 'Please Sign In/Sign up to access ${request.title}'
+                                          );
                                         } else if (widget.isSignedUser) {
                                           Navigator.push(context,
                                               MaterialPageRoute(
@@ -566,8 +572,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       if (!widget.isSignedUser) {
                         showSignInAlertMessage(
                             context: context,
-                            message:
-                                'Please Sign In/Sign up to access ${timabanksList[index].name}');
+                            message: L.of(context).sign_in_alert);
+                        // 'Please Sign In/Sign up to access ${timabanksList[index].name}');
                       } else if (widget.isSignedUser &&
                           isUserJoined &&
                           community.id ==
@@ -662,7 +668,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text('Switch Community to view this ' + message + '.'),
+            content: Text(L.of(context).switch_community),
             actions: [
               RaisedButton(
                 color: Colors.orange,

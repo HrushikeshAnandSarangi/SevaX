@@ -18,9 +18,13 @@ class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
   final RequestModel requestModel;
   final VoidCallback onFinish;
   final UserModel userModel;
+  final bool fromNotification;
   // TODO needs flow correction to tasks model
   OneToManySpeakerTimeEntryComplete(
-      {@required this.requestModel, @required this.onFinish, this.userModel});
+      {@required this.requestModel,
+      @required this.onFinish,
+      this.userModel,
+      @required this.fromNotification});
 
   @override
   OneToManySpeakerTimeEntryCompleteState createState() =>
@@ -290,6 +294,9 @@ class OneToManySpeakerTimeEntryCompleteState
 
                                 Navigator.of(context).pop();
                                 //Navigator.of(context).pop();
+                                // if (!widget.fromNotification) {
+                                //   Navigator.of(context).pop();
+                                // }
                               }
                             },
                             child: Text(

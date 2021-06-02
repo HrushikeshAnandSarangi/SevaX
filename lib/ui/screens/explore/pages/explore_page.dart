@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +40,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
+import '../../../../labels.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
@@ -149,7 +149,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Explore Opportunities',
+                      L.of(context).explore_page_title_text,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       alignment: Alignment.centerLeft,
                       width: screenWidth * 0.7,
                       child: Text(
-                        'Find communities near you. Offer to volunteer. Request the help you need. Search for community events based on your interests and more!',
+                        L.of(context).explore_page_subtitle_text,
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -297,7 +297,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                           builder: (context) =>
                                               ExploreSearchPage(
                                             tabIndex: 1,
-                                            isUserSignedIn: widget.isUserSignedIn,
+                                            isUserSignedIn:
+                                                widget.isUserSignedIn,
                                           ),
                                         ),
                                       );
@@ -792,7 +793,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                         isFromNearby: true,
                                         model: CommunityCategoryModel(),
                                         geoPoint: geoPoint,
-                                        isUserSignedIn:widget.isUserSignedIn,
+                                        isUserSignedIn: widget.isUserSignedIn,
                                       ),
                                     ),
                                   );

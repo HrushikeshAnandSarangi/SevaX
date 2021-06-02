@@ -362,7 +362,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Speaker',
+                              Text(L.of(context).speaker,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600)),
@@ -632,7 +632,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     text: (widget.requestItem.acceptors.contains(
                                 SevaCore.of(context).loggedInUser.email) &&
                             widget.requestItem.isSpeakerCompleted)
-                        ? 'You have requested for completion'
+                        ? L.of(context).requested_for_completion
                         : 'You are the speaker for the request',
                     style: TextStyle(
                       fontSize: 16,
@@ -644,13 +644,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
           ),
+          // widget.requestItem.isSpeakerCompleted
+          //     ? Container()
+          //     : speakerWithdrawOneToManyRequest,
+
           widget.requestItem.isSpeakerCompleted
               ? Container()
-              : speakerWithdrawOneToManyRequest,
-          SizedBox(width: 4),
-          widget.requestItem.isSpeakerCompleted
-              ? Container()
-              : speakerCompleteOneToManyRequest
+              : speakerCompleteOneToManyRequest,
+
+          SizedBox(width: 7),
         ],
       );
     } else {
@@ -677,9 +679,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
           ),
+          SizedBox(width: 3),
           rejectOneToManySpeakerRequest,
-          SizedBox(width: 4),
+          SizedBox(width: 6),
           acceptOneToManySpeakerRequest,
+          SizedBox(width: 7),
         ],
       );
     }
@@ -796,7 +800,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title: Text('Are you sure you want to reject invite?'),
+                  title: Text(L.of(context).speaker_reject_invite_dialog),
                   actions: <Widget>[
                     FlatButton(
                       color: Theme.of(context).primaryColor,
@@ -906,7 +910,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             SizedBox(width: 1),
             Spacer(),
             Text(
-              'Complete',
+              L.of(context).speaker_claim_credits,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -927,9 +931,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   onFinish: () async {
                     await oneToManySpeakerRequestCompleted(
                         widget.requestItem, context);
-
-                    // Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
+                  fromNotification: false,
                 );
               },
             ),
@@ -1367,7 +1371,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       children: [
                         TextSpan(
                           text: widget.requestItem.isSpeakerCompleted
-                              ? 'The request is completed by speaker'
+                              ? L.of(context).request_completed_by_speaker
                               : S.of(context).creator_of_request_message,
                           style: TextStyle(
                             fontSize: 16,
@@ -1394,7 +1398,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         SizedBox(width: 1),
                         Spacer(),
                         Text(
-                          L.of(context).complete,
+                          L.of(context).speaker_claim_credits,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -1405,7 +1409,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         ),
                       ],
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
@@ -1415,9 +1419,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               onFinish: () async {
                                 await oneToManySpeakerRequestCompleted(
                                     widget.requestItem, context);
-
-                                // Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               },
+                              fromNotification: false,
                             );
                           },
                         ),
@@ -1539,7 +1543,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               children: [
                 TextSpan(
                   text: widget.requestItem.isSpeakerCompleted
-                      ? 'The request is completed by speaker'
+                      ? L.of(context).request_completed_by_speaker
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,

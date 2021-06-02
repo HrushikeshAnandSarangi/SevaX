@@ -735,7 +735,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             BorderRadius
                                                                 .circular(
                                                                     15.7)),
-                                                hintText: 'Ex: Garry',
+                                                hintText: L
+                                                    .of(context)
+                                                    .select_speaker_hint,
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -3075,13 +3077,46 @@ class RequestEditFormState extends State<RequestEditForm> {
                                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                 <tbody>
                                                     <tr>
-                                                        <td valign="top" style="padding-bottom:10px">
+                                                        <td valign="top" style="padding-bottom:0px">
                                                             <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;max-width:100%;min-width:100%">
                                                                 <tbody>
                                                                     <tr>
                                                                         <td valign="top" style="font-family:Helvetica;word-break:break-word;font-size:16px;line-height:16px;padding:0px 4px 9px">
                                                                             <div style="text-align:left;font-size:18px;line-height:20px;font-weight:500;color:#2c2c2d;">Hi ${receiverName},</div>
-                                                                            <div style="text-align:left;font-size:20px;line-height:25px;color:black;font-weight:700;"><br>You have been invited by ${requestCreatorName} to be the speaker \n for: ${requestName} on ${DateFormat('EEEE, d MMM h:mm a').format(DateTime.fromMillisecondsSinceEpoch(startDate))}.</div>
+                                                                            <div style="text-align:left;font-size:20px;line-height:25px;color:black;font-weight:700;"><br>You have been invited by ${requestCreatorName} to be a speaker \n on the topic of ${requestName} on ${DateFormat('EEEE, d').format(DateTime.fromMillisecondsSinceEpoch(startDate))} at ${DateFormat('MMM h:mm a').format(DateTime.fromMillisecondsSinceEpoch(startDate))}.</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top" style="padding-bottom:10px">
+                                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;max-width:100%;min-width:100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" style="font-family:Helvetica;word-break:break-word;font-size:16px;line-height:16px;padding:0px 4px 9px">
+                                                                            <div style="text-align:left;font-size:20px;line-height:25px;color:black;font-weight:700;"><br>Please accept the invitation by clicking on the notification you will receive in the SevaX app.</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top" style="padding-bottom:10px">
+                                                            <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: inherit;max-width:100%;min-width:100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td valign="top" style="font-family:Helvetica;word-break:break-word;font-size:16px;line-height:16px;padding:0px 4px 9px">
+                                                                            <br>
+                                                                            <br>
+                                                                            <div style="text-align:left;font-size:18px;line-height:20px;font-weight:500;color:#2c2c2d;">Regards,</div>
+                                                                            <br>
+                                                                            <div style="text-align:left;font-size:18px;line-height:20px;font-weight:500;color:#2c2c2d;">${communityName}</div>
+                                                                            <br>
+                                                                            <br>
+                                                                            <br>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -3131,7 +3166,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                                                 <tbody>
                                                                                     <tr>
                                                                                 <td valign="top " style="font-family:Helvetica;word-break:break-word;color:rgb(255,255,255);font-size:12px;line-height:18px;text-align:center !important;padding:0px 18px 9px">
-                                                                                    <em>Copyright Â© 2020 Seva Exchange, All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
+                                                                                    <em>Copyright © 2021 Seva Exchange Corporation. All rights reserved.</em><br><br><strong>Feel free to contact us at:</strong><br><a href="mailto:contact@sevaexchange.com " style="color:rgb(255,255,255) "
                                                                                         target="_blank ">info@sevaexchange.com</a><br><br><a href="https://sevaxapp.com/PrivacyPolicy.html" target="_blank" style="color:rgb(255,255,255);">Privacy Policy&nbsp;</a>&nbsp;<br>
                                                                                 </td>
                                                                                     </tr>
@@ -3156,7 +3191,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             </table>
         </div>
     </body>
-  </html> """,
+  </html>
+ """,
     ));
   } //Label to be confirmed
 
