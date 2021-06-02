@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +81,10 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             );
           },
         ),
-        title: Text(Strings.filters,style:TextStyle(fontSize:18),),
+        title: Text(
+          Strings.filters,
+          style: TextStyle(fontSize: 18),
+        ),
       ),
       body: Container(
         margin: EdgeInsets.only(left: 20, right: 20, top: 20),
