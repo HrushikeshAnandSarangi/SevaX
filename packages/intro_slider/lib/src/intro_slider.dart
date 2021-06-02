@@ -25,7 +25,7 @@ class _IntroSliderState extends State<IntroSlider> {
       WidgetsBinding.instance.addPostFrameCallback(
         (timeStamp) {
           _timer = Timer.periodic(
-            Duration(seconds: 1),
+            Duration(milliseconds: 600),
             (timer) async {
               // await _controller.nextPage(
               //   duration: Duration(milliseconds: 600),
