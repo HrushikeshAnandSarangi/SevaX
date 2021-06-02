@@ -13,8 +13,9 @@ class SelectedSpeakerTimeDetails {
   factory SelectedSpeakerTimeDetails.fromMap(Map<dynamic, dynamic> json) =>
       SelectedSpeakerTimeDetails(
         prepTime: json["prepTime"] == null ? null : json["prepTime"],
-        speakingTime:
-            json["speakingTime"] == null ? null : json["speakingTime"],
+        speakingTime: json["speakingTime"] == null
+            ? null
+            : double.parse(json["speakingTime"].toString()),
       );
 
   Map<String, dynamic> toMap() => {
