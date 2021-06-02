@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -568,6 +569,63 @@ class OfferDetails extends StatelessWidget {
                                   .then((_) => Navigator.of(context).pop());
                             }
                           }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Offstage(
+                  offstage: isCreator ||
+                      offerModel.offerType == OfferType.GROUP_OFFER ||
+                      offerModel.type != RequestType.TIME,
+                  child: Container(
+                    width: isAccepted ? 150 : 120,
+                    height: 32,
+                    child: ConfigurationCheck(
+                      actionType: 'accept_offers',
+                      role: memberType(widget.timebankModel,
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              S.of(context).accept_offer,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          showDialogForMakingAnOffer(
+                              model: offerModel,
+                              parentContext: context,
+                              timebankModel: timebankModel,
+                              sevaUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              hideCancelBookMark: true);
                         },
                       ),
                     ),
