@@ -32,7 +32,9 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
+import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:path/path.dart' as pathExt;
 
 import '../../globals.dart' as globals;
 import '../core.dart';
@@ -572,12 +574,19 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   void userDoc(String _doc, String fileName) {
     // TODO: implement userDoc
-    setState(() {
-      this._path = _doc;
-      this._fileName = fileName;
-      this._isDocumentBeingUploaded = true;
-    });
-    checkFileSize();
+    String _extension = pathExt.extension(_doc).split('?').first;
+    if (_extension == 'pdf' || _extension == '.pdf') {
+      setState(() {
+        this._path = _doc;
+        this._fileName = fileName;
+        this._isDocumentBeingUploaded = true;
+      });
+      checkFileSize();
+    } else {
+      getExtensionAlertDialog(
+          context: context, message: S.of(context).only_pdf_files_allowed);
+    }
+
     return null;
   }
 
@@ -722,7 +731,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       this._saving = true;
     });
     SevaCore.of(context).loggedInUser.fullname = name;
-    
+
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
@@ -834,7 +843,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
-                  onChanged: (value)=>name = value,
+                  onChanged: (value) => name = value,
                   validator: (value) {
                     if (value.isEmpty) {
                       return S.of(context).enter_name_hint;
