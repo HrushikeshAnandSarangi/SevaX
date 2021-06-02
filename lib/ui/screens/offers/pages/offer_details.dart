@@ -583,7 +583,7 @@ class OfferDetails extends StatelessWidget {
                     height: 32,
                     child: ConfigurationCheck(
                       actionType: 'accept_offers',
-                      role: memberType(widget.timebankModel,
+                      role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
