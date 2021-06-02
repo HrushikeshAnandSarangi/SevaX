@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 class TimebankRequestCard extends StatelessWidget {
   final bool isRecurring;
@@ -176,7 +177,11 @@ class TimebankRequestCard extends StatelessWidget {
         return getTagMainFrame(S.of(context).time_request, context);
 
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request', context);
+        return getTagMainFrame(
+            S.of(context).one_to_many.sentenceCase() +
+                '' +
+                S.of(context).request,
+            context);
 
       default:
         return Container();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 /// [hideFilters] Pass bool to hide in order
 /// Time Request
@@ -34,7 +35,7 @@ class RequestFilters extends StatelessWidget {
           children: [
             CustomChipWithTap(
               isHidden: hideFilters[0],
-              label: 'Time Request',
+              label: 'Time',
               isSelected: filter.timeRequest,
               onTap: () {
                 onTap(
@@ -70,7 +71,7 @@ class RequestFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[3],
-              label: 'One to many',
+              label: S.of(context).one_to_many.sentenceCase(),
               isSelected: filter.oneToManyRequest,
               onTap: () {
                 onTap(

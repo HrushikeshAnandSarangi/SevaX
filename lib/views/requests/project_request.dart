@@ -33,6 +33,8 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/utils/extensions.dart';
+import '../../labels.dart';
 
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
@@ -685,6 +687,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         return getTagMainFrame(S.of(context).goods_request);
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
+      case RequestType.ONE_TO_MANY_REQUEST:
+        return getTagMainFrame(S.of(context).one_to_many.sentenceCase() +
+            '' +
+            S.of(context).request);
+      case RequestType.BORROW:
+        return getTagMainFrame(L.of(context).borrow_request_title);
 
       default:
         return Container();

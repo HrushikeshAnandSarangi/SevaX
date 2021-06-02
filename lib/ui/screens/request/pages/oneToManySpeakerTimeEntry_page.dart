@@ -38,7 +38,7 @@ class OneToManySpeakerTimeEntry extends StatefulWidget {
 
 class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
   int prepTime = 0;
-  int speakingTime = 0;
+  // double speakingTime = 0;
 
   RequestModel requestModel;
 
@@ -59,7 +59,7 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
   @override
   Widget build(BuildContext context) {
     log('preptime:  ' + prepTime.toString());
-    log('speakingTime:  ' + speakingTime.toString());
+    // log('speakingTime:  ' + speakingTime.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -147,66 +147,66 @@ class OneToManySpeakerTimeEntryState extends State<OneToManySpeakerTimeEntry> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 25),
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                child: Text(
-                                  'How much time do you need to fulfill the request?',
-                                  style: TextStyle(
-                                      fontSize: 17.0,
-                                      fontWeight: FontWeight.w500),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    TextFormField(
-                                      controller:
-                                          selectedHoursDeliveryTimeController,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        BlacklistingTextInputFormatter(
-                                          RegExp('[\\.|\\,|\\ |\\-]'),
-                                        ),
-                                      ],
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            EdgeInsets.only(bottom: 5),
-                                        //errorText: S.of(context).enter_hours,
-                                        hintText: 'Time in hours',
-                                        hintStyle: TextStyle(fontSize: 13),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value == '') {
-                                          return S.of(context).enter_hours;
-                                        }
-                                        if (value.isEmpty) {
-                                          S.of(context).select_hours;
-                                        }
-                                        this.speakingTime = int.parse(value);
-                                        return null;
-                                      },
-                                      onChanged: (val2) {
-                                        setState(() {
-                                          speakingTime = int.parse(val2);
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                          // SizedBox(height: 25),
+                          // Row(
+                          //   children: [
+                          //     Container(
+                          //       width: MediaQuery.of(context).size.width * 0.7,
+                          //       child: Text(
+                          //         'How much time do you need to fulfill the request?',
+                          //         style: TextStyle(
+                          //             fontSize: 17.0,
+                          //             fontWeight: FontWeight.w500),
+                          //         textAlign: TextAlign.left,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // SizedBox(height: 15),
+                          // Row(
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   children: <Widget>[
+                          //     Expanded(
+                          //       child: Column(
+                          //         crossAxisAlignment: CrossAxisAlignment.start,
+                          //         children: <Widget>[
+                          //           TextFormField(
+                          //             controller:
+                          //                 selectedHoursDeliveryTimeController,
+                          //             keyboardType: TextInputType.number,
+                          //             inputFormatters: [
+                          //               BlacklistingTextInputFormatter(
+                          //                 RegExp('[\\.|\\,|\\ |\\-]'),
+                          //               ),
+                          //             ],
+                          //             decoration: InputDecoration(
+                          //               contentPadding:
+                          //                   EdgeInsets.only(bottom: 5),
+                          //               //errorText: S.of(context).enter_hours,
+                          //               hintText: 'Time in hours',
+                          //               hintStyle: TextStyle(fontSize: 13),
+                          //             ),
+                          //             validator: (value) {
+                          //               if (value == null || value == '') {
+                          //                 return S.of(context).enter_hours;
+                          //               }
+                          //               if (value.isEmpty) {
+                          //                 S.of(context).select_hours;
+                          //               }
+                          //               this.speakingTime = int.parse(value);
+                          //               return null;
+                          //             },
+                          //             onChanged: (val2) {
+                          //               setState(() {
+                          //                 speakingTime = int.parse(val2);
+                          //               });
+                          //             },
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           SizedBox(height: 30),
                           Row(
                             children: [

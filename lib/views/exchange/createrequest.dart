@@ -73,6 +73,7 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/extensions.dart';
 
 import '../../labels.dart';
 
@@ -1988,7 +1989,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     transaction_matrix_type: 'cash_goods_requests',
                     comingFrom: widget.comingFrom,
                     child: _optionRadioButton<RequestType>(
-                      title: 'One To Many (Webinar)',
+                      title: S.of(context).one_to_many.sentenceCase(),
                       value: RequestType.ONE_TO_MANY_REQUEST,
                       isEnabled: !widget.isOfferRequest,
                       groupvalue: requestModel.requestType,

@@ -94,7 +94,7 @@ class OneToManyCreatorCompleteRequestPageState
           child: ConstrainedBox(
             constraints: BoxConstraints(),
             child: Container(
-              padding: EdgeInsets.only(top: 25.0, left: 5, right: 5),
+              padding: EdgeInsets.only(top: 20.0, left: 5, right: 5),
               color: requestModel.color,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,8 +168,8 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
                                                       null
-                                                  ? '0'
-                                                  : 'Session duration: ' +
+                                                  ? 'Duration of Session: unavailable'
+                                                  : 'Duration of Session: ' +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
                                                           .speakingTime
@@ -186,7 +186,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .prepTime ==
                                                       null
                                                   ? '0'
-                                                  : 'Prep time: ' +
+                                                  : 'Time to prepare: ' +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
                                                           .prepTime
@@ -237,7 +237,7 @@ class OneToManyCreatorCompleteRequestPageState
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   setState(() {
                                     tempAttendeesList =
@@ -248,8 +248,8 @@ class OneToManyCreatorCompleteRequestPageState
                                   'Reset list',
                                   style: TextStyle(
                                       fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[600]),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black),
                                 ),
                               ),
                             ],
@@ -262,66 +262,64 @@ class OneToManyCreatorCompleteRequestPageState
                     children: [
                       Container(
                         padding: EdgeInsets.only(left: 17, right: 17),
-                        alignment: Alignment.center,
+                        alignment: Alignment.topCenter,
                         width: MediaQuery.of(context).size.width * 0.88,
-                        height: MediaQuery.of(context).size.width * 0.40,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ListView.separated(
-                              shrinkWrap: true,
-                              reverse: true,
-                              itemCount: tempAttendeesList.length,
-                              separatorBuilder:
-                                  (BuildContext context, int index) =>
-                                      Divider(),
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                tempAttendeesList[index]
-                                                            ['photoURL'] ==
-                                                        null
-                                                    ? defaultUserImageURL
-                                                    : tempAttendeesList[index]
-                                                        ['photoURL']),
-                                            minRadius: 25.0),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          tempAttendeesList[index]
-                                                  ['fullname'] ??
-                                              S.of(context).name_not_available,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: ListView.separated(
+                            physics: ClampingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            reverse: true,
+                            itemCount: tempAttendeesList.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) => Divider(),
+                            itemBuilder: (context, index) {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              tempAttendeesList[index]
+                                                          ['photoURL'] ==
+                                                      null
+                                                  ? defaultUserImageURL
+                                                  : tempAttendeesList[index]
+                                                      ['photoURL']),
+                                          minRadius: 25.0),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        tempAttendeesList[index]['fullname'] ??
+                                            S.of(context).name_not_available,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ],
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        log('tap');
-                                        if (tempAttendeesList.length > 0) {
-                                          setState(() {
-                                            tempAttendeesList.removeAt(index);
-                                          });
-                                        }
-                                      },
-                                      child: Icon(Icons.cancel_rounded,
-                                          color: Colors.grey, size: 32),
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      log('tap');
+                                      if (tempAttendeesList.length > 0) {
+                                        setState(() {
+                                          tempAttendeesList.removeAt(index);
+                                        });
+                                      }
+                                    },
+                                    child: Icon(Icons.cancel_rounded,
+                                        color: Colors.grey, size: 32),
+                                  )
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -349,7 +347,7 @@ class OneToManyCreatorCompleteRequestPageState
                       ),
                     ],
                   ),
-                  SizedBox(height: 25),
+                  SizedBox(height: 10),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.93,
                     child: Row(
