@@ -24,6 +24,7 @@ import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 class OfferList extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -213,7 +214,7 @@ class _OfferListState extends State<OfferList> {
             children: [
               SizedBox(width: 10),
               CustomChip(
-                label: 'Time Offers',
+                label: S.of(context).time,
                 isSelected: filter.timeOffer,
                 onTap: () {
                   bloc.onFilterChange(
@@ -225,7 +226,7 @@ class _OfferListState extends State<OfferList> {
               ),
               SizedBox(width: 10),
               CustomChip(
-                label: 'Money',
+                label: S.of(context).cash,
                 isSelected: filter.cashOffer,
                 onTap: () {
                   bloc.onFilterChange(
@@ -243,6 +244,18 @@ class _OfferListState extends State<OfferList> {
                   bloc.onFilterChange(
                     snapshot.data.copyWith(
                       goodsOffer: !snapshot.data.goodsOffer,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
+                label: S.of(context).one_to_many.sentenceCase(),
+                isSelected: filter.oneToManyOffer,
+                onTap: () {
+                  bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      oneToManyOffer: !snapshot.data.oneToManyOffer,
                     ),
                   );
                 },
@@ -267,18 +280,6 @@ class _OfferListState extends State<OfferList> {
                   bloc.onFilterChange(
                     snapshot.data.copyWith(
                       virtualOffer: !snapshot.data.virtualOffer,
-                    ),
-                  );
-                },
-              ),
-              SizedBox(width: 10),
-              CustomChip(
-                label: 'One to many offer',
-                isSelected: filter.oneToManyOffer,
-                onTap: () {
-                  bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      oneToManyOffer: !snapshot.data.oneToManyOffer,
                     ),
                   );
                 },

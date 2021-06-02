@@ -44,6 +44,7 @@ import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import '../../../../labels.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -327,20 +328,57 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           );
                         },
                         onPressedAccept: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return OneToManySpeakerTimeEntry(
-                                  requestModel: model,
-                                  onFinish: () async {
-                                    await oneToManySpeakerInviteAcceptedPersonalNotifications(
-                                        oneToManyRequestModel, context);
-                                    await onDismissed();
-                                  },
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext viewContext) {
+                                return AlertDialog(
+                                  title: Text(L
+                                      .of(context)
+                                      .oneToManyRequestSpeakerAcceptRequest),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      color: Theme.of(context).primaryColor,
+                                      child: Text(
+                                        S.of(context).yes,
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                      onPressed: () async {
+                                        await oneToManySpeakerInviteAcceptedPersonalNotifications(
+                                            model, context);
+
+                                        Navigator.of(viewContext).pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      color: Theme.of(context).accentColor,
+                                      child: Text(
+                                        S.of(context).no,
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(viewContext).pop();
+                                      },
+                                    ),
+                                  ],
                                 );
-                              },
-                            ),
-                          );
+                              });
+
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (context) {
+                          //       return OneToManySpeakerTimeEntry(
+                          //         requestModel: model,
+                          //         onFinish: () async {
+                          //           await oneToManySpeakerInviteAcceptedPersonalNotifications(
+                          //               oneToManyRequestModel, context);
+                          //           await onDismissed();
+                          //         },
+                          //       );
+                          //     },
+                          //   ),
+                          // );
                         },
                         onPressedReject: () async {
                           showDialog(
@@ -1430,16 +1468,25 @@ class WithdrawnRequestBody {
 }
 
 Future oneToManySpeakerInviteAcceptedPersonalNotifications(
-    oneToManyRequestModel, BuildContext context) async {
+    RequestModel oneToManyRequestModel, BuildContext context) async {
+  Set<String> approvedUsersList = Set.from(oneToManyRequestModel.approvedUsers);
+  approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+  oneToManyRequestModel.approvedUsers = approvedUsersList.toList();
+
+  await Firestore.instance
+      .collection('requests')
+      .document(oneToManyRequestModel.id)
+      .updateData(oneToManyRequestModel.toMap());
+
   NotificationsModel notificationModel = NotificationsModel(
-      timebankId: oneToManyRequestModel['timebankId'],
-      targetUserId: oneToManyRequestModel['sevaUserId'],
-      data: oneToManyRequestModel,
+      timebankId: oneToManyRequestModel.timebankId,
+      targetUserId: oneToManyRequestModel.sevaUserId,
+      data: oneToManyRequestModel.toMap(),
       type: NotificationType.OneToManyRequestInviteAccepted,
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: oneToManyRequestModel['communityId'],
+      communityId: oneToManyRequestModel.communityId,
       isTimebankNotification: true);
 
   await Firestore.instance
@@ -1448,6 +1495,12 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
       .collection('notifications')
       .document(notificationModel.id)
       .setData(notificationModel.toMap());
+
+  await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
+    requestModel: oneToManyRequestModel,
+    userEmail: SevaCore.of(context).loggedInUser.email,
+    fromNotification: false,
+  );
 }
 
 Future oneToManySpeakerInviteRejectedPersonalNotifications(
@@ -1496,6 +1549,15 @@ Future oneToManySpeakerInviteAccepted(
     userEmail: SevaCore.of(context).loggedInUser.email,
     fromNotification: false,
   );
+
+  Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
+  approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
+  requestModel.approvedUsers = approvedUsersList.toList();
+
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
 
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,

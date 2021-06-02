@@ -377,40 +377,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                           defaultUserImageURL),
                                       minRadius: 34.0),
                                   SizedBox(width: 25),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          widget.requestItem.selectedInstructor
-                                              .fullname,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500)),
-                                      SizedBox(height: 7),
-                                      widget
-                                                  .requestItem
-                                                  .selectedSpeakerTimeDetails
-                                                  .speakingTime ==
-                                              null
-                                          ? Text('hours not updated..',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey))
-                                          : Text(
-                                              'Session: ' +
-                                                  widget
-                                                      .requestItem
-                                                      .selectedSpeakerTimeDetails
-                                                      .speakingTime
-                                                      .toString() +
-                                                  ' hours',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey)),
-                                    ],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            widget.requestItem
+                                                .selectedInstructor.fullname,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500)),
+                                        SizedBox(height: 7),
+                                        widget
+                                                    .requestItem
+                                                    .selectedSpeakerTimeDetails
+                                                    .speakingTime ==
+                                                null
+                                            ? Text('hours not updated..',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey))
+                                            : Text(
+                                                'Duration of Session: ' +
+                                                    widget
+                                                        .requestItem
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime
+                                                        .toString() +
+                                                    ' hours',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey)),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -457,8 +459,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             getBottomFrame,
             HideWidget(
               hide: widget.requestItem.sevaUserId !=
-                      SevaCore.of(context).loggedInUser.sevaUserID &&
-                  widget.requestItem.accepted == false,
+                      SevaCore.of(context).loggedInUser.sevaUserID ||
+                  widget.requestItem.accepted == true,
               child: InkWell(
                 onTap: () async {
                   await Firestore.instance
@@ -554,32 +556,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForUserMode {
     switch (widget.requestItem.requestType) {
       case RequestType.CASH:
-        return getBottomFrameForCashRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForCashRequest;
 
       case RequestType.GOODS:
-        return getBottomFrameForGoodRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForGoodRequest;
 
       case RequestType.BORROW:
-        return getBottomFrameForBorrowRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForBorrowRequest;
 
       case RequestType.TIME:
-        return getBottomFrameForTimeRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForTimeRequest;
 
       case RequestType.ONE_TO_MANY_REQUEST:
         return widget.requestItem.accepted
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    L.of(context).request_closed,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Europa',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
+            ? requestClosed
             : getBottomFrameForOneToManyRequest;
 
       default:
@@ -599,6 +597,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       return getBottombarAttenders;
     }
+  }
+
+  Widget get requestClosed {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L.of(context).request_closed,
+          style: TextStyle(
+            fontSize: 16,
+            fontFamily: 'Europa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget get getOneToManySpeakerWidget {
@@ -696,21 +710,57 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return OneToManySpeakerTimeEntry(
-                  requestModel: widget.requestItem,
-                  onFinish: () async {
-                    await oneToManySpeakerInviteAccepted(
-                        widget.requestItem, context);
-                    // await onDismissed();
-                  },
+        onPressed: () async {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title:
+                      Text(L.of(context).oneToManyRequestSpeakerAcceptRequest),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        await oneToManySpeakerInviteAccepted(
+                            widget.requestItem, context);
+
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
-              },
-            ),
-          );
+              });
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return OneToManySpeakerTimeEntry(
+          //         requestModel: widget.requestItem,
+          //         onFinish: () async {
+          //           await oneToManySpeakerInviteAccepted(
+          //               widget.requestItem, context);
+          //           // await onDismissed();
+          //         },
+          //       );
+          //     },
+          //   ),
+          // );
         },
       ),
     );

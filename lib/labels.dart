@@ -5,7 +5,7 @@ class L {
 
   //OFFERS LABELS STARTS HERE
 // NOTIFICATIONS
-// 
+//
 
   String get invitation_accepted => "Invitation Accepted";
   String get invitation_accepted_subtitle =>
@@ -14,8 +14,6 @@ class L {
   String get offer_invitation_notification_title => "Offer Invitation";
   String get offer_invitation_notification_subtitle =>
       " has invited you to accept an offer.";
-
-
 
   String get accept_offer_invitation_confirmation =>
       "By accepting, a task will be added to your pending tasks.";
@@ -28,8 +26,7 @@ class L {
   String get minimum_credit_title => "Minimum Credits*";
   String get minimum_credit_hint => "Provide minimum credits you require";
 
-
-
+  String get borrow_request_title => "Borrow Request";
 
   String get select_a_speaker => "Select a speaker";
   String get registration_link => "Registration Link";
@@ -41,6 +38,9 @@ class L {
       "Maximum number of participants reached";
   String get reject_request_completion =>
       "Are you sure you want to reject request completion?";
+
+  String get oneToManyRequestSpeakerAcceptRequest =>
+      'Are you sure you want to accept this request?';
 
   //OFFERS LABELS ENDS HERE
 }

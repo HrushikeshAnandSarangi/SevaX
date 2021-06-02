@@ -35,6 +35,8 @@ import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import '../../labels.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 import '../core.dart';
 
@@ -505,9 +507,11 @@ class RequestListItemsState extends State<RequestListItems> {
       case RequestType.GOODS:
         return getTagMainFrame(S.of(context).goods_request);
       case RequestType.ONE_TO_MANY_REQUEST:
-        return getTagMainFrame('One To Many Request');
+        return getTagMainFrame(S.of(context).one_to_many.sentenceCase() +
+            '' +
+            S.of(context).request);
       case RequestType.BORROW:
-        return getTagMainFrame('Borrow Request');
+        return getTagMainFrame(L.of(context).borrow_request_title);
       case RequestType.TIME:
         return getTagMainFrame(S.of(context).time_request);
 
