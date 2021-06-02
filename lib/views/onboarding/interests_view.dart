@@ -54,7 +54,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
     hasPellError = false;
     Firestore.instance
         .collection('interests')
-        .orderBy('name')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {

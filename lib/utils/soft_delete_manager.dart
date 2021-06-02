@@ -47,7 +47,7 @@ Future<bool> checkExistingRequest({
   });
 }
 
-Future<void> showAdvisoryBeforeDeletion({
+Future<bool> showAdvisoryBeforeDeletion({
   BuildContext context,
   SoftDelete softDeleteType,
   String associatedId,
@@ -69,18 +69,18 @@ Future<void> showAdvisoryBeforeDeletion({
   progressDialog.hide();
 
   if (isAlreadyRequested) {
-    _showRequestProcessingWithStatus(context: context);
-    return;
+    await _showRequestProcessingWithStatus(context: context);
+    return true;
   }
 
   if (softDeleteType == SoftDelete.REQUEST_DELETE_GROUP ||
       softDeleteType == SoftDelete.REQUEST_DELETE_TIMEBANK) {
     if (isAccedentalDeleteEnabled) {
-      _showAccedentalDeleteConfirmation(
+      await _showAccedentalDeleteConfirmation(
         context: context,
         softDeleteType: softDeleteType,
       );
-      return;
+      return true;
     }
   }
 
@@ -278,7 +278,7 @@ String _getType(SoftDelete softDeleteType) {
   }
 }
 
-void _showAccedentalDeleteConfirmation({
+Future<bool> _showAccedentalDeleteConfirmation({
   BuildContext context,
   SoftDelete softDeleteType,
 }) {
@@ -299,6 +299,7 @@ void _showAccedentalDeleteConfirmation({
           RaisedButton(
             onPressed: () {
               Navigator.pop(accedentalDialogContext);
+              return true;
             },
             child: Text(
               S.of(context).dismiss,
@@ -310,7 +311,7 @@ void _showAccedentalDeleteConfirmation({
   );
 }
 
-void _showRequestProcessingWithStatus({BuildContext context}) {
+Future<bool> _showRequestProcessingWithStatus({BuildContext context}) {
   showDialog(
     context: context,
     builder: (BuildContext _showRequestProcessingWithStatusContext) {
@@ -325,6 +326,7 @@ void _showRequestProcessingWithStatus({BuildContext context}) {
           RaisedButton(
             onPressed: () {
               Navigator.pop(_showRequestProcessingWithStatusContext);
+              return true;
             },
             child: Text(
               S.of(context).dismiss,

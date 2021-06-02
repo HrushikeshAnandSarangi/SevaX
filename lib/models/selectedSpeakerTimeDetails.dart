@@ -15,8 +15,7 @@ class SelectedSpeakerTimeDetails {
         prepTime: json["prepTime"] == null ? null : json["prepTime"],
         speakingTime: json["speakingTime"] == null
             ? null
-            : double.parse(json["speakingTime"]
-                .toString()), //was throwing expected int not double so forcefully parsing to double
+            : double.parse(json["speakingTime"].toString()),
       );
 
   Map<String, dynamic> toMap() => {

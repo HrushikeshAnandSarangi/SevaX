@@ -37,6 +37,7 @@ import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
+import 'package:path/path.dart' as pathExt;
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -281,7 +282,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     ),
                   ),
                   onTap: () async {
-                    _asyncInputDialog(context,SevaCore.of(context).loggedInUser);
+                    _asyncInputDialog(
+                        context, SevaCore.of(context).loggedInUser);
                   },
                 ),
               )
@@ -522,8 +524,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
-
-      userDoc(_path, _fileName);
+      String _extension = pathExt.extension(_path).split('?').first;
+      if (_extension == 'csv' || _extension == '.csv') {
+        userDoc(_path, _fileName);
+      } else {
+        getExtensionAlertDialog(
+            context: context, message: S.of(context).only_csv_allowed);
+      }
     }
   }
 
@@ -1048,7 +1055,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  Future<String> _asyncInputDialog(BuildContext context,UserModel user) async {
+  Future<String> _asyncInputDialog(BuildContext context, UserModel user) async {
     String timebankCode = createCryptoRandomString();
 
     return showDialog<String>(
@@ -1093,7 +1100,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     builder: (context) => TimebankCodeWidget(
                       timebankCodeModel: codeModel,
                       timebankName: widget.timebankModel.name,
-                      user:user,
+                      user: user,
                     ),
                   ),
                 );
@@ -1259,4 +1266,27 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         .document(notification.id)
         .setData(notification.toMap());
   }
+}
+
+getExtensionAlertDialog({BuildContext context, String message}) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: Text(S.of(context).extension_alert),
+        content: new Text(message),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            textColor: Colors.red,
+            child: new Text(S.of(context).close),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

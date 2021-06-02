@@ -11,10 +11,13 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../globals.dart' as globals;
 import 'news_image_picker_handler.dart';
+
+import 'package:path/path.dart' as pathExt;
 
 class NewsImage extends StatefulWidget {
   final String photoCredits;
@@ -126,12 +129,18 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void userDoc(String _doc, String fileName) {
-    setState(() {
-      this._path = _doc;
-      this._fileName = fileName;
-      this._isDocumentBeingUploaded = true;
-    });
-    checkPdfSize();
+    String _extension = pathExt.extension(_doc).split('?').first;
+    if (_extension == 'pdf' || _extension == '.pdf') {
+      setState(() {
+        this._path = _doc;
+        this._fileName = fileName;
+        this._isDocumentBeingUploaded = true;
+      });
+      checkPdfSize();
+    } else {
+      getExtensionAlertDialog(
+          context: context, message: S.of(context).only_pdf_files_allowed);
+    }
   }
 
   void checkPdfSize() async {
