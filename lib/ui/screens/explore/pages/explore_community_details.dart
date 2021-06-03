@@ -301,7 +301,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  "Upcoming Events",
+                                  S.of(context).upcoming_events,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
@@ -424,7 +424,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  "Latest Requests",
+                                  S.of(context).latest_requests,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,

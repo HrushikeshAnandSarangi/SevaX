@@ -263,9 +263,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 controller:_minimumCreditsController,
                 currentNode: _minimumCredits,
                 value: snapshot.data,
-                heading: L.of(context).minimum_credit_title,
+                heading: S.of(context).minimum_credit_title,
                 onChanged: _bloc.onMinimumCreditsChanged,
-                hint: L.of(context).minimum_credit_hint,
+                hint:S.of(context).minimum_credit_hint,
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
                 formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
@@ -281,14 +281,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 0: Padding(
                   padding: EdgeInsets.only(left: 14, right: 14),
                   child: Text(
-                    L.of(context).option_one, //Label to be created
+                    S.of(context).option_one, //Label to be created
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),
                 1: Padding(
                   padding: EdgeInsets.only(left: 14, right: 14),
                   child: Text(
-                    L.of(context).option_two, //Label to be created
+                    S.of(context).option_two, //Label to be created
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),

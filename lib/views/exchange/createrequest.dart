@@ -2466,7 +2466,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           categoryWidget(),
           SizedBox(height: 20),
           Text(
-            'Provide the list of Skills that you required for this request',
+           S.of(context).provide_skills,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

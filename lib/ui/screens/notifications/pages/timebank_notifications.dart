@@ -266,8 +266,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: null, // TO BE MADE
                   photoUrl: oneToManyRequestModel['selectedInstructor']
                       ['photoURL'],
-                  title: oneToManyRequestModel['selectedInstructor']
-                      ['fullname'],
+                  title: S.of(context).invitation_accepted,
                   subTitle: 'accepted invite to be Speaker',
                 );
                 break;
@@ -359,7 +358,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         builder: (BuildContext viewContext) {
                           return AlertDialog(
                             title: Text(
-                                'Are you sure you want to reject request completion?'),
+                               S.of(context).reject_request_completion),
                             actions: <Widget>[
                               FlatButton(
                                 color: Theme.of(context).primaryColor,

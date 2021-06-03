@@ -375,7 +375,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   fontSize: 12,
                 ),
               ),
-              headingText("Event Description *"),
+              headingText(S.of(context).event_description + " *"),
               TextFormField(
                 decoration: InputDecoration(
                   errorMaxLines: 2,
@@ -419,11 +419,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 padding: EdgeInsets.all(8),
               ),
 
-              headingText(L.of(context).registration_link),
+              headingText(S.of(context).registration_link),
               TextFormField(
                 decoration: InputDecoration(
                   errorMaxLines: 2,
-                  hintText: L.of(context).registration_link_hint,
+                  hintText: S.of(context).registration_link_hint,
                 ),
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(focusNodes[3]);

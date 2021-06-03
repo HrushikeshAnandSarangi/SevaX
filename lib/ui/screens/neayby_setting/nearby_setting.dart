@@ -158,7 +158,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                   ),
                 ),
                 Container(
-                  child: Text(Strings.miles),
+                  child: Text(S.of(context).miles),
                 ),
                 Container(
                   child: Radio(

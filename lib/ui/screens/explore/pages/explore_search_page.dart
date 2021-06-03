@@ -425,7 +425,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                               Text(
                                 snapshot.data == 0
                                     ? 'Anywhere'
-                                    : 'Within ${snapshot.data} Miles',
+                                    : 'Within ${snapshot.data} '+ S.of(context).miles,
                                 style: TextStyle(
                                   color: snapshot.data == 0
                                       ? Theme.of(context).primaryColor

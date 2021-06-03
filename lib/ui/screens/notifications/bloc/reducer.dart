@@ -880,8 +880,8 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: timeOfferParticipantsModel.participantDetails.photourl,
       subTitle: timeOfferParticipantsModel.participantDetails.fullname +
-          L.of(context).invitation_accepted_subtitle,
-      title: L.of(context).invitation_accepted,
+           S.of(context).invitation_accepted_subtitle,
+      title: S.of(context).invitation_accepted,
       onPressed: () {
         showDialog(
           context: context,
@@ -935,8 +935,8 @@ class PersonalNotificationsReducerForOffer {
       },
       photoUrl: model.photoUrlImage ?? defaultUserImageURL,
       subTitle: "${model.fullName} " +
-          L.of(context).offer_invitation_notification_subtitle,
-      title: L.of(context).offer_invitation_notification_title,
+         S.of(context).offer_invitation_notification_subtitle,
+      title: S.of(context).offer_invitation_notification_title,
     );
   }
 }

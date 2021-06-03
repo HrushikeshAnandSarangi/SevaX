@@ -386,7 +386,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               builder: (BuildContext viewContext) {
                                 return AlertDialog(
                                   title: Text(
-                                      L.of(context).speaker_reject_invite_dialog),
+                                     S.of(context).speaker_reject_invite_dialog),
                                   actions: <Widget>[
                                     FlatButton(
                                       color: Theme.of(context).primaryColor,
