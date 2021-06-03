@@ -26,6 +26,7 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -209,6 +210,10 @@ class RequestEditFormState extends State<RequestEditForm> {
   int roomOrTool = 0;
 
   UserModel selectedInstructorModel;
+  BasicUserDetails selectedInstructorModelTemp;
+  SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
+      new SelectedSpeakerTimeDetails(speakingTime: 0.0, prepTime: 0);
+  DocumentReference speakerNotificationDocRefNew;
   bool createEvent = false;
   bool instructorAdded = false;
 
@@ -229,7 +234,9 @@ class RequestEditFormState extends State<RequestEditForm> {
     requestModel = RequestModel(
       communityId: widget.requestModel.communityId,
       oneToManyRequestAttenders: widget.requestModel.oneToManyRequestAttenders,
+      selectedInstructor: widget.requestModel.selectedInstructor,
     );
+    selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
@@ -607,16 +614,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                   CrossAxisAlignment.center,
                                               children: <Widget>[
                                                 UserProfileImage(
-                                                  photoUrl: widget
-                                                      .requestModel
-                                                      .selectedInstructor
-                                                      .photoURL,
-                                                  email: widget.requestModel
-                                                      .selectedInstructor.email,
-                                                  userId: widget
-                                                      .requestModel
-                                                      .selectedInstructor
-                                                      .sevaUserID,
+                                                  photoUrl:
+                                                      selectedInstructorModelTemp
+                                                          .photoURL,
+                                                  email:
+                                                      selectedInstructorModelTemp
+                                                          .email,
+                                                  userId:
+                                                      selectedInstructorModelTemp
+                                                          .sevaUserID,
                                                   height: 75,
                                                   width: 75,
                                                   timebankModel: timebankModel,
@@ -626,9 +632,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    widget
-                                                            .requestModel
-                                                            .selectedInstructor
+                                                    selectedInstructorModelTemp
                                                             .fullname ??
                                                         S
                                                             .of(context)
@@ -656,8 +660,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                     onTap: () {
                                                       setState(() {
                                                         instructorAdded = false;
-                                                        widget.requestModel
-                                                                .selectedInstructor =
+                                                        selectedInstructorModelTemp =
                                                             null;
                                                       });
                                                     },
@@ -999,13 +1002,20 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                                                 user;
                                                                             instructorAdded =
                                                                                 true;
-                                                                            widget.requestModel.selectedInstructor =
+                                                                            selectedInstructorModelTemp =
                                                                                 BasicUserDetails(
-                                                                              fullname: user.fullname,
-                                                                              email: user.email,
-                                                                              photoURL: user.photoURL,
-                                                                              sevaUserID: user.sevaUserID,
+                                                                              fullname: user?.fullname,
+                                                                              email: user?.email,
+                                                                              photoURL: user?.photoURL,
+                                                                              sevaUserID: user?.sevaUserID,
                                                                             );
+                                                                            // widget.requestModel.selectedInstructor =
+                                                                            //     BasicUserDetails(
+                                                                            //   fullname: user.fullname,
+                                                                            //   email: user.email,
+                                                                            //   photoURL: user.photoURL,
+                                                                            //   sevaUserID: user.sevaUserID,
+                                                                            // );
                                                                           });
                                                                         },
                                                                       );
@@ -2625,11 +2635,39 @@ class RequestEditFormState extends State<RequestEditForm> {
       // }
 
       if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-          (widget.requestModel.selectedInstructor == {} ||
-              widget.requestModel.selectedInstructor == null ||
+          (selectedInstructorModelTemp == {} ||
+              selectedInstructorModelTemp == null ||
               instructorAdded == false)) {
         showDialogForTitle(dialogTitle: L.of(context).select_a_speaker);
         return;
+      }
+
+      //Calculate session duration of one to many request using request start and request end time
+      if (widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
+        if (OfferDurationWidgetState.starttimestamp != null &&
+            OfferDurationWidgetState.endtimestamp != null) {
+          DateTime startDateNew = DateTime.fromMillisecondsSinceEpoch(
+              OfferDurationWidgetState.starttimestamp);
+          DateTime endDateNew = DateTime.fromMillisecondsSinceEpoch(
+              OfferDurationWidgetState.endtimestamp);
+
+          Duration sessionDuration = endDateNew.difference(startDateNew);
+          double sixty = 60;
+
+          logger.e('----------> Speaking Minutes: ' +
+              sessionDuration.inMinutes.toString());
+
+          selectedSpeakerTimeDetails.speakingTime = double.parse(
+              (sessionDuration.inMinutes / sixty).toStringAsPrecision(3));
+
+          //prep time will be entered by speaker when he/she is completing the request
+          // selectedSpeakerTimeDetails.prepTime = 0;
+
+          widget.requestModel.selectedSpeakerTimeDetails =
+              selectedSpeakerTimeDetails;
+
+          setState(() {});
+        }
       }
 
       //comparing the recurring days List
@@ -2686,7 +2724,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                   .contains(selectedInstructorModel.email) &&
               widget.requestModel.requestType ==
                   RequestType.ONE_TO_MANY_REQUEST) {
+            //below is to update the invited speaker to inivted members list when speaker is changed
+            await reUpdateInvitedSpeakerForRequest(
+              requestID: widget.requestModel.id,
+              sevaUserIdPrevious:
+                  widget.requestModel.selectedInstructor.sevaUserID,
+              emailPrevious: widget.requestModel.selectedInstructor.email,
+              sevaUserIdNew: selectedInstructorModelTemp.sevaUserID,
+              emailNew: selectedInstructorModelTemp.email,
+            );
+
             List<String> acceptorsList = [];
+
+            //remove old speaker from invitedUsers and add new speaker to invited users
+            widget.requestModel.invitedUsers
+                .remove(widget.requestModel.selectedInstructor.sevaUserID);
+            widget.requestModel.invitedUsers
+                .add(selectedInstructorModelTemp.sevaUserID);
+
             acceptorsList.add(selectedInstructorModel.email);
             widget.requestModel.acceptors = acceptorsList;
             widget.requestModel.requestCreatorName =
@@ -2695,17 +2750,19 @@ class RequestEditFormState extends State<RequestEditForm> {
 
             if (selectedInstructorModel.communities
                 .contains(widget.requestModel.communityId)) {
-              await sendNotificationToMemberOneToManyRequest(
-                  communityId: widget.requestModel.communityId,
-                  timebankId: widget.requestModel.timebankId,
-                  sevaUserId: selectedInstructorModel.sevaUserID,
-                  userEmail: selectedInstructorModel.email);
+              speakerNotificationDocRefNew =
+                  await sendNotificationToMemberOneToManyRequest(
+                      communityId: widget.requestModel.communityId,
+                      timebankId: widget.requestModel.timebankId,
+                      sevaUserId: selectedInstructorModel.sevaUserID,
+                      userEmail: selectedInstructorModel.email);
             } else {
-              await sendNotificationToMemberOneToManyRequest(
-                  communityId: FlavorConfig.values.timebankId,
-                  timebankId: FlavorConfig.values.timebankId,
-                  sevaUserId: selectedInstructorModel.sevaUserID,
-                  userEmail: selectedInstructorModel.email);
+              speakerNotificationDocRefNew =
+                  await sendNotificationToMemberOneToManyRequest(
+                      communityId: FlavorConfig.values.timebankId,
+                      timebankId: FlavorConfig.values.timebankId,
+                      sevaUserId: selectedInstructorModel.sevaUserID,
+                      userEmail: selectedInstructorModel.email);
               // send sevax global notification for user who is not part of the community for this request
               await sendMailToInstructor(
                   senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
@@ -2820,6 +2877,14 @@ class RequestEditFormState extends State<RequestEditForm> {
               EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
           //});
 
+          // update new speaker details
+          widget.requestModel.selectedInstructor = BasicUserDetails(
+            fullname: selectedInstructorModelTemp?.fullname,
+            email: selectedInstructorModelTemp?.email,
+            photoURL: selectedInstructorModelTemp?.photoURL,
+            sevaUserID: selectedInstructorModelTemp?.sevaUserID,
+          );
+
           logger.i("=============IF===============");
 
           linearProgressForCreatingRequest();
@@ -2855,7 +2920,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                 .contains(selectedInstructorModel.email) &&
             widget.requestModel.requestType ==
                 RequestType.ONE_TO_MANY_REQUEST) {
+          //below is to update the invited speaker to inivted members list when speaker is changed
+          await reUpdateInvitedSpeakerForRequest(
+            requestID: widget.requestModel.id,
+            sevaUserIdPrevious:
+                widget.requestModel.selectedInstructor.sevaUserID,
+            emailPrevious: widget.requestModel.selectedInstructor.email,
+            sevaUserIdNew: selectedInstructorModelTemp.sevaUserID,
+            emailNew: selectedInstructorModelTemp.email,
+          );
+
           List<String> acceptorsList = [];
+
+          //remove old speaker from invitedUsers and add new speaker to invited users
+          widget.requestModel.invitedUsers
+              .remove(widget.requestModel.selectedInstructor.sevaUserID);
+          widget.requestModel.invitedUsers
+              .add(selectedInstructorModelTemp.sevaUserID);
+
           acceptorsList.add(selectedInstructorModel.email);
           widget.requestModel.acceptors = acceptorsList;
           widget.requestModel.requestCreatorName =
@@ -2864,18 +2946,20 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           if (selectedInstructorModel.communities
               .contains(widget.requestModel.communityId)) {
-            await sendNotificationToMemberOneToManyRequest(
-                communityId: widget.requestModel.communityId,
-                timebankId: widget.requestModel.timebankId,
-                sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+            speakerNotificationDocRefNew =
+                await sendNotificationToMemberOneToManyRequest(
+                    communityId: widget.requestModel.communityId,
+                    timebankId: widget.requestModel.timebankId,
+                    sevaUserId: selectedInstructorModel.sevaUserID,
+                    userEmail: selectedInstructorModel.email);
           } else {
             // send sevax global notification for user who is not part of the community for this request
-            await sendNotificationToMemberOneToManyRequest(
-                communityId: FlavorConfig.values.timebankId,
-                timebankId: FlavorConfig.values.timebankId,
-                sevaUserId: selectedInstructorModel.sevaUserID,
-                userEmail: selectedInstructorModel.email);
+            speakerNotificationDocRefNew =
+                await sendNotificationToMemberOneToManyRequest(
+                    communityId: FlavorConfig.values.timebankId,
+                    timebankId: FlavorConfig.values.timebankId,
+                    sevaUserId: selectedInstructorModel.sevaUserID,
+                    userEmail: selectedInstructorModel.email);
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
@@ -2887,6 +2971,10 @@ class RequestEditFormState extends State<RequestEditForm> {
                 endDate: widget.requestModel.requestEnd);
           }
         }
+
+        //update current speaker notification document reference
+        widget.requestModel.speakerInviteNotificationDocRef =
+            speakerNotificationDocRefNew;
 
         widget.requestModel.title = initialRequestTitle;
         widget.requestModel.description = initialRequestDescription;
@@ -2905,6 +2993,14 @@ class RequestEditFormState extends State<RequestEditForm> {
             : null;
         widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
         widget.requestModel.maxCredits = tempCredits;
+
+        // update new speaker details
+        widget.requestModel.selectedInstructor = BasicUserDetails(
+          fullname: selectedInstructorModelTemp?.fullname,
+          email: selectedInstructorModelTemp?.email,
+          photoURL: selectedInstructorModelTemp?.photoURL,
+          sevaUserID: selectedInstructorModelTemp?.sevaUserID,
+        );
 
         linearProgressForCreatingRequest();
         await updateRequest(requestModel: widget.requestModel);
@@ -2959,15 +3055,19 @@ class RequestEditFormState extends State<RequestEditForm> {
     return location != null;
   }
 
-  Future<void> sendNotificationToMemberOneToManyRequest(
+  Future<DocumentReference> sendNotificationToMemberOneToManyRequest(
       {String communityId,
       String sevaUserId,
       String timebankId,
-      String userEmail}) async {
-    UserAddedModel userAddedModel = UserAddedModel(
-        timebankImage: timebankModel.photoUrl,
-        timebankName: timebankModel.name,
-        adminName: SevaCore.of(context).loggedInUser.fullname);
+      String userEmail,
+      DocumentReference speakerNotificationDocRefOld}) async {
+    // UserAddedModel userAddedModel = UserAddedModel(
+    //     timebankImage: timebankModel.photoUrl,
+    //     timebankName: timebankModel.name,
+    //     adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    //delete the previous speaker's notification document, since new speaker is invited here
+    speakerNotificationDocRefOld.delete();
 
     NotificationsModel notification = NotificationsModel(
         id: Utils.getUuid(),
@@ -2988,6 +3088,49 @@ class RequestEditFormState extends State<RequestEditForm> {
         .setData(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
+
+    return speakerNotificationDocRefNew = Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id);
+  }
+
+  //if another speaker is invited then we need to remove the previous speaker from the invited list
+//re update the invited speaker
+  Future reUpdateInvitedSpeakerForRequest(
+      {String requestID,
+      String sevaUserIdPrevious,
+      String emailPrevious,
+      String sevaUserIdNew,
+      String emailNew}) async {
+    var batch = Firestore.instance.batch();
+
+    //remove previous speaker as invited member
+    // batch.updateData(
+    //     Firestore.instance.collection('requests').document(requestID), {
+    //   'invitedUsers': FieldValue.arrayRemove([sevaUserIdPrevious]),
+    // });
+    batch.updateData(
+      Firestore.instance.collection('users').document(emailPrevious),
+      {
+        'invitedRequests': FieldValue.arrayRemove([requestID])
+      },
+    );
+
+    //Add new speaker as invited member
+    // batch.updateData(
+    //     Firestore.instance.collection('requests').document(requestID), {
+    //   'invitedUsers': FieldValue.arrayUnion([sevaUserIdNew]),
+    // });
+    batch.updateData(
+      Firestore.instance.collection('users').document(emailNew),
+      {
+        'invitedRequests': FieldValue.arrayUnion([requestID])
+      },
+    );
+
+    await batch.commit();
   }
 
 //Sending only if instructor is not part of the community of the request

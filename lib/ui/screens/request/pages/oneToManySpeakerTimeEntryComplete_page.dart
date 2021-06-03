@@ -37,6 +37,7 @@ class OneToManySpeakerTimeEntryCompleteState
   // int speakingTime = 0;
 
   RequestModel requestModel;
+  BuildContext dialogContext;
 
   @override
   void initState() {
@@ -269,7 +270,17 @@ class OneToManySpeakerTimeEntryCompleteState
                           child: RaisedButton(
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                LinearProgressIndicator();
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (createDialogContext) {
+                                      dialogContext = createDialogContext;
+                                      return AlertDialog(
+                                        title: Text(S.of(context).loading),
+                                        content: LinearProgressIndicator(),
+                                      );
+                                    });
+
                                 //store form input to map in requestModel
                                 requestModel.selectedSpeakerTimeDetails
                                     .prepTime = prepTime;
@@ -289,6 +300,9 @@ class OneToManySpeakerTimeEntryCompleteState
                                     .updateData(requestModel.toMap());
 
                                 //Navigator.of(creditRequestDialogContext).pop();
+
+                                Navigator.of(dialogContext)
+                                    .pop(); //this is to pop loader
 
                                 widget.onFinish();
 

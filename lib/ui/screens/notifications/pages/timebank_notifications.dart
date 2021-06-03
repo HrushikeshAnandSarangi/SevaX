@@ -253,23 +253,28 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.OneToManyRequestInviteAccepted:
                 Map oneToManyRequestModel = notification.data;
+                RequestModel model =
+                    new RequestModel.fromMap(notification.data);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: null,
-                  isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
-                  onPressed: null, // TO BE MADE
-                  photoUrl: oneToManyRequestModel['selectedInstructor']
-                      ['photoURL'],
-                  title: oneToManyRequestModel['selectedInstructor']
-                      ['fullname'],
-                  subTitle: 'accepted invite to be Speaker',
-                );
+                    timestamp: notification.timestamp,
+                    entityName: null,
+                    isDissmissible: true,
+                    onDismissed: () {
+                      FirestoreManager.readTimeBankNotification(
+                        notificationId: notification.id,
+                        timebankId: notification.timebankId,
+                      );
+                    },
+                    onPressed: null, // TO BE MADE
+                    photoUrl: oneToManyRequestModel['selectedInstructor']
+                        ['photoURL'],
+                    title: S.of(context).invitation_accepted,
+                    subTitle: S
+                        .of(context)
+                        .speaker_accepted_invite_notification
+                        .replaceAll('**speakerName',
+                            model.selectedInstructor.fullname));
+
                 break;
 
               case NotificationType.OneToManyRequestInviteRejected:
@@ -277,50 +282,52 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 RequestModel model =
                     new RequestModel.fromMap(notification.data);
                 return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: null,
-                  isDissmissible: true,
-                  onDismissed: () async {
-                    await FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
-                  onPressed: () async {
-                    RequestModel newRequestModel;
-                    await Firestore.instance
-                        .collection('requests')
-                        .document(model.id)
-                        .get()
-                        .then((returnedModel) {
-                      newRequestModel =
-                          RequestModel.fromMap(returnedModel.data);
-                      log("request returned is: ${returnedModel.data['title']}");
-                      setState(() {});
-                    });
+                    timestamp: notification.timestamp,
+                    entityName: null,
+                    isDissmissible: true,
+                    onDismissed: () async {
+                      await FirestoreManager.readTimeBankNotification(
+                        notificationId: notification.id,
+                        timebankId: notification.timebankId,
+                      );
+                    },
+                    onPressed: () async {
+                      RequestModel newRequestModel;
+                      await Firestore.instance
+                          .collection('requests')
+                          .document(model.id)
+                          .get()
+                          .then((returnedModel) {
+                        newRequestModel =
+                            RequestModel.fromMap(returnedModel.data);
+                        log("request returned is: ${returnedModel.data['title']}");
+                        setState(() {});
+                      });
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditRequest(
-                          timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
-                          requestModel: newRequestModel,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditRequest(
+                            timebankId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentTimebank,
+                            requestModel: newRequestModel,
+                          ),
                         ),
-                      ),
-                    );
+                      );
 
-                    await FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
-                  photoUrl: oneToManyRequestModel['selectedInstructor']
-                      ['photoURL'],
-                  title: oneToManyRequestModel['selectedInstructor']
-                      ['fullname'],
-                  subTitle: 'rejected invite to be Speaker',
-                );
+                      await FirestoreManager.readTimeBankNotification(
+                        notificationId: notification.id,
+                        timebankId: notification.timebankId,
+                      );
+                    },
+                    photoUrl: oneToManyRequestModel['selectedInstructor']
+                        ['photoURL'],
+                    title: S.of(context).speaker_rejected,
+                    subTitle: model.selectedInstructor.fullname +
+                        S.of(context).speakerRejectedNotificationLabel +
+                        model.title);
+
                 break;
 
               case NotificationType.OneToManyRequestCompleted:
@@ -329,7 +336,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCardOneToManyCompletedApproval(
                   timestamp: notification.timestamp,
                   entityName: 'NAME',
-                  isDissmissible: true,
+                  isDissmissible: false,
                   onDismissed: () async {
                     await FirestoreManager.readTimeBankNotification(
                       notificationId: notification.id,
@@ -358,8 +365,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         context: context,
                         builder: (BuildContext viewContext) {
                           return AlertDialog(
-                            title: Text(
-                                'Are you sure you want to reject request completion?'),
+                            title:
+                                Text(S.of(context).reject_request_completion),
                             actions: <Widget>[
                               FlatButton(
                                 color: Theme.of(context).primaryColor,

@@ -306,9 +306,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('${widget.requestItem.oneToManyRequestAttenders.length}/' +
-                                    '${widget.requestItem.numberOfApprovals}' +
-                                    ' people Applied'),
+                                Text(
+                                  '${widget.requestItem.oneToManyRequestAttenders.length} ' +
+                                      S.of(context).of_text +
+                                      ' ${widget.requestItem.numberOfApprovals}' +
+                                      L.of(context).people_applied_for_request,
+                                ),
                                 StreamBuilder(
                                     stream: Firestore.instance
                                         .collection("requests")
@@ -651,7 +654,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.isSpeakerCompleted
               ? Container()
               : speakerCompleteOneToManyRequest,
-
           SizedBox(width: 7),
         ],
       );
