@@ -168,7 +168,7 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
                                                       null
-                                                  ? 'Duration of Session: unavailable'
+                                                  ? 'Duration of Session: 0'
                                                   : 'Duration of Session: ' +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
@@ -395,9 +395,14 @@ class OneToManyCreatorCompleteRequestPageState
                                                 requestModel
                                                     .selectedSpeakerTimeDetails
                                                     .prepTime +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .speakingTime);
+                                                (requestModel
+                                                            .selectedSpeakerTimeDetails
+                                                            .speakingTime ==
+                                                        null
+                                                    ? 0.0
+                                                    : requestModel
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime));
 
                                             log('Total Credits: ' +
                                                 totalCredits.toString());
@@ -405,9 +410,14 @@ class OneToManyCreatorCompleteRequestPageState
                                             double creditsToSpeaker = requestModel
                                                     .selectedSpeakerTimeDetails
                                                     .prepTime +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .speakingTime;
+                                                (requestModel
+                                                            .selectedSpeakerTimeDetails
+                                                            .speakingTime ==
+                                                        null
+                                                    ? 0.0
+                                                    : requestModel
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime);
 
                                             //Sevax global to timebank
                                             await TransactionBloc()
