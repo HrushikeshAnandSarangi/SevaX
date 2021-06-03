@@ -59,6 +59,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent_credits_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
+import 'package:sevaexchange/labels.dart';
 
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -398,9 +399,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: oneToManyRequestModel['selectedInstructor']
                       ['photoURL'],
-                  title: oneToManyRequestModel['selectedInstructor']
-                      ['fullname'],
-                  subTitle: 'Completed the request',
+                  title: model.title,
+                  subTitle:
+                      L.of(context).speaker_requested_completion_notification,
                 );
                 break;
 

@@ -386,7 +386,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               builder: (BuildContext viewContext) {
                                 return AlertDialog(
                                   title: Text(
-                                      'Are you sure you want to reject invite?'),
+                                      L.of(context).speaker_reject_invite_dialog),
                                   actions: <Widget>[
                                     FlatButton(
                                       color: Theme.of(context).primaryColor,
@@ -449,6 +449,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         oneToManyRequestModel);
                                     await onDismissed();
                                   },
+                                  fromNotification: true,
                                 );
                               },
                             ),
