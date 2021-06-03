@@ -389,7 +389,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
           widget.timebankModel.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID
-              ? viewMemberConfigurations(context: context)
+              ? TransactionsMatrixCheck(
+                  comingFrom: ComingFrom.Settings,
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.admin_role_customization,
+                  transaction_matrix_type: 'admin_role_customization',
+                  child: viewMemberConfigurations(context: context))
               : Container(),
 
           SizedBox(height: 20),

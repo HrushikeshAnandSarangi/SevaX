@@ -34,6 +34,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
 
@@ -693,23 +694,32 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        SponsorsWidget(
-                          sponsorsMode: widget.isCreateTimebank
-                              ? SponsorsMode.CREATE
-                              : SponsorsMode.EDIT,
-                          timebankModel: timebankModel,
-                          onCreated: (TimebankModel timebank) {
-                            snapshot.data.timebank.updateValueByKey(
-                              'sponsors',
-                              timebank.sponsors,
-                            );
-                            timebankModel = timebank;
-                            setState(() {});
-                          },
-                          onRemoved: (TimebankModel timebank) {
-                            timebankModel = timebank;
-                            setState(() {});
-                          },
+                        HideWidget(
+                          hide: widget.isCreateTimebank,
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Community,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.community_sponsors,
+                            transaction_matrix_type: 'community_sponsors',
+                            child: SponsorsWidget(
+                              sponsorsMode: widget.isCreateTimebank
+                                  ? SponsorsMode.CREATE
+                                  : SponsorsMode.EDIT,
+                              timebankModel: timebankModel,
+                              onCreated: (TimebankModel timebank) {
+                                snapshot.data.timebank.updateValueByKey(
+                                  'sponsors',
+                                  timebank.sponsors,
+                                );
+                                timebankModel = timebank;
+                                setState(() {});
+                              },
+                              onRemoved: (TimebankModel timebank) {
+                                timebankModel = timebank;
+                                setState(() {});
+                              },
+                            ),
+                          ),
                         ),
                         widget.isCreateTimebank
                             ? Container()
