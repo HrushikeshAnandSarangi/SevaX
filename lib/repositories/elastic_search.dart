@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -291,7 +291,7 @@ class ElasticSearchApi {
       }
     });
 
-    List<CommunityModel> communityList = [];
+    Map<String, CommunityModel> communityData = {};
     try {
       List<CommunityModel> communityListTemp =
           await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
@@ -299,7 +299,7 @@ class ElasticSearchApi {
       communityListTemp.forEach((item) {
         logger
             .i("-----------First Community Name  " + communityListTemp[0].name);
-        communityList.add(item);
+        communityData[item.id] = item;
       });
     } on NoNearByCommunitesFoundException catch (e) {
       logger.i("NoNearByCommunitesViaZIPFoundException");
@@ -349,15 +349,16 @@ class ElasticSearchApi {
         CommunityModel model = CommunityModel(sourceMap);
         if (distanceFilterData?.isInRadius(model.location) ?? true) {
           if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
-            if (model.testCommunity) communityList.add(model);
+            if (model.testCommunity) communityData[model.id] = model;
           } else {
-            communityList.add(model);
+            communityData[model.id] = model;
           }
         }
       } on Exception catch (e) {
         logger.e(e);
       }
     });
+    List<CommunityModel> communityList = communityData.values.toList();
     communityList.sort((a, b) => a.name.compareTo(b.name));
 
     logger.i(
