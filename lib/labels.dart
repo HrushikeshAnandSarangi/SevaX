@@ -4,8 +4,7 @@
 //   L.of(BuildContext context) {}
 
 //   // <------------ PENDING START ------------>
-//   String get no_groups_text =>
-//       "You are currently not part of any groups. You can either join one or create a new group."; //(only for mobile)
+
 //   String get offer => "Offer"; //it's in flavor config file so cannot add it.
 //   String get minimum_credits => "Minimum Credits"; //can't find where to replace
 //   String get applied_for_request =>
@@ -55,6 +54,8 @@ String get sandbox_create_community_alert =>
 //<------------------below labels are done------------->
 
 // //DO BELOW OF THIS VISHNU
+//   String get no_groups_text =>
+//       "You are currently not part of any groups. You can either join one or create a new group."; //(done in mobile)
 //   String get kilometers => "Kilometers"; //done in web
 //   String get miles => "Miles"; //done in web
 //  String get continue_to_signin => "Continue to Sign in"; //done in web
