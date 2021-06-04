@@ -168,7 +168,7 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
                                                       null
-                                                  ? 'Duration of Session: unavailable'
+                                                  ? 'Duration of Session: 0'
                                                   : 'Duration of Session: ' +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
@@ -395,9 +395,14 @@ class OneToManyCreatorCompleteRequestPageState
                                                 requestModel
                                                     .selectedSpeakerTimeDetails
                                                     .prepTime +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .speakingTime);
+                                                (requestModel
+                                                            .selectedSpeakerTimeDetails
+                                                            .speakingTime ==
+                                                        null
+                                                    ? 0.0
+                                                    : requestModel
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime));
 
                                             log('Total Credits: ' +
                                                 totalCredits.toString());
@@ -405,9 +410,14 @@ class OneToManyCreatorCompleteRequestPageState
                                             double creditsToSpeaker = requestModel
                                                     .selectedSpeakerTimeDetails
                                                     .prepTime +
-                                                requestModel
-                                                    .selectedSpeakerTimeDetails
-                                                    .speakingTime;
+                                                (requestModel
+                                                            .selectedSpeakerTimeDetails
+                                                            .speakingTime ==
+                                                        null
+                                                    ? 0.0
+                                                    : requestModel
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime);
 
                                             //Sevax global to timebank
                                             await TransactionBloc()
@@ -487,34 +497,34 @@ class OneToManyCreatorCompleteRequestPageState
                                                   [], //so that we don't see it in pending tasks
                                             });
 
-                                            NotificationsModel notification =
-                                                NotificationsModel(
-                                                    id: Utils.getUuid(),
-                                                    timebankId: FlavorConfig
-                                                        .values.timebankId,
-                                                    data: requestModel.toMap(),
-                                                    isRead: false,
-                                                    isTimebankNotification:
-                                                        false,
-                                                    type: NotificationType
-                                                        .OneToManyRequestDoneForSpeaker,
-                                                    communityId: requestModel
-                                                        .communityId,
-                                                    senderUserId:
-                                                        SevaCore.of(context)
-                                                            .loggedInUser
-                                                            .sevaUserID,
-                                                    targetUserId: requestModel
-                                                        .selectedInstructor
-                                                        .sevaUserID);
+                                            // NotificationsModel notification =
+                                            //     NotificationsModel(
+                                            //         id: Utils.getUuid(),
+                                            //         timebankId: FlavorConfig
+                                            //             .values.timebankId,
+                                            //         data: requestModel.toMap(),
+                                            //         isRead: false,
+                                            //         isTimebankNotification:
+                                            //             false,
+                                            //         type: NotificationType
+                                            //             .OneToManyRequestDoneForSpeaker,
+                                            //         communityId: requestModel
+                                            //             .communityId,
+                                            //         senderUserId:
+                                            //             SevaCore.of(context)
+                                            //                 .loggedInUser
+                                            //                 .sevaUserID,
+                                            //         targetUserId: requestModel
+                                            //             .selectedInstructor
+                                            //             .sevaUserID);
 
-                                            await Firestore.instance
-                                                .collection('users')
-                                                .document(requestModel
-                                                    .selectedInstructor.email)
-                                                .collection("notifications")
-                                                .document(notification.id)
-                                                .setData(notification.toMap());
+                                            // await Firestore.instance
+                                            //     .collection('users')
+                                            //     .document(requestModel
+                                            //         .selectedInstructor.email)
+                                            //     .collection("notifications")
+                                            //     .document(notification.id)
+                                            //     .setData(notification.toMap());
 
                                             //make the relevant notification is read true
                                             await FirestoreManager

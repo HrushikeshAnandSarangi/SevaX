@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -36,6 +37,7 @@ import 'notifications_data_manager.dart';
 
 Location location = Location();
 Geoflutterfire geo = Geoflutterfire();
+BuildContext dialogContext;
 
 Future<void> createRequest({@required RequestModel requestModel}) async {
   return await Firestore.instance
@@ -1560,6 +1562,41 @@ Future<void> rejectInviteRequest(
   }
 }
 
+Future<void> acceptOfferInvite({
+  @required String requestId,
+  @required String acceptedUserEmail,
+  @required String acceptedUserId,
+  @required String notificationId,
+  @required bool allowedCalender,
+  @required AcceptorModel acceptorModel,
+  UserModel user,
+}) async {
+  // logger.i("acceptInviteRequest LEVEL |||||||||||||||||||||");
+
+  if (allowedCalender) {
+    // logger.i("allowedCalender is true");
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  } else {
+    // logger.i("Updating request with requestId approved members " +
+    // acceptedUserEmail);
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  }
+}
+
 Future<void> acceptInviteRequest({
   @required String requestId,
   @required String acceptedUserEmail,
@@ -1995,6 +2032,17 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
     context,
     UserModel userModel,
     bool fromNotification) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   //Send notification OneToManyCreatorRejectedCompletion
   //and speaker enters hours again and sends same completed notitifiation to creator
 
@@ -2054,6 +2102,10 @@ Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
   await FirestoreManager
       .readTimeBankNotificationOneToManyCreatorRejectedCompletion(
           requestModel: requestModel, fromNotification: fromNotification);
+
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
 
   log('oneToManyCreatorRequestCompletionRejected end of function');
 }

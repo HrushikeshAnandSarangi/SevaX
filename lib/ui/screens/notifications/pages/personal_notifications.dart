@@ -51,6 +51,8 @@ class PersonalNotifications extends StatefulWidget {
   _PersonalNotificationsState createState() => _PersonalNotificationsState();
 }
 
+BuildContext dialogContext;
+
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
   final subjectBorrow = ReplaySubject<int>();
@@ -203,23 +205,23 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         parentContext: parentContext,
                       );
 
-                    case NotificationType.OneToManyRequestDoneForSpeaker:
-                      RequestModel model =
-                          RequestModel.fromMap(notification.data);
-                      return NotificationCard(
-                        isDissmissible: true,
-                        timestamp: notification.timestamp,
-                        title: model.title + ' ' + 'request has now ended',
-                        subTitle:
-                            S.of(context).hosted_by + ': ' + model.fullName,
-                        //entityName: '',
-                        onDismissed: () {
-                          NotificationsRepository.readUserNotification(
-                            notification.id,
-                            user.email,
-                          );
-                        },
-                      );
+                    // case NotificationType.OneToManyRequestDoneForSpeaker:
+                    //   RequestModel model =
+                    //       RequestModel.fromMap(notification.data);
+                    //   return NotificationCard(
+                    //     isDissmissible: true,
+                    //     timestamp: notification.timestamp,
+                    //     title: model.title + ' ' + 'request has now ended',
+                    //     subTitle:
+                    //         S.of(context).hosted_by + ': ' + model.fullName,
+                    //     //entityName: '',
+                    //     onDismissed: () {
+                    //       NotificationsRepository.readUserNotification(
+                    //         notification.id,
+                    //         user.email,
+                    //       );
+                    //     },
+                    //   );
 
                     case NotificationType.RequestCompletedApproved:
                       return PersonalNotificationReducerForRequests
@@ -314,13 +316,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     //   break;
 
                     case NotificationType.OneToManyRequestAccept:
-                      Map oneToManyRequestModel = notification.data;
+                      // Map oneToManyRequestModel = notification.data;
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
                       return NotificationCardOneToManyAccept(
                         timestamp: notification.timestamp,
                         entityName: 'NAME',
-                        isDissmissible: true,
+                        isDissmissible: false,
                         onDismissed: () {
                           NotificationsRepository.readUserNotification(
                             notification.id,
@@ -385,8 +387,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               context: context,
                               builder: (BuildContext viewContext) {
                                 return AlertDialog(
-                                  title: Text(
-                                      L.of(context).speaker_reject_invite_dialog),
+                                  title: Text(L
+                                      .of(context)
+                                      .speaker_reject_invite_dialog),
                                   actions: <Widget>[
                                     FlatButton(
                                       color: Theme.of(context).primaryColor,
@@ -398,7 +401,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       onPressed: () async {
                                         Navigator.of(viewContext).pop();
                                         await oneToManySpeakerInviteRejectedPersonalNotifications(
-                                            oneToManyRequestModel, context);
+                                            model, context);
                                         await onDismissed();
                                       },
                                     ),
@@ -417,10 +420,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 );
                               });
                         },
-                        photoUrl: oneToManyRequestModel['requestorphotourl'],
-                        title: oneToManyRequestModel['requestCreatorName'],
-                        subTitle: 'added you as Speaker for request: ' +
-                            oneToManyRequestModel['title'],
+                        photoUrl: model.photoUrl,
+                        title: model.requestCreatorName,
+                        subTitle:
+                            'added you as Speaker for request: ' + model.title,
                       );
                       break;
 
@@ -1470,14 +1473,27 @@ class WithdrawnRequestBody {
 
 Future oneToManySpeakerInviteAcceptedPersonalNotifications(
     RequestModel oneToManyRequestModel, BuildContext context) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   Set<String> approvedUsersList = Set.from(oneToManyRequestModel.approvedUsers);
   approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
-  oneToManyRequestModel.approvedUsers = approvedUsersList.toList();
+  // oneToManyRequestModel.approvedUsers = approvedUsersList.toList();
 
   await Firestore.instance
       .collection('requests')
       .document(oneToManyRequestModel.id)
-      .updateData(oneToManyRequestModel.toMap());
+      .updateData({
+    'approvedUsers': approvedUsersList.toList(),
+  });
 
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: oneToManyRequestModel.timebankId,
@@ -1502,10 +1518,25 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
     userEmail: SevaCore.of(context).loggedInUser.email,
     fromNotification: false,
   );
+
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
 }
 
 Future oneToManySpeakerInviteRejectedPersonalNotifications(
     oneToManyRequestModel, BuildContext context) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: oneToManyRequestModel['timebankId'],
       targetUserId: oneToManyRequestModel['sevaUserId'],
@@ -1539,11 +1570,26 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       .document(oneToManyRequestModel['id'])
       .updateData(oneToManyRequestModel);
 
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
+
   log('sends timebank notif to 1 to many creator abt rejection!');
 }
 
 Future oneToManySpeakerInviteAccepted(
     RequestModel requestModel, BuildContext context) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   //make the relevant notification is read true
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: requestModel,
@@ -1553,12 +1599,14 @@ Future oneToManySpeakerInviteAccepted(
 
   Set<String> approvedUsersList = Set.from(requestModel.approvedUsers);
   approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
-  requestModel.approvedUsers = approvedUsersList.toList();
+  // requestModel.approvedUsers = approvedUsersList.toList();
 
   await Firestore.instance
       .collection('requests')
       .document(requestModel.id)
-      .updateData(requestModel.toMap());
+      .updateData({
+    'approvedUsers': approvedUsersList.toList(),
+  });
 
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,
@@ -1586,10 +1634,25 @@ Future oneToManySpeakerInviteAccepted(
     userEmail: SevaCore.of(context).loggedInUser.email,
     fromNotification: false,
   );
+
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
 }
 
 Future oneToManySpeakerInviteRejected(
     RequestModel requestModel, BuildContext context) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,
       targetUserId: requestModel.sevaUserId,
@@ -1610,6 +1673,7 @@ Future oneToManySpeakerInviteRejected(
 
   Set<String> acceptorsList = Set.from(requestModel.acceptors);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
+  acceptorsList.add(requestModel.email);
   requestModel.acceptors = acceptorsList.toList();
 
   //if already approved
@@ -1620,7 +1684,7 @@ Future oneToManySpeakerInviteRejected(
   //So that if a speaker withdraws and a new speaker is invited, before they accept,
   //it will show previously invited speakers time details
   requestModel.selectedSpeakerTimeDetails.prepTime = null;
-  requestModel.selectedSpeakerTimeDetails.speakingTime = null;
+  // requestModel.selectedSpeakerTimeDetails.speakingTime = null;
 
   //below is to fetch creator of request details and set as speaker by default
   var creatorUserModel =
@@ -1647,11 +1711,26 @@ Future oneToManySpeakerInviteRejected(
     fromNotification: false,
   );
 
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
+
   log('sends timebank notif to 1 to many creator abt rejection!');
 }
 
 Future oneToManySpeakerRequestCompleted(
     RequestModel requestModel, BuildContext context) async {
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (createDialogContext) {
+        dialogContext = createDialogContext;
+        return AlertDialog(
+          title: Text(S.of(context).loading),
+          content: LinearProgressIndicator(),
+        );
+      });
+
   NotificationsModel notificationModel = NotificationsModel(
       timebankId: requestModel.timebankId,
       targetUserId: requestModel.sevaUserId,
@@ -1676,6 +1755,10 @@ Future oneToManySpeakerRequestCompleted(
       .updateData({
     'isSpeakerCompleted': true,
   });
+
+  if (dialogContext != null) {
+    Navigator.of(dialogContext).pop();
+  }
 
   await FirestoreManager
       .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(

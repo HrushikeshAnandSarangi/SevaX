@@ -124,7 +124,7 @@ enum NotificationType {
   OneToManyRequestInviteRejected,
   OneToManyRequestCompleted,
   OneToManyCreatorRejectedCompletion,
-  OneToManyRequestDoneForSpeaker,
+  // OneToManyRequestDoneForSpeaker,
   RequestApprove,
   RequestInvite,
   RequestReject,
@@ -229,8 +229,8 @@ Map<String, NotificationType> typeMapper = {
   "OneToManyRequestCompleted": NotificationType.OneToManyRequestCompleted,
   "OneToManyCreatorRejectedCompletion":
       NotificationType.OneToManyCreatorRejectedCompletion,
-  "OneToManyRequestDoneForSpeaker":
-      NotificationType.OneToManyRequestDoneForSpeaker,
+  // "OneToManyRequestDoneForSpeaker":
+      // NotificationType.OneToManyRequestDoneForSpeaker,
   "RequestReject": NotificationType.RequestReject,
   "RequestCompleted": NotificationType.RequestCompleted,
   "RequestCompletedApproved": NotificationType.RequestCompletedApproved,
