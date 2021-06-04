@@ -2,32 +2,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/helpers/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-
+import 'package:sevaexchange/utils/extensions.dart';
 import 'models.dart';
 
 enum OfferType { INDIVIDUAL_OFFER, GROUP_OFFER }
 
 extension OfferTypeExtension on OfferType {
-  String readbable(RequestType requestType) {
+  String readbable(RequestType requestType, BuildContext context) {
     if (this == OfferType.GROUP_OFFER)
-      return 'One to many Offer';
+      return S.of(context).one_to_many.sentenceCase();
     else if (this == OfferType.INDIVIDUAL_OFFER)
       switch (requestType) {
         case RequestType.CASH:
-          return 'Money Offer';
+          return S.of(context).cash;
         case RequestType.GOODS:
-          return 'Goods Offer';
+          return S.of(context).goods;
         case RequestType.TIME:
-          return 'Time Offer';
+          return S.of(context).time;
         default:
-          return 'Individual Offer';
+          return 'Individual'; //Label to be created
       }
     else
-      return 'Individual Offer';
+      return 'Individual'; //Label to be created
   }
 }
 

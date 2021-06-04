@@ -174,7 +174,13 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .selectedSpeakerTimeDetails
                                                           .speakingTime
                                                           .toString() +
-                                                      ' hours',
+                                                      '' +
+                                                      ((requestModel
+                                                                  .selectedSpeakerTimeDetails
+                                                                  .speakingTime >
+                                                              1.0)
+                                                          ? S.of(context).hours
+                                                          : S.of(context).hour),
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
@@ -191,7 +197,13 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .selectedSpeakerTimeDetails
                                                           .prepTime
                                                           .toString() +
-                                                      ' hours',
+                                                      '' +
+                                                      ((requestModel
+                                                                  .selectedSpeakerTimeDetails
+                                                                  .prepTime >
+                                                              1)
+                                                          ? S.of(context).hours
+                                                          : S.of(context).hour),
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,

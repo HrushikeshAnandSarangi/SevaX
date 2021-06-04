@@ -680,7 +680,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                   pendingTask: project.pendingRequests?.length,
                   onTap: () {
                     if (widget.joinStatus == CompareUserStatus.JOINED) {
-                      switchCommunity(message: 'Event');
+                      switchCommunity(message: S.of(context).event);
                     } else {
                       showAlertMessage(
                           message: S.of(context).projects.toLowerCase());

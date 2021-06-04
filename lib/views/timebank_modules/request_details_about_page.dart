@@ -397,7 +397,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                     .selectedSpeakerTimeDetails
                                                     .speakingTime ==
                                                 null
-                                            ? Text('hours not updated..',
+                                            ? Text(
+                                                'hours not updated..', //Label to be created
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -409,7 +410,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                         .selectedSpeakerTimeDetails
                                                         .speakingTime
                                                         .toString() +
-                                                    ' hours',
+                                                    '' +
+                                                    ((widget
+                                                                .requestItem
+                                                                .selectedSpeakerTimeDetails
+                                                                .speakingTime >
+                                                            1.0)
+                                                        ? S.of(context).hours
+                                                        : S.of(context).hour),
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
