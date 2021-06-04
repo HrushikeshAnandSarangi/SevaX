@@ -484,14 +484,14 @@ class MyTasksListState extends State<MyTaskList> {
                   spacing: 8,
                   children: <Widget>[
                     model.isSpeakerCompleted
-                        ? Text(L.of(context).requested_for_completion)
+                        ? Text(S.of(context).requested_for_completion)
                         : Container(
                             height: 35,
                             child: RaisedButton(
                               padding: EdgeInsets.zero,
                               color: FlavorConfig.values.theme.primaryColor,
                               child: Text(
-                                L.of(context).speaker_claim_credits,
+                                S.of(context).speaker_claim_credits,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Europa',
@@ -856,8 +856,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                           ),
-                                          Text(
-                                              S.of(context).hour), //plural here
+                                          Text(S.of(context).hours),
                                         ],
                                       ),
                                     ),
@@ -956,8 +955,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                           ),
-                                          Text(
-                                              S.of(context).hour), //plural here
+                                          Text(S.of(context).hours),
                                         ],
                                       ),
                                     ),
@@ -1046,7 +1044,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                           return null;
                                         },
                                       ),
-                                      Text(S.of(context).hour), //plural here
+                                      Text(S.of(context).hours),
                                     ],
                                   ),
                                 ),
@@ -1192,7 +1190,7 @@ class TaskCardViewState extends State<TaskCardView> {
         0) {
       showDialogFoInfo(
         title: S.of(context).enter_hours,
-        content: L.of(context).entered_credits_less_than_minimum_credits,
+        content: S.of(context).minimum_credits_offer,
       );
       return;
     }

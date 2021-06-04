@@ -25,6 +25,8 @@ import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../../../l10n/l10n.dart';
+
 class RequestsByCategoryView extends StatefulWidget {
   final CategoryModel model;
 
@@ -165,7 +167,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                         showSignInAlertMessage(
                             context: context,
                             message:
-                                'Please Sign In/Sign up to access ${request.title}');
+                                S.of(context).sign_in_alert);
                       },
                       photoUrl: request.photoUrl ?? defaultProjectImageURL,
                       title: request.title,

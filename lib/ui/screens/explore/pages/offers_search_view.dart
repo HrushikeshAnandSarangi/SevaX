@@ -15,6 +15,8 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../../../l10n/l10n.dart';
+
 class OffersSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
@@ -60,7 +62,7 @@ class OffersSearchView extends StatelessWidget {
                       showSignInAlertMessage(
                           context: context,
                           message:
-                              'Please Sign In/Sign up to access ${offer.individualOfferDataModel != null ? offer.individualOfferDataModel.title : offer.groupOfferDataModel.classTitle}');
+                               S.of(context).sign_in_alert);
                     }
                   },
                   photoUrl: /*offer.photoUrl ??*/ defaultProjectImageURL,

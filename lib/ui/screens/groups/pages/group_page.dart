@@ -163,7 +163,7 @@ class _GroupPageState extends State<GroupPage> {
                 ),
                 myGroups.isNotEmpty
                     ? Text(
-                        L.of(context).my_groups,
+                        S.of(context).my_groups,
                         style: TextStyle(
                           fontSize: 18,
                         ),

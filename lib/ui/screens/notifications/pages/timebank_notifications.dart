@@ -132,10 +132,12 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     UserInsufficentCreditsModel.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
-                  title: "${userInsufficientModel.senderName}"
-                      " Has Insufficient Credits To Create Requests",
-                  subTitle: "Credits Needed: "
-                      "${userInsufficientModel.creditsNeeded} \n${S.of(context).tap_to_view_details}",
+                  title: "${userInsufficientModel.senderName}" +
+                      S.of(context).adminNotificationInsufficientCredits,
+                  subTitle: S
+                          .of(context)
+                          .adminNotificationInsufficientCreditsNeeded +
+                      "${(userInsufficientModel.creditsNeeded ?? 10).truncate()} \n${S.of(context).tap_to_view_details}",
                   photoUrl: userInsufficientModel.senderPhotoUrl,
                   entityName: userInsufficientModel.senderName,
                   onPressed: () {
@@ -408,7 +410,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       ['photoURL'],
                   title: model.title,
                   subTitle:
-                      L.of(context).speaker_requested_completion_notification,
+                      S.of(context).speaker_requested_completion_notification,
                 );
                 break;
 

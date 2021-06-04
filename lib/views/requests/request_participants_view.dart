@@ -338,7 +338,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       textColor: Colors.white,
                       // elevation: 5,
                       onPressed: () {},
-                      child: Text(L.of(context).speaker,
+                      child: Text(S.of(context).speaker,
                           style: TextStyle(
                             fontSize: 14,
                           )),
@@ -364,7 +364,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           //checking if speaker is the creator then we can directly show as speaker
                           child: userModel.email == widget.requestModel.email
                               ? Text(
-                                  L.of(context).speaker,
+                                  S.of(context).speaker,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),
