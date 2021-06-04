@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
@@ -196,10 +199,20 @@ class RequestCard extends StatelessWidget {
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  RequestViewClassifer.getTimeFormattedString(
-                                    model.requestEnd,
-                                    user.language,
-                                  ),
+                                  DateFormat.MMMd(getLangTag()).add_jm().format(
+                                        getDateTimeAccToUserTimezone(
+                                          dateTime: DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  model.requestStart),
+                                          timezoneAbb: SevaCore.of(context)
+                                              .loggedInUser
+                                              .timezone,
+                                        ),
+                                      ),
+                                  // RequestViewClassifer.getTimeFormattedString(
+                                  //   model.requestEnd,
+                                  //   user.language,
+                                  // ),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),
@@ -211,10 +224,20 @@ class RequestCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 2),
                                 Text(
-                                  RequestViewClassifer.getTimeFormattedString(
-                                    model.requestEnd,
-                                    user.timezone,
-                                  ),
+                                  DateFormat.MMMd(getLangTag()).add_jm().format(
+                                        getDateTimeAccToUserTimezone(
+                                          dateTime: DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  model.requestEnd),
+                                          timezoneAbb: SevaCore.of(context)
+                                              .loggedInUser
+                                              .timezone,
+                                        ),
+                                      ),
+                                  // RequestViewClassifer.getTimeFormattedString(
+                                  //   model.requestEnd,
+                                  //   user.timezone,
+                                  // ),
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 ),

@@ -1816,7 +1816,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       width: 100,
       height: 32,
       child: ConfigurationCheck(
-        actionType: 'accept_offers',
+        actionType: 'accept_requests',
         role: memberType(
             widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
         child: FlatButton(

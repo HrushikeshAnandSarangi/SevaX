@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -491,7 +492,10 @@ class OfferDetails extends StatelessWidget {
                     width: isAccepted ? 150 : 120,
                     height: 32,
                     child: ConfigurationCheck(
-                      actionType: 'accept_offers',
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
+                        offerModel,
+                      ),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: FlatButton(
@@ -583,7 +587,9 @@ class OfferDetails extends StatelessWidget {
                     padding: EdgeInsets.only(top: 8),
                     height: 32,
                     child: ConfigurationCheck(
-                      actionType: 'accept_offers',
+                      actionType:
+                          ConfigurationCheckExtension.getOfferAcceptanceKey(
+                              offerModel),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
                       child: FlatButton(
@@ -620,13 +626,16 @@ class OfferDetails extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
+                          logger.i("INDIVIDUAL ========== || =======");
+
                           showDialogForMakingAnOffer(
-                              model: offerModel,
-                              parentContext: context,
-                              timebankModel: timebankModel,
-                              sevaUserId:
-                                  SevaCore.of(context).loggedInUser.sevaUserID,
-                              hideCancelBookMark: true);
+                            model: offerModel,
+                            parentContext: context,
+                            timebankModel: timebankModel,
+                            sevaUserId:
+                                SevaCore.of(context).loggedInUser.sevaUserID,
+                            hideCancelBookMark: true,
+                          );
                         },
                       ),
                     ),
