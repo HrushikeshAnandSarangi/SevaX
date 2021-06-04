@@ -24,8 +24,6 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
-import '../../../../labels.dart';
-
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
   final String timebankId;
@@ -67,7 +65,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   void initState() {
     AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
-
+    _bloc.onTypeChanged(RequestType.TIME);
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
       _titleController.text = widget.offerModel.individualOfferDataModel.title;
