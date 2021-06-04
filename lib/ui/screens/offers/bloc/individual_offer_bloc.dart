@@ -35,14 +35,15 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
   final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
+  final _donationAmount = BehaviorSubject<int>();
 
-  final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(
-      donors: [],
-      achdetails: ACHModel(),
-      paymentType: RequestPaymentType.ACH,
-      amountRaised: 0,
-      minAmount: 0,
-      targetAmount: 0));
+  // final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(
+  //     donors: [],
+  //     achdetails: ACHModel(),
+  //     paymentType: RequestPaymentType.ACH,
+  //     amountRaised: 0,
+  //     minAmount: 0,
+  //     targetAmount: 0));
   final _goodsDonationDetails = BehaviorSubject<GoodsDonationDetails>.seeded(
       GoodsDonationDetails(address: '', donors: [], requiredGoods: {}));
 
@@ -55,11 +56,11 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Function(bool value) get onOfferMadePublic => _makePublic.sink.add;
 
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
-
+  Function(int) get onDonationAmountChanged => _donationAmount.sink.add;
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
   Function(RequestType) get onTypeChanged => _type.sink.add;
-  Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
+  // Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
   Function(bool) get isVisibleChanged => _isVisible.sink.add;
 
   void onOfferMadeVirtual(bool value) {
@@ -86,7 +87,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Stream<Status> get status => _status.stream;
   Stream<bool> get isVisible => _isVisible.stream;
   Stream<RequestType> get type => _type.stream;
-  Stream<CashModel> get cashModel => _cashModel.stream;
+  // Stream<CashModel> get cashModel => _cashModel.stream;
+  Stream<int> get donationAmount => _donationAmount.stream;
 
   Stream<GoodsDonationDetails> get goodsDonationDetails =>
       _goodsDonationDetails.stream;
@@ -150,7 +152,14 @@ class IndividualOfferBloc extends BlocBase with Validators {
             public: _makePublic.value ?? false,
             virtual: _makeVirtual.value ?? false,
             liveMode: !AppConfig.isTestCommunity,
-            cashModel: _cashModel.value,
+            cashModel: CashModel(
+              donors: [],
+              achdetails: ACHModel(),
+              paymentType: RequestPaymentType.ACH,
+              amountRaised: 0,
+              minAmount: 0,
+              targetAmount: _donationAmount.value,
+            ),
             goodsDonationDetails: _goodsDonationDetails.value,
             timebanksPosted: _makePublic.value ?? false
                 ? [timebankId, FlavorConfig.values.timebankId]
@@ -211,7 +220,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _makePublic.add(offerModel.public);
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
-    _cashModel.add(offerModel.cashModel);
+    _donationAmount.add(offerModel.cashModel.targetAmount);
     if (offerModel.individualOfferDataModel != null) {
       _minimumCredits
           .add(offerModel.individualOfferDataModel.minimumCredits.toString());
@@ -270,9 +279,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
           flag = true;
         }
       } else if (_type.value == RequestType.CASH) {
-        if (_cashModel.value.targetAmount == null ||
-            _cashModel.value.targetAmount == 0) {
-          _cashModel.addError(ValidationErrors.emptyErrorCash);
+        if (_donationAmount.value == null || _donationAmount.value == 0) {
+          _donationAmount.addError(ValidationErrors.emptyErrorCash);
           flag = true;
         }
       } else if (_type.value == RequestType.GOODS) {
@@ -299,7 +307,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _availabilty.close();
     _location.close();
     _status.close();
-    _cashModel.close;
+    _donationAmount.close;
     _goodsDonationDetails.close();
     _type.close();
     _minimumCredits.close();

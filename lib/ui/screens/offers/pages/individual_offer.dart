@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -318,15 +317,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          StreamBuilder<CashModel>(
-            stream: _bloc.cashModel,
+          StreamBuilder<int>(
+            stream: _bloc.donationAmount,
             builder: (context, snapshot) {
               return TextFormField(
                 focusNode: _availability,
-                onChanged: (data) => {
-                  snapshot.data.targetAmount = int.parse(data),
-                  _bloc.onCashModelChanged(snapshot.data)
-                },
+                onChanged: (String data) =>
+                    _bloc.onDonationAmountChanged(int.tryParse(data)),
                 inputFormatters: null,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
@@ -339,8 +336,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     : '',
                 onFieldSubmitted: (v) {
                   _availability.unfocus();
-                  snapshot.data.targetAmount = int.parse(v);
-                  _bloc.onCashModelChanged(snapshot.data);
+                  _bloc.onDonationAmountChanged(int.tryParse(v));
                 },
               );
             },
