@@ -27,7 +27,9 @@ class NoGroupPlaceHolder extends StatelessWidget {
               children: <InlineSpan>[
                 TextSpan(
                   style: TextStyle(color: Colors.grey, fontSize: 14),
-                  text: S.of(context).no_group_message ,
+                  text: S
+                      .of(context)
+                      .no_groups_text, //no_group_message (old label)
                 ),
                 WidgetSpan(
                   child: InkWell(
