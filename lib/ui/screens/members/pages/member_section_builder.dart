@@ -450,10 +450,7 @@ class MemberSectionBuilder extends StatelessWidget {
           reason: reason,
         );
 
-        logger.e("user exited");
-        Future.delayed(Duration.zero, () {
-          Phoenix.rebirth(context);
-        });
+        Phoenix.rebirth(context);
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&

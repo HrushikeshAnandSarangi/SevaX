@@ -438,6 +438,10 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
+                        headingText('Select categories for your community'),
+                        SizedBox(
+                          height: 10,
+                        ),
                         CommunityCategorySelector(
                           selectedCategories:
                               communityModel.communityCategories ?? [],

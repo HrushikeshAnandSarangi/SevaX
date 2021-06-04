@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/image_picker_handler.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -22,12 +22,13 @@ class ImagePickerDialogMobile extends StatefulWidget {
 
   ImagePickerDialogMobile(
       {this.imagePickerType,
-        this.onLinkCreated,
-        this.storeImageFile,
-        this.storPdfFile});
+      this.onLinkCreated,
+      this.storeImageFile,
+      this.storPdfFile});
 
   @override
-  _ImagePickerDialogMobileState createState() => _ImagePickerDialogMobileState();
+  _ImagePickerDialogMobileState createState() =>
+      _ImagePickerDialogMobileState();
 }
 
 class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
@@ -42,7 +43,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           borderRadius: BorderRadius.circular(20),
         ),
         constraints: BoxConstraints(
-            maxHeight: 300, minHeight:180, maxWidth: 450, minWidth: 400),
+            maxHeight: 300, minHeight: 180, maxWidth: 450, minWidth: 400),
         child: Column(
           children: [
             AppBar(
@@ -55,10 +56,9 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
               title: Text(
                 S.of(context).add_image,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black
-                ),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
             ),
             SizedBox(
@@ -103,7 +103,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         cameraImageWidget(),
         SizedBox(
           height: 10,
-        ), 
+        ),
         galleryImageWidget(),
         SizedBox(
           height: 10,
@@ -207,18 +207,19 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     return imagePickerOption(
         title: S.of(context).camera,
         icon: Icons.add_circle_outline,
-        onTap: ()async {
-                var image = await ImagePicker.pickImage(source: ImageSource.camera);
-                cropImage(image);
+        onTap: () async {
+          var image = await ImagePicker.pickImage(source: ImageSource.camera);
+          cropImage(image);
         });
   }
+
   Widget galleryImageWidget() {
     return imagePickerOption(
         title: S.of(context).gallery,
         icon: Icons.add_circle_outline,
-        onTap: ()async {
-                var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-                cropImage(image);
+        onTap: () async {
+          var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+          cropImage(image);
         });
   }
 
@@ -226,13 +227,13 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     return imagePickerOption(
         title: S.of(context).choose_pdf_file,
         icon: Icons.picture_as_pdf,
-        onTap: ()async {
+        onTap: () async {
           try {
-           String _path = await FilePicker.getFilePath(
+            String _path = await FilePicker.getFilePath(
                 type: FileType.custom, allowedExtensions: ['pdf']);
-           if(_path != null){
-             widget.storPdfFile(File(_path));
-           }
+            if (_path != null) {
+              widget.storPdfFile(File(_path));
+            }
           } on PlatformException catch (e) {
             throw e;
           }
@@ -247,10 +248,11 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
           // );
         });
   }
+
   Widget imagePickerOption({String title, IconData icon, Function onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: FlavorConfig.values.theme.primaryColor,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 45,
@@ -258,19 +260,15 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         onTap: onTap,
         leading: title.contains('Add Image')
-            ? Image.asset(
-          'images/icons/link.png',
-          height: 16,
-        )
+            ? Image.asset('images/icons/link.png',
+                height: 16, color: Colors.white)
             : title.contains('Stock')
-            ? Image.asset(
-          'images/icons/multi_image.png',
-          height: 16,
-        )
-            : Icon(icon),
+                ? Image.asset('images/icons/multi_image.png',
+                    height: 16, color: Colors.white)
+                : Icon(icon, color: Colors.white),
         title: Text(
           title,
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -296,7 +294,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     String timestampString = timestamp.toString();
     String imageURL;
     String folderName = '';
-   // ImageUploadToFirestore imageData;
+    // ImageUploadToFirestore imageData;
     if (widget.imagePickerType == ImagePickerType.FEED) {
       folderName = 'newsimages/';
     } else if (widget.imagePickerType == ImagePickerType.PROJECT) {
@@ -305,8 +303,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       folderName = 'timebanklogos/';
     } else if (widget.imagePickerType == ImagePickerType.MESSAGE) {
       folderName = 'multiUserMessagingLogo/';
-    }
-    else if (widget.imagePickerType == ImagePickerType.REQUEST) {
+    } else if (widget.imagePickerType == ImagePickerType.REQUEST) {
       folderName = 'request_images/';
     } else {
       folderName = 'profile_images/';
@@ -323,7 +320,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       ),
     );
     // StorageUploadTask uploadTask = ref.putFile(File.)
-     imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     // imageData =
     // await uploadImageWeb(file, folderName + timestampString + '.jpg');
     // imageURL = imageData.imageUrl;
@@ -335,6 +332,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
     return imageURL;
   }
+
   Future cropImage(File image) async {
     File croppedFile = await ImageCropper.cropImage(
       sourcePath: image.path,
@@ -347,6 +345,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
 
     uploadImage(croppedFile);
   }
+
   Future<void> profanityCheck(
       {String imageURL, @required String storagePath}) async {
     ProfanityImageModel profanityImageModel = ProfanityImageModel();
@@ -366,14 +365,14 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       });
     } else {
       profanityStatusModel =
-      await getProfanityStatus(profanityImageModel: profanityImageModel);
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
 
       if (profanityStatusModel.isProfane) {
         if (dialogContext != null) {
           Navigator.of(dialogContext).pop();
         }
         showProfanityImageAlert(
-            context: context, content: profanityStatusModel.category)
+                context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
             FirebaseStorage.instance
@@ -394,4 +393,12 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   }
 }
 
-enum ImagePickerType { FEED, USER, PROJECT, MESSAGE, TIMEBANK, REGISTER,REQUEST }
+enum ImagePickerType {
+  FEED,
+  USER,
+  PROJECT,
+  MESSAGE,
+  TIMEBANK,
+  REGISTER,
+  REQUEST
+}
