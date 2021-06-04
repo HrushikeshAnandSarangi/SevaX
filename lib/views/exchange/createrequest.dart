@@ -2552,15 +2552,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           ),
           SizedBox(height: 20),
-          Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
+          requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+          ? Text(
+              S.of(context).total_no_of_participants,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            )
+          : Text(
+              S.of(context).number_of_volunteers,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
             ),
-          ),
           TextFormField(
             focusNode: focusNodes[2],
             onFieldSubmitted: (v) {

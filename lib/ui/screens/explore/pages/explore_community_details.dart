@@ -608,7 +608,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         });
                       } else if (SevaCore.of(context).loggedInUser != null &&
                           isUserJoined) {
-                        switchCommunity(message: 'Event');
+                        switchCommunity(message: S.of(context).event);
                       } else if (SevaCore.of(context).loggedInUser != null &&
                           !isUserJoined) {
                         showAlertMessage(message: timabanksList[index].name);
@@ -697,7 +697,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
-        title: Text('Access not available'),
+        title: Text(S.of(context).access_not_available),
         content: Text(message),
         actions: [
           FlatButton(
@@ -718,7 +718,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
               );
             },
             child: Text(
-              'Continue to Sign in',
+              S.of(context).continue_to_signin,
               style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
             ),
           ),
