@@ -25,10 +25,10 @@ extension OfferTypeExtension on OfferType {
         case RequestType.TIME:
           return S.of(context).time;
         default:
-          return 'Individual';
+          return 'Individual'; //Label to be created
       }
     else
-      return S.of(context).individual_offer.sentenceCase();
+      return 'Individual'; //Label to be created
   }
 }
 
