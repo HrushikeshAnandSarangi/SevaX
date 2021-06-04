@@ -515,10 +515,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   Spacer(),
                   FlatButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
                     child: Text(
-                      S.of(context).submit,
+                      S.of(context).next,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -609,17 +609,17 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Add logo',
+            'Add Sponsor Logo',
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [
             RaisedButton(
-                onPressed: () {
-                  Navigator.of(viewContext).pop();
-
-                  getLogoFile(timebankModel: timebankModel, name: name);
-                },
-                child: Text(S.of(context).continue_text)),
+              onPressed: () {
+                Navigator.of(viewContext).pop();
+                getLogoFile(timebankModel: timebankModel, name: name);
+              },
+              child: Text("Choose image"),
+            ),
             FlatButton(
                 onPressed: () async {
                   SponsorDataModel sponsorModel = SponsorDataModel(
