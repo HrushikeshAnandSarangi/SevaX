@@ -346,12 +346,17 @@ class OneToManyCreatorCompleteRequestPageState
                         child: Column(
                           children: [
                             Text(
-                                'I acknowldge that ${requestModel.selectedInstructor.fullname} has completed the request and the above list of members attended the request.',
+                                S
+                                    .of(context)
+                                    .speaker_complete_page_text_1
+                                    .replaceAll(
+                                        'speaker_name',
+                                        requestModel
+                                            .selectedInstructor.fullname),
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 14)),
                             SizedBox(height: 15),
-                            Text(
-                                'Note: The hours will be credited to the speaker and attendees on your approval. Ensure aboe members have attended. You cannot modify the list after approval.',
+                            Text(S.of(context).speaker_complete_page_text_2,
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 14)),
                           ],
@@ -374,8 +379,9 @@ class OneToManyCreatorCompleteRequestPageState
                                   context: context,
                                   builder: (BuildContext viewContext) {
                                     return AlertDialog(
-                                      title: Text(
-                                          'Are you sure you want to accept and complete this request?'),
+                                      title: Text(S
+                                          .of(context)
+                                          .oneToManyRequestCreatorCompletingRequestDialog),
                                       actions: <Widget>[
                                         FlatButton(
                                           color: Theme.of(context).primaryColor,

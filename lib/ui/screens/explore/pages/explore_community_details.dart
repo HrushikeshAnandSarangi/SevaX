@@ -301,7 +301,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  "Upcoming Events",
+                                  S.of(context).upcoming_events,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
@@ -697,7 +697,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
-        title: Text('Access not available'),
+        title: Text(S.of(context).access_not_available),
         content: Text(message),
         actions: [
           FlatButton(
@@ -718,7 +718,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
               );
             },
             child: Text(
-              'Continue to Sign in',
+              S.of(context).continue_to_signin,
               style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
             ),
           ),

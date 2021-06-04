@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
+import '../l10n/l10n.dart';
+
 class DistanceFromCurrentLocation extends StatelessWidget {
   final Coordinates coordinates;
   final Coordinates currentLocation;
@@ -40,7 +42,7 @@ class DistanceFromCurrentLocation extends StatelessWidget {
                         style: textStyle,
                       )
                     : Text(
-                        '${miles(distance)} Miles',
+                        '${miles(distance)} '+ S.of(context).miles,
                         overflow: TextOverflow.ellipsis,
                         style: textStyle,
                       ),

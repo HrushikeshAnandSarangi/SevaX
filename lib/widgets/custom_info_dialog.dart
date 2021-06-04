@@ -148,7 +148,7 @@ void showDialogFromInfoWindow(
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        details[infoKeyMapper[type]] ?? 'Dummy label', //??
+                        details[infoKeyMapper[type]] ?? S.of(context).sandbox_dialog_subtitle, //??
                         // infoDescriptionMapper[key],
                         style: TextStyle(
                           fontSize: 16,

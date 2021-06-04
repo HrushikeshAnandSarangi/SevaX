@@ -169,7 +169,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingText(L.of(context).registration_link),
+                              headingText(S.of(context).registration_link),
                               SizedBox(height: 10),
                               Umeshify(
                                 text: projectModel.registrationLink,

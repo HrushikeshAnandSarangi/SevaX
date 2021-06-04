@@ -15,6 +15,8 @@ import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../../../l10n/l10n.dart';
+
 class RequestsSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
@@ -107,7 +109,7 @@ class RequestsSearchView extends StatelessWidget {
                           showSignInAlertMessage(
                               context: context,
                               message:
-                                  'Please Sign In/Sign up to access ${request.title}');
+                                   S.of(context).sign_in_alert);
                         },
                         photoUrl: request.photoUrl ?? defaultProjectImageURL,
                         title: request.title,

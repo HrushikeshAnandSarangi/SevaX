@@ -111,7 +111,7 @@ String getValidationError(BuildContext context, String errorCode) {
       return error.add_goods_donate_empty;
       break;
     case ValidationErrors.minimumCreditsError:
-      return 'Minimum credits cannot be empty or zero';
+      return S.of(context).min_credits_error;
       break;
 
     default:

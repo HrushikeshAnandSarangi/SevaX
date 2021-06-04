@@ -96,7 +96,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               Container(
                                 width: constraints.maxWidth * 0.7,
                                 child: Text(
-                                  'How much prep time did you need for the request?',
+                                   S.of(context).speaker_claim_form_field_title,
                                   style: TextStyle(
                                       fontSize: 17.0,
                                       fontWeight: FontWeight.w500),
@@ -131,7 +131,9 @@ class OneToManySpeakerTimeEntryCompleteState
                                           //errorText: S.of(context).enter_hours,
                                           contentPadding:
                                               EdgeInsets.only(bottom: 5),
-                                          hintText: 'Prep time in hours',
+                                          hintText:  S
+                                              .of(context)
+                                              .speaker_claim_form_field_title_hint,
                                           hintStyle: TextStyle(fontSize: 13),
                                         ),
                                         validator: (value) {
@@ -228,7 +230,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               Container(
                                 width: constraints.maxWidth * 0.7,
                                 child: Text(
-                                  'I acknowledge that I have completed the session for the request.',
+                                  S.of(context).speaker_claim_form_text_1,
                                   style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.w500,
@@ -244,7 +246,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               Container(
                                 width: constraints.maxWidth * 0.72,
                                 child: Text(
-                                  'Note: Based on the preparation hours and time to fulfill the request combined hours will be added upon completing the request.',
+                                 S.of(context).speaker_claim_form_text_2,
                                   style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.w500,
