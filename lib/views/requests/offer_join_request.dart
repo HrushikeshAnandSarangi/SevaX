@@ -86,7 +86,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.timeOfferParticipantsModel.participantDetails.bio ??
-                    "${S.of(context).timebank} name not updated",
+                    "${S.of(context).bio} name not updated",
               ),
             ),
             // Padding(
@@ -142,50 +142,15 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                         timebankId: communityModel.primary_timebank,
                       );
 
-                      if (widget.userModel.calendarId != null) {
-                        showDialog(
-                          context: context,
-                          builder: (_context) {
-                            return CalenderEventConfirmationDialog(
-                              title: widget.requestTitle,
-                              isrequest: true,
-                              cancelled: () async {
-                                approveInvitationForVolunteerRequest(
-                                  allowedCalender: false,
-                                  notificationId: widget.notificationId,
-                                  user: widget.userModel,
-                                  acceptorModel: acceptorModel,
-                                  offerId: widget.offerId,
-                                  requestId: widget.requestId,
-                                );
-                                Navigator.pop(_context);
-                                Navigator.of(context).pop();
-                              },
-                              addToCalender: () async {
-                                approveInvitationForVolunteerRequest(
-                                    offerId: widget.offerId,
-                                    requestId: widget.requestId,
-                                    allowedCalender: true,
-                                    notificationId: widget.notificationId,
-                                    user: widget.userModel,
-                                    acceptorModel: acceptorModel);
-                                Navigator.pop(_context);
-                                Navigator.of(context).pop();
-                              },
-                            );
-                          },
-                        );
-                      } else {
-                        approveInvitationForVolunteerRequest(
-                            allowedCalender: false,
-                            offerId: widget.offerId,
-                            requestId: widget.requestId,
-                            notificationId: widget.notificationId,
-                            user: widget.userModel,
-                            acceptorModel: acceptorModel);
+                      approveInvitationForVolunteerRequest(
+                          allowedCalender: false,
+                          offerId: widget.offerId,
+                          requestId: widget.requestId,
+                          notificationId: widget.notificationId,
+                          user: widget.userModel,
+                          acceptorModel: acceptorModel);
 
-                        Navigator.of(context).pop();
-                      }
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),
@@ -270,7 +235,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
     bool allowedCalender,
     AcceptorModel acceptorModel,
   }) {
-    acceptInviteRequest(
+    acceptOfferInvite(
       requestId: requestId,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,

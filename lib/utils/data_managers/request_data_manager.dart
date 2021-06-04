@@ -1562,6 +1562,41 @@ Future<void> rejectInviteRequest(
   }
 }
 
+Future<void> acceptOfferInvite({
+  @required String requestId,
+  @required String acceptedUserEmail,
+  @required String acceptedUserId,
+  @required String notificationId,
+  @required bool allowedCalender,
+  @required AcceptorModel acceptorModel,
+  UserModel user,
+}) async {
+  // logger.i("acceptInviteRequest LEVEL |||||||||||||||||||||");
+
+  if (allowedCalender) {
+    // logger.i("allowedCalender is true");
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  } else {
+    // logger.i("Updating request with requestId approved members " +
+    // acceptedUserEmail);
+
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  }
+}
+
 Future<void> acceptInviteRequest({
   @required String requestId,
   @required String acceptedUserEmail,
