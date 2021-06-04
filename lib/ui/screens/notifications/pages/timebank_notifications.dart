@@ -678,8 +678,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.RequestCompleted:
                 Map<dynamic, dynamic> oneToManyModel = notification.data;
-                log('One TO Many Data check:  ' +
-                    oneToManyModel['creatorName']);
+                // log('One TO Many Data check:  ' +
+                //     oneToManyModel['creatorName']);
                 if (oneToManyModel['requestType'] == 'ONE_TO_MANY_REQUEST') {
                   return OneToManyCreatorApproveCompletionCard(
                     timestamp: notification.timestamp,
