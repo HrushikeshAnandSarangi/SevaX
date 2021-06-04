@@ -1970,7 +1970,12 @@ class RequestEditFormState extends State<RequestEditForm> {
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: S.of(context).max_credit_hint,
+                    hintText: requestModel.requestType ==
+                            RequestType.ONE_TO_MANY_REQUEST
+                        ? S
+                            .of(context)
+                            .onetomanyrequest_participants_or_credits_hint
+                        : S.of(context).max_credit_hint,
                     hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
@@ -2024,7 +2029,10 @@ class RequestEditFormState extends State<RequestEditForm> {
               }
             },
             decoration: InputDecoration(
-              hintText: S.of(context).number_of_volunteers,
+              hintText: requestModel.requestType ==
+                      RequestType.ONE_TO_MANY_REQUEST
+                  ? S.of(context).onetomanyrequest_participants_or_credits_hint
+                  : S.of(context).number_of_volunteers,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
             ),

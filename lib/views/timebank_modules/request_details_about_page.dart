@@ -926,8 +926,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
                 return OneToManySpeakerTimeEntryComplete(
@@ -942,7 +942,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 );
               },
             ),
-          );
+          ).then((e) => Navigator.of(context).pop());
 
           // showDialog(
           //     context: context,
@@ -1530,12 +1530,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        // (widget.requestItem.oneToManyRequestAttenders.length >=
-        //             widget.requestItem.numberOfApprovals ||
-        //         widget.requestItem.isSpeakerCompleted == true)
-        //     ? Container()
-        //     :
-        oneToManyRequestActionWidgetForParticipant,
+        (widget.requestItem.oneToManyRequestAttenders.length >=
+                    widget.requestItem.numberOfApprovals ||
+                widget.requestItem.isSpeakerCompleted == true)
+            ? Container()
+            : oneToManyRequestActionWidgetForParticipant,
       ],
     );
   }
