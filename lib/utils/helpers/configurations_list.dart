@@ -6,8 +6,8 @@ class ConfigurationsList {
   final List<ConfigurationModel> configurationsList = [
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
-    ConfigurationModel(
-        id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
+    // ConfigurationModel(
+    //     id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(
@@ -16,6 +16,24 @@ class ConfigurationsList {
     //     id: 'create_borrow_request',
     //     title_en: 'Create Borrow Request',
     //     type: 'request'),
+
+    ConfigurationModel(
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_time_offer',
+        title_en: 'Accept Time Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_money_offers',
+        title_en: 'Accept Money Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_goods_offers',
+        title_en: 'Accept Goods/Supplies Offers',
+        type: 'offer'),
+
     ConfigurationModel(
         id: 'create_events', title_en: 'Create Events', type: 'events'),
     ConfigurationModel(
@@ -70,23 +88,23 @@ class ConfigurationsList {
         type: 'offer'),
     ConfigurationModel(
         id: 'create_public_offer',
-        title_en: 'Create public offer',
+        title_en: 'Create Public offer',
         type: 'offer'),
     ConfigurationModel(
         id: 'create_virtual_event',
-        title_en: 'Create virtual event',
+        title_en: 'Create Virtual Event',
         type: 'events'),
     ConfigurationModel(
         id: 'create_public_event',
-        title_en: 'Create public event',
+        title_en: 'Create Public Event',
         type: 'events'),
     ConfigurationModel(
         id: 'create_endorsed_group',
-        title_en: 'Create endorsed group',
+        title_en: 'Create Endorsed group',
         type: 'group'),
     ConfigurationModel(
         id: 'create_private_group',
-        title_en: 'Create private group',
+        title_en: 'Create Private Group',
         type: 'group'),
     ConfigurationModel(
         id: 'one_to_many_offer',
@@ -97,8 +115,31 @@ class ConfigurationsList {
   final List<ConfigurationModel> memberConfigurationsList = [
     ConfigurationModel(
         id: 'create_feeds', title_en: 'Create Feeds', type: 'general'),
+    // ConfigurationModel(
+    //     id: 'accept_one_to_many_offer',
+    //     title_en: 'Accept One To Many Offers',
+    //     type: 'offer'),
+    // ConfigurationModel(
+    //     id: 'accept_time_offers',
+    //     title_en: 'Accept Time Offers',
+    //     type: 'offer'),
+    // ConfigurationModel(
+    //     id: 'accept_money_offers',
+    //     title_en: 'Accept Money Offers',
+    //     type: 'offer'),
+    // ConfigurationModel(
+    //     id: 'accept_goods_offers',
+    //     title_en: 'Accept Goods/Supplies Offers',
+    //     type: 'offer'),
+
     ConfigurationModel(
-        id: 'accept_offers', title_en: 'Accept Offers', type: 'offer'),
+        id: 'accept_one_to_many_offer',
+        title_en: 'Accept One To Many Offers',
+        type: 'offer'),
+    ConfigurationModel(
+        id: 'accept_time_offer',
+        title_en: 'Accept Time Offers',
+        type: 'offer'),
     ConfigurationModel(
         id: 'accept_requests', title_en: 'Accept requests', type: 'request'),
     ConfigurationModel(

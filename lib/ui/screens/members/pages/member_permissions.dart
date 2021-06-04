@@ -350,7 +350,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
             title: Text(groupsList[index].title_en),
-            value: all_permissions.contains(offerList[index].id),
+            value: all_permissions.contains(groupsList[index].id),
             onChanged: (value) {
               if (value) {
                 all_permissions.add(groupsList[index].id);
