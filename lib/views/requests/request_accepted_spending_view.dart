@@ -550,7 +550,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     ),
                     TextSpan(
                       text: () {
-                        return '${transactionModel.credits} ${S.of(context).hour}'; //plural here //S.of(context).hour(transactionModel.credits)
+                        return '${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour}';
                       }(),
                       style: TextStyle(
                         color: Colors.black,
@@ -650,7 +650,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for} $credits ${S.of(context).hour}", //plural here //S.of(context).hour(credits)
+                          "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for} $credits ${credits > 1 ? S.of(context).hours : S.of(context).hour}",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,

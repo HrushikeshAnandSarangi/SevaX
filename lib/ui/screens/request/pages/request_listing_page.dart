@@ -443,21 +443,19 @@ class RequestListBuilder extends StatelessWidget {
 Widget getAppropriateTag(BuildContext context, RequestType requestType) {
   switch (requestType) {
     case RequestType.CASH:
-      return getTagMainFrame(S.of(context).cash_request);
+      return getTagMainFrame(S.of(context).cash);
 
     case RequestType.GOODS:
-      return getTagMainFrame(S.of(context).goods_request);
+      return getTagMainFrame(S.of(context).goods);
 
     case RequestType.TIME:
-      return getTagMainFrame(S.of(context).time_request);
+      return getTagMainFrame(S.of(context).time);
 
     case RequestType.ONE_TO_MANY_REQUEST:
-      return getTagMainFrame(S.of(context).one_to_many.sentenceCase() +
-          '' +
-          S.of(context).request);
+      return getTagMainFrame(S.of(context).one_to_many.sentenceCase());
 
     case RequestType.BORROW:
-      return getTagMainFrame(L.of(context).borrow_request_title);
+      return getTagMainFrame('Borrow'); //Label to be created
 
     default:
       return Container();

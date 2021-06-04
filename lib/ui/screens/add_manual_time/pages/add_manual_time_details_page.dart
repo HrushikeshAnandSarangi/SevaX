@@ -110,10 +110,13 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                           children: <Widget>[
                             TextField(
                               keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$"))],
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r"^[0-9]*$"))
+                              ],
                               onChanged: _bloc.onHoursChanged,
                             ),
-                            Text(S.of(context).hour), //plural here
+                            Text(S.of(context).hours),
                           ],
                         ),
                       ),

@@ -149,7 +149,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      L.of(context).explore_page_title_text,
+                      S.of(context).explore_page_title_text,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -161,7 +161,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       alignment: Alignment.centerLeft,
                       width: screenWidth * 0.7,
                       child: Text(
-                        L.of(context).explore_page_subtitle_text,
+                        S.of(context).explore_page_subtitle_text,
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -392,7 +392,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   showSignInAlertMessage(
                                                       context: context,
                                                       message:
-                                                          'Please Sign In/Sign up to access ${projectModel.name}');
+                                                           S.of(context).sign_in_alert);
                                                 },
                                               ),
                                       ],
@@ -564,7 +564,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               showSignInAlertMessage(
                                                   context: context,
                                                   message:
-                                                      'Please Sign In/Sign up to access ${model.title}');
+                                                       S.of(context).sign_in_alert);
                                             },
                                           ),
                                   ],
@@ -746,7 +746,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                               showSignInAlertMessage(
                                                   context: context,
                                                   message:
-                                                      'Please Sign In/Sign up to access ${offer.individualOfferDataModel != null ? offer.individualOfferDataModel.title : offer.groupOfferDataModel.classTitle}');
+                                                      S.of(context).sign_in_alert);
                                             },
                                           ),
                                   ],

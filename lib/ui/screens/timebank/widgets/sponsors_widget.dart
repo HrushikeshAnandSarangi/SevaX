@@ -75,7 +75,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
             ),
             Offstage(
               offstage: widget.timebankModel.sponsors.length >= 5 ||
-                  !isOwnerCreator(widget.timebankModel,
+                  !isMemberAnAdmin(widget.timebankModel,
                       SevaCore.of(context).loggedInUser.sevaUserID),
               child: addIconWidget(widget.timebankModel),
             ),

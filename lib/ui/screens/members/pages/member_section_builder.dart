@@ -29,6 +29,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/member_level.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
@@ -450,10 +451,12 @@ class MemberSectionBuilder extends StatelessWidget {
           reason: reason,
         );
 
-        logger.e("user exited");
-        Future.delayed(Duration.zero, () {
-          Phoenix.rebirth(context);
-        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SwitchTimebank(),
+          ),
+        );
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&
@@ -517,9 +520,12 @@ class MemberSectionBuilder extends StatelessWidget {
           communityId: userModel.currentCommunity,
           reason: reason,
         );
-        Future.delayed(Duration.zero, () {
-          Phoenix.rebirth(context);
-        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SwitchTimebank(),
+          ),
+        );
       }
     } else {
       if (responseData['softDeleteCheck'] == false &&

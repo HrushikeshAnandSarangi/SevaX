@@ -101,7 +101,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
             //   ),
             // ),
             Center(
-              child: Text(L.of(context).accept_offer_invitation_confirmation,
+              child: Text(S.of(context).accept_offer_invitation_confirmation,
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),

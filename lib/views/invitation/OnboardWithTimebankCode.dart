@@ -96,17 +96,16 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         ? Scaffold(
             key: _scaffold,
             appBar: AppBar(
-                    centerTitle: true,
-                    title: Text(
-                      S.of(context).join + ' ' + S.of(context).timebank,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        // fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  )
-                ,
+              centerTitle: true,
+              title: Text(
+                S.of(context).join + ' ' + S.of(context).timebank,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  // fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
             body: SingleChildScrollView(
               child: Container(child: timebankStreamBuilder(context)),
             ),

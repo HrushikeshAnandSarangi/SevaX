@@ -1494,9 +1494,11 @@ class TimezoneListData {
   ) {
     List<TimeZoneModel> data = List<TimeZoneModel>.from(timezoneList);
     data.retainWhere(
-      (element) => element.timezoneName.toLowerCase().contains(
-            query.toLowerCase(),
-          ),
+      (element) =>
+          element.timezoneName.toLowerCase().contains(
+                query.toLowerCase(),
+              ) ||
+          element.timezoneAbb.toLowerCase().contains(query.toLowerCase()),
     );
     return data;
   }
