@@ -169,8 +169,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              headingText(
-                                  L.of(context).registration_link),
+                              headingText(L.of(context).registration_link),
                               SizedBox(height: 10),
                               Umeshify(
                                 text: projectModel.registrationLink,
@@ -291,7 +290,9 @@ class _AboutProjectViewState extends State<AboutProjectView> {
           associatedContentTitle: projectModel.name,
           email: SevaCore.of(context).loggedInUser.email,
           isAccedentalDeleteEnabled: false,
-        );
+        ).then((value) {
+          if (value) Navigator.of(context).pop();
+        });
       },
       child: Container(
         margin: EdgeInsets.only(top: 20),

@@ -306,9 +306,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('${widget.requestItem.oneToManyRequestAttenders.length}/' +
-                                    '${widget.requestItem.numberOfApprovals}' +
-                                    ' people Applied'),
+                                Text(
+                                  '${widget.requestItem.oneToManyRequestAttenders.length} ' +
+                                      S.of(context).of_text +
+                                      ' ${widget.requestItem.numberOfApprovals}' +
+                                      L.of(context).people_applied_for_request,
+                                ),
                                 StreamBuilder(
                                     stream: Firestore.instance
                                         .collection("requests")
@@ -362,7 +365,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Speaker',
+                              Text(L.of(context).speaker,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600)),
@@ -377,40 +380,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                           defaultUserImageURL),
                                       minRadius: 34.0),
                                   SizedBox(width: 25),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          widget.requestItem.selectedInstructor
-                                              .fullname,
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500)),
-                                      SizedBox(height: 7),
-                                      widget
-                                                  .requestItem
-                                                  .selectedSpeakerTimeDetails
-                                                  .speakingTime ==
-                                              null
-                                          ? Text('hours not updated..',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey))
-                                          : Text(
-                                              'Session: ' +
-                                                  widget
-                                                      .requestItem
-                                                      .selectedSpeakerTimeDetails
-                                                      .speakingTime
-                                                      .toString() +
-                                                  ' hours',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey)),
-                                    ],
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            widget.requestItem
+                                                .selectedInstructor.fullname,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500)),
+                                        SizedBox(height: 7),
+                                        widget
+                                                    .requestItem
+                                                    .selectedSpeakerTimeDetails
+                                                    .speakingTime ==
+                                                null
+                                            ? Text('hours not updated..',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey))
+                                            : Text(
+                                                'Duration of Session: ' +
+                                                    widget
+                                                        .requestItem
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime
+                                                        .toString() +
+                                                    ' hours',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey)),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -457,8 +462,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             getBottomFrame,
             HideWidget(
               hide: widget.requestItem.sevaUserId !=
-                      SevaCore.of(context).loggedInUser.sevaUserID &&
-                  widget.requestItem.accepted == false,
+                      SevaCore.of(context).loggedInUser.sevaUserID ||
+                  widget.requestItem.accepted == true,
               child: InkWell(
                 onTap: () async {
                   await Firestore.instance
@@ -554,32 +559,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get getBottomFrameForUserMode {
     switch (widget.requestItem.requestType) {
       case RequestType.CASH:
-        return getBottomFrameForCashRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForCashRequest;
 
       case RequestType.GOODS:
-        return getBottomFrameForGoodRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForGoodRequest;
 
       case RequestType.BORROW:
-        return getBottomFrameForBorrowRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForBorrowRequest;
 
       case RequestType.TIME:
-        return getBottomFrameForTimeRequest;
+        return widget.requestItem.accepted
+            ? requestClosed
+            : getBottomFrameForTimeRequest;
 
       case RequestType.ONE_TO_MANY_REQUEST:
         return widget.requestItem.accepted
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    L.of(context).request_closed,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Europa',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
+            ? requestClosed
             : getBottomFrameForOneToManyRequest;
 
       default:
@@ -601,6 +602,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
+  Widget get requestClosed {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          L.of(context).request_closed,
+          style: TextStyle(
+            fontSize: 16,
+            fontFamily: 'Europa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget get getOneToManySpeakerWidget {
     if (widget.requestItem.acceptors
             .contains(SevaCore.of(context).loggedInUser.email) &&
@@ -618,7 +635,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     text: (widget.requestItem.acceptors.contains(
                                 SevaCore.of(context).loggedInUser.email) &&
                             widget.requestItem.isSpeakerCompleted)
-                        ? 'You have requested for completion'
+                        ? L.of(context).requested_for_completion
                         : 'You are the speaker for the request',
                     style: TextStyle(
                       fontSize: 16,
@@ -630,13 +647,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
           ),
+          // widget.requestItem.isSpeakerCompleted
+          //     ? Container()
+          //     : speakerWithdrawOneToManyRequest,
+
           widget.requestItem.isSpeakerCompleted
               ? Container()
-              : speakerWithdrawOneToManyRequest,
-          SizedBox(width: 4),
-          widget.requestItem.isSpeakerCompleted
-              ? Container()
-              : speakerCompleteOneToManyRequest
+              : speakerCompleteOneToManyRequest,
+          SizedBox(width: 7),
         ],
       );
     } else {
@@ -663,9 +681,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
           ),
+          SizedBox(width: 3),
           rejectOneToManySpeakerRequest,
-          SizedBox(width: 4),
+          SizedBox(width: 6),
           acceptOneToManySpeakerRequest,
+          SizedBox(width: 7),
         ],
       );
     }
@@ -696,21 +716,57 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return OneToManySpeakerTimeEntry(
-                  requestModel: widget.requestItem,
-                  onFinish: () async {
-                    await oneToManySpeakerInviteAccepted(
-                        widget.requestItem, context);
-                    // await onDismissed();
-                  },
+        onPressed: () async {
+          showDialog(
+              context: context,
+              builder: (BuildContext viewContext) {
+                return AlertDialog(
+                  title:
+                      Text(L.of(context).oneToManyRequestSpeakerAcceptRequest),
+                  actions: <Widget>[
+                    FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      child: Text(
+                        S.of(context).yes,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        await oneToManySpeakerInviteAccepted(
+                            widget.requestItem, context);
+
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).no,
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.of(viewContext).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 );
-              },
-            ),
-          );
+              });
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return OneToManySpeakerTimeEntry(
+          //         requestModel: widget.requestItem,
+          //         onFinish: () async {
+          //           await oneToManySpeakerInviteAccepted(
+          //               widget.requestItem, context);
+          //           // await onDismissed();
+          //         },
+          //       );
+          //     },
+          //   ),
+          // );
         },
       ),
     );
@@ -746,7 +802,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title: Text('Are you sure you want to reject invite?'),
+                  title: Text(L.of(context).speaker_reject_invite_dialog),
                   actions: <Widget>[
                     FlatButton(
                       color: Theme.of(context).primaryColor,
@@ -844,7 +900,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get speakerCompleteOneToManyRequest {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.25,
+      width: MediaQuery.of(context).size.width * 0.29,
       child: FlatButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -855,11 +911,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           children: <Widget>[
             SizedBox(width: 1),
             Spacer(),
-            Text(
-              'Complete',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
+            Padding(
+              padding: EdgeInsets.all(7.0),
+              child: Text(
+                L.of(context).speaker_claim_credits,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
             Spacer(
@@ -867,8 +926,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
                 return OneToManySpeakerTimeEntryComplete(
@@ -877,13 +936,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   onFinish: () async {
                     await oneToManySpeakerRequestCompleted(
                         widget.requestItem, context);
-
-                    // Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
+                  fromNotification: false,
                 );
               },
             ),
-          );
+          ).then((e) => Navigator.of(context).pop());
 
           // showDialog(
           //     context: context,
@@ -1317,7 +1376,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       children: [
                         TextSpan(
                           text: widget.requestItem.isSpeakerCompleted
-                              ? 'The request is completed by speaker'
+                              ? L.of(context).request_completed_by_speaker
                               : S.of(context).creator_of_request_message,
                           style: TextStyle(
                             fontSize: 16,
@@ -1329,10 +1388,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ),
                   ),
                 ),
+                SizedBox(width: 5),
                 Container(
-                  margin: EdgeInsets.only(right: 7),
-                  width: 95,
-                  height: 32,
+                  width: MediaQuery.of(context).size.width * 0.29,
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -1343,11 +1401,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       children: <Widget>[
                         SizedBox(width: 1),
                         Spacer(),
-                        Text(
-                          L.of(context).complete,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
+                        Padding(
+                          padding: EdgeInsets.all(7.0),
+                          child: Text(
+                            L.of(context).speaker_claim_credits,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         Spacer(
@@ -1355,8 +1416,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         ),
                       ],
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(
+                    onPressed: () async {
+                      await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
                             return OneToManySpeakerTimeEntryComplete(
@@ -1365,13 +1426,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               onFinish: () async {
                                 await oneToManySpeakerRequestCompleted(
                                     widget.requestItem, context);
-
-                                // Navigator.of(context).pop();
+                                Navigator.of(context).pop();
                               },
+                              fromNotification: false,
                             );
                           },
                         ),
-                      );
+                      ).then((e) => Navigator.of(context).pop());
 
                       // showDialog(
                       //     context: context,
@@ -1410,7 +1471,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       //     });
                     },
                   ),
-                )
+                ),
+                SizedBox(width: 7),
               ],
             )
           : Row(
@@ -1468,12 +1530,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        // (widget.requestItem.oneToManyRequestAttenders.length >=
-        //             widget.requestItem.numberOfApprovals ||
-        //         widget.requestItem.isSpeakerCompleted == true)
-        //     ? Container()
-        //     :
-        oneToManyRequestActionWidgetForParticipant,
+        (widget.requestItem.oneToManyRequestAttenders.length >=
+                    widget.requestItem.numberOfApprovals ||
+                widget.requestItem.isSpeakerCompleted == true)
+            ? Container()
+            : oneToManyRequestActionWidgetForParticipant,
       ],
     );
   }
@@ -1489,7 +1550,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               children: [
                 TextSpan(
                   text: widget.requestItem.isSpeakerCompleted
-                      ? 'The request is completed by speaker'
+                      ? L.of(context).request_completed_by_speaker
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
@@ -1535,7 +1596,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   context: context,
                   builder: (BuildContext viewContext) {
                     return AlertDialog(
-                      title: Text(L.of(context).reject_request_completion),
+                      title: Text(S.of(context).reject_request_completion),
                       actions: <Widget>[
                         FlatButton(
                           color: Theme.of(context).primaryColor,
@@ -1546,10 +1607,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           onPressed: () async {
                             Navigator.of(viewContext).pop();
                             await oneToManyCreatorRequestCompletionRejectedTimebankNotifications(
-                                widget.requestItem,
-                                context,
-                                SevaCore.of(context).loggedInUser,
-                                false);
+                                    widget.requestItem,
+                                    context,
+                                    SevaCore.of(context).loggedInUser,
+                                    false)
+                                .then((e) => Navigator.of(context).pop());
                           },
                         ),
                         FlatButton(
@@ -1604,19 +1666,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 ),
               ],
             ),
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => OneToManyCreatorCompleteRequestPage(
                     requestModel: widget.requestItem,
-                    onFinish: () async {
-                      // if anything else to be done after creator approves,
-                      //maybe send completetion notification to speaker, attendees?, etc.
-                    },
+                    onFinish: () async {},
                   ),
                 ),
-              );
+              ).then((val) => Navigator.of(context).pop());
             },
           ),
         ),

@@ -1,4 +1,3 @@
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -260,7 +259,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             stream: _bloc.minimumCredits,
             builder: (context, snapshot) {
               return CustomTextField(
-                controller:_minimumCreditsController,
+                controller: _minimumCreditsController,
                 currentNode: _minimumCredits,
                 value: snapshot.data,
                 heading: L.of(context).minimum_credit_title,
@@ -268,7 +267,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 hint: L.of(context).minimum_credit_hint,
                 maxLength: 100,
                 error: getValidationError(context, snapshot.error),
-                formatters: [FilteringTextInputFormatter.allow(Regex.numericRegex)],
+                formatters: [
+                  FilteringTextInputFormatter.allow(Regex.numericRegex)
+                ],
               );
             },
           ),
@@ -281,14 +282,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                 0: Padding(
                   padding: EdgeInsets.only(left: 14, right: 14),
                   child: Text(
-                    L.of(context).option_one, //Label to be created
+                    S.of(context).option_one, 
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),
                 1: Padding(
                   padding: EdgeInsets.only(left: 14, right: 14),
                   child: Text(
-                    L.of(context).option_two, //Label to be created
+                    S.of(context).option_two, 
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),

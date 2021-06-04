@@ -219,6 +219,7 @@ class RequestModel extends DataModel {
   int minimumCredits;
   List<String> imageUrls = [];
   String communityName;
+  DocumentReference speakerInviteNotificationDocRef;
 
   RequestModel({
     this.id,
@@ -281,6 +282,7 @@ class RequestModel extends DataModel {
     this.imageUrls,
     this.oneToManyRequestAttenders,
     this.communityName,
+    this.speakerInviteNotificationDocRef,
   }) {
     log("===========Constructir called $communityId =======");
   }
@@ -534,6 +536,10 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('communityName')) {
       this.communityName = map['communityName'];
+    }
+    if (map.containsKey('speakerInviteNotificationDocRef')) {
+      this.speakerInviteNotificationDocRef =
+          map['speakerInviteNotificationDocRef'];
     }
     if (map.containsKey('oneToManyRequestAttenders')) {
       List<String> oneToManyRequestAttenders =
@@ -891,6 +897,10 @@ class RequestModel extends DataModel {
     if (map.containsKey('communityName')) {
       this.communityName = map['communityName'];
     }
+    if (map.containsKey('speakerInviteNotificationDocRef')) {
+      this.speakerInviteNotificationDocRef =
+          map['speakerInviteNotificationDocRef'];
+    }
   }
 
   @override
@@ -965,6 +975,10 @@ class RequestModel extends DataModel {
     }
     if (this.communityName != null && this.communityName.isNotEmpty) {
       object['communityName'] = this.communityName;
+    }
+    if (this.speakerInviteNotificationDocRef != null) {
+      object['speakerInviteNotificationDocRef'] =
+          this.speakerInviteNotificationDocRef;
     }
     if (this.softDelete != null) {
       object['softDelete'] = this.softDelete;

@@ -484,14 +484,14 @@ class MyTasksListState extends State<MyTaskList> {
                   spacing: 8,
                   children: <Widget>[
                     model.isSpeakerCompleted
-                        ? Text('You have requested for completion.')
+                        ? Text(L.of(context).requested_for_completion)
                         : Container(
                             height: 35,
                             child: RaisedButton(
                               padding: EdgeInsets.zero,
                               color: FlavorConfig.values.theme.primaryColor,
                               child: Text(
-                                'Complete',
+                                L.of(context).speaker_claim_credits,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Europa',
@@ -507,6 +507,7 @@ class MyTasksListState extends State<MyTaskList> {
                                           await oneToManySpeakerCompletesRequest(
                                               context, model);
                                         },
+                                        fromNotification: false,
                                       );
                                     },
                                   ),
@@ -852,9 +853,11 @@ class TaskCardViewState extends State<TaskCardView> {
                                               }
                                               this.selectedHoursPrepTime =
                                                   value;
+                                              return null;
                                             },
                                           ),
-                                          Text(S.of(context).hour(3)),
+                                          Text(
+                                              S.of(context).hour), //plural here
                                         ],
                                       ),
                                     ),
@@ -950,9 +953,11 @@ class TaskCardViewState extends State<TaskCardView> {
                                               }
                                               this.selectedHoursDeliveryTime =
                                                   value;
+                                              return null;
                                             },
                                           ),
-                                          Text(S.of(context).hour(3)),
+                                          Text(
+                                              S.of(context).hour), //plural here
                                         ],
                                       ),
                                     ),
@@ -1038,9 +1043,10 @@ class TaskCardViewState extends State<TaskCardView> {
                                             S.of(context).select_hours;
                                           }
                                           this.selectedHourValue = value;
+                                          return null;
                                         },
                                       ),
-                                      Text(S.of(context).hour(3)),
+                                      Text(S.of(context).hour), //plural here
                                     ],
                                   ),
                                 ),

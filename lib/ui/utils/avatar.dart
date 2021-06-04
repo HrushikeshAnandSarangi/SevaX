@@ -29,6 +29,8 @@ class CustomAvatar extends StatelessWidget {
         child: Center(
           child: Text(
             getInitials(name.trim()).trim().toUpperCase(),
+            style: TextStyle(
+                color: color == Colors.white ? Colors.black : Colors.white),
           ),
         ),
       ),

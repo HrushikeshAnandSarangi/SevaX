@@ -268,12 +268,36 @@ class RequestCard extends StatelessWidget {
                                         ),
                                         padding: EdgeInsets.all(0),
                                         color: Colors.green,
-                                        child: Text(
-                                          S.of(context).applied,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                        child: (model.requestType ==
+                                                    RequestType
+                                                        .ONE_TO_MANY_REQUEST &&
+                                                model.acceptors
+                                                    .contains(user.email) &&
+                                                !model.approvedUsers
+                                                    .contains(user.email))
+                                            ? Text(
+                                                S.of(context).invited,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            : (model.requestType ==
+                                                        RequestType
+                                                            .ONE_TO_MANY_REQUEST &&
+                                                    model.approvedUsers
+                                                        .contains(user.email))
+                                                ? Text(
+                                                    S.of(context).accepted,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    S.of(context).applied,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
                                         onPressed: () {},
                                       ),
                                     )

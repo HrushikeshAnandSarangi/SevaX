@@ -700,6 +700,9 @@ class DiscussionListState extends State<DiscussionList> {
                 ),
               );
             }
+
+            // return Text(snapshot.data.length.toString() + ' length');
+
             return Expanded(
               child: ListView(
                 children: <Widget>[
@@ -714,6 +717,8 @@ class DiscussionListState extends State<DiscussionList> {
                     shrinkWrap: true,
                     itemCount: newsList.length + 1,
                     itemBuilder: (context, index) {
+                      // return Text(snapshot.data.length.toString() + ' length');
+
                       if (index >= newsList.length) {
                         return Container(
                           width: double.infinity,
@@ -749,19 +754,21 @@ class DiscussionListState extends State<DiscussionList> {
 
   List<NewsModel> filterPinnedNews(
       List<NewsModel> newsList, BuildContext context) {
-    //  pinnedNewsModel = null;
     List<NewsModel> filteredNewsList = [];
     filteredNewsList = newsList;
+    isPinned = false;
     filteredNewsList.forEach((newsModel) {
-      if (newsModel.isPinned == true) {
+      if (newsModel.isPinned) {
         //  filteredNewsList.remove(newsModel);
         //  filteredNewsList.insert(0, newsModel);
+
+        pinnedNewsModel = null;
         pinnedNewsModel = newsModel;
         isPinned = true;
       }
     });
 
-    if (filteredNewsList.length > 1) {
+    if (filteredNewsList.length > 0) {
       filteredNewsList.removeWhere((news) => news.isPinned == true);
     }
 
@@ -814,7 +821,7 @@ class DiscussionListState extends State<DiscussionList> {
     var feedAddress = getLocation(news.placeAddress ?? '');
 
     return InkWell(
-      key: UniqueKey(),
+      key: ValueKey(news.id),
       onTap: () {
         Navigator.push(
           context,

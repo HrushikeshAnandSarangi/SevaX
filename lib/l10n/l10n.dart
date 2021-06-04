@@ -1396,7 +1396,7 @@ class S {
       );
 
   String get applied_for_request => Intl.message(
-        'You have accepted this offer.',
+        'You have accepetd the request',
         name: 'applied_for_request',
       );
 
@@ -2026,7 +2026,7 @@ class S {
       );
 
   String get offer_description_error => Intl.message(
-        'Please enter some class description',
+        'Please give a detailed description of the class you’re offering.',
         name: 'offer_description_error',
       );
 
@@ -3830,77 +3830,62 @@ class S {
         name: 'thanks',
       );
 
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
+  String get hour => Intl.message(
+        'hour',
         name: 'hour',
-        args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Seva Community Project', other: 'Seva Community Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Seva Community Request', other: 'Seva Community Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4036,13 +4021,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4497,7 +4482,7 @@ class S {
       );
 
   String get nearby_settings_content => Intl.message(
-        'This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in a Event',
+        'This indicates the distance that the user is willing to travel to complete a Request for a Seva Community or participate in an Event',
         name: 'nearby_settings_content',
       );
 
@@ -6165,34 +6150,474 @@ class S {
         'This is currently not permitted, Please see the following link for more information. http://www.web.sevaxapp.com/',
         name: 'currently_not_permitted',
       );
+
+  String get provide_skills => Intl.message(
+        'Provide the list of Skills that you required for this request',
+        name: 'provide_skills',
+      );
+
+  String get event_description => Intl.message(
+        'Event Description',
+        name: 'event_description',
+      );
+
+  String get request_to_join => Intl.message(
+        'Request to join',
+        name: 'request_to_join',
+      );
+
+  String get event => Intl.message(
+        'Event',
+        name: 'event',
+      );
+
+  String get offer => Intl.message(
+        'Offer',
+        name: 'offer',
+      );
+
+  String get minimum_credits => Intl.message(
+        'Minimum Credits',
+        name: 'minimum_credits',
+      );
+
+  String get min_credits_error => Intl.message(
+        'Minimum credits cannot be empty or zero',
+        name: 'min_credits_error',
+      );
+
+  String get part_of_sevax => Intl.message(
+        'Part of SevaX Global Network of Communities',
+        name: 'part_of_sevax',
+      );
+
+  String get upcoming_events => Intl.message(
+        'Upcoming Events',
+        name: 'upcoming_events',
+      );
+
+  String get latest_requests => Intl.message(
+        'Latest Requests',
+        name: 'latest_requests',
+      );
+
+  String get continue_to_signin => Intl.message(
+        'Continue to Sign in',
+        name: 'continue_to_signin',
+      );
+
+  String get access_not_available => Intl.message(
+        'Access not available',
+        name: 'access_not_available',
+      );
+
+  String get switch_community => Intl.message(
+        'You need to switch Seva Communities in order to access Groups in another Community.',
+        name: 'switch_community',
+      );
+
+  String get join_community_alert => Intl.message(
+        'This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.',
+        name: 'join_community_alert',
+      );
+
+  String get no_interests_added => Intl.message(
+        'No interests added',
+        name: 'no_interests_added',
+      );
+
+  String get no_skills_added => Intl.message(
+        'No skills added',
+        name: 'no_skills_added',
+      );
+
+  String get kilometer => Intl.message(
+        'Kilometer',
+        name: 'kilometer',
+      );
+
+  String get kilometers => Intl.message(
+        'Kilometers',
+        name: 'kilometers',
+      );
+
+  String get miles => Intl.message(
+        'Miles',
+        name: 'miles',
+      );
+
+  String get mile => Intl.message(
+        'Mile',
+        name: 'mile',
+      );
+
+  String get sign_in_alert => Intl.message(
+        'You need to sign in or register to view this.',
+        name: 'sign_in_alert',
+      );
+
+  String get invitation_accepted => Intl.message(
+        'Invitation Accepted.',
+        name: 'invitation_accepted',
+      );
+
+  String get no_groups_text => Intl.message(
+        'You are currently not part of any groups. You can either join one or create a new group.',
+        name: 'no_groups_text',
+      );
+
+  String get my_groups => Intl.message(
+        'My Groups',
+        name: 'my_groups',
+      );
+
+  String get sandbox_community => Intl.message(
+        'Sandbox Community',
+        name: 'sandbox_community',
+      );
+
+  String get sandbox_dialog_title => Intl.message(
+        'Sandbox seva community',
+        name: 'sandbox_dialog_title',
+      );
+
+  String get select_a_speaker_dialog => Intl.message(
+        'Select a speaker',
+        name: 'select_a_speaker_dialog',
+      );
+
+  String get duration_of_session => Intl.message(
+        'Duration of Session: ',
+        name: 'duration_of_session',
+      );
+
+  String get time_to_prepare => Intl.message(
+        'Time to prepare: ',
+        name: 'time_to_prepare',
+      );
+
+  String get hours => Intl.message(
+        'hours',
+        name: 'hours',
+      );
+
+  String get you_are_the_speaker => Intl.message(
+        'You are the speaker for: ',
+        name: 'you_are_the_speaker',
+      );
+
+  String get select_a_speaker => Intl.message(
+        'Please select a Speaker*',
+        name: 'select_a_speaker',
+      );
+
+  String get selected_speaker => Intl.message(
+        'Selected Speaker',
+        name: 'selected_speaker',
+      );
+
+  String get minimum_credit_title => Intl.message(
+        'Minimum Credits*',
+        name: 'minimum_credit_title',
+      );
+
+  String get request_closed => Intl.message(
+        'Request closed',
+        name: 'request_closed',
+      );
+
+  String get speaker_claim_credits => Intl.message(
+        'Claim credits',
+        name: 'speaker_claim_credits',
+      );
+
+  String get option_one => Intl.message(
+        'Standing Offer',
+        name: 'option_one',
+      );
+
+  String get option_two => Intl.message(
+        'One Time',
+        name: 'option_two',
+      );
+
+  String get registration_link => Intl.message(
+        'Registration Link',
+        name: 'registration_link',
+      );
+
+  String get invitation_accepted_subtitle => Intl.message(
+        ' has accepted your offer.',
+        name: 'invitation_accepted_subtitle',
+      );
+
+  String get offer_invitation_notification_title => Intl.message(
+        'Offer Invitation',
+        name: 'offer_invitation_notification_title',
+      );
+
+  String get offer_invitation_notification_subtitle => Intl.message(
+        ' has invited you to accept an offer.',
+        name: 'offer_invitation_notification_subtitle',
+      );
+
+  String get accept_offer_invitation_confirmation => Intl.message(
+        'This task will be added to your Pending Tasks, after you approve it.',
+        name: 'accept_offer_invitation_confirmation',
+      );
+
+  String get minimum_credit_hint => Intl.message(
+        'Provide minimum credits you require',
+        name: 'minimum_credit_hint',
+      );
+
+  String get minimum_credits_offer => Intl.message(
+        'This offer does not meet your minimum credit requirement.',
+        name: 'minimum_credits_offer',
+      );
+
+  String get speaker_claim_form_field_title => Intl.message(
+        'How much prep time did you require for this request?',
+        name: 'speaker_claim_form_field_title',
+      );
+
+  String get speaker_claim_form_field_title_hint => Intl.message(
+        'Prep time in hours',
+        name: 'speaker_claim_form_field_title_hint',
+      );
+
+  String get speaker_claim_form_text_1 => Intl.message(
+        'I acknowledge that I have completed the session for the request.',
+        name: 'speaker_claim_form_text_1',
+      );
+
+  String get speaker_claim_form_text_2 => Intl.message(
+        'Upon completing the one to many request, the combined prep time and session hours will be credited to you.',
+        name: 'speaker_claim_form_text_2',
+      );
+
+  String get registration_link_hint => Intl.message(
+        'Ex: Eventbrite link, etc.',
+        name: 'registration_link_hint',
+      );
+
+  String get requested_for_completion => Intl.message(
+        'Your completed request is pending approval.',
+        name: 'requested_for_completion',
+      );
+
+  String get this_request_has_now_ended => Intl.message(
+        'This request has now ended',
+        name: 'this_request_has_now_ended',
+      );
+
+  String get maximumNoOfParticipants => Intl.message(
+        'This request has a maximum number of participants. That limit has been reached.',
+        name: 'maximumNoOfParticipants',
+      );
+
+  String get reject_request_completion => Intl.message(
+        'Are you sure you want to reject this request for completion?',
+        name: 'reject_request_completion',
+      );
+
+  String get speaker_reject_invite_dialog => Intl.message(
+        'Are you sure you want to reject this invitation to speak?',
+        name: 'speaker_reject_invite_dialog',
+      );
+
+  String get explore_page_title_text => Intl.message(
+        'Explore Opportunities',
+        name: 'explore_page_title_text',
+      );
+
+  String get explore_page_subtitle_text => Intl.message(
+        'Find communities near you or online communities that interest you. You can offer to volunteer your services or request any assistance or search for Community Events.',
+        name: 'explore_page_subtitle_text',
+      );
+
+  String get select_speaker_hint => Intl.message(
+        'Ex: Name of speaker.',
+        name: 'select_speaker_hint',
+      );
+
+  String get onetomanyrequest_create_new_event => Intl.message(
+        'A new event will be created and linked to this request.',
+        name: 'onetomanyrequest_create_new_event',
+      );
+
+  String get speaker_requested_completion_notification => Intl.message(
+        'This request has been completed.',
+        name: 'speaker_requested_completion_notification',
+      );
+
+  String get request_completed_by_speaker => Intl.message(
+        'This request has been completed and is awaiting your approval.',
+        name: 'request_completed_by_speaker',
+      );
+
+  String get speaker => Intl.message(
+        'Speaker',
+        name: 'speaker',
+      );
+
+  String get speaker_completion_rejected_notification_1 => Intl.message(
+        'Request rejected.',
+        name: 'speaker_completion_rejected_notification_1',
+      );
+
+  String get speaker_accepted_invite_notification => Intl.message(
+        'This request has been accepted by **speakerName.',
+        name: 'speaker_accepted_invite_notification',
+      );
+
+  String get oneToManyRequestSpeakerAcceptRequest => Intl.message(
+        'Are you sure you want to accept this request?',
+        name: 'oneToManyRequestSpeakerAcceptRequest',
+      );
+
+  String get resetPasswordSuccess => Intl.message(
+        'An email has been sent. Please follow the steps in the email to reset your password.',
+        name: 'resetPasswordSuccess',
+      );
+
+  String get bundlePricingInfoButton => Intl.message(
+        'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.',
+        name: 'bundlePricingInfoButton',
+      );
+
+  String get insufficientSevaCreditsDialog => Intl.message(
+        'You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits',
+        name: 'insufficientSevaCreditsDialog',
+      );
+
+  String get adminNotificationInsufficientCredits => Intl.message(
+        ' Has Insufficient Credits To Create Requests',
+        name: 'adminNotificationInsufficientCredits',
+      );
+
+  String get adminNotificationInsufficientCreditsNeeded => Intl.message(
+        'Credits Needed: ',
+        name: 'adminNotificationInsufficientCreditsNeeded',
+      );
+
+  String get oneToManyRequestSpeakerWithdrawDialog => Intl.message(
+        'Please confirm that you would like to withdraw as a speaker',
+        name: 'oneToManyRequestSpeakerWithdrawDialog',
+      );
+
+  String get speakerRejectedNotificationLabel => Intl.message(
+        ' rejected the Speaker invitation for ',
+        name: 'speakerRejectedNotificationLabel',
+      );
+
+  String get speaker_rejected => Intl.message(
+        'Speaker Rejected',
+        name: 'speaker_rejected',
+      );
+
+  String get people_applied_for_request => Intl.message(
+        ' people have applied for this request',
+        name: 'people_applied_for_request',
+      );
+
+  String get oneToManyRequestCreatorCompletingRequestDialog => Intl.message(
+        'Are you sure you want to accept and complete this request?',
+        name: 'oneToManyRequestCreatorCompletingRequestDialog',
+      );
+
+  String get speaker_complete_page_text_1 => Intl.message(
+        'I acknowledge that speaker_name has completed the request. The list of members provided above attended the request.',
+        name: 'speaker_complete_page_text_1',
+      );
+
+  String get speaker_complete_page_text_2 => Intl.message(
+        'Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval.',
+        name: 'speaker_complete_page_text_2',
+      );
+
+  String get action_restricted_by_owner => Intl.message(
+        'This action is Restricted for you by the owner of the seva Community.',
+        name: 'action_restricted_by_owner',
+      );
+
+  String get accepted_this_request => Intl.message(
+        'You have accepted this request.',
+        name: 'accepted_this_request',
+      );
+
+  String get onetomanyrequest_member_invite_notif_subtitle => Intl.message(
+        'admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation.',
+        name: 'onetomanyrequest_member_invite_notif_subtitle',
+      );
+
+  String get onetomanyrequest_title_hint => Intl.message(
+        'Ex: Implicit Bias webinar.',
+        name: 'onetomanyrequest_title_hint',
+      );
+
+  String get total_no_of_participants => Intl.message(
+        'Total No. of Participants*',
+        name: 'total_no_of_participants',
+      );
+
+  String get onetomanyrequest_participants_or_credits_hint => Intl.message(
+        'Ex: 40.',
+        name: 'onetomanyrequest_participants_or_credits_hint',
+      );
+
+  String get speaker_invite_notification => Intl.message(
+        'Added you as the Speaker for request: ',
+        name: 'speaker_invite_notification',
+      );
+
+  String get sandbox_already_created_1 => Intl.message(
+        'Only one sandbox community is currently allowed for each SevaX member.',
+        name: 'sandbox_already_created_1',
+      );
+
+  String get sandbox_create_community_alert => Intl.message(
+        'Are you sure you want to create a sandbox community?',
+        name: 'sandbox_create_community_alert',
+      );
+
+  String get you_are_on_enterprise_plan => Intl.message(
+        'You are on Enterprise Plan',
+        name: 'you_are_on_enterprise_plan',
+      );
+
+  String get sandbox_dialog_subtitle => Intl.message(
+        'Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account.',
+        name: 'sandbox_dialog_subtitle',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
-        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fr'),
-      ];
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
+  ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
+        'en',
         'es',
+        'fr',
         'pt',
         'sn',
-        'zh',
-        'zh',
-        'af',
         'sw',
-        'en',
-        'fr',
+        'zh',
+        'zh',
       ].contains(locale.languageCode);
 
   @override

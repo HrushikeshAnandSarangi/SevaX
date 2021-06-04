@@ -29,10 +29,13 @@ class UpgradePlanBannerModel {
     this.admins_child_timebanks_messaging,
     this.cash_request,
     this.goods_request,
-    this.multiple_super_admins,
     this.sponsored_groups,
     this.add_manual_time,
     this.onetomany_requests,
+    this.multiple_super_admins,
+    this.public_to_sevax_global,
+    this.community_sponsors,
+    this.admin_role_customization,
   });
   BannerDetails pin_feeds;
   BannerDetails multi_lang;
@@ -62,6 +65,9 @@ class UpgradePlanBannerModel {
   BannerDetails sponsored_groups;
   BannerDetails add_manual_time;
   BannerDetails onetomany_requests;
+  BannerDetails public_to_sevax_global;
+  BannerDetails community_sponsors;
+  BannerDetails admin_role_customization;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -142,14 +148,23 @@ class UpgradePlanBannerModel {
         sponsored_groups: json.containsKey("sponsored_groups")
             ? BannerDetails.fromJson(json["sponsored_groups"])
             : null,
-        multiple_super_admins: json.containsKey("multiple_super_admins")
-            ? BannerDetails.fromJson(json["multiple_super_admins"])
-            : null,
         add_manual_time: json.containsKey("add_manual_time")
             ? BannerDetails.fromJson(json["add_manual_time"])
             : null,
         onetomany_requests: json.containsKey("onetomany_requests")
             ? BannerDetails.fromJson(json["onetomany_requests"])
+            : null,
+        multiple_super_admins: json.containsKey("multiple_super_admins")
+            ? BannerDetails.fromJson(json["multiple_super_admins"])
+            : null,
+        public_to_sevax_global: json.containsKey("public_to_sevax_global")
+            ? BannerDetails.fromJson(json["public_to_sevax_global"])
+            : null,
+        community_sponsors: json.containsKey("community_sponsors")
+            ? BannerDetails.fromJson(json["community_sponsors"])
+            : null,
+        admin_role_customization: json.containsKey("admin_role_customization")
+            ? BannerDetails.fromJson(json["admin_role_customization"])
             : null,
       );
 }

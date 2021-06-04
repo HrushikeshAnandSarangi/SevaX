@@ -31,6 +31,8 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import '../../../../labels.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 class RequestListingPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -157,7 +159,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
             children: [
               SizedBox(width: 10),
               CustomChip(
-                label: 'Time Request',
+                label: 'Time',
                 isSelected: filter.timeRequest,
                 onTap: () {
                   _bloc.onFilterChange(
@@ -193,6 +195,18 @@ class _RequestListingPageState extends State<RequestListingPage> {
               ),
               SizedBox(width: 10),
               CustomChip(
+                label: S.of(context).one_to_many.sentenceCase(),
+                isSelected: filter.oneToManyRequest,
+                onTap: () {
+                  _bloc.onFilterChange(
+                    snapshot.data.copyWith(
+                      oneToManyRequest: !snapshot.data.oneToManyRequest,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 10),
+              CustomChip(
                 label: 'Public',
                 isSelected: filter.publicRequest,
                 onTap: () {
@@ -211,18 +225,6 @@ class _RequestListingPageState extends State<RequestListingPage> {
                   _bloc.onFilterChange(
                     snapshot.data.copyWith(
                       virtualRequest: !snapshot.data.virtualRequest,
-                    ),
-                  );
-                },
-              ),
-              SizedBox(width: 10),
-              CustomChip(
-                label: 'One to many request',
-                isSelected: filter.oneToManyRequest,
-                onTap: () {
-                  _bloc.onFilterChange(
-                    snapshot.data.copyWith(
-                      oneToManyRequest: !snapshot.data.oneToManyRequest,
                     ),
                   );
                 },
@@ -450,7 +452,12 @@ Widget getAppropriateTag(BuildContext context, RequestType requestType) {
       return getTagMainFrame(S.of(context).time_request);
 
     case RequestType.ONE_TO_MANY_REQUEST:
-      return getTagMainFrame(S.of(context).one_to_many);
+      return getTagMainFrame(S.of(context).one_to_many.sentenceCase() +
+          '' +
+          S.of(context).request);
+
+    case RequestType.BORROW:
+      return getTagMainFrame(L.of(context).borrow_request_title);
 
     default:
       return Container();

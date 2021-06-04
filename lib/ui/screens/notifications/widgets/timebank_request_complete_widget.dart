@@ -76,7 +76,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           title: model.title,
           subTitle: model.requestType == RequestType.BORROW
               ? '${user.fullname} has reviewed this request. \nTap to share feedback.'
-              : '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour(transactionModel.credits)}, ${S.of(context).notifications_waiting_for_approval}.',
+              : '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour}, ${S.of(context).notifications_waiting_for_approval}.', //plural here //S.of(context).hour(transactionModel.credits)
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {

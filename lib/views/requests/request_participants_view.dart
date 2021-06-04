@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sevaexchange/labels.dart';
 
 import '../core.dart';
 
@@ -337,7 +338,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       textColor: Colors.white,
                       // elevation: 5,
                       onPressed: () {},
-                      child: Text('Speaker',
+                      child: Text(L.of(context).speaker,
                           style: TextStyle(
                             fontSize: 14,
                           )),
@@ -363,7 +364,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           //checking if speaker is the creator then we can directly show as speaker
                           child: userModel.email == widget.requestModel.email
                               ? Text(
-                                  'Speaker',
+                                  L.of(context).speaker,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),

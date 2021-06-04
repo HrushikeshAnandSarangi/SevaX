@@ -34,8 +34,7 @@ class NotificationCardOneToManySpeakerRecalims extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing:
-          !isDissmissible && onPressedAccept == null,
+      absorbing: !isDissmissible && onPressedAccept == null,
       child: Slidable(
         actionExtentRatio: 0.25,
         actions: isDissmissible
@@ -131,33 +130,31 @@ class NotificationCardOneToManySpeakerRecalims extends StatelessWidget {
                 ),
                 //onTap: () => onPressed != null ? onPressed() : null,
               ),
-              SizedBox(height: 7),
-              Row(
-                children: [
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.19),
-                  Container(
-                    height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
-                      padding: EdgeInsets.zero,
-                      color: FlavorConfig.values.theme.primaryColor,
-                      child: Text(
-                        S.of(context).accept,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Europa',
-                            fontSize: 12),
-                      ),
-                      onPressed: () =>
-                          onPressedAccept != null ? onPressedAccept() : null,
-                    ),
-                  ),
+              SizedBox(height: 4),
+              // Row(
+              //   children: [
+              //     SizedBox(width: MediaQuery.of(context).size.width * 0.19),
+              //     Container(
+              //       height: MediaQuery.of(context).size.width * 0.07,
+              //       child: RaisedButton(
+              //         padding: EdgeInsets.zero,
+              //         color: FlavorConfig.values.theme.primaryColor,
+              //         child: Text(
+              //           S.of(context).accept,
+              //           style: TextStyle(
+              //               color: Colors.white,
+              //               fontFamily: 'Europa',
+              //               fontSize: 12),
+              //         ),
+              //         onPressed: () =>
+              //             onPressedAccept != null ? onPressedAccept() : null,
+              //       ),
+              //     ),
 
-                  
-                ],
-              ),
+              //   ],
+              // ),
 
-              SizedBox(height: MediaQuery.of(context).size.width * 0.04),
-
+              // SizedBox(height: MediaQuery.of(context).size.width * 0.04),
             ],
           ),
         ),

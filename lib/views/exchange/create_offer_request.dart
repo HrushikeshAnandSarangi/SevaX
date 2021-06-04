@@ -129,7 +129,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                           headerContainer(),
                           SizedBox(height: 14),
                           OfferDurationWidget(
-                            title: "${S.of(context).request_duration} *",
+                            title: "${S.of(context).offer_duration} *",
                           ),
                           TimeRequest(),
                           Padding(
