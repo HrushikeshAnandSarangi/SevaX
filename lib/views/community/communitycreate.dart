@@ -660,31 +660,40 @@ class CreateEditCommunityViewFormState
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
-                                                "planId": "grande_plan",
-                                                "payment_success": true,
-                                                "message":
-                                                    "You are on Non-Profit Plan",
-                                                "status": 200,
-                                              };
-                                            } else {
-                                              communityModel.payment = {
-                                                "planId": "venti_plan",
+                                                "planId": PlanIds
+                                                    .enterprise_plan.label,
                                                 "payment_success": true,
                                                 "message":
                                                     "You are on Enterprise Plan",
                                                 "status": 200,
                                               };
+                                              communityModel.testCommunity =
+                                                  true;
+                                              snapshot.data.community
+                                                  .updateValueByKey(
+                                                'testCommunity',
+                                                true,
+                                              );
+                                              testCommunity = true;
+                                              timebankModel.liveMode = true;
+
+                                              setState(() {});
                                             }
                                           });
-                                        }
+                                        } else {
+                                          communityModel.payment = null;
+                                          snapshot.data.community
+                                              .updateValueByKey(
+                                            'testCommunity',
+                                            false,
+                                          );
+                                          testCommunity = false;
+                                          timebankModel.liveMode = false;
+                                           communityModel.testCommunity =
+                                                  false;
 
-                                        snapshot.data.community
-                                            .updateValueByKey(
-                                          'testCommunity',
-                                          value,
-                                        );
-                                        testCommunity = value;
-                                        setState(() {});
+                                          setState(() {});
+                                        }
                                       } else {
                                         showDialogForSuccess(
                                             dialogTitle:
