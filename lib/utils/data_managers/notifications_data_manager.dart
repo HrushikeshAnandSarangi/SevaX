@@ -582,31 +582,37 @@ Future<void> readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion({
   @required String userEmail,
   @required bool fromNotification,
 }) async {
+  logger.e('HEREEE 0');
   if (!fromNotification) {
+    logger.e('HEREEE 1');
     logger.e('-------------User Email: ${userEmail}--------------');
     logger.e('-------------RequestModel id: ${requestModel.id}--------------');
-    QuerySnapshot snapshotQuery = await Firestore.instance
-        .collection('users')
-        .document(userEmail)
-        .collection('notifications')
-        .where('isRead', isEqualTo: false)
-        .where('type', isEqualTo: 'OneToManyCreatorRejectedCompletion')
-        .where('data.id', isEqualTo: requestModel.id)
-        .getDocuments();
-    snapshotQuery.documents.forEach(
-      (document) async {
-        await Firestore.instance
-            .collection('users')
-            .document(userEmail)
-            .collection('notifications')
-            .document(document.documentID)
-            .updateData({
-          'isRead': true,
-        });
-      },
-    );
+    try {
+      QuerySnapshot snapshotQuery = await Firestore.instance
+          .collection('users')
+          .document(userEmail)
+          .collection('notifications')
+          .where('isRead', isEqualTo: false)
+          .where('type', isEqualTo: 'OneToManyCreatorRejectedCompletion')
+          .where('data.id', isEqualTo: requestModel.id)
+          .getDocuments();
+      snapshotQuery.documents.forEach(
+        (document) async {
+          await Firestore.instance
+              .collection('users')
+              .document(userEmail)
+              .collection('notifications')
+              .document(document.documentID)
+              .updateData({
+            'isRead': true,
+          });
+        },
+      );
+    } catch (error) {
+      logger.e('Error:' + error.toString());
+    }
   } else {
-    return null;
+    logger.e('No OneToManyCreatorRejectedCompletion notification to delete');
   }
 }
 
