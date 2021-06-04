@@ -579,7 +579,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                     children: [
                                       SizedBox(height: 20),
                                       Text(
-                                        "Selected Speaker",
+                                        S.of(context).selected_speaker,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -678,7 +678,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         children: [
                                             SizedBox(height: 20),
                                             Text(
-                                              "Select a Speaker*",
+                                              S.of(context).select_a_speaker,
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
@@ -735,9 +735,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             BorderRadius
                                                                 .circular(
                                                                     15.7)),
-                                                hintText: L
-                                                    .of(context)
-                                                    .select_speaker_hint,
+                                                hintText: S.of(context).select_speaker_hint,
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -2628,7 +2626,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           (widget.requestModel.selectedInstructor == {} ||
               widget.requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(dialogTitle: L.of(context).select_a_speaker);
+        showDialogForTitle(dialogTitle: S.of(context).select_a_speaker);
         return;
       }
 

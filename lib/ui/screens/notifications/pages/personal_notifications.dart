@@ -332,9 +332,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               context: context,
                               builder: (BuildContext viewContext) {
                                 return AlertDialog(
-                                  title: Text(L
-                                      .of(context)
-                                      .oneToManyRequestSpeakerAcceptRequest),
+                                  title: Text(S.of(context).oneToManyRequestSpeakerAcceptRequest),
                                   actions: <Widget>[
                                     FlatButton(
                                       color: Theme.of(context).primaryColor,
@@ -418,9 +416,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               });
                         },
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
-                        title: oneToManyRequestModel['requestCreatorName'],
-                        subTitle: 'added you as Speaker for request: ' +
-                            oneToManyRequestModel['title'],
+                        title: model.requestCreatorName,
+                        subTitle:  S.of(context).speaker_invite_notification +
+                      model.title,
                       );
                       break;
 
@@ -456,9 +454,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           );
                         },
                         photoUrl: oneToManyRequestModel['requestorphotourl'],
-                        title: oneToManyRequestModel['requestCreatorName'],
+                        title: S.of(context).speaker_completion_rejected_notification_1,
                         subTitle:
-                            'Rejected completion of request: ${oneToManyRequestModel['title']}. Please confirm again to close the request.',
+                            S.of(context).notifications_request_rejected_by +
+                      '' +
+                      model.requestCreatorName,
                       );
                       break;
 

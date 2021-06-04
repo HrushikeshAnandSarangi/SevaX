@@ -253,7 +253,7 @@ class PersonalNotificationReducerForRequests {
       onPressed: null,
       photoUrl: model.photoUrl,
       subTitle:
-          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)} ',
+          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hours} ',//plural here
       title: model.title,
     );
   }
@@ -934,8 +934,7 @@ class PersonalNotificationsReducerForOffer {
         );
       },
       photoUrl: model.photoUrlImage ?? defaultUserImageURL,
-      subTitle: "${model.fullName} " +
-         S.of(context).offer_invitation_notification_subtitle,
+      subTitle:  model.fullName + S.of(context).offer_invitation_notification_subtitle,
       title: S.of(context).offer_invitation_notification_title,
     );
   }

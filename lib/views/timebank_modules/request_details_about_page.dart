@@ -306,9 +306,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text('${widget.requestItem.oneToManyRequestAttenders.length}/' +
+                                Text('${widget.requestItem.oneToManyRequestAttenders.length}' +
+                                   S.of(context).of_text +
                                     '${widget.requestItem.numberOfApprovals}' +
-                                    ' people Applied'),
+                                     S.of(context).people_applied_for_request),
                                 StreamBuilder(
                                     stream: Firestore.instance
                                         .collection("requests")
@@ -362,7 +363,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(L.of(context).speaker,
+                              Text(S.of(context).speaker,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600)),
@@ -400,13 +401,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.grey))
                                             : Text(
-                                                'Duration of Session: ' +
-                                                    widget
-                                                        .requestItem
-                                                        .selectedSpeakerTimeDetails
-                                                        .speakingTime
-                                                        .toString() +
-                                                    ' hours',
+                                                      S.of(context).duration_of_session +
+                                                          widget
+                                                              .requestItem
+                                                              .selectedSpeakerTimeDetails
+                                                              .speakingTime
+                                                              .toString() +
+                                                          (widget
+                                                                      .requestItem
+                                                                      .selectedSpeakerTimeDetails
+                                                                      .speakingTime >
+                                                                  1.0
+                                                              ? '' +
+                                                                  S.of(context).hour
+                                                              : ' hour'),
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -633,7 +641,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 SevaCore.of(context).loggedInUser.email) &&
                             widget.requestItem.isSpeakerCompleted)
                         ? S.of(context).requested_for_completion
-                        : 'You are the speaker for the request',
+                        : S.of(context).you_are_the_speaker,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -667,8 +675,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   TextSpan(
                     text: widget.requestItem.acceptors
                             .contains(SevaCore.of(context).loggedInUser.email)
-                        ? 'You are the speaker for the request'
-                        : 'You are the speaker for the request',
+                        ? S.of(context).you_are_the_speaker
+                        : S.of(context).you_are_the_speaker,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -720,7 +728,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               builder: (BuildContext viewContext) {
                 return AlertDialog(
                   title:
-                      Text(L.of(context).oneToManyRequestSpeakerAcceptRequest),
+                      Text(S.of(context).oneToManyRequestSpeakerAcceptRequest),
                   actions: <Widget>[
                     FlatButton(
                       color: Theme.of(context).primaryColor,
@@ -863,7 +871,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title: Text('Are you sure you want to withdraw as speaker?'),
+                  title: Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
                   actions: <Widget>[
                     FlatButton(
                       color: Theme.of(context).primaryColor,
@@ -1203,7 +1211,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
           : isApplied
-              ? S.of(context).applied_for_request
+              ?  S.of(context).accepted_this_request
               : S.of(context).particpate_in_request_question;
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -1371,7 +1379,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       children: [
                         TextSpan(
                           text: widget.requestItem.isSpeakerCompleted
-                              ? L.of(context).request_completed_by_speaker
+                              ? S.of(context).request_completed_by_speaker
                               : S.of(context).creator_of_request_message,
                           style: TextStyle(
                             fontSize: 16,
@@ -1504,7 +1512,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 TextSpan(
                   text: widget.requestItem.oneToManyRequestAttenders
                           .contains(SevaCore.of(context).loggedInUser.email)
-                      ? S.of(context).applied_for_request
+                      ?  S.of(context).accepted_this_request
                       : widget.requestItem.isSpeakerCompleted == true
                           ? S.of(context).this_request_has_now_ended
                           : widget.requestItem.oneToManyRequestAttenders
@@ -1543,7 +1551,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               children: [
                 TextSpan(
                   text: widget.requestItem.isSpeakerCompleted
-                      ? L.of(context).request_completed_by_speaker
+                      ? S.of(context).request_completed_by_speaker
                       : S.of(context).creator_of_request_message,
                   style: TextStyle(
                     fontSize: 16,
@@ -1690,7 +1698,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     children: [
                       TextSpan(
                         text: isApplied
-                            ? 'You are the speaker for the request'
+                            ?  S.of(context).accepted_this_request
                             : S.of(context).particpate_in_request_question,
                         style: TextStyle(
                           fontSize: 16,
@@ -1745,7 +1753,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         children: [
                           TextSpan(
                             text: isApplied
-                                ? 'You have accepted this request.'
+                                ? S.of(context).accepted_this_request
                                 : S.of(context).particpate_in_request_question,
                             style: TextStyle(
                               fontSize: 16,
