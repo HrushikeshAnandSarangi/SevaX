@@ -571,12 +571,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           : requestModel.requestType ==
                                                   RequestType
                                                       .ONE_TO_MANY_REQUEST
-                                              ?  S.of(context).onetomanyrequest_title_hint
-                                              
-                                            
+                                              ? S
+                                                  .of(context)
+                                                  .onetomanyrequest_title_hint
                                               : requestModel.requestType ==
                                                       RequestType.BORROW
-                                                  ? S.of(context).request_title_hint
+                                                  ? S
+                                                      .of(context)
+                                                      .request_title_hint
                                                   : "Ex: Non-perishable goods for Food Bank...",
                                   hintStyle: hintTextStyle,
                                 ),
@@ -620,7 +622,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       children: [
                                         SizedBox(height: 20),
                                         Text(
-                                           S.of(context).selected_speaker,
+                                          S.of(context).selected_speaker,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -719,7 +721,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           children: [
                                               SizedBox(height: 20),
                                               Text(
-                                                 S.of(context).select_a_speaker,
+                                                S.of(context).select_a_speaker,
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -777,7 +779,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                               BorderRadius
                                                                   .circular(
                                                                       15.7)),
-                                                  hintText: S.of(context).select_speaker_hint,
+                                                  hintText: S
+                                                      .of(context)
+                                                      .select_speaker_hint,
                                                   hintStyle: TextStyle(
                                                     color: Colors.black45,
                                                     fontSize: 14,
@@ -2468,7 +2472,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           categoryWidget(),
           SizedBox(height: 20),
           Text(
-           S.of(context).provide_skills,
+            S.of(context).provide_skills,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -2525,9 +2529,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   },
                   decoration: InputDecoration(
                     hintText: requestModel.requestType ==
-                      RequestType.ONE_TO_MANY_REQUEST
-                  ? S.of(context).onetomanyrequest_participants_or_credits_hint
-                  : S.of(context).max_credit_hint,
+                            RequestType.ONE_TO_MANY_REQUEST
+                        ? S
+                            .of(context)
+                            .onetomanyrequest_participants_or_credits_hint
+                        : S.of(context).max_credit_hint,
                     hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
@@ -2557,24 +2563,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
           ),
           SizedBox(height: 20),
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-          ? Text(
-              S.of(context).total_no_of_participants,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            )
-          : Text(
-              S.of(context).number_of_volunteers,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Europa',
-                color: Colors.black,
-              ),
-            ),
+              ? Text(
+                  S.of(context).total_no_of_participants,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                )
+              : Text(
+                  S.of(context).number_of_volunteers,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
           TextFormField(
             focusNode: focusNodes[2],
             onFieldSubmitted: (v) {
@@ -2588,9 +2594,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
               }
             },
             decoration: InputDecoration(
-              hintText: requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-            ? S.of(context).onetomanyrequest_participants_or_credits_hint
-            : S.of(context).number_of_volunteers,
+              hintText: requestModel.requestType ==
+                      RequestType.ONE_TO_MANY_REQUEST
+                  ? S.of(context).onetomanyrequest_participants_or_credits_hint
+                  : S.of(context).number_of_volunteers,
               hintStyle: hintTextStyle,
               // labelText: 'No. of volunteers',
             ),
@@ -3063,7 +3070,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           (requestModel.selectedInstructor.toMap().isEmpty ||
               requestModel.selectedInstructor == null ||
               instructorAdded == false)) {
-        showDialogForTitle(dialogTitle:S.of(context).select_a_speaker_dialog);
+        showDialogForTitle(dialogTitle: S.of(context).select_a_speaker_dialog);
         return;
       }
 
@@ -3107,7 +3114,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           //   communityId: timebankModel.communityId,
           // );
           if (!onBalanceCheckResult.hasSuffiientCredits) {
-            showInsufficientBalance();
+            showInsufficientBalance(onBalanceCheckResult.credits);
             await sendInsufficentNotificationToAdmin(
               creditsNeeded: onBalanceCheckResult.credits,
             );
@@ -3654,9 +3661,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
     await _updateProjectModel();
     Navigator.pop(dialogContext);
 
-    if (resVar.length == 0 && requestModel.requestType != RequestType.BORROW) {
-      showInsufficientBalance();
-    }
+    // if (resVar.length == 0 && requestModel.requestType != RequestType.BORROW) {
+    //   showInsufficientBalance();
+    // }
     if (confirmationDialogContext != null) {
       Navigator.pop(confirmationDialogContext);
     }
@@ -3680,12 +3687,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
         });
   }
 
-  void showInsufficientBalance() {
+  void showInsufficientBalance(double credits) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(S.of(context).insufficientSevaCreditsDialog
+            title: Text(S
+                .of(context)
+                .insufficientSevaCreditsDialog
                 .replaceFirst('***', credits.toString())),
             actions: <Widget>[
               FlatButton(

@@ -229,7 +229,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     } else {
                                       showSignInAlertMessage(
                                         context: context,
-                                        message: L.of(context).sign_in_alert,
+                                        message: S.of(context).sign_in_alert,
                                         //'Please Sign In/Sign up to access ${community.name}',
                                       );
                                     }
@@ -322,7 +322,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           showSignInAlertMessage(
                                             context: context,
                                             message:
-                                                L.of(context).sign_in_alert,
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${event.name}'
                                           );
                                         } else if (widget.isSignedUser !=
@@ -445,7 +445,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           showSignInAlertMessage(
                                             context: context,
                                             message:
-                                                L.of(context).sign_in_alert,
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${request.title}'
                                           );
                                         } else if (widget.isSignedUser) {
@@ -572,7 +572,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       if (!widget.isSignedUser) {
                         showSignInAlertMessage(
                             context: context,
-                            message: L.of(context).sign_in_alert);
+                            message: S.of(context).sign_in_alert);
                         // 'Please Sign In/Sign up to access ${timabanksList[index].name}');
                       } else if (widget.isSignedUser &&
                           isUserJoined &&
@@ -668,7 +668,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(L.of(context).switch_community),
+            content: Text(S.of(context).switch_community),
             actions: [
               RaisedButton(
                 color: Colors.orange,

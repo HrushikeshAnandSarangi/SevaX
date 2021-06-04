@@ -306,19 +306,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-<<<<<<< HEAD
-                                Text(
-                                  '${widget.requestItem.oneToManyRequestAttenders.length} ' +
-                                      S.of(context).of_text +
-                                      ' ${widget.requestItem.numberOfApprovals}' +
-                                      L.of(context).people_applied_for_request,
-                                ),
-=======
                                 Text('${widget.requestItem.oneToManyRequestAttenders.length}' +
                                    S.of(context).of_text +
                                     '${widget.requestItem.numberOfApprovals}' +
                                      S.of(context).people_applied_for_request),
->>>>>>> origin/bluebottle_labels_update
                                 StreamBuilder(
                                     stream: Firestore.instance
                                         .collection("requests")
@@ -926,22 +917,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           children: <Widget>[
             SizedBox(width: 1),
             Spacer(),
-<<<<<<< HEAD
-            Padding(
-              padding: EdgeInsets.all(7.0),
-              child: Text(
-                L.of(context).speaker_claim_credits,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-=======
             Text(
               S.of(context).speaker_claim_credits,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
->>>>>>> origin/bluebottle_labels_update
               ),
             ),
             Spacer(
@@ -1424,22 +1404,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       children: <Widget>[
                         SizedBox(width: 1),
                         Spacer(),
-<<<<<<< HEAD
-                        Padding(
-                          padding: EdgeInsets.all(7.0),
-                          child: Text(
-                            L.of(context).speaker_claim_credits,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-=======
                         Text(
                           S.of(context).speaker_claim_credits,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
->>>>>>> origin/bluebottle_labels_update
                           ),
                         ),
                         Spacer(
