@@ -904,7 +904,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   photoUrl: null,
                   title: "Seva Credits Credited",
                   subTitle: notification.data['credits'].toString() +
-                      " Seva Credits have been credited to your account.",
+                      " Seva Credit(s) have been credited to your account.",
                   onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,
@@ -917,9 +917,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva Credits debited",
+                  title: "Seva Credits Debited",
                   subTitle: notification.data['credits'].toString() +
-                      " Seva Credits have been debited from your account.",
+                      " Seva Credit(s) have been debited from your account.",
                   onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,

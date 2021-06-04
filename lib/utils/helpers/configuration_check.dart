@@ -94,7 +94,7 @@ Widget permissionsAlertDialog(BuildContext context) {
   return AlertDialog(
     title: Text(S.of(context).alert),
     content: Text(
-        S.of(context).action_restricted_by_owner),
+        "This action is restricted for you by the owner of this Seva Community."),
     actions: [
       FlatButton(
         onPressed: () => Navigator.of(context).pop(),
