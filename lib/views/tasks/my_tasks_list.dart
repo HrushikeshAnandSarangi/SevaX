@@ -856,8 +856,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                           ),
-                                          Text(
-                                              S.of(context).hour), //plural here
+                                          Text(S.of(context).hours),
                                         ],
                                       ),
                                     ),
@@ -956,8 +955,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                               return null;
                                             },
                                           ),
-                                          Text(
-                                              S.of(context).hour), //plural here
+                                          Text(S.of(context).hours),
                                         ],
                                       ),
                                     ),
@@ -1046,7 +1044,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                           return null;
                                         },
                                       ),
-                                      Text(S.of(context).hour), //plural here
+                                      Text(S.of(context).hours),
                                     ],
                                   ),
                                 ),

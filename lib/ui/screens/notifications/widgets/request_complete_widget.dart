@@ -109,7 +109,7 @@ class RequestCompleteWidget extends StatelessWidget {
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} ${S.of(context).hour.toLowerCase()}'; //plural here //S.of(context).hour(transactionModel.credits).toLowerCase()
+                            return '${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours.toLowerCase() : S.of(context).hour.toLowerCase()}';
                           }(),
                           style: TextStyle(
                             color: Colors.black,

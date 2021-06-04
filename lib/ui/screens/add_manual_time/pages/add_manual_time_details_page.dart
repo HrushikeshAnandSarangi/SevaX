@@ -116,7 +116,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                               ],
                               onChanged: _bloc.onHoursChanged,
                             ),
-                            Text(S.of(context).hours), //plural here
+                            Text(S.of(context).hours),
                           ],
                         ),
                       ),

@@ -253,7 +253,7 @@ class PersonalNotificationReducerForRequests {
       onPressed: null,
       photoUrl: model.photoUrl,
       subTitle:
-          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hours} ', //plural here
+          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${transactionModel.credits > 1 ? S.of(context).hours : S.of(context).hour} ', //plural here
       title: model.title,
     );
   }
