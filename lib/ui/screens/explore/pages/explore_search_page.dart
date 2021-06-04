@@ -122,7 +122,9 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                    },
                   ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 4),
                 ),
@@ -230,7 +232,8 @@ class ExploreCommunityCard extends StatelessWidget {
   final bool isSignedUser;
   const ExploreCommunityCard({
     Key key,
-    @required this.model, @required this.isSignedUser,
+    @required this.model,
+    @required this.isSignedUser,
   }) : super(key: key);
 
   @override
@@ -425,7 +428,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                               Text(
                                 snapshot.data == 0
                                     ? 'Anywhere'
-                                    : 'Within ${snapshot.data} Miles',
+                                    : 'Within ${snapshot.data} '+ S.of(context).miles,
                                 style: TextStyle(
                                   color: snapshot.data == 0
                                       ? Theme.of(context).primaryColor

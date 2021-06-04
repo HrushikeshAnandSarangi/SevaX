@@ -141,7 +141,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Part of SevaX Global Network of Communities',
+                            S.of(context).part_of_sevax,
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
@@ -204,7 +204,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     padding: const EdgeInsets.all(0.0),
                                     child: Text(isUserJoined
                                         ? S.of(context).joined
-                                        : 'Request to join'),
+                                        : S.of(context).request_to_join),
                                   ),
                                   onPressed: () {
                                     if (widget.isSignedUser && !isUserJoined) {
@@ -229,7 +229,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                     } else {
                                       showSignInAlertMessage(
                                         context: context,
-                                        message: L.of(context).sign_in_alert,
+                                        message: S.of(context).sign_in_alert,
                                         //'Please Sign In/Sign up to access ${community.name}',
                                       );
                                     }
@@ -301,7 +301,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  "Upcoming Events",
+                                  S.of(context).upcoming_events,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
@@ -322,7 +322,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           showSignInAlertMessage(
                                             context: context,
                                             message:
-                                                L.of(context).sign_in_alert,
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${event.name}'
                                           );
                                         } else if (widget.isSignedUser !=
@@ -424,7 +424,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  "Latest Requests",
+                                  S.of(context).latest_requests,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor,
@@ -445,7 +445,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           showSignInAlertMessage(
                                             context: context,
                                             message:
-                                                L.of(context).sign_in_alert,
+                                                S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${request.title}'
                                           );
                                         } else if (widget.isSignedUser) {
@@ -572,7 +572,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                       if (!widget.isSignedUser) {
                         showSignInAlertMessage(
                             context: context,
-                            message: L.of(context).sign_in_alert);
+                            message: S.of(context).sign_in_alert);
                         // 'Please Sign In/Sign up to access ${timabanksList[index].name}');
                       } else if (widget.isSignedUser &&
                           isUserJoined &&
@@ -608,7 +608,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         });
                       } else if (SevaCore.of(context).loggedInUser != null &&
                           isUserJoined) {
-                        switchCommunity(message: 'Event');
+                        switchCommunity(message: S.of(context).event);
                       } else if (SevaCore.of(context).loggedInUser != null &&
                           !isUserJoined) {
                         showAlertMessage(message: timabanksList[index].name);
@@ -668,7 +668,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(L.of(context).switch_community),
+            content: Text(S.of(context).switch_community),
             actions: [
               RaisedButton(
                 color: Colors.orange,
@@ -697,7 +697,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
     context: context,
     builder: (dialogContext) {
       return AlertDialog(
-        title: Text('Access not available'),
+        title: Text(S.of(context).access_not_available),
         content: Text(message),
         actions: [
           FlatButton(
@@ -718,7 +718,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
               );
             },
             child: Text(
-              'Continue to Sign in',
+              S.of(context).continue_to_signin,
               style: TextStyle(color: FlavorConfig.values.theme.primaryColor),
             ),
           ),

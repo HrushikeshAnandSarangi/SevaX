@@ -97,7 +97,7 @@ class OfferCard extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TagView(
-                                tagTitle: offerType.readbable(requestType),
+                                tagTitle: offerType.readbable(requestType, context),
                               ),
                             ),
                             Visibility(
@@ -290,13 +290,13 @@ class OfferCard extends StatelessWidget {
   Widget getAppropriateTag(RequestType requestType, BuildContext context) {
     switch (requestType) {
       case RequestType.CASH:
-        return getTagMainFrame(S.of(context).cash_offer, context);
+        return getTagMainFrame(S.of(context).cash, context);
 
       case RequestType.GOODS:
-        return getTagMainFrame(S.of(context).goods_offer, context);
+        return getTagMainFrame(S.of(context).goods, context);
 
       case RequestType.TIME:
-        return getTagMainFrame(S.of(context).time_offer, context);
+        return getTagMainFrame(S.of(context).time, context);
 
       default:
         return Container();

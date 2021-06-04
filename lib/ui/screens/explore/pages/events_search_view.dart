@@ -16,6 +16,8 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../../../l10n/l10n.dart';
+
 class EventsSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
@@ -78,7 +80,7 @@ class EventsSearchView extends StatelessWidget {
                                   showSignInAlertMessage(
                                     context: context,
                                     message:
-                                        'Please Sign In/Sign up to access ${event.name}',
+                                        S.of(context).sign_in_alert,
                                   );
                                 }
                               },
@@ -103,7 +105,7 @@ class EventsSearchView extends StatelessWidget {
                           showSignInAlertMessage(
                               context: context,
                               message:
-                                  'Please Sign In/Sign up to access ${event.name}');
+                                   S.of(context).sign_in_alert);
                         },
                         photoUrl: event.photoUrl ?? defaultProjectImageURL,
                         title: event.name,
