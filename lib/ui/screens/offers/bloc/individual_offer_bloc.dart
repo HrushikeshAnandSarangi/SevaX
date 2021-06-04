@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -211,10 +212,13 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _makeVirtual.add(offerModel.virtual);
     _goodsDonationDetails.add(offerModel.goodsDonationDetails);
     _cashModel.add(offerModel.cashModel);
-    if (offerModel.individualOfferDataModel != null) { 
+    if (offerModel.individualOfferDataModel != null) {
       _minimumCredits
           .add(offerModel.individualOfferDataModel.minimumCredits.toString());
-          timeOfferType = offerModel.individualOfferDataModel.timeOfferType == 'SPOT_ON'?0:1;
+      timeOfferType =
+          offerModel.individualOfferDataModel.timeOfferType == 'SPOT_ON'
+              ? 0
+              : 1;
     }
     if (offerModel.individualOfferDataModel.schedule != null) {
       _availabilty.add(
@@ -251,7 +255,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
       _offerDescription.addError(ValidationErrors.profanityError);
       flag = true;
     }
-    if (_type.value == null && _type.value != '') {
+    if (_type.value != null) {
       if (_type.value == RequestType.TIME) {
         if (_availabilty.value == null || _availabilty.value == '') {
           _availabilty.addError(ValidationErrors.genericError);
@@ -259,8 +263,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
         } else if (profanityDetector.isProfaneString(_availabilty.value)) {
           _availabilty.addError(ValidationErrors.profanityError);
           flag = true;
-        } else if (_minimumCredits.value == null ||
-            _minimumCredits.value == 0) {
+        }
+        logger.e("minimum credit value -> ${_minimumCredits.value}");
+        if (_minimumCredits.value == null || _minimumCredits.value.isEmpty) {
           _minimumCredits.addError(ValidationErrors.minimumCreditsError);
           flag = true;
         }
