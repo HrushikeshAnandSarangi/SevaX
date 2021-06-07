@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with
 import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
 import 'package:sevaexchange/ui/utils/tag_builder.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -64,7 +65,7 @@ class RequestsSearchView extends StatelessWidget {
                           return ExploreEventCard(
                             onTap: () {
                               bool isAdmin = snapshot.data.admins.contains(
-                                Provider.of<UserModel>(context).sevaUserID,
+                                SevaCore.of(context).loggedInUser.sevaUserID,
                               );
                               Navigator.push(
                                 context,
@@ -108,8 +109,7 @@ class RequestsSearchView extends StatelessWidget {
                         onTap: () {
                           showSignInAlertMessage(
                               context: context,
-                              message:
-                                   S.of(context).sign_in_alert);
+                              message: S.of(context).sign_in_alert);
                         },
                         photoUrl: request.photoUrl ?? defaultProjectImageURL,
                         title: request.title,
