@@ -18,7 +18,6 @@ import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/intro_slider.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -28,7 +27,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/language.dart';
@@ -539,9 +537,8 @@ class _SplashViewState extends State<SplashView> {
 
     if (loggedInUser.communities == null ||
         loggedInUser.communities.isEmpty ||
-        (loggedInUser.communities?.length == 1 &&
-            loggedInUser.communities?.elementAt(0) ==
-                FlavorConfig.values.timebankId)) {
+        !loggedInUser.skipCreateCommunityPage
+        ) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);

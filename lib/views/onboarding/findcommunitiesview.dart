@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
@@ -13,7 +14,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
-import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -307,6 +308,31 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         // This container holds the align
         widget.isFromHome ? Container() : createCommunity(),
+        FlatButton(
+          onPressed: () async {
+            
+            await Firestore.instance
+                .collection("users")
+                .document(widget.loggedInUser.email)
+                .updateData(
+              {
+                'skipCreateCommunityPage': true,
+              },
+            );
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => SevaCore(
+                  loggedInUser: widget.loggedInUser,
+                  child: HomePageRouter(),
+                ),
+              ),
+              ModalRoute.withName('/'),
+            );
+          
+          },
+          child: Text(S.of(context).skip),
+        ),
+        
       ]),
     );
   }
@@ -628,7 +654,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   } else {}
                 },
               ),
-              SizedBox(height: 20),
+              SizedBox(height:8),
             ],
           ),
         ),

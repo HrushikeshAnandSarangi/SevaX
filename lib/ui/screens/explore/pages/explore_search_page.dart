@@ -394,7 +394,7 @@ class ExploreSearchTabBar extends StatelessWidget {
               children: [
                 Container(
                   height: 30,
-                  width: 90,
+                  width: 135,
                   child: StreamBuilder<int>(
                     initialData: 0,
                     stream: _bloc.distance,
@@ -409,28 +409,24 @@ class ExploreSearchTabBar extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.only(left: 8),
                         child: InkWell(
                           onTap: () async {
-                            if (snapshot.data == 0) {
-                              await Navigator.of(context)
-                                  .push<int>(
-                                MaterialPageRoute(
-                                  builder: (context) => NearByFiltersView(),
-                                ),
-                              )
-                                  .then(
-                                (value) {
-                                  if (value != null) {
-                                    _bloc.distanceChanged(value);
-                                  } else {
-                                    _bloc.distanceChanged(0);
-                                  }
-                                },
-                              );
-                            } else {
-                              _bloc.distanceChanged(0);
-                            }
+                            await Navigator.of(context)
+                                .push<int>(
+                              MaterialPageRoute(
+                                builder: (context) => NearByFiltersView(),
+                              ),
+                            )
+                                .then(
+                              (value) {
+                                if (value != null) {
+                                  _bloc.distanceChanged(value);
+                                } else {
+                                  _bloc.distanceChanged(0);
+                                }
+                              },
+                            );
                           },
                           child: Row(
                             children: [
@@ -443,6 +439,22 @@ class ExploreSearchTabBar extends StatelessWidget {
                                   color: snapshot.data == 0
                                       ? Theme.of(context).primaryColor
                                       : Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              HideWidget(
+                                hide: snapshot.data == 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4.0),
+                                  child: GestureDetector(
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      _bloc.distanceChanged(0);
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
