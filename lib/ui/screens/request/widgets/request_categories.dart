@@ -36,7 +36,7 @@ class RequestCategories extends StatelessWidget {
             snapshot.data.length,
             (index) => ExploreBrowseCard(
               imageUrl:
-                  'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore%20browse%20card%20image.JPG?alt=media&token=48eda7bf-0089-40f4-8b04-0efcb3a881bd',
+                  snapshot.data[index].logo??'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore%20browse%20card%20image.JPG?alt=media&token=48eda7bf-0089-40f4-8b04-0efcb3a881bd',
               title: snapshot.data[index].title_en,
               onTap: () => onTap(snapshot.data[index]),
             ),
