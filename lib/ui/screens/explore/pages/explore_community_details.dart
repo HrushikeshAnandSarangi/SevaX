@@ -31,7 +31,6 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import '../../../../labels.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -309,7 +308,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                 ),
                               ),
                               SizedBox(
-                                height: 300,
+                                height: 330,
                                 child: ListView.builder(
                                   itemCount: snapshot.data.length,
                                   shrinkWrap: true,
@@ -367,6 +366,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               SizedBox(height: 4),
                                               Text(
                                                 event.description,
+                                                maxLines:2,
                                               ),
                                               SizedBox(height: 4),
                                               MemberAvatarListWithCount(
