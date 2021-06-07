@@ -40,6 +40,7 @@ class UserModel extends DataModel {
   String language;
   String cvUrl;
   String cvName;
+  bool skipCreateCommunityPage;
 
   NearBySettings nearBySettings;
 
@@ -100,6 +101,7 @@ class UserModel extends DataModel {
       this.otp,
       this.requestStatus,
       //this.availability,
+      this.skipCreateCommunityPage,
       this.currentTimebank,
       this.timezone,
       this.tokens,
@@ -135,6 +137,11 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('calendarId')) {
       this.calendarId = map['calendarId'];
+    }
+    if (map.containsKey('skipCreateCommunityPage')) {
+      this.skipCreateCommunityPage = map['skipCreateCommunityPage'] ?? false;
+    } else {
+      this.skipCreateCommunityPage = false;
     }
     if (map.containsKey('calendarAccId')) {
       this.calendarAccId = map['calendarAccId'];
@@ -435,6 +442,9 @@ class UserModel extends DataModel {
     }
     if (this.interests != null) {
       object['interests'] = this.interests;
+    }
+    if (this.skipCreateCommunityPage != null) {
+      object['skipCreateCommunityPage'] = this.skipCreateCommunityPage;
     }
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
