@@ -48,6 +48,7 @@ import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -3197,7 +3198,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         if (selectedInstructorModel != null &&
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-          if (selectedInstructorModel.communities
+          if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            log('speaker is creator');
+          } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
               selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
             speakerNotificationDocRef =
@@ -3244,7 +3247,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
         if (selectedInstructorModel != null &&
             //selectedInstructorModel.sevaUserID != requestModel.sevaUserId &&
             requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST) {
-          if (selectedInstructorModel.communities
+          if (selectedInstructorModel.sevaUserID == requestModel.sevaUserId) {
+            log('speaker is creator');
+          } else if (selectedInstructorModel.communities
                   .contains(requestModel.communityId) &&
               selectedInstructorModel.sevaUserID != requestModel.sevaUserId) {
             speakerNotificationDocRef =
