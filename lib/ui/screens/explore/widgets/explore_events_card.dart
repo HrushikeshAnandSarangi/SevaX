@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 //import 'package:sevaexchange/constants/sevatitles.dart';
 
 class ExploreEventsCard extends StatelessWidget {
@@ -9,7 +10,7 @@ class ExploreEventsCard extends StatelessWidget {
     this.communityName,
     this.city,
     this.description,
-    this.participantsImageList,
+    this.userIds,
     this.firstTextStyle,
     this.secondTextStyle,
     this.onTap,
@@ -21,7 +22,7 @@ class ExploreEventsCard extends StatelessWidget {
   final String communityName;
   final String city;
   final String description;
-  final List<String> participantsImageList;
+  final List<String> userIds;
   final TextStyle firstTextStyle;
   final TextStyle secondTextStyle;
   //final EdgeInsetsGeometry padding;
@@ -56,27 +57,18 @@ class ExploreEventsCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          communityName != null
-                              ? communityName.toUpperCase()
-                              : 'COMMUNITY NAME UNAVAILABLE',
+                          communityName?.toUpperCase()??'',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w400,
                               ),
                         ),
+                        
                         Text(
-                          ' - ',
-                          style: firstTextStyle ??
-                              const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                              ),
-                        ),
-                        Text(
-                          city != null
-                              ? city.toUpperCase()
-                              : 'CITY UNAVAILABLE',
+                          city != null && city.isNotEmpty
+                              ? ' - ${city.toUpperCase()}'
+                              :'',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
@@ -94,48 +86,22 @@ class ExploreEventsCard extends StatelessWidget {
                     width: 250,
                     child: Text(
                       description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: secondTextStyle ??
                           const TextStyle(
-                            fontSize: 17,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.5),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 20,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 4,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 9,
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.transparent,
-                                  backgroundImage:
-                                      participantsImageList[index] != null
-                                          ? NetworkImage(
-                                              participantsImageList[index])
-                                          : null,
-                                ),
-                                const SizedBox(width: 2),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                
+                MemberAvatarListWithCount(
+                  userIds: userIds,
+                  radius: 10,
+                ),
               ],
             ),
           ],
