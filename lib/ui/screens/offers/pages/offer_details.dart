@@ -584,7 +584,6 @@ class OfferDetails extends StatelessWidget {
                       offerModel.type != RequestType.TIME,
                   child: Container(
                     width: isAccepted ? 150 : 120,
-                    padding: EdgeInsets.only(top: 8),
                     height: 32,
                     child: ConfigurationCheck(
                       actionType:
