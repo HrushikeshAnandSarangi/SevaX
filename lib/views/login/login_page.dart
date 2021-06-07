@@ -13,7 +13,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -22,6 +21,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -336,29 +336,33 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 0.0),
                 child: Column(
                   children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        padding: EdgeInsets.only(top: 35, bottom: 50.0),
-                        child: Row(
-                          children: [
-                            BackButton(
-                              color: Theme.of(context).accentColor,
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            Text(
-                              'Go Back',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).accentColor,
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(top: 35, bottom: 50.0),
+                      child: FlatButton.icon(
+                        icon: Icon(Icons.arrow_back_ios,
+                            color: Theme.of(context).accentColor),
+                        onPressed: () {
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          } else {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => ExplorePage(
+                                  isUserSignedIn: false,
+                                ),
                               ),
-                            ),
-                          ],
+                              (route) => false,
+                            );
+                          }
+                        },
+                        label: Text(
+                          'Go Back',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).accentColor,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),

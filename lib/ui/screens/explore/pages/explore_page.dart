@@ -40,7 +40,6 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
-import '../../../../labels.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
@@ -56,43 +55,26 @@ class ExplorePage extends StatefulWidget {
 List findCardsData = [
   {
     'imageUrl':
-        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
+        'https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/category_images%2FIcons%2FCommunities.jpeg?alt=media&token=b04baab1-aa95-4ed4-abfc-ddf41382c677',
     'title': FindCards.COMMUNITIES.readable
   },
   {
     'imageUrl':
-        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
+        'https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/category_images%2FIcons%2FEvents.jpeg?alt=media&token=884ea985-d84d-4711-a618-68d76e520712',
     'title': FindCards.EVENTS.readable
   },
   {
     'imageUrl':
-        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
+        'https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/category_images%2FIcons%2FRequests.jpeg?alt=media&token=049d6276-fe8b-45a6-a781-25c8584bcb4a',
     'title': FindCards.REQUESTS.readable
   },
   {
     'imageUrl':
-        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
+        'https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/category_images%2FIcons%2FOffer.jpeg?alt=media&token=33ba56e5-9625-4cef-99f2-bfe86a1bfb78',
     'title': FindCards.OFFERS.readable
   },
-  {
-    'imageUrl':
-        'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
-    'title': FindCards.PEOPLE.readable
-  }
 ];
 
-List<String> participantsImageList1 = [
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-];
-List<String> participantsImageList2 = [
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-  "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fuser%20circle%20avatar.png?alt=media&token=f5ccc2aa-1178-413a-b26f-f496caaac203",
-];
 
 class _ExplorePageState extends State<ExplorePage> {
   TextEditingController _searchController = TextEditingController();
@@ -236,7 +218,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             children: [
                               ExploreFindCard(
                                 imageUrl:
-                                    'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/explore_cards_test_images%2Fexplore_find_card_image.JPG?alt=media&token=6a8fca32-df2a-4026-84d4-f5dcb7d36b70',
+                                    findCardsData[index]['imageUrl'],
                                 title: findCardsData[index]['title'],
                                 style: TextStyle(
                                   fontSize: 16,
@@ -347,8 +329,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     return Container();
                                                   }
                                                   return ExploreEventsCard(
-                                                    participantsImageList:
-                                                        participantsImageList1,
+                                                    userIds:
+                                                        projectModel.associatedmembers.keys.toList(),
                                                     imageUrl: projectModel
                                                             .photoUrl ??
                                                         defaultGroupImageURL,
@@ -378,8 +360,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   );
                                                 })
                                             : ExploreEventsCard(
-                                                participantsImageList:
-                                                    participantsImageList1,
+                                                userIds:projectModel.associatedmembers.keys.toList(),
                                                 imageUrl:
                                                     projectModel.photoUrl ??
                                                         defaultGroupImageURL,
@@ -391,8 +372,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 onTap: () {
                                                   showSignInAlertMessage(
                                                       context: context,
-                                                      message:
-                                                           S.of(context).sign_in_alert);
+                                                      message: S
+                                                          .of(context)
+                                                          .sign_in_alert);
                                                 },
                                               ),
                                       ],
@@ -448,7 +430,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           ),
                           SizedBox(height: 10),
                           Container(
-                            height: 320,
+                            height: 260,
                             child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: snapshot.data.length > 6
@@ -547,13 +529,12 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     );
                                                   }
                                                 },
-                                                participantsImageList:
-                                                    participantsImageList2,
+                                                userIds:model.approvedUsers,
+                                                    
                                               );
                                             })
                                         : ExploreRequestsCard(
-                                            participantsImageList:
-                                                participantsImageList2,
+                                            userIds:model.approvedUsers,
                                             imageUrl: model.photoUrl ??
                                                 defaultGroupImageURL,
                                             communityName:
@@ -563,8 +544,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                             onTap: () {
                                               showSignInAlertMessage(
                                                   context: context,
-                                                  message:
-                                                       S.of(context).sign_in_alert);
+                                                  message: S
+                                                      .of(context)
+                                                      .sign_in_alert);
                                             },
                                           ),
                                   ],
@@ -633,130 +615,128 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
                 SizedBox(height: screenWidth * 0.02),
                 StreamBuilder<List<OfferModel>>(
-                    stream: _exploreBloc.offers,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return LoadingIndicator();
-                      }
-                      if (snapshot.hasError ||
-                          snapshot.data == null ||
-                          snapshot.data.isEmpty) {
-                        return Container();
-                      }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                S.of(context).offers,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                  stream: _exploreBloc.offers,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return LoadingIndicator();
+                    }
+                    if (snapshot.hasError ||
+                        snapshot.data == null ||
+                        snapshot.data.isEmpty) {
+                      return Container();
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              S.of(context).offers,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
                               ),
-                              SeeAllButton(
-                                hideButton: snapshot.data.length < 6,
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ExploreSearchPage(
-                                        tabIndex: 3,
-                                        isUserSignedIn: widget.isUserSignedIn,
-                                      ),
+                            ),
+                            SeeAllButton(
+                              hideButton: snapshot.data.length < 6,
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ExploreSearchPage(
+                                      tabIndex: 3,
+                                      isUserSignedIn: widget.isUserSignedIn,
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: 255,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.length > 6
-                                  ? 6
-                                  : snapshot.data.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                OfferModel offer = snapshot.data[index];
-                                String landMark = offer.selectedAdrress;
-
-                                if (offer.selectedAdrress != null &&
-                                    offer.selectedAdrress.contains(',')) {
-                                  List<String> x =
-                                      offer.selectedAdrress.split(',');
-                                  landMark = x[x.length > 3
-                                      ? x.length - 3
-                                      : x.length - 1];
-                                }
-                                return Row(
-                                  children: [
-                                    widget.isUserSignedIn
-                                        ? FutureBuilder<TimebankModel>(
-                                            future: getTimeBankForId(
-                                                timebankId: offer.timebankId),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return LoadingIndicator();
-                                              }
-                                              if (snapshot.hasError) {
-                                                return Container();
-                                              }
-                                              if (snapshot.data == null) {
-                                                return Container();
-                                              }
-                                              return ExploreOffersCard(
-                                                imageUrl: defaultGroupImageURL,
-                                                offerName: getOfferTitle(
-                                                        offerDataModel:
-                                                            offer) ??
-                                                    '',
-                                                city: landMark ?? '',
-                                                description:
-                                                    getOfferDescription(
-                                                        offerDataModel: offer),
-                                                onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return OfferDetailsRouter(
-                                                      offerModel: offer,
-                                                      comingFrom:
-                                                          ComingFrom.Home,
-                                                      //TODO : fix the timebank model
-                                                    );
-                                                  }));
-                                                },
-                                              );
-                                            })
-                                        : ExploreOffersCard(
-                                            imageUrl: defaultGroupImageURL,
-                                            offerName: getOfferTitle(
-                                                    offerDataModel: offer) ??
-                                                '',
-                                            city: landMark ?? '',
-                                            description: getOfferDescription(
-                                                offerDataModel: offer),
-                                            onTap: () {
-                                              showSignInAlertMessage(
-                                                  context: context,
-                                                  message:
-                                                      S.of(context).sign_in_alert);
-                                            },
-                                          ),
-                                  ],
+                                  ),
                                 );
                               },
                             ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          height: 290,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length > 6
+                                ? 6
+                                : snapshot.data.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              OfferModel offer = snapshot.data[index];
+                              String landMark = offer.selectedAdrress;
+
+                              if (offer.selectedAdrress != null &&
+                                  offer.selectedAdrress.contains(',')) {
+                                List<String> x =
+                                    offer.selectedAdrress.split(',');
+                                landMark = x[
+                                    x.length > 3 ? x.length - 3 : x.length - 1];
+                              }
+                              return Row(
+                                children: [
+                                  widget.isUserSignedIn
+                                      ? FutureBuilder<TimebankModel>(
+                                          future: getTimeBankForId(
+                                              timebankId: offer.timebankId),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return LoadingIndicator();
+                                            }
+                                            if (snapshot.hasError) {
+                                              return Container();
+                                            }
+                                            if (snapshot.data == null) {
+                                              return Container();
+                                            }
+                                            return ExploreOffersCard(
+                                              imageUrl: defaultGroupImageURL,
+                                              offerName: getOfferTitle(
+                                                      offerDataModel: offer) ??
+                                                  '',
+                                              city: landMark ?? '',
+                                              description: getOfferDescription(
+                                                  offerDataModel: offer),
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return OfferDetailsRouter(
+                                                    offerModel: offer,
+                                                    comingFrom: ComingFrom.Home,
+                                                    //TODO : fix the timebank model
+                                                  );
+                                                }));
+                                              },
+                                            );
+                                          })
+                                      : ExploreOffersCard(
+                                          imageUrl: defaultGroupImageURL,
+                                          offerName: getOfferTitle(
+                                                  offerDataModel: offer) ??
+                                              '',
+                                          city: landMark ?? '',
+                                          description: getOfferDescription(
+                                              offerDataModel: offer),
+                                          onTap: () {
+                                            showSignInAlertMessage(
+                                                context: context,
+                                                message: S
+                                                    .of(context)
+                                                    .sign_in_alert);
+                                          },
+                                        ),
+                                ],
+                              );
+                            },
                           ),
-                        ],
-                      );
-                    }),
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 SizedBox(height: screenWidth * 0.02),
                 Container(
                   alignment: Alignment.centerLeft,

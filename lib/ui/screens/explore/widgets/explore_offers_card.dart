@@ -53,32 +53,27 @@ class ExploreOffersCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 4.5),
                   child: Container(
+                    width: 300,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          offerName != null
-                              ? offerName.toUpperCase()
-                              : 'COMMUNITY NAME UNAVAILABLE',
-                          style: firstTextStyle ??
-                              const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                              ),
+                        Flexible(
+                          child: Text(
+                            offerName.toUpperCase() ?? '',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: firstTextStyle ??
+                                const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                          ),
                         ),
                         Text(
-                          ' - ',
-                          style: firstTextStyle ??
-                              const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                              ),
-                        ),
-                        Text(
-                          city != null
-                              ? city.toUpperCase()
-                              : 'CITY UNAVAILABLE',
+                          city != null && city.isNotEmpty
+                              ? ' - ${city.toUpperCase()}'
+                              : '',
                           style: firstTextStyle ??
                               const TextStyle(
                                 fontSize: 11,
@@ -96,9 +91,11 @@ class ExploreOffersCard extends StatelessWidget {
                     width: 220,
                     child: Text(
                       description,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                       style: secondTextStyle ??
                           const TextStyle(
-                            fontSize: 17,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                     ),

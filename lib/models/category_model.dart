@@ -32,12 +32,14 @@ class CategoryModel {
     this.title_en,
     this.type,
     this.typeId,
+    this.logo,
   });
 
   String categoryId;
   String title_en;
   CategoryType type;
   String typeId;
+  String logo;
 
   factory CategoryModel.fromMap(Map<String, dynamic> json) => CategoryModel(
         categoryId: json["categoryId"] == null ? null : json["categoryId"],
@@ -48,18 +50,8 @@ class CategoryModel {
                 ? CategoryType.CATEGORY
                 : CategoryType.SUB_CATEGORY,
         typeId: json["typeId"] == null ? null : json["typeId"],
+        logo: json.containsKey('logo') ? json['logo'] : null,
       );
-
-  Map<String, dynamic> toMap() => {
-        "categoryId": categoryId == null ? null : categoryId,
-        "title_en": title_en == null ? null : title_en,
-        "type": type == null
-            ? null
-            : type == CategoryType.CATEGORY
-                ? 'category'
-                : 'subCategory',
-        "typeId": typeId == null ? null : typeId,
-      };
 }
 
 enum CategoryType { CATEGORY, SUB_CATEGORY }

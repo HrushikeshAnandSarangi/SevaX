@@ -26,11 +26,11 @@ class ConfigurationsList {
         title_en: 'Accept Time Offers',
         type: 'offer'),
     ConfigurationModel(
-        id: 'accept_money_offers',
+        id: 'accept_money_offer',
         title_en: 'Accept Money Offers',
         type: 'offer'),
     ConfigurationModel(
-        id: 'accept_goods_offers',
+        id: 'accept_goods_offer',
         title_en: 'Accept Goods/Supplies Offers',
         type: 'offer'),
 

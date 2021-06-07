@@ -677,6 +677,8 @@ class DiscussionListState extends State<DiscussionList> {
             newsList = filterBlockedContent(newsList, context);
             newsList = filterPinnedNews(newsList, context);
 
+            // return Text(newsList.length.toString() + ' length');
+
             if (newsList.length == 1 && newsList[0].isPinned == true) {
               return Expanded(
                 child: ListView(
@@ -700,8 +702,6 @@ class DiscussionListState extends State<DiscussionList> {
                 ),
               );
             }
-
-            // return Text(snapshot.data.length.toString() + ' length');
 
             return Expanded(
               child: ListView(
@@ -768,7 +768,7 @@ class DiscussionListState extends State<DiscussionList> {
       }
     });
 
-    if (filteredNewsList.length > 0) {
+    if (filteredNewsList.length > 1) {
       filteredNewsList.removeWhere((news) => news.isPinned == true);
     }
 

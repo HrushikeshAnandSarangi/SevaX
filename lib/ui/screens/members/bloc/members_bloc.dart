@@ -75,13 +75,13 @@ class MembersBloc extends BlocBase {
           .toList();
 
       List<UserModel> users = await Future.wait(futures);
-      logger.d("usercount ${users.length}");
-      users.forEach((element) {
-        logger.e(element.fullname);
-      });
+      // logger.d("usercount ${users.length}");
+      // users.forEach((element) {
+      //   // logger.e(element.fullname);
+      // });
       return users.map((user) => user.photoURL).toList();
     } on Exception catch (e) {
-      logger.e("error is -> $e");
+      // logger.e("error is -> $e");
       return [];
     }
   }
