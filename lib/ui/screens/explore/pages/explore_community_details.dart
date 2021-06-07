@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_community_details_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -23,6 +24,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -31,6 +33,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_back.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -126,6 +129,14 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (!widget.isSignedUser)
+                        CustomBackButton(
+                          onBackPressed: () {
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                          },
+                        ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 40.0),
                         child: AspectRatio(
@@ -327,23 +338,20 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                                 S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${event.name}'
                                           );
-                                        } else if (widget.isSignedUser !=
-                                                null &&
-                                            isUserJoined &&
-                                            community.id ==
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .currentCommunity) {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return ProjectRequests(
-                                              ComingFrom.Projects,
-                                              timebankId: event.timebankId,
-                                              projectModel: event,
-                                              timebankModel: timebankModel,
-                                            );
-                                          }));
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return ProjectRequests(
+                                                  ComingFrom.Projects,
+                                                  timebankId: event.timebankId,
+                                                  projectModel: event,
+                                                  timebankModel: timebankModel,
+                                                );
+                                              },
+                                            ),
+                                          );
                                         }
                                       },
                                       child: Padding(
@@ -369,7 +377,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               SizedBox(height: 4),
                                               Text(
                                                 event.description,
-                                                maxLines:2,
+                                                maxLines: 2,
                                               ),
                                               SizedBox(height: 4),
                                               MemberAvatarListWithCount(
@@ -452,6 +460,8 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                             // 'Please Sign In/Sign up to access ${request.title}'
                                           );
                                         } else if (widget.isSignedUser) {
+                                          //
+
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -459,7 +469,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               requestItem: request,
                                               timebankModel: timebankModel,
                                               isAdmin: false,
-                                              //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                              // communityModel: community,
                                             );
                                           }));
                                         }

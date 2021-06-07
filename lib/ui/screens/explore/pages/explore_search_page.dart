@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
+import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreSearchPage extends StatefulWidget {
@@ -96,6 +97,14 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (!widget.isUserSignedIn)
+              CustomBackButton(
+                onBackPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             SizedBox(
               height: 40,
               child: TextField(
