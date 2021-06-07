@@ -95,7 +95,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               (index) => Container(
                 margin: EdgeInsets.only(right: 10),
                 child: InkWell(
-                  onTap: isOwnerCreator(widget.timebankModel,
+                  onTap: isMemberAnAdmin(widget.timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID)
                       ? () {
                           return showDialog(
