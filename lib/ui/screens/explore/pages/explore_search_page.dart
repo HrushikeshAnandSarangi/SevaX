@@ -256,7 +256,7 @@ class ExploreCommunityCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: SizedBox(
-            height: 400,
+            height: 410,
             child: Padding(
               padding: EdgeInsets.all(12),
               child: Column(
