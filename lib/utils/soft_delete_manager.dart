@@ -374,9 +374,9 @@ String _getModelType(SoftDelete type) {
     case SoftDelete.REQUEST_DELETE_GROUP:
       return "group";
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return "project";
+      return "event";
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
-      return "timebank";
+      return "Seva Community";
   }
 }
 
