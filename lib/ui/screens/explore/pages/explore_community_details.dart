@@ -24,6 +24,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -334,23 +335,20 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                                 S.of(context).sign_in_alert,
                                             // 'Please Sign In/Sign up to access ${event.name}'
                                           );
-                                        } else if (widget.isSignedUser !=
-                                                null &&
-                                            isUserJoined &&
-                                            community.id ==
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .currentCommunity) {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return ProjectRequests(
-                                              ComingFrom.Projects,
-                                              timebankId: event.timebankId,
-                                              projectModel: event,
-                                              timebankModel: timebankModel,
-                                            );
-                                          }));
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return ProjectRequests(
+                                                  ComingFrom.Projects,
+                                                  timebankId: event.timebankId,
+                                                  projectModel: event,
+                                                  timebankModel: timebankModel,
+                                                );
+                                              },
+                                            ),
+                                          );
                                         }
                                       },
                                       child: Padding(
@@ -376,7 +374,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                               SizedBox(height: 4),
                                               Text(
                                                 event.description,
-                                                maxLines:2,
+                                                maxLines: 2,
                                               ),
                                               SizedBox(height: 4),
                                               MemberAvatarListWithCount(
