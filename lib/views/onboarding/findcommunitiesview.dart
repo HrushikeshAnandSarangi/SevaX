@@ -434,11 +434,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   // unities[index].
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ExploreCommunityDetails(
+                      builder: (_context) => SevaCore(
+                      loggedInUser: SevaCore.of(context).loggedInUser,
+                      child:ExploreCommunityDetails(
                         communityId: communityModell.id,
                         isSignedUser: true,
                       ),
-                    ),
+                    ),),
                   );
                 }
               : null,

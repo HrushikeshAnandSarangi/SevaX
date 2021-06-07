@@ -213,16 +213,19 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           SevaCore.of(context).loggedInUser);
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              OnBoardWithTimebank(
+                                          builder: (_context) =>
+                                              SevaCore(
+                                                loggedInUser:SevaCore.of(context).loggedInUser,
+                                                child: OnBoardWithTimebank(
                                             user: SevaCore.of(context)
-                                                .loggedInUser,
+                                                  .loggedInUser,
                                             communityModel: community,
                                             isFromExplore: true,
                                             sevauserId: SevaCore.of(context)
-                                                .loggedInUser
-                                                .sevaUserID,
+                                                  .loggedInUser
+                                                  .sevaUserID,
                                           ),
+                                              ),
                                         ),
                                       );
                                     } else {
