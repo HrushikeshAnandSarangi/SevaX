@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -23,7 +24,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
-import '../../../../labels.dart';
 
 class GroupPage extends StatefulWidget {
   final String communityId;
@@ -280,18 +280,23 @@ class _GroupPageState extends State<GroupPage> {
     } on Exception catch (e) {
       logger.e(e);
     }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider<UserDataBloc>(
-          bloc: BlocProvider.of<UserDataBloc>(context),
-          child: TabarView(
-            userModel: SevaCore.of(context).loggedInUser,
-            timebankModel: timebank,
-          ),
-        ),
-      ),
-    ).then((_) {
+
+  Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_context) => BlocProvider(
+              bloc: BlocProvider.of<UserDataBloc>(context),
+              child: BlocProvider(
+                bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+                child: TabarView(
+                  userModel: SevaCore.of(context).loggedInUser,
+                  timebankModel: timebank,
+                ),
+              ),
+            ),
+          ))
+
+   .then((_) {
       try {
         Provider.of<HomePageBaseBloc>(context, listen: false)
             .switchToPreviousTimebank();
