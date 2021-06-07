@@ -306,7 +306,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         ));
       },
       child: Text(
-        'Member Permissions',
+        'Manage Permissions',
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
