@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreEventCard extends StatelessWidget {
   const ExploreEventCard(
@@ -29,7 +30,7 @@ class ExploreEventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 440,
+      height: tagsToShow != null && tagsToShow.isNotEmpty ? 469:440,
       child: InkWell(
         onTap: onTap,
         child: Card(
@@ -57,15 +58,18 @@ class ExploreEventCard extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 24),
-                  maxLines: 1,
+                  style: const TextStyle(fontSize: 22),
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  communityName,
-                  style: const TextStyle(fontSize: 12),
+                HideWidget(
+                  hide: communityName != null && communityName.isEmpty,
+                  child: Text(
+                    communityName,
+                    style: const TextStyle(fontSize: 12),
+                  ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 4),
                 Row(
                   children: [
                     ...iconText(context, Icons.calendar_today, date),
@@ -73,13 +77,14 @@ class ExploreEventCard extends StatelessWidget {
                     ...iconText(context, Icons.location_on, location),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Text(
                   description,
                   style: const TextStyle(fontSize: 14),
-                  maxLines: 4,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: tagsToShow
@@ -122,11 +127,14 @@ class ExploreEventCard extends StatelessWidget {
               size: 18,
               color: Theme.of(context).primaryColor,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                text,
-                style: const TextStyle(color: Colors.grey, fontSize: 14),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  text,
+                  overflow:TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
               ),
             )
           ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 
 class MemberAvatarListWithCount extends StatelessWidget {
@@ -11,8 +12,6 @@ class MemberAvatarListWithCount extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-
-
     return FutureBuilder<List<String>>(
       future: Provider.of<MembersBloc>(context)
           .getUserImages(userIds.length > 5 ? userIds.sublist(0, 5) : userIds),
@@ -38,7 +37,7 @@ class MemberAvatarListWithCount extends StatelessWidget {
               ),
             ),
             SizedBox(width: 4),
-            Text('${userIds.length} Members '),
+            Text('${userIds.length} ${S.of(context).members}'),
           ],
         );
       },
