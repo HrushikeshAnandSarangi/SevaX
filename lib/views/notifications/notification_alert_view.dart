@@ -138,7 +138,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   lineDivider,
                   NotificationWidgetSwitch(
                     isTurnedOn:
-                        getCurrentStatus('MEMBER_PROMOTED_AS_ADMIN'),
+                        getCurrentStatus('MEMBER_DEMOTED_FROM_ADMIN'),
                     title: S.of(context).demotion_from_admin_to_member,
                     onPressed: (bool status) {
                       NotificationWidgetSwitch.updatePersonalNotifications(
