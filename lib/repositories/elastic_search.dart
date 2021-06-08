@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/category_model.dart';
+import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -509,6 +510,28 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       CategoryModel model = CategoryModel.fromMap(sourceMap);
+      categoryList.add(model);
+    });
+    return categoryList;
+  }
+
+  // get all community categories
+  static Future<List<CommunityCategoryModel>>
+      getAllCommunityCategories() async {
+    String endPoint = '//elasticsearch/community_categories/_doc/_search';
+
+    dynamic body = json.encode({
+      "query": {"match_all": {}}
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<CommunityCategoryModel> categoryList = [];
+
+    log('Elastic seach categories result:  ' + hitList.toString());
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      CommunityCategoryModel model = CommunityCategoryModel.fromMap(sourceMap);
       categoryList.add(model);
     });
     return categoryList;

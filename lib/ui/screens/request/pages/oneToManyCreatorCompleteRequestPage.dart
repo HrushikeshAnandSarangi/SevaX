@@ -168,13 +168,18 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel.selectedSpeakerTimeDetails
                                                           .speakingTime ==
                                                       null
-                                                  ? 'Duration of Session: 0'
-                                                  : 'Duration of Session: ' +
+                                                  ? S
+                                                          .of(context)
+                                                          .duration_of_session +
+                                                      '0'
+                                                  : S
+                                                          .of(context)
+                                                          .duration_of_session +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
                                                           .speakingTime
                                                           .toString() +
-                                                      '' +
+                                                      ' ' +
                                                       ((requestModel
                                                                   .selectedSpeakerTimeDetails
                                                                   .speakingTime >
@@ -192,12 +197,14 @@ class OneToManyCreatorCompleteRequestPageState
                                                           .prepTime ==
                                                       null
                                                   ? '0'
-                                                  : 'Time to prepare: ' +
+                                                  : S
+                                                          .of(context)
+                                                          .time_to_prepare +
                                                       requestModel
                                                           .selectedSpeakerTimeDetails
                                                           .prepTime
                                                           .toString() +
-                                                      '' +
+                                                      ' ' +
                                                       ((requestModel
                                                                   .selectedSpeakerTimeDetails
                                                                   .prepTime >

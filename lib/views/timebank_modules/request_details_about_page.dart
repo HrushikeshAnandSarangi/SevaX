@@ -421,7 +421,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                                 .selectedSpeakerTimeDetails
                                                                 .speakingTime >
                                                             1.0
-                                                        ? '' +
+                                                        ? ' ' +
                                                             S.of(context).hours
                                                         : S.of(context).hour),
                                                 style: TextStyle(

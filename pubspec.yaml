@@ -124,6 +124,7 @@ flutter:
     - lib/assets/images/close.png
     - lib/assets/images/group_icon.png
     - lib/assets/sevaX.png
+    - images/seva-x-logo-white.png
     - lib/assets/images/g.png
     - lib/assets/images/approved.png
     - lib/assets/images/genericlogo.png

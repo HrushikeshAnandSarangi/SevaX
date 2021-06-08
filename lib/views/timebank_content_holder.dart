@@ -693,7 +693,7 @@ class DiscussionListState extends State<DiscussionList> {
             }
             if (newsList.length == 0) {
               return Padding(
-                padding: const EdgeInsets.all(28.0),
+                padding: const EdgeInsets.all(25.0),
                 child: Center(
                   child: EmptyWidget(
                     title: S.of(context).no_posts_title,
