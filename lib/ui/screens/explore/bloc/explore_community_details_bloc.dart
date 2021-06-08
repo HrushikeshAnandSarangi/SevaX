@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 
 import '../../../../flavor_config.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ExploreCommunityDetailsBloc {
   final _community = BehaviorSubject<CommunityModel>();
@@ -53,7 +54,7 @@ class ExploreCommunityDetailsBloc {
         },
       );
 
-      Searches.getGroupsUnderCommunity(communityId: communityId).then(
+      FirestoreManager.getAllTheGroups(communityId).then(
         (List<TimebankModel> models) {
           models.isNotEmpty
               ? _groups.add(models)

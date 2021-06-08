@@ -336,18 +336,18 @@ class _RecurringListState extends State<RecurringList> {
                                         ),
                                       ),
                                       onPressed: () async {
-                                        if (SevaCore.of(context)
-                                                .loggedInUser
-                                                .calendarId ==
-                                            null) {
-                                          _settingModalBottomSheet(context,
-                                              widget.offerModel[index]);
-                                        } else {
-                                          offerActions(
-                                              context,
-                                              widget.offerModel[index],
-                                              ComingFrom.Offers);
-                                        }
+                                        // if (SevaCore.of(context)
+                                        //         .loggedInUser
+                                        //         .calendarId ==
+                                        //     null) {
+                                        //   _settingModalBottomSheet(context,
+                                        //       widget.offerModel[index]);
+                                        // } else {
+                                        offerActions(
+                                            context,
+                                            widget.offerModel[index],
+                                            ComingFrom.Offers);
+                                        //}
                                       },
                                     )
                                   ],

@@ -194,90 +194,89 @@ class OfferDetails extends StatelessWidget {
   }
 
   Widget showCashDonationDetails(BuildContext context, OfferModel offerModel) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Text(
-              'Offering Amount',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Offering Amount',
+            style: TextStyle(
+              fontSize: 16,
             ),
           ),
-          CustomListTile(
-            title: Text(
-              S.of(context).total_donation_amount,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+        ),
+        CustomListTile(
+          title: Text(
+            S.of(context).total_donation_amount,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
             ),
-            subtitle: Text('\$${offerModel.cashModel.targetAmount}'),
-            leading: Image.asset(
-              offerModel.type == RequestType.CASH
-                  ? SevaAssetIcon.donateCash
-                  : SevaAssetIcon.donateGood,
-              height: 30,
-              width: 30,
+          ),
+          subtitle: Text('\$${offerModel.cashModel.targetAmount}'),
+          leading: Image.asset(
+            offerModel.type == RequestType.CASH
+                ? SevaAssetIcon.donateCash
+                : SevaAssetIcon.donateGood,
+            height: 30,
+            width: 30,
+          ),
+          trailing: Text(
+            '',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
             ),
-            trailing: Text(
-              '',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
-          )
-        ],
-      );
-    
+          ),
+        )
+      ],
+    );
   }
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
     List<String> keys =
         List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Text(
-              'Offering Goods',
-              style: TextStyle(
-                fontSize: 16,
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Offering Goods',
+            style: TextStyle(
+              fontSize: 16,
             ),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Checkbox(
-                    value: offerModel.goodsDonationDetails.requiredGoods
-                            .containsKey(keys[index]) ??
-                        false,
-                    checkColor: Colors.black,
-                    onChanged: null,
-                    activeColor: Colors.grey[200],
-                  ),
-                  Text(
-                    offerModel.goodsDonationDetails.requiredGoods[keys[index]],
-                    style: subTitleStyle,
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      );
+        ),
+        ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
+          itemBuilder: (context, index) {
+            return Row(
+              children: [
+                Checkbox(
+                  value: offerModel.goodsDonationDetails.requiredGoods
+                          .containsKey(keys[index]) ??
+                      false,
+                  checkColor: Colors.black,
+                  onChanged: null,
+                  activeColor: Colors.grey[200],
+                ),
+                Text(
+                  offerModel.goodsDonationDetails.requiredGoods[keys[index]],
+                  style: subTitleStyle,
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
   }
 
   Widget oneToManyOfferCancellation(BuildContext context) {
@@ -553,19 +552,18 @@ class OfferDetails extends StatelessWidget {
                                   !isAccepted) {
                             navigateToDonations(context, offerModel);
                           } else {
-                            if (offerModel.offerType == OfferType.GROUP_OFFER &&
-                                SevaCore.of(context).loggedInUser.calendarId ==
-                                    null &&
-                                !isAccepted) {
-                              _settingModalBottomSheet(
-                                context,
-                                offerModel,
-                              );
-                            } else {
-                              offerActions(
-                                      context, offerModel, ComingFrom.Offers)
-                                  .then((_) => Navigator.of(context).pop());
-                            }
+                            // if (offerModel.offerType == OfferType.GROUP_OFFER &&
+                            //     SevaCore.of(context).loggedInUser.calendarId ==
+                            //         null &&
+                            //     !isAccepted) {
+                            //   _settingModalBottomSheet(
+                            //     context,
+                            //     offerModel,
+                            //   );
+                            // } else {
+                            offerActions(context, offerModel, ComingFrom.Offers)
+                                .then((_) => Navigator.of(context).pop());
+                            // }
                           }
                         },
                       ),
