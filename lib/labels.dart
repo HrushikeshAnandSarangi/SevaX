@@ -1,11 +1,10 @@
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 
-// class L {
-//   L.of(BuildContext context) {}
+class L {
+  L.of(BuildContext context) {}
 
 //   // <------------ PENDING START ------------>
-//   String get no_groups_text =>
-//       "You are currently not part of any groups. You can either join one or create a new group."; //(only for mobile)
+
 //   String get offer => "Offer"; //it's in flavor config file so cannot add it.
 //   String get minimum_credits => "Minimum Credits"; //can't find where to replace
 //   String get applied_for_request =>
@@ -16,61 +15,56 @@
 //   String get mile => "Mile"; //cant find where to replace
 //   // <------------ PENDING END ------------>
 
-// //
-// //
-// // <----------- BELOW DONE IN WEB ------------>
-// //
-// //
+// <-----------      new label 8th June  --------->
+String get onetomany_createoffer_note =>
+    "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
+
+//
 //Below cound not find in mob - vishnu
- String get no_interests_added => "No interests added"; //done in web  // ask  shubam or umesh
-String get no_skills_added => "No skills added"; //done in web  // ask  shubam or umesh
- 
+//
+String get no_interests_added =>
+    "No interests added"; //done in web  // ask  shubam or umesh
+String get no_skills_added =>
+    "No skills added"; //done in web  // ask  shubam or umesh
+
 String get bundlePricingInfoButton =>
-      'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
+    'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
 String get sandbox_already_created_1 =>
-      "Only one sandbox community is currently allowed for each SevaX member."; //done in web // ask  umesh
+    "Only one sandbox community is currently allowed for each SevaX member."; //done in web // ask  umesh
 String get provide_skills =>
-      "Provide the list of Skills that you require for this request"; //done in web // not in edit request in mob
+    "Provide the list of Skills that you require for this request"; //done in web // not in edit request in mob
 String get speaker_claim_credits => 'Claim credits'; //done in mobile & web
 String get requested_for_completion =>
-      "Your completed request is pending approval."; //done in mobile & web
+    "Your completed request is pending approval."; //done in mobile & web
 String get join_community_alert => //already in json  //done in web
-      "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
+    "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
 String get sign_in_alert =>
-      "You need to sign in or register to view this."; //done in web //already in json
+    "You need to sign in or register to view this."; //done in web //already in json
 String get resetPasswordSuccess =>
-      'An email has been sent. Please follow the steps in the email to reset your password.'; //done in web //not matching
+    'An email has been sent. Please follow the steps in the email to reset your password.'; //done in web //not matching
 
- String get onetomanyrequest_title_hint =>
-      "Ex: Implicit Bias webinar."; //done in web  //labels are not migrated  ,other hints not in arbify //not in edit request
+String get onetomanyrequest_title_hint =>
+    "Ex: Implicit Bias webinar."; //done in web  //labels are not migrated  ,other hints not in arbify //not in edit request
 
 String get sandbox_community => "Sandbox Community"; //done in web // ask umesh
 
 String get you_are_on_enterprise_plan =>
-      "You are on Enterprise Plan"; //done in web // ask umesh
-  String get sandbox_dialog_title => "Sandbox seva community"; //done in web // ask umesh
-  String get sandbox_create_community_alert =>
-      "Are you sure you want to create a sandbox community?"; //done in web // ask umesh
-
-
-
-
-
-
-
-
+    "You are on Enterprise Plan"; //done in web // ask umesh
+String get sandbox_dialog_title =>
+    "Sandbox seva community"; //done in web // ask umesh
+String get sandbox_create_community_alert =>
+    "Are you sure you want to create a sandbox community?"; //done in web // ask umesh
 
 //<------------------below labels are done------------->
 
-
-      
-
-// //DO BELOW OF THIS VISHNU  
+// //DO BELOW OF THIS VISHNU
+//   String get no_groups_text =>
+//       "You are currently not part of any groups. You can either join one or create a new group."; //(done in mobile)
 //   String get kilometers => "Kilometers"; //done in web
 //   String get miles => "Miles"; //done in web
 //  String get continue_to_signin => "Continue to Sign in"; //done in web
 //  String get request_to_join => "Request to join"; //done in web
- 
+
 //  String get event => "Event"; //done in web
 //   String get part_of_sevax =>
 //       "Part of SevaX Global Network of Communities"; //done in web
@@ -79,11 +73,11 @@ String get you_are_on_enterprise_plan =>
 //       "Upcoming Events"; //done in web (but code is commented out)
 //   String get latest_requests =>
 //       "Latest Requests"; //done in web (but code is commented out)
- 
+
 //   String get event_description => "Event Description"; //done in web
 //  String get hours => 'hours'; //done in web
 // String get hour => 'hour'; //done in web
- 
+
 //   String get min_credits_error =>
 //       "Minimum credits cannot be empty or zero"; //done in web
 //   //OFFERS LABELS STARTS HERE
@@ -118,7 +112,7 @@ String get you_are_on_enterprise_plan =>
 //   String get registration_link_hint =>
 //       "Ex: Eventbrite link, etc."; //done in mobile & web
 //   String get request_closed => "Request closed"; //done in mobile & web
-  
+
 // String get total_no_of_participants =>
 //       "Total No. of Participants*"; //done in web
 
@@ -152,22 +146,21 @@ String get you_are_on_enterprise_plan =>
 //       "This request has been accepted by **speakerName."; //done in web
 //   String get you_are_the_speaker => "You are the speaker for: "; //done in web
 //   String get select_a_speaker => "Please select a Speaker*"; //done in web
-  
+
 //   String get selected_speaker => "Selected Speaker"; //done in web
-  
+
 //   String get oneToManyRequestSpeakerAcceptRequest =>
 //       'Are you sure you want to accept this request?'; //done in web
-  
+
 //    String get insufficientSevaCreditsDialog =>
 //       'You do not have sufficient Seva credits to create this request. You need to have *** more Seva credits'; //done in web
 
- 
 // String get adminNotificationInsufficientCreditsNeeded =>
 //       'Credits Needed: '; //done in web
 
 //   String get adminNotificationInsufficientCredits =>
 //       ' Has Insufficient Credits To Create Requests'; //done in web
-  
+
 //   String get oneToManyRequestSpeakerWithdrawDialog =>
 //       'Please confirm that you would like to withdraw as a speaker'; //done in web
 //   String get speakerRejectedNotificationLabel =>
@@ -181,7 +174,7 @@ String get you_are_on_enterprise_plan =>
 //       'Are you sure you want to accept and complete this request?'; //done in web
 // String get onetomanyrequest_participants_or_credits_hint =>
 //       "Ex: 40."; //done in web
-  
+
 //   String get speaker_complete_page_text_1 =>
 //       'I acknowledge that speaker_name has completed the request. The list of members provided above attended the request.'; //done in web
 //   String get speaker_complete_page_text_2 =>
@@ -190,19 +183,16 @@ String get you_are_on_enterprise_plan =>
 //       'This action is Restricted for you by the owner of the seva Community.'; //done in web
 //   String get accepted_this_request =>
 //       'You have accepted this request.'; //done in web
-  
+
 //   String get select_a_speaker_dialog => 'Select a speaker';
 //  String get duration_of_session => 'Duration of Session: '; //done in web
- 
+
 //   String get speaker_invite_notification =>
 //       "Added you as the Speaker for request: "; //done in web
- 
-  
-
 
 //   String get sandbox_dialog_subtitle =>
 //       "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."; //done in web
-// // }
+}
 
 // // <--------  IRRELEVANT FOR NOW  --------->
 // // String get borrow_request_title => "Borrow Request"; //done in mobile
