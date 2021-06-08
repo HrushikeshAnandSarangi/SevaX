@@ -189,6 +189,18 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               SizedBox(
                 height: 10,
               ),
+              Container(
+                child: Center(
+                  child: RaisedButton(
+                    onPressed: () {
+                      updateConfigurations().then(
+                        (value) => Navigator.of(context).pop(),
+                      );
+                    },
+                    child: Text(S.of(context).save),
+                  ),
+                ),
+              )
             ],
           ),
         ),

@@ -43,6 +43,7 @@ class ConfigurationCheck extends StatelessWidget {
         ? child
         : InkWell(
             onTap: () {
+              log('role ${role}');
               logger.i(actionType + " <<<<<<<<<<<<<<");
               actionNotAllowedDialog(context);
             },
@@ -54,6 +55,8 @@ class ConfigurationCheck extends StatelessWidget {
     TimebankConfigurations configurations =
         AppConfig.timebankConfigurations ?? getConfigurationModel();
     switch (role) {
+      case MemberType.CREATOR:
+        return true;
       case MemberType.MEMBER:
         return configurations.member != null &&
             configurations.member.contains(actionType);
@@ -63,8 +66,7 @@ class ConfigurationCheck extends StatelessWidget {
       case MemberType.SUPER_ADMIN:
         return configurations.superAdmin != null &&
             configurations.superAdmin.contains(actionType);
-
-      case MemberType.CREATOR:
+      default:
         return true;
     }
   }
@@ -77,7 +79,7 @@ MemberType memberType(TimebankModel model, String userId) {
     return MemberType.ADMIN;
   } else if (model.organizers.contains(userId)) {
     return MemberType.SUPER_ADMIN;
-  } else {
+  } else if (model.members.contains(userId)) {
     return MemberType.MEMBER;
   }
 }

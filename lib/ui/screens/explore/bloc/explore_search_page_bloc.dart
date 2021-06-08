@@ -76,11 +76,11 @@ class ExploreSearchPageBloc {
     } catch (e) {
       logger.e("explore search bloc location timed out");
     }
-    CommunityRepository.getCommunityCategories().then((value) {
+    ElasticSearchApi.getAllCommunityCategories().then((value) {
       _communityCategory.add(value);
     });
 
-    CommunityRepository.getFeatureCommunitiesFuture().then((value) {
+    ElasticSearchApi.getPublicCommunities().then((value) {
       if (value != null) {
         _featuredCommunities.add(value);
       }
