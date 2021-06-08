@@ -416,13 +416,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                         .selectedSpeakerTimeDetails
                                                         .speakingTime
                                                         .toString() +
+                                                    ' ' +
                                                     (widget
                                                                 .requestItem
                                                                 .selectedSpeakerTimeDetails
                                                                 .speakingTime >
                                                             1.0
-                                                        ? ' ' +
-                                                            S.of(context).hours
+                                                        ? S.of(context).hours
                                                         : S.of(context).hour),
                                                 style: TextStyle(
                                                     fontSize: 18,
@@ -827,7 +827,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       onPressed: () async {
                         Navigator.of(viewContext).pop();
                         await oneToManySpeakerInviteRejected(
-                            widget.requestItem, context);
+                                widget.requestItem, context)
+                            .then((e) => Navigator.of(context).pop());
                         // await onDismissed();
                       },
                     ),

@@ -738,7 +738,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             BorderRadius
                                                                 .circular(
                                                                     15.7)),
-                                                hintText: S.of(context).select_speaker_hint,
+                                                hintText: S
+                                                    .of(context)
+                                                    .select_speaker_hint,
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
@@ -2741,12 +2743,14 @@ class RequestEditFormState extends State<RequestEditForm> {
             );
 
             List<String> acceptorsList = [];
-
+            Set<String> invitedUsersList =
+                Set.from(widget.requestModel.invitedUsers);
             //remove old speaker from invitedUsers and add new speaker to invited users
-            widget.requestModel.invitedUsers
+            invitedUsersList
                 .remove(widget.requestModel.selectedInstructor.sevaUserID);
-            widget.requestModel.invitedUsers
-                .add(selectedInstructorModelTemp.sevaUserID);
+            invitedUsersList.add(selectedInstructorModelTemp.sevaUserID);
+            //assign updated list to request model invited users
+            widget.requestModel.invitedUsers = invitedUsersList.toList();
 
             acceptorsList.add(selectedInstructorModel.email);
             widget.requestModel.acceptors = acceptorsList;
@@ -2761,14 +2765,18 @@ class RequestEditFormState extends State<RequestEditForm> {
                       communityId: widget.requestModel.communityId,
                       timebankId: widget.requestModel.timebankId,
                       sevaUserId: selectedInstructorModel.sevaUserID,
-                      userEmail: selectedInstructorModel.email);
+                      userEmail: selectedInstructorModel.email,
+                      speakerNotificationDocRefOld:
+                          widget.requestModel.speakerInviteNotificationDocRef);
             } else {
               speakerNotificationDocRefNew =
                   await sendNotificationToMemberOneToManyRequest(
                       communityId: FlavorConfig.values.timebankId,
                       timebankId: FlavorConfig.values.timebankId,
                       sevaUserId: selectedInstructorModel.sevaUserID,
-                      userEmail: selectedInstructorModel.email);
+                      userEmail: selectedInstructorModel.email,
+                      speakerNotificationDocRefOld:
+                          widget.requestModel.speakerInviteNotificationDocRef);
               // send sevax global notification for user who is not part of the community for this request
               await sendMailToInstructor(
                   senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
@@ -2937,12 +2945,14 @@ class RequestEditFormState extends State<RequestEditForm> {
           );
 
           List<String> acceptorsList = [];
-
+          Set<String> invitedUsersList =
+              Set.from(widget.requestModel.invitedUsers);
           //remove old speaker from invitedUsers and add new speaker to invited users
-          widget.requestModel.invitedUsers
+          invitedUsersList
               .remove(widget.requestModel.selectedInstructor.sevaUserID);
-          widget.requestModel.invitedUsers
-              .add(selectedInstructorModelTemp.sevaUserID);
+          invitedUsersList.add(selectedInstructorModelTemp.sevaUserID);
+          //assign updated list to request model invited users
+          widget.requestModel.invitedUsers = invitedUsersList.toList();
 
           acceptorsList.add(selectedInstructorModel.email);
           widget.requestModel.acceptors = acceptorsList;
@@ -2957,7 +2967,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                     communityId: widget.requestModel.communityId,
                     timebankId: widget.requestModel.timebankId,
                     sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email);
+                    userEmail: selectedInstructorModel.email,
+                    speakerNotificationDocRefOld:
+                        widget.requestModel.speakerInviteNotificationDocRef);
           } else {
             // send sevax global notification for user who is not part of the community for this request
             speakerNotificationDocRefNew =
@@ -2965,7 +2977,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                     communityId: FlavorConfig.values.timebankId,
                     timebankId: FlavorConfig.values.timebankId,
                     sevaUserId: selectedInstructorModel.sevaUserID,
-                    userEmail: selectedInstructorModel.email);
+                    userEmail: selectedInstructorModel.email,
+                    speakerNotificationDocRefOld:
+                        widget.requestModel.speakerInviteNotificationDocRef);
             await sendMailToInstructor(
                 senderEmail: 'noreply@sevaexchange.com', //requestModel.email,
                 receiverEmail: selectedInstructorModel.email,
@@ -3066,14 +3080,19 @@ class RequestEditFormState extends State<RequestEditForm> {
       String sevaUserId,
       String timebankId,
       String userEmail,
-      DocumentReference speakerNotificationDocRefOld}) async {
+      @required DocumentReference speakerNotificationDocRefOld}) async {
     // UserAddedModel userAddedModel = UserAddedModel(
     //     timebankImage: timebankModel.photoUrl,
     //     timebankName: timebankModel.name,
     //     adminName: SevaCore.of(context).loggedInUser.fullname);
 
     //delete the previous speaker's notification document, since new speaker is invited here
-    speakerNotificationDocRefOld.delete();
+    try {
+      speakerNotificationDocRefOld.delete();
+    } catch (error) {
+      logger.e('did not find notification doc to delete');
+    }
+    ;
 
     NotificationsModel notification = NotificationsModel(
         id: Utils.getUuid(),
