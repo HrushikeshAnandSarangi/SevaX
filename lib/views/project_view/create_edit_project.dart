@@ -500,7 +500,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ),
               headingText(S.of(context).phone_number),
               TextFormField(
-              
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).unfocus();
                 },
@@ -535,7 +534,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         : projectModel.phoneNumber != null
                             ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
                             : ''
-                    : projectModel?.phoneNumber?.replaceAll('+', '')??'',
+                    : projectModel?.phoneNumber?.replaceAll('+', '') ?? '',
                 decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
@@ -706,7 +705,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               HideWidget(
                 hide: !isPulicCheckboxVisible,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
                   child: ConfigurationCheck(
                     actionType: 'create_public_event',
                     role: memberType(timebankModel,
