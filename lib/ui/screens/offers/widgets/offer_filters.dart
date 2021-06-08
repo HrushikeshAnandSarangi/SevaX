@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_list_bloc.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 /// [hideFilters] Pass bool to hide in order
 /// Time offer
@@ -31,7 +32,7 @@ class OfferFilters extends StatelessWidget {
           children: [
             CustomChipWithTap(
               isHidden: hideFilters[0],
-              label: 'Time Offers',
+              label: S.of(context).time,
               isSelected: filter.timeOffer,
               onTap: () {
                 onTap(
@@ -43,7 +44,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[1],
-              label: 'Money',
+              label: S.of(context).cash,
               isSelected: filter.cashOffer,
               onTap: () {
                 onTap(
@@ -55,7 +56,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[2],
-              label: 'Goods',
+              label: S.of(context).goods,
               isSelected: filter.goodsOffer,
               onTap: () {
                 onTap(
@@ -67,7 +68,7 @@ class OfferFilters extends StatelessWidget {
             ),
             CustomChipWithTap(
               isHidden: hideFilters[3],
-              label: 'One to many offer',
+              label: S.of(context).one_to_many.sentenceCase(),
               isSelected: filter.oneToManyOffer,
               onTap: () {
                 onTap(

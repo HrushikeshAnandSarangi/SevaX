@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -384,7 +385,7 @@ class CreateEditCommunityViewFormState
                               return S.of(context).profanity_text_alert;
                             } else if (value.substring(0, 1).contains('_') &&
                                 !AppConfig.testingEmails
-                                    .contains(AppConfig.loggedInEmail)) {
+                                    .contains(SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
@@ -689,8 +690,7 @@ class CreateEditCommunityViewFormState
                                           );
                                           testCommunity = false;
                                           timebankModel.liveMode = false;
-                                           communityModel.testCommunity =
-                                                  false;
+                                          communityModel.testCommunity = false;
 
                                           setState(() {});
                                         }
@@ -1411,6 +1411,7 @@ class CreateEditCommunityViewFormState
   }
 
   Widget headingText(String name) {
+    
     return Padding(
       padding: EdgeInsets.only(top: 15),
       child: Text(

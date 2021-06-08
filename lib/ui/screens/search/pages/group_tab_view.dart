@@ -7,12 +7,16 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
     as prefix0;
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class GroupTabView extends StatefulWidget {
@@ -72,16 +76,35 @@ class _GroupTabViewState extends State<GroupTabView> {
                     _bloc.user.sevaUserID,
                     snapshot.data.requests,
                   );
-                  return GroupCard(
-                    image: group.photoUrl ?? defaultGroupImageURL,
-                    title: group.name,
-                    subtitle: group.missionStatement,
-                    status: joinStatus,
-                    onPressed: joinStatus == JoinStatus.JOIN
-                        ? () {
-                            joinTimebank(_bloc.user, group);
-                          }
-                        : null,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_context) => BlocProvider(
+                              bloc: BlocProvider.of<UserDataBloc>(context),
+                              child: BlocProvider(
+                                bloc:
+                                    BlocProvider.of<HomeDashBoardBloc>(context),
+                                child: TabarView(
+                                  userModel: SevaCore.of(context).loggedInUser,
+                                  timebankModel: group,
+                                ),
+                              ),
+                            ),
+                          ));
+                    },
+                    child: GroupCard(
+                      image: group.photoUrl ?? defaultGroupImageURL,
+                      title: group.name,
+                      subtitle: group.missionStatement,
+                      status: joinStatus,
+                      onPressed: joinStatus == JoinStatus.JOIN
+                          ? () {
+                              joinTimebank(_bloc.user, group);
+                            }
+                          : null,
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {

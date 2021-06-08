@@ -358,19 +358,21 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST &&
         isFromRequest()) {
       return ProjectSelection(
-          requestModel: requestModel,
-          projectModelList: projectModelList,
-          selectedProject: tempProjectId != null
-              ? projectModelList.firstWhere(
-                  (element) => element.id == widget.requestModel.projectId,
-                  orElse: () => null)
-              : null,
-          updateProjectIdCallback: (String projectid) {
-            //widget.requestModel.projectId = projectid;
-            tempProjectId = projectid;
-          },
-          admin: isAccessAvailable(
-              snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID));
+        requestModel: requestModel,
+        projectModelList: projectModelList,
+        selectedProject: tempProjectId != null
+            ? projectModelList.firstWhere(
+                (element) => element.id == widget.requestModel.projectId,
+                orElse: () => null)
+            : null,
+        updateProjectIdCallback: (String projectid) {
+          //widget.requestModel.projectId = projectid;
+          tempProjectId = projectid;
+          setState(() {});
+        },
+        admin: isAccessAvailable(
+            snapshot.data, SevaCore.of(context).loggedInUser.sevaUserID),
+      );
     } else {
       this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       this.requestModel.requestType = RequestType.TIME;
@@ -2532,9 +2534,8 @@ class RequestEditFormState extends State<RequestEditForm> {
   BuildContext dialogContext;
 
   void editRequest() async {
-    log('Project ID:  ' + tempProjectId.toString());
+    logger.e('Project ID:  ' + tempProjectId.toString());
     // verify f the start and end date time is not same
-    log('while updating:  ' + tempProjectId);
 
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
@@ -3639,7 +3640,11 @@ class ProjectSelectionState extends State<ProjectSelection> {
       change: (value) {
         if (value != null && value[0] != 'None') {
           //widget.requestModel.projectId = value[0];
+          logger.e('inside project selection widget 1: ' + value.toString());
           widget.updateProjectIdCallback(value[0]);
+        } else {
+          logger.e('inside project selection widget 2: ' + value.toString());
+          widget.updateProjectIdCallback('None');
         }
       },
       selectIcon: Icons.arrow_drop_down_circle,

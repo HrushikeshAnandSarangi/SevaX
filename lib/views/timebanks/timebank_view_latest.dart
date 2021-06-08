@@ -364,6 +364,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: SponsorsWidget(
                 sponsorsMode: SponsorsMode.ABOUT,
                 timebankModel: widget.timebankModel,
+                titleColor: Colors.lightBlueAccent,
               ),
             ),
             Padding(
