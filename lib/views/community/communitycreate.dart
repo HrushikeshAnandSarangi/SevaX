@@ -384,7 +384,7 @@ class CreateEditCommunityViewFormState
                               return S.of(context).profanity_text_alert;
                             } else if (value.substring(0, 1).contains('_') &&
                                 !AppConfig.testingEmails
-                                    .contains(AppConfig.loggedInEmail)) {
+                                    .contains(SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
