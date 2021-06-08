@@ -55,6 +55,8 @@ List<NotificationType> dismissiableNotification = [
   NotificationType.MANUAL_TIME_CLAIM_REJECTED,
   NotificationType.MEMBER_ADDED_TO_MESSAGE_ROOM,
   NotificationType.MEMBER_REMOVED_FROM_MESSAGE_ROOM,
+  NotificationType.OneToManyRequestInviteAccepted,
+  NotificationType.OneToManyCreatorRejectedCompletion,
 ];
 
 //Not dismissiable notifications
