@@ -308,7 +308,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             if (index == 0) {
               return Container(
                 padding: EdgeInsets.only(left: 8, top: 16),
-                child: Text(L.of(context).users, style: sectionTextStyle),
+                child: Text(S.of(context).users, style: sectionTextStyle),
               );
             }
             UserModel user = userList.elementAt(index - 1);
