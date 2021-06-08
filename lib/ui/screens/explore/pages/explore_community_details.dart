@@ -92,8 +92,6 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
             orElse: () => TimebankModel({}),
           );
-          log('ti,e id ${timebankModel.id}');
-          log('ti,e id ${timebankModel.sponsors[0]}');
           templist = [
             ...timebankModel.members,
             ...timebankModel.admins,
