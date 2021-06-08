@@ -120,8 +120,7 @@ class TransactionLimitCheck extends StatelessWidget {
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         ViewerRole viewRole = initViewerRole(_userBloc);
-        // bool isBillingFailed =
-        //     !(_userBloc.community.payment['payment_success'] ?? false);
+        bool isBillingFailed =!(_userBloc.community.payment != null && _userBloc.community.payment.containsKey('payment_success') && (_userBloc.community.payment['payment_success'] ?? false));
 
         // bool exaustedLimit = getTransactionStatus(
         //   communityModel: _userBloc.community,
@@ -145,7 +144,7 @@ class TransactionLimitCheck extends StatelessWidget {
             );
           },
           child: AbsorbPointer(
-            absorbing: isSoftDeleteRequested,
+            absorbing: isSoftDeleteRequested || isBillingFailed,
             // isBillingFailed || isSoftDeleteRequested || exaustedLimit,
             child: child,
           ),
