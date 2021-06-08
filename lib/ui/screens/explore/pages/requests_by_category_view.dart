@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
@@ -21,6 +22,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_back.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
 
@@ -30,7 +33,8 @@ class RequestsByCategoryView extends StatefulWidget {
 
   const RequestsByCategoryView({
     Key key,
-    @required this.model, @required this.isUserSignedIn,
+    @required this.model,
+    @required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _RequestsByCategoryViewState createState() => _RequestsByCategoryViewState();
@@ -55,98 +59,144 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
       appBarTitle: widget.model.title_en != null
           ? widget.model.title_en
           : '', //widget.model.getCategoryName(context),
-      child: FutureBuilder(
-        future: requests,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 4 - 20),
-                child: LoadingIndicator(),
-              ),
-            );
-          }
-          if (snapshot.data == null || snapshot.data.isEmpty) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height / 4 - 20),
-                child: Text('No result found'),
-              ),
-            );
-          }
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          HideWidget(
+            hide: Provider.of<UserModel>(context, listen: false) != null,
+            child: CustomBackButton(
+              onBackPressed: () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                } else {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => ExplorePage(
+                        isUserSignedIn: false,
+                      ),
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
+            ),
+          ),
+          FutureBuilder(
+            future: requests,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 4 - 20),
+                    child: LoadingIndicator(),
+                  ),
+                );
+              }
+              if (snapshot.data == null || snapshot.data.isEmpty) {
+                return Container(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height / 4 - 20),
+                    child: Text('No result found'),
+                  ),
+                );
+              }
 
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              var request = snapshot.data[index];
-              var date =
-                  DateTime.fromMillisecondsSinceEpoch(request.requestStart);
-              return Provider.of<UserModel>(context, listen: false)
-                          ?.sevaUserID !=
-                      null
-                  ? FutureBuilder<TimebankModel>(
-                      future: getTimeBankForId(timebankId: request.timebankId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return LoadingIndicator();
-                        }
-                        if (snapshot.hasError) {
-                          return Container();
-                        }
-                        if (snapshot.data == null) {
-                          return Container();
-                        }
-                        return ExploreEventCard(
-                          onTap: () {
-                            bool isAdmin = snapshot.data.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID);
-
-                            if (request.sevaUserId ==
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID ||
-                                isAccessAvailable(
-                                    snapshot.data,
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID)) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: RequestTabHolder(
-                                      //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
-                                      isAdmin: true,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: RequestDetailsAboutPage(
-                                      requestItem: request,
-                                      timebankModel: snapshot.data,
-                                      isAdmin: false,
-                                      //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
-                                    ),
-                                  ),
-                                ),
-                              );
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  var request = snapshot.data[index];
+                  var date =
+                      DateTime.fromMillisecondsSinceEpoch(request.requestStart);
+                  return Provider.of<UserModel>(context, listen: false)
+                              ?.sevaUserID !=
+                          null
+                      ? FutureBuilder<TimebankModel>(
+                          future:
+                              getTimeBankForId(timebankId: request.timebankId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return LoadingIndicator();
                             }
+                            if (snapshot.hasError) {
+                              return Container();
+                            }
+                            if (snapshot.data == null) {
+                              return Container();
+                            }
+                            return ExploreEventCard(
+                              onTap: () {
+                                bool isAdmin = snapshot.data.admins.contains(
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID);
+
+                                if (request.sevaUserId ==
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID ||
+                                    isAccessAvailable(
+                                        snapshot.data,
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_context) => BlocProvider(
+                                        bloc:
+                                            BlocProvider.of<HomeDashBoardBloc>(
+                                                context),
+                                        child: RequestTabHolder(
+                                          //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                          isAdmin: true,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_context) => BlocProvider(
+                                        bloc:
+                                            BlocProvider.of<HomeDashBoardBloc>(
+                                                context),
+                                        child: RequestDetailsAboutPage(
+                                          requestItem: request,
+                                          timebankModel: snapshot.data,
+                                          isAdmin: false,
+                                          //communityModel: BlocProvider.of<HomeDashBoardBloc>(context).selectedCommunityModel,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              photoUrl:
+                                  request.photoUrl ?? defaultProjectImageURL,
+                              title: request.title,
+                              description: request.description,
+                              location: request.address,
+                              communityName: request.fullName ?? '',
+                              date: DateFormat('d MMMM, y').format(date),
+                              time: DateFormat.jm().format(date),
+                              memberList: MemberAvatarListWithCount(
+                                userIds: request.approvedUsers,
+                              ),
+                            );
+                          })
+                      : ExploreEventCard(
+                          onTap: () {
+                            showSignInAlertMessage(
+                                context: context,
+                                message: S.of(context).sign_in_alert);
                           },
                           photoUrl: request.photoUrl ?? defaultProjectImageURL,
                           title: request.title,
@@ -159,27 +209,11 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                             userIds: request.approvedUsers,
                           ),
                         );
-                      })
-                  : ExploreEventCard(
-                      onTap: () {
-                        showSignInAlertMessage(
-                            context: context,
-                            message: S.of(context).sign_in_alert);
-                      },
-                      photoUrl: request.photoUrl ?? defaultProjectImageURL,
-                      title: request.title,
-                      description: request.description,
-                      location: request.address,
-                      communityName: request.fullName ?? '',
-                      date: DateFormat('d MMMM, y').format(date),
-                      time: DateFormat.jm().format(date),
-                      memberList: MemberAvatarListWithCount(
-                        userIds: request.approvedUsers,
-                      ),
-                    );
+                },
+              );
             },
-          );
-        },
+          ),
+        ],
       ),
     );
   }
