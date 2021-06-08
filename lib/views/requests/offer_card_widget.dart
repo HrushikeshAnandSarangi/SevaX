@@ -127,7 +127,7 @@ class OfferCardWidget extends StatelessWidget {
                               .collection('offers')
                               .document(offerId)
                               .updateData({
-                            'individualOfferDataModel.offerInvites':
+                            'individualOfferDataModeferInvites':
                                 FieldValue.arrayUnion([userModel.sevaUserID])
                           });
                           //Create a notification for other member

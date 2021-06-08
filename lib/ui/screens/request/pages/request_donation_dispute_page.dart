@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -107,7 +108,7 @@ class _RequestDonationDisputePageState
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text('Please enter a valid donation amount'),
+            title: Text(S.of(context).enter_valid_amount),
             actions: <Widget>[
               FlatButton(
                 child: Text(
@@ -162,7 +163,7 @@ class _RequestDonationDisputePageState
           // print('Inside, switch');
           // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
           // requests flow (if is written for clarity sake if we handle this logic at pledgedAmount Itself if is not nessasary (recommendation rename pledgeAmount to amount)
-          if (widget.model.requestIdType == 'offer' &&
+          if (widget.model.requestIdType == S.of(context).offer &&
               widget.model.donationStatus == DonationStatus.PLEDGED) {
 //          id = widget.notificationId;
             amount = 0;
@@ -206,8 +207,8 @@ class _RequestDonationDisputePageState
                         widget.model.minimumAmount) {
                   _key.currentState.showSnackBar(
                     SnackBar(
-                        content: Text(
-                            "Entered amount is less than minimum donation amount.")),
+                        content:
+                            Text(S.of(context).amount_lessthan_donation_amount)),
                   );
                 } else {
                   _key.currentState.showSnackBar(
@@ -266,7 +267,7 @@ class _RequestDonationDisputePageState
           progressDialogNew.show();
 
           if (widget.model.donationStatus == DonationStatus.REQUESTED &&
-              widget.model.requestIdType == 'offer') {
+              widget.model.requestIdType == S.of(context).offer) {
             // for the offers.
             widget.model.donationStatus = DonationStatus.PLEDGED;
           }
@@ -303,7 +304,7 @@ class _RequestDonationDisputePageState
         : OperatingMode.CREATOR;
     var name;
     var toWhom;
-    if (widget.model.requestIdType == 'offer' &&
+    if (widget.model.requestIdType == S.of(context).offer &&
         widget.model.donationStatus == DonationStatus.REQUESTED) {
       name = widget.model.receiverDetails.name;
     } else {
@@ -335,7 +336,7 @@ class _RequestDonationDisputePageState
                       model: widget.model,
                       scaffoldKey: _key,
                       to: widget.model.cashDetails.pledgedAmount != null
-                          ? widget.model.requestIdType == 'offer'
+                          ? widget.model.requestIdType == S.of(context).offer
                               ? toWhom
                               : widget.model.donationAssociatedTimebankDetails
                                   .timebankTitle
@@ -456,7 +457,7 @@ class _RequestDonationDisputePageState
                             communityId: loggedInUser.currentCommunity,
                             entityId: widget.model.id,
                             showToCommunities: widget.model.requestIdType ==
-                                    'offer'
+                                    S.of(context).offer
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -465,12 +466,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
 
@@ -484,7 +485,7 @@ class _RequestDonationDisputePageState
                               .createChatForDispute(
                             entityId: widget.model.id,
                             showToCommunities: widget.model.requestIdType ==
-                                    'offer'
+                                    S.of(context).offer
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -493,12 +494,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -553,7 +554,7 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             entityId: widget.model.id,
                             showToCommunities: widget.model.requestIdType ==
-                                    'offer'
+                                    S.of(context).offer
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -562,12 +563,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == 'offer'
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
                       }
@@ -807,7 +808,7 @@ class _CashFlow extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == 'offer' &&
+        model.requestIdType == S.of(context).offer &&
                 model.donationStatus == DonationStatus.REQUESTED
             ? offerDonatePaymentDetails()
             : Text(''),

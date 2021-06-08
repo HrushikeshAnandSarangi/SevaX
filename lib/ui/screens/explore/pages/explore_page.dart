@@ -43,6 +43,7 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
+import 'package:sevaexchange/labels.dart';
 
 class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
@@ -151,7 +152,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       children: [
                         SearchBar(
                           controller: _searchController,
-                          hintText: 'Try "Osaka" "Postal Code" "Location"',
+                          hintText: S.of(context).explore_search_hint,
                           onChanged: null,
                         ),
                         Align(
@@ -197,7 +198,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Find',
+                      S.of(context).find,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -562,7 +563,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Featured Communities',
+                      S.of(context).featured_communities,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -759,7 +760,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Seva Communities near you.',
+                              Text(S.of(context).timebanks_near_you,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -850,7 +851,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Browse requests by category',
+                      S.of(context).browse_by_category,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -866,6 +867,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           MaterialPageRoute(
                             builder: (context) => RequestsByCategoryView(
                               model: value,
+                              isUserSignedIn: widget.isUserSignedIn,
                             ),
                           ),
                         );

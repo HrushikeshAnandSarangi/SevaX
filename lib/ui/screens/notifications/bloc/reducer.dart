@@ -320,7 +320,7 @@ class PersonalNotificationReducerForRequests {
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -356,7 +356,7 @@ class PersonalNotificationReducerForRequests {
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -392,7 +392,7 @@ class PersonalNotificationReducerForRequests {
                         comingFrom: ComingFrom.Home,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -580,7 +580,7 @@ class PersonalNotificationReducerForRequests {
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
           '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-      title: 'Join Webinar',
+      title: S.of(context).join_webinar,
       onPressed: () {
         if (SevaCore.of(context).loggedInUser.calendarId == null) {
           _settingModalBottomSheet(context, requestInvitationModel,
@@ -1033,17 +1033,17 @@ class PersonalNotificationsRedcerForDonations {
       entityName: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
           : invertGoodsLabel
-              ? holder.donorDetails.name + ' has pledge to donate good/supplies'
+              ? holder.donorDetails.name + S.of(context).pledge_goods_supplies
               : S.of(context).goods_modified_by_donor,
       title: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
           : invertGoodsLabel
-              ? 'Acknowledge donation'
+              ? S.of(context).acknowledge
               : S.of(context).goods_modified_by_donor,
       subTitle: holder.donationType == RequestType.CASH
           ? S.of(context).amount_modified_by_donor_desc
           : invertGoodsLabel
-              ? holder.donorDetails.name + ' has pledge to donate good/supplies'
+              ? holder.donorDetails.name + S.of(context).pledge_goods_supplies
               : S.of(context).goods_modified_by_donor_desc,
       onDismissed: onDismissed,
       onPressed: () {

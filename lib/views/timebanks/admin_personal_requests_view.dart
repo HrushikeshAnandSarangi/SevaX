@@ -1,8 +1,11 @@
+// import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -64,7 +67,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
       appBar: widget.showAppBar
           ? AppBar(
               title: Text(
-                "Existing Requests",
+                S.of(context).existing_requests,
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -75,7 +78,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong!');
+                  return Text(S.of(context).general_stream_error);
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return LoadingIndicator();
@@ -136,7 +139,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? "Filtering blocked content"
+        ? S.of(context).filtering_blocked_content
         : filteredList.add(request));
 
     return filteredList;
@@ -151,7 +154,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
     requestModelList.forEach((request) =>
         request.requestEnd > DateTime.now().millisecondsSinceEpoch
             ? filteredList.add(request)
-            : "Filtering past requests content");
+            : S.of(context).filtering_past_requests_content);
 
     return filteredList;
   }

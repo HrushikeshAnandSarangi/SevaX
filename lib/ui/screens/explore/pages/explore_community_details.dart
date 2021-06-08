@@ -92,8 +92,6 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 isPrimaryTimebank(parentTimebankId: model.parentTimebankId),
             orElse: () => TimebankModel({}),
           );
-          log('ti,e id ${timebankModel.id}');
-          log('ti,e id ${timebankModel.sponsors[0]}');
           templist = [
             ...timebankModel.members,
             ...timebankModel.admins,
@@ -152,7 +150,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            S.of(context).part_of_sevax,
+                           S.of(context).part_of_sevax,
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
@@ -662,7 +660,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         builder: (dialogContext) {
           return AlertDialog(
             content: Text(
-                'This action is available only to the members of this community. You need to request to join the Seva Community to view this ' +
+               S.of(context).join_community_alert +
                     message +
                     '.'),
             actions: [

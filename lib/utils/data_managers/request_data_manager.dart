@@ -15,21 +15,19 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:usage/uuid/uuid.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../app_config.dart';
 import '../svea_credits_manager.dart';
@@ -2174,9 +2172,10 @@ Future oneToManyCreatorRequestCompletionRejected(
 
 //getALl the categories
 Stream<List<CategoryModel>> getAllCategoriesStream() async* {
-  var data = Firestore.instance.collection('requestCategories').snapshots();
-
-  log('returned categories from firestore length: ' + data.length.toString());
+  var data = Firestore.instance
+      .collection('requestCategories')
+      .where("type", isEqualTo: "subCategory")
+      .snapshots();
 
   yield* data.transform(
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
@@ -2191,4 +2190,20 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
       sink.add(categories);
     },
   ));
+}
+
+Future<List<CategoryModel>> getSubCategoriesFuture() async {
+  var data = await Firestore.instance
+      .collection('requestCategories')
+      .where("type", isEqualTo: "subCategory")
+      .getDocuments();
+  List<CategoryModel> categories = [];
+  data.documents.forEach((element) {
+    CategoryModel model = CategoryModel.fromMap(element.data);
+    model.typeId = element.documentID;
+    log('${model.title_en}');
+    categories.add(model);
+  });
+  logger.i("subCat length ${categories.length}");
+  return categories;
 }

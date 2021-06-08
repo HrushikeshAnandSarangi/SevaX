@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:js';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
@@ -201,7 +203,7 @@ class OfferDetails extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            'Offering Amount',
+            L.of(context).offering_amount,
             style: TextStyle(
               fontSize: 16,
             ),
@@ -246,7 +248,7 @@ class OfferDetails extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            'Offering Goods',
+            L.of(context).offering_goods,
             style: TextStyle(
               fontSize: 16,
             ),
@@ -434,8 +436,10 @@ class OfferDetails extends StatelessWidget {
                                   text: isCreator
                                       ? S.of(context).you_created_offer
                                       : isAccepted
-                                          ? "You have accepted this offer."
-                                          : "Would you like to accept this offer?",
+                                          ? S.of(context).accepted_offer_msg
+                                          : S
+                                              .of(context)
+                                              .would_like_to_accept_offer,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -742,7 +746,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -771,7 +775,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -798,7 +802,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

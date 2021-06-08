@@ -6,13 +6,12 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_list_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
-
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class ExploreSearchPageBloc {
@@ -67,7 +66,7 @@ class ExploreSearchPageBloc {
   }
 
   Future<void> load() async {
-    ElasticSearchApi.getAllCategories().then((value) {
+    FirestoreManager.getSubCategoriesFuture().then((value) {
       _requestCategory.add(value);
     });
     LocationData location;
