@@ -37,9 +37,9 @@ class ExplorePageAppBar extends PreferredSize {
                     Navigator.of(context).maybePop();
                   },
                   child: Image.asset(
-                    'images/seva_x_logo.png',
-                    width: 110,
-                    height: 31,
+                    'images/seva-x-logo-white.png',
+                    width: 112,
+                    height: 32,
                   ),
                 ),
                 Spacer(),

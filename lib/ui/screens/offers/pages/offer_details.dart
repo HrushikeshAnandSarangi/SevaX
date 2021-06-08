@@ -10,14 +10,12 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -196,7 +194,6 @@ class OfferDetails extends StatelessWidget {
   }
 
   Widget showCashDonationDetails(BuildContext context, OfferModel offerModel) {
-    if (offerModel.type == RequestType.CASH) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,14 +234,12 @@ class OfferDetails extends StatelessWidget {
           )
         ],
       );
-    }
+    
   }
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
     List<String> keys =
         List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
-
-    if (offerModel.type == RequestType.GOODS) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +278,6 @@ class OfferDetails extends StatelessWidget {
           ),
         ],
       );
-    }
   }
 
   Widget oneToManyOfferCancellation(BuildContext context) {

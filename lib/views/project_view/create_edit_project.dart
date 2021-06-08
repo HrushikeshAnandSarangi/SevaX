@@ -37,7 +37,6 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 import '../../flavor_config.dart';
-import '../../labels.dart';
 
 class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
@@ -501,6 +500,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ),
               headingText(S.of(context).phone_number),
               TextFormField(
+              
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).unfocus();
                 },
@@ -535,7 +535,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         : projectModel.phoneNumber != null
                             ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
                             : ''
-                    : '',
+                    : projectModel?.phoneNumber?.replaceAll('+', '')??'',
                 decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
