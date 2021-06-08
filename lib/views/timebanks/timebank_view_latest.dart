@@ -88,7 +88,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Container(
               width: MediaQuery.of(context).size.width,
               child: CachedNetworkImage(
-                imageUrl: widget.timebankModel.photoUrl ?? ' ',
+                imageUrl: widget.timebankModel.photoUrl ?? defaultGroupImageURL,
                 fit: BoxFit.cover,
                 height: 200,
                 errorWidget: (context, url, error) => Container(
@@ -364,6 +364,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: SponsorsWidget(
                 sponsorsMode: SponsorsMode.ABOUT,
                 timebankModel: widget.timebankModel,
+                titleColor: Colors.lightBlueAccent,
               ),
             ),
             Padding(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/core/error/failures.dart';
@@ -25,7 +26,7 @@ class PaymentRepository {
       logger.i(
           "hitting ${communityId} $paymentMethodId $planId $isPrivate $isBundlePricingEnabled");
       var result = await http.post(
-        _baseUrl + 'stripCreateSubscription',
+        _baseUrl + 'stripeCreateSubscription',
         headers: {
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*"

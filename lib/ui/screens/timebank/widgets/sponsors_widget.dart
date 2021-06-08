@@ -1,12 +1,12 @@
-import 'dart:io';
 import 'dart:developer';
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -18,7 +18,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:path/path.dart' as pathExt;
 
 import '../../../../flavor_config.dart';
 
@@ -29,12 +28,13 @@ class SponsorsWidget extends StatefulWidget {
   final SponsorsMode sponsorsMode;
   final Function(TimebankModel timebankModel) onCreated;
   final Function(TimebankModel timebankModel) onRemoved;
+  final Color titleColor;
 
   SponsorsWidget(
       {this.timebankModel,
       @required this.sponsorsMode,
       this.onCreated,
-      this.onRemoved});
+      this.onRemoved, this.titleColor});
 
   @override
   _SponsorsWidgetState createState() => _SponsorsWidgetState();
@@ -331,7 +331,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       child: Text(
         "Sponsored By",
         style: TextStyle(
-          color: HexColor('#766FE0'),
+          color: widget.titleColor??HexColor('#766FE0'), 
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
