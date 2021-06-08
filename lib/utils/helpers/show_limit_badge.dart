@@ -131,7 +131,7 @@ class TransactionLimitCheck extends StatelessWidget {
               context,
               viewRole,
               _userBloc.user,
-              // isBillingFailed,
+              isBillingFailed,
               _userBloc.community.private,
               // isBillingFailed
               //     ? PaymentUtils.isFailedOrProcessingPlanUpdate(
@@ -157,7 +157,7 @@ class TransactionLimitCheck extends StatelessWidget {
     context,
     ViewerRole viewRole,
     UserModel user,
-    // bool isBillingFailed,
+    bool isBillingFailed,
     bool isPrivate,
     // bool isUpdatingPlan,
     // String activePlanId,
@@ -188,7 +188,7 @@ class TransactionLimitCheck extends StatelessWidget {
                   context: context,
                   viewRole: viewRole,
                   isSoftDeleteRequested: isSoftDeleteRequested,
-                  // isBillingFailed: isBillingFailed,
+                  isBillingFailed: isBillingFailed,
                   // isUpdatingPlan: isUpdatingPlan,
                   // exaustedLimit: exaustedLimit,
                 ),
@@ -334,7 +334,7 @@ String getRoleAssociatedMessage({
 String getMessage({
   BuildContext context,
   ViewerRole viewRole,
-  // bool isBillingFailed,
+  bool isBillingFailed,
   bool isSoftDeleteRequested,
   // bool isUpdatingPlan,
   // bool exaustedLimit,
@@ -358,14 +358,14 @@ String getMessage({
   //   );
   // }
 
-  // if (isBillingFailed ?? false) {
-  //   return getRoleAssociatedMessage(
-  //     viewRole: viewRole,
-  //     forAdmin: S.of(context).limit_badge_billing_failed,
-  //     forCreator: S.of(context).limit_badge_billing_failed,
-  //     forMember: S.of(context).limit_badge_contact_admin,
-  //   );
-  // }
+  if (isBillingFailed ?? false) {
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).limit_badge_billing_failed,
+      forCreator: S.of(context).limit_badge_billing_failed,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
+  }
   if (isSoftDeleteRequested) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
