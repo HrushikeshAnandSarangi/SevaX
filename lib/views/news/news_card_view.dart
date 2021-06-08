@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -143,7 +144,7 @@ class NewsCardViewState extends State<NewsCardView> {
                 children: <Widget>[
                   newsAuthorAndDate,
                   widget.newsModel.title == null ||
-                          widget.newsModel.title == "NoData"
+                          widget.newsModel.title == S.of(context).no_data
                       ? Offstage()
                       : newsTitle,
                   newsImage,
@@ -286,7 +287,7 @@ class NewsCardViewState extends State<NewsCardView> {
                                           .fullname !=
                                       null
                                   ? SevaCore.of(context).loggedInUser.fullname
-                                  : "Anonymous user",
+                                  : L.of(context).anonymous_user,
                               createdEmail:
                                   SevaCore.of(context).loggedInUser.email,
                               createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -354,7 +355,7 @@ class NewsCardViewState extends State<NewsCardView> {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
       child:
-          widget.newsModel.title == null || widget.newsModel.title == "NoData"
+          widget.newsModel.title == null || widget.newsModel.title == S.of(context).no_data
               ? Offstage()
               : Text(
                   widget.newsModel.title.trim(),
@@ -586,7 +587,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get scrappedImage {
     return widget.newsModel.imageScraped == null ||
-            widget.newsModel.imageScraped == "NoData"
+            widget.newsModel.imageScraped == S.of(context).no_data
         ? Offstage()
         //change tag to avoid hero widget issue
         : getImageView(
@@ -1388,7 +1389,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         padding: EdgeInsets.only(left: 2, top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('likes',
+                            child: Text(L.of(context).likes,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -1988,7 +1989,7 @@ class _RepliesViewState extends State<RepliesView> {
                                       defaultUserImageURL),
                             ),
                           ),
-                          labelText: 'Add a comment...',
+                          labelText: S.of(context).add_comment,
                           isDense: true,
                           contentPadding: EdgeInsets.all(3.0),
                         ),
@@ -2032,7 +2033,7 @@ class _RepliesViewState extends State<RepliesView> {
                                             .fullname !=
                                         null
                                     ? SevaCore.of(context).loggedInUser.fullname
-                                    : "Anonymous user",
+                                    :L.of(context).anonymous_user,
                                 createdEmail:
                                     SevaCore.of(context).loggedInUser.email,
                                 createdAt:

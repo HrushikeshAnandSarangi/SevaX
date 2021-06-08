@@ -1,3 +1,4 @@
+import 'dart:js';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -275,7 +277,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       );
     } else if (widget.controller.text.trim().length < 3) {
       return getEmptyWidget(
-          'Users', S.of(context).validation_error_search_min_characters);
+         L.of(context).users, S.of(context).validation_error_search_min_characters);
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -296,7 +298,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
           return getEmptyWidget(
-            'Users',
+           L.of(context).users,
             S.of(context).no_user_found,
           );
         }
@@ -306,7 +308,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             if (index == 0) {
               return Container(
                 padding: EdgeInsets.only(left: 8, top: 16),
-                child: Text('Users', style: sectionTextStyle),
+                child: Text(L.of(context).users, style: sectionTextStyle),
               );
             }
             UserModel user = userList.elementAt(index - 1);

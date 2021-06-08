@@ -1,5 +1,9 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/communities_categories.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
@@ -26,7 +30,7 @@ class CommunitiesSearchView extends StatelessWidget {
             }
 
             if (snapshot.data.isEmpty) {
-              return Text('No result found');
+              return Text(S.of(context).no_search_result_found);
             }
 
             int length = snapshot.data.length;
@@ -41,7 +45,7 @@ class CommunitiesSearchView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Featured Communities',
+                            L.of(context).featured_communities,
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -116,7 +120,7 @@ class CommunitiesSearchView extends StatelessWidget {
         ),
         SizedBox(height: 22),
         Text(
-          'Browse community by category',
+          L.of(context).browse_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         CommunitiesCategory(

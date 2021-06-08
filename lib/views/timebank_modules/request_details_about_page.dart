@@ -195,7 +195,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       centerTitle: true,
       title: Text(
         // S.of(context).request_details,
-        'Request Details',
+        S.of(context).request_details,
         style:
             TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.black),
       ),
@@ -319,7 +319,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Text(
-                                          'No images available...',
+                                         S.of(context).no_image_available,
                                         );
                                       } else {
                                         return Expanded(
@@ -395,7 +395,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                     .selectedSpeakerTimeDetails
                                                     .speakingTime ==
                                                 null
-                                            ? Text('hours not updated..',
+                                            ? Text(L.of(context).hours_not_updated,
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -1237,18 +1237,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       if (widget.requestItem.approvedUsers.length >= 1) {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
-            ? 'Request Approved'
-            : 'Request has been assigned to a member';
+            ? L.of(context).request_approved
+            : L.of(context).request_has_been_assigned_to_a_member;
       } else if (widget.requestItem.roomOrTool == 'ROOM') {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for place';
+            : L.of(context).borrow_request_for_place;
       } else {
         textLabel = widget.requestItem.sevaUserId ==
                 SevaCore.of(context).loggedInUser.sevaUserID
             ? S.of(context).creator_of_request_message
-            : 'Borrow Request for item';
+            : L.of(context).borrow_request_for_item;
       }
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -1729,13 +1729,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                 .loggedInUser
                                                 .email ==
                                             widget.requestItem.approvedUsers[0])
-                                    ? 'Request Approved'
-                                    : 'Request has been assigned to a member')
+                                    ? L.of(context).request_approved
+                                    :  L.of(context).request_has_been_assigned_to_a_member)
                                 : isApplied
                                     ? S.of(context).applied_for_request
                                     : (widget.requestItem.roomOrTool == 'ROOM'
-                                        ? 'Borrow request for place'
-                                        : 'Borrow request for item'),
+                                        ? L.of(context).borrow_request_for_place
+                                        : L.of(context).borrow_request_for_item),
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Europa',
@@ -3116,7 +3116,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       TransactionsMatrixCheck(
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: L.of(context).calender_sync,
                         comingFrom: ComingFrom.Requests,
                         child: GestureDetector(
                             child: CircleAvatar(
@@ -3150,7 +3150,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: L.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -3185,7 +3185,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         comingFrom: ComingFrom.Requests,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: L.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

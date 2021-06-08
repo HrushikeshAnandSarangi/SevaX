@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
+
+import '../../../../labels.dart';
 
 class CommunitiesCategory extends StatelessWidget {
   final Stream<List<CommunityCategoryModel>> stream;
@@ -22,7 +25,7 @@ class CommunitiesCategory extends StatelessWidget {
           }
           if (snapshot.data == null) {
             return Center(
-              child: Text("No categories found"),
+              child: Text(S.of(context).no_categories_available),
             );
           }
           return LayoutBuilder(

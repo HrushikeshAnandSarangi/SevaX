@@ -1,6 +1,10 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/umeshify.dart';
@@ -91,9 +95,8 @@ class NewsCard extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(top: 5),
                           child: Linkify(
-                              text: title != null && title != "NoData"
-                                  ? title.trim()
-                                  : "titile",
+                              text: title != null && title != S.of(context).no_data                                  ? title.trim()
+                                  :S.of(context).title,
                               onOpen: (url) async {
                                 // if (await canLaunch(url)) {
                                 //   launch(url);
@@ -135,7 +138,7 @@ class NewsCard extends StatelessWidget {
                         Text(
                           userName != null
                               ? userName.trim()
-                              : "User name not available",
+                              : L.of(context).user_name_not_availble,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 7,
                           style: TextStyle(fontSize: 16.0),
@@ -155,7 +158,7 @@ class NewsCard extends StatelessWidget {
               height: 10,
             ),
             //feed image
-            imageUrl == null || imageUrl == "NoData"
+            imageUrl == null || imageUrl == S.of(context).no_data
                 ? Offstage()
                 : getImageView(id, imageUrl),
             SizedBox(
@@ -339,7 +342,7 @@ class NewsCard extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    documentName ?? "Document",
+                    documentName ?? L.of(context).document,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,

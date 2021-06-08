@@ -511,7 +511,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Text('Error Loading Data');
+                  return Text(L.of(context).error_loading_data);
                 } else {
                   return Form(
                     key: _formKey,
@@ -563,7 +563,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       ? S.of(context).request_title_hint
                                       : requestModel.requestType ==
                                               RequestType.CASH
-                                          ? "Ex: Fundraiser for women’s shelter..."
+                                          ? L.of(context).cash_request_title_hint
                                           : requestModel.requestType ==
                                                   RequestType
                                                       .ONE_TO_MANY_REQUEST

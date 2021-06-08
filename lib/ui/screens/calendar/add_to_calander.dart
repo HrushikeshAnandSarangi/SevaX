@@ -13,6 +13,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../../../flavor_config.dart';
+import '../../../labels.dart';
 
 class AddToCalendar extends StatefulWidget {
   @required
@@ -193,7 +194,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          'Add event to calander',
+         L.of(context).add_event_to_calender,
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -208,11 +209,11 @@ class AddToCalendarState extends State<AddToCalendar> {
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text('Add to calendar'),
+            child: Text(L.of(context).add_to_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text('Do you want to add this event to your calendar?'),
+            child: Text(L.of(context).do_you_want_addto_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 50),
@@ -226,7 +227,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/googlecal.png"),
                     ),
                     onPressed: googleCalanderIntegration,
-                    title: 'Add to Google Calendar',
+                    title: L.of(context).add_to_google_calender,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -235,7 +236,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/outlookcal.png"),
                     ),
                     onPressed: outlookCalanderIntegration,
-                    title: 'Add to Outlook',
+                    title: L.of(context).add_to_outlook,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -244,7 +245,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/ical.png"),
                     ),
                     onPressed: iCalIntegration,
-                    title: 'Add to iCal',
+                    title:L.of(context).add_to_ical,
                   ),
                   Container(
                     alignment: Alignment.bottomRight,
@@ -277,7 +278,7 @@ class AddToCalendarState extends State<AddToCalendar> {
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-      transaction_matrix_type: "calendar_sync",
+      transaction_matrix_type: L.of(context).calender_sync,
       child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Row(

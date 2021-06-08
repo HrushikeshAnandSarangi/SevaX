@@ -692,7 +692,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     photoUrl: oneToManyModel['requestorphotourl'],
                     creatorName: oneToManyModel['selectedInstructor']
                         ['fullname'],
-                    title: ' Completed the request',
+                    title: L.of(context).completed_the_request,
                     //subTitle:
                     //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                   );
@@ -807,7 +807,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     SoftDeleteRequestDataHolder.fromMap(notification.data);
                 return NotificationCard(
                   timestamp: notification.timestamp,
-                  entityName: requestData.entityTitle ?? "Deletion Request",
+                  entityName: requestData.entityTitle ??L.of(context).deletion_request,
                   photoUrl: null,
                   title: requestData.requestAccepted
                       ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
@@ -898,9 +898,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva Credits Credited",
+                  title: S.of(context).notifications_credited,
                   subTitle: notification.data['credits'].toString() +
-                      " Seva Credits have been credited to your account.",
+                      S.of(context).notifications_credited_to,
                   onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,
@@ -913,9 +913,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   timestamp: notification.timestamp,
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva Credits debited",
+                  title: L.of(context).credits_debited,
                   subTitle: notification.data['credits'].toString() +
-                      " Seva Credits have been debited from your account.",
+                     L.of(context).credits_debited_msg,
                   onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,

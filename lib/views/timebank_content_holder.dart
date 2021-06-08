@@ -918,7 +918,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.title != null && news.title != "NoData"
+                              text: news.title != null && news.title != S.of(context).no_data
                                   ? news.title.trim()
                                   : '',
                               onOpen: (url) async {
@@ -1010,7 +1010,7 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               //feed image
               news.newsImageUrl == null
-                  ? news.imageScraped == null || news.imageScraped == "NoData"
+                  ? news.imageScraped == null || news.imageScraped == S.of(context).no_data
                       ? Offstage()
                       : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
@@ -1250,7 +1250,7 @@ class DiscussionListState extends State<DiscussionList> {
                                       padding: EdgeInsets.only(left: 3),
                                       child: Align(
                                           alignment: Alignment.centerLeft,
-                                          child: Text('comments',
+                                          child: Text(S.of(context).comments,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,

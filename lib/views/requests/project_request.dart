@@ -691,8 +691,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         return getTagMainFrame(S.of(context).one_to_many.sentenceCase() +
             '' +
             S.of(context).request);
-      case RequestType.BORROW:
-        return getTagMainFrame(L.of(context).borrow_request_title);
+      // case RequestType.BORROW:
+      //   return getTagMainFrame(L.of(context).borrow_request_title);
 
       default:
         return Container();

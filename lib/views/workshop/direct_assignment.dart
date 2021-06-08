@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -111,7 +112,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ],
       ),
       body: getList(
-        timebankId: FlavorConfig.values.timebankName == "Yang 2020"
+        timebankId: FlavorConfig.values.timebankName == L.of(context).yang_2020
             ? FlavorConfig.values.timebankId
             : widget.timebankId,
       ),
@@ -188,7 +189,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   bool checkAlreadyExistingMembersContains(String sevaId) {
-    if (FlavorConfig.values.timebankName != "Yang 2020") {
+    if (FlavorConfig.values.timebankName !=L.of(context).yang_2020) {
       for (var i = 0; i < widget.listOfAlreadyExistingMembers.length; i++) {
         if (sevaId.trim() == widget.listOfAlreadyExistingMembers[i].trim()) {
           return false;
