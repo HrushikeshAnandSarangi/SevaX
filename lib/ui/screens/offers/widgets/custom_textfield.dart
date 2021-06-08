@@ -81,8 +81,10 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           onChanged: (value) {
             onChanged?.call(value);
-            ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] =
-                value;
+            if (ExitWithConfirmation.of(context)?.fieldValues != null) {
+              ExitWithConfirmation.of(context)?.fieldValues[context.hashCode] =
+                  value;
+            }
           },
           inputFormatters: formatters,
           textCapitalization:
