@@ -1,7 +1,7 @@
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 
-// class L {
-//   L.of(BuildContext context) {}
+class L {
+  L.of(BuildContext context) {}
 
 //   // <------------ PENDING START ------------>
 
@@ -14,6 +14,10 @@
 //   String get kilometer => "Kilometer"; //cant find where to replace
 //   String get mile => "Mile"; //cant find where to replace
 //   // <------------ PENDING END ------------>
+
+// <-----------      new label 8th June  --------->
+String get onetomany_createoffer_note =>
+    "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
 //
 //Below cound not find in mob - vishnu
@@ -188,7 +192,7 @@ String get sandbox_create_community_alert =>
 
 //   String get sandbox_dialog_subtitle =>
 //       "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."; //done in web
-// // }
+}
 
 // // <--------  IRRELEVANT FOR NOW  --------->
 // // String get borrow_request_title => "Borrow Request"; //done in mobile
