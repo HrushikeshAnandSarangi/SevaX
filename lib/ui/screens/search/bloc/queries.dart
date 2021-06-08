@@ -951,4 +951,29 @@ class Searches {
     }
     return userModel;
   }
+
+  static Future<UserModel> getUserByEmailElastic({@required userEmail}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"email.keyword": userEmail}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    UserModel userModel;
+
+    for (var map in hitList) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      userModel = UserModel.fromMap(sourceMap, "elastic");
+    }
+    return userModel;
+  }
 }

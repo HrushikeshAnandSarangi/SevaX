@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
+import 'package:sevaexchange/views/core.dart';
 
-class MemberAvatarListWithCount extends StatelessWidget {
+class   MemberAvatarListWithCount extends StatelessWidget {
   final List<String> userIds;
   final double radius;
 
@@ -14,7 +15,7 @@ class MemberAvatarListWithCount extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
       future: Provider.of<MembersBloc>(context)
-          .getUserImages(userIds.length > 5 ? userIds.sublist(0, 5) : userIds),
+          .getUserImages(userIds.length > 5 ? userIds.sublist(0, 5) : userIds,isUserSignedIn:SevaCore.of(context) != null),
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return Container(

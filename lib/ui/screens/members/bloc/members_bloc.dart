@@ -1,6 +1,7 @@
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -41,14 +42,20 @@ class MembersBloc extends BlocBase {
     return null;
   }
 
-  Future<UserModel> getUserModel({String userId, String email}) async {
+  Future<UserModel> getUserModel({String userId, String email,bool isUserSignedIn = true}) async {
     UserModel user = getMemberFromLocalData(email: email, userId: userId);
     if (user != null) {
       return Future.value(user);
     } else {
-      user = userId != null
-          ? await UserRepository.fetchUserById(userId)
-          : await UserRepository.fetchUserByEmail(email);
+      if (isUserSignedIn) {
+        user = userId != null
+            ? await UserRepository.fetchUserById(userId)
+            : await UserRepository.fetchUserByEmail(email);
+      }else{
+        user = userId != null
+            ? await Searches.getUserElastic(userId: userId)
+            : await Searches.getUserByEmailElastic(userEmail: email);
+      }
       _membersMap[user.sevaUserID] = user;
       _memberEmailIdMapping[user.email] = user.sevaUserID;
       return user;
@@ -64,13 +71,13 @@ class MembersBloc extends BlocBase {
     return images;
   }
 
-  Future<List<String>> getUserImages(List<String> ids) async {
+  Future<List<String>> getUserImages(List<String> ids,{bool isUserSignedIn = true}) async {
     try {
       List<Future<UserModel>> futures = ids
           .map(
             (id) => id.contains('@')
-                ? getUserModel(email: id)
-                : getUserModel(userId: id),
+                ? getUserModel(email: id,isUserSignedIn: isUserSignedIn)
+                : getUserModel(userId: id,isUserSignedIn:isUserSignedIn),
           )
           .toList();
 
@@ -81,6 +88,7 @@ class MembersBloc extends BlocBase {
       // });
       return users.map((user) => user.photoURL).toList();
     } on Exception catch (e) {
+      logger.e(e);
       // logger.e("error is -> $e");
       return [];
     }
