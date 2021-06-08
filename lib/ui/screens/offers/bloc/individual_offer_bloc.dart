@@ -34,7 +34,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _isVisible = BehaviorSubject<bool>.seeded(false);
-  final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
+  // final _isPublicVisible = BehaviorSubject<bool>.seeded(false);
   final _donationAmount = BehaviorSubject<int>();
 
   // final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(
@@ -199,6 +199,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..minimumCredits = _minimumCredits.value != null
               ? int.parse(_minimumCredits.value)
               : 0;
+        if (offer.cashModel != null) {
+          offer.cashModel..targetAmount = _donationAmount.value;
+        }
 
         updateOfferWithRequest(offer: offerModel).then((_) {
           _status.add(Status.COMPLETE);
