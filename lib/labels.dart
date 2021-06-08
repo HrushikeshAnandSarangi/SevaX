@@ -17,7 +17,7 @@ class L {
 
 // <-----------      new label 8th June  --------->
   String get offering_amount => "Offering Amount";
-  String get offering_goods => "Offering Goods";
+  // String get offering_goods => "Offering Goods";
 
   String get onetomany_createoffer_note =>
       "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
