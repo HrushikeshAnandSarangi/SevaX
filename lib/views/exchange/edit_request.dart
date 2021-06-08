@@ -2758,6 +2758,14 @@ class RequestEditFormState extends State<RequestEditForm> {
                 SevaCore.of(context).loggedInUser.fullname;
             log('ADDED ACCEPTOR');
 
+            // update new speaker details
+            widget.requestModel.selectedInstructor = BasicUserDetails(
+              fullname: selectedInstructorModelTemp?.fullname,
+              email: selectedInstructorModelTemp?.email,
+              photoURL: selectedInstructorModelTemp?.photoURL,
+              sevaUserID: selectedInstructorModelTemp?.sevaUserID,
+            );
+
             if (selectedInstructorModel.communities
                 .contains(widget.requestModel.communityId)) {
               speakerNotificationDocRefNew =
@@ -2891,14 +2899,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch;
           //});
 
-          // update new speaker details
-          widget.requestModel.selectedInstructor = BasicUserDetails(
-            fullname: selectedInstructorModelTemp?.fullname,
-            email: selectedInstructorModelTemp?.email,
-            photoURL: selectedInstructorModelTemp?.photoURL,
-            sevaUserID: selectedInstructorModelTemp?.sevaUserID,
-          );
-
           logger.i("=============IF===============");
 
           linearProgressForCreatingRequest();
@@ -2960,6 +2960,14 @@ class RequestEditFormState extends State<RequestEditForm> {
               SevaCore.of(context).loggedInUser.fullname;
           log('ADDED ACCEPTOR');
 
+          // update new speaker details
+          widget.requestModel.selectedInstructor = BasicUserDetails(
+            fullname: selectedInstructorModelTemp?.fullname,
+            email: selectedInstructorModelTemp?.email,
+            photoURL: selectedInstructorModelTemp?.photoURL,
+            sevaUserID: selectedInstructorModelTemp?.sevaUserID,
+          );
+
           if (selectedInstructorModel.communities
               .contains(widget.requestModel.communityId)) {
             speakerNotificationDocRefNew =
@@ -3013,14 +3021,6 @@ class RequestEditFormState extends State<RequestEditForm> {
             : null;
         widget.requestModel.numberOfApprovals = tempNoOfVolunteers;
         widget.requestModel.maxCredits = tempCredits;
-
-        // update new speaker details
-        widget.requestModel.selectedInstructor = BasicUserDetails(
-          fullname: selectedInstructorModelTemp?.fullname,
-          email: selectedInstructorModelTemp?.email,
-          photoURL: selectedInstructorModelTemp?.photoURL,
-          sevaUserID: selectedInstructorModelTemp?.sevaUserID,
-        );
 
         linearProgressForCreatingRequest();
         await updateRequest(requestModel: widget.requestModel);
