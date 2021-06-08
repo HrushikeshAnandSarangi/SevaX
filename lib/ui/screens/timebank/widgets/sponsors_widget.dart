@@ -168,6 +168,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget defaultWidget() {
+    log('len${widget.timebankModel.sponsors.length}');
     return Offstage(
       offstage: widget.timebankModel.sponsors == null ||
           widget.timebankModel.sponsors.length < 1,
