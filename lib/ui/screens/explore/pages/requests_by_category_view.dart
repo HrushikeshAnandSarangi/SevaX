@@ -33,7 +33,8 @@ class RequestsByCategoryView extends StatefulWidget {
 
   const RequestsByCategoryView({
     Key key,
-    @required this.model, @required this.isUserSignedIn,
+    @required this.model,
+    @required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _RequestsByCategoryViewState createState() => _RequestsByCategoryViewState();
