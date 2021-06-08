@@ -287,7 +287,7 @@ class NewsCardViewState extends State<NewsCardView> {
                                           .fullname !=
                                       null
                                   ? SevaCore.of(context).loggedInUser.fullname
-                                  : L.of(context).anonymous_user,
+                                  : S.of(context).anonymous_user,
                               createdEmail:
                                   SevaCore.of(context).loggedInUser.email,
                               createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -354,16 +354,16 @@ class NewsCardViewState extends State<NewsCardView> {
   Widget get newsTitle {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
-      child:
-          widget.newsModel.title == null || widget.newsModel.title == S.of(context).no_data
-              ? Offstage()
-              : Text(
-                  widget.newsModel.title.trim(),
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.bold),
-                ),
+      child: widget.newsModel.title == null ||
+              widget.newsModel.title == S.of(context).no_data
+          ? Offstage()
+          : Text(
+              widget.newsModel.title.trim(),
+              style: TextStyle(
+                  fontSize: 28.0,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.bold),
+            ),
     );
   }
 
@@ -1389,7 +1389,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                         padding: EdgeInsets.only(left: 2, top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(L.of(context).likes,
+                            child: Text(S.of(context).likes,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -2033,7 +2033,7 @@ class _RepliesViewState extends State<RepliesView> {
                                             .fullname !=
                                         null
                                     ? SevaCore.of(context).loggedInUser.fullname
-                                    :L.of(context).anonymous_user,
+                                    : S.of(context).anonymous_user,
                                 createdEmail:
                                     SevaCore.of(context).loggedInUser.email,
                                 createdAt:

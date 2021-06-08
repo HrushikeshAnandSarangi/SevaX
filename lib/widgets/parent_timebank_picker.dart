@@ -313,7 +313,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Text(communityModel.name == selectedTimebank
-                    ?L.of(context).current
+                    ? S.of(context).current
                     : S.of(context).choose),
               ),
             ],

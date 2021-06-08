@@ -436,7 +436,7 @@ class OfferDetails extends StatelessWidget {
                                   text: isCreator
                                       ? S.of(context).you_created_offer
                                       : isAccepted
-                                          ? L.of(context).accepted_offer_msg
+                                          ? S.of(context).accepted_offer_msg
                                           : S
                                               .of(context)
                                               .would_like_to_accept_offer,
@@ -746,7 +746,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: L.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -775,7 +775,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: L.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -802,7 +802,7 @@ class OfferDetails extends StatelessWidget {
                         comingFrom: ComingFrom.Offers,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: L.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

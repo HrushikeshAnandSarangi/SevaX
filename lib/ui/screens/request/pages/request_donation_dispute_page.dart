@@ -207,8 +207,8 @@ class _RequestDonationDisputePageState
                         widget.model.minimumAmount) {
                   _key.currentState.showSnackBar(
                     SnackBar(
-                        content: Text(
-                            L.of(context).amount_lessthan_donation_amount)),
+                        content:
+                            Text(S.of(context).amount_lessthan_donation_amount)),
                   );
                 } else {
                   _key.currentState.showSnackBar(
@@ -336,7 +336,7 @@ class _RequestDonationDisputePageState
                       model: widget.model,
                       scaffoldKey: _key,
                       to: widget.model.cashDetails.pledgedAmount != null
-                          ? widget.model.requestIdType ==S.of(context).offer
+                          ? widget.model.requestIdType == S.of(context).offer
                               ? toWhom
                               : widget.model.donationAssociatedTimebankDetails
                                   .timebankTitle
@@ -457,7 +457,7 @@ class _RequestDonationDisputePageState
                             communityId: loggedInUser.currentCommunity,
                             entityId: widget.model.id,
                             showToCommunities: widget.model.requestIdType ==
-                                   S.of(context).offer
+                                    S.of(context).offer
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -466,12 +466,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == S.of(context).offer
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
 
@@ -494,12 +494,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == S.of(context).offer
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                             communityId: loggedInUser.currentCommunity,
                             sender: ParticipantInfo(
                               id: loggedInUser.sevaUserID,
@@ -554,7 +554,7 @@ class _RequestDonationDisputePageState
                             timeBankId: widget.model.timebankId,
                             entityId: widget.model.id,
                             showToCommunities: widget.model.requestIdType ==
-                                   S.of(context).offer
+                                    S.of(context).offer
                                 ? [
                                     widget.model.donorDetails.communityId,
                                     widget.model.receiverDetails.communityId,
@@ -563,12 +563,12 @@ class _RequestDonationDisputePageState
                                     widget.model.donorDetails.communityId,
                                     timebankModel.communityId
                                   ],
-                            interCommunity:
-                                widget.model.requestIdType == S.of(context).offer
-                                    ? widget.model.donorDetails.communityId !=
-                                        widget.model.receiverDetails.communityId
-                                    : widget.model.donorDetails.communityId !=
-                                        timebankModel.communityId,
+                            interCommunity: widget.model.requestIdType ==
+                                    S.of(context).offer
+                                ? widget.model.donorDetails.communityId !=
+                                    widget.model.receiverDetails.communityId
+                                : widget.model.donorDetails.communityId !=
+                                    timebankModel.communityId,
                           );
                           break;
                       }
@@ -808,7 +808,7 @@ class _CashFlow extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        model.requestIdType == S.of(context).offer   &&
+        model.requestIdType == S.of(context).offer &&
                 model.donationStatus == DonationStatus.REQUESTED
             ? offerDonatePaymentDetails()
             : Text(''),

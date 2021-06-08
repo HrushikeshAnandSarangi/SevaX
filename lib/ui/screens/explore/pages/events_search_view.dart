@@ -80,8 +80,7 @@ class EventsSearchView extends StatelessWidget {
                                 } else {
                                   showSignInAlertMessage(
                                     context: context,
-                                    message:
-                                        S.of(context).sign_in_alert,
+                                    message: S.of(context).sign_in_alert,
                                   );
                                 }
                               },
@@ -105,8 +104,7 @@ class EventsSearchView extends StatelessWidget {
                         onTap: () {
                           showSignInAlertMessage(
                               context: context,
-                              message:
-                                   S.of(context).sign_in_alert);
+                              message: S.of(context).sign_in_alert);
                         },
                         photoUrl: event.photoUrl ?? defaultProjectImageURL,
                         title: event.name,
@@ -129,7 +127,7 @@ class EventsSearchView extends StatelessWidget {
         ),
         SizedBox(height: 22),
         Text(
-          L.of(context).browse_by_category,
+          S.of(context).browse_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         CommunitiesCategory(

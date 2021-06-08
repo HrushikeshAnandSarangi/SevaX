@@ -112,7 +112,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ],
       ),
       body: getList(
-        timebankId: FlavorConfig.values.timebankName == L.of(context).yang_2020
+        timebankId: FlavorConfig.values.timebankName == "Yang 2020"
             ? FlavorConfig.values.timebankId
             : widget.timebankId,
       ),
@@ -189,7 +189,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   bool checkAlreadyExistingMembersContains(String sevaId) {
-    if (FlavorConfig.values.timebankName !=L.of(context).yang_2020) {
+    if (FlavorConfig.values.timebankName != "Yang 2020") {
       for (var i = 0; i < widget.listOfAlreadyExistingMembers.length; i++) {
         if (sevaId.trim() == widget.listOfAlreadyExistingMembers[i].trim()) {
           return false;

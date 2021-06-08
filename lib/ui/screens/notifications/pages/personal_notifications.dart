@@ -104,7 +104,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               alignment: Alignment.centerRight,
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: Text(L.of(context).clear_all),
+                child: Text(S.of(context).clear_all),
                 textColor: Colors.blue,
                 onPressed: () async {
                   if (await CustomDialogs.generalConfirmationDialogWithMessage(
@@ -530,7 +530,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onPressed: null,
                         photoUrl:
                             creatorDetails.photoUrl ?? defaultUserImageURL,
-                        title: L.of(context).message_room_join,
+                        title: S.of(context).message_room_join,
                         subTitle:
                             '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.',
                       );
@@ -553,7 +553,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         onPressed: null,
                         photoUrl: creatorDetails.photoUrl,
-                        title: L.of(context).message_room_remove,
+                        title: S.of(context).message_room_remove,
                         subTitle:
                             '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
                       );
@@ -873,7 +873,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: L.of(context).credits_credited,
+                        title: S.of(context).credits_credited,
                         subTitle: notification.data['credits'].toString() +
                             S.of(context).notifications_credited_msg,
                         onDismissed: onDismissed,
@@ -942,7 +942,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             context: context,
                             builder: (_context) => AlertDialog(
                               title: Text(
-                                  L.of(context).item_received_alert_dialouge),
+                                  S.of(context).item_received_alert_dialouge),
                               actions: [
                                 FlatButton(
                                   onPressed: () {
@@ -985,7 +985,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
-                        subTitle: L.of(context).request_ended,
+                        subTitle: S.of(context).request_ended,
                       );
                       break;
 
@@ -1006,7 +1006,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
-                        subTitle: L.of(context).request_ended_emailsent_msg,
+                        subTitle: S.of(context).request_ended_emailsent_msg,
                       );
                       break;
 
@@ -1027,7 +1027,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
-                        subTitle: L
+                        subTitle: S
                             .of(context)
                             .lender_acknowledged_request_completion,
                       );

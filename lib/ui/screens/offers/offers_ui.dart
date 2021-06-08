@@ -232,7 +232,7 @@
 //                                                   ),
 //                                                   onPressed: () {
 //                                                     switch (widget
-//                                                         .offerModel.offerType) {
+//                                                         .offerModeferType) {
 //                                                       case OfferType
 //                                                           .INDIVIDUAL_OFFER:
 //                                                         Navigator.of(context)
@@ -523,7 +523,7 @@
 //                       // );
 //                       // tempOutput
 //                       //     .add(SevaCore.of(context).loggedInUser.sevaUserID);
-//                       // widget.offerModel.offerType == OfferType.GROUP_OFFER
+//                       // widget.offerModeferType == OfferType.GROUP_OFFER
 //                       //     ? widget
 //                       //         .offerModel.groupOfferDataModel.signedUpMembers
 //                       //     : widget.offerModel.individualOfferDataModel

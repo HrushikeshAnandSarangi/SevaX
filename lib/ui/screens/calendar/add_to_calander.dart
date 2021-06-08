@@ -43,7 +43,6 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
-
   Future<void> googleCalanderIntegration() async {
     logger.i("inside google callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
@@ -75,8 +74,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -99,7 +97,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
       "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
-    "offerCreationOrListing": true
+      "offerCreationOrListing": true
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     String redirectUrl =
@@ -120,8 +118,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -133,7 +130,6 @@ class AddToCalendarState extends State<AddToCalendar> {
     }
 
     Navigator.of(context).pop();
-
   }
 
   Future<void> iCalIntegration() async {
@@ -167,8 +163,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "creatorAllowedCalender": true,
         "allowedCalenderUsers": [widget.offer.email]
@@ -182,11 +177,10 @@ class AddToCalendarState extends State<AddToCalendar> {
     Navigator.of(context).pop();
   }
 
-  void initState(){
+  void initState() {
     super.initState();
     logger.i("inside the page integrating cals");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +188,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-         L.of(context).add_event_to_calender,
+          S.of(context).add_event_to_calender,
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -209,11 +203,11 @@ class AddToCalendarState extends State<AddToCalendar> {
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text(L.of(context).add_to_calender),
+            child: Text(S.of(context).add_to_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text(L.of(context).do_you_want_addto_calender),
+            child: Text(S.of(context).do_you_want_addto_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 50),
@@ -227,7 +221,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/googlecal.png"),
                     ),
                     onPressed: googleCalanderIntegration,
-                    title: L.of(context).add_to_google_calender,
+                    title: S.of(context).add_to_google_calender,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -236,7 +230,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/outlookcal.png"),
                     ),
                     onPressed: outlookCalanderIntegration,
-                    title: L.of(context).add_to_outlook,
+                    title: S.of(context).add_to_outlook,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -245,7 +239,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/ical.png"),
                     ),
                     onPressed: iCalIntegration,
-                    title:L.of(context).add_to_ical,
+                    title: S.of(context).add_to_ical,
                   ),
                   Container(
                     alignment: Alignment.bottomRight,
@@ -278,14 +272,14 @@ class AddToCalendarState extends State<AddToCalendar> {
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-      transaction_matrix_type: L.of(context).calender_sync,
+      transaction_matrix_type: S.of(context).calender_sync,
       child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Row(
           children: [
             icon,
             FlatButton(
-              onPressed: ()=>onPressed(),
+              onPressed: () => onPressed(),
               child: Text(
                 title,
                 style: TextStyle(

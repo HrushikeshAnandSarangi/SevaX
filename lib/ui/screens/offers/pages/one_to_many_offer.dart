@@ -343,7 +343,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   builder: (context, snapshot) {
                                     return ConfigurationCheck(
                                       actionType:
-                                          L.of(context).create_virtual_offer,
+                                          S.of(context).create_virtual_offer,
                                       role: memberType(
                                           widget.timebankModel,
                                           SevaCore.of(context)
@@ -411,8 +411,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             comingFrom: ComingFrom.Offers,
                             upgradeDetails: AppConfig
                                 .upgradePlanBannerModel.onetomany_offers,
-                            transaction_matrix_type:
-                                L.of(context).onetomany_offers,
+                            transaction_matrix_type: "onetomany_offers",
                             child: RaisedButton(
                               onPressed: status.data == Status.LOADING
                                   ? () {}

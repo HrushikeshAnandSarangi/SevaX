@@ -292,14 +292,14 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
               (documentSnapshot) {
                 CommunityModel model = CommunityModel(documentSnapshot.data);
                 model.id = documentSnapshot.documentID;
-                if(AppConfig.isTestCommunity){
-                  if(model.testCommunity){
+                if (AppConfig.isTestCommunity) {
+                  if (model.testCommunity) {
                     communityList.add(model);
-
                   }
-                }else {
-                  model.softDelete == true || model.private == true ||
-                      AppConfig.isTestCommunity
+                } else {
+                  model.softDelete == true ||
+                          model.private == true ||
+                          AppConfig.isTestCommunity
                       ? null
                       : communityList.add(model);
                 }
@@ -667,8 +667,7 @@ Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
     {@required String sevaUserId}) async* {
   var data = Firestore.instance
       .collection('offers')
-      .where('individualOfferDataModel.offerAcceptors',
-          arrayContains: sevaUserId)
+      .where('individualOfferDataModeferAcceptors', arrayContains: sevaUserId)
       .snapshots();
 
   yield* data.transform(

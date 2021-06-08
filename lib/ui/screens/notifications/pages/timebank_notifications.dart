@@ -695,7 +695,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     photoUrl: oneToManyModel['requestorphotourl'],
                     creatorName: oneToManyModel['selectedInstructor']
                         ['fullname'],
-                    title: L.of(context).completed_the_request,
+                    title: S.of(context).completed_the_request,
                     //subTitle:
                     //    '${oneToManyModel['fullname']} - ${oneToManyModel['title']}',
                   );
@@ -811,7 +811,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   entityName:
-                      requestData.entityTitle ?? L.of(context).deletion_request,
+                      requestData.entityTitle ?? S.of(context).deletion_request,
                   photoUrl: null,
                   title: requestData.requestAccepted
                       ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"

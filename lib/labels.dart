@@ -82,8 +82,8 @@ class L {
 
   String get browse_by_category => "Browse community by category";
 
-  String get explore_searchbar_hinttext =>
-      'Try "Osaka" "Postal Code" "Location"';
+  // String get explore_searchbar_hinttext =>
+  //     'Try "Osaka" "Postal Code" "Location"';
 
   String get find => "Find";
 

@@ -86,7 +86,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       ],
       child: ExplorePageViewHolder(
         scrollController: _scrollController,
-        appBarTitle:S.of(context).search,
+        appBarTitle: S.of(context).search,
         hideSearchBar: true,
         hideHeader: widget.isUserSignedIn,
         hideFooter: widget.isUserSignedIn,
@@ -112,7 +112,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 controller: _searchController,
                 onChanged: _bloc.onSearchChange,
                 decoration: InputDecoration(
-                  hintText: L.of(context).explore_searchbar_hinttext,
+                  hintText: S.of(context).explore_search_hint,
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -228,7 +228,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           items: <DropdownMenuItem<int>>[
             DropdownMenuItem(
               value: 0,
-              child: Text(L.of(context).any_category),
+              child: Text(S.of(context).any_category),
             ),
           ],
         ),
@@ -291,7 +291,7 @@ class ExploreCommunityCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    L.of(context).new_york,
+                    S.of(context).new_york,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                     ),
@@ -499,7 +499,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(L.of(context).any_category),
+                              child: Text(S.of(context).any_category),
                             ),
                             ...selectedCommunityCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(
@@ -549,7 +549,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(L.of(context).any_category),
+                              child: Text(S.of(context).any_category),
                             ),
                             ...selectedRequestCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(

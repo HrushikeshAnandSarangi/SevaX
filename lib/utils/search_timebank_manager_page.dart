@@ -276,8 +276,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      return getEmptyWidget(
-         L.of(context).users, S.of(context).validation_error_search_min_characters);
+      return getEmptyWidget(S.of(context).users,
+          S.of(context).validation_error_search_min_characters);
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -298,7 +298,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
           return getEmptyWidget(
-           L.of(context).users,
+            S.of(context).users,
             S.of(context).no_user_found,
           );
         }

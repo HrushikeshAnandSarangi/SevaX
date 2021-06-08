@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -120,7 +118,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
     requestModelList.forEach((request) =>
         request.requestEnd > DateTime.now().millisecondsSinceEpoch
             ? filteredList.add(request)
-            : L.of(context).filtering_past_requests_content);
+            : S.of(context).filtering_past_requests_content);
 
     return filteredList;
   }
@@ -139,7 +137,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? L.of(context).filtering_blocked_content
+        ? S.of(context).filtering_blocked_content
         : filteredList.add(request));
 
     return filteredList;

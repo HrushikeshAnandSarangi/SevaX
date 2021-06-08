@@ -41,26 +41,28 @@ class RequestStatusViewState extends State<RequestStatusView> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: Text(
-            L.of(context).approved_member,
+            S.of(context).approved_member,
             style: TextStyle(color: Colors.white),
           ),
           elevation: 0,
           actions: <Widget>[],
         ),
         floatingActionButton: FloatingActionButton.extended(
-            label: Text(L.of(context).send_csv_file),
+            label: Text(S.of(context).send_csv_file),
             foregroundColor: FlavorConfig.values.buttonTextColor,
             onPressed: () async {
-              await sendMail();
+              await sendMail(context);
               showDialog(
                 context: context,
                 builder: (BuildContext viewcontext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text(this.isSent == true ? L.of(context).success : L.of(context).failure ),
+                    title: Text(this.isSent == true
+                        ? S.of(context).success
+                        : S.of(context).failure),
                     content: Text(this.isSent == true
                         ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}."
-                        :S.of(context).general_stream_error),
+                        : S.of(context).general_stream_error),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
                       FlatButton(
@@ -169,9 +171,9 @@ class RequestStatusViewState extends State<RequestStatusView> {
 //        //print(response);
 //  }
 
-  Future sendMail() async {
+  Future sendMail(BuildContext context) async {
     final response1 = await http.get(
- '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
+        '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 
     if (response1.statusCode == 200) {
       this.isSent = true;

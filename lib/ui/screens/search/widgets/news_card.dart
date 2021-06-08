@@ -140,7 +140,7 @@ class NewsCard extends StatelessWidget {
                         Text(
                           userName != null
                               ? userName.trim()
-                              : L.of(context).user_name_not_availble,
+                              : S.of(context).user_name_not_availble,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 7,
                           style: TextStyle(fontSize: 16.0),
@@ -344,7 +344,7 @@ class NewsCard extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    documentName ?? L.of(context).document,
+                    documentName ?? S.of(context).document,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start,

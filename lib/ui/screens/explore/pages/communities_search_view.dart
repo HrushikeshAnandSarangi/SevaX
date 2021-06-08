@@ -14,7 +14,8 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 class CommunitiesSearchView extends StatelessWidget {
   final bool isUserSignedIn;
 
-  const CommunitiesSearchView({Key key, @required this.isUserSignedIn}) : super(key: key);
+  const CommunitiesSearchView({Key key, @required this.isUserSignedIn})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     var _bloc = Provider.of<ExploreSearchPageBloc>(context);
@@ -45,7 +46,7 @@ class CommunitiesSearchView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            L.of(context).featured_communities,
+                            S.of(context).featured_communities,
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -110,7 +111,7 @@ class CommunitiesSearchView extends StatelessWidget {
                     return ExploreCommunityCard(
                       model:
                           snapshot.data[index >= length ? length ~/ 2 : index],
-                          isSignedUser:isUserSignedIn,
+                      isSignedUser: isUserSignedIn,
                     );
                   }
                 },
@@ -120,7 +121,7 @@ class CommunitiesSearchView extends StatelessWidget {
         ),
         SizedBox(height: 22),
         Text(
-          L.of(context).browse_by_category,
+          S.of(context).browse_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         CommunitiesCategory(
