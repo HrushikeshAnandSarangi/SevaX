@@ -16,44 +16,160 @@ class L {
 //   // <------------ PENDING END ------------>
 
 // <-----------      new label 8th June  --------->
-String get onetomany_createoffer_note =>
-    "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
+  String get offering_amount => "Offering Amount";
+  String get offering_goods => "Offering Goods";
+
+  String get onetomany_createoffer_note =>
+      "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
 //
 //Below cound not find in mob - vishnu
 //
-String get no_interests_added =>
-    "No interests added"; //done in web  // ask  shubam or umesh
-String get no_skills_added =>
-    "No skills added"; //done in web  // ask  shubam or umesh
+  String get no_interests_added =>
+      "No interests added"; //done in web  // ask  shubam or umesh
+  String get no_skills_added =>
+      "No skills added"; //done in web  // ask  shubam or umesh
 
-String get bundlePricingInfoButton =>
-    'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
-String get sandbox_already_created_1 =>
-    "Only one sandbox community is currently allowed for each SevaX member."; //done in web // ask  umesh
-String get provide_skills =>
-    "Provide the list of Skills that you require for this request"; //done in web // not in edit request in mob
-String get speaker_claim_credits => 'Claim credits'; //done in mobile & web
-String get requested_for_completion =>
-    "Your completed request is pending approval."; //done in mobile & web
-String get join_community_alert => //already in json  //done in web
-    "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
-String get sign_in_alert =>
-    "You need to sign in or register to view this."; //done in web //already in json
-String get resetPasswordSuccess =>
-    'An email has been sent. Please follow the steps in the email to reset your password.'; //done in web //not matching
+  String get bundlePricingInfoButton =>
+      'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
+  String get sandbox_already_created_1 =>
+      "Only one sandbox community is currently allowed for each SevaX member."; //done in web // ask  umesh
+  String get provide_skills =>
+      "Provide the list of Skills that you require for this request"; //done in web // not in edit request in mob
+  String get speaker_claim_credits => 'Claim credits'; //done in mobile & web
+  String get requested_for_completion =>
+      "Your completed request is pending approval."; //done in mobile & web
+  String get join_community_alert => //already in json  //done in web
+      "This action is only available to members of Community **CommunityName. Please request to join the community first before you can perform this action.";
+  String get sign_in_alert =>
+      "You need to sign in or register to view this."; //done in web //already in json
+  String get resetPasswordSuccess =>
+      'An email has been sent. Please follow the steps in the email to reset your password.'; //done in web //not matching
 
-String get onetomanyrequest_title_hint =>
-    "Ex: Implicit Bias webinar."; //done in web  //labels are not migrated  ,other hints not in arbify //not in edit request
+  String get onetomanyrequest_title_hint =>
+      "Ex: Implicit Bias webinar."; //done in web  //labels are not migrated  ,other hints not in arbify //not in edit request
 
-String get sandbox_community => "Sandbox Community"; //done in web // ask umesh
+  String get sandbox_community =>
+      "Sandbox Community"; //done in web // ask umesh
 
-String get you_are_on_enterprise_plan =>
-    "You are on Enterprise Plan"; //done in web // ask umesh
-String get sandbox_dialog_title =>
-    "Sandbox seva community"; //done in web // ask umesh
-String get sandbox_create_community_alert =>
-    "Are you sure you want to create a sandbox community?"; //done in web // ask umesh
+  String get you_are_on_enterprise_plan =>
+      "You are on Enterprise Plan"; //done in web // ask umesh
+  String get sandbox_dialog_title =>
+      "Sandbox seva community"; //done in web // ask umesh
+  String get sandbox_create_community_alert =>
+      "Are you sure you want to create a sandbox community?"; //done in web // ask umesh
+
+  //new labels to be updated
+
+  String get add_event_to_calender => "Add event to calender";
+
+  String get add_to_calender => "Add to calender";
+
+  String get do_you_want_addto_calender =>
+      "Do you want to add this event to your calendar?";
+
+  String get add_to_google_calender => "Add to Google Calendar";
+
+  String get add_to_outlook => "Add to Outlook";
+
+  String get add_to_ical => "Add to ical ";
+
+  String get calender_sync => "calendar_sync";
+
+  String get something_went_wrong => "something went wrong";
+
+  String get featured_communities => "Featured communities";
+
+  String get browse_by_category => "Browse community by category";
+
+  String get explore_searchbar_hinttext =>
+      'Try "Osaka" "Postal Code" "Location"';
+
+  String get find => "Find";
+
+  String get any_category => "any category";
+  String get new_york => "New york | USA";
+
+  String get join_webinar => "join webinar";
+
+  String get pledge_goods_supplies => " has pledge to donate good/supplies";
+  String get credits_debited => "seva credits debited";
+  String get credits_credited => "Seva credits Credited";
+
+  String get credits_debited_msg =>
+      "Seva Credits have been debited from your account";
+
+  String get accepted_offer_msg => "You have accepted this offer.";
+
+  String get completed_the_request => " Completed the request";
+
+  String get deletion_request => "Deletion Request";
+
+  String get create_virtual_offer => "create virtual offer";
+  String get create_public_offer => "create public offer";
+  String get onetomany_offers => "onetomany offers";
+
+  String get amount_lessthan_donation_amount =>
+      "Entered amount is less than minimum donation amount.";
+
+  String get user_name_not_availble => "User name not available";
+
+  String get document => "Document";
+
+  String get users => "Users";
+
+  String get cash_request_title_hint => "Ex: Fundraiser for women’s shelter...";
+
+  String get error_loading_data => 'Error Loading Data';
+  String get likes => "likes";
+
+  String get anonymous_user => "Anonymous user";
+
+  String get filtering_blocked_content => "Filtering blocked content";
+
+  String get filtering_past_requests_content =>
+      "Filtering past requests content";
+
+  String get approved_member => "Approved Members";
+
+  String get send_csv_file => "Send CSV File";
+  String get success => "success";
+  String get failure => "Failure";
+
+  String get yang_2020 => "Yang 2020";
+
+  String get current => "current";
+
+  String get card_holder => "Card Holder";
+
+  String get hours_not_updated => "hours not updated";
+
+  String get request_approved => "Request Approved";
+
+  String get request_has_been_assigned_to_a_member =>
+      "Request has been assigned to a member";
+
+  String get borrow_request_for_place => "Borrow request for place";
+
+  String get borrow_request_for_item => "Borrow Request for item";
+
+  String get clear_all => "Clear All";
+
+  String get message_room_join => "Message room join";
+
+  String get message_room_remove => "Message room remove";
+
+  String get item_received_alert_dialouge =>
+      "'If you have you received your item/place back click the button below to complete this.'";
+
+  String get request_ended =>
+      "This request has now ended. Tap to complete the request";
+
+  String get request_ended_emailsent_msg =>
+      "The request has completed and an email has been sent to you. Tap to leave a feedback.";
+
+  String get lender_acknowledged_request_completion =>
+      "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
 
 //<------------------below labels are done------------->
 

@@ -27,6 +27,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+import 'package:sevaexchange/labels.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -128,9 +129,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
           child: StreamBuilder<Status>(
             stream: _bloc.status,
             builder: (_, status) {
-              if (status.data == Status.COMPLETE &&
-                  closePage 
-                  ) {
+              if (status.data == Status.COMPLETE && closePage) {
                 closePage = false;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (Navigator.of(mcontext).canPop())
@@ -343,7 +342,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   stream: _bloc.makeVirtualValue,
                                   builder: (context, snapshot) {
                                     return ConfigurationCheck(
-                                      actionType: 'create_virtual_offer',
+                                      actionType:
+                                          L.of(context).create_virtual_offer,
                                       role: memberType(
                                           widget.timebankModel,
                                           SevaCore.of(context)
@@ -377,8 +377,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                             stream: _bloc.makePublicValue,
                                             builder: (context, snapshot) {
                                               return ConfigurationCheck(
-                                                actionType:
-                                                    'create_public_offer',
+                                                actionType: L
+                                                    .of(context)
+                                                    .create_public_offer,
                                                 role: memberType(
                                                     widget.timebankModel,
                                                     SevaCore.of(context)
@@ -410,7 +411,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             comingFrom: ComingFrom.Offers,
                             upgradeDetails: AppConfig
                                 .upgradePlanBannerModel.onetomany_offers,
-                            transaction_matrix_type: "onetomany_offers",
+                            transaction_matrix_type:
+                                L.of(context).onetomany_offers,
                             child: RaisedButton(
                               onPressed: status.data == Status.LOADING
                                   ? () {}
@@ -467,12 +469,15 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                   return WillPopScope(
                                                       onWillPop: () {},
                                                       child: AlertDialog(
-                                                          title: Text(
-                                                              "This is a repeating event"),
+                                                          title: Text(S
+                                                              .of(context)
+                                                              .this_is_repeating_event),
                                                           actions: [
                                                             FlatButton(
                                                               child: Text(
-                                                                "Edit this event only",
+                                                                S
+                                                                    .of(context)
+                                                                    .edit_this_event,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         14,
@@ -500,7 +505,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                             ),
                                                             FlatButton(
                                                               child: Text(
-                                                                "Edit subsequent events",
+                                                                S
+                                                                    .of(context)
+                                                                    .edit_subsequent_event,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         14,
@@ -529,7 +536,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                             ),
                                                             FlatButton(
                                                               child: Text(
-                                                                "Cancel",
+                                                                S
+                                                                    .of(context)
+                                                                    .cancel,
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         14,
@@ -611,12 +620,15 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     if (_bloc.isRecurring) {
       _bloc.recurringDays = RepeatWidgetState.getRecurringdays();
       _bloc.occurenceCount = 1;
-      end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+      end.endType = RepeatWidgetState.endType == 0
+          ? S.of(context).on
+          : S.of(context).after;
       end.on = end.endType == "on"
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
           : null;
-      end.after =
-          (end.endType == "after" ? int.parse(RepeatWidgetState.after) : null);
+      end.after = (end.endType == S.of(context).after
+          ? int.parse(RepeatWidgetState.after)
+          : null);
       _bloc.end = end;
     }
 
@@ -667,11 +679,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     if (_bloc.isRecurring || _bloc.autoGenerated) {
       _bloc.recurringDays = EditRepeatWidgetState.getRecurringdays();
       _bloc.occurenceCount = widget.offerModel.occurenceCount;
-      end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
-      end.on = end.endType == "on"
+      end.endType = EditRepeatWidgetState.endType == 0
+          ? S.of(context).on
+          : S.of(context).after;
+      end.on = end.endType == S.of(context).on
           ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
           : null;
-      end.after = (end.endType == "after"
+      end.after = (end.endType == S.of(context).after
           ? int.parse(EditRepeatWidgetState.after)
           : null);
       _bloc.end = end;

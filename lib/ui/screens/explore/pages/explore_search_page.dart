@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -85,7 +86,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
       ],
       child: ExplorePageViewHolder(
         scrollController: _scrollController,
-        appBarTitle: 'Search',
+        appBarTitle:S.of(context).search,
         hideSearchBar: true,
         hideHeader: widget.isUserSignedIn,
         hideFooter: widget.isUserSignedIn,
@@ -111,7 +112,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                 controller: _searchController,
                 onChanged: _bloc.onSearchChange,
                 decoration: InputDecoration(
-                  hintText: 'Try "Oska" "Postal Code"',
+                  hintText: L.of(context).explore_searchbar_hinttext,
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 12),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -227,7 +228,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           items: <DropdownMenuItem<int>>[
             DropdownMenuItem(
               value: 0,
-              child: Text('Any Category'),
+              child: Text(L.of(context).any_category),
             ),
           ],
         ),
@@ -290,7 +291,7 @@ class ExploreCommunityCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    ' New York | USA',
+                    L.of(context).new_york,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                     ),
@@ -498,7 +499,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text('Any Category'),
+                              child: Text(L.of(context).any_category),
                             ),
                             ...selectedCommunityCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(
@@ -548,7 +549,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text('Any Category'),
+                              child: Text(L.of(context).any_category),
                             ),
                             ...selectedRequestCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
@@ -67,7 +68,7 @@ void _parentSelectionBottomsheet(
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  'Select Parent Seva Communities',
+                  S.of(context).select_parent_timebank,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -312,7 +313,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
               Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: Text(communityModel.name == selectedTimebank
-                    ? "Current"
+                    ?L.of(context).current
                     : S.of(context).choose),
               ),
             ],

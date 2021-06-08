@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -36,7 +37,7 @@ class EventsSearchView extends StatelessWidget {
               return LoadingIndicator();
             }
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Text('No result found');
+              return Text(S.of(context).no_search_result_found);
             }
 
             return ListView.builder(
@@ -128,7 +129,7 @@ class EventsSearchView extends StatelessWidget {
         ),
         SizedBox(height: 22),
         Text(
-          'Browse community by category',
+          L.of(context).browse_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         CommunitiesCategory(

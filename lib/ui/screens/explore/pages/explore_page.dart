@@ -151,7 +151,7 @@ class _ExplorePageState extends State<ExplorePage> {
                       children: [
                         SearchBar(
                           controller: _searchController,
-                          hintText: 'Try "Osaka" "Postal Code" "Location"',
+                          hintText: L.of(context).explore_searchbar_hinttext,
                           onChanged: null,
                         ),
                         Align(
@@ -197,7 +197,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Find',
+                      L.of(context).find,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -562,7 +562,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Featured Communities',
+                      L.of(context).featured_communities,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -759,7 +759,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Seva Communities near you.',
+                              Text(S.of(context).timebanks_near_you,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
@@ -850,7 +850,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Browse requests by category',
+                      L.of(context).browse_by_category,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,

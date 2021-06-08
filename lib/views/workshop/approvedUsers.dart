@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:js';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -39,14 +41,14 @@ class RequestStatusViewState extends State<RequestStatusView> {
         appBar: AppBar(
           automaticallyImplyLeading: true,
           title: Text(
-            'Approved Members',
+            L.of(context).approved_member,
             style: TextStyle(color: Colors.white),
           ),
           elevation: 0,
           actions: <Widget>[],
         ),
         floatingActionButton: FloatingActionButton.extended(
-            label: Text('Send CSV File'),
+            label: Text(L.of(context).send_csv_file),
             foregroundColor: FlavorConfig.values.buttonTextColor,
             onPressed: () async {
               await sendMail();
@@ -55,10 +57,10 @@ class RequestStatusViewState extends State<RequestStatusView> {
                 builder: (BuildContext viewcontext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: Text(this.isSent == true ? "Success" : "Failure"),
+                    title: Text(this.isSent == true ? L.of(context).success : L.of(context).failure ),
                     content: Text(this.isSent == true
                         ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}."
-                        : "Something went wrong please try again later"),
+                        :S.of(context).general_stream_error),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
                       FlatButton(
@@ -169,7 +171,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
 
   Future sendMail() async {
     final response1 = await http.get(
-        '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
+ '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 
     if (response1.statusCode == 200) {
       this.isSent = true;
