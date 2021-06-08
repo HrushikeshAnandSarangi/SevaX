@@ -6591,34 +6591,314 @@ class S {
         'Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account.',
         name: 'sandbox_dialog_subtitle',
       );
+
+  String get info => Intl.message(
+        'Info',
+        name: 'info',
+      );
+
+  String get Login => Intl.message(
+        'Login',
+        name: 'Login',
+      );
+
+  String get Register => Intl.message(
+        'Register',
+        name: 'Register',
+      );
+
+  String get explore_search_hint => Intl.message(
+        'Ex: ZIP/ Postal Code or city, state, country',
+        name: 'explore_search_hint',
+      );
+
+  String get onetomany_createoffer_note => Intl.message(
+        'Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.',
+        name: 'onetomany_createoffer_note',
+      );
+
+  String get add_event_to_calender => Intl.message(
+        'Add event to calender',
+        name: 'add_event_to_calender',
+      );
+
+  String get add_to_calender => Intl.message(
+        'Add to calender',
+        name: 'add_to_calender',
+      );
+
+  String get do_you_want_addto_calender => Intl.message(
+        'Do you want to add this event to your calendar?',
+        name: 'do_you_want_addto_calender',
+      );
+
+  String get add_to_google_calender => Intl.message(
+        'Add to Google Calendar',
+        name: 'add_to_google_calender',
+      );
+
+  String get add_to_outlook => Intl.message(
+        'Add to Outlook',
+        name: 'add_to_outlook',
+      );
+
+  String get add_to_ical => Intl.message(
+        'Add to ical',
+        name: 'add_to_ical',
+      );
+
+  String get calender_sync => Intl.message(
+        'calendar_sync',
+        name: 'calender_sync',
+      );
+
+  String get something_went_wrong => Intl.message(
+        'something went wrong',
+        name: 'something_went_wrong',
+      );
+
+  String get featured_communities => Intl.message(
+        'Featured communities',
+        name: 'featured_communities',
+      );
+
+  String get browse_by_category => Intl.message(
+        'Browse community by category',
+        name: 'browse_by_category',
+      );
+
+  String get find => Intl.message(
+        'Find',
+        name: 'find',
+      );
+
+  String get any_category => Intl.message(
+        'any category',
+        name: 'any_category',
+      );
+
+  String get new_york => Intl.message(
+        'New york | USA',
+        name: 'new_york',
+      );
+
+  String get join_webinar => Intl.message(
+        'join webinar',
+        name: 'join_webinar',
+      );
+
+  String get pledge_goods_supplies => Intl.message(
+        ' has pledge to donate good/supplies',
+        name: 'pledge_goods_supplies',
+      );
+
+  String get credits_debited => Intl.message(
+        'seva credits debited',
+        name: 'credits_debited',
+      );
+
+  String get credits_credited => Intl.message(
+        'Seva credits Credited',
+        name: 'credits_credited',
+      );
+
+  String get credits_debited_msg => Intl.message(
+        'Seva Credits have been debited from your account',
+        name: 'credits_debited_msg',
+      );
+
+  String get accepted_offer_msg => Intl.message(
+        'You have accepted this offer.',
+        name: 'accepted_offer_msg',
+      );
+
+  String get completed_the_request => Intl.message(
+        ' Completed the request',
+        name: 'completed_the_request',
+      );
+
+  String get deletion_request => Intl.message(
+        'Deletion Request',
+        name: 'deletion_request',
+      );
+
+  String get create_virtual_offer => Intl.message(
+        'create virtual offer',
+        name: 'create_virtual_offer',
+      );
+
+  String get create_public_offer => Intl.message(
+        'create public offer',
+        name: 'create_public_offer',
+      );
+
+  String get amount_lessthan_donation_amount => Intl.message(
+        'Entered amount is less than minimum donation amount.',
+        name: 'amount_lessthan_donation_amount',
+      );
+
+  String get user_name_not_availble => Intl.message(
+        'User name not available',
+        name: 'user_name_not_availble',
+      );
+
+  String get document => Intl.message(
+        'Document',
+        name: 'document',
+      );
+
+  String get users => Intl.message(
+        'Users',
+        name: 'users',
+      );
+
+  String get cash_request_title_hint => Intl.message(
+        'Ex: Fundraiser for women’s shelter...',
+        name: 'cash_request_title_hint',
+      );
+
+  String get error_loading_data => Intl.message(
+        'Error Loading Data',
+        name: 'error_loading_data',
+      );
+
+  String get likes => Intl.message(
+        'likes',
+        name: 'likes',
+      );
+
+  String get anonymous_user => Intl.message(
+        'Anonymous user',
+        name: 'anonymous_user',
+      );
+
+  String get filtering_blocked_content => Intl.message(
+        'Filtering blocked content',
+        name: 'filtering_blocked_content',
+      );
+
+  String get filtering_past_requests_content => Intl.message(
+        'Filtering past requests content',
+        name: 'filtering_past_requests_content',
+      );
+
+  String get approved_member => Intl.message(
+        'Approved Members',
+        name: 'approved_member',
+      );
+
+  String get send_csv_file => Intl.message(
+        'Send CSV File',
+        name: 'send_csv_file',
+      );
+
+  String get success => Intl.message(
+        'success',
+        name: 'success',
+      );
+
+  String get failure => Intl.message(
+        'Failure',
+        name: 'failure',
+      );
+
+  String get current => Intl.message(
+        'current',
+        name: 'current',
+      );
+
+  String get hours_not_updated => Intl.message(
+        'hours not updated',
+        name: 'hours_not_updated',
+      );
+
+  String get request_approved => Intl.message(
+        'Request Approved',
+        name: 'request_approved',
+      );
+
+  String get request_has_been_assigned_to_a_member => Intl.message(
+        'Request has been assigned to a member',
+        name: 'request_has_been_assigned_to_a_member',
+      );
+
+  String get borrow_request_for_item => Intl.message(
+        'Borrow Request for item',
+        name: 'borrow_request_for_item',
+      );
+
+  String get clear_all => Intl.message(
+        'Clear All',
+        name: 'clear_all',
+      );
+
+  String get message_room_join => Intl.message(
+        'Message room join',
+        name: 'message_room_join',
+      );
+
+  String get message_room_remove => Intl.message(
+        'Message room remove',
+        name: 'message_room_remove',
+      );
+
+  String get item_received_alert_dialouge => Intl.message(
+        'If you have you received your item/place back click the button below to complete this.',
+        name: 'item_received_alert_dialouge',
+      );
+
+  String get request_ended => Intl.message(
+        'This request has now ended. Tap to complete the request',
+        name: 'request_ended',
+      );
+
+  String get request_ended_emailsent_msg => Intl.message(
+        'The request has completed and an email has been sent to you. Tap to leave a feedback.',
+        name: 'request_ended_emailsent_msg',
+      );
+
+  String get lender_acknowledged_request_completion => Intl.message(
+        'The Lender has acknowledged completion of this request. Tap to leave a feedback.',
+        name: 'lender_acknowledged_request_completion',
+      );
+
+  String get borrow_request_for_place => Intl.message(
+        'Borrow request for place',
+        name: 'borrow_request_for_place',
+      );
+
+  String get card_holder => Intl.message(
+        'Card Holder',
+        name: 'card_holder',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
-        Locale.fromSubtags(languageCode: 'af'),
-        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
-        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'sw'),
+        Locale.fromSubtags(languageCode: 'en'),
+        Locale.fromSubtags(languageCode: 'fr'),
   ];
 
   @override
   bool isSupported(Locale locale) => [
-        'af',
-        'en',
         'es',
-        'fr',
         'pt',
         'sn',
+        'zh',
+        'zh',
+        'af',
         'sw',
-        'zh',
-        'zh',
+        'en',
+        'fr',
       ].contains(locale.languageCode);
 
   @override
