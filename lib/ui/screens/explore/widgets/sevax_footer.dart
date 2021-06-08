@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,78 +14,6 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-enum FooterData {
-  SevaX,
-  Discover,
-  Hosting,
-  About_Us,
-  Trust_Safety,
-  Host_community,
-  Careers,
-  Requests,
-  Create_offer,
-  Press,
-  Communities,
-  Organize_event,
-  Policies,
-  Offers,
-  Create_request,
-  Help,
-  Events,
-  Diversity_Belonging,
-  Guidebooks,
-  EMPTY
-}
-
-extension Label on FooterData {
-  String label({@required BuildContext context}) {
-    switch (this) {
-      case FooterData.About_Us:
-        return S.of(context).help_about_us;
-      case FooterData.Careers:
-        return 'Careers';
-      case FooterData.Communities:
-        return 'Communities';
-      case FooterData.Create_offer:
-        return S.of(context).create_offer;
-      case FooterData.Create_request:
-        return S.of(context).create_request;
-      case FooterData.Discover:
-        return 'Discover';
-      case FooterData.Diversity_Belonging:
-        return 'Diversity Belonging';
-      case FooterData.Events:
-        return S.of(context).projects;
-      case FooterData.Guidebooks:
-        return 'Guidebooks';
-      case FooterData.Help:
-        return S.of(context).help;
-      case FooterData.Hosting:
-        return 'Hosting';
-      case FooterData.Host_community:
-        return 'Host a community';
-      case FooterData.Organize_event:
-        return 'Organize an event';
-      case FooterData.Policies:
-        return 'Policies';
-      case FooterData.Press:
-        return 'Press';
-      case FooterData.Offers:
-        return S.of(context).offers;
-      case FooterData.Trust_Safety:
-        return 'Trust & Safety';
-      case FooterData.SevaX:
-        return 'SevaX';
-      case FooterData.Requests:
-        return S.of(context).requests;
-      case FooterData.EMPTY:
-        return '';
-      default:
-        return '';
-    }
-  }
-}
 
 class SevaExploreFooter extends StatelessWidget {
   final List<List<FooterData>> footerData = [
@@ -191,7 +120,8 @@ class SevaExploreFooter extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      data.label(context: context),
+                                      getFooterDataTitle(
+                                          data: data, context: context),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: footerData[0].contains(data)
@@ -204,12 +134,10 @@ class SevaExploreFooter extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                onTap: () {
-                                  openUrl(
-                                    context: context,
-                                    data: data,
-                                  );
-                                },
+                                onTap: openUrl(
+                                  context: context,
+                                  data: data,
+                                ),
                               ),
                             )
                             .toList(),
@@ -254,7 +182,14 @@ class SevaExploreFooter extends StatelessWidget {
                     width: 15,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigateToWebView(
+                      aboutMode: AboutMode(
+                          title: 'Facebook',
+                          urlToHit: 'https://www.facebook.com/sevaexchange/'),
+                      context: context,
+                    );
+                  },
                 ),
                 IconButton(
                   icon: Image.network(
@@ -262,7 +197,14 @@ class SevaExploreFooter extends StatelessWidget {
                     width: 15,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigateToWebView(
+                      aboutMode: AboutMode(
+                          title: 'Twitter',
+                          urlToHit: 'https://twitter.com/exchangeseva'),
+                      context: context,
+                    );
+                  },
                 ),
                 IconButton(
                   icon: Image.network(
@@ -270,7 +212,14 @@ class SevaExploreFooter extends StatelessWidget {
                     width: 15,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigateToWebView(
+                      aboutMode: AboutMode(
+                          title: 'Instagram',
+                          urlToHit: 'https://www.instagram.com/sevaexchange/'),
+                      context: context,
+                    );
+                  },
                 ),
               ],
             ),
@@ -306,15 +255,63 @@ class SevaExploreFooter extends StatelessWidget {
       var dynamicLinks;
       dynamicLinks = json.decode(
         AppConfig.remoteConfig.getString(
-          'links_${S.of(context).localeName}',
+          'links_${S.of(context).localeName ?? 'en'}',
         ),
       );
-
+      log(dynamicLinks[dynamicKey]);
       navigateToWebView(
         aboutMode: AboutMode(title: title, urlToHit: dynamicLinks[dynamicKey]),
         context: context,
       );
     };
+  }
+
+  String getFooterDataTitle(
+      {@required FooterData data, @required BuildContext context}) {
+    switch (data) {
+      case FooterData.About_Us:
+        return S.of(context).help_about_us;
+      case FooterData.Careers:
+        return 'Careers';
+      case FooterData.Communities:
+        return 'Communities';
+      case FooterData.Create_offer:
+        return S.of(context).create_offer;
+      case FooterData.Create_request:
+        return S.of(context).create_request;
+      case FooterData.Discover:
+        return 'Discover';
+      case FooterData.Diversity_Belonging:
+        return 'Diversity Belonging';
+      case FooterData.Events:
+        return S.of(context).projects;
+      case FooterData.Guidebooks:
+        return 'Guidebooks';
+      case FooterData.Help:
+        return S.of(context).help;
+      case FooterData.Hosting:
+        return 'Hosting';
+      case FooterData.Host_community:
+        return 'Host a community';
+      case FooterData.Organize_event:
+        return 'Organize an event';
+      case FooterData.Policies:
+        return 'Policies';
+      case FooterData.Press:
+        return 'News';
+      case FooterData.Offers:
+        return S.of(context).offers;
+      case FooterData.Trust_Safety:
+        return 'Trust & Safety';
+      case FooterData.SevaX:
+        return 'SevaX';
+      case FooterData.Requests:
+        return S.of(context).requests;
+      case FooterData.EMPTY:
+        return '';
+      default:
+        return '';
+    }
   }
 
   Function openUrl(
@@ -324,31 +321,34 @@ class SevaExploreFooter extends StatelessWidget {
         return getOnTap(context, S.of(context).help_about_us, 'aboutUsLink');
 
       case FooterData.Careers:
-        return getOnTap(context, 'Careers', 'aboutSeva');
+        return getOnTap(context, 'Careers', 'careersLink');
       case FooterData.Communities:
         return getOnTap(context, 'Communities', 'aboutSeva');
 
       case FooterData.Create_offer:
-        return getOnTap(context, S.of(context).create_offer, 'offersInfoLink');
+        return getOnTap(context, S.of(context).create_offer, 'trainingVideo');
 
       case FooterData.Create_request:
-        return getOnTap(
-            context, S.of(context).create_request, 'requestsInfoLink');
+        return getOnTap(context, S.of(context).create_request, 'trainingVideo');
 
       case FooterData.Discover:
-        return getOnTap(context, 'Discover', 'aboutSeva');
+        return getOnTap(context, 'Discover', 'trainingVideo');
 
       case FooterData.Diversity_Belonging:
-        return getOnTap(context, 'Diversity Belonging', 'aboutSeva');
+        return getOnTap(context, 'Diversity Belonging', 'diversityLink');
 
       case FooterData.Events:
         return getOnTap(context, S.of(context).projects, 'projectsInfoLink');
 
       case FooterData.Guidebooks:
-        return getOnTap(context, 'Guidebooks', 'aboutSeva');
+        return getOnTap(context, 'Guidebooks', 'trainingVideo');
 
       case FooterData.Help:
-        return getOnTap(context, S.of(context).help, 'trainingVideo');
+        return getOnTap(
+          context,
+          S.of(context).help,
+          AppConfig.remoteConfig.getString('help_videos_admin'),
+        );
 
       case FooterData.Hosting:
         return getOnTap(context, 'Hosting', 'aboutSeva');
@@ -363,13 +363,13 @@ class SevaExploreFooter extends StatelessWidget {
         return getOnTap(context, 'Policies', 'privacyPolicyLink');
 
       case FooterData.Press:
-        return getOnTap(context, 'Press', 'aboutSeva');
+        return getOnTap(context, 'News', 'pressLink');
 
       case FooterData.Offers:
         return getOnTap(context, S.of(context).offers, 'offersInfoLink');
 
       case FooterData.Trust_Safety:
-        return getOnTap(context, 'Trust & Safety', 'aboutSeva');
+        return getOnTap(context, 'Trust & Safety', 'trustAndSafetyLink');
 
       case FooterData.SevaX:
         return getOnTap(context, 'SevaX', 'aboutSeva');
@@ -384,4 +384,27 @@ class SevaExploreFooter extends StatelessWidget {
         return () {};
     }
   }
+}
+
+enum FooterData {
+  SevaX,
+  Discover,
+  Hosting,
+  About_Us,
+  Trust_Safety,
+  Host_community,
+  Careers,
+  Requests,
+  Create_offer,
+  Press,
+  Communities,
+  Organize_event,
+  Policies,
+  Offers,
+  Create_request,
+  Help,
+  Events,
+  Diversity_Belonging,
+  Guidebooks,
+  EMPTY
 }
