@@ -323,8 +323,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         timebankId: notification.timebankId,
                       );
                     },
-                    photoUrl: oneToManyRequestModel['selectedInstructor']
-                        ['photoURL'],
+                    photoUrl: model.selectedInstructor.photoURL,
                     title: S.of(context).speaker_rejected,
                     subTitle: model.selectedInstructor.fullname +
                         S.of(context).speakerRejectedNotificationLabel +

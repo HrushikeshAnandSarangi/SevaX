@@ -400,7 +400,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       ),
                                       onPressed: () async {
                                         Navigator.of(viewContext).pop();
-                                        await oneToManySpeakerInviteRejectedPersonalNotifications(
+                                        await oneToManySpeakerInviteRejected(
                                             model, context);
                                         await onDismissed();
                                       },
@@ -1529,7 +1529,7 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
 }
 
 Future oneToManySpeakerInviteRejectedPersonalNotifications(
-    oneToManyRequestModel, BuildContext context) async {
+    RequestModel oneToManyRequestModel, BuildContext context) async {
   showDialog(
       barrierDismissible: false,
       context: context,
@@ -1542,14 +1542,14 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       });
 
   NotificationsModel notificationModel = NotificationsModel(
-      timebankId: oneToManyRequestModel['timebankId'],
-      targetUserId: oneToManyRequestModel['sevaUserId'],
-      data: oneToManyRequestModel,
+      timebankId: oneToManyRequestModel.timebankId,
+      targetUserId: oneToManyRequestModel.sevaUserId,
+      data: oneToManyRequestModel.toMap(),
       type: NotificationType.OneToManyRequestInviteRejected,
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: oneToManyRequestModel['communityId'],
+      communityId: oneToManyRequestModel.communityId,
       isTimebankNotification: true);
 
   await Firestore.instance
@@ -1557,28 +1557,30 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       .document(notificationModel.timebankId)
       .collection('notifications')
       .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+      .setData(notificationModel.toMap())
+      .then((e) async {
+    Set<String> acceptorsList = Set.from(oneToManyRequestModel.acceptors);
+    acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
+    acceptorsList.add(oneToManyRequestModel.email);
+    oneToManyRequestModel.acceptors = acceptorsList.toList();
+    oneToManyRequestModel.selectedInstructor = BasicUserDetails(
+      fullname: oneToManyRequestModel.requestCreatorName,
+      email: oneToManyRequestModel.email,
+      photoURL: oneToManyRequestModel.photoUrl,
+      sevaUserID: oneToManyRequestModel.sevaUserId,
+    );
 
-  Set<String> acceptorsList = Set.from(oneToManyRequestModel['acceptors']);
-  acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
-  oneToManyRequestModel['acceptors'] = acceptorsList.toList();
-  oneToManyRequestModel['selectedInstructor'] = {
-    'fullname': oneToManyRequestModel['requestCreatorName'],
-    'email': oneToManyRequestModel['email'],
-    'photoURL': oneToManyRequestModel['requestorphotourl'],
-    'sevaUserID': oneToManyRequestModel['sevauserid'],
-  };
-
-  await Firestore.instance
-      .collection('requests')
-      .document(oneToManyRequestModel['id'])
-      .updateData(oneToManyRequestModel);
+    await Firestore.instance
+        .collection('requests')
+        .document(oneToManyRequestModel.id)
+        .updateData(oneToManyRequestModel.toMap());
+  });
 
   if (dialogContext != null) {
     Navigator.of(dialogContext).pop();
   }
 
-  log('sends timebank notif to 1 to many creator abt rejection!');
+  log('sent timebank notif to 1 to many creator abt rejection!');
 }
 
 Future oneToManySpeakerInviteAccepted(

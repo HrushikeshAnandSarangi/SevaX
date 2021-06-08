@@ -14,7 +14,6 @@ class DistanceFilterData {
         radius == null ||
         radius == 0 ||
         entityCoordinates == null) {
-      logger.wtf("passed due to null");
       return true;
     } else {
       var result = radius >=
