@@ -357,7 +357,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         label: Text(
-                          'Go Back',
+                          S.of(context).go_back,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).accentColor,
@@ -769,7 +769,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             title: Text(
-              'Sign in with Apple',
+              S.of(context).sign_in_with_apple,
               style: TextStyle(color: Colors.white),
             ),
           ),

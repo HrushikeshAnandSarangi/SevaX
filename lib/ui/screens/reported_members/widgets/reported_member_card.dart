@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:js';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -232,7 +233,7 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberGroupFn(BuildContext context) async {
-    log("remove member");
+    log(S.of(context).remove_member);
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: model.reportedId, groupId: timebankModel.id);
     progressDialog.hide();

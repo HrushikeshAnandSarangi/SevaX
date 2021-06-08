@@ -13,6 +13,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../../../flavor_config.dart';
+import '../../../labels.dart';
 
 class AddToCalendar extends StatefulWidget {
   @required
@@ -42,7 +43,6 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
-
   Future<void> googleCalanderIntegration() async {
     logger.i("inside google callllll");
     Map<String, dynamic> stateOfcalendarCallback = {
@@ -74,8 +74,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -98,7 +97,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
       "createType": widget.requestModel != null ? "REQUEST" : "OFFER",
-    "offerCreationOrListing": true
+      "offerCreationOrListing": true
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     String redirectUrl =
@@ -119,8 +118,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "allowedCalenderUsers": [widget.offer.email],
         "creatorAllowedCalender": true
@@ -132,7 +130,6 @@ class AddToCalendarState extends State<AddToCalendar> {
     }
 
     Navigator.of(context).pop();
-
   }
 
   Future<void> iCalIntegration() async {
@@ -166,8 +163,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           fields: {
             "allowedCalenderUsers": widget.requestModel.allowedCalenderUsers
           });
-    }
-    else {
+    } else {
       await updateOffersByFields(offerIds: widget.eventsIdsArr, fields: {
         "creatorAllowedCalender": true,
         "allowedCalenderUsers": [widget.offer.email]
@@ -181,11 +177,10 @@ class AddToCalendarState extends State<AddToCalendar> {
     Navigator.of(context).pop();
   }
 
-  void initState(){
+  void initState() {
     super.initState();
     logger.i("inside the page integrating cals");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +188,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          'Add event to calander',
+          S.of(context).add_event_to_calender,
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -208,11 +203,11 @@ class AddToCalendarState extends State<AddToCalendar> {
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text('Add to calendar'),
+            child: Text(S.of(context).add_to_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text('Do you want to add this event to your calendar?'),
+            child: Text(S.of(context).do_you_want_addto_calender),
           ),
           Container(
             margin: EdgeInsets.only(top: 50),
@@ -226,7 +221,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/googlecal.png"),
                     ),
                     onPressed: googleCalanderIntegration,
-                    title: 'Add to Google Calendar',
+                    title: S.of(context).add_to_google_calender,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -235,7 +230,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/outlookcal.png"),
                     ),
                     onPressed: outlookCalanderIntegration,
-                    title: 'Add to Outlook',
+                    title: S.of(context).add_to_outlook,
                   ),
                   getCalander(
                     icon: CircleAvatar(
@@ -244,7 +239,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/ical.png"),
                     ),
                     onPressed: iCalIntegration,
-                    title: 'Add to iCal',
+                    title: S.of(context).add_to_ical,
                   ),
                   Container(
                     alignment: Alignment.bottomRight,
@@ -277,14 +272,14 @@ class AddToCalendarState extends State<AddToCalendar> {
     return TransactionsMatrixCheck(
       comingFrom: ComingFrom.Home,
       upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-      transaction_matrix_type: "calendar_sync",
+      transaction_matrix_type: S.of(context).calender_sync,
       child: Container(
         margin: EdgeInsets.only(left: 10),
         child: Row(
           children: [
             icon,
             FlatButton(
-              onPressed: ()=>onPressed(),
+              onPressed: () => onPressed(),
               child: Text(
                 title,
                 style: TextStyle(

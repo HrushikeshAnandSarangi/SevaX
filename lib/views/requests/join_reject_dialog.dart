@@ -61,7 +61,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.requestInvitationModel.requestModel.title ?? "Anonymous",
+                widget.requestInvitationModel.requestModel.title ?? S.of(context).anonymous,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,

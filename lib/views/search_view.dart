@@ -403,11 +403,11 @@
 //                         ),
 //                       );
 //                     },
-//                     title: Text(model.offerType == OfferType.INDIVIDUAL_OFFER
+//                     title: Text(modeferType == OfferType.INDIVIDUAL_OFFER
 //                         ? model.individualOfferDataModel.title
 //                         : model.individualOfferDataModel.title),
 //                     subtitle: Text(
-//                       model.offerType == OfferType.INDIVIDUAL_OFFER
+//                       modeferType == OfferType.INDIVIDUAL_OFFER
 //                           ? model.individualOfferDataModel.description
 //                           : model.groupOfferDataModel.classDescription,
 //                     ),

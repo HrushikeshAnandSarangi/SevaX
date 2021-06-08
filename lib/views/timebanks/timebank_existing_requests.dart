@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -117,7 +118,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
     requestModelList.forEach((request) =>
         request.requestEnd > DateTime.now().millisecondsSinceEpoch
             ? filteredList.add(request)
-            : "Filtering past requests content");
+            : S.of(context).filtering_past_requests_content);
 
     return filteredList;
   }
@@ -136,7 +137,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? "Filtering blocked content"
+        ? S.of(context).filtering_blocked_content
         : filteredList.add(request));
 
     return filteredList;

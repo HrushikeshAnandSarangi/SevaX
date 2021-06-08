@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -74,7 +75,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height / 4 - 20),
-                      child: Text('No result found'),
+                      child: Text(S.of(context).no_search_result_found),
                     ),
                   );
                 }
@@ -102,7 +103,7 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height / 4 - 20),
-                      child: Text('No result found'),
+                      child: Text(S.of(context).no_search_result_found),
                     ),
                   );
                 }

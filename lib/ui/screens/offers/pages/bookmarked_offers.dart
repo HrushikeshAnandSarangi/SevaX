@@ -31,7 +31,7 @@ class BookmarkedOffers extends StatelessWidget {
     return StreamBuilder(
       stream: Firestore.instance
           .collection("offers")
-          .where('individualOfferDataModel.offerAcceptors',
+          .where('individualOfferDataModeferAcceptors',
               arrayContains: sevaUserId)
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

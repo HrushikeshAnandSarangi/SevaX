@@ -57,7 +57,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 //  void _onEdit(BuildContext context, ComingFrom comingFrom) {
 //    //TODO by eswer - navigate to respective edit offer page using either offers router
 //
-//    switch (widget.offerModel.offerType) {
+//    switch (widget.offerModeferType) {
 //      case OfferType.INDIVIDUAL_OFFER:
 //        if(comingFrom == ComingFrom.Offers){
 //
@@ -88,7 +88,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 //  }
 //
 //  void _onCancel(BuildContext context) {
-//    switch (widget.offerModel.offerType) {
+//    switch (widget.offerModeferType) {
 //      case OfferType.INDIVIDUAL_OFFER:
 //        ExtendedNavigator.ofRouter<OffersNavigationRouter>().pushIndividualOffer(
 //          offerModel: widget.offerModel,
