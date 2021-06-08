@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-06-08T15:33:35+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Kyk of ons van te vore al ontmoet het",
     "we_met": "Ons het van te vore al ontmoet",
     "hang_on": "Net 'n oomblik",
@@ -1302,7 +1302,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Is jy seker jy wil hierdie versoek aanvaar en voltooi?",
     "speaker_complete_page_text_1": "Ek erken dat Speaker_Name die versoek voltooi het.Die lys van lede wat hierbo verskaf word, het die versoek bygewoon.",
     "speaker_complete_page_text_2": "Let wel: Die ure sal op u goedkeuring aan die Speaker en aan die deelnemers gekrediteer word.Hierdie lys van deelnemers kan nie na goedkeuring verander word nie.",
-    "action_restricted_by_owner": "Hierdie aksie is vir u beperk deur die eienaar van die Seva-gemeenskap.",
+    "action_restricted_by_owner": "Hierdie aksie is vir u beperk deur die eienaar van hierdie SEVA-gemeenskap.",
     "accepted_this_request": "U het hierdie versoek aanvaar.",
     "onetomanyrequest_member_invite_notif_subtitle": "Admin_Name in Community_Name het u genooi om by die Webinar_Name op Date_Webinar by Time_Webinar aan te sluit.Tik om die uitnodiging te aanvaar.",
     "onetomanyrequest_title_hint": "Ex: implisiete vooroordeel webinar.",
@@ -1368,5 +1368,6 @@
     "request_ended_emailsent_msg": "Die versoek het voltooi en 'n e-pos is aan u gestuur.Tik om 'n terugvoer te gee.",
     "lender_acknowledged_request_completion": "Die lener het die voltooiing van hierdie versoek erken.Tik om 'n terugvoer te gee.",
     "borrow_request_for_place": "Leen versoek om plek",
-    "card_holder": "Kaarthouer"
+    "card_holder": "Kaarthouer",
+    "offering_amount": "Aanbod bedrag"
 }

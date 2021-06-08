@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2021-06-08T15:33:34+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Are you sure you want to accept and complete this request?",
     "speaker_complete_page_text_1": "I acknowledge that speaker_name has completed the request. The list of members provided above attended the request.",
     "speaker_complete_page_text_2": "Note: The hours will be credited to the speaker and to the attendees upon your approval. This list of attendees cannot be modified after approval.",
-    "action_restricted_by_owner": "This action is Restricted for you by the owner of the seva Community.",
+    "action_restricted_by_owner": "This action is restricted for you by the owner of this Seva Community.",
     "accepted_this_request": "You have accepted this request.",
     "onetomanyrequest_member_invite_notif_subtitle": "admin_name in community_name has invited you to join the webinar_name on date_webinar at time_webinar. Tap to accept the invitation.",
     "onetomanyrequest_title_hint": "Ex: Implicit Bias webinar.",
@@ -1332,8 +1332,8 @@
     "new_york": "New york | USA",
     "join_webinar": "join webinar",
     "pledge_goods_supplies": " has pledge to donate good\/supplies",
-    "credits_debited": "seva credits debited",
-    "credits_credited": "Seva credits Credited",
+    "credits_debited": "Seva Credits Debited",
+    "credits_credited": "Seva Credits Credited",
     "credits_debited_msg": "Seva Credits have been debited from your account",
     "accepted_offer_msg": "You have accepted this offer.",
     "completed_the_request": " Completed the request",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "The request has completed and an email has been sent to you. Tap to leave a feedback.",
     "lender_acknowledged_request_completion": "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
     "borrow_request_for_place": "Borrow request for place",
-    "card_holder": "Card Holder"
+    "card_holder": "Card Holder",
+    "offering_amount": "Offering Amount"
 }

@@ -6538,7 +6538,7 @@ class S {
       );
 
   String get action_restricted_by_owner => Intl.message(
-        'This action is Restricted for you by the owner of the seva Community.',
+        'This action is restricted for you by the owner of this Seva Community.',
         name: 'action_restricted_by_owner',
       );
 
@@ -6693,12 +6693,12 @@ class S {
       );
 
   String get credits_debited => Intl.message(
-        'seva credits debited',
+        'Seva Credits Debited',
         name: 'credits_debited',
       );
 
   String get credits_credited => Intl.message(
-        'Seva credits Credited',
+        'Seva Credits Credited',
         name: 'credits_credited',
       );
 
@@ -6870,6 +6870,11 @@ class S {
   String get card_holder => Intl.message(
         'Card Holder',
         name: 'card_holder',
+      );
+
+  String get offering_amount => Intl.message(
+        'Offering Amount',
+        name: 'offering_amount',
       );
 }
 

@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2021-06-08T15:33:30+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "查看我们曾经见过？",
     "we_met": "是的，我们曾见过",
     "hang_on": "请稍待。。。",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "您确定要接受并填写此请求吗？",
     "speaker_complete_page_text_1": "我承认扬声器_Name已完成请求。上述会员名单参加了请求。",
     "speaker_complete_page_text_2": "注意：在您批准时将记入发言人和与会者的时间。此次与会者列表无法在批准后进行修改。",
-    "action_restricted_by_owner": "Seva社区的所有者受到限制为您的行动。",
+    "action_restricted_by_owner": "本eva社区的所有者受到限制为您的行动。",
     "accepted_this_request": "您已接受此请求。",
     "onetomanyrequest_member_invite_notif_subtitle": "Admin_Name在Community_Name中邀请您在date_webinar上加入date_webinar上的webinar_name。点按以接受邀请。",
     "onetomanyrequest_title_hint": "例如：隐含偏置网络研讨会。",
@@ -1332,8 +1332,8 @@
     "new_york": "纽约|美国",
     "join_webinar": "加入网络研讨会",
     "pledge_goods_supplies": "承诺捐赠良好\/供应",
-    "credits_debited": "Seva Credits借记了",
-    "credits_credited": "Seva Credits贷记",
+    "credits_debited": "Seva Credits 借记了",
+    "credits_credited": "Seva Credits 贷记",
     "credits_debited_msg": "SEVA学分已从您的帐户中扣除",
     "accepted_offer_msg": "您已接受此优惠。",
     "completed_the_request": "完成了请求",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "该请求已完成，并已发送电子邮件给您。点击以留下反馈。",
     "lender_acknowledged_request_completion": "贷款人已承认完成此请求。点击以留下反馈。",
     "borrow_request_for_place": "借用地点",
-    "card_holder": "卡持有人"
+    "card_holder": "卡持有人",
+    "offering_amount": "提供金额"
 }

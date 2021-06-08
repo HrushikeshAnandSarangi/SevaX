@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2021-06-08T15:33:30+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Una uhakika unataka kukubali na kukamilisha ombi hili?",
     "speaker_complete_page_text_1": "Ninakubali kwamba Spika_name imekamilisha ombi hilo.Orodha ya wanachama iliyotolewa hapo juu walihudhuria ombi hilo.",
     "speaker_complete_page_text_2": "Kumbuka: Masaa yatahesabiwa kwa msemaji na wahudhuriaji juu ya kibali chako.Orodha hii ya waliohudhuria haiwezi kubadilishwa baada ya idhini.",
-    "action_restricted_by_owner": "Hatua hii imezuiwa na mmiliki wa Jumuiya ya Seva.",
+    "action_restricted_by_owner": "Hatua hii imezuiwa na mmiliki wa jamii hii ya Seva.",
     "accepted_this_request": "Umekubali ombi hili.",
     "onetomanyrequest_member_invite_notif_subtitle": "admin_name katika jumuiya_name imekualika kujiunga na webinar_name tarehe_webinar wakati_webinar.Gonga ili kukubali mwaliko.",
     "onetomanyrequest_title_hint": "Ex: Webinar ya kupendeza.",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "Ombi imekamilika na barua pepe imetumwa kwako.Gonga ili uondoe maoni.",
     "lender_acknowledged_request_completion": "Mkopeshaji amekubali kukamilika kwa ombi hili.Gonga ili uondoe maoni.",
     "borrow_request_for_place": "Borrow ombi la mahali",
-    "card_holder": "Mmiliki wa Kadi."
+    "card_holder": "Mmiliki wa Kadi.",
+    "offering_amount": "Kutoa kiasi"
 }

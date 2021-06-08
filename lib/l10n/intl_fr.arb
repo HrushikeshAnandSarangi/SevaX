@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2021-06-08T15:33:32+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Êtes-vous sûr de vouloir accepter et compléter cette demande?",
     "speaker_complete_page_text_1": "Je reconnais que le nom de haut-parleur a terminé la demande.La liste des membres fournis ci-dessus a assisté à la demande.",
     "speaker_complete_page_text_2": "Remarque: les heures seront créditées au Président et aux participants à votre approbation.Cette liste des participants ne peut être modifiée après approbation.",
-    "action_restricted_by_owner": "Cette action est restreinte pour vous par le propriétaire de la communauté SEVA.",
+    "action_restricted_by_owner": "Cette action est restreinte pour vous par le propriétaire de cette communauté SEVA.",
     "accepted_this_request": "Vous avez accepté cette demande.",
     "onetomanyrequest_member_invite_notif_subtitle": "Admin_Name dans Community_Name vous a invité à rejoindre le webinar_name sur date_webinar à Time_Webinar.Appuyez sur pour accepter l'invitation.",
     "onetomanyrequest_title_hint": "Ex: webinaire implicite de biais.",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "La demande est terminée et un courrier électronique vous a été envoyé.Appuyez sur pour laisser un retour d'information.",
     "lender_acknowledged_request_completion": "Le prêteur a acquitté la fin de cette demande.Appuyez sur pour laisser un retour d'information.",
     "borrow_request_for_place": "Emprunter une demande de place",
-    "card_holder": "Titulaire de la carte"
+    "card_holder": "Titulaire de la carte",
+    "offering_amount": "Montant offrant"
 }

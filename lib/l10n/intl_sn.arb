@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2021-06-08T15:33:31+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Une chokwadi here kuti unoda kugamuchira uye kuzadzisa chikumbiro ichi?",
     "speaker_complete_page_text_1": "Ini ndinobvuma kuti mutauri_name apedza chikumbiro.Rondedzero yenhengo dzakapihwa pamusoro apa vakapinda chikumbiro ichi.",
     "speaker_complete_page_text_2": "Ongorora: Maawa acho anozopihwa mutauri uye kune vaende kune vanobvumirwa newe.Rondedzero iyi yevanopinda haigoni kugadziridzwa mushure mekubvumidzwa.",
-    "action_restricted_by_owner": "Ichi chiitiko chinoganhurirwa iwe nemuridzi wenharaunda yeSeva.",
+    "action_restricted_by_owner": "Ichi chiitiko chinoganhurirwa iwe nemuridzi weiyi Seva nharaunda.",
     "accepted_this_request": "Wakagamuchira chikumbiro ichi.",
     "onetomanyrequest_member_invite_notif_subtitle": "admin_name in community_name yakukoka kuti ubatane newebhu_binname on Date_webinar panguva _binar.Tinya kuti ubvume kukokwa.",
     "onetomanyrequest_title_hint": "Ex: Zvakazara Bias Webinar.",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "Chikumbiro chakapedza uye email yatumirwa kwauri.Tinya kuti usiye mhinduro.",
     "lender_acknowledged_request_completion": "Iye mukweretesi akabvuma kupedzisa chikumbiro ichi.Tinya kuti usiye mhinduro.",
     "borrow_request_for_place": "Kukwereta chikumbiro nzvimbo",
-    "card_holder": "Card Holder"
+    "card_holder": "Card Holder",
+    "offering_amount": "Kupa huwandu"
 }

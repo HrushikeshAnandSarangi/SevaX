@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2021-06-08T15:33:33+00:00",
+    "@@last_modified": "2021-06-08T16:39:37+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1301,7 +1301,7 @@
     "oneToManyRequestCreatorCompletingRequestDialog": "Tem certeza de que deseja aceitar e concluir este pedido?",
     "speaker_complete_page_text_1": "Eu reconheço que o Speaker_name concluiu o pedido.A lista de membros fornecidos acima participou da solicitação.",
     "speaker_complete_page_text_2": "Nota: As horas serão creditadas no alto-falante e aos participantes após sua aprovação.Esta lista de participantes não pode ser modificada após a aprovação.",
-    "action_restricted_by_owner": "Esta ação é restrita para você pelo proprietário da Comunidade Seva.",
+    "action_restricted_by_owner": "Esta ação é restrita para você pelo proprietário desta comunidade de Seva.",
     "accepted_this_request": "Você aceitou este pedido.",
     "onetomanyrequest_member_invite_notif_subtitle": "Admin_name em Comunidade_Name convidou você para ingressar no Webinar_Name no Date_Webinar no time_webinar.Toque para aceitar o convite.",
     "onetomanyrequest_title_hint": "Ex: Webinar de viés implícito.",
@@ -1367,5 +1367,6 @@
     "request_ended_emailsent_msg": "A solicitação foi concluída e um email foi enviado para você.Toque para deixar um feedback.",
     "lender_acknowledged_request_completion": "O credor reconheceu a conclusão deste pedido.Toque para deixar um feedback.",
     "borrow_request_for_place": "Pedir emprestado para lugar",
-    "card_holder": "Titular do cartão"
+    "card_holder": "Titular do cartão",
+    "offering_amount": "Quantidade de oferta"
 }
