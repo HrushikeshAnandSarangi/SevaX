@@ -121,6 +121,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   UserMode refreshUserViewMode() {
     String loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
+    logger.i("===>>   " + widget.requestItem.requestMode.toString());
 
     switch (widget.requestItem.requestMode) {
       case RequestMode.PERSONAL_REQUEST:
@@ -133,7 +134,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 isPrimaryTimebank(
                         parentTimebankId: widget.timebankModel.parentTimebankId)
                     ? widget.timebankModel.creatorId
-                    : widget.timebankModel.managedCreatorIds.first,
+                    : widget.timebankModel.managedCreatorIds.length > 0
+                        ? widget.timebankModel.managedCreatorIds.first
+                        : widget.timebankModel.creatorId,
+            // ? widget.timebankModel.creatorId
+            // : widget.timebankModel.managedCreatorIds.first,
+            // '',
             timebankCreatorId: widget.timebankModel.creatorId))
           return UserMode.TIMEBANK_CREATOR;
         else if (widget.requestItem.sevaUserId == loggedInUser)
@@ -154,18 +160,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
       case RequestMode.TIMEBANK_REQUEST:
         if (utils.isDeletable(
-            contentCreatorId: widget.requestItem.sevaUserId,
-            context: context,
-            communityCreatorId:
-                // BlocProvider.of<HomeDashBoardBloc>(context)
-                //     .selectedCommunityModel
-                //     .created_by
-                isPrimaryTimebank(
-                        parentTimebankId: widget.timebankModel.parentTimebankId)
-                    ? widget.timebankModel.creatorId
-                    : widget.timebankModel.managedCreatorIds.first,
-            timebankCreatorId: widget.timebankModel.creatorId))
-          return UserMode.TIMEBANK_CREATOR;
+          contentCreatorId: widget.requestItem.sevaUserId,
+          context: context,
+          communityCreatorId:
+              // BlocProvider.of<HomeDashBoardBloc>(context)
+              //     .selectedCommunityModel
+              //     .created_by
+              isPrimaryTimebank(
+                      parentTimebankId: widget.timebankModel.parentTimebankId)
+                  ? widget.timebankModel.creatorId
+                  : widget.timebankModel.managedCreatorIds.first,
+          timebankCreatorId: widget.timebankModel.creatorId,
+        )) return UserMode.TIMEBANK_CREATOR;
 
         if (widget.requestItem.sevaUserId == loggedInUser) {
           return UserMode.REQUEST_CREATOR;
@@ -307,9 +313,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text('${widget.requestItem.oneToManyRequestAttenders.length}' +
-                                   S.of(context).of_text +
+                                    S.of(context).of_text +
                                     '${widget.requestItem.numberOfApprovals}' +
-                                     S.of(context).people_applied_for_request),
+                                    S.of(context).people_applied_for_request),
                                 StreamBuilder(
                                     stream: Firestore.instance
                                         .collection("requests")
@@ -402,20 +408,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.grey))
                                             : Text(
-                                                      S.of(context).duration_of_session +
-                                                          widget
-                                                              .requestItem
-                                                              .selectedSpeakerTimeDetails
-                                                              .speakingTime
-                                                              .toString() +
-                                                          (widget
-                                                                      .requestItem
-                                                                      .selectedSpeakerTimeDetails
-                                                                      .speakingTime >
-                                                                  1.0
-                                                              ? '' +
-                                                                  S.of(context).hours
-                                                              : S.of(context).hour),
+                                                S
+                                                        .of(context)
+                                                        .duration_of_session +
+                                                    widget
+                                                        .requestItem
+                                                        .selectedSpeakerTimeDetails
+                                                        .speakingTime
+                                                        .toString() +
+                                                    (widget
+                                                                .requestItem
+                                                                .selectedSpeakerTimeDetails
+                                                                .speakingTime >
+                                                            1.0
+                                                        ? '' +
+                                                            S.of(context).hours
+                                                        : S.of(context).hour),
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -871,7 +879,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               context: context,
               builder: (BuildContext viewContext) {
                 return AlertDialog(
-                  title: Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
+                  title:
+                      Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
                   actions: <Widget>[
                     FlatButton(
                       color: Theme.of(context).primaryColor,
@@ -1211,7 +1220,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               SevaCore.of(context).loggedInUser.sevaUserID
           ? S.of(context).creator_of_request_message
           : isApplied
-              ?  S.of(context).accepted_this_request
+              ? S.of(context).accepted_this_request
               : S.of(context).particpate_in_request_question;
 
       actionWidget = widget.requestItem.sevaUserId ==
@@ -1512,7 +1521,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 TextSpan(
                   text: widget.requestItem.oneToManyRequestAttenders
                           .contains(SevaCore.of(context).loggedInUser.email)
-                      ?  S.of(context).accepted_this_request
+                      ? S.of(context).accepted_this_request
                       : widget.requestItem.isSpeakerCompleted == true
                           ? S.of(context).this_request_has_now_ended
                           : widget.requestItem.oneToManyRequestAttenders
@@ -1695,7 +1704,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     children: [
                       TextSpan(
                         text: isApplied
-                            ?  S.of(context).accepted_this_request
+                            ? S.of(context).accepted_this_request
                             : S.of(context).particpate_in_request_question,
                         style: TextStyle(
                           fontSize: 16,

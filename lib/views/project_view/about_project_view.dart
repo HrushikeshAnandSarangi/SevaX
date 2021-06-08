@@ -6,10 +6,8 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -22,7 +20,6 @@ import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../labels.dart';
 import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
@@ -82,25 +79,12 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              height: 100,
-                              width: 100,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    projectModel.photoUrl ??
-                                        defaultProjectImageURL),
-                              ),
-                            ),
-                          ],
-                        ),
+                    AspectRatio(
+                      aspectRatio: 3/2,
+                      child: Image.network(
+                        projectModel.photoUrl ?? defaultProjectImageURL,
+                        fit: BoxFit.cover,
+                        height: 200,
                       ),
                     ),
                     projectModel.creatorId ==

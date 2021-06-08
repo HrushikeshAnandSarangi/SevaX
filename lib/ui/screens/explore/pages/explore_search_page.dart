@@ -17,6 +17,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
+import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreSearchPage extends StatefulWidget {
@@ -96,6 +97,14 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (!widget.isUserSignedIn)
+              CustomBackButton(
+                onBackPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             SizedBox(
               height: 40,
               child: TextField(
@@ -385,7 +394,7 @@ class ExploreSearchTabBar extends StatelessWidget {
               children: [
                 Container(
                   height: 30,
-                  width: 90,
+                  width: 135,
                   child: StreamBuilder<int>(
                     initialData: 0,
                     stream: _bloc.distance,
@@ -400,39 +409,52 @@ class ExploreSearchTabBar extends StatelessWidget {
                           ),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.only(left: 8),
                         child: InkWell(
                           onTap: () async {
-                            if (snapshot.data == 0) {
-                              await Navigator.of(context)
-                                  .push<int>(
-                                MaterialPageRoute(
-                                  builder: (context) => NearByFiltersView(),
-                                ),
-                              )
-                                  .then(
-                                (value) {
-                                  if (value != null) {
-                                    _bloc.distanceChanged(value);
-                                  } else {
-                                    _bloc.distanceChanged(0);
-                                  }
-                                },
-                              );
-                            } else {
-                              _bloc.distanceChanged(0);
-                            }
+                            await Navigator.of(context)
+                                .push<int>(
+                              MaterialPageRoute(
+                                builder: (context) => NearByFiltersView(),
+                              ),
+                            )
+                                .then(
+                              (value) {
+                                if (value != null) {
+                                  _bloc.distanceChanged(value);
+                                } else {
+                                  _bloc.distanceChanged(0);
+                                }
+                              },
+                            );
                           },
                           child: Row(
                             children: [
                               Text(
                                 snapshot.data == 0
                                     ? 'Anywhere'
-                                    : 'Within ${snapshot.data} '+ S.of(context).miles,
+                                    : 'Within ${snapshot.data} ' +
+                                        S.of(context).miles,
                                 style: TextStyle(
                                   color: snapshot.data == 0
                                       ? Theme.of(context).primaryColor
                                       : Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              HideWidget(
+                                hide: snapshot.data == 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 4.0),
+                                  child: GestureDetector(
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: Colors.white,
+                                    ),
+                                    onTap: () {
+                                      _bloc.distanceChanged(0);
+                                    },
+                                  ),
                                 ),
                               ),
                             ],

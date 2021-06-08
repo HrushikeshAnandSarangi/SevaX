@@ -13,7 +13,7 @@ class ExploreEventCard extends StatelessWidget {
       this.date,
       this.memberList,
       this.onTap,
-      this.tagsToShow})
+      this.tagsToShow =  const []})
       : super(key: key);
 
   final String photoUrl;

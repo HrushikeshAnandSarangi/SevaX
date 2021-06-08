@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -23,7 +24,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
-import '../../../../labels.dart';
 
 class GroupPage extends StatefulWidget {
   final String communityId;
@@ -178,6 +178,7 @@ class _GroupPageState extends State<GroupPage> {
                     return Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: _GroupCard(
+                        hideCard: timebank.softDelete,
                         hideButton: true,
                         buttonText: S.of(context).joined,
                         onButtonPressed: null,
@@ -212,6 +213,7 @@ class _GroupPageState extends State<GroupPage> {
                             return Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: _GroupCard(
+                                hideCard: timebank.softDelete,
                                 buttonText: getLabelFromMembershipStatus(
                                     context: context, membshipStatus: status),
                                 onButtonPressed: status == MembershipStatus.JOIN
@@ -280,18 +282,21 @@ class _GroupPageState extends State<GroupPage> {
     } on Exception catch (e) {
       logger.e(e);
     }
+
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider<UserDataBloc>(
-          bloc: BlocProvider.of<UserDataBloc>(context),
-          child: TabarView(
-            userModel: SevaCore.of(context).loggedInUser,
-            timebankModel: timebank,
+        context,
+        MaterialPageRoute(
+          builder: (_context) => BlocProvider(
+            bloc: BlocProvider.of<UserDataBloc>(context),
+            child: BlocProvider(
+              bloc: BlocProvider.of<HomeDashBoardBloc>(context),
+              child: TabarView(
+                userModel: SevaCore.of(context).loggedInUser,
+                timebankModel: timebank,
+              ),
+            ),
           ),
-        ),
-      ),
-    ).then((_) {
+        )).then((_) {
       try {
         Provider.of<HomePageBaseBloc>(context, listen: false)
             .switchToPreviousTimebank();
@@ -325,6 +330,7 @@ class _GroupPageState extends State<GroupPage> {
 }
 
 class _GroupCard extends StatelessWidget {
+  final bool hideCard;
   final VoidCallback onTap;
   final VoidCallback onButtonPressed;
   final String buttonText;
@@ -335,37 +341,40 @@ class _GroupCard extends StatelessWidget {
     this.onTap,
     @required this.onButtonPressed,
     @required this.buttonText,
-    this.hideButton = false,
+    this.hideButton = false, this.hideCard = false,
   }) : super(key: key);
 
   final TimebankModel timebank;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage:
-                    NetworkImage(timebank.photoUrl ?? defaultGroupImageURL),
-              ),
-              SizedBox(width: 12),
-              Text(timebank.name),
-              Spacer(),
-              HideWidget(
-                hide: hideButton,
-                child: RaisedButton(
-                  child: Text(buttonText),
-                  onPressed: onButtonPressed,
+    return HideWidget(
+      hide:hideCard,
+      child: InkWell(
+        onTap: onTap,
+        child: Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundImage:
+                      NetworkImage(timebank.photoUrl ?? defaultGroupImageURL),
                 ),
-              ),
-            ],
+                SizedBox(width: 12),
+                Text(timebank.name),
+                Spacer(),
+                HideWidget(
+                  hide: hideButton,
+                  child: RaisedButton(
+                    child: Text(buttonText),
+                    onPressed: onButtonPressed,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

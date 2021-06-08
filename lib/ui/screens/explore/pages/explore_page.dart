@@ -75,7 +75,6 @@ List findCardsData = [
   },
 ];
 
-
 class _ExplorePageState extends State<ExplorePage> {
   TextEditingController _searchController = TextEditingController();
   ExplorePageBloc _exploreBloc = ExplorePageBloc();
@@ -217,8 +216,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           return Row(
                             children: [
                               ExploreFindCard(
-                                imageUrl:
-                                    findCardsData[index]['imageUrl'],
+                                imageUrl: findCardsData[index]['imageUrl'],
                                 title: findCardsData[index]['title'],
                                 style: TextStyle(
                                   fontSize: 16,
@@ -329,8 +327,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     return Container();
                                                   }
                                                   return ExploreEventsCard(
-                                                    userIds:
-                                                        projectModel.associatedmembers.keys.toList(),
+                                                    userIds: projectModel
+                                                        .associatedmembers.keys
+                                                        .toList(),
                                                     imageUrl: projectModel
                                                             .photoUrl ??
                                                         defaultGroupImageURL,
@@ -360,7 +359,9 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   );
                                                 })
                                             : ExploreEventsCard(
-                                                userIds:projectModel.associatedmembers.keys.toList(),
+                                                userIds: projectModel
+                                                    .associatedmembers.keys
+                                                    .toList(),
                                                 imageUrl:
                                                     projectModel.photoUrl ??
                                                         defaultGroupImageURL,
@@ -529,12 +530,11 @@ class _ExplorePageState extends State<ExplorePage> {
                                                     );
                                                   }
                                                 },
-                                                userIds:model.approvedUsers,
-                                                    
+                                                userIds: model.approvedUsers,
                                               );
                                             })
                                         : ExploreRequestsCard(
-                                            userIds:model.approvedUsers,
+                                            userIds: model.approvedUsers,
                                             imageUrl: model.photoUrl ??
                                                 defaultGroupImageURL,
                                             communityName:

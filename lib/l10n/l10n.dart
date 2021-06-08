@@ -5,6 +5,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import 'messages_all.dart';
 
 class S {
@@ -6603,8 +6604,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
   ];
 
   @override
