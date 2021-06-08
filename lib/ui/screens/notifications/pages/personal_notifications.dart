@@ -102,7 +102,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               alignment: Alignment.centerRight,
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: Text('Clear All'),
+                child: Text(L.of(context).clear_all),
                 textColor: Colors.blue,
                 onPressed: () async {
                   if (await CustomDialogs.generalConfirmationDialogWithMessage(
@@ -523,7 +523,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         onPressed: null,
                         photoUrl:
                             creatorDetails.photoUrl ?? defaultUserImageURL,
-                        title: 'Message room join',
+                        title: L.of(context).message_room_join,
                         subTitle:
                             '${creatorDetails.name.toLowerCase()} ${S.of(context).notifications_added_you} ${data['messageRoomName']} ${S.of(context).messaging_room}.',
                       );
@@ -546,7 +546,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         },
                         onPressed: null,
                         photoUrl: creatorDetails.photoUrl,
-                        title: 'Message room remove',
+                        title: L.of(context).message_room_remove,
                         subTitle:
                             '${creatorDetails.name.toLowerCase()} removed you from ${data['messageRoomName']}.',
                       );
@@ -866,9 +866,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: "Seva Credits Credited",
+                        title: L.of(context).credits_credited,
                         subTitle: notification.data['credits'].toString() +
-                            " Seva Credits have been credited to your account.",
+                            S.of(context).notifications_credited_msg,
                         onDismissed: onDismissed,
                       );
 
@@ -877,9 +877,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         timestamp: notification.timestamp,
                         entityName: "CR",
                         photoUrl: null,
-                        title: "Seva Credits debited",
+                        title:L.of(context).credits_debited,
                         subTitle: notification.data['credits'].toString() +
-                            " Seva Credits have been debited from your account.",
+                            L.of(context).credits_debited_msg,
                         onDismissed: onDismissed,
                       );
 
@@ -935,7 +935,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             context: context,
                             builder: (_context) => AlertDialog(
                               title: Text(
-                                  'If you have you received your item/place back click the button below to complete this.'),
+                                 L.of(context).item_received_alert_dialouge),
                               actions: [
                                 FlatButton(
                                   onPressed: () {
@@ -979,7 +979,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
                         subTitle:
-                            "This request has now ended. Tap to complete the request.",
+                            L.of(context).request_ended,
                       );
                       break;
 
@@ -1001,7 +1001,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
                         subTitle:
-                            "The request has completed and an email has been sent to you. Tap to leave a feedback.",
+                            L.of(context).request_ended_emailsent_msg,
                       );
                       break;
 
@@ -1023,7 +1023,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: model.photoUrl,
                         title: '${model.title}',
                         subTitle:
-                            "The Lender has acknowledged completion of this request. Tap to leave a feedback.",
+                            L.of(context).lender_acknowledged_request_completion,
                       );
                       break;
 

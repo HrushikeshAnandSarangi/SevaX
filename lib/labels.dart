@@ -105,6 +105,8 @@ String get pledge_goods_supplies =>
 " has pledge to donate good/supplies";
 String get credits_debited =>
 "seva credits debited";
+String get credits_credited =>
+"Seva credits Credited";
 
 String get credits_debited_msg =>
 "Seva Credits have been debited from your account";
@@ -187,6 +189,31 @@ String get borrow_request_for_place =>
 
 String get borrow_request_for_item =>
 "Borrow Request for item";
+
+String get clear_all =>
+"Clear All";
+
+String get message_room_join =>
+"Message room join";
+
+String get message_room_remove =>
+"Message room remove";
+
+String get item_received_alert_dialouge =>
+"'If you have you received your item/place back click the button below to complete this.'";
+
+String get request_ended =>
+"This request has now ended. Tap to complete the request";
+
+String get request_ended_emailsent_msg =>
+"The request has completed and an email has been sent to you. Tap to leave a feedback.";
+
+String get lender_acknowledged_request_completion =>
+"The Lender has acknowledged completion of this request. Tap to leave a feedback.";
+
+
+
+
 
 
 //<------------------below labels are done------------->
