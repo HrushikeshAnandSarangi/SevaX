@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -1368,5 +1368,6 @@
     "lender_acknowledged_request_completion": "Iye mukweretesi akabvuma kupedzisa chikumbiro ichi.Tinya kuti usiye mhinduro.",
     "borrow_request_for_place": "Kukwereta chikumbiro nzvimbo",
     "card_holder": "Card Holder",
-    "offering_amount": "Kupa huwandu"
+    "offering_amount": "Kupa huwandu",
+    "offering_goods": "Kupa zvinhu"
 }

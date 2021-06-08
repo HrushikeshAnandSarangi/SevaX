@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "Comprobando, si nos conocimos antes",
     "we_met": "Nos conocimos antes",
     "hang_on": "Agárrate fuerte",
@@ -1368,5 +1368,6 @@
     "lender_acknowledged_request_completion": "El prestamista ha reconocido la finalización de esta solicitud.Toque para dejar un comentario.",
     "borrow_request_for_place": "Solicitudes de prestada",
     "card_holder": "Titular de la tarjeta",
-    "offering_amount": "Cantidad de ofreciendo"
+    "offering_amount": "Cantidad de ofreciendo",
+    "offering_goods": "Ofreciendo bienes"
 }

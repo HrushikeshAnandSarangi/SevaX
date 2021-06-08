@@ -6876,6 +6876,11 @@ class S {
         'Offering Amount',
         name: 'offering_amount',
       );
+
+  String get offering_goods => Intl.message(
+        'Offering Goods',
+        name: 'offering_goods',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

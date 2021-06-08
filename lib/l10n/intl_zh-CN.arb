@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "查看我们曾经见过？",
     "we_met": "是的，我们曾见过",
     "hang_on": "请稍待。。。",
@@ -1368,5 +1368,6 @@
     "lender_acknowledged_request_completion": "贷款人已承认完成此请求。点击以留下反馈。",
     "borrow_request_for_place": "借用地点",
     "card_holder": "卡持有人",
-    "offering_amount": "提供金额"
+    "offering_amount": "提供金额",
+    "offering_goods": "提供商品"
 }

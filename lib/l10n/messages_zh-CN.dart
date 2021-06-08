@@ -853,6 +853,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "offered" : MessageLookupByLibrary.simpleMessage("提供了"),
     "offered_by" : MessageLookupByLibrary.simpleMessage("由...提供"),
     "offering_amount" : MessageLookupByLibrary.simpleMessage("提供金额"),
+    "offering_goods" : MessageLookupByLibrary.simpleMessage("提供商品"),
     "offers" : MessageLookupByLibrary.simpleMessage("提供服务"),
     "ok" : MessageLookupByLibrary.simpleMessage("好"),
     "on" : MessageLookupByLibrary.simpleMessage("上"),

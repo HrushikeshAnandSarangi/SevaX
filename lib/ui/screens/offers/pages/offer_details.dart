@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:js';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
@@ -203,7 +201,7 @@ class OfferDetails extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            L.of(context).offering_amount,
+            S.of(context).offering_amount,
             style: TextStyle(
               fontSize: 16,
             ),
@@ -248,7 +246,7 @@ class OfferDetails extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            L.of(context).offering_goods,
+            S.of(context).offering_goods,
             style: TextStyle(
               fontSize: 16,
             ),

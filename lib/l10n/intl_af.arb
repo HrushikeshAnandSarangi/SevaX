@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "Kyk of ons van te vore al ontmoet het",
     "we_met": "Ons het van te vore al ontmoet",
     "hang_on": "Net 'n oomblik",
@@ -1369,5 +1369,6 @@
     "lender_acknowledged_request_completion": "Die lener het die voltooiing van hierdie versoek erken.Tik om 'n terugvoer te gee.",
     "borrow_request_for_place": "Leen versoek om plek",
     "card_holder": "Kaarthouer",
-    "offering_amount": "Aanbod bedrag"
+    "offering_amount": "Aanbod bedrag",
+    "offering_goods": "Bied goedere aan"
 }

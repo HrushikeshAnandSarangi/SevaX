@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -1368,5 +1368,6 @@
     "lender_acknowledged_request_completion": "Le prêteur a acquitté la fin de cette demande.Appuyez sur pour laisser un retour d'information.",
     "borrow_request_for_place": "Emprunter une demande de place",
     "card_holder": "Titulaire de la carte",
-    "offering_amount": "Montant offrant"
+    "offering_amount": "Montant offrant",
+    "offering_goods": "Offrant des biens"
 }

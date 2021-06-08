@@ -853,6 +853,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "offered" : MessageLookupByLibrary.simpleMessage("Oferecido"),
     "offered_by" : MessageLookupByLibrary.simpleMessage("Oferecido por"),
     "offering_amount" : MessageLookupByLibrary.simpleMessage("Quantidade de oferta"),
+    "offering_goods" : MessageLookupByLibrary.simpleMessage("Oferecendo mercadorias."),
     "offers" : MessageLookupByLibrary.simpleMessage("Ofertas"),
     "ok" : MessageLookupByLibrary.simpleMessage("Está bem"),
     "on" : MessageLookupByLibrary.simpleMessage("Em"),

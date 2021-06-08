@@ -853,6 +853,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "offered" : MessageLookupByLibrary.simpleMessage("Yakapihwa"),
     "offered_by" : MessageLookupByLibrary.simpleMessage("Inopihwa na"),
     "offering_amount" : MessageLookupByLibrary.simpleMessage("Kupa huwandu"),
+    "offering_goods" : MessageLookupByLibrary.simpleMessage("Kupa zvinhu"),
     "offers" : MessageLookupByLibrary.simpleMessage("Zvipiriso"),
     "ok" : MessageLookupByLibrary.simpleMessage("Zvakanaka"),
     "on" : MessageLookupByLibrary.simpleMessage("On"),

@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2021-06-08T16:39:37+00:00",
+    "@@last_modified": "2021-06-08T16:48:18+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -1368,5 +1368,6 @@
     "lender_acknowledged_request_completion": "O credor reconheceu a conclusão deste pedido.Toque para deixar um feedback.",
     "borrow_request_for_place": "Pedir emprestado para lugar",
     "card_holder": "Titular do cartão",
-    "offering_amount": "Quantidade de oferta"
+    "offering_amount": "Quantidade de oferta",
+    "offering_goods": "Oferecendo mercadorias."
 }
