@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -231,9 +230,7 @@ class EarningImageItem extends StatelessWidget {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return CircleAvatar();
     }
-    if (model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
-        model.type != 'RequestMode.TIMEBANK_REQUEST' &&
-        model.from != model.timebankid) {
+    if (snapshot.data is UserModel) {
       UserModel user = snapshot.data;
       //Fallback in case the condition anyhow
       if (user == null)
