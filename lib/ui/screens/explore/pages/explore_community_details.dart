@@ -13,7 +13,6 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_community_details_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -25,7 +24,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -695,9 +693,13 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 color: Colors.orange,
                 onPressed: () {
                   _profileBloc.setDefaultCommunity(
-                      SevaCore.of(context).loggedInUser.email,
-                      community,
-                      context);
+                    SevaCore.of(context).loggedInUser.email,
+                    community,
+                    context,
+                  );
+                  if (Navigator.of(dialogContext).canPop()) {
+                    Navigator.of(dialogContext).pop();
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -705,7 +707,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                     ),
                   );
                 },
-                child: Text(S.of(context).switch_timebank),
+                child: Text(S.of(context).switch_timebank,style:TextStyle(color:Colors.white),),
               )
             ],
           );
