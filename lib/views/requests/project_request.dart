@@ -890,7 +890,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                               getSpacerItem(
                                 Text(
                                   !model.isRecurring
-                                      ? '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}'
+                                      ? '${getTimeFormattedString(model.requestStart, loggedintimezone) + '- ' + getTimeFormattedString(model.requestEnd, loggedintimezone)}'
                                       : '',
                                   style: TextStyle(
                                     color: Colors.black38,
