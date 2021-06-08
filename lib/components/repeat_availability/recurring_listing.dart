@@ -68,7 +68,7 @@ class _RecurringListingState extends State<RecurringListing> {
 
   Future<void> getTimebankForId(timebankId) async {
     DocumentSnapshot timebankDoc = await Firestore.instance
-        .collection("timebankDoc")
+        .collection("timebanknew")
         .document(timebankId)
         .get();
     timebankModel = TimebankModel.fromMap(timebankDoc.data);
@@ -93,30 +93,31 @@ class _RecurringListingState extends State<RecurringListing> {
             ),
           ),
           body: FutureBuilder<CommunityModel>(
-            future: getCommunityForId(SevaCore.of(context).loggedInUser.currentCommunity),
-            builder: (context, commSnapshot) {
-              if(!commSnapshot.hasData){
-                return LoadingIndicator();
-              }
-              communityModel = commSnapshot.data;
-              return Container(
-                child: StreamBuilder(
-                    stream: RecurringListDataManager.getRecurringRequestListStream(
-                      parentRequestId: widget.requestModel.parent_request_id,
-                    ),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+              future: getCommunityForId(
+                  SevaCore.of(context).loggedInUser.currentCommunity),
+              builder: (context, commSnapshot) {
+                if (!commSnapshot.hasData) {
+                  return LoadingIndicator();
+                }
+                communityModel = commSnapshot.data;
+                return Container(
+                  child: StreamBuilder(
+                      stream: RecurringListDataManager
+                          .getRecurringRequestListStream(
+                        parentRequestId: widget.requestModel.parent_request_id,
+                      ),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data != null) {
+                          List<RequestModel> requestModelList = snapshot.data;
 
-                      if (snapshot.data != null) {
-                        List<RequestModel> requestModelList = snapshot.data;
-
-                        return RecurringList(requestModelList, null, timebankModel, communityModel);
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }),
-              );
-            }
-          ));
+                          return RecurringList(requestModelList, null,
+                              timebankModel, communityModel);
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      }),
+                );
+              }));
     } else {
       return Scaffold(
           appBar: AppBar(
@@ -126,29 +127,31 @@ class _RecurringListingState extends State<RecurringListing> {
             ),
           ),
           body: FutureBuilder<CommunityModel>(
-              future: getCommunityForId(SevaCore.of(context).loggedInUser.currentCommunity),
-            builder: (context, commSnapshot) {
-              if(!commSnapshot.hasData){
-                return LoadingIndicator();
-              }
-              communityModel = commSnapshot.data;
-              return Container(
-                child: StreamBuilder(
-                    stream: RecurringListDataManager.getRecurringofferListStream(
-                      parentOfferId: widget.offerModel.parent_offer_id,
-                    ),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.data != null) {
-                        List<OfferModel> offerModelList = snapshot.data;
+              future: getCommunityForId(
+                  SevaCore.of(context).loggedInUser.currentCommunity),
+              builder: (context, commSnapshot) {
+                if (!commSnapshot.hasData) {
+                  return LoadingIndicator();
+                }
+                communityModel = commSnapshot.data;
+                return Container(
+                  child: StreamBuilder(
+                      stream:
+                          RecurringListDataManager.getRecurringofferListStream(
+                        parentOfferId: widget.offerModel.parent_offer_id,
+                      ),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.data != null) {
+                          List<OfferModel> offerModelList = snapshot.data;
 
-                        return RecurringList(null, offerModelList, timebankModel, communityModel);
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }),
-              );
-            }
-          ));
+                          return RecurringList(null, offerModelList,
+                              timebankModel, communityModel);
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      }),
+                );
+              }));
     }
   }
 }
@@ -159,7 +162,8 @@ class RecurringList extends StatefulWidget {
   TimebankModel timebankModel;
   CommunityModel communityModel;
 
-  RecurringList(this.requestmodel, this.offerModel, this.timebankModel, this.communityModel);
+  RecurringList(this.requestmodel, this.offerModel, this.timebankModel,
+      this.communityModel);
 
   @override
   _RecurringListState createState() => _RecurringListState();
@@ -188,8 +192,7 @@ class _RecurringListState extends State<RecurringList> {
                   onTap: () => editRequest(
                       model: widget.requestmodel[index],
                       timebankModel: widget.timebankModel,
-                      communityModel: widget.communityModel
-                  ),
+                      communityModel: widget.communityModel),
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -266,7 +269,8 @@ class _RecurringListState extends State<RecurringList> {
                 elevation: 2,
                 child: InkWell(
                   onTap: () async {
-                    _navigateToOfferDetails(widget.offerModel[index], widget.communityModel);
+                    _navigateToOfferDetails(
+                        widget.offerModel[index], widget.communityModel);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -362,7 +366,8 @@ class _RecurringListState extends State<RecurringList> {
         });
   }
 
-  void _navigateToOfferDetails(OfferModel model, CommunityModel communityModel) {
+  void _navigateToOfferDetails(
+      OfferModel model, CommunityModel communityModel) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -436,7 +441,8 @@ class _RecurringListState extends State<RecurringList> {
     );
   }
 
-  void editRequest({RequestModel model, TimebankModel timebankModel, communityModel}) {
+  void editRequest(
+      {RequestModel model, TimebankModel timebankModel, communityModel}) {
     timeBankBloc.setSelectedRequest(model);
     if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         isAccessAvailable(
@@ -446,10 +452,8 @@ class _RecurringListState extends State<RecurringList> {
         MaterialPageRoute(
           builder: (_context) => BlocProvider(
             bloc: BlocProvider.of<HomeDashBoardBloc>(context),
-            child: RequestTabHolder(
-              isAdmin: true,
-              communityModel: communityModel
-            ),
+            child:
+                RequestTabHolder(isAdmin: true, communityModel: communityModel),
           ),
         ),
       );

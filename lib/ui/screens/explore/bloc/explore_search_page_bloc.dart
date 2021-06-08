@@ -80,7 +80,7 @@ class ExploreSearchPageBloc {
       _communityCategory.add(value);
     });
 
-    CommunityRepository.getFeatureCommunitiesFuture().then((value) {
+    ElasticSearchApi.getPublicCommunities().then((value) {
       if (value != null) {
         _featuredCommunities.add(value);
       }
