@@ -7,11 +7,8 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
-import 'package:sevaexchange/repositories/request_repository.dart';
-import 'package:sevaexchange/ui/screens/explore/bloc/explore_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page_view_holder.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_search_cards.dart';
@@ -29,10 +26,11 @@ import '../../../../l10n/l10n.dart';
 
 class RequestsByCategoryView extends StatefulWidget {
   final CategoryModel model;
+  final bool isUserSignedIn;
 
   const RequestsByCategoryView({
     Key key,
-    @required this.model,
+    @required this.model, @required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _RequestsByCategoryViewState createState() => _RequestsByCategoryViewState();
@@ -52,8 +50,8 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
   Widget build(BuildContext context) {
     return ExplorePageViewHolder(
       hideSearchBar: true,
-      hideHeader: Provider.of<UserModel>(context, listen: false) != null,
-      hideFooter: Provider.of<UserModel>(context, listen: false) != null,
+      hideHeader: widget.isUserSignedIn,
+      hideFooter: widget.isUserSignedIn,
       appBarTitle: widget.model.title_en != null
           ? widget.model.title_en
           : '', //widget.model.getCategoryName(context),
@@ -166,8 +164,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                       onTap: () {
                         showSignInAlertMessage(
                             context: context,
-                            message:
-                                S.of(context).sign_in_alert);
+                            message: S.of(context).sign_in_alert);
                       },
                       photoUrl: request.photoUrl ?? defaultProjectImageURL,
                       title: request.title,

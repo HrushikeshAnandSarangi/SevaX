@@ -866,6 +866,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           MaterialPageRoute(
                             builder: (context) => RequestsByCategoryView(
                               model: value,
+                              isUserSignedIn:widget.isUserSignedIn,
                             ),
                           ),
                         );
