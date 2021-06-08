@@ -75,6 +75,9 @@ class Searches {
           "bool": {
             "must": [
               {
+                "term": {"communityId.keyword": loggedInUser.currentCommunity}
+              },
+              {
                 "terms": {"timebanksposted.keyword": timebanksIdArr}
               },
               {
@@ -91,6 +94,7 @@ class Searches {
     );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
+
     List<NewsModel> feedsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -335,6 +339,7 @@ class Searches {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<ProjectModel> projectsList = [];
+
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if (sourceMap['softDelete'] == false) {
@@ -683,13 +688,15 @@ class Searches {
                     },
                     {
                       "terms": {
-                        "skills.keyword": allSkillsInterestsConsolidated['skills']
+                        "skills.keyword":
+                            allSkillsInterestsConsolidated['skills']
                         // allSkillsInterestsConsolidated['skills']
                       }
                     },
                     {
                       "terms": {
-                      "interests.keyword": allSkillsInterestsConsolidated['interests']
+                        "interests.keyword":
+                            allSkillsInterestsConsolidated['interests']
                       }
                     }
                   ]
