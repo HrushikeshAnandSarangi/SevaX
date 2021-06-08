@@ -123,7 +123,7 @@ class OfferCard extends StatelessWidget {
                               child: Container(
                                 margin: EdgeInsets.only(right: 10),
                                 child: TagView(
-                                  tagTitle: 'Recurring',
+                                  tagTitle: S.of(context).recurring,
                                 ),
                               ),
                             ),

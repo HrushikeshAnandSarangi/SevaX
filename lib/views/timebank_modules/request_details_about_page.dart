@@ -1540,9 +1540,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        (widget.requestItem.oneToManyRequestAttenders.length >=
-                    widget.requestItem.numberOfApprovals ||
-                widget.requestItem.isSpeakerCompleted == true)
+        ((widget.requestItem.oneToManyRequestAttenders.length >=
+                        widget.requestItem.numberOfApprovals ||
+                    widget.requestItem.isSpeakerCompleted == true) &&
+                !widget.requestItem.oneToManyRequestAttenders
+                    .contains(SevaCore.of(context).loggedInUser.email))
             ? Container()
             : oneToManyRequestActionWidgetForParticipant,
       ],
