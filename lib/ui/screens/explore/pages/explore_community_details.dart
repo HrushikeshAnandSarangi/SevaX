@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart'
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/community_about_widget.dart';
+import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -224,19 +225,19 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                           SevaCore.of(context).loggedInUser);
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (_context) =>
-                                              SevaCore(
-                                                loggedInUser:SevaCore.of(context).loggedInUser,
-                                                child: OnBoardWithTimebank(
-                                            user: SevaCore.of(context)
+                                          builder: (_context) => SevaCore(
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
+                                            child: OnBoardWithTimebank(
+                                              user: SevaCore.of(context)
                                                   .loggedInUser,
-                                            communityModel: community,
-                                            isFromExplore: true,
-                                            sevauserId: SevaCore.of(context)
+                                              communityModel: community,
+                                              isFromExplore: true,
+                                              sevauserId: SevaCore.of(context)
                                                   .loggedInUser
                                                   .sevaUserID,
+                                            ),
                                           ),
-                                              ),
                                         ),
                                       );
                                     } else {
@@ -285,6 +286,13 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                             ),
                           ),
                         ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SponsorsWidget(
+                          sponsorsMode: SponsorsMode.ABOUT,
+                          timebankModel: timebankModel,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
