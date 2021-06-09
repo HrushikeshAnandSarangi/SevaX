@@ -80,7 +80,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     AspectRatio(
-                      aspectRatio: 3/2,
+                      aspectRatio: 3 / 2,
                       child: Image.network(
                         projectModel.photoUrl ?? defaultProjectImageURL,
                         fit: BoxFit.cover,

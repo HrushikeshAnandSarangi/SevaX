@@ -44,7 +44,7 @@ class ExplorePageAppBar extends PreferredSize {
                 ),
                 Spacer(),
                 appBarButton(
-                  'Sign Up',
+                  S.of(context).register,
                   () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -54,7 +54,7 @@ class ExplorePageAppBar extends PreferredSize {
                   },
                 ),
                 appBarButton(
-                  'Sign In',
+                   S.of(context).log_in,
                   () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

@@ -63,7 +63,9 @@ bool isMemberBlocked(UserModel user, String idToCheck) {
 
 UserRole getLoggedInUserRole(TimebankModel model, String userId) {
   if (model.creatorId == userId) {
-    if (model.parentTimebankId == FlavorConfig.values.timebankId) {
+    if (model.parentTimebankId == FlavorConfig.values.timebankId ||
+        model.managedCreatorIds != null &&
+            model.managedCreatorIds.contains(userId)) {
       return UserRole.TimebankCreator;
     } else {
       return UserRole.Creator;
@@ -88,10 +90,10 @@ Widget getEmptyWidget(String title, String notFoundValue) {
 }
 
 Widget getEmptyWidgetLeftAligned(String title, String notFoundValue) {
-  return  Text(
-      notFoundValue,
-      overflow: TextOverflow.ellipsis,
-      style: sectionHeadingStyle,
+  return Text(
+    notFoundValue,
+    overflow: TextOverflow.ellipsis,
+    style: sectionHeadingStyle,
   );
 }
 

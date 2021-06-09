@@ -6,6 +6,9 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
+import '../flavor_config.dart';
 
 class ManualTimeRepository {
   static final String _userCollection = "users";
@@ -34,7 +37,11 @@ class ManualTimeRepository {
       timebankTransaction: timebankTransaction,
       notificationId: notificationId,
       userModel: userModel,
-    ).commit().then((value) => true).catchError((onError) => false);
+    ).commit().then((value) {
+      return true;
+    }).catchError((onError) {
+      return false;
+    });
   }
 
   static Future<bool> rejectManualCreditClaim({
@@ -154,13 +161,13 @@ class ManualTimeRepository {
     );
 
     //Update Balance
-    batchWrite.updateData(
-      _firestore.collection('users').document(model.userDetails.email),
-      {
-        AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
-            FieldValue.increment(model.claimedTime / 60),
-      },
-    );
+    // batchWrite.updateData(
+    //   _firestore.collection('users').document(model.userDetails.email),
+    //   {
+    //     AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
+    //         FieldValue.increment(model.claimedTime / 60),
+    //   },
+    // );
 
     //Create notification
     var notificationModel = getNotificationModel(
@@ -294,8 +301,8 @@ class ManualTimeRepository {
     return TransactionModel(
         communityId: model.communityId,
         credits: model.claimedTime / 60,
-        from: model.timebankId,
-        fromEmail_Id: model.timebankId,
+        from: FlavorConfig.values.timebankId,
+        fromEmail_Id: FlavorConfig.values.timebankId,
         toEmail_Id: model.timebankId,
         isApproved: true,
         timebankid: model.timebankId,
@@ -303,7 +310,7 @@ class ManualTimeRepository {
         to: model.timebankId,
         transactionbetween: [
           model.timebankId,
-          model.timebankId,
+          FlavorConfig.values.timebankId,
         ],
         type: 'MANNUAL_TIME',
         typeid: model.typeId,

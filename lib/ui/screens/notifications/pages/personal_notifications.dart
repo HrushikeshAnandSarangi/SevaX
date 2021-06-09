@@ -875,6 +875,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: S.of(context).credits_credited,
                         subTitle: notification.data['credits'].toString() +
+                            " " +
                             S.of(context).notifications_credited_msg,
                         onDismissed: onDismissed,
                       );
@@ -886,6 +887,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         photoUrl: null,
                         title: S.of(context).credits_debited,
                         subTitle: notification.data['credits'].toString() +
+                            " " +
                             S.of(context).credits_debited_msg,
                         onDismissed: onDismissed,
                       );
