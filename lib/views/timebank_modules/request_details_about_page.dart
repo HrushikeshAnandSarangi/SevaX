@@ -1808,7 +1808,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               widget.requestItem.oneToManyRequestAttenders
                       .contains(SevaCore.of(context).loggedInUser.email)
                   ? S.of(context).withdraw
-                  : 'Attend',
+                  : L.of(context).attend,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -2195,7 +2195,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       children: [
         SizedBox(height: 10),
         Text(
-          "Requested by",
+          L.of(context).requested_by,
           style: titleStyle,
           maxLines: 1,
         ),
@@ -2489,7 +2489,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             )
           : Container();
     } else {
-      return Text('Location not provided',
+      return Text(L.of(context).location_not_provided,
           style: TextStyle(color: Colors.grey));
     }
   }
@@ -2529,7 +2529,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             )
           : Container();
     } else {
-      return Text('Location not provided',
+      return Text(L.of(context).location_not_provided,
           style: TextStyle(color: Colors.grey));
     }
   }
@@ -2628,7 +2628,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         padding: const EdgeInsets.only(
                             left: 7.0, right: 7, top: 5, bottom: 5),
                         child: Text(
-                          'Your request has been approved by ' +
+                          L.of(context).request_approved_by_msg +
                               snapshot.data.documents[0]['acceptorName'],
                           style: TextStyle(
                               fontSize: 15,
@@ -2641,7 +2641,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.documents[0]['selectedAddress']),
                     Text(
-                      'Instruction for the stay',
+                      L.of(context).instruction_for_stay,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],
@@ -2670,8 +2670,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? 'Request agreement not available'
-                      : 'Click to view request agreement',
+                      ? L.of(context).request_agreement_not_available
+                      : L.of(context).click_to_view_request_agreement,
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,
@@ -2723,7 +2723,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
         ),
         Text(
-          "Account number : " +
+         "${S.of(context).account_no} : " +
               widget.requestItem.cashModel.achdetails.account_number,
         ),
         Text(
@@ -2731,7 +2731,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               widget.requestItem.cashModel.achdetails.bank_address,
         ),
         Text(
-          "Bank Name : " + widget.requestItem.cashModel.achdetails.bank_name,
+         "${S.of(context).bank_name} : " + widget.requestItem.cashModel.achdetails.bank_name,
         ),
         Text(
           "${S.of(context).routing_number} : " +
@@ -2753,7 +2753,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            'Donation Address',
+           S.of(context).donation_address,
             style: TextStyle(
               fontSize: 16,
             ),

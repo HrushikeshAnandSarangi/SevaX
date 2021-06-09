@@ -315,7 +315,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   textColor: Colors.white,
                   // elevation: 5,
                   onPressed: () {},
-                  child: Text('Attending',
+                  child: Text(L.of(context).attending,
                       style: TextStyle(
                         fontSize: 14,
                       )),
@@ -370,7 +370,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                   ),
                                 )
                               : Text(
-                                  'Invited Speaker',
+                                  L.of(context).invited_speaker,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),

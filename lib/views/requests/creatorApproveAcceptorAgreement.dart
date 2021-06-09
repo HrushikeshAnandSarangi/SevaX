@@ -16,6 +16,8 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import '../../labels.dart';
+
 class CreatorApproveAcceptorAgreeement extends StatefulWidget {
   final String timeBankId;
   final String userId;
@@ -121,7 +123,7 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: 250,
               child: Text(
-                  "I accept the terms of use as per the agreement",
+                  L.of(context).terms_acknowledgement_text,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -241,7 +243,7 @@ class _CreatorApproveAcceptorAgreeementState
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Agreement',
+              L.of(context).agreement,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ],
@@ -254,8 +256,8 @@ class _CreatorApproveAcceptorAgreeementState
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
                 widget.requestModel.hasBorrowAgreement
-                    ? 'Please review the agreement below before proceeding.'
-                    : 'Lender has not created an agreement for this request.',
+                    ? L.of(context).review_before_proceding_text
+                    : L.of(context).lender_not_accepted_request_msg,
                 style: TextStyle(fontSize: 15),
                 softWrap: true, 
               ),
@@ -297,7 +299,7 @@ class _CreatorApproveAcceptorAgreeementState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        'Review Agreement',
+                        L.of(context).review_agreement,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

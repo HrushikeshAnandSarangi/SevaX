@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 
 void showDialogForIncompleteTransactions({
@@ -24,7 +25,7 @@ void showDialogForIncompleteTransactions({
         actions: <Widget>[
           FlatButton(
             child: Text(
-              "Dismiss",
+              S.of(context).dismiss,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.red,

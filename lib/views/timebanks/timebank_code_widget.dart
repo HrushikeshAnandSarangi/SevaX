@@ -7,6 +7,7 @@ import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:share/share.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class TimebankCodeWidget extends StatefulWidget {
   final TimebankCodeModel timebankCodeModel;
@@ -70,7 +71,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                     ),
                     Center(
                       child: headingTitle(
-                        'Code Generated: Copy the code and share to your friends',
+                        L.of(context).copy_and_share_code,
                       ),
                     ),
                     SizedBox(
@@ -133,7 +134,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Tooltip(
-                                    message: "Copy Community Code",
+                                    message: L.of(context).copy_community_code,
                                     child: InkWell(
                                       onTap: () {
                                         ClipboardData data = ClipboardData(
@@ -152,7 +153,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                             .showSnackBar(snackbar);
                                       },
                                       child: Text(
-                                        'Copy code',
+                                       L.of(context).copy_code,
                                         style: TextStyle(
                                           color: FlavorConfig
                                               .values.theme.primaryColor,
@@ -202,7 +203,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                         },
                         color: FlavorConfig.values.theme.primaryColor,
                         textColor: Colors.white,
-                        child: Text('Share'),
+                        child: Text(S.of(context).share_code),
                       ),
                     ),
                     SizedBox(
@@ -210,7 +211,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                     ),
                     Center(
                         child: Text(
-                      'You can share the code to invite them to your seva community',
+                      L.of(context).share_code_msg,
                       style: TextStyle(
                         fontSize: 20,
                       ),

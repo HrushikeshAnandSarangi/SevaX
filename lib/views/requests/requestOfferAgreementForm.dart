@@ -27,6 +27,8 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
+import '../../labels.dart';
+
 class RequestOfferAgreementForm extends StatefulWidget {
   final bool isRequest; //false means offer
   final String roomOrTool; //'ROOM' or 'TOOL' (for request) (for offer same?)
@@ -151,7 +153,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         centerTitle: true,
         title: Text(
-          'Choose Document', //Labels to be created
+         L.of(context).choose_document,//Labels to be created
           style: TextStyle(
               fontFamily: "Europa", fontSize: 20, color: Colors.white),
         ),
@@ -228,7 +230,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                  "Usage term*",
+                                 L.of(context).usage_term,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -267,7 +269,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      "Quiet hours allowed",
+                                     L.of(context).quite_hours_allowed,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -288,7 +290,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      "Pets allowed",
+                                      L.of(context).pets_allowed,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -300,7 +302,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Maximum occupants",
+                                  L.of(context).max_occupants,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -342,7 +344,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Security Deposit",
+                                 L.of(context).security_deposits,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -385,7 +387,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "Person of contact details",
+                                 L.of(context).person_of_contact_details,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -549,7 +551,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         SizedBox(height: 17),
         documentNameTextField,
         Text(
-          "Any specific condition(s)",
+          L.of(context).any_specific_conditions,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -571,7 +573,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: item must be returned in the same condition.',
+                L.of(context).item_returned_hint_text,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -587,7 +589,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          "Description of item(s)",
+          L.of(context).description_of_item,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

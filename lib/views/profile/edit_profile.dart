@@ -37,6 +37,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path/path.dart' as pathExt;
 
 import '../../globals.dart' as globals;
+import '../../labels.dart';
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -275,7 +276,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  usermodel.cvName ?? 'CV not available',
+                                  usermodel.cvName ?? L.of(context).cv_not_available,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
@@ -404,7 +405,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     child: ListTile(
                                       leading: Icon(Icons.attachment),
                                       title: Text(
-                                        cvName ?? "cv not available",
+                                        cvName ?? L.of(context).cv_not_available,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       trailing: IconButton(
