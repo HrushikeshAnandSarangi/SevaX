@@ -586,9 +586,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             }
                             return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: snapshot.data.length > 6
-                                  ? 6
-                                  : snapshot.data.length,
+                              itemCount: snapshot.data.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 CommunityModel community = snapshot.data[index];

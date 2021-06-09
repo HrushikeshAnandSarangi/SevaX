@@ -94,7 +94,9 @@ class CommunitiesSearchView extends StatelessWidget {
                                               ),
                                             ),
                                             SizedBox(height: 3),
-                                            Text(community.name),
+                                            Text(
+                                              community.name,
+                                            ),
                                           ],
                                         ),
                                       ),

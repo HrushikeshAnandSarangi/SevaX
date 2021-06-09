@@ -667,7 +667,8 @@ class ElasticSearchApi {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
     List<CommunityModel> models = [];
-    logger.wtf(hitList);
+    // logger.wtf(hitList.length.toString() +
+    //     "<><><><><><><><><><>>>>>>>>>>><<<<<<<<<<<");
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
@@ -675,7 +676,7 @@ class ElasticSearchApi {
       logger.e("featured community", sourceMap['featuredCommunity']);
       models.add(model);
     });
-    models.sort((a, b) => a.name.compareTo(b.name));
+    // models.sort((a, b) => a.name.compareTo(b.name));
     return models;
   }
 }
