@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -16,6 +15,7 @@ import 'package:sevaexchange/ui/screens/explore/pages/requests_search_view.dart'
 import 'package:sevaexchange/ui/screens/explore/widgets/members_avatar_list_with_count.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
@@ -228,7 +228,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           items: <DropdownMenuItem<int>>[
             DropdownMenuItem(
               value: 0,
-              child: Text(S.of(context).any_category),
+              child: Text(S.of(context).any_category.firstWordUpperCase()),
             ),
           ],
         ),
@@ -499,7 +499,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(S.of(context).any_category),
+                              child: Text(S.of(context).any_category.firstWordUpperCase(),),
                             ),
                             ...selectedCommunityCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(
@@ -549,7 +549,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(S.of(context).any_category),
+                              child: Text(S.of(context).any_category.firstWordUpperCase()),
                             ),
                             ...selectedRequestCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(
