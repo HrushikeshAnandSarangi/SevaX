@@ -517,7 +517,7 @@ class ElasticSearchApi {
   // get all community categories
   static Future<List<CommunityCategoryModel>>
       getAllCommunityCategories() async {
-    String endPoint = '//elasticsearch/community_categories/_doc/_search';
+    String endPoint = '//elasticsearch/community_categories/_doc/_search?size=100';
 
     dynamic body = json.encode({
       "query": {"match_all": {}}
