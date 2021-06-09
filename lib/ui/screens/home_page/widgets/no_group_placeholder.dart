@@ -31,20 +31,20 @@ class NoGroupPlaceHolder extends StatelessWidget {
                       .of(context)
                       .no_groups_text, //no_group_message (old label)
                 ),
-                WidgetSpan(
-                  child: InkWell(
-                    onTap: navigateToCreateGroup,
-                    child: Text(
-                      S.of(context).creating_one,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  // recognizer: TapGestureRecognizer()
-                  //   ..onTap = navigateToCreateGroup,
-                ),
+                // WidgetSpan(
+                //   child: InkWell(
+                //     onTap: navigateToCreateGroup,
+                //     child: Text(
+                //       S.of(context).creating_one,
+                //       style: TextStyle(
+                //         color: Theme.of(context).primaryColor,
+                //         fontSize: 16,
+                //       ),
+                //     ),
+                //   ),
+                //   // recognizer: TapGestureRecognizer()
+                //   //   ..onTap = navigateToCreateGroup,
+                // ),
               ],
             ),
           ),
