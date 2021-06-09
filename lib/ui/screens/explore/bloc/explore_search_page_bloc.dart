@@ -79,7 +79,7 @@ class ExploreSearchPageBloc {
       _communityCategory.add(value);
     });
 
-    ElasticSearchApi.getPublicCommunities().then((value) {
+    ElasticSearchApi.getFeaturedCommunities().then((value) {
       if (value != null) {
         _featuredCommunities.add(value);
       }
