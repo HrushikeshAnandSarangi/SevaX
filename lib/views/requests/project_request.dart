@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -33,8 +34,6 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/utils/extensions.dart';
-import '../../labels.dart';
 
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
@@ -292,7 +291,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type:L.of(context).calender_sync,
+                        transaction_matrix_type:S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -317,7 +316,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: L.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -342,7 +341,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: L.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,

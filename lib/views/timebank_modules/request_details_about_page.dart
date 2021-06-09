@@ -17,8 +17,8 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -30,10 +30,9 @@ import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -43,11 +42,8 @@ import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
 
 import '../../flavor_config.dart';
-import '../../labels.dart';
 // import 'package:timezone/browser.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -1808,7 +1804,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               widget.requestItem.oneToManyRequestAttenders
                       .contains(SevaCore.of(context).loggedInUser.email)
                   ? S.of(context).withdraw
-                  : L.of(context).attend,
+                  : S.of(context).attend,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -2195,7 +2191,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       children: [
         SizedBox(height: 10),
         Text(
-          L.of(context).requested_by,
+          S.of(context).requested_by,
           style: titleStyle,
           maxLines: 1,
         ),
@@ -2489,7 +2485,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             )
           : Container();
     } else {
-      return Text(L.of(context).location_not_provided,
+      return Text(S.of(context).location_not_provided,
           style: TextStyle(color: Colors.grey));
     }
   }
@@ -2529,7 +2525,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             )
           : Container();
     } else {
-      return Text(L.of(context).location_not_provided,
+      return Text(S.of(context).location_not_provided,
           style: TextStyle(color: Colors.grey));
     }
   }
@@ -2628,7 +2624,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         padding: const EdgeInsets.only(
                             left: 7.0, right: 7, top: 5, bottom: 5),
                         child: Text(
-                          L.of(context).request_approved_by_msg +
+                          S.of(context).request_approved_by_msg +
                               snapshot.data.documents[0]['acceptorName'],
                           style: TextStyle(
                               fontSize: 15,
@@ -2641,7 +2637,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.documents[0]['selectedAddress']),
                     Text(
-                      L.of(context).instruction_for_stay,
+                      "S.of(context).instruction_for_stay",
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],
@@ -2670,8 +2666,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               Text(
                   (widget.requestItem.borrowAgreementLink == null ||
                           widget.requestItem.borrowAgreementLink == '')
-                      ? L.of(context).request_agreement_not_available
-                      : L.of(context).click_to_view_request_agreement,
+                      ? S.of(context).request_agreement_not_available
+                      : S.of(context).click_to_view_request_agreement,
                   style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).primaryColor,

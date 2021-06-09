@@ -38,7 +38,6 @@ import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
 import '../../globals.dart' as globals;
-import '../../labels.dart';
 import '../image_picker_handler.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -244,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage>
                                   child: ListTile(
                                     leading: Icon(Icons.attachment),
                                     title: Text(
-                                      cvName ?? L.of(context).cv_not_available,
+                                      cvName ?? S.of(context).cv_not_available,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     trailing: IconButton(
@@ -1055,7 +1054,7 @@ class _RegisterPageState extends State<RegisterPage>
               ),
             ),
             title: Text(
-            L.of(context).sign_up_with_apple,
+            S.of(context).sign_up_with_apple,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -1076,7 +1075,7 @@ class _RegisterPageState extends State<RegisterPage>
               width: 30,
               child: Image.asset('lib/assets/images/g.png'),
             ),
-            title: Text(L.of(context).sign_up_with_google),
+            title: Text(S.of(context).sign_up_with_google),
           ),
         ),
       ),

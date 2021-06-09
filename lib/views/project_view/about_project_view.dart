@@ -252,7 +252,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
         child: Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-            L.of(context).add_manual_time,
+            S.of(context).add_manual_time,
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.bold,

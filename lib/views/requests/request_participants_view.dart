@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/labels.dart';
 
 import '../core.dart';
 
@@ -315,7 +313,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   textColor: Colors.white,
                   // elevation: 5,
                   onPressed: () {},
-                  child: Text(L.of(context).attending,
+                  child: Text(S.of(context).attending,
                       style: TextStyle(
                         fontSize: 14,
                       )),
@@ -370,7 +368,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                   ),
                                 )
                               : Text(
-                                  L.of(context).invited_speaker,
+                                  S.of(context).invited_speaker,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),

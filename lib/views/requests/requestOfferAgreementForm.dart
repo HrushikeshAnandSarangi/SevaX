@@ -1,14 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
@@ -19,15 +14,13 @@ import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
-
-import '../../labels.dart';
 
 class RequestOfferAgreementForm extends StatefulWidget {
   final bool isRequest; //false means offer
@@ -153,7 +146,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         centerTitle: true,
         title: Text(
-         L.of(context).choose_document,//Labels to be created
+         S.of(context).choose_document,//Labels to be created
           style: TextStyle(
               fontFamily: "Europa", fontSize: 20, color: Colors.white),
         ),
@@ -230,7 +223,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                 L.of(context).usage_term,
+                                 "S.of(context).usage_term",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -269,7 +262,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                     L.of(context).quite_hours_allowed,
+                                     "S.of(context).quite_hours_allowed",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -290,7 +283,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      L.of(context).pets_allowed,
+                                      S.of(context).pets_allowed,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -302,7 +295,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  L.of(context).max_occupants,
+                                  "S.of(context).max_occupants",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -344,7 +337,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                 L.of(context).security_deposits,
+                                 "S.of(context).security_deposits",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -387,7 +380,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                 L.of(context).person_of_contact_details,
+                                 "S.of(context).person_of_contact_details",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -551,7 +544,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         SizedBox(height: 17),
         documentNameTextField,
         Text(
-          L.of(context).any_specific_conditions,
+          "S.of(context).any_specific_conditions",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -573,7 +566,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                L.of(context).item_returned_hint_text,
+                "S.of(context).item_returned_hint_text",
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -589,7 +582,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          L.of(context).description_of_item,
+          "S.of(context).description_of_item",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

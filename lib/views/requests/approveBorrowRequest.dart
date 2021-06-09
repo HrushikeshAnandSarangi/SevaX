@@ -12,8 +12,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
-import '../../labels.dart';
-
 class AcceptBorrowRequest extends StatefulWidget {
   final String timeBankId;
   final String userId;
@@ -81,7 +79,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20),
-            Text(L.of(context).guests_can_do_and_dont,
+            Text("S.of(context).guests_can_do_and_dont",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -258,7 +256,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 } else if (documentName == '') {
                   _key.currentState.showSnackBar(
                     SnackBar(
-                      content: Text(L.of(context).snackbar_select_agreement_type),
+                      content: Text("S.of(context).snackbar_select_agreement_type"),
                     ),
                   );
                 } else {
@@ -343,7 +341,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 15),
         Text(
-         L.of(context).agreement,
+         "S.of(context).agreement",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 10),

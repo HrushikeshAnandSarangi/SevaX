@@ -9,7 +9,6 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -1243,7 +1242,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                             .fullname !=
                                         null
                                     ? SevaCore.of(context).loggedInUser.fullname
-                                    : L.of(context).anonymous_user,
+                                    : S.of(context).anonymous_user,
                                 createdEmail:
                                     SevaCore.of(context).loggedInUser.email,
                                 createdAt:
@@ -1650,7 +1649,7 @@ class _LikeCommentState extends State<LikeComment> {
           padding: EdgeInsets.only(left: 3, top: 10),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(L.of(context).likes,
+              child: Text(S.of(context).likes,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

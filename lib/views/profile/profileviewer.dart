@@ -20,8 +20,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import '../../labels.dart';
-
 //TODO update bio and remove un-necessary stuff
 
 class ProfileViewer extends StatefulWidget {
@@ -107,7 +105,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       borderColor: Colors.yellow,
                       spacing: 0.0),
                   Text(
-                   L.of(context).trustworthiness,
+                   S.of(context).trustworthiness,
                     style: subTitle,
                   ),
                 ],
@@ -138,7 +136,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     borderColor: Colors.yellow,
                     spacing: 0.0),
                 Text(
-                 L.of(context).reliabilitysocre,
+                 S.of(context).reliabilitysocre,
                   style: subTitle,
                 ),
               ],
@@ -344,7 +342,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                 width: 8,
                               ),
                               Text(
-                                user.cvName ?? L.of(context).cv_not_available,
+                                user.cvName ?? S.of(context).cv_not_available,
                                 style: TextStyle(
                                   color: Color(0xFFF0ca5f2),
                                   fontSize: 16,

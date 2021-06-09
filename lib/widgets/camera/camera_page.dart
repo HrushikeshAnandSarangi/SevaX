@@ -5,7 +5,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
@@ -167,7 +166,7 @@ class _CameraState extends State<CameraPage> {
   Widget build(BuildContext context) {
     if (_cameraNotAvailable) {
       return Center(
-        child: Text(L.of(context).camera_not_available),
+        child: Text(S.of(context).camera_not_available),
       );
     }
 
@@ -181,7 +180,7 @@ class _CameraState extends State<CameraPage> {
                     aspectRatio: 1 / controller.value.aspectRatio,
                     child: CameraPreview(controller),
                   )
-                : Text(L.of(context).loading_camera),
+                : Text(S.of(context).loading_camera),
           ),
         ),
         Column(

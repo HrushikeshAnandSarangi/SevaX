@@ -11,7 +11,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
-import '../../labels.dart';
 
 class JoinRequestView extends StatefulWidget {
   final String timebankId;
@@ -90,7 +89,7 @@ class TimebankRequests extends StatelessWidget {
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
 
           if (joinrequestModelList.length == 0) {
-            return Center(child: Text(L.of(context).no_pending_join_request));
+            return Center(child: Text(S.of(context).no_pending_join_request));
           }
 
           return ListView.builder(
@@ -203,7 +202,7 @@ class TimebankRequests extends StatelessWidget {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  getBio(userModel),
+                  getBio(context,userModel),
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
@@ -299,7 +298,7 @@ class TimebankRequests extends StatelessWidget {
     );
   }
 
-  Widget getBio(UserModel userModel) {
+  Widget getBio(BuildContext context,UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
         return Center(

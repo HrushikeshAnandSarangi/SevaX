@@ -1,7 +1,5 @@
-import 'dart:js';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/labels.dart';
 
 const TextStyle whiteCardNumberStyle = TextStyle(
   color: Colors.white,
@@ -99,7 +97,7 @@ class CardFrontLayout {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(L.of(context).exp_date,
+                            Text("Exp. Date",
                               style: TextStyle(
                                   package: 'awesome_card',
                                   color: textColor,
