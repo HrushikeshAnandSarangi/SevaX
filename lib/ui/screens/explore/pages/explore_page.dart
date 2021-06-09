@@ -43,7 +43,6 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
-import 'package:sevaexchange/labels.dart';
 
 class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
@@ -851,7 +850,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      L.of(context).browse_requests_by_category,
+                      S.of(context).browse_requests_by_category,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
