@@ -813,7 +813,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Enter Prep Time',
+                                      L.of(context).enter_prep_time,
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
@@ -911,7 +911,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                 Row(
                                   children: [
                                     Text(
-                                      'Enter Delivery Time',
+                                     L.of(context).enter_delivery_time,
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),

@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/timebanks/edit_group.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class ManageGroupView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -319,7 +320,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         ));
       },
       child: Text(
-        'Member Permissions',
+        L.of(context).member_permission,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+
+import '../labels.dart';
 
 class SevaCore extends InheritedWidget {
   UserModel loggedInUser;
@@ -57,7 +60,7 @@ class SevaCore extends InheritedWidget {
             ),
           ),
           Text(
-            'Internet connection lost',
+            L.of(context).internet_connection_lost,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
@@ -65,7 +68,7 @@ class SevaCore extends InheritedWidget {
           FlatButton(
             color: Colors.yellow,
             child: Text(
-              "OK",
+              S.of(context).ok,
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {},

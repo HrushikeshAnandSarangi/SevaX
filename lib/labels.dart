@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class L {
   L.of(BuildContext context) {}
@@ -212,10 +213,144 @@ String get lender_acknowledged_request_completion =>
 "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
 
 
+// added on 9th june
 
+String get  images_help_convey_theme_of_request =>
+'Images helps to convey the theme of your request';
 
+String get max_image_size =>
+'Maximum size: 5MB';
 
+String get exp_date =>
+"Exp. Date";
+String get camera_not_available =>
+"Camera not available";
 
+String get loading_camera =>
+"Loading Camera...";
+
+String get internet_connection_lost =>
+'Internet connection lost';
+
+String get update_available =>
+'Update Available';
+String get update_app =>
+"Update App";
+
+String get update_msg =>
+ "There is an update available with the app, Please tap on update to use the latest version of the app";
+
+ String get member_permission =>
+ "Member Permission";
+
+ String get    copy_and_share_code    =>
+ 'Code Generated: Copy the code and share to your friends';
+
+ String get copy_community_code =>
+ "Copy Community Code";
+
+ String get copy_code =>
+ "Copy Code";
+
+ String get share_code_msg =>
+ "You can share the code to invite them to your seva community";
+
+String get no_pending_join_request =>
+'No pending join requests';
+
+String get attend =>
+"Attend";
+
+String get requested_by =>
+"Requested By";
+
+String get location_not_provided =>
+"Location not provided";
+
+String get request_approved_by_msg =>
+'Your request has been approved by ';
+
+String get instruction_for_stay =>
+'Instruction for the stay';
+
+String get request_agreement_not_available =>
+'Request agreement not available';
+
+String get click_to_view_request_agreement =>
+'Click to view request agreement';
+
+String get enter_prep_time =>
+'Enter Prep Time';
+
+String get enter_delivery_time=>
+ 'Enter Delivery Time';
+
+ String get choose_document =>
+ "Choose Document";
+
+ 
+ String get usage_term =>
+ "Usage term*";
+
+ String get quite_hours_allowed =>
+ "Quiet hours allowed";
+ 
+ String get pets_allowed =>
+ "Pets Allowed";
+
+String get max_occupants =>
+ "Maximum occupants";
+
+ String get security_deposits =>
+  "Security Deposit";
+
+  String get person_of_contact_details =>
+   "Person of contact details";
+
+   String get any_specific_conditions =>
+   "Any specific condition(s)";
+
+  
+  String get item_returned_hint_text =>
+
+   'Ex: item must be returned in the same condition.';
+String get description_of_item =>
+   "Description of item(s)";
+
+   String get attending =>
+   "Attending";
+
+   String get invited_speaker =>
+   "Invited Speaker";
+   String get description_not_updated =>
+    "Description not yet updated";
+
+    String get terms_acknowledgement_text =>
+
+"I accept the terms of use as per the agreement";
+String get agreement  =>
+"Agreement";
+String get lender_not_accepted_request_msg =>
+"Lender has not created an agreement for this request";
+
+String get review_before_proceding_text =>
+"Please review the agreement below before proceeding.";
+
+String get review_agreement =>
+"Review Agreement";
+
+String get guests_can_do_and_dont =>
+"Guests can do and don't*";
+
+String get snackbar_select_agreement_type =>
+"Select an agreement type";
+String get add_manual_time =>
+"Add Manual Time";
+
+String get trustworthiness =>
+ "Trustworthiness";
+ String get reliabilitysocre =>
+ "Reliabilityscore";
 //<------------------below labels are done------------->
 
 // //DO BELOW OF THIS VISHNU

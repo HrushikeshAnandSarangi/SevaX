@@ -12,6 +12,8 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../../labels.dart';
+
 class JoinRejectDialogView extends StatefulWidget {
   final RequestInvitationModel requestInvitationModel;
   final String timeBankId;
@@ -79,7 +81,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 widget.requestInvitationModel.requestModel.description ??
-                    "Description not yet updated",
+                  L.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

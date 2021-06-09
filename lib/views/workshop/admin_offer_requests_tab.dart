@@ -41,7 +41,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Existing Requests",
+           S.of(context).existing_requests,
             style: TextStyle(fontSize: 18),
           ),
         ),

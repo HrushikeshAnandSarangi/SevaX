@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class JoinRequestView extends StatefulWidget {
   final String timebankId;
@@ -39,7 +40,7 @@ class JoinRequestViewState extends State<JoinRequestView>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Join Requests',
+              S.of(context).notifications_join_request,
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -89,7 +90,7 @@ class TimebankRequests extends StatelessWidget {
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
 
           if (joinrequestModelList.length == 0) {
-            return Center(child: Text('No pending join requests'));
+            return Center(child: Text(L.of(context).no_pending_join_request));
           }
 
           return ListView.builder(
@@ -206,7 +207,7 @@ class TimebankRequests extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      "Reason to join:",
+                     S.of(context).reason_to_join,
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: 16,
@@ -228,7 +229,7 @@ class TimebankRequests extends StatelessWidget {
                       RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          'Allow',
+                          S.of(context).allow,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -250,7 +251,7 @@ class TimebankRequests extends StatelessWidget {
                       RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          'Reject',
+                          S.of(context).reject,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -320,7 +321,7 @@ class TimebankRequests extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text("Bio not yet updated"),
+      child: Text(S.of(context).bio_not_updated),
     );
   }
 

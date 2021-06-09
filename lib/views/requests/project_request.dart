@@ -292,7 +292,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type:L.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -317,7 +317,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: L.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -342,7 +342,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type: "calendar_sync",
+                        transaction_matrix_type: L.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -924,7 +924,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                         padding:
                                             const EdgeInsets.only(top: 5.0),
                                         child: Text(
-                                          "Recurring",
+                                          S.of(context).recurring,
                                           style: TextStyle(
                                               fontSize: 16.0,
                                               color: Theme.of(context)

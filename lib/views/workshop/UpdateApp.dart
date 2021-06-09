@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:store_redirect/store_redirect.dart';
+
+import '../../labels.dart';
 // import 'package:open_appstore/open_appstore.dart';
 
 class UpdateView extends StatefulWidget {
@@ -25,7 +27,7 @@ class UpdateAppState extends State<UpdateView> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            'Update Available',
+            L.of(context).update_available,
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -47,7 +49,7 @@ class UpdateAppState extends State<UpdateView> {
                     iOSAppId: "456DU6XRWC.com.sevaexchange.app");
               },
               child: Text(
-                "Update App",
+               L.of(context).update_app,
                 style: TextStyle(color: Colors.white),
               ),
             )
@@ -57,7 +59,7 @@ class UpdateAppState extends State<UpdateView> {
           margin: EdgeInsets.all(25),
           alignment: Alignment.center,
           child: Text(
-            "There is an update available with the app, Please tap on update to use the latest version of the app",
+           L.of(context).update_msg,
             style: TextStyle(
               fontSize: 16.0,
             ),

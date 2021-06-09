@@ -20,6 +20,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
 
+import '../../labels.dart';
+
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
 
@@ -306,7 +308,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         ));
       },
       child: Text(
-        'Member Permissions',
+       L.of(context).member_permission,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

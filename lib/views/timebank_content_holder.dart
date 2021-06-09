@@ -41,6 +41,7 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../flavor_config.dart';
+import '../labels.dart';
 import 'core.dart';
 
 enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
@@ -987,7 +988,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Text(
                             news.fullName != null && news.fullName != ""
                                 ? news.fullName.trim()
-                                : "User name not available",
+                                : L.of(context).user_name_not_availble,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 7,
                             style: TextStyle(fontSize: 16.0),
@@ -1341,7 +1342,7 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                     Expanded(
                       child: Text(
-                        newsDocumentName ?? "Document",
+                        newsDocumentName ?? L.of(context).document,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
