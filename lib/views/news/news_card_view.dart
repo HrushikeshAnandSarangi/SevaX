@@ -1243,7 +1243,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                             .fullname !=
                                         null
                                     ? SevaCore.of(context).loggedInUser.fullname
-                                    : "Anonymous user",
+                                    : L.of(context).anonymous_user,
                                 createdEmail:
                                     SevaCore.of(context).loggedInUser.email,
                                 createdAt:
@@ -1650,7 +1650,7 @@ class _LikeCommentState extends State<LikeComment> {
           padding: EdgeInsets.only(left: 3, top: 10),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('likes',
+              child: Text(L.of(context).likes,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

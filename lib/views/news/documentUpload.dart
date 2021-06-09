@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../globals.dart' as globals;
+import '../../labels.dart';
 import '../core.dart';
 
 class DocumentUpload extends StatefulWidget {
@@ -95,7 +96,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                             child: ListTile(
                               leading: Icon(Icons.attachment),
                               title: Text(
-                                globals.newsDocumentName ?? "Document",
+                                globals.newsDocumentName ?? L.of(context).document,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -108,7 +109,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _path != null ? "Change document" : "Add document",
+                _path != null ? L.of(context).change_document : L.of(context).add_document,
               ),
             ),
             onPressed: () {

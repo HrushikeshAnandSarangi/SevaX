@@ -344,7 +344,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                 width: 8,
                               ),
                               Text(
-                                user.cvName ?? "CV not available",
+                                user.cvName ?? L.of(context).cv_not_available,
                                 style: TextStyle(
                                   color: Color(0xFFF0ca5f2),
                                   fontSize: 16,

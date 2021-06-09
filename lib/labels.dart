@@ -16,6 +16,163 @@ class L {
 //   String get mile => "Mile"; //cant find where to replace
 //   // <------------ PENDING END ------------>
 
+
+    //new labels to be updated
+
+// String get add_event_to_calender =>
+// "Add event to calender";
+
+// String get add_to_calender =>
+// "Add to calender";
+
+// String get do_you_want_addto_calender =>
+// "Do you want to add this event to your calendar?";
+
+// String get add_to_google_calender =>
+// "Add to Google Calendar";
+
+// String get add_to_outlook =>
+// "Add to Outlook";
+
+// String get add_to_ical =>
+// "Add to ical ";
+
+// String get calender_sync =>
+// "calendar_sync";
+
+// String get something_went_wrong =>
+// "something went wrong";
+
+// String get featured_communities =>
+// "Featured communities";
+
+// String get browse_by_category =>
+// "Browse community by category";
+
+// String get explore_searchbar_hinttext =>
+// 'Try "Osaka" "Postal Code" "Location"';
+
+// String get find =>
+// "Find";
+
+// String get any_category =>
+// "any category";
+// String get new_york =>
+// "New york | USA";
+
+// String get join_webinar =>
+// "join webinar";
+
+// String get pledge_goods_supplies =>
+// " has pledge to donate good/supplies";
+// String get credits_debited =>
+// "seva credits debited";
+// String get credits_credited =>
+// "Seva credits Credited";
+
+// String get credits_debited_msg =>
+// "Seva Credits have been debited from your account";
+
+// String get accepted_offer_msg =>
+// "You have accepted this offer.";
+
+// String get completed_the_request =>
+// " Completed the request";
+
+// String get deletion_request =>
+//  "Deletion Request";
+
+//  String get create_virtual_offer =>
+//  "create virtual offer";
+//  String get create_public_offer =>
+//  "create public offer";
+//  String get onetomany_offers =>
+//  "onetomany offers";
+
+//  String get amount_lessthan_donation_amount =>
+//  "Entered amount is less than minimum donation amount.";
+
+//  String get user_name_not_availble =>
+//  "User name not available";
+
+//  String get document =>
+//  "Document";
+
+//  String get users =>
+//  "Users";
+
+//  String get cash_request_title_hint =>
+//  "Ex: Fundraiser for women’s shelter...";
+
+//  String get error_loading_data =>
+//  'Error Loading Data';
+// String get likes =>
+// "likes";
+
+// String get anonymous_user =>
+//  "Anonymous user";
+
+//  String get filtering_blocked_content =>
+//  "Filtering blocked content";
+
+//  String get filtering_past_requests_content =>
+// "Filtering past requests content";
+
+// String get approved_member =>
+// "Approved Members";
+
+// String get send_csv_file =>
+// "Send CSV File";
+// String get success =>
+// "success";
+// String get failure =>
+// "Failure";
+
+// String get yang_2020 =>
+// "Yang 2020";
+
+// String get current =>
+// "current";
+
+// String get card_holder =>
+// "Card Holder";
+
+// String get hours_not_updated =>
+// "hours not updated";
+
+// String get request_approved =>
+// "Request Approved";
+
+// String get request_has_been_assigned_to_a_member =>
+// "Request has been assigned to a member";
+
+// String get borrow_request_for_place =>
+// "Borrow request for place";
+
+// String get borrow_request_for_item =>
+// "Borrow Request for item";
+
+// String get clear_all =>
+// "Clear All";
+
+// String get message_room_join =>
+// "Message room join";
+
+// String get message_room_remove =>
+// "Message room remove";
+
+// String get item_received_alert_dialouge =>
+// "'If you have you received your item/place back click the button below to complete this.'";
+
+// String get request_ended =>
+// "This request has now ended. Tap to complete the request";
+
+// String get request_ended_emailsent_msg =>
+// "The request has completed and an email has been sent to you. Tap to leave a feedback.";
+
+// String get lender_acknowledged_request_completion =>
+// "The Lender has acknowledged completion of this request. Tap to leave a feedback.";
+
 // <-----------      new label 8th June  --------->
 String get onetomany_createoffer_note =>
     "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
@@ -56,161 +213,6 @@ String get sandbox_dialog_title =>
 String get sandbox_create_community_alert =>
     "Are you sure you want to create a sandbox community?"; //done in web // ask umesh
 
-    //new labels to be updated
-
-String get add_event_to_calender =>
-"Add event to calender";
-
-String get add_to_calender =>
-"Add to calender";
-
-String get do_you_want_addto_calender =>
-"Do you want to add this event to your calendar?";
-
-String get add_to_google_calender =>
-"Add to Google Calendar";
-
-String get add_to_outlook =>
-"Add to Outlook";
-
-String get add_to_ical =>
-"Add to ical ";
-
-String get calender_sync =>
-"calendar_sync";
-
-String get something_went_wrong =>
-"something went wrong";
-
-String get featured_communities =>
-"Featured communities";
-
-String get browse_by_category =>
-"Browse community by category";
-
-String get explore_searchbar_hinttext =>
-'Try "Osaka" "Postal Code" "Location"';
-
-String get find =>
-"Find";
-
-String get any_category =>
-"any category";
-String get new_york =>
-"New york | USA";
-
-String get join_webinar =>
-"join webinar";
-
-String get pledge_goods_supplies =>
-" has pledge to donate good/supplies";
-String get credits_debited =>
-"seva credits debited";
-String get credits_credited =>
-"Seva credits Credited";
-
-String get credits_debited_msg =>
-"Seva Credits have been debited from your account";
-
-String get accepted_offer_msg =>
-"You have accepted this offer.";
-
-String get completed_the_request =>
-" Completed the request";
-
-String get deletion_request =>
- "Deletion Request";
-
- String get create_virtual_offer =>
- "create virtual offer";
- String get create_public_offer =>
- "create public offer";
- String get onetomany_offers =>
- "onetomany offers";
-
- String get amount_lessthan_donation_amount =>
- "Entered amount is less than minimum donation amount.";
-
- String get user_name_not_availble =>
- "User name not available";
-
- String get document =>
- "Document";
-
- String get users =>
- "Users";
-
- String get cash_request_title_hint =>
- "Ex: Fundraiser for women’s shelter...";
-
- String get error_loading_data =>
- 'Error Loading Data';
-String get likes =>
-"likes";
-
-String get anonymous_user =>
- "Anonymous user";
-
- String get filtering_blocked_content =>
- "Filtering blocked content";
-
- String get filtering_past_requests_content =>
-"Filtering past requests content";
-
-String get approved_member =>
-"Approved Members";
-
-String get send_csv_file =>
-"Send CSV File";
-String get success =>
-"success";
-String get failure =>
-"Failure";
-
-String get yang_2020 =>
-"Yang 2020";
-
-String get current =>
-"current";
-
-String get card_holder =>
-"Card Holder";
-
-String get hours_not_updated =>
-"hours not updated";
-
-String get request_approved =>
-"Request Approved";
-
-String get request_has_been_assigned_to_a_member =>
-"Request has been assigned to a member";
-
-String get borrow_request_for_place =>
-"Borrow request for place";
-
-String get borrow_request_for_item =>
-"Borrow Request for item";
-
-String get clear_all =>
-"Clear All";
-
-String get message_room_join =>
-"Message room join";
-
-String get message_room_remove =>
-"Message room remove";
-
-String get item_received_alert_dialouge =>
-"'If you have you received your item/place back click the button below to complete this.'";
-
-String get request_ended =>
-"This request has now ended. Tap to complete the request";
-
-String get request_ended_emailsent_msg =>
-"The request has completed and an email has been sent to you. Tap to leave a feedback.";
-
-String get lender_acknowledged_request_completion =>
-"The Lender has acknowledged completion of this request. Tap to leave a feedback.";
 
 
 // added on 9th june
@@ -304,29 +306,27 @@ String get max_occupants =>
  String get security_deposits =>
   "Security Deposit";
 
-  String get person_of_contact_details =>
+ String get person_of_contact_details =>
    "Person of contact details";
 
-   String get any_specific_conditions =>
+ String get any_specific_conditions =>
    "Any specific condition(s)";
 
   
-  String get item_returned_hint_text =>
+String get item_returned_hint_text =>
 
    'Ex: item must be returned in the same condition.';
 String get description_of_item =>
    "Description of item(s)";
 
-   String get attending =>
+ String get attending =>
    "Attending";
 
-   String get invited_speaker =>
+ String get invited_speaker =>
    "Invited Speaker";
-   String get description_not_updated =>
+ String get description_not_updated =>
     "Description not yet updated";
-
-    String get terms_acknowledgement_text =>
-
+ String get terms_acknowledgement_text =>
 "I accept the terms of use as per the agreement";
 String get agreement  =>
 "Agreement";
@@ -351,6 +351,19 @@ String get trustworthiness =>
  "Trustworthiness";
  String get reliabilitysocre =>
  "Reliabilityscore";
+ String get cv_not_available =>
+ "CV not available";
+
+ String get change_document =>
+"Change document";
+String get add_document =>
+"Add document";
+
+String get sign_up_with_apple =>
+  'Sign up with Apple';
+  
+String get sign_up_with_google =>
+  'Sign up with Google';
 //<------------------below labels are done------------->
 
 // //DO BELOW OF THIS VISHNU
