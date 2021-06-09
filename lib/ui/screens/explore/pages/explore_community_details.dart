@@ -150,7 +150,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                           S.of(context).part_of_sevax,
+                            S.of(context).part_of_sevax,
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
@@ -659,10 +659,10 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(
-               S.of(context).join_community_alert +
-                    message +
-                    '.'),
+            content: Text(S
+                .of(context)
+                .join_community_alert
+                .replaceAll(" **CommunityName", '')),
             actions: [
               RaisedButton(
                 color: Colors.red,
@@ -707,7 +707,10 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                     ),
                   );
                 },
-                child: Text(S.of(context).switch_timebank,style:TextStyle(color:Colors.white),),
+                child: Text(
+                  S.of(context).switch_timebank,
+                  style: TextStyle(color: Colors.white),
+                ),
               )
             ],
           );

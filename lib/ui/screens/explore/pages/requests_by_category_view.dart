@@ -63,7 +63,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HideWidget(
-            hide: Provider.of<UserModel>(context, listen: false) != null,
+            hide: widget.isUserSignedIn,
             child: CustomBackButton(
               onBackPressed: () {
                 if (Navigator.of(context).canPop()) {
