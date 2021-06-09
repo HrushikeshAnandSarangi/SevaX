@@ -75,7 +75,7 @@ dependencies:
   package_info: ^0.4.1
   path_provider: ^1.6.10
   pdf: ^1.10.0
-  permission_handler: ^5.0.1+1
+  # permission_handler: ^5.0.1+1
   pin_code_text_field: ^1.6.0
   progress_dialog: ^1.2.3
   provider: ^4.3.3
