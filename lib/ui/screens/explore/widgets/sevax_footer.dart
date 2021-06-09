@@ -7,13 +7,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/language.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 
 class SevaExploreFooter extends StatefulWidget {
@@ -98,7 +95,7 @@ class _SevaExploreFooterState extends State<SevaExploreFooter> {
                     ),
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(width: 12),
                 Container(
                   height: 40,
                   decoration: BoxDecoration(
