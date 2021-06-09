@@ -27,7 +27,6 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
-import 'package:sevaexchange/labels.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -377,7 +376,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                             stream: _bloc.makePublicValue,
                                             builder: (context, snapshot) {
                                               return ConfigurationCheck(
-                                                actionType: L
+                                                actionType: S
                                                     .of(context)
                                                     .create_public_offer,
                                                 role: memberType(

@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
@@ -17,7 +16,6 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../l10n/l10n.dart';
-import '../../../../labels.dart';
 
 class RequestsSearchView extends StatelessWidget {
   final bool isUserSignedIn;
@@ -139,7 +137,7 @@ class RequestsSearchView extends StatelessWidget {
           },
         ),
         Text(
-          L.of(context).browse_requests_by_category,
+          S.of(context).browse_requests_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12),
