@@ -96,12 +96,9 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Container(
+                  alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height / 2,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height / 4 - 20),
-                    child: Text('No result found'),
-                  ),
+                  child: Text('No result found'),
                 );
               }
 

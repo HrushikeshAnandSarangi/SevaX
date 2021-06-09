@@ -2182,6 +2182,8 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
+
+      logger.i(snapshot.documents.length.toString() + "List Categrories from ");
       snapshot.documents.forEach((element) {
         CategoryModel model = CategoryModel.fromMap(element.data);
         model.typeId = element.documentID;

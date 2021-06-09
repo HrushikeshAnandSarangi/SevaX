@@ -814,7 +814,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                   buttonLabel:
                                       status == CompareUserStatus.JOINED
                                           ? S.of(context).joined
-                                          : S.of(context).join,
+                                          : S.of(context).info,
                                   buttonColor:
                                       status == CompareUserStatus.JOINED
                                           ? HexColor("#D2D2D2")
@@ -851,7 +851,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      S.of(context).browse_by_category,
+                      L.of(context).browse_requests_by_category,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -859,9 +859,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 10),
                     RequestCategories(
-                      stream: widget.isUserSignedIn
-                          ? FirestoreManager.getAllCategoriesStream()
-                          : _exploreBloc.categories,
+                      stream: FirestoreManager.getAllCategoriesStream(),
                       onTap: (value) {
                         Navigator.of(context).push(
                           MaterialPageRoute(

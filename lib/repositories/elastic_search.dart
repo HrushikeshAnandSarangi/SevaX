@@ -505,7 +505,7 @@ class ElasticSearchApi {
         await _makeElasticSearchPostRequest(endPoint, body);
     List<CategoryModel> categoryList = [];
 
-    log('Elastic seach categories result:  ' + hitList.toString());
+    // log('Elastic seach categories result:  ' + hitList.toString());
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];

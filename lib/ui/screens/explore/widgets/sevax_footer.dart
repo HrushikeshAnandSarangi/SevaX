@@ -14,8 +14,15 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/views/profile/timezone.dart';
 
-class SevaExploreFooter extends StatelessWidget {
+class SevaExploreFooter extends StatefulWidget {
+  @override
+  _SevaExploreFooterState createState() => _SevaExploreFooterState();
+}
+
+class _SevaExploreFooterState extends State<SevaExploreFooter> {
+  String timezoneName;
   final List<List<FooterData>> footerData = [
     [FooterData.SevaX, FooterData.Discover, FooterData.Hosting],
     [FooterData.About_Us, FooterData.Trust_Safety, FooterData.Host_community],
@@ -25,6 +32,21 @@ class SevaExploreFooter extends StatelessWidget {
     [FooterData.Help, FooterData.Events, FooterData.EMPTY],
     [FooterData.Diversity_Belonging, FooterData.Guidebooks, FooterData.EMPTY],
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    timezoneName = DateTime.now().timeZoneName.toLowerCase();
+    var exists = TimezoneListData().timezonelist.firstWhere(
+          (element) =>
+              element.timezoneName.toLowerCase() == timezoneName.toLowerCase(),
+          orElse: () => null,
+        );
+    if (exists == null) {
+      timezoneName = 'PACIFIC TIME'.toLowerCase();
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,17 +107,23 @@ class SevaExploreFooter extends StatelessWidget {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      onChanged: (value) {},
-                      items: languageNames.keys
+                      onChanged: (value) {
+                        setState(() {
+                          timezoneName = value;
+                        });
+                      },
+                      value: timezoneName,
+                      items: TimezoneListData()
+                          .timezonelist
                           .map(
-                            (key) => DropdownMenuItem(
+                            (model) => DropdownMenuItem(
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  languageNames[key],
+                                  model.timezoneName,
                                 ),
                               ),
-                              value: key,
+                              value: model.timezoneName.toLowerCase(),
                             ),
                           )
                           .toList(),

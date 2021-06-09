@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../l10n/l10n.dart';
+import '../../../../labels.dart';
 
 class RequestsSearchView extends StatelessWidget {
   final bool isUserSignedIn;
@@ -138,7 +139,7 @@ class RequestsSearchView extends StatelessWidget {
           },
         ),
         Text(
-          'Browse Requests by category',
+          L.of(context).browse_requests_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12),

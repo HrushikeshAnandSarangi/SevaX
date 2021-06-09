@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 class L {
   L.of(BuildContext context) {}
 
+  String get browse_requests_by_category => "Browse requests by category";
+
 //   // <------------ PENDING START ------------>
 
 //   String get offer => "Offer"; //it's in flavor config file so cannot add it.
