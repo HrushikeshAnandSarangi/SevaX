@@ -215,7 +215,7 @@ String get sandbox_create_community_alert =>
 
 
 
-// added on 9th june
+// new labes to be updated 
 
 String get  images_help_convey_theme_of_request =>
 'Images helps to convey the theme of your request';
