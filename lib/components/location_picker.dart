@@ -44,7 +44,8 @@ class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  final Geolocator geolocator = Geolocator()
+    ..forceAndroidLocationManager = true;
   LocationData locationData;
   String address;
   // CameraPosition cameraPosition;

@@ -71,7 +71,7 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 
 Stream<List<NewsModel>> getNearNewsStream(
     {@required String timebankID}) async* {
-  Geolocator geolocator = Geolocator();
+  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;;
   Position userLocation;
   var futures = <Future>[];
 
@@ -155,7 +155,7 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 }
 
 Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  Geolocator geolocator = Geolocator();
+  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
   Position userLocation;
 
   userLocation = await geolocator.getCurrentPosition();

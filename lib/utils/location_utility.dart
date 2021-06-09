@@ -7,7 +7,8 @@ class LocationUtility {
   Future<String> getFormattedAddress(double latitude, double longitude) async {
     List<Placemark> placemarkList;
     try {
-      placemarkList = await Geolocator().placemarkFromCoordinates(
+      var geoLocator = Geolocator()..forceAndroidLocationManager = true;
+      placemarkList = await geoLocator.placemarkFromCoordinates(
         latitude,
         longitude,
       );
