@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -527,8 +526,6 @@ class ElasticSearchApi {
         await _makeElasticSearchPostRequest(endPoint, body);
     List<CommunityCategoryModel> categoryList = [];
 
-    log('Elastic seach categories result:  ' + hitList.toString());
-
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       CommunityCategoryModel model = CommunityCategoryModel.fromMap(sourceMap);
@@ -561,9 +558,6 @@ class ElasticSearchApi {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
     List<RequestModel> models = [];
-
-    log('Returned Requests: ' + hitList.toString());
-
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       RequestModel model = RequestModel.fromMap(sourceMap);
@@ -638,6 +632,47 @@ class ElasticSearchApi {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       CommunityModel model = CommunityModel(sourceMap);
+      models.add(model);
+    });
+    models.sort((a, b) => a.name.compareTo(b.name));
+    return models;
+  }
+
+  static Future<List<CommunityModel>> getFeaturedCommunities() async {
+    String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search?size=10';
+
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "testCommunity": AppConfig.isTestCommunity != null &&
+                    AppConfig.isTestCommunity
+              }
+            },
+            {
+              "term": {"private": false}
+            },
+            {
+              "term": {"softDelete": false}
+            }
+          ]
+        }
+      },
+      "sort": {
+        "featuredCommunity": {"order": "desc"}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(endPoint, body);
+    List<CommunityModel> models = [];
+    logger.wtf(hitList);
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      CommunityModel model = CommunityModel(sourceMap);
+      logger.e("featured community", sourceMap['featuredCommunity']);
       models.add(model);
     });
     models.sort((a, b) => a.name.compareTo(b.name));
