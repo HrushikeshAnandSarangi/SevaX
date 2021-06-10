@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 // import 'package:location/location.dart';
@@ -18,6 +19,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -125,11 +127,7 @@ Future<int> getTimebankRaisedAmountAndGoods({
 Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
     {GeoFirePoint locationVal, String userEmailId}) async {
   GeoFirePoint location;
-  Location templocation = Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
   Geoflutterfire geo = Geoflutterfire();
-  LocationData locationData;
 
   String userEmail =
       userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
@@ -145,16 +143,14 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   }
 
   if (locationVal == null) {
-    _permissionGranted = await templocation.hasPermission();
-    if (_permissionGranted == PermissionStatus.granted) {
-      locationData = await templocation.getLocation();
-      double lat = locationData?.latitude;
-      double lng = locationData?.longitude;
-      location = geo.point(latitude: lat, longitude: lng);
-    }
+    LocationHelper.getLastKnownPosition().then((value) {
+      location =
+          geo.point(latitude: value.latitude, longitude: value.longitude);
+    });
   } else {
     location = locationVal;
   }
+
   AppConfig.loggedInEmail = userEmailId;
   deviceDetails.location = location;
   await Firestore.instance.collection("users").document(userEmail).updateData({
@@ -166,11 +162,8 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
 Future<DeviceDetails> addCreationSourceOfUser(
     {GeoFirePoint locationVal, String userEmailId}) async {
   GeoFirePoint location;
-  Location templocation = Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
+  // PermissionStatus _permissionGranted;
   Geoflutterfire geo = Geoflutterfire();
-  LocationData locationData;
 
   String userEmail =
       userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
@@ -186,13 +179,10 @@ Future<DeviceDetails> addCreationSourceOfUser(
   }
 
   if (locationVal == null) {
-    _permissionGranted = await templocation.hasPermission();
-    if (_permissionGranted == PermissionStatus.granted) {
-      locationData = await templocation.getLocation();
-      double lat = locationData?.latitude;
-      double lng = locationData?.longitude;
-      location = geo.point(latitude: lat, longitude: lng);
-    }
+    await LocationHelper.getLastKnownPosition().then((value) {
+      location =
+          geo.point(latitude: value.latitude, longitude: value.longitude);
+    });
   } else {
     location = locationVal;
   }
