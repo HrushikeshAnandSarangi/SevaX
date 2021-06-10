@@ -91,8 +91,9 @@ class LocationHelper {
       coordinates = null;
     }, (r) {
       coordinates = Coordinates(r.latitude, r.longitude);
+      logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates in fold");
     });
-    logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates");
+    logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates return");
     return coordinates;
   }
 }
