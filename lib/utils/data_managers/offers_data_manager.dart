@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -31,7 +30,7 @@ Stream<List<OfferModel>> getOffersStream(
 
   var data = query.snapshots();
   logger.i("fetched data");
-  Location location = await LocationHelper.gpsCheck();
+  Coordinates coordinates = await LocationHelper.getCoordinates();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
@@ -43,7 +42,7 @@ Stream<List<OfferModel>> getOffersStream(
           log(model.id + '--->' + model.offerType.toString());
 
           model.id = snapshot.documentID;
-          model.currentUserLocation = location != null ? Coordinates(location.latitude, location.longitude):null;
+          model.currentUserLocation = coordinates;
 
           if (model.offerType == OfferType.GROUP_OFFER &&
               !model.groupOfferDataModel.isCanceled) {

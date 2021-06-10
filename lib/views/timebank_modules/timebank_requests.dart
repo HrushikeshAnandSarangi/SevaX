@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
@@ -316,8 +315,8 @@ class RequestListItemsState extends State<RequestListItems> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Location>(
-      future: LocationHelper.gpsCheck(),
+    return FutureBuilder<Coordinates>(
+      future: LocationHelper.getCoordinates(),
       builder: (context, currentLocation) {
         if (currentLocation.connectionState == ConnectionState.waiting) {
           log(' set true');
@@ -364,7 +363,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   loggedintimezone: loggedintimezone,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                   projectId: widget.projectId,
-                  currentCoords: currentLocation.data != null ? Coordinates(currentLocation.data.latitude, currentLocation.data.longitude):null,
+                  currentCoords: currentLocation.data,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -408,7 +407,7 @@ class RequestListItemsState extends State<RequestListItems> {
                           SevaCore.of(context).loggedInUser.sevaUserID);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
-                    currentCoords:  currentLocation.data != null?Coordinates(currentLocation.data.latitude,currentLocation.data.longitude):null,
+                    currentCoords:  currentLocation.data ,
                   );
               }
             },

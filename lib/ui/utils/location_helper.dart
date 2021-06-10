@@ -67,4 +67,19 @@ class LocationHelper {
       return null;
     });
   }
+
+  static Future<Coordinates> getCoordinates() {
+    return Geolocator.getLastKnownPosition().then((currentPostion) {
+      if (currentPostion != null) {
+        return Coordinates(
+          currentPostion.latitude,
+          currentPostion.longitude,
+        );
+      } else {
+        return null;
+      }
+    }).catchError((e) {
+      return null;
+    });
+  }
 }
