@@ -6,10 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as prefix;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -27,7 +28,7 @@ extension StringExtension on String {
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
   final String selectedAddress;
-  final Location location = new Location();
+  final prefix.Location location = new prefix.Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
@@ -44,9 +45,8 @@ class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
-  final Geolocator geolocator = Geolocator()
-    ..forceAndroidLocationManager = true;
-  LocationData locationData;
+  final Geolocator geolocator = Geolocator();
+  prefix.LocationData locationData;
   String address;
   // CameraPosition cameraPosition;
   LatLng defaultLatLng = LatLng(41.678510, -87.494080);
@@ -212,7 +212,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   Future loadInitialLocation() async {
     log('loadCurrentLocation');
-    LocationData locationData;
+    prefix.LocationData locationData;
     try {
       locationData = await widget.location.getLocation();
       if (_mapController != null) {
@@ -344,7 +344,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Future<String> _getAddressFromLatLng(LatLng latlng, context) async {
     if (latlng != null) {
       try {
-        List<Placemark> p = await geolocator.placemarkFromCoordinates(
+        List<Placemark> p = await placemarkFromCoordinates(
             latlng.latitude, latlng.longitude);
         Placemark place = p[0];
         String locality =

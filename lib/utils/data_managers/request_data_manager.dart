@@ -957,10 +957,10 @@ Stream<List<RequestModel>> getNearRequestListStream(
   // double lat = pos.latitude;
   // double lng = pos.longitude;
 
-  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  
 
   Position userLocation;
-  userLocation = await geolocator.getCurrentPosition();
+  userLocation = await Geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 
