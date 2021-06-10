@@ -15,6 +15,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -59,7 +60,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   String errorText = '';
   @override
   void initState() {
-    gpsCheck();
+    LocationHelper.getLastKnownPosition().then((value) {
+      if (mounted) setState(() {});
+    });
     super.initState();
     String _searchText = "";
 
@@ -310,7 +313,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         widget.isFromHome ? Container() : createCommunity(),
         FlatButton(
           onPressed: () async {
-            
             await Firestore.instance
                 .collection("users")
                 .document(widget.loggedInUser.email)
@@ -328,11 +330,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               ModalRoute.withName('/'),
             );
-          
           },
           child: Text(S.of(context).skip),
         ),
-        
       ]),
     );
   }
@@ -435,12 +435,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_context) => SevaCore(
-                      loggedInUser: SevaCore.of(context).loggedInUser,
-                      child:ExploreCommunityDetails(
-                        communityId: communityModell.id,
-                        isSignedUser: true,
+                        loggedInUser: SevaCore.of(context).loggedInUser,
+                        child: ExploreCommunityDetails(
+                          communityId: communityModell.id,
+                          isSignedUser: true,
+                        ),
                       ),
-                    ),),
+                    ),
                   );
                 }
               : null,
@@ -461,44 +462,45 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
-  void gpsCheck() async {
-    logger.i("check gps");
+//TODOCHECK
+  // void getLastKnownPosition() async {
+  //   logger.i("check gps");
 
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
+  //   try {
+  //     Location templocation = Location();
+  //     bool _serviceEnabled;
+  //     PermissionStatus _permissionGranted;
 
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        logger.i("requesting location");
+  //     _serviceEnabled = await templocation.serviceEnabled();
+  //     if (!_serviceEnabled) {
+  //       _serviceEnabled = await templocation.requestService();
+  //       logger.i("requesting location");
 
-        if (!_serviceEnabled) {
-          return;
-        } else {
-          setState(() {});
-        }
-      }
+  //       if (!_serviceEnabled) {
+  //         return;
+  //       } else {
+  //         setState(() {});
+  //       }
+  //     }
 
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        logger.i("requesting location");
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        } else {
-          setState(() {});
-        }
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        logger.e(e);
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        logger.e(e);
-      }
-    }
-  }
+  //     _permissionGranted = await templocation.hasPermission();
+  //     if (_permissionGranted == PermissionStatus.denied) {
+  //       _permissionGranted = await templocation.requestPermission();
+  //       logger.i("requesting location");
+  //       if (_permissionGranted != PermissionStatus.granted) {
+  //         return;
+  //       } else {
+  //         setState(() {});
+  //       }
+  //     }
+  //   } on PlatformException catch (e) {
+  //     if (e.code == 'PERMISSION_DENIED') {
+  //       logger.e(e);
+  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
+  //       logger.e(e);
+  //     }
+  //   }
+  // }
 
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
@@ -656,7 +658,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   } else {}
                 },
               ),
-              SizedBox(height:8),
+              SizedBox(height: 8),
             ],
           ),
         ),

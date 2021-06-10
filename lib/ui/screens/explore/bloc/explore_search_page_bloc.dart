@@ -71,7 +71,7 @@ class ExploreSearchPageBloc {
     });
     Location location;
     try {
-      location = await LocationHelper.gpsCheck().timeout(Duration(seconds: 3));
+      location = await LocationHelper.getLastKnownPosition().timeout(Duration(seconds: 3));
     } catch (e) {
       logger.e("explore search bloc location timed out");
     }

@@ -414,13 +414,13 @@ class NewsImageState extends State<NewsImage>
   //       }
   //     }
 
-  //     _permissionGranted = await templocation.hasPermission();
-  //     if (_permissionGranted == PermissionStatus.denied) {
-  //       _permissionGranted = await templocation.requestPermission();
-  //       if (_permissionGranted != PermissionStatus.granted) {
-  //         return;
-  //       }
-  //     }
+  // _permissionGranted = await templocation.hasPermission();
+  // if (_permissionGranted == PermissionStatus.denied) {
+  //   _permissionGranted = await templocation.requestPermission();
+  //   if (_permissionGranted != PermissionStatus.granted) {
+  //     return;
+  //   }
+  // }
   //     Location().getLocation().then((onValue) {
   //       GeoFirePoint location =
   //           GeoFirePoint(onValue.latitude, onValue.longitude);

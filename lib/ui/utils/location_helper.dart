@@ -1,5 +1,6 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class DistanceFilterData {
@@ -39,7 +40,31 @@ class LocationHelper {
     // return GeoFirePoint.distanceBetween(to: cord1, from: cord2);
   }
 
-  static Future<Location> gpsCheck() async {
+  static Future<Location> getLastKnownPosition() async {
     //return location over here
+    var isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationServiceEnabled) {
+      await Geolocator.requestPermission();
+      var isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (isLocationServiceEnabled) {
+        return await getLocation();
+      } else {
+        return null;
+      }
+    } else {
+      return await getLocation();
+    }
+  }
+
+  static Future<Location> getLocation() {
+    return Geolocator.getLastKnownPosition().then((currentPostion) {
+      return Location(
+        latitude: currentPostion.latitude,
+        longitude: currentPostion.longitude,
+      );
+    }).catchError((e) {
+      return null;
+    });
   }
 }

@@ -91,7 +91,7 @@ class _ExplorePageState extends State<ExplorePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
       // if (isSignedUser) {
-      LocationHelper.gpsCheck().then((value) {
+      LocationHelper.getLastKnownPosition().then((value) {
         if (value != null) {
           geoPoint = GeoPoint(value.latitude, value.longitude);
           setState(() {});
