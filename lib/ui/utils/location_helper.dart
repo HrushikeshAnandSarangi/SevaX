@@ -1,10 +1,9 @@
-import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class DistanceFilterData {
-  final LocationData locationData;
+  final Location locationData;
   final int radius;
 
   DistanceFilterData(this.locationData, this.radius);
@@ -40,53 +39,7 @@ class LocationHelper {
     // return GeoFirePoint.distanceBetween(to: cord1, from: cord2);
   }
 
-  static Future<LocationData> gpsCheck() async {
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
-      LocationData locationData;
-
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        logger.i("requesting location");
-
-        if (!_serviceEnabled) {
-          return null;
-        } else {
-          locationData = await templocation.getLocation();
-          if (locationData != null) {
-            return locationData;
-          }
-        }
-      }
-
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        logger.i("requesting location");
-        if (_permissionGranted != PermissionStatus.granted) {
-          return null;
-        } else {
-          locationData = await templocation.getLocation();
-          if (locationData != null) {
-            return locationData;
-          }
-        }
-      } else {
-        locationData = await templocation.getLocation();
-        if (locationData != null) {
-          return locationData;
-        }
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        logger.e(e);
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        logger.e(e);
-      }
-    }
-    return null;
+  static Future<Location> gpsCheck() async {
+    //return location over here
   }
 }

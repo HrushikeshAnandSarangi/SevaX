@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/explore_cards_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -27,10 +24,10 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_categories.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
@@ -83,7 +80,7 @@ class _ExplorePageState extends State<ExplorePage> {
   bool seeAllBool = false;
   int seeAllSliceVal = 4;
   int members = 4000;
-  List<CategoryModel> categories = [];
+
   bool dataLoaded = false;
 
   GeoPoint geoPoint = GeoPoint(12.87428, 77.6688899);
@@ -94,20 +91,15 @@ class _ExplorePageState extends State<ExplorePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
       // if (isSignedUser) {
-      gpsCheck().then((_) {
+      LocationHelper.gpsCheck().then((value) {
+        if (value != null) {
+          geoPoint = GeoPoint(value.latitude, value.longitude);
+          setState(() {});
+        }
         _bloc.init(
-            Provider.of<UserModel>(context, listen: false)?.nearBySettings);
-        getCategories();
+          Provider.of<UserModel>(context, listen: false)?.nearBySettings,
+        );
       });
-      // }
-    });
-  }
-
-  Future<void> getCategories() async {
-    await FirestoreManager.getAllCategories().then((value) {
-      categories = value;
-      dataLoaded = true;
-      setState(() {});
     });
   }
 
@@ -876,64 +868,6 @@ class _ExplorePageState extends State<ExplorePage> {
         ],
       ),
     );
-  }
-
-  Future<void> gpsCheck() async {
-    logger.i("check gps");
-
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
-      LocationData locationData;
-
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        logger.i("requesting location");
-
-        if (!_serviceEnabled) {
-          return;
-        } else {
-          locationData = await templocation.getLocation();
-
-          double lat = locationData?.latitude;
-          double lng = locationData?.longitude;
-          geoPoint = GeoPoint(lat, lng);
-          setState(() {});
-        }
-      }
-
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        logger.i("requesting location");
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        } else {
-          locationData = await templocation.getLocation();
-
-          double lat = locationData?.latitude;
-          double lng = locationData?.longitude;
-          geoPoint = GeoPoint(lat, lng);
-
-          setState(() {});
-        }
-      } else {
-        locationData = await templocation.getLocation();
-
-        double lat = locationData?.latitude;
-        double lng = locationData?.longitude;
-        geoPoint = GeoPoint(lat, lng);
-        setState(() {});
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        logger.e(e);
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        logger.e(e);
-      }
-    }
   }
 }
 

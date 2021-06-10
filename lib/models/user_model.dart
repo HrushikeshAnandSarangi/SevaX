@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/models/device_details.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
@@ -62,7 +61,6 @@ class UserModel extends DataModel {
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
   List<String> curatedRequestIds = [];
-  LocationData currentPosition;
   bool notificationAlerts;
 
   String calendarId;
@@ -111,7 +109,7 @@ class UserModel extends DataModel {
       this.completedIntro,
       this.pastHires,
       this.blockedBy,
-      this.currentPosition,
+      
       this.currentCommunity,
       this.communities,
       this.emailSent,
@@ -600,7 +598,6 @@ class UserModel extends DataModel {
       ${this.reportedUsers.toString()},
       ${this.blockedMembers.toString()},
       ${this.blockedBy.toString()},
-      ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
