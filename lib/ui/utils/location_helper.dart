@@ -83,20 +83,16 @@ class LocationHelper {
       return true;
   }
 
-  static Future<Coordinates> getCoordinates() {
-    return Geolocator.getLastKnownPosition()
-        .timeout(Duration(seconds: 4))
-        .then((currentPostion) {
-      if (currentPostion != null) {
-        return Coordinates(
-          currentPostion.latitude,
-          currentPostion.longitude,
-        );
-      } else {
-        return null;
-      }
-    }).catchError((e) {
-      return null;
+  static Future<Coordinates> getCoordinates() async {
+    var result = await getLocation();
+    Coordinates coordinates;
+
+    result.fold((l) {
+      coordinates = null;
+    }, (r) {
+      coordinates = Coordinates(r.latitude, r.longitude);
     });
+    logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates");
+    return coordinates;
   }
 }
