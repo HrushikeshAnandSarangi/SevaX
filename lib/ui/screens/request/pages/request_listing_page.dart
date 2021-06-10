@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -12,11 +13,12 @@ import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/cutom_chip.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_card.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -31,8 +33,6 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import '../../../../labels.dart';
-import 'package:sevaexchange/utils/extensions.dart';
 
 class RequestListingPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -48,11 +48,11 @@ class RequestListingPage extends StatefulWidget {
 }
 
 class _RequestListingPageState extends State<RequestListingPage> {
-  Future<Coordinates> currentCoords;
+  Future<Location> currentCoords;
   final RequestBloc _bloc = RequestBloc();
   @override
   void initState() {
-    currentCoords = findcurrentLocation();
+    currentCoords = LocationHelper.gpsCheck();
     Future.delayed(Duration.zero, () {
       _bloc.init(
         widget.timebankModel.id,
@@ -116,9 +116,9 @@ class _RequestListingPageState extends State<RequestListingPage> {
             ),
             buildFilterView(),
             SizedBox(height: 8),
-            FutureBuilder<Coordinates>(
+            FutureBuilder<Location>(
               future: currentCoords,
-              builder: (context, AsyncSnapshot<Coordinates> currentLocation) {
+              builder: (context, AsyncSnapshot<Location> currentLocation) {
                 if (currentLocation.connectionState ==
                     ConnectionState.waiting) {
                   return LoadingIndicator();
@@ -128,7 +128,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
                   return Expanded(
                     child: SingleChildScrollView(
                       child: RequestListBuilder(
-                        coords: currentLocation.data,
+                        coords: currentLocation.data != null? Coordinates(currentLocation.data.latitude, currentLocation.data.longitude):null,
                         timebankModel: widget.timebankModel,
                       ),
                     ),
