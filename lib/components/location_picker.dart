@@ -10,12 +10,13 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' as prefix;
+// import 'package:location/location.dart' as prefix;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 
 import 'get_location.dart';
 
@@ -28,7 +29,7 @@ extension StringExtension on String {
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
   final String selectedAddress;
-  final prefix.Location location = new prefix.Location();
+  // final prefix.Location location = new prefix.Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
@@ -46,7 +47,7 @@ class _LocationPickerState extends State<LocationPicker> {
   LatLng target;
   Set<Marker> markers = {};
   final Geolocator geolocator = Geolocator();
-  prefix.LocationData locationData;
+  Location locationData;
   String address;
   // CameraPosition cameraPosition;
   LatLng defaultLatLng = LatLng(41.678510, -87.494080);
@@ -212,9 +213,9 @@ class _LocationPickerState extends State<LocationPicker> {
 
   Future loadInitialLocation() async {
     log('loadCurrentLocation');
-    prefix.LocationData locationData;
+    Location locationData;
     try {
-      locationData = await widget.location.getLocation();
+      locationData = await LocationHelper.getLastKnownPosition();
       if (_mapController != null) {
         if (widget.selectedLocation != null) {
           animateToLocation(
@@ -344,8 +345,8 @@ class _LocationPickerState extends State<LocationPicker> {
   Future<String> _getAddressFromLatLng(LatLng latlng, context) async {
     if (latlng != null) {
       try {
-        List<Placemark> p = await placemarkFromCoordinates(
-            latlng.latitude, latlng.longitude);
+        List<Placemark> p =
+            await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
         Placemark place = p[0];
         String locality =
             place.subLocality != '' ? place.subLocality : place.locality;

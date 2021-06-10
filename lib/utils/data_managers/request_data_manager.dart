@@ -4,9 +4,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -956,8 +957,6 @@ Stream<List<RequestModel>> getNearRequestListStream(
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
-
-  
 
   Position userLocation;
   userLocation = await Geolocator.getCurrentPosition();
@@ -2182,7 +2181,7 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
-       snapshot.documents.forEach((element) {
+      snapshot.documents.forEach((element) {
         CategoryModel model = CategoryModel.fromMap(element.data);
         model.typeId = element.documentID;
         log('${model.title_en}');
