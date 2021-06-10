@@ -212,10 +212,14 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   Future loadInitialLocation() async {
-    log('loadCurrentLocation');
     Location locationData;
     try {
-      locationData = await LocationHelper.getLastKnownPosition();
+      var lastLocation = await LocationHelper.getLocation();
+
+      lastLocation.fold((l) => throw PlatformException, (r) {
+        locationData = r;
+      });
+
       if (_mapController != null) {
         if (widget.selectedLocation != null) {
           animateToLocation(
