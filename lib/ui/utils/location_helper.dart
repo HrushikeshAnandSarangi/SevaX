@@ -68,7 +68,9 @@ class LocationHelper {
     if (await _hasPermissions()) {
       logger.i("Permission seems to be granted for location!", "Location");
       try {
-        var lastKnownLocation = await Geolocator.getLastKnownPosition();
+        var lastKnownLocation = await Geolocator.getLastKnownPosition(
+          forceAndroidLocationManager: true,
+        );
         logger.i(
             "Successfully retrieved location========" +
                 lastKnownLocation.toString(),
@@ -106,8 +108,7 @@ class LocationHelper {
             "Location permission is not enabled! requesting permission from user!",
             "Location");
 
-        // return await Geolocator.isLocationServiceEnabled();
-        return true;
+        return await Geolocator.isLocationServiceEnabled();
       } else {
         logger.d("Location permission allowed from user!!", "Location");
         return true;
@@ -123,9 +124,11 @@ class LocationHelper {
       coordinates = null;
     }, (r) {
       coordinates = Coordinates(r.latitude, r.longitude);
-      logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates in fold");
+      logger.d([coordinates?.latitude, coordinates?.longitude],
+          "Coordinates in fold");
     });
-    logger.d([coordinates?.latitude,coordinates?.longitude], "Coordinates return");
+    logger.d(
+        [coordinates?.latitude, coordinates?.longitude], "Coordinates return");
     return coordinates;
   }
 }

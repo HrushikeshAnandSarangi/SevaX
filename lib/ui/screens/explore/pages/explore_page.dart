@@ -83,7 +83,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   bool dataLoaded = false;
 
-  GeoPoint geoPoint = GeoPoint(12.87428, 77.6688899);
+  GeoPoint geoPoint;
   void initState() {
     super.initState();
     _bloc = FindCommunitiesBloc();
@@ -734,7 +734,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   alignment: Alignment.centerLeft,
                   child: StreamBuilder<List<CommunityModel>>(
                     stream: widget.isUserSignedIn
-                        ? _bloc.nearyByCommunities
+                        // ? _bloc.nearyByCommunities
+                        ? Searches.getNearBYCommunities(geoPoint: geoPoint)
                         : Searches.getNearBYCommunities(geoPoint: geoPoint),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
