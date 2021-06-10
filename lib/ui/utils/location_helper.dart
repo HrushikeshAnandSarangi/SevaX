@@ -32,6 +32,11 @@ class DistanceFilterData {
   }
 }
 
+class LocationMetaData {
+  bool canAccess;
+  String accessDetail;
+}
+
 class LocationHelper {
   static double getDistanceBetweenPoints(
       Coordinates cord1, GeoFirePoint cord2) {
@@ -60,27 +65,54 @@ class LocationHelper {
   // }
 
   static Future<Either<Failure, Location>> getLocation() async {
-    if (await _hasPermissions())
+    if (await _hasPermissions()) {
+      logger.i("Permission seems to be granted for location!", "Location");
       try {
         var lastKnownLocation = await Geolocator.getLastKnownPosition();
+        logger.i(
+            "Successfully retrieved location========" +
+                lastKnownLocation.toString(),
+            "Location");
+
         return right(Location(
           latitude: lastKnownLocation.latitude,
           longitude: lastKnownLocation.longitude,
         ));
       } catch (e) {
+        logger.i("Failed to retrieve location", "Location");
         return left(Failure(e.toString()));
       }
-    else
+    } else {
+      logger.i("Permission denied!===================", "Location");
       return left(Failure("Permission Denied."));
+    }
   }
 
-  static Future<bool> _hasPermissions() async {
-    var isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationServiceEnabled) {
-      await Geolocator.requestPermission();
-      return await Geolocator.isLocationServiceEnabled();
-    } else
-      return true;
+  static Future<bool> _hasPermissions({bool firstTime = true}) async {
+    var permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      if (firstTime) {
+        await Geolocator.requestPermission();
+        return _hasPermissions(firstTime: false);
+      } else
+        return false;
+    } else {
+      var isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        logger.d(
+            "Location permission is not enabled! requesting permission from user!",
+            "Location");
+
+        // return await Geolocator.isLocationServiceEnabled();
+        return true;
+      } else {
+        logger.d("Location permission allowed from user!!", "Location");
+        return true;
+      }
+    }
   }
 
   static Future<Coordinates> getCoordinates() async {
