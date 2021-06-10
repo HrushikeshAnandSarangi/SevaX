@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
@@ -15,10 +16,12 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -35,8 +38,6 @@ import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import '../../labels.dart';
-import 'package:sevaexchange/utils/extensions.dart';
 
 import '../core.dart';
 
@@ -315,8 +316,8 @@ class RequestListItemsState extends State<RequestListItems> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Coordinates>(
-      future: findcurrentLocation(),
+    return FutureBuilder<Location>(
+      future: LocationHelper.gpsCheck(),
       builder: (context, currentLocation) {
         if (currentLocation.connectionState == ConnectionState.waiting) {
           log(' set true');
@@ -363,7 +364,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   loggedintimezone: loggedintimezone,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                   projectId: widget.projectId,
-                  currentCoords: currentLocation.data,
+                  currentCoords: currentLocation.data != null ? Coordinates(currentLocation.data.latitude, currentLocation.data.longitude):null,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -407,7 +408,7 @@ class RequestListItemsState extends State<RequestListItems> {
                           SevaCore.of(context).loggedInUser.sevaUserID);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
-                    currentCoords: currentLocation.data,
+                    currentCoords:  currentLocation.data != null?Coordinates(currentLocation.data.latitude,currentLocation.data.longitude):null,
                   );
               }
             },

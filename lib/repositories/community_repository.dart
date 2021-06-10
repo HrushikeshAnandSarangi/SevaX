@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';

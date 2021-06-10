@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -21,7 +19,6 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -461,46 +458,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ]),
     );
   }
-
-//TODOCHECK
-  // void getLastKnownPosition() async {
-  //   logger.i("check gps");
-
-  //   try {
-  //     Location templocation = Location();
-  //     bool _serviceEnabled;
-  //     PermissionStatus _permissionGranted;
-
-  //     _serviceEnabled = await templocation.serviceEnabled();
-  //     if (!_serviceEnabled) {
-  //       _serviceEnabled = await templocation.requestService();
-  //       logger.i("requesting location");
-
-  //       if (!_serviceEnabled) {
-  //         return;
-  //       } else {
-  //         setState(() {});
-  //       }
-  //     }
-
-  //     _permissionGranted = await templocation.hasPermission();
-  //     if (_permissionGranted == PermissionStatus.denied) {
-  //       _permissionGranted = await templocation.requestPermission();
-  //       logger.i("requesting location");
-  //       if (_permissionGranted != PermissionStatus.granted) {
-  //         return;
-  //       } else {
-  //         setState(() {});
-  //       }
-  //     }
-  //   } on PlatformException catch (e) {
-  //     if (e.code == 'PERMISSION_DENIED') {
-  //       logger.e(e);
-  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
-  //       logger.e(e);
-  //     }
-  //   }
-  // }
 
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
