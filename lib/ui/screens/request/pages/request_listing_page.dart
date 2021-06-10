@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -48,11 +47,11 @@ class RequestListingPage extends StatefulWidget {
 }
 
 class _RequestListingPageState extends State<RequestListingPage> {
-  Future<Location> currentCoords;
+  Future<Coordinates> currentCoords;
   final RequestBloc _bloc = RequestBloc();
   @override
   void initState() {
-    currentCoords = LocationHelper.gpsCheck();
+    currentCoords = LocationHelper.getCoordinates();
     Future.delayed(Duration.zero, () {
       _bloc.init(
         widget.timebankModel.id,
@@ -116,9 +115,9 @@ class _RequestListingPageState extends State<RequestListingPage> {
             ),
             buildFilterView(),
             SizedBox(height: 8),
-            FutureBuilder<Location>(
+            FutureBuilder<Coordinates>(
               future: currentCoords,
-              builder: (context, AsyncSnapshot<Location> currentLocation) {
+              builder: (context, AsyncSnapshot<Coordinates> currentLocation) {
                 if (currentLocation.connectionState ==
                     ConnectionState.waiting) {
                   return LoadingIndicator();
@@ -128,7 +127,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
                   return Expanded(
                     child: SingleChildScrollView(
                       child: RequestListBuilder(
-                        coords: currentLocation.data != null? Coordinates(currentLocation.data.latitude, currentLocation.data.longitude):null,
+                        coords: currentLocation.data,
                         timebankModel: widget.timebankModel,
                       ),
                     ),

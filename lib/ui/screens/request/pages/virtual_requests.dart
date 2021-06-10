@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
@@ -40,13 +39,13 @@ class VirtualRequests extends StatefulWidget {
 }
 
 class _VirtualRequestsState extends State<VirtualRequests> {
-  Future<Location> currentCoords;
+  Future<Coordinates> currentCoords;
 
   bool isAdmin = false;
   @override
   void initState() {
     // TODO: implement initState
-    currentCoords = LocationHelper.gpsCheck();
+    currentCoords = LocationHelper.getCoordinates();
 
     super.initState();
   }
@@ -55,7 +54,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
   Widget build(BuildContext context) {
     String loggedintimezone = SevaCore.of(context).loggedInUser.timezone;
 
-    return FutureBuilder<Location>(
+    return FutureBuilder<Coordinates>(
         future: currentCoords,
         builder: (context, currentLocation) {
           return StreamBuilder<List<RequestModel>>(
@@ -93,7 +92,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                   consolidatedList: consolidatedList,
                   loggedintimezone: loggedintimezone,
                   userEmail: SevaCore.of(context).loggedInUser.email,
-                  currentCoords: currentLocation.data != null?Coordinates(currentLocation.data.latitude, currentLocation.data.longitude):null,
+                  currentCoords: currentLocation.data,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
