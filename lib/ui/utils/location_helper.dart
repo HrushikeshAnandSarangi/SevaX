@@ -59,15 +59,27 @@ class LocationHelper {
   //   }
   // }
 
-  static Future<Either<Failure,Location>> getLocation() {
-    return Geolocator.getLastKnownPosition().then((currentPostion) {
-      return right(Location(
-        latitude: currentPostion.latitude,
-        longitude: currentPostion.longitude,
-      ));
-    }).catchError((e) {
-      return left(Failure(e.toString()));
-    });
+  static Future<Either<Failure, Location>> getLocation() async {
+    if (await _hasPermissions())
+      return Geolocator.getLastKnownPosition().then((currentPostion) {
+        return right(Location(
+          latitude: currentPostion.latitude,
+          longitude: currentPostion.longitude,
+        ));
+      }).catchError((e) {
+        return left(Failure(e.toString()));
+      });
+    else
+      return left(Failure("Permission Denied."));
+  }
+
+  static Future<bool> _hasPermissions() async {
+    var isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationServiceEnabled) {
+      await Geolocator.requestPermission();
+      return await Geolocator.isLocationServiceEnabled();
+    } else
+      return true;
   }
 
   static Future<Coordinates> getCoordinates() {
