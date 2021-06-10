@@ -57,7 +57,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   String errorText = '';
   @override
   void initState() {
-    LocationHelper.getLastKnownPosition().then((value) {
+    LocationHelper.getLocation().then((value) {
       if (mounted) setState(() {});
     });
     super.initState();

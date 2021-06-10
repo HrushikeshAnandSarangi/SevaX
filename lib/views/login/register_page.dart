@@ -87,11 +87,13 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   void initState() {
-    LocationHelper.getLastKnownPosition().then((value) {
-      Geoflutterfire geo = Geoflutterfire();
-      location =
-          geo.point(latitude: value.latitude, longitude: value.longitude);
-      if (mounted) setState(() {});
+    LocationHelper.getLocation().then((value) {
+      if (value != null) {
+        value.fold((l) => null, (r) {
+          location = GeoFirePoint(r.latitude, r.longitude);
+          if (mounted) setState(() {});
+        });
+      }
     });
     super.initState();
     AnimationController _controller = AnimationController(
