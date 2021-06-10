@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -68,7 +70,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
                 userInsufficientModel.timebankName ??
-                    "Seva Community name not updated",
+                    L.of(context).seva_community_name_not_updated,
               ),
             ),
             // Padding(
@@ -88,7 +90,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.accentColor,
                     child: Text(
-                      'Message',
+                      S.of(context).message,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
@@ -100,7 +102,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      'Donate',
+                      S.of(context).donate,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

@@ -604,7 +604,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           .contains('_') &&
                                       !AppConfig.testingEmails
                                           .contains(AppConfig.loggedInEmail)) {
-                                    return 'Creating request with "_" is not allowed';
+                                    return L.of(context).creating_request_with_underscore_not_allowed;
                                   } else {
                                     requestModel.title = value;
                                     return null;
@@ -1150,7 +1150,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       children: [
                                         SizedBox(height: 12),
                                         Text(
-                                          "Borrow",
+                                          L.of(context).borrow,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1168,7 +1168,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                'Need a place',
+                                               L.of(context).need_a_place,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1177,7 +1177,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                'Item',
+                                               L.of(context).item,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1816,7 +1816,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           (requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
               ? Text(
-                  "Request tools description*",
+                 L.of(context).request_tools_description,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -2340,7 +2340,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             children: [
               _selectedSkillsMap.values.length < 1
                   ? Text(
-                      'Choose Skills for request',
+                      L.of(context).choose_skills_for_request,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -2349,7 +2349,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       ),
                     )
                   : Text(
-                      "Selected Skills",
+                      L.of(context).selected_skills,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -2887,7 +2887,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             0: Text(
               timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                   ? S.of(context).timebank_request(1)
-                  : "Seva " +
+                  :L.of(context).seva +
                       timebankModel.name +
                       " ${S.of(context).group} " +
                       S.of(context).request,
@@ -2976,12 +2976,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
     if (requestModel.isRecurring) {
       requestModel.recurringDays = RepeatWidgetState.getRecurringdays();
       requestModel.occurenceCount = 1;
-      end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
-      end.on = end.endType == "on"
+      end.endType = RepeatWidgetState.endType == 0 ? S.of(context).on: S.of(context).after;
+      end.on = end.endType == S.of(context).on
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
           : null;
       end.after =
-          (end.endType == "after" ? int.parse(RepeatWidgetState.after) : null);
+          (end.endType ==S.of(context).after ? int.parse(RepeatWidgetState.after) : null);
       requestModel.end = end;
     }
 

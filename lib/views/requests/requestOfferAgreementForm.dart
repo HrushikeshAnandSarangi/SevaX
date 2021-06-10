@@ -172,7 +172,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
                       //Radio Buttons
                       _optionRadioButtonMain<String>(
-                        title: 'Create New',
+                        title: L.of(context).create_new,
                         value: AgreementDocumentType.NEW.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -183,7 +183,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                       ),
                       _optionRadioButtonMain<String>(
                         title:
-                            'Choose previous agreement',
+                            L.of(context).choose_previous_agreement,
                         value: AgreementDocumentType.TEMPLATE.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -200,7 +200,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                       buildTemplateWidget(),
 
                       _optionRadioButtonMain<String>(
-                        title: 'No Agreement',
+                        title: L.of(context).no_agrreement,
                         value: AgreementDocumentType.NO_AGREEMENT.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -233,7 +233,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 5),
                                 _optionRadioButtonRoomForm<bool>(
-                                  title: 'Fixed',
+                                  title: L.of(context).fixed,
                                   value: true,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -243,7 +243,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 _optionRadioButtonRoomForm<bool>(
                                   title:
-                                      'Long-term (Month to Month)',
+                                      L.of(context).long_term_month_to_month,
                                   value: false,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -319,7 +319,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: 'Ex: 3',
+                                    hintText: L.of(context).request_offer_agreement_hint_text,
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -362,7 +362,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: "Ex: \$300",
+                                    hintText: L.of(context).request_offer_agreement_hint_text2,
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -604,7 +604,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: Gas-powered lawnmower in mint condition with full tank of gas.',
+               L.of(context).request_offer_agreement_hint_text3,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -620,7 +620,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          "Stipulations regarding returned item in unsatisfactory condition.",
+          L.of(context).request_offer_agreement_tool_widget_text,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -642,7 +642,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 3,
             hintText:
-                'Ex: Lawnmower must be cleaned and operable with a full tank of gas.', 
+                L.of(context).request_offer_agreement_hint_text4, 
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -667,7 +667,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Document Name*",
+         L.of(context).document_name,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -693,7 +693,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return "Please enter document name";
+              return L.of(context).please_enter_doc_name;
             } else {
               documentName = value;
               return null;
@@ -709,7 +709,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Other details",
+         L.of(context).other_details,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -732,7 +732,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           decoration: InputDecoration(
             hintMaxLines: 11,
             hintText:
-                "Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.",
+                L.of(context).request_offer_agreement_hint_text5,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -764,7 +764,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
             //Radio Buttons
             _optionRadioButtonMain<String>(
-              title: 'Create New', 
+              title:L.of(context).create_new, 
               value: AgreementDocumentType.NEW.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -774,7 +774,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: 'Choose previous agreement', 
+              title: L.of(context).choose_previous_agreement, 
               value: AgreementDocumentType.TEMPLATE.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -783,7 +783,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: 'No Agreement', 
+              title:L.of(context).no_agrreement,
               value: AgreementDocumentType.NO_AGREEMENT.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -801,7 +801,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   }
 
   Widget get agreementText {
-    return Text("Agreement",
+    return Text(L.of(context).agreement,
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,
@@ -821,7 +821,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
               child: Text(
-                'Use',
+              L.of(context).use,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {

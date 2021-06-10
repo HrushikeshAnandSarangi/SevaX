@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -105,7 +106,7 @@ class _CommunityAboutState extends State<CommunityAbout>
     _tabsNames = [
       S.of(context).about,
       S.of(context).projects,
-      'Groups',
+      S.of(context).groups,
     ];
 
     return Scaffold(
@@ -275,7 +276,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Center(
                           child: Text(
-                        'Join Seva Community',
+                        L.of(context).join_seva_community,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
                 )
@@ -394,7 +395,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           SizedBox(
             height: 30,
           ),
-          Text("About Us",
+          Text(S.of(context).help_about_us,
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -561,7 +562,7 @@ class _CommunityAboutState extends State<CommunityAbout>
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text('Please switch seva community to access ' + message),
+            content: Text(L.of(context).please_switch_to_access + message),
             actions: [
               RaisedButton(
                 color: Colors.orange,
@@ -587,7 +588,7 @@ class _CommunityAboutState extends State<CommunityAbout>
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text('Please join seva community to access ' + message),
+            content: Text(L.of(context).please_join_seva_to_access + message),
             actions: [
               RaisedButton(
                 color: Colors.red,
@@ -615,7 +616,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           if (snapshot.data == null) {
             return Center(
               child: Text(
-                'No Events available',
+                L.of(context).no_events_available,
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.black,
@@ -644,7 +645,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                         height: 20,
                       ),
                       Text(
-                        'No Events available',
+                       L.of(context).no_events_available,
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.black,

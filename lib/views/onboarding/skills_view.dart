@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -126,7 +127,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBuilder: (context, err) {
-                return Text('Error was thrown');
+                return Text(L.of(context).error_was_thrown);
               },
               debounceDuration: Duration(milliseconds: 600),
               hideOnError: true,

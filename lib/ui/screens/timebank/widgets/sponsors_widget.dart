@@ -10,6 +10,7 @@ import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
@@ -34,7 +35,8 @@ class SponsorsWidget extends StatefulWidget {
       {this.timebankModel,
       @required this.sponsorsMode,
       this.onCreated,
-      this.onRemoved, this.titleColor});
+      this.onRemoved,
+      this.titleColor});
 
   @override
   _SponsorsWidgetState createState() => _SponsorsWidgetState();
@@ -127,7 +129,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                             timebankModel:
                                                 widget.timebankModel);
                                       },
-                                      title: Text('Edit Name'),
+                                      title: Text(S.of(context).edit),
                                       trailing: Icon(Icons.edit),
                                     ),
                                     ListTile(
@@ -330,9 +332,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Text(
-        "Sponsored By",
+        L.of(context).sponsored_by,
         style: TextStyle(
-          color: widget.titleColor??HexColor('#766FE0'), 
+          color: widget.titleColor ?? HexColor('#766FE0'),
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
@@ -476,7 +478,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Sponsor name',
+            L.of(context).sponsor_name,
             style: TextStyle(fontSize: 15.0),
           ),
           content: Column(

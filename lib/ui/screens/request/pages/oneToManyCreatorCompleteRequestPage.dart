@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -153,7 +154,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                                 .selectedInstructor
                                                                 .fullname ==
                                                             null)
-                                                    ? 'Name not available'
+                                                    ? L.of(context).name_not_available
                                                     : requestModel
                                                         .selectedInstructor
                                                         .fullname,
@@ -252,7 +253,7 @@ class OneToManyCreatorCompleteRequestPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Attended by',
+                               L.of(context).attended_by,
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
@@ -264,7 +265,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   });
                                 },
                                 child: Text(
-                                  'Reset list',
+                                  L.of(context).reset_list,
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,

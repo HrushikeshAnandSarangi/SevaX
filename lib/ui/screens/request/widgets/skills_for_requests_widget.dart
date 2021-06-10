@@ -4,6 +4,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -68,7 +69,7 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
               borderRadius: BorderRadius.circular(8),
             ),
             errorBuilder: (context, err) {
-              return Text('Error was thrown');
+              return Text(L.of(context).error_was_thrown);
             },
             debounceDuration: Duration(milliseconds: 600),
             hideOnError: true,
