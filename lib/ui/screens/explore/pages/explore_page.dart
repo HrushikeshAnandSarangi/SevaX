@@ -91,10 +91,12 @@ class _ExplorePageState extends State<ExplorePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
       // if (isSignedUser) {
-      LocationHelper.getLastKnownPosition().then((value) {
+      LocationHelper.getLocation().then((value) {
         if (value != null) {
-          geoPoint = GeoPoint(value.latitude, value.longitude);
-          setState(() {});
+          value.fold((l) => null, (r) {
+            geoPoint = GeoPoint(r.latitude, r.longitude);
+            setState(() {});
+          });
         }
         _bloc.init(
           Provider.of<UserModel>(context, listen: false)?.nearBySettings,

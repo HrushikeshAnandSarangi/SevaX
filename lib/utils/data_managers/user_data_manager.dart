@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
 // import 'package:location/location.dart';
@@ -143,9 +142,10 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   }
 
   if (locationVal == null) {
-    LocationHelper.getLastKnownPosition().then((value) {
-      location =
-          geo.point(latitude: value.latitude, longitude: value.longitude);
+    LocationHelper.getLocation().then((value) {
+      value.fold((l) => null, (r) {
+        location = geo.point(latitude: r.latitude, longitude: r.longitude);
+      });
     });
   } else {
     location = locationVal;
@@ -179,9 +179,15 @@ Future<DeviceDetails> addCreationSourceOfUser(
   }
 
   if (locationVal == null) {
-    await LocationHelper.getLastKnownPosition().then((value) {
-      location =
-          geo.point(latitude: value.latitude, longitude: value.longitude);
+    await LocationHelper.getLocation().then((value) {
+      if (value != null) {
+        value.fold((l) => null, (r) {
+          location = geo.point(
+            latitude: r.latitude,
+            longitude: r.longitude,
+          );
+        });
+      }
     });
   } else {
     location = locationVal;

@@ -70,11 +70,9 @@ class ExploreSearchPageBloc {
       _requestCategory.add(value);
     });
     Location location;
-    try {
-      location = await LocationHelper.getLastKnownPosition().timeout(Duration(seconds: 3));
-    } catch (e) {
-      logger.e("explore search bloc location timed out");
-    }
+    var result = await LocationHelper.getLocation();
+    result.fold((l) => null, (r) => location = r);
+
     ElasticSearchApi.getAllCommunityCategories().then((value) {
       _communityCategory.add(value);
     });
