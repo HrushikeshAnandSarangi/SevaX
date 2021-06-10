@@ -22,8 +22,8 @@ class L {
 // String get add_event_to_calender =>
 // "Add event to calender";
 
-// String get add_to_calender =>
-// "Add to calender";
+ String get add_to_calender =>
+  "Add to calender";
 
 // String get do_you_want_addto_calender =>
 // "Do you want to add this event to your calendar?";
@@ -98,16 +98,16 @@ class L {
 //  String get document =>
 //  "Document";
 
-//  String get users =>
-//  "Users";
+  String get users =>
+  "Users";
 
 //  String get cash_request_title_hint =>
 //  "Ex: Fundraiser for women’s shelter...";
 
 //  String get error_loading_data =>
 //  'Error Loading Data';
-// String get likes =>
-// "likes";
+ String get likes =>
+ "likes";
 
 // String get anonymous_user =>
 //  "Anonymous user";
@@ -364,6 +364,167 @@ String get sign_up_with_apple =>
   
 String get sign_up_with_google =>
   'Sign up with Google';
+
+
+  // labels on june 10
+  String get do_you_want_to_add =>
+  "Do you want to add this";
+  String get event_to_calender =>
+  "event to calender";
+
+  String get seva_community_name_not_updated =>
+"Seva Community name not updated";
+String get create_new =>
+"Create New";
+String get choose_previous_agreement =>
+"Choose previous agreement";
+
+String get no_agrreement =>
+"No Agreement";
+String get fixed =>
+"Fixed";
+
+String get long_term_month_to_month =>
+'Long-term (Month to Month)';
+String get request_offer_agreement_hint_text =>
+"Ex :3";
+String get request_offer_agreement_hint_text2 =>
+"Ex: \$300";
+String get request_offer_agreement_hint_text3 =>
+ 'Ex: Gas-powered lawnmower in mint condition with full tank of gas.';
+
+String get request_offer_agreement_tool_widget_text =>
+"Stipulations regarding returned item in unsatisfactory condition.";
+
+String get request_offer_agreement_hint_text4 =>
+'Ex: Lawnmower must be cleaned and operable with a full tank of gas.';
+
+String get document_name =>
+"Document Name*";
+String get please_enter_doc_name =>
+"Please enter document name";
+String get other_details =>
+"Other Details";
+
+String get request_offer_agreement_hint_text5 =>
+"Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.";
+
+String get use =>
+"use";
+
+String get approve_borrow_request =>
+'Approve Room Borrow Request';
+String get approve_item_borrow =>
+'Approve Item Borrow request';
+
+String get approve_borrow_hint_text1 =>
+ "Tell your borrower do and dont's";
+String get approve_borrow_alert_msg1 =>
+  "Please enter the do's and dont's";
+
+  String get approve_borrow_no_agreement_selected =>
+  "No Agreement Selected";
+String get request_agreement_form_component_text =>
+'Create/Use agreement between you and borrower on how your item/place can be used.';
+
+String get approve_borrow_terms_acknowledgement_text1 =>
+"I acknowledge that you can use the room on the mentioned dates." ;
+String get approve_borrow_terms_acknowledgement_text2 =>
+"I acknowledge that you can use the item on the mentioned dates.";
+String get approve_borrow_terms_acknowledgement_text3 =>
+"Note: Please instruct on how to reach the location and do and don't accordingly." ;
+String get approve_borrow_terms_acknowledgement_text4 =>
+"Note: Please create an agreement if you have specific instructions and/or requirements.";
+
+String get error_was_thrown =>
+"Error was Thrown";
+String get max_250_characters =>
+'* max 250 characters';
+
+String get doc_pdf =>
+"Document.pdf";
+
+String get credits =>
+"Credits:";
+String get could_not_launch =>
+"Could not launch";
+
+String get need_a_place =>
+"Need a  place";
+String get item =>
+"Item";
+String get borrow =>
+"Borrow";
+String get choose_skills_for_request =>
+"Choose skills for request";
+String get creating_request_with_underscore_not_allowed =>
+'Creating request with "_" is not allowed';
+
+String get selected_skills =>
+"Selected Skills";
+
+String get request_tools_description =>
+ "Request tools description*";
+ String get seva =>
+ "Seva";
+ String get test_community =>
+ "Test Community";
+
+ String get you_already_created_test_community =>
+ 'You already created a test community.';
+ String get selected_value =>
+ "Selected value :";
+ String get upgrade_plan_msg1 =>
+ "Sorry Couldn't fetch data";
+
+ String get upgrade_plan_disable_msg1 =>
+ 'This feature is disabled for your community';
+
+  String get upgrade_plan_disable_msg2 =>
+'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/';
+   String get upgrade_plan_disable_msg3 =>
+   'This is currently not permitted. Please contact the Community Creator for more information';
+
+   String get edit_name =>
+   "Edit Name";
+
+   String get sponsored_by =>
+   "Sponsored By";
+   String get sponsor_name =>
+   "Sponsor name";
+
+   String get no_search_result_found =>
+   "No search result found";
+   String get join_seva_community =>
+   "Join Seva Community";
+
+   String get please_switch_to_access =>
+ 'Please switch seva community to access ';
+ String get please_join_seva_to_access =>
+ 'Please join seva community to access ';
+ String get no_events_available =>
+ "No Events Available";
+ String get ack =>
+ "Ack";
+ String get enter_the_amount_received =>
+ "Enter the amount recieved";
+
+ String get virtual_requests =>
+ "Virtual requests";
+ String get name_not_available =>
+ "Name not available";
+ String get attended_by =>
+ "Attended by";
+ String get reset_list =>
+ "Reset list";
+
+ String get join_community_to_view_updates =>
+ "To view and receive updates join the community";
+
+ String get join_chat =>
+ "Join Chat";
+
+
 //<------------------below labels are done------------->
 
 // //DO BELOW OF THIS VISHNU

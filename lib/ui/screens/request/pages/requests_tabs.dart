@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/screens/request/pages/virtual_requests.dart';
@@ -31,7 +32,7 @@ class RequestTabs extends StatelessWidget {
                     ),
                   ),
                   Tab(
-                    child: Text('Virtual requests'),
+                    child: Text(L.of(context).virtual_requests),
                   ),
                 ],
               ),

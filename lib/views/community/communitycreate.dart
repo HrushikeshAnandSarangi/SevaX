@@ -15,6 +15,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/enums/plan_ids.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -631,7 +632,7 @@ class CreateEditCommunityViewFormState
                           offstage: !widget.isCreateTimebank,
                           child: Row(
                             children: <Widget>[
-                              headingText('Test Community'),
+                              headingText(L.of(context).test_community),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                                 child: infoButton(
@@ -684,7 +685,7 @@ class CreateEditCommunityViewFormState
                                       } else {
                                         showDialogForSuccess(
                                             dialogTitle:
-                                                'You already created a test community.',
+                                                L.of(context).you_already_created_test_community,
                                             err: true);
                                       }
                                     },
@@ -863,7 +864,7 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    'Selected Value : ${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    L.of(context).selected_value + '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,

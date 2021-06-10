@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -80,7 +82,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           if (userList.length == 0) {
             return getEmptyWidget(
-              'Users',
+              L.of(context).users,
               S.of(context).no_user_found,
             );
           }

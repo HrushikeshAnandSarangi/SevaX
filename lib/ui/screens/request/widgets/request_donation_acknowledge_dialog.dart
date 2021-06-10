@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 
 AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
   return AlertDialog(
-    title: Text("Enter the amount recieved"),
+    title: Text(L.of(context).enter_the_amount_received),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -19,7 +20,7 @@ AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RaisedButton(
-              child: Text('Ack'),
+              child: Text(L.of(context).ack),
               onPressed: () {},
             ),
             RaisedButton(
