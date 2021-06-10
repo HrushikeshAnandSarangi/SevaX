@@ -61,14 +61,15 @@ class LocationHelper {
 
   static Future<Either<Failure, Location>> getLocation() async {
     if (await _hasPermissions())
-      return Geolocator.getLastKnownPosition().then((currentPostion) {
+      try {
+        var lastKnownLocation = await Geolocator.getLastKnownPosition();
         return right(Location(
-          latitude: currentPostion.latitude,
-          longitude: currentPostion.longitude,
+          latitude: lastKnownLocation.latitude,
+          longitude: lastKnownLocation.longitude,
         ));
-      }).catchError((e) {
+      } catch (e) {
         return left(Failure(e.toString()));
-      });
+      }
     else
       return left(Failure("Permission Denied."));
   }
@@ -83,7 +84,9 @@ class LocationHelper {
   }
 
   static Future<Coordinates> getCoordinates() {
-    return Geolocator.getLastKnownPosition().then((currentPostion) {
+    return Geolocator.getLastKnownPosition()
+        .timeout(Duration(seconds: 4))
+        .then((currentPostion) {
       if (currentPostion != null) {
         return Coordinates(
           currentPostion.latitude,
