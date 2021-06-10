@@ -308,7 +308,7 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          setState(() {
+          if(mounted)setState(() {
             target = position.target;
           });
         },
