@@ -256,24 +256,19 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
 }) async* {
   Geoflutterfire geo = Geoflutterfire();
   Location locationData;
-  Location location = Location();
-
   try {
-    var lastKnownPosition =
-        await LocationHelper.getLastKnownPosition().then((value) {
-      yield * Stream.error("service disabled");
-    }).catchError((onError) {});
-
-    if (permission != PermissionStatus.granted || !serviceEnabled) {
-    } else {
-      logger.i("fetching location");
-      locationData = await location.getLocation();
+    var lastLocation = await LocationHelper.getLocation();
+    if (lastLocation.isLeft())
+      yield* Stream.error("service disabled");
+    else {
+      lastLocation.fold((l) => null, (r) {
+        locationData = r;
+      });
 
       double lat = locationData?.latitude;
       double lng = locationData?.longitude;
 
       //Here get radius from dataabse
-
       var radius =
           NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
       log("Getting within the raidus ==> " + radius.toString());
