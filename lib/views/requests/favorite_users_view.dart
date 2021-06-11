@@ -12,6 +12,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../../labels.dart';
+
 enum FavoriteUserStatus { LOADING, LOADED, EMPTY }
 
 class FavoriteUsers extends StatefulWidget {

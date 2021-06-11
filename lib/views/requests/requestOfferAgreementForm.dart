@@ -22,6 +22,8 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
+import '../../labels.dart';
+
 class RequestOfferAgreementForm extends StatefulWidget {
   final bool isRequest; //false means offer
   final String roomOrTool; //'ROOM' or 'TOOL' (for request) (for offer same?)
@@ -146,7 +148,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         centerTitle: true,
         title: Text(
-         S.of(context).choose_document,//Labels to be created
+          S.of(context).choose_document, //Labels to be created
           style: TextStyle(
               fontFamily: "Europa", fontSize: 20, color: Colors.white),
         ),
@@ -182,8 +184,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                         },
                       ),
                       _optionRadioButtonMain<String>(
-                        title:
-                            L.of(context).choose_previous_agreement,
+                        title: L.of(context).choose_previous_agreement,
                         value: AgreementDocumentType.TEMPLATE.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -223,7 +224,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                 "S.of(context).usage_term",
+                                  "S.of(context).usage_term",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -242,8 +243,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                 ),
                                 _optionRadioButtonRoomForm<bool>(
-                                  title:
-                                      L.of(context).long_term_month_to_month,
+                                  title: L.of(context).long_term_month_to_month,
                                   value: false,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -262,7 +262,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                     "S.of(context).quite_hours_allowed",
+                                      "S.of(context).quite_hours_allowed",
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -319,7 +319,9 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: L.of(context).request_offer_agreement_hint_text,
+                                    hintText: L
+                                        .of(context)
+                                        .request_offer_agreement_hint_text,
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -337,7 +339,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                 "S.of(context).security_deposits",
+                                  "S.of(context).security_deposits",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -362,7 +364,9 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: L.of(context).request_offer_agreement_hint_text2,
+                                    hintText: L
+                                        .of(context)
+                                        .request_offer_agreement_hint_text2,
                                     hintStyle: TextStyle(
                                         fontSize: 13, color: Colors.grey),
                                     // labelText: 'No. of volunteers',
@@ -370,7 +374,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   keyboardType: TextInputType.number,
                                   // validator: (value) {
                                   //   if (value.isEmpty) {
-                                  //     return "Ex: 3"; 
+                                  //     return "Ex: 3";
                                   //   } else {
                                   //     maximumOccupants = int.parse(value);
                                   //     setState(() {});
@@ -380,7 +384,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                 "S.of(context).person_of_contact_details",
+                                  "S.of(context).person_of_contact_details",
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -411,7 +415,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   keyboardType: TextInputType.text,
                                   // validator: (value) {
                                   //   if (value.isEmpty) {
-                                  //     return "Please enter document name"; 
+                                  //     return "Please enter document name";
                                   //   } else {
                                   //     documentName = value;
                                   //     setState(() {});
@@ -565,8 +569,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText:
-                "S.of(context).item_returned_hint_text",
+            hintText: "S.of(context).item_returned_hint_text",
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -603,15 +606,14 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText:
-               L.of(context).request_offer_agreement_hint_text3,
+            hintText: L.of(context).request_offer_agreement_hint_text3,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
           keyboardType: TextInputType.text,
           // validator: (value) {
           //   if (value.isEmpty) {
-          //     return "Please enter specific conditions"; 
+          //     return "Please enter specific conditions";
           //   } else {
           //     specificConditions = value;
           //     return null;
@@ -641,8 +643,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText:
-                L.of(context).request_offer_agreement_hint_text4, 
+            hintText: L.of(context).request_offer_agreement_hint_text4,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -667,7 +668,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-         L.of(context).document_name,
+          L.of(context).document_name,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -709,7 +710,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-         L.of(context).other_details,
+          L.of(context).other_details,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -731,8 +732,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 11,
-            hintText:
-                L.of(context).request_offer_agreement_hint_text5,
+            hintText: L.of(context).request_offer_agreement_hint_text5,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -764,7 +764,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
             //Radio Buttons
             _optionRadioButtonMain<String>(
-              title:L.of(context).create_new, 
+              title: L.of(context).create_new,
               value: AgreementDocumentType.NEW.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -774,7 +774,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: L.of(context).choose_previous_agreement, 
+              title: L.of(context).choose_previous_agreement,
               value: AgreementDocumentType.TEMPLATE.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -783,7 +783,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title:L.of(context).no_agrreement,
+              title: L.of(context).no_agrreement,
               value: AgreementDocumentType.NO_AGREEMENT.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -821,7 +821,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
               child: Text(
-              L.of(context).use,
+                L.of(context).use,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
@@ -877,11 +877,22 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                     //   2.2 - Then store pdf in Storage and obtain download url
 
                     borrowAgreementLinkFinal = await BorrowAgreementPdf()
-                        .borrowAgreementPdf(context, widget.requestModel,
-                            documentName, widget.isRequest, widget.roomOrTool,
-                            otherDetails,specificConditions,itemDescription, additionalConditions,
-                            isFixedTerm, isQuietHoursAllowed, isPetsAllowed, maximumOccupants, 
-                            securityDeposit, contactDetails);
+                        .borrowAgreementPdf(
+                            context,
+                            widget.requestModel,
+                            documentName,
+                            widget.isRequest,
+                            widget.roomOrTool,
+                            otherDetails,
+                            specificConditions,
+                            itemDescription,
+                            additionalConditions,
+                            isFixedTerm,
+                            isQuietHoursAllowed,
+                            isPetsAllowed,
+                            maximumOccupants,
+                            securityDeposit,
+                            contactDetails);
 
                     widget.onPdfCreated(borrowAgreementLinkFinal, documentName);
 

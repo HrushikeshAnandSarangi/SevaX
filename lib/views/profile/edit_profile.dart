@@ -37,6 +37,7 @@ import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../globals.dart' as globals;
+import '../../labels.dart';
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -275,7 +276,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  usermodel.cvName ?? S.of(context).cv_not_available,
+                                  usermodel.cvName ??
+                                      S.of(context).cv_not_available,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
@@ -404,7 +406,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     child: ListTile(
                                       leading: Icon(Icons.attachment),
                                       title: Text(
-                                        cvName ?? S.of(context).cv_not_available,
+                                        cvName ??
+                                            S.of(context).cv_not_available,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       trailing: IconButton(
@@ -950,7 +953,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
                     } else if (value.length > 250) {
-                      return  L.of(context).max_250_characters;
+                      return L.of(context).max_250_characters;
                     } else {
                       bio = value;
                       return null;

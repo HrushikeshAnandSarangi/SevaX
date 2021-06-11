@@ -28,6 +28,7 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
+import '../../labels.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
@@ -495,7 +496,7 @@ class NewsCardViewState extends State<NewsCardView> {
             if (await canLaunch(value)) {
               await launch(value);
             } else {
-              throw  L.of(context).could_not_launch +'$value';
+              throw L.of(context).could_not_launch + '$value';
             }
           },
           child: Material(
@@ -619,7 +620,7 @@ class NewsCardViewState extends State<NewsCardView> {
             child: Container(
               child: Text(
                 widget.newsModel.photoCredits != null
-                    ? L.of(context).credits+ '${widget.newsModel.photoCredits}'
+                    ? L.of(context).credits + '${widget.newsModel.photoCredits}'
                     : '',
                 style: TextStyle(
                   fontSize: 15.0,
@@ -662,7 +663,8 @@ class NewsCardViewState extends State<NewsCardView> {
                   child: ListTile(
                     leading: Icon(Icons.attachment),
                     title: Text(
-                      widget.newsModel.newsDocumentName ?? L.of(context).doc_pdf,
+                      widget.newsModel.newsDocumentName ??
+                          L.of(context).doc_pdf,
                       //overflow: TextOverflow.ellipsis,
                     ),
                   ),
