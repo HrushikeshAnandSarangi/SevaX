@@ -507,10 +507,13 @@ class Searches {
   //get all categories
   static Stream<List<CategoryModel>> getAllCategories() async* {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}/elasticsearch/request_categories/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}/elasticsearch/request_categories/_doc/_search?size=200';
 
     dynamic body = json.encode({
-      "query": {"match_all": {}}
+      "query": {"match_all": {}},
+      "sort": {
+        "title_en.keyword": {"order": "asc"}
+      }
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);

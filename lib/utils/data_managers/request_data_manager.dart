@@ -2176,13 +2176,14 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
   var data = Firestore.instance
       .collection('requestCategories')
       .where("type", isEqualTo: "subCategory")
+      .orderBy("title_en", descending: false)
       .snapshots();
 
   yield* data.transform(
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
-       snapshot.documents.forEach((element) {
+      snapshot.documents.forEach((element) {
         CategoryModel model = CategoryModel.fromMap(element.data);
         model.typeId = element.documentID;
         log('${model.title_en}');

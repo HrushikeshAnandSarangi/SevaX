@@ -495,10 +495,13 @@ class ElasticSearchApi {
 
   static Future<List<CategoryModel>> getAllCategories() async {
     String endPoint =
-        '//elasticsearch/request_categories/_doc/_search?size=300';
+        '//elasticsearch/request_categories/_doc/_search?size=200';
 
     dynamic body = json.encode({
-      "query": {"match_all": {}}
+      "query": {"match_all": {}},
+      "sort": {
+        "title_en.keyword": {"order": "asc"}
+      }
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
@@ -517,10 +520,14 @@ class ElasticSearchApi {
   // get all community categories
   static Future<List<CommunityCategoryModel>>
       getAllCommunityCategories() async {
-    String endPoint = '//elasticsearch/community_categories/_doc/_search?size=100';
+    String endPoint =
+        '//elasticsearch/community_categories/_doc/_search?size=200';
 
     dynamic body = json.encode({
-      "query": {"match_all": {}}
+      "query": {"match_all": {}},
+      "sort": {
+        "en.keyword": {"order": "asc"}
+      }
     });
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(endPoint, body);
