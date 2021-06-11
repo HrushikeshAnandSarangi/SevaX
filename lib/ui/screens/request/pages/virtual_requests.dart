@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -22,7 +23,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
@@ -45,7 +45,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
   @override
   void initState() {
     // TODO: implement initState
-    currentCoords = findcurrentLocation();
+    currentCoords = LocationHelper.getCoordinates();
 
     super.initState();
   }

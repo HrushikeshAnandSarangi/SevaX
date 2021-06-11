@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
@@ -16,6 +17,7 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -253,24 +255,20 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream({
   @required NearBySettings nearbySettings,
 }) async* {
   Geoflutterfire geo = Geoflutterfire();
-  LocationData locationData;
-  Location location = Location();
-
+  Location locationData;
   try {
-    var permission = await location.hasPermission();
-    var serviceEnabled = await location.serviceEnabled();
-
-    if (permission != PermissionStatus.granted || !serviceEnabled) {
+    var lastLocation = await LocationHelper.getLocation();
+    if (lastLocation.isLeft())
       yield* Stream.error("service disabled");
-    } else {
-      logger.i("fetching location");
-      locationData = await location.getLocation();
+    else {
+      lastLocation.fold((l) => null, (r) {
+        locationData = r;
+      });
 
       double lat = locationData?.latitude;
       double lng = locationData?.longitude;
 
       //Here get radius from dataabse
-
       var radius =
           NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
       log("Getting within the raidus ==> " + radius.toString());

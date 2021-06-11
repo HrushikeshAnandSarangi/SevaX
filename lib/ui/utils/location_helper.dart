@@ -1,10 +1,12 @@
-import 'package:flutter/services.dart';
+import 'package:dartz/dartz.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:sevaexchange/core/error/failures.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class DistanceFilterData {
-  final LocationData locationData;
+  final Location locationData;
   final int radius;
 
   DistanceFilterData(this.locationData, this.radius);
@@ -30,6 +32,11 @@ class DistanceFilterData {
   }
 }
 
+class LocationMetaData {
+  bool canAccess;
+  String accessDetail;
+}
+
 class LocationHelper {
   static double getDistanceBetweenPoints(
       Coordinates cord1, GeoFirePoint cord2) {
@@ -40,53 +47,88 @@ class LocationHelper {
     // return GeoFirePoint.distanceBetween(to: cord1, from: cord2);
   }
 
-  static Future<LocationData> gpsCheck() async {
-    try {
-      Location templocation = Location();
-      bool _serviceEnabled;
-      PermissionStatus _permissionGranted;
-      LocationData locationData;
+  // static Future<Either<Failure,Location>> getLastKnownPosition() async {
+  //   //return location over here
+  //   var isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!isLocationServiceEnabled) {
+  //     await Geolocator.requestPermission();
+  //     var isLocationServiceEnabled =
+  //         await Geolocator.isLocationServiceEnabled();
+  //     if (isLocationServiceEnabled) {
+  //       return getLocation();
+  //     } else {
+  //       return null;
+  //     }
+  //   } else {
+  //     return getLocation();
+  //   }
+  // }
 
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        logger.i("requesting location");
+  static Future<Either<Failure, Location>> getLocation() async {
+    if (await _hasPermissions()) {
+      logger.i("Permission seems to be granted for location!", "Location");
+      try {
+        var lastKnownLocation = await Geolocator.getLastKnownPosition(
+          forceAndroidLocationManager: true,
+        );
+        logger.i(
+            "Successfully retrieved location========" +
+                lastKnownLocation.toString(),
+            "Location");
 
-        if (!_serviceEnabled) {
-          return null;
-        } else {
-          locationData = await templocation.getLocation();
-          if (locationData != null) {
-            return locationData;
-          }
-        }
+        return right(Location(
+          latitude: lastKnownLocation.latitude,
+          longitude: lastKnownLocation.longitude,
+        ));
+      } catch (e) {
+        logger.i("Failed to retrieve location", "Location");
+        return left(Failure(e.toString()));
       }
+    } else {
+      logger.i("Permission denied!===================", "Location");
+      return left(Failure("Permission Denied."));
+    }
+  }
 
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        logger.i("requesting location");
-        if (_permissionGranted != PermissionStatus.granted) {
-          return null;
-        } else {
-          locationData = await templocation.getLocation();
-          if (locationData != null) {
-            return locationData;
-          }
-        }
+  static Future<bool> _hasPermissions({bool firstTime = true}) async {
+    var permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      if (firstTime) {
+        await Geolocator.requestPermission();
+        return _hasPermissions(firstTime: false);
+      } else
+        return false;
+    } else {
+      var isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        logger.d(
+            "Location permission is not enabled! requesting permission from user!",
+            "Location");
+
+        return await Geolocator.isLocationServiceEnabled();
       } else {
-        locationData = await templocation.getLocation();
-        if (locationData != null) {
-          return locationData;
-        }
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        logger.e(e);
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        logger.e(e);
+        logger.d("Location permission allowed from user!!", "Location");
+        return true;
       }
     }
-    return null;
+  }
+
+  static Future<Coordinates> getCoordinates() async {
+    var result = await getLocation();
+    Coordinates coordinates;
+
+    result.fold((l) {
+      coordinates = null;
+    }, (r) {
+      coordinates = Coordinates(r.latitude, r.longitude);
+      logger.d([coordinates?.latitude, coordinates?.longitude],
+          "Coordinates in fold");
+    });
+    logger.d(
+        [coordinates?.latitude, coordinates?.longitude], "Coordinates return");
+    return coordinates;
   }
 }

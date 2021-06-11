@@ -443,40 +443,44 @@ class Searches {
   //get public requests
   static Stream<List<CommunityModel>> getNearBYCommunities(
       {GeoPoint geoPoint}) async* {
-    String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+    if (geoPoint == null) {
+      yield [];
+    } else {
+      String url =
+          '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
 
-    dynamic body = json.encode({
-      "query": {
-        "bool": {
-          "must": {"match_all": {}},
-          "filter": {
-            "geo_distance": {
-              "distance": "100km",
-              "location_elastic": {
-                "lat": geoPoint.latitude.toString(),
-                "lon": geoPoint.longitude.toString()
+      dynamic body = json.encode({
+        "query": {
+          "bool": {
+            "must": {"match_all": {}},
+            "filter": {
+              "geo_distance": {
+                "distance": "100km",
+                "location_elastic": {
+                  "lat": geoPoint.latitude.toString(),
+                  "lon": geoPoint.longitude.toString()
+                }
               }
             }
           }
         }
-      }
-    });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
+      });
+      List<Map<String, dynamic>> hitList =
+          await _makeElasticSearchPostRequest(url, body);
 
-    List<CommunityModel> communityList = [];
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
+      List<CommunityModel> communityList = [];
+      hitList.forEach((map) {
+        Map<String, dynamic> sourceMap = map['_source'];
 
-      if (sourceMap['softDelete'] == false) {
-        CommunityModel model = CommunityModel(sourceMap);
+        if (sourceMap['softDelete'] == false) {
+          CommunityModel model = CommunityModel(sourceMap);
 
-        communityList.add(model);
-      }
-    });
-    communityList.sort((a, b) => a.name.compareTo(b.name));
-    yield communityList;
+          communityList.add(model);
+        }
+      });
+      communityList.sort((a, b) => a.name.compareTo(b.name));
+      yield communityList;
+    }
   }
 
   //get public offers

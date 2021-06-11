@@ -12,11 +12,12 @@ import 'package:sevaexchange/ui/screens/request/bloc/request_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/cutom_chip.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_card.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -31,8 +32,6 @@ import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import '../../../../labels.dart';
-import 'package:sevaexchange/utils/extensions.dart';
 
 class RequestListingPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -52,7 +51,7 @@ class _RequestListingPageState extends State<RequestListingPage> {
   final RequestBloc _bloc = RequestBloc();
   @override
   void initState() {
-    currentCoords = findcurrentLocation();
+    currentCoords = LocationHelper.getCoordinates();
     Future.delayed(Duration.zero, () {
       _bloc.init(
         widget.timebankModel.id,

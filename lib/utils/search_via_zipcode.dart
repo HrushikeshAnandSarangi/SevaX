@@ -3,14 +3,13 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:geocode/geocode.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/zip_code_model.dart';
-import 'package:http/http.dart' as http;
 
 import 'log_printer/log_printer.dart';
 

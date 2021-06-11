@@ -1,4 +1,4 @@
-import 'package:location/location.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
@@ -69,12 +69,10 @@ class ExploreSearchPageBloc {
     FirestoreManager.getSubCategoriesFuture().then((value) {
       _requestCategory.add(value);
     });
-    LocationData location;
-    try {
-      location = await LocationHelper.gpsCheck().timeout(Duration(seconds: 3));
-    } catch (e) {
-      logger.e("explore search bloc location timed out");
-    }
+    Location location;
+    var result = await LocationHelper.getLocation();
+    result.fold((l) => null, (r) => location = r);
+
     ElasticSearchApi.getAllCommunityCategories().then((value) {
       _communityCategory.add(value);
     });

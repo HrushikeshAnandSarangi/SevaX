@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class LocationUtility {
   Future<String> getFormattedAddress(double latitude, double longitude) async {
     List<Placemark> placemarkList;
     try {
-      var geoLocator = Geolocator()..forceAndroidLocationManager = true;
-      placemarkList = await geoLocator.placemarkFromCoordinates(
+      
+      placemarkList = await placemarkFromCoordinates(
         latitude,
         longitude,
       );

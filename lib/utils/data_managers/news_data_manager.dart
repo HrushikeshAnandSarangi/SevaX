@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
@@ -13,9 +12,8 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../app_config.dart';
 import '../location_utility.dart';
 
-Location locations = Location();
-Geoflutterfire geos = Geoflutterfire();
 
+Geoflutterfire geos = Geoflutterfire();
 Future<void> createNews({@required NewsModel newsObject}) async {
   await Firestore.instance
       .collection('news')
@@ -71,11 +69,11 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 
 Stream<List<NewsModel>> getNearNewsStream(
     {@required String timebankID}) async* {
-  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;;
+  // Geolocator geolocator = Geolocator();
   Position userLocation;
   var futures = <Future>[];
 
-  userLocation = await geolocator.getCurrentPosition();
+  userLocation = await Geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 
@@ -155,10 +153,10 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 }
 
 Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+  
   Position userLocation;
 
-  userLocation = await geolocator.getCurrentPosition();
+  userLocation = await Geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 

@@ -4,9 +4,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -957,10 +958,8 @@ Stream<List<RequestModel>> getNearRequestListStream(
   // double lat = pos.latitude;
   // double lng = pos.longitude;
 
-  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
-
   Position userLocation;
-  userLocation = await geolocator.getCurrentPosition();
+  userLocation = await Geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 

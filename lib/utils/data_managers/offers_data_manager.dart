@@ -3,15 +3,13 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-Location loc = Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
 
 Stream<List<OfferModel>> getOffersStream(
@@ -32,17 +30,7 @@ Stream<List<OfferModel>> getOffersStream(
 
   var data = query.snapshots();
   logger.i("fetched data");
-  Coordinates currentCoords;
-  try {
-    currentCoords = await findcurrentLocation().timeout(
-      Duration(seconds: 1),
-    );
-    // logger.i('offer location loading time ${sw.elapsedMilliseconds}');
-  } catch (e) {
-    logger.e(e);
-  }
-
-  logger.i("fetched location");
+  Coordinates coordinates = await LocationHelper.getCoordinates();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
@@ -54,7 +42,7 @@ Stream<List<OfferModel>> getOffersStream(
           log(model.id + '--->' + model.offerType.toString());
 
           model.id = snapshot.documentID;
-          model.currentUserLocation = currentCoords;
+          model.currentUserLocation = coordinates;
 
           if (model.offerType == OfferType.GROUP_OFFER &&
               !model.groupOfferDataModel.isCanceled) {
@@ -72,7 +60,9 @@ Stream<List<OfferModel>> getOffersStream(
                 logger.i("Exemtion reported!!");
               }
             } else {
-              logger.i(model.individualOfferDataModel.isAccepted.toString() + "====NOT ACCEPTED/ SPOT ON " + model.individualOfferDataModel.title);
+              logger.i(model.individualOfferDataModel.isAccepted.toString() +
+                  "====NOT ACCEPTED/ SPOT ON " +
+                  model.individualOfferDataModel.title);
 
               offerList.add(model);
             }

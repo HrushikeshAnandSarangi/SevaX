@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -27,6 +27,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -86,7 +87,14 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   void initState() {
-    gpsCheck();
+    LocationHelper.getLocation().then((value) {
+      if (value != null) {
+        value.fold((l) => null, (r) {
+          location = GeoFirePoint(r.latitude, r.longitude);
+          if (mounted) setState(() {});
+        });
+      }
+    });
     super.initState();
     AnimationController _controller = AnimationController(
       vsync: this,
@@ -321,62 +329,62 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  Future<void> gpsCheck() async {
-    Location templocation = Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    Geoflutterfire geo = Geoflutterfire();
-    LocationData locationData;
+  // Future<void> getLastKnownPosition() async {
+  //   Location templocation = Location();
+  //   bool _serviceEnabled;
+  //   PermissionStatus _permissionGranted;
+  //   Geoflutterfire geo = Geoflutterfire();
+  //   LocationData locationData;
 
-    try {
-      _serviceEnabled = await templocation.serviceEnabled();
-      if (!_serviceEnabled) {
-        _serviceEnabled = await templocation.requestService();
-        logger.i("requesting location");
+  //   try {
+  //     _serviceEnabled = await templocation.serviceEnabled();
+  //     if (!_serviceEnabled) {
+  //       _serviceEnabled = await templocation.requestService();
+  //       logger.i("requesting location");
 
-        if (!_serviceEnabled) {
-          return;
-        } else {
-          locationData = await templocation.getLocation();
+  //       if (!_serviceEnabled) {
+  //         return;
+  //       } else {
+  //         locationData = await templocation.getLocation();
 
-          double lat = locationData?.latitude;
-          double lng = locationData?.longitude;
-          location = geo.point(latitude: lat, longitude: lng);
-          setState(() {});
-        }
-      }
+  //         double lat = locationData?.latitude;
+  //         double lng = locationData?.longitude;
+  //         location = geo.point(latitude: lat, longitude: lng);
+  //         setState(() {});
+  //       }
+  //     }
 
-      _permissionGranted = await templocation.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await templocation.requestPermission();
-        logger.i("requesting permission");
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        } else {
-          locationData = await templocation.getLocation();
-          double lat = locationData?.latitude;
-          double lng = locationData?.longitude;
-          location = geo.point(latitude: lat, longitude: lng);
+  //     _permissionGranted = await templocation.hasPermission();
+  //     if (_permissionGranted == PermissionStatus.denied) {
+  //       _permissionGranted = await templocation.requestPermission();
+  //       logger.i("requesting permission");
+  //       if (_permissionGranted != PermissionStatus.granted) {
+  //         return;
+  //       } else {
+  //         locationData = await templocation.getLocation();
+  //         double lat = locationData?.latitude;
+  //         double lng = locationData?.longitude;
+  //         location = geo.point(latitude: lat, longitude: lng);
 
-          setState(() {});
-        }
-      } else {
-        locationData = await templocation.getLocation();
+  //         setState(() {});
+  //       }
+  //     } else {
+  //       locationData = await templocation.getLocation();
 
-        double lat = locationData?.latitude;
-        double lng = locationData?.longitude;
-        location = geo.point(latitude: lat, longitude: lng);
+  //       double lat = locationData?.latitude;
+  //       double lng = locationData?.longitude;
+  //       location = geo.point(latitude: lat, longitude: lng);
 
-        setState(() {});
-      }
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        logger.e(e);
-      } else if (e.code == 'SERVICE_STATUS_ERROR') {
-        logger.e(e);
-      }
-    }
-  }
+  //       setState(() {});
+  //     }
+  //   } on PlatformException catch (e) {
+  //     if (e.code == 'PERMISSION_DENIED') {
+  //       logger.e(e);
+  //     } else if (e.code == 'SERVICE_STATUS_ERROR') {
+  //       logger.e(e);
+  //     }
+  //   }
+  // }
 
   Widget get _formFields {
     return Form(
@@ -1054,7 +1062,7 @@ class _RegisterPageState extends State<RegisterPage>
               ),
             ),
             title: Text(
-            S.of(context).sign_up_with_apple,
+              S.of(context).sign_up_with_apple,
               style: TextStyle(color: Colors.white),
             ),
           ),
