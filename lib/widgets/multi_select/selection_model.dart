@@ -12,7 +12,7 @@ class SelectionModal extends StatefulWidget {
   final bool filterable;
   final String textField;
   final String valueField;
-  final String title;
+  final Widget title;
   final int maxLength;
   final Color buttonBarColor;
   final String cancelButtonText;
@@ -41,7 +41,7 @@ class SelectionModal extends StatefulWidget {
       {this.filterable,
       this.dataSource,
       this.admin,
-      this.title = 'Please select one or more option(s)',
+      this.title,
       this.values,
       this.textField,
       this.valueField,
@@ -156,7 +156,8 @@ class _SelectionModalState extends State<SelectionModal> {
       automaticallyImplyLeading: false,
       elevation: 0.0,
       centerTitle: false,
-      title: Text(widget.title, style: TextStyle(fontSize: 18.0)),
+      title:
+          widget.title, //Text(widget.title, style: TextStyle(fontSize: 18.0)),
       actions: <Widget>[
         IconButton(
           icon: Icon(

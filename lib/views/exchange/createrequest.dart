@@ -380,6 +380,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   children: [
                     Flexible(
                       child: ProjectSelection(
+                        setcreateEventState: () {
+                          createEvent = !createEvent;
+                          setState(() {});
+                        },
+                        createEvent: createEvent,
                         requestModel: requestModel,
                         projectModelList: projectModelList,
                         selectedProject: null,
@@ -387,27 +392,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             SevaCore.of(context).loggedInUser.sevaUserID),
                       ),
                     ),
-                    SizedBox(width: 3),
-                    requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                createEvent = !createEvent;
-                                requestModel.projectId = '';
-                                log('projectId1:  ' +
-                                    requestModel.projectId.toString());
-                                log('createEvent1:  ' + createEvent.toString());
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 1.8),
-                              child: Icon(Icons.add_circle_outline_rounded,
-                                  size: 28,
-                                  color:
-                                      createEvent ? Colors.green : Colors.grey),
-                            ),
-                          )
-                        : Container()
                   ],
                 ),
           createEvent
@@ -423,8 +407,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   child: Row(
                     children: [
                       Icon(Icons.check_box, size: 19, color: Colors.green),
-                      SizedBox(width: 3),
-                      Text(S.of(context).onetomanyrequest_create_new_event),
+                      SizedBox(width: 5),
+                      Expanded(
+                        child: Text(
+                          S.of(context).onetomanyrequest_create_new_event,
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -482,6 +470,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
   @override
   Widget build(BuildContext context) {
+    logger.e('CREATE EVENT STATUS: ' + createEvent.toString());
     hoursMessage = S.of(context).set_duration;
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
@@ -3890,21 +3879,25 @@ class RequestCreateFormState extends State<RequestCreateForm>
 }
 
 class ProjectSelection extends StatefulWidget {
-  ProjectSelection({
-    Key key,
-    this.requestModel,
-    this.admin,
-    this.projectModelList,
-    this.selectedProject,
-    this.timebankModel,
-    this.userModel,
-  }) : super(key: key);
+  ProjectSelection(
+      {Key key,
+      this.requestModel,
+      this.admin,
+      this.projectModelList,
+      this.selectedProject,
+      this.timebankModel,
+      this.userModel,
+      this.createEvent,
+      this.setcreateEventState})
+      : super(key: key);
   final bool admin;
   final List<ProjectModel> projectModelList;
   final ProjectModel selectedProject;
   RequestModel requestModel;
   TimebankModel timebankModel;
   UserModel userModel;
+  bool createEvent;
+  VoidCallback setcreateEventState;
 
   @override
   ProjectSelectionState createState() => ProjectSelectionState();
@@ -3932,7 +3925,40 @@ class ProjectSelectionState extends State<ProjectSelection> {
       userModel: widget.userModel,
       autovalidate: true,
       initialValue: ['None'],
-      titleText: S.of(context).assign_to_project,
+      titleText: Row(
+        children: [
+          Text(S.of(context).assign_to_project),
+          SizedBox(
+            width: 10,
+          ),
+          Icon(
+            Icons.arrow_drop_down_circle,
+            color: Theme.of(context).primaryColor,
+            size: 30.0,
+          ),
+          SizedBox(width: 4),
+          widget.requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.createEvent = !widget.createEvent;
+                      widget.requestModel.projectId = '';
+                      log('projectId1:  ' +
+                          widget.requestModel.projectId.toString());
+                      log('createEvent1:  ' + widget.createEvent.toString());
+                    });
+                    widget.setcreateEventState();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 1.8),
+                    child: Icon(Icons.add_circle_outline_rounded,
+                        size: 28,
+                        color: widget.createEvent ? Colors.green : Colors.grey),
+                  ),
+                )
+              : Container()
+        ],
+      ),
       maxLength: 1, // optional
       hintText: S.of(context).tap_to_select,
       validator: (dynamic value) {

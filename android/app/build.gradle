@@ -55,9 +55,9 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
+            // storeFile file(keystoreProperties['storeFile'])
             // storeFile file('D:\\\\Projects\\\\seva-exchange\\\\seva_key.jks')
-            // storeFile file('Keystore')
+            storeFile file('Keystore')
             storePassword keystoreProperties['storePassword']
         }
     }

@@ -10,7 +10,7 @@ import 'package:sevaexchange/widgets/multi_select/selection_model.dart';
 class MultiSelect extends FormField<dynamic> {
   final TimebankModel timebankModel;
   final UserModel userModel;
-  final String titleText;
+  final Widget titleText;
   final String hintText;
   final bool required;
   final String errorText;
@@ -66,7 +66,7 @@ class MultiSelect extends FormField<dynamic> {
       this.userModel,
       dynamic initialValue,
       bool autovalidate = false,
-      this.titleText = 'Title',
+      this.titleText,
       this.titleTextColor,
       this.hintText,
       this.hintTextColor = Colors.grey,
@@ -130,15 +130,15 @@ class MultiSelect extends FormField<dynamic> {
                     }, orElse: () => null);
 
                     if (existingItem != null) {
-                      selectedOptions=Chip(
+                      selectedOptions = Chip(
                         label: Text(existingItem[textField],
                             overflow: TextOverflow.ellipsis),
                       );
-                    }else{
-                      selectedOptions=Container();
+                    } else {
+                      selectedOptions = Container();
                     }
                   });
-                } 
+                }
                 return selectedOptions;
               }
 
@@ -204,45 +204,48 @@ class MultiSelect extends FormField<dynamic> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                    text: titleText,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Europa',
-                                        fontSize: 16.0,
-                                        color: titleTextColor ??
-                                            Theme.of(state.context)
-                                                .primaryColor),
-                                    children: [
-//                                  TextSpan(
-//                                    text: required ? ' *' : '',
-//                                    style: TextStyle(
-//                                        color: maxLengthIndicatorColor,
-//                                        fontSize: 16.0),
-//                                  ),
-//                                  TextSpan(
-//                                    text: maxLength != null ? (maxLengthText ?? '(max $maxLength)') : '',
-//                                    style: TextStyle(
-//                                        color: maxLengthIndicatorColor,
-//                                        fontSize: 13.0),
-//                                  )
-                                    ]),
-                              ),
+                              child:
+                                  // RichText(
+                                  // text:
+                                  titleText,
+//                                 TextSpan(
+//                                     text: titleText,
+//                                     style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                         fontFamily: 'Europa',
+//                                         fontSize: 16.0,
+//                                         color: titleTextColor ??
+//                                             Theme.of(state.context)
+//                                                 .primaryColor),
+//                                     children: [
+// //                                  TextSpan(
+// //                                    text: required ? ' *' : '',
+// //                                    style: TextStyle(
+// //                                        color: maxLengthIndicatorColor,
+// //                                        fontSize: 16.0),
+// //                                  ),
+// //                                  TextSpan(
+// //                                    text: maxLength != null ? (maxLengthText ?? '(max $maxLength)') : '',
+// //                                    style: TextStyle(
+// //                                        color: maxLengthIndicatorColor,
+// //                                        fontSize: 13.0),
+// //                                  )
+//                                     ]),
+                              // ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Icon(
-                                  selectIcon,
-                                  color: selectIconColor ??
-                                      Theme.of(state.context).primaryColor,
-                                  size: 30.0,
-                                )
-                              ],
-                            )
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.center,
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   mainAxisSize: MainAxisSize.max,
+                            //   children: <Widget>[
+                            //     Icon(
+                            //       selectIcon,
+                            //       color: selectIconColor ??
+                            //           Theme.of(state.context).primaryColor,
+                            //       size: 30.0,
+                            //     )
+                            //   ],
+                            // )
                           ],
                         ),
                       ),
@@ -258,8 +261,7 @@ class MultiSelect extends FormField<dynamic> {
                                 ),
                               ),
                             )
-                          :                                  _buildSelectedOptions(state.value, state),
-
+                          : _buildSelectedOptions(state.value, state),
                     ],
                   ));
             });
