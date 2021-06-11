@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/image_url_view.dart';
+import 'package:path/path.dart' as pathExt;
 
 class ImagePickerDialogMobile extends StatefulWidget {
   final ImagePickerType imagePickerType;
@@ -87,6 +88,7 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       case ImagePickerType.TIMEBANK:
       case ImagePickerType.USER:
       case ImagePickerType.REQUEST:
+      case ImagePickerType.SPONSOR:
         return defaultType();
         break;
 
@@ -209,7 +211,14 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         icon: Icons.add_circle_outline,
         onTap: () async {
           var image = await ImagePicker.pickImage(source: ImageSource.camera);
-          cropImage(image);
+          String _extension = pathExt.extension(image.path).split('?').first;
+
+          if (_extension == 'gif' || _extension == '.gif') {
+            showProgressDialog(parentContext);
+            uploadImage(image);
+          } else {
+            cropImage(image);
+          }
         });
   }
 
@@ -219,7 +228,14 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         icon: Icons.add_circle_outline,
         onTap: () async {
           var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-          cropImage(image);
+          String _extension = pathExt.extension(image.path).split('?').first;
+
+          if (_extension == 'gif' || _extension == '.gif') {
+            showProgressDialog(parentContext);
+            uploadImage(image);
+          } else {
+            cropImage(image);
+          }
         });
   }
 
@@ -305,6 +321,8 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
       folderName = 'multiUserMessagingLogo/';
     } else if (widget.imagePickerType == ImagePickerType.REQUEST) {
       folderName = 'request_images/';
+    } else if (widget.imagePickerType == ImagePickerType.SPONSOR) {
+      folderName = 'sponsorsLogos/';
     } else {
       folderName = 'profile_images/';
     }
@@ -400,5 +418,6 @@ enum ImagePickerType {
   MESSAGE,
   TIMEBANK,
   REGISTER,
-  REQUEST
+  REQUEST,
+  SPONSOR
 }

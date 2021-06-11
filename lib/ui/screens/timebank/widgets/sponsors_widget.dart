@@ -12,6 +12,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -34,7 +35,8 @@ class SponsorsWidget extends StatefulWidget {
       {this.timebankModel,
       @required this.sponsorsMode,
       this.onCreated,
-      this.onRemoved, this.titleColor});
+      this.onRemoved,
+      this.titleColor});
 
   @override
   _SponsorsWidgetState createState() => _SponsorsWidgetState();
@@ -77,7 +79,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               offstage: widget.timebankModel.sponsors.length >= 5 ||
                   !isMemberAnAdmin(widget.timebankModel,
                       SevaCore.of(context).loggedInUser.sevaUserID),
-              child: addIconWidget(widget.timebankModel),
+              child: addIconWidget(widget.timebankModel, context),
             ),
           ],
         ),
@@ -109,7 +111,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                     ListTile(
                                       onTap: () async {
                                         indexPosition = index;
-                                        addImageAlert(
+                                        chooseImage(
                                             context: context,
                                             timebankModel: widget.timebankModel,
                                             name: widget.timebankModel
@@ -121,8 +123,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                     ListTile(
                                       onTap: () {
                                         indexPosition = index;
+                                        Navigator.of(dialogContext).pop();
 
-                                        showUploadImageDialog(
+                                        showEnterNameDialog(
                                             context: context,
                                             timebankModel:
                                                 widget.timebankModel);
@@ -148,7 +151,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                   onPressed: () {
                                     Navigator.of(dialogContext).pop();
                                   },
-                                  child: Text(S.of(context).cancel),
+                                  child: Text(
+                                    S.of(context).close,
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
                                 ),
                               ],
                             ),
@@ -168,7 +174,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
   }
 
   Widget defaultWidget() {
-    log('len${widget.timebankModel.sponsors.length}');
     return Offstage(
       offstage: widget.timebankModel.sponsors == null ||
           widget.timebankModel.sponsors.length < 1,
@@ -241,8 +246,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               width: 30,
             ),
             Offstage(
-                offstage: widget.timebankModel.sponsors.length >= 5,
-                child: addIconWidget(widget.timebankModel)),
+                offstage: widget.timebankModel.sponsors != null &&
+                    widget.timebankModel.sponsors.length >= 5,
+                child: addIconWidget(widget.timebankModel, context)),
           ],
         ),
         SizedBox(
@@ -271,7 +277,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 ListTile(
                                   onTap: () async {
                                     indexPosition = index;
-                                    addImageAlert(
+                                    Navigator.of(dialogContext).pop();
+
+                                    chooseImage(
                                         context: context,
                                         timebankModel: widget.timebankModel,
                                         name: widget.timebankModel
@@ -283,8 +291,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 ListTile(
                                   onTap: () {
                                     indexPosition = index;
+                                    Navigator.of(dialogContext).pop();
 
-                                    showUploadImageDialog(
+                                    showEnterNameDialog(
                                         context: context,
                                         timebankModel: widget.timebankModel);
                                   },
@@ -309,7 +318,10 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
                               },
-                              child: Text(S.of(context).cancel),
+                              child: Text(
+                                S.of(context).close,
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
                             ),
                           ],
                         ),
@@ -332,7 +344,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
       child: Text(
         "Sponsored By",
         style: TextStyle(
-          color: widget.titleColor??HexColor('#766FE0'), 
+          color: widget.titleColor ?? HexColor('#766FE0'),
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
@@ -340,7 +352,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     );
   }
 
-  Widget addIconWidget(TimebankModel timebankModel) {
+  Widget addIconWidget(TimebankModel timebankModel, BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: IconButton(
@@ -349,121 +361,13 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           color: FlavorConfig.values.theme.primaryColor,
         ),
         onPressed: () async {
-          showUploadImageDialog(context: context, timebankModel: timebankModel);
+          showEnterNameDialog(context: context, timebankModel: timebankModel);
         },
       ),
     );
   }
 
-  Future<String> uploadImage(
-      dynamic file, TimebankModel timebankModel, @required String name) async {
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    String imageURL;
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('sponsorsLogos')
-        .child(
-            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
-
-    StorageUploadTask uploadTask = ref.putFile(
-      file,
-      StorageMetadata(
-        contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'Timebank Logo'},
-      ),
-    );
-
-    imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
-
-    await profanityCheck(
-        imageURL: imageURL,
-        storagePath: ref.path,
-        timebankModel: timebankModel,
-        name: name);
-    return imageURL;
-  }
-
-  Future<void> profanityCheck(
-      {String imageURL,
-      @required String storagePath,
-      @required String name,
-      TimebankModel timebankModel}) async {
-    ProfanityImageModel profanityImageModel = ProfanityImageModel();
-    ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-    // _newsImageURL = imageURL;
-    profanityImageModel = await checkProfanityForImage(
-      imageUrl: imageURL,
-      storagePath: storagePath,
-    );
-
-    if (profanityImageModel == null) {
-      if (dialogContext != null) {
-        Navigator.of(dialogContext).pop();
-      }
-      showFailedLoadImage(context: context).then((value) {
-        Navigator.of(context).pop();
-      });
-    } else {
-      profanityStatusModel =
-          await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-      if (profanityStatusModel.isProfane) {
-        if (dialogContext != null) {
-          Navigator.of(dialogContext).pop();
-        }
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
-            .then((status) {
-          if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-            });
-          }
-        });
-      } else {
-        SponsorDataModel sponsorModel = SponsorDataModel(
-            name: name,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            createdBy: SevaCore.of(context).loggedInUser.sevaUserID,
-            logo: imageURL);
-        if (indexPosition == null) {
-          timebankModel.sponsors.add(sponsorModel);
-        } else {
-          timebankModel.sponsors[indexPosition] = sponsorModel;
-        }
-
-        if (widget.sponsorsMode == SponsorsMode.CREATE) {
-          widget.onCreated(timebankModel);
-          Navigator.of(dialogContext).pop();
-        } else {
-          await FirestoreManager.updateTimebank(timebankModel: timebankModel)
-              .then((onValue) {
-            Navigator.of(dialogContext).pop();
-          });
-        }
-      }
-    }
-  }
-
-  BuildContext dialogContext;
-
-  void showProgressDialog(BuildContext context) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          dialogContext = createDialogContext;
-          return AlertDialog(
-            title: Text(S.of(context).loading),
-            content: LinearProgressIndicator(),
-          );
-        });
-  }
-
-  Future showUploadImageDialog(
+  Future showEnterNameDialog(
       {BuildContext context, TimebankModel timebankModel}) async {
     final profanityDetector = ProfanityDetector();
     GlobalKey<FormState> _formKey = GlobalKey();
@@ -519,7 +423,9 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     child: Text(
-                      S.of(context).next,
+                      indexPosition == null
+                          ? S.of(context).next
+                          : S.of(context).save,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -527,12 +433,22 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        Navigator.of(viewContext).pop();
 
-                        addImageAlert(
-                            timebankModel: timebankModel,
-                            name: name,
-                            context: context);
+                        if (indexPosition == null) {
+                          await addImageAlert(
+                              timebankModel: timebankModel,
+                              name: name,
+                              context: context);
+
+                          name = null;
+                          Navigator.of(viewContext).pop();
+                        } else {
+                          timebankModel.sponsors[indexPosition].name = name;
+                          indexPosition = null;
+                          name = null;
+                          widget.onCreated(timebankModel);
+                          Navigator.of(viewContext).pop();
+                        }
                       }
                     },
                   ),
@@ -545,6 +461,8 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       ),
                     ),
                     onPressed: () {
+                      indexPosition = null;
+                      name = null;
                       Navigator.of(viewContext).pop();
                     },
                   ),
@@ -555,47 +473,6 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         );
       },
     );
-  }
-
-  void getLogoFile({TimebankModel timebankModel, @required String name}) async {
-    String _path;
-    // PickedFile image =
-    //     await ImagePicker().getImage(source: ImageSource.gallery);
-    try {
-      _path = await FilePicker.getFilePath(
-          type: FileType.custom,
-          allowedExtensions: ['jpg', 'jpeg', 'gif', 'png', 'webp']);
-    } on PlatformException catch (e) {
-      throw e;
-    }
-
-    String _extension = pathExt.extension(_path).split('?').first;
-    log("exten ${_extension}");
-
-    if (_extension == 'gif' || _extension == '.gif') {
-      showProgressDialog(context);
-      uploadImage(File(_path), timebankModel, name);
-    } else {
-      cropImage(_path, timebankModel, name);
-    }
-  }
-
-  Future cropImage(
-      String path, TimebankModel timebankModel, String name) async {
-    File croppedFile;
-    ImageCropper.cropImage(
-      sourcePath: path,
-      ratioX: 1.0,
-      ratioY: 1.0,
-      maxWidth: 200,
-      maxHeight: 200,
-    ).then((value) {
-      if (value != null) {
-        croppedFile = value;
-        showProgressDialog(context);
-        uploadImage(croppedFile, timebankModel, name);
-      }
-    });
   }
 
   Future addImageAlert(
@@ -610,16 +487,16 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Add Sponsor Logo',
+            'Add Sponsor image',
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [
             RaisedButton(
-              onPressed: () {
-                Navigator.of(viewContext).pop();
-                getLogoFile(timebankModel: timebankModel, name: name);
+              onPressed: () async {
+                chooseImage(
+                    context: context, timebankModel: timebankModel, name: name);
               },
-              child: Text("Choose image"),
+              child: Text(S.of(context).choose_image),
             ),
             FlatButton(
                 onPressed: () async {
@@ -633,17 +510,11 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                   } else {
                     timebankModel.sponsors[indexPosition] = sponsorModel;
                   }
+                  indexPosition = null;
 
-                  if (widget.sponsorsMode == SponsorsMode.CREATE) {
-                    widget.onCreated(timebankModel);
-                    Navigator.of(viewContext).pop();
-                  } else {
-                    await FirestoreManager.updateTimebank(
-                            timebankModel: timebankModel)
-                        .then((onValue) {
-                      Navigator.of(viewContext).pop();
-                    });
-                  }
+                  widget.onCreated(timebankModel);
+
+                  Navigator.of(viewContext).pop();
                 },
                 child: Text(
                   S.of(context).skip,
@@ -653,5 +524,33 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
         );
       },
     );
+  }
+
+  void chooseImage(
+      {BuildContext context, TimebankModel timebankModel, String name}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return ImagePickerDialogMobile(
+            imagePickerType: ImagePickerType.SPONSOR,
+            onLinkCreated: (link) {
+              SponsorDataModel sponsorModel = SponsorDataModel(
+                  name: name,
+                  createdAt: DateTime.now().millisecondsSinceEpoch,
+                  createdBy: SevaCore.of(context).loggedInUser.sevaUserID,
+                  logo: link);
+              if (indexPosition == null) {
+                timebankModel.sponsors.add(sponsorModel);
+              } else {
+                timebankModel.sponsors[indexPosition] = sponsorModel;
+              }
+
+              widget.onCreated(timebankModel);
+              indexPosition = null;
+
+              Navigator.of(dialogContext).pop();
+            },
+          );
+        });
   }
 }

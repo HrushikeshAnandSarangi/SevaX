@@ -410,10 +410,10 @@ class SponsorDataModel {
     this.createdBy,
   });
 
-  final String logo;
-  final String name;
-  final int createdAt;
-  final String createdBy;
+  String logo;
+  String name;
+  int createdAt;
+  String createdBy;
 
   SponsorDataModel copyWith({
     String logo,

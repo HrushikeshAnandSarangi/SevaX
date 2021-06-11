@@ -568,7 +568,9 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       ? S.of(context).request_title_hint
                                       : requestModel.requestType ==
                                               RequestType.CASH
-                                          ? S.of(context).cash_request_title_hint
+                                          ? S
+                                              .of(context)
+                                              .cash_request_title_hint
                                           : requestModel.requestType ==
                                                   RequestType
                                                       .ONE_TO_MANY_REQUEST
@@ -2086,33 +2088,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
         : Container();
   }
 
-// Navigat to skills class and geting data from the class
-  void selectSkills() async {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return SkillViewNew(
-        automaticallyImplyLeading: false,
-        userModel: SevaCore.of(context).loggedInUser,
-        isFromProfile: false,
-        selectedSkills: _selectedSkillsMap,
-        onSelectedSkillsMap: (skillMap) {
-          Navigator.pop(context);
-          if (skillMap.values != null && skillMap.values.length > 0) {
-            _selectedSkillsMap = skillMap;
-            setState(() {});
-          }
-        },
-        onSelectedSkills: (skills) {
-          Navigator.pop(context);
-        },
-        onSkipped: () {
-          Navigator.pop(context);
-        },
-        languageCode: SevaCore.of(context).loggedInUser.language ?? 'en',
-        isFromRequests: true,
-      );
-    }));
-  }
-
 // Choose Category and Sub Category function
   // get data from Category class
   List categories;
@@ -2330,74 +2305,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ),
           )
         ]);
-  }
-
-  Widget skillsWidget() {
-    return InkWell(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _selectedSkillsMap.values.length < 1
-                  ? Text(
-                      'Choose Skills for request',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    )
-                  : Text(
-                      "Selected Skills",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                      ),
-                    ),
-              Spacer(),
-              Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          _selectedSkillsMap.values != null
-              ? Wrap(
-                  alignment: WrapAlignment.start,
-                  children: _selectedSkillsMap.values
-                      .toList()
-                      .map(
-                        (value) => value == null
-                            ? Container()
-                            : Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 10, bottom: 10),
-                                child: Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                    child: Text(value.toString(),
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                              ),
-                      )
-                      .toList(),
-                )
-              : Container(),
-        ],
-      ),
-      onTap: () => selectSkills(),
-    );
   }
 
   Widget categoryWidget() {
