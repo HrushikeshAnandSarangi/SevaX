@@ -288,7 +288,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: Colors.red,
+          color: Colors.blue,
         ),
       ),
     );
@@ -304,7 +304,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         ));
       },
       child: Text(
-        S.of(context).member_permission,
+        "Manage Permissions",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
