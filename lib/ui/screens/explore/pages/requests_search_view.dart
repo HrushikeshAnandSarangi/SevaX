@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
@@ -138,7 +137,7 @@ class RequestsSearchView extends StatelessWidget {
           },
         ),
         Text(
-          'Browse Requests by category',
+          S.of(context).browse_requests_by_category,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 12),

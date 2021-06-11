@@ -61,6 +61,9 @@ class ExplorePageViewHolder extends StatelessWidget {
                   childPadding ?? const EdgeInsets.symmetric(horizontal: 12),
               child: child,
             ),
+            SizedBox(
+              height: 30,
+            ),
             HideWidget(
               hide: hideFooter,
               child: SevaExploreFooter(),

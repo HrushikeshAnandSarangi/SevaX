@@ -243,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage>
                                   child: ListTile(
                                     leading: Icon(Icons.attachment),
                                     title: Text(
-                                      cvName ?? "cv not available",
+                                      cvName ?? S.of(context).cv_not_available,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     trailing: IconButton(
@@ -1054,7 +1054,7 @@ class _RegisterPageState extends State<RegisterPage>
               ),
             ),
             title: Text(
-              'Sign up with Apple',
+            S.of(context).sign_up_with_apple,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -1075,7 +1075,7 @@ class _RegisterPageState extends State<RegisterPage>
               width: 30,
               child: Image.asset('lib/assets/images/g.png'),
             ),
-            title: Text('Sign up with Google'),
+            title: Text(S.of(context).sign_up_with_google),
           ),
         ),
       ),

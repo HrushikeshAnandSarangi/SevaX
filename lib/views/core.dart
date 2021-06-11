@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class SevaCore extends InheritedWidget {
@@ -36,7 +37,7 @@ class SevaCore extends InheritedWidget {
     return false;
   }
 
-  Future<Widget> get errorDialogueBox async {
+  Future<Widget>  errorDialogueBox (BuildContext context)async {
     var status = await _checkInternet;
     if (status) {
       return null;
@@ -57,7 +58,7 @@ class SevaCore extends InheritedWidget {
             ),
           ),
           Text(
-            'Internet connection lost',
+            S.of(context).internet_connection_lost,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
@@ -65,7 +66,7 @@ class SevaCore extends InheritedWidget {
           FlatButton(
             color: Colors.yellow,
             child: Text(
-              "OK",
+              S.of(context).ok,
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {},

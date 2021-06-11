@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:path/path.dart' as pathExt;
 import 'package:path_drawing/path_drawing.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -34,7 +35,6 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:path/path.dart' as pathExt;
 
 import '../../globals.dart' as globals;
 import '../core.dart';
@@ -275,7 +275,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  usermodel.cvName ?? 'CV not available',
+                                  usermodel.cvName ?? S.of(context).cv_not_available,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
@@ -404,7 +404,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                                     child: ListTile(
                                       leading: Icon(Icons.attachment),
                                       title: Text(
-                                        cvName ?? "cv not available",
+                                        cvName ?? S.of(context).cv_not_available,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       trailing: IconButton(
@@ -950,7 +950,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
                     } else if (value.length > 250) {
-                      return '* max 250 characters';
+                      return  L.of(context).max_250_characters;
                     } else {
                       bio = value;
                       return null;

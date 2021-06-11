@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
@@ -62,9 +63,9 @@ class _ProjectChatViewState extends State<ProjectChatView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('To View and receive updates join the community'),
+                  Text(L.of(context).join_community_to_view_updates),
                   RaisedButton(
-                    child: Text('Join Chat'),
+                    child: Text(L.of(context).join_chat),
                     onPressed: () {
                       ChatsRepository.addMember(
                         snapshot.data.id,

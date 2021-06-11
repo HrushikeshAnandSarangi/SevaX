@@ -10,6 +10,7 @@ import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
@@ -130,7 +131,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                             timebankModel:
                                                 widget.timebankModel);
                                       },
-                                      title: Text('Edit Name'),
+                                      title: Text(S.of(context).edit),
                                       trailing: Icon(Icons.edit),
                                     ),
                                     ListTile(
@@ -342,7 +343,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Text(
-        "Sponsored By",
+        L.of(context).sponsored_by,
         style: TextStyle(
           color: widget.titleColor ?? HexColor('#766FE0'),
           fontSize: 16,
@@ -380,7 +381,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Sponsor name',
+            L.of(context).sponsor_name,
             style: TextStyle(fontSize: 15.0),
           ),
           content: Column(

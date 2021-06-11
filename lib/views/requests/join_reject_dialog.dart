@@ -79,7 +79,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 widget.requestInvitationModel.requestModel.description ??
-                    "Description not yet updated",
+                  S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

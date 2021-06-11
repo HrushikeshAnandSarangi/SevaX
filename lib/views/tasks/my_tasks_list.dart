@@ -13,26 +13,21 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../../flavor_config.dart';
-import '../../labels.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
 
@@ -813,7 +808,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Enter Prep Time',
+                                      S.of(context).enter_prep_time,
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
@@ -912,7 +907,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                 Row(
                                   children: [
                                     Text(
-                                      'Enter Delivery Time',
+                                     "S.of(context).enter_delivery_time",
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),

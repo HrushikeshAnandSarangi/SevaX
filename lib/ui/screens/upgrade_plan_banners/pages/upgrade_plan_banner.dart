@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -84,7 +85,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text("Sorry Couldn't fetch data");
+            return Text(L.of(context).upgrade_plan_msg1);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -107,7 +108,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                     style: TextStyle(fontSize: 16, color: Colors.black),
                     children: [
                       TextSpan(
-                        text: 'This feature is disabled for your community',
+                        text: L.of(context).upgrade_plan_disable_msg1,
                       )
                     ],
                   ),
@@ -157,12 +158,12 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                 Spacer(),
                 timebankModel.creatorId == currentUser.sevaUserID
                     ? Text(
-                        'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/',
+                        L.of(context).upgrade_plan_disable_msg2,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       )
                     : Text(
-                        'This is currently not permitted. Please contact the Community Creator for more information',
+                         L.of(context).upgrade_plan_disable_msg3,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       ),

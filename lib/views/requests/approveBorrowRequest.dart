@@ -57,8 +57,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'ROOM'
-              ? 'Approve Room Borrow Request'
-              : 'Approve Item Borrow request',
+              ? L.of(context).approve_borrow_request
+              : L.of(context).approve_item_borrow,
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -79,7 +79,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20),
-            Text("Guests can do and don't*",
+            Text("S.of(context).guests_can_do_and_dont",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -96,14 +96,14 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               },
               decoration: InputDecoration(
                 hintText:
-                    "Tell your borrower do and dont's", 
+                   L.of(context).approve_borrow_hint_text1, 
                 hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                 // labelText: 'No. of volunteers',
               ),
               keyboardType: TextInputType.text,
               validator: (value) {
                 if (value.isEmpty) {
-                  return "Please enter the do's and dont's"; 
+                  return L.of(context).approve_borrow_alert_msg1; 
                 } else {
                   doAndDonts = value;
                   setState(() {});
@@ -203,8 +203,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 20),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? "I acknowledge that you can use the room on the mentioned dates." 
-                : "I acknowledge that you can use the item on the mentioned dates.", 
+                ? L.of(context).approve_borrow_terms_acknowledgement_text1
+                :  L.of(context).approve_borrow_terms_acknowledgement_text2,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -214,8 +214,8 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(height: 15),
         Text(
             widget.requestModel.roomOrTool == 'ROOM'
-                ? "Note: Please instruct on how to reach the location and do and don't accordingly." 
-                : "Note: Please create an agreement if you have specific instructions and/or requirements.",
+                ?  L.of(context).approve_borrow_terms_acknowledgement_text3
+                :  L.of(context).approve_borrow_terms_acknowledgement_text4,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -256,7 +256,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                 } else if (documentName == '') {
                   _key.currentState.showSnackBar(
                     SnackBar(
-                      content: Text('Select an agreement type'),
+                      content: Text("S.of(context).snackbar_select_agreement_type"),
                     ),
                   );
                 } else {
@@ -341,7 +341,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 15),
         Text(
-          'Agreement',
+         "S.of(context).agreement",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 10),
@@ -351,7 +351,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
             Container(
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
-                'Create/Use agreement between you and borrower on how your item/place can be used.',
+                L.of(context).request_agreement_form_component_text,
                 style: TextStyle(fontSize: 15),
                 softWrap: true,
               ),
@@ -380,7 +380,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                       child: Text(
                         documentName != ''
                             ? documentName
-                            : 'No Agreement Selected',
+                            :L.of(context).approve_borrow_no_agreement_selected,
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: documentName != ''

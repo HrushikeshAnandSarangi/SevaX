@@ -3,7 +3,6 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/elastic_search.dart';
@@ -33,7 +32,7 @@ class ExplorePageBloc {
       );
 
   void load({bool isUserLoggedIn = false}) {
-    ElasticSearchApi.getPublicCommunities().then((value) {
+    ElasticSearchApi.getFeaturedCommunities().then((value) {
       _communities.add(value);
     });
     if (isUserLoggedIn) {

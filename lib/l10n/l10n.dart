@@ -6881,6 +6881,181 @@ class S {
         'Offering Goods',
         name: 'offering_goods',
       );
+
+  String get images_help_convey_theme_of_request => Intl.message(
+        'Images helps to convey the theme of your request',
+        name: 'images_help_convey_theme_of_request',
+      );
+
+  String get max_image_size => Intl.message(
+        'Maximum size: 5MB',
+        name: 'max_image_size',
+      );
+
+  String get exp_date => Intl.message(
+        'Exp. Date',
+        name: 'exp_date',
+      );
+
+  String get camera_not_available => Intl.message(
+        'Camera not available',
+        name: 'camera_not_available',
+      );
+
+  String get loading_camera  => Intl.message(
+        'Loading Camera...',
+        name: 'loading_camera ',
+      );
+
+  String get internet_connection_lost => Intl.message(
+        'Internet connection lost',
+        name: 'internet_connection_lost',
+      );
+
+  String get update_available => Intl.message(
+        'Update Available',
+        name: 'update_available',
+      );
+
+  String get update_app => Intl.message(
+        'Update App',
+        name: 'update_app',
+      );
+
+  String get update_msg => Intl.message(
+        'There is an update available with the app, Please tap on update to use the latest version of the app',
+        name: 'update_msg',
+      );
+
+  String get member_permission  => Intl.message(
+        'Member Permission',
+        name: 'member_permission ',
+      );
+
+  String get copy_and_share_code => Intl.message(
+        'Code Generated: Copy the code and share to your friends',
+        name: 'copy_and_share_code',
+      );
+
+  String get copy_community_code => Intl.message(
+        'Copy Community Code',
+        name: 'copy_community_code',
+      );
+
+  String get copy_code => Intl.message(
+        'Copy Code',
+        name: 'copy_code',
+      );
+
+  String get share_code_msg => Intl.message(
+        'You can share the code to invite them to your seva community',
+        name: 'share_code_msg',
+      );
+
+  String get no_pending_join_request => Intl.message(
+        'No pending join requests',
+        name: 'no_pending_join_request',
+      );
+
+  String get attend => Intl.message(
+        'Attend',
+        name: 'attend',
+      );
+
+  String get requested_by => Intl.message(
+        'Requested By',
+        name: 'requested_by',
+      );
+
+  String get location_not_provided => Intl.message(
+        'Location not provided',
+        name: 'location_not_provided',
+      );
+
+  String get request_approved_by_msg => Intl.message(
+        'Your request has been approved by',
+        name: 'request_approved_by_msg',
+      );
+
+  String get request_agreement_not_available => Intl.message(
+        'Request agreement not available',
+        name: 'request_agreement_not_available',
+      );
+
+  String get click_to_view_request_agreement => Intl.message(
+        'Click to view request agreement',
+        name: 'click_to_view_request_agreement',
+      );
+
+  String get enter_prep_time  => Intl.message(
+        'Enter Prep Time',
+        name: 'enter_prep_time ',
+      );
+
+  String get choose_document => Intl.message(
+        ' Choose Document',
+        name: 'choose_document',
+      );
+
+  String get pets_allowed => Intl.message(
+        'Pets Allowed',
+        name: 'pets_allowed',
+      );
+
+  String get attending => Intl.message(
+        'Attending',
+        name: 'attending',
+      );
+
+  String get invited_speaker => Intl.message(
+        'Invited Speaker',
+        name: 'invited_speaker',
+      );
+
+  String get description_not_updated => Intl.message(
+        'Description not yet updated',
+        name: 'description_not_updated',
+      );
+
+  String get add_manual_time => Intl.message(
+        'Add Manual Time',
+        name: 'add_manual_time',
+      );
+
+  String get reliabilitysocre => Intl.message(
+        'Reliability score',
+        name: 'reliabilitysocre',
+      );
+
+  String get cv_not_available  => Intl.message(
+        'CV not available',
+        name: 'cv_not_available ',
+      );
+
+  String get change_document => Intl.message(
+        'Change document',
+        name: 'change_document',
+      );
+
+  String get add_document => Intl.message(
+        'Add document',
+        name: 'add_document',
+      );
+
+  String get sign_up_with_apple => Intl.message(
+        'Sign up with Apple',
+        name: 'sign_up_with_apple',
+      );
+
+  String get sign_up_with_google => Intl.message(
+        'Sign up with Google',
+        name: 'sign_up_with_google',
+      );
+
+  String get browse_requests_by_category => Intl.message(
+        'Browse requests by category',
+        name: 'browse_requests_by_category',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

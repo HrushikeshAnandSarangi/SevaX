@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../../globals.dart' as globals;
@@ -95,7 +96,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                             child: ListTile(
                               leading: Icon(Icons.attachment),
                               title: Text(
-                                globals.newsDocumentName ?? "Document",
+                                globals.newsDocumentName ?? S.of(context).document,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -108,7 +109,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _path != null ? "Change document" : "Add document",
+                _path != null ? S.of(context).change_document : S.of(context).add_document,
               ),
             ),
             onPressed: () {

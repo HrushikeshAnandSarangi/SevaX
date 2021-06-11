@@ -25,7 +25,7 @@ class UpdateAppState extends State<UpdateView> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            'Update Available',
+            S.of(context).update_available,
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -47,7 +47,7 @@ class UpdateAppState extends State<UpdateView> {
                     iOSAppId: "456DU6XRWC.com.sevaexchange.app");
               },
               child: Text(
-                "Update App",
+               S.of(context).update_app,
                 style: TextStyle(color: Colors.white),
               ),
             )
@@ -57,7 +57,7 @@ class UpdateAppState extends State<UpdateView> {
           margin: EdgeInsets.all(25),
           alignment: Alignment.center,
           child: Text(
-            "There is an update available with the app, Please tap on update to use the latest version of the app",
+           S.of(context).update_msg,
             style: TextStyle(
               fontSize: 16.0,
             ),

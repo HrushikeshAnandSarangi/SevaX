@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
-import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class CreatorApproveAcceptorAgreeement extends StatefulWidget {
@@ -121,7 +115,7 @@ class _CreatorApproveAcceptorAgreeementState
             Container(
               width: 250,
               child: Text(
-                  "I accept the terms of use as per the agreement",
+                  "S.of(context).terms_acknowledgement_text",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -241,7 +235,7 @@ class _CreatorApproveAcceptorAgreeementState
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Agreement',
+              "S.of(context).agreement",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ],
@@ -254,8 +248,8 @@ class _CreatorApproveAcceptorAgreeementState
               width: MediaQuery.of(context).size.width * 0.68,
               child: Text(
                 widget.requestModel.hasBorrowAgreement
-                    ? 'Please review the agreement below before proceeding.'
-                    : 'Lender has not created an agreement for this request.',
+                    ? "S.of(context).review_before_proceding_text"
+                    : "S.of(context).lender_not_accepted_request_msg",
                 style: TextStyle(fontSize: 15),
                 softWrap: true, 
               ),
@@ -297,7 +291,7 @@ class _CreatorApproveAcceptorAgreeementState
                       SizedBox(width: 1),
                       Spacer(),
                       Text(
-                        'Review Agreement',
+                        "S.of(context).review_agreement",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

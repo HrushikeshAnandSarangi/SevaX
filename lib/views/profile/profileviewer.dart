@@ -105,7 +105,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       borderColor: Colors.yellow,
                       spacing: 0.0),
                   Text(
-                    "Trustworthiness",
+                   S.of(context).trustworthiness,
                     style: subTitle,
                   ),
                 ],
@@ -136,7 +136,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     borderColor: Colors.yellow,
                     spacing: 0.0),
                 Text(
-                  "Reliabilityscore",
+                 S.of(context).reliabilitysocre,
                   style: subTitle,
                 ),
               ],
@@ -342,7 +342,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                 width: 8,
                               ),
                               Text(
-                                user.cvName ?? "CV not available",
+                                user.cvName ?? S.of(context).cv_not_available,
                                 style: TextStyle(
                                   color: Color(0xFFF0ca5f2),
                                   fontSize: 16,

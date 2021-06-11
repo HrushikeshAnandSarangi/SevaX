@@ -9,7 +9,6 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -496,7 +495,7 @@ class NewsCardViewState extends State<NewsCardView> {
             if (await canLaunch(value)) {
               await launch(value);
             } else {
-              throw 'Could not launch $value';
+              throw  L.of(context).could_not_launch +'$value';
             }
           },
           child: Material(
@@ -620,7 +619,7 @@ class NewsCardViewState extends State<NewsCardView> {
             child: Container(
               child: Text(
                 widget.newsModel.photoCredits != null
-                    ? 'Credits: ${widget.newsModel.photoCredits}'
+                    ? L.of(context).credits+ '${widget.newsModel.photoCredits}'
                     : '',
                 style: TextStyle(
                   fontSize: 15.0,
@@ -663,7 +662,7 @@ class NewsCardViewState extends State<NewsCardView> {
                   child: ListTile(
                     leading: Icon(Icons.attachment),
                     title: Text(
-                      widget.newsModel.newsDocumentName ?? "Document.pdf",
+                      widget.newsModel.newsDocumentName ?? L.of(context).doc_pdf,
                       //overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -905,7 +904,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         padding: EdgeInsets.only(left: 2, top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('likes',
+                            child: Text(L.of(context).likes,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -1243,7 +1242,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
                                             .fullname !=
                                         null
                                     ? SevaCore.of(context).loggedInUser.fullname
-                                    : "Anonymous user",
+                                    : S.of(context).anonymous_user,
                                 createdEmail:
                                     SevaCore.of(context).loggedInUser.email,
                                 createdAt:
@@ -1650,7 +1649,7 @@ class _LikeCommentState extends State<LikeComment> {
           padding: EdgeInsets.only(left: 3, top: 10),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('likes',
+              child: Text(S.of(context).likes,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

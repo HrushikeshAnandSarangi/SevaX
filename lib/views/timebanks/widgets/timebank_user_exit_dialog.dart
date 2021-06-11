@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 
@@ -69,7 +70,7 @@ class TimebankUserExitDialogView extends StatelessWidget {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      'Ok',
+                     S.of(context).ok,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

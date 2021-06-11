@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/ui/screens/explore/widgets/explore_browse_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -20,7 +21,7 @@ class RequestCategories extends StatelessWidget {
         }
         if (snapshot.data == null) {
           return Center(
-            child: Text('No Categories available'),
+            child: Text(S.of(context).no_categories_available),
           );
         }
         return GridView(

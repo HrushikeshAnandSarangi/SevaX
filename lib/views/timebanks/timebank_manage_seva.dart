@@ -304,7 +304,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         ));
       },
       child: Text(
-        'Manage Permissions',
+        S.of(context).member_permission,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -372,8 +372,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         children: <Widget>[
           getTitle,
           SizedBox(height: 20),
-          viewRequests(context: context),
-          SizedBox(height: 20),
+          // viewRequests(context: context),
+          // SizedBox(height: 20),
           // widget.timebankModel.creatorId ==
           //         SevaCore.of(context).loggedInUser.sevaUserID
           //     ? Padding(

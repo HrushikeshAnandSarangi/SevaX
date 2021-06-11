@@ -957,7 +957,8 @@ Stream<List<RequestModel>> getNearRequestListStream(
   // double lat = pos.latitude;
   // double lng = pos.longitude;
 
-  Geolocator geolocator = Geolocator();
+  Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
+
   Position userLocation;
   userLocation = await geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
@@ -2181,7 +2182,7 @@ Stream<List<CategoryModel>> getAllCategoriesStream() async* {
       StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
     handleData: (snapshot, sink) {
       List<CategoryModel> categories = [];
-      snapshot.documents.forEach((element) {
+       snapshot.documents.forEach((element) {
         CategoryModel model = CategoryModel.fromMap(element.data);
         model.typeId = element.documentID;
         log('${model.title_en}');

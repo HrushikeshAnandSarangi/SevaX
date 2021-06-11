@@ -1,9 +1,8 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
-import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 
 import '../flavor_config.dart';
@@ -41,7 +40,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Add images',
+           S.of(context).add_image,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -50,7 +49,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
           ),
           SizedBox(height: 5,),
           Text(
-            'Images helps to convey the theme of your request',
+            S.of(context).images_help_convey_theme_of_request,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -79,12 +78,12 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                   color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
-                  'Choose Images',
+                  S.of(context).choose_image,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 Text(
-                  'Files Supported: PNG,JPEG',
+                 S.of(context).only_images_types_allowed,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 11),
                 ),
@@ -112,7 +111,7 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                   ),
                 ),
                 Text(
-                  'Maximum size: 5MB',
+                  S.of(context).max_image_size,
                   style: TextStyle(color: Colors.grey[500], fontSize: 11),
                 )
               ],

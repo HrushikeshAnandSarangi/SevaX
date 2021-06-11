@@ -43,7 +43,6 @@ import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
 import '../../../../new_baseline/models/community_model.dart';
-import 'package:sevaexchange/labels.dart';
 
 class ExplorePage extends StatefulWidget {
   final bool isUserSignedIn;
@@ -587,9 +586,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             }
                             return ListView.builder(
                               shrinkWrap: true,
-                              itemCount: snapshot.data.length > 6
-                                  ? 6
-                                  : snapshot.data.length,
+                              itemCount: snapshot.data.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 CommunityModel community = snapshot.data[index];
@@ -814,7 +811,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                   buttonLabel:
                                       status == CompareUserStatus.JOINED
                                           ? S.of(context).joined
-                                          : S.of(context).join,
+                                          : S.of(context).info,
                                   buttonColor:
                                       status == CompareUserStatus.JOINED
                                           ? HexColor("#D2D2D2")
@@ -851,7 +848,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      S.of(context).browse_by_category,
+                      S.of(context).browse_requests_by_category,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -859,9 +856,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     ),
                     SizedBox(height: 10),
                     RequestCategories(
-                      stream: widget.isUserSignedIn
-                          ? FirestoreManager.getAllCategoriesStream()
-                          : _exploreBloc.categories,
+                      stream: FirestoreManager.getAllCategoriesStream(),
                       onTap: (value) {
                         Navigator.of(context).push(
                           MaterialPageRoute(

@@ -987,7 +987,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Text(
                             news.fullName != null && news.fullName != ""
                                 ? news.fullName.trim()
-                                : "User name not available",
+                                : S.of(context).user_name_not_availble,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 7,
                             style: TextStyle(fontSize: 16.0),
@@ -1341,7 +1341,7 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                     Expanded(
                       child: Text(
-                        newsDocumentName ?? "Document",
+                        newsDocumentName ?? S.of(context).document,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,

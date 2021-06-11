@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class AmountRaisedProgressIndicator extends StatelessWidget {
   const AmountRaisedProgressIndicator({
@@ -22,7 +23,7 @@ class AmountRaisedProgressIndicator extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Total amount raised',
+                S.of(context).total_amount_raised,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,

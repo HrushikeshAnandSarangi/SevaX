@@ -166,7 +166,7 @@ class _CameraState extends State<CameraPage> {
   Widget build(BuildContext context) {
     if (_cameraNotAvailable) {
       return Center(
-        child: Text('Camera not available /_\\'),
+        child: Text(S.of(context).camera_not_available),
       );
     }
 
@@ -180,7 +180,7 @@ class _CameraState extends State<CameraPage> {
                     aspectRatio: 1 / controller.value.aspectRatio,
                     child: CameraPreview(controller),
                   )
-                : Text('Loading camera...'),
+                : Text(S.of(context).loading_camera),
           ),
         ),
         Column(
