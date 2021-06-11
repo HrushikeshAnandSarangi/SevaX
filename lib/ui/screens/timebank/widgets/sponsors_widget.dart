@@ -153,7 +153,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                     Navigator.of(dialogContext).pop();
                                   },
                                   child: Text(
-                                    S.of(context).close,
+                                    S.of(context).cancel,
                                     style: TextStyle(color: Colors.redAccent),
                                   ),
                                 ),
@@ -320,7 +320,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 Navigator.of(dialogContext).pop();
                               },
                               child: Text(
-                                S.of(context).close,
+                                S.of(context).cancel,
                                 style: TextStyle(color: Colors.redAccent),
                               ),
                             ),
