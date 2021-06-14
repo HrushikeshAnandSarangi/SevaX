@@ -8,7 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:location/location.dart' as prefix;
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -46,7 +46,7 @@ class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
-  final Geolocator geolocator = Geolocator();
+  // final Geolocator geolocator = Geolocator();
   Location locationData;
   String address;
   // CameraPosition cameraPosition;
