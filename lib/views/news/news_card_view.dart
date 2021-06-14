@@ -496,7 +496,7 @@ class NewsCardViewState extends State<NewsCardView> {
             if (await canLaunch(value)) {
               await launch(value);
             } else {
-              throw L.of(context).could_not_launch + '$value';
+              throw S.of(context).could_not_launch + '$value';
             }
           },
           child: Material(
@@ -620,7 +620,7 @@ class NewsCardViewState extends State<NewsCardView> {
             child: Container(
               child: Text(
                 widget.newsModel.photoCredits != null
-                    ? L.of(context).credits + '${widget.newsModel.photoCredits}'
+                    ? S.of(context).credits + '${widget.newsModel.photoCredits}'
                     : '',
                 style: TextStyle(
                   fontSize: 15.0,
@@ -664,7 +664,7 @@ class NewsCardViewState extends State<NewsCardView> {
                     leading: Icon(Icons.attachment),
                     title: Text(
                       widget.newsModel.newsDocumentName ??
-                          L.of(context).doc_pdf,
+                          S.of(context).doc_pdf,
                       //overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -906,7 +906,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         padding: EdgeInsets.only(left: 2, top: 0),
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(L.of(context).likes,
+                            child: Text(S.of(context).likes,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,

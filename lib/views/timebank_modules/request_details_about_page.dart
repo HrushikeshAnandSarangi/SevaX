@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -2637,7 +2638,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.documents[0]['selectedAddress']),
                     Text(
-                      "S.of(context).instruction_for_stay",
+                      L.of(context).instruction_for_stay,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],

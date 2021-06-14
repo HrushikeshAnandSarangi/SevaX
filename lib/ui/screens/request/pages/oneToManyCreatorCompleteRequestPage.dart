@@ -154,7 +154,7 @@ class OneToManyCreatorCompleteRequestPageState
                                                                 .selectedInstructor
                                                                 .fullname ==
                                                             null)
-                                                    ? L.of(context).name_not_available
+                                                    ? S.of(context).name_not_available
                                                     : requestModel
                                                         .selectedInstructor
                                                         .fullname,
@@ -253,7 +253,7 @@ class OneToManyCreatorCompleteRequestPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                               L.of(context).attended_by,
+                               S.of(context).attended_by,
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),
@@ -265,7 +265,7 @@ class OneToManyCreatorCompleteRequestPageState
                                   });
                                 },
                                 child: Text(
-                                  L.of(context).reset_list,
+                                  S.of(context).reset_list,
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
