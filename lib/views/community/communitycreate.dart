@@ -385,8 +385,8 @@ class CreateEditCommunityViewFormState
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
                             } else if (value.substring(0, 1).contains('_') &&
-                                !AppConfig.testingEmails
-                                    .contains(SevaCore.of(context).loggedInUser.email)) {
+                                !AppConfig.testingEmails.contains(
+                                    SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
@@ -637,7 +637,7 @@ class CreateEditCommunityViewFormState
                           offstage: !widget.isCreateTimebank,
                           child: Row(
                             children: <Widget>[
-                              headingText(L.of(context).test_community),
+                              headingText(S.of(context).sandbox_community),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                                 child: infoButton(
@@ -697,8 +697,9 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle:
-                                                L.of(context).you_already_created_test_community,
+                                            dialogTitle: L
+                                                .of(context)
+                                                .you_already_created_test_community,
                                             err: true);
                                       }
                                     },
@@ -877,7 +878,8 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    L.of(context).selected_value + '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    L.of(context).selected_value +
+                                        '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,
@@ -1412,7 +1414,6 @@ class CreateEditCommunityViewFormState
   }
 
   Widget headingText(String name) {
-    
     return Padding(
       padding: EdgeInsets.only(top: 15),
       child: Text(
