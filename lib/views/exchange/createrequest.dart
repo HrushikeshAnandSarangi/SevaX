@@ -2217,7 +2217,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
           SizedBox(height: 15),
 
-          RequestDescriptionData('Your Request and any #hashtags'),
+          RequestDescriptionData(L.of(context).request_descrip_hint_text),
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2369,7 +2369,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
 
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? RequestDescriptionData('You Request and any #hashtags')
+              ? RequestDescriptionData(L.of(context).request_descrip_hint_text)
               : RequestDescriptionData(S.of(context).request_description_hint),
 
           SizedBox(height: 20),
@@ -2599,7 +2599,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Fundraiser to expand women’s shelter..."),
+          RequestDescriptionData(L.of(context).cash_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2727,7 +2727,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Local Food Bank has a shortage..."),
+          RequestDescriptionData(L.of(context).goods_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),

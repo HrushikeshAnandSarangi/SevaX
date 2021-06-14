@@ -248,6 +248,10 @@ String get enter_delivery_time => 'Enter Delivery Time';
 String get you_created_sandbox_community => 'You already created a sandbox community.';
 String get anywhere =>"Anywhere";
 
+String get request_descrip_hint_text =>"Your Request and any #hashtags";
+String get request_description_hint_text_borrow =>'Please describe what you require';
+String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
+String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";
 
   // // labels on june 10
   // String get do_you_want_to_add => "Do you want to add this";
