@@ -1,4 +1,7 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
@@ -52,29 +55,29 @@ class _GroupRouterState extends State<GroupRouter>
               ...userType != UserType.NOT_MEMBER
                   ? [
                       Tab(
-                        text: "Feeds",
+                        text: S.of(context).feeds,
                       ),
                       Tab(
-                        text: "Projects",
+                        text: S.of(context).projects,
                       ),
                       Tab(
-                        text: "Requests",
+                        text: S.of(context).requests,
                       ),
                       Tab(
-                        text: "Offers",
+                        text: S.of(context).offers,
                       )
                     ]
                   : [],
               Tab(
-                text: "About",
+                text: S.of(context).about,
               ),
               Tab(
-                text: "Members",
+                text: S.of(context).members,
               ),
               ...userType == UserType.GROUP_ADMIN
                   ? [
                       Tab(
-                        text: "Manage",
+                        text: S.of(context).manage,
                       ),
                       Container(
                         width: 20,

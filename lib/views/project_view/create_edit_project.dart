@@ -15,6 +15,7 @@ import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -219,7 +220,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : "Seva " + timebankModel.name +S.of(context).event,
+                      : S.of(context).seva + timebankModel.name +S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -557,7 +558,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black54),
                   ),
-                  hintText: "123456789",
+                  hintText: L.of(context).hint_text_number,
                   hintStyle: textStyle,
                 ),
               ),

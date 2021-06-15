@@ -374,7 +374,7 @@ void showDialogForMakingAnOffer({
                             width: double.infinity,
                             child: Center(
                               child: Text(
-                                'Cancel',
+                                S.of(context).cancel,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),

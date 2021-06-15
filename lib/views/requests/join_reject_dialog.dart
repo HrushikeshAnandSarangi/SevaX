@@ -4,6 +4,7 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -72,7 +73,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.requestInvitationModel.requestModel.fullName ??
-                    "${S.of(context).timebank} name not updated",
+                    "${S.of(context).timebank}"+ L.of(context).name_not_updated,
               ),
             ),
             Padding(

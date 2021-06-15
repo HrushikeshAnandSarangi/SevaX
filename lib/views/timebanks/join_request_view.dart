@@ -134,7 +134,7 @@ class TimebankRequests extends StatelessWidget {
                                             defaultUserImageURL),
                                   ),
                                   subtitle: Text(
-                                    'Reason: ${model.reason}',
+                                     S.of(context).reason +':${model.reason}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -198,7 +198,7 @@ class TimebankRequests extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                       S.of(context).about +" ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
