@@ -637,7 +637,7 @@ class FeedbackConstants {
   static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_AF = const [
     {
       FEEDBACK_TITLE:
-          "Hoe waarskynlik is jy hierdie persoon / diens aan 'n vriend aanbeveel, op 'n skaal tussen 0-10 waar 0 = Glad nie waarskynlik en 10 = Uiters waarskynlik",
+          "Hoe waarskynlik is jy hierdie persoon / diens aan n skaal tussen 0-10 waar 0 = Glad nie waarskynlik en 10 = Uiters waarskynlik",
       ANSWERS: [
         {ANSWER_TEXT: "Uitstekende", SCORE: 6},
         {ANSWER_TEXT: "goeie", SCORE: 4},
@@ -730,7 +730,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Le volontaire s'est-il présenté à l'heure?",
+      FEEDBACK_TITLE: "Le volontaire sheure?",
       ANSWERS: [
         {ANSWER_TEXT: "À temps", SCORE: 3},
         {ANSWER_TEXT: "Un peu tard", SCORE: 4},

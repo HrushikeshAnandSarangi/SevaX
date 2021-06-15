@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -375,7 +376,7 @@ class CampaignRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Center(
-      child: Text('Coming soon'),
+      child: Text(L.of(context).coming_soon),
     );
   }
 }

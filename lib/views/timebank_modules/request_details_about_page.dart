@@ -2641,7 +2641,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.documents[0]['selectedAddress']),
                     Text(
-                      L.of(context).instruction_for_stay,
+                      S.of(context).instruction_for_stay,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],

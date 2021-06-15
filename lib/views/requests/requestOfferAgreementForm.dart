@@ -224,7 +224,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                  L.of(context).usage_term,
+                                  S.of(context).usage_term,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -262,7 +262,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      L.of(context).quite_hours_allowed,
+                                      S.of(context).quite_hours_allowed,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -295,7 +295,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  L.of(context).max_occupants,
+                                  S.of(context).max_occupants,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -339,7 +339,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  L.of(context).security_deposits,
+                                  S.of(context).security_deposits,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -384,7 +384,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  L.of(context).person_of_contact_details,
+                                  S.of(context).person_of_contact_details,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -548,7 +548,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         SizedBox(height: 17),
         documentNameTextField,
         Text(
-          L.of(context).any_specific_conditions,
+          S.of(context).any_specific_conditions,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -569,7 +569,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText: L.of(context).item_returned_hint_text,
+            hintText: S.of(context).item_returned_hint_text,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -585,7 +585,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          L.of(context).description_of_item,
+          S.of(context).description_of_item,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -801,7 +801,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   }
 
   Widget get agreementText {
-    return Text(L.of(context).agreement,
+    return Text(S.of(context).agreement,
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,

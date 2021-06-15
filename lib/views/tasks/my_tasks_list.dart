@@ -908,7 +908,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                 Row(
                                   children: [
                                     Text(
-                                     L.of(context).enter_delivery_time,
+                                     S.of(context).enter_delivery_time,
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),

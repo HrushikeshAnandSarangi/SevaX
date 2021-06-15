@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -7366,34 +7365,154 @@ class S {
         'Join Chat',
         name: 'join_chat',
       );
+
+  String get person_of_contact_details => Intl.message(
+        'Person of contact details',
+        name: 'person_of_contact_details',
+      );
+
+  String get review_agreement => Intl.message(
+        'Review Agreement',
+        name: 'review_agreement',
+      );
+
+  String get any_specific_conditions => Intl.message(
+        'Any specific condition(s)',
+        name: 'any_specific_conditions',
+      );
+
+  String get review_before_proceding_text => Intl.message(
+        'Please review the agreement below before proceeding.',
+        name: 'review_before_proceding_text',
+      );
+
+  String get lender_not_accepted_request_msg => Intl.message(
+        'Lender has not created an agreement for this request',
+        name: 'lender_not_accepted_request_msg',
+      );
+
+  String get agreement => Intl.message(
+        'Agreement',
+        name: 'agreement',
+      );
+
+  String get terms_acknowledgement_text => Intl.message(
+        'I accept the terms of use as per the agreement',
+        name: 'terms_acknowledgement_text',
+      );
+
+  String get description_of_item => Intl.message(
+        'Description of item(s)',
+        name: 'description_of_item',
+      );
+
+  String get item_returned_hint_text => Intl.message(
+        'Ex: item must be returned in the same condition.',
+        name: 'item_returned_hint_text',
+      );
+
+  String get sandbox_community_description => Intl.message(
+        'Sandbox communities are created for testing purposes?',
+        name: 'sandbox_community_description',
+      );
+
+  String get select_categories_community_headding => Intl.message(
+        'Select categories for your community',
+        name: 'select_categories_community_headding',
+      );
+
+  String get snackbar_select_agreement_type => Intl.message(
+        'Select an agreement type',
+        name: 'snackbar_select_agreement_type',
+      );
+
+  String get guests_can_do_and_dont => Intl.message(
+        'Guests can do and don\'t*',
+        name: 'guests_can_do_and_dont',
+      );
+
+  String get security_deposits => Intl.message(
+        'Security Deposit',
+        name: 'security_deposits',
+      );
+
+  String get max_occupants => Intl.message(
+        'Maximum occupants',
+        name: 'max_occupants',
+      );
+
+  String get quite_hours_allowed => Intl.message(
+        'Quiet hours allowed',
+        name: 'quite_hours_allowed',
+      );
+
+  String get usage_term => Intl.message(
+        'Usage term*',
+        name: 'usage_term',
+      );
+
+  String get instruction_for_stay => Intl.message(
+        'Instruction for the stay',
+        name: 'instruction_for_stay',
+      );
+
+  String get enter_delivery_time => Intl.message(
+        'Enter Delivery Time',
+        name: 'enter_delivery_time',
+      );
+
+  String get you_created_sandbox_community => Intl.message(
+        'You already created a sandbox community.',
+        name: 'you_created_sandbox_community',
+      );
+
+  String get anywhere => Intl.message(
+        'Anywhere',
+        name: 'anywhere',
+      );
+
+  String get request_description_hint_text_borrow => Intl.message(
+        'Please describe what you require',
+        name: 'request_description_hint_text_borrow',
+      );
+
+  String get goods_request_data_hint_text => Intl.message(
+        'Ex: Local Food Bank has a shortage...',
+        name: 'goods_request_data_hint_text',
+      );
+
+  String get cash_request_data_hint_text => Intl.message(
+        'Ex: Fundraiser to expand women’s shelter...',
+        name: 'cash_request_data_hint_text',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
-        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fr'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
   ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
+        'en',
         'es',
+        'fr',
         'pt',
         'sn',
-        'zh',
-        'zh',
-        'af',
         'sw',
-        'en',
-        'fr',
+        'zh',
+        'zh',
       ].contains(locale.languageCode);
 
   @override

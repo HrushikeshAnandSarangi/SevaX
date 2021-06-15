@@ -2599,7 +2599,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData(L.of(context).cash_request_data_hint_text),
+          RequestDescriptionData(S.of(context).cash_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2727,7 +2727,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData(L.of(context).goods_request_data_hint_text),
+          RequestDescriptionData(S.of(context).goods_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),

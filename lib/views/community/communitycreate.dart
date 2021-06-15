@@ -196,7 +196,7 @@ class CreateEditCommunityViewFormState
             if (commFound) {
               setState(() {
                 communityFound = true;
-                errTxt = 'Seva Community name already exists';
+                errTxt = S.of(context).timebank_name_exists;
               });
             } else {
               setState(() {
@@ -440,7 +440,7 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText(L.of(context).select_categories_community_headding),
+                        headingText(S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
@@ -658,7 +658,7 @@ class CreateEditCommunityViewFormState
                                                   title:
                                                       S.of(context).sandbox_dialog_title.sentenceCase(),
                                                   description:
-                                                      L.of(context).sandbox_community_description)
+                                                      S.of(context).sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
@@ -697,7 +697,7 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle: L.of(context).you_created_sandbox_community
+                                            dialogTitle: S.of(context).you_created_sandbox_community
                                                 ,
                                             err: true);
                                       }

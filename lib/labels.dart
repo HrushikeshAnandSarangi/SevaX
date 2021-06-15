@@ -225,33 +225,37 @@ class L {
 
 //june 14
 
-String get person_of_contact_details => "Person of contact details";
-String get review_agreement => "Review Agreement";
-String get any_specific_conditions => "Any specific condition(s)";
-String get review_before_proceding_text => "Please review the agreement below before proceeding.";
-String get lender_not_accepted_request_msg => "Lender has not created an agreement for this request";
-String get agreement => "Agreement";
-String get terms_acknowledgement_text => "I accept the terms of use as per the agreement";
-String get description_of_item => "Description of item(s)";
-String get item_returned_hint_text => 'Ex: item must be returned in the same condition.';
-String get sign_up_with_google => 'Sign up with Google';
-String get sandbox_community_description =>'Sandbox communities are created for testing purposes?';
-String get select_categories_community_headding =>'Select categories for your community';
-String get snackbar_select_agreement_type => "Select an agreement type";
-String get guests_can_do_and_dont => "Guests can do and don't*";
-String get security_deposits => "Security Deposit";
-String get max_occupants => "Maximum occupants";
-String get quite_hours_allowed => "Quiet hours allowed";
-String get usage_term => "Usage term*";
-String get instruction_for_stay => 'Instruction for the stay';
-String get enter_delivery_time => 'Enter Delivery Time';
-String get you_created_sandbox_community => 'You already created a sandbox community.';
-String get anywhere =>"Anywhere";
-
-String get request_descrip_hint_text =>"Your Request and any #hashtags";
-String get request_description_hint_text_borrow =>'Please describe what you require';
-String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
-String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";
+// String get person_of_contact_details => "Person of contact details";
+// String get review_agreement => "Review Agreement";
+// String get any_specific_conditions => "Any specific condition(s)";
+// String get review_before_proceding_text => "Please review the agreement below before proceeding.";
+// String get lender_not_accepted_request_msg => "Lender has not created an agreement for this request";
+// String get agreement => "Agreement";
+// String get terms_acknowledgement_text => "I accept the terms of use as per the agreement";
+// String get description_of_item => "Description of item(s)";
+// String get item_returned_hint_text => 'Ex: item must be returned in the same condition.';
+// String get sign_up_with_google => 'Sign up with Google';
+// String get sandbox_community_description =>'Sandbox communities are created for testing purposes?';
+// String get select_categories_community_headding =>'Select categories for your community';
+// String get snackbar_select_agreement_type => "Select an agreement type";
+// String get guests_can_do_and_dont => "Guests can do and don't*";
+// String get security_deposits => "Security Deposit";
+// String get max_occupants => "Maximum occupants";
+// String get quite_hours_allowed => "Quiet hours allowed";
+// String get usage_term => "Usage term*";
+// String get instruction_for_stay => 'Instruction for the stay';
+// String get enter_delivery_time => 'Enter Delivery Time';
+// String get you_created_sandbox_community => 'You already created a sandbox community.';
+// String get anywhere =>"Anywhere";
+ String get request_descrip_hint_text =>"Your Request and any #hashtags";
+ String get invite_members_group_dots =>"...";
+ String get view => "view";
+ String get coming_soon => "Coming Soon";
+ String get public => "Public";
+ 
+// String get request_description_hint_text_borrow =>'Please describe what you require';
+// String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
+// String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";
 
   // // labels on june 10
   // String get do_you_want_to_add => "Do you want to add this";

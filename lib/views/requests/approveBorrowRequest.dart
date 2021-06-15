@@ -81,7 +81,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20),
-            Text(L.of(context).guests_can_do_and_dont,
+            Text(S.of(context).guests_can_do_and_dont,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -258,7 +258,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
                   _key.currentState.showSnackBar(
                     SnackBar(
                       content:
-                          Text(L.of(context).snackbar_select_agreement_type),
+                          Text(S.of(context).snackbar_select_agreement_type),
                     ),
                   );
                 } else {
@@ -343,7 +343,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: [
         SizedBox(height: 15),
         Text(
-          L.of(context).agreement,
+          S.of(context).agreement,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 10),
@@ -374,7 +374,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(documentName != '' ? 'view ' : ''),
+                Text(documentName != '' ?  L.of(context).view   : ''),
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.topLeft,

@@ -2119,7 +2119,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           SizedBox(height: 15),
 
-          RequestDescriptionData(L.of(context).request_description_hint_text_borrow),
+          RequestDescriptionData(S.of(context).request_description_hint_text_borrow),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
           InkWell(
