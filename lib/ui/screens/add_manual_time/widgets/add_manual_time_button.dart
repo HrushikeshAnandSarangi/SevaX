@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/pages/add_manual_time_details_page.dart';
 
@@ -23,7 +24,7 @@ class AddManualTimeButton extends StatelessWidget {
       // width: double.infinity,
       height: 45,
       child: RaisedButton(
-        child: Text('Add manual time'),
+        child: Text(S.of(context).manual_time_add),
         onPressed: () => onPressed(
           context: context,
           typeId: typeId,

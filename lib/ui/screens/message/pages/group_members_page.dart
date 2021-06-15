@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
@@ -54,7 +55,7 @@ class GroupMembersPage extends StatelessWidget {
                           offstage: !BlocProvider.of<CreateChatBloc>(context)
                               .isSelectionEnabled,
                           child: FlatButton(
-                            child: Text('Select All'),
+                            child: Text(L.of(context).select_all),
                             textColor: Theme.of(context).primaryColor,
                             onPressed: () {
                               model.members.forEach((element) {

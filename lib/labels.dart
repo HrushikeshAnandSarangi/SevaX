@@ -253,6 +253,18 @@ class L {
  String get coming_soon => "Coming Soon";
  String get public => "Public";
  String get document_csv => "Document.CSV"; 
+ String get select_time => "Select time";
+ String get claimed_successfully => 'Claimed Successfully';
+ String get no_result_found => 'No result found';
+ String get try_text => "Try";
+ String get seva_community_groups =>  'Seva Community Groups';
+ String get projects_text => "Projects";
+ String get select_all => "Select All";
+ String get click_button_below_to_review => "Click button below to review";
+ String get and_complete_task => "and complete the task";
+ String get will_be_added_to_request => "will be added to the request.";
+ String get  remove_from_bookmark    => "Remove from bookmarks";
+
 // String get request_description_hint_text_borrow =>'Please describe what you require';
 // String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
 // String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";
