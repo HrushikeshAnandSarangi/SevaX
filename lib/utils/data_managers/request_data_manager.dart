@@ -669,7 +669,8 @@ Future<List<ProjectModel>> getAllPublicProjects({String timebankid}) async {
   return projectsList;
 }
 
-Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
+Stream<List<ProjectModel>> getAllProjectListStream(
+    {String timebankid, bool isAdminOrOwner, BuildContext context}) async* {
   var query = Firestore.instance
       .collection('projects')
       .where('timebanksPosted', arrayContains: timebankid)
@@ -687,7 +688,20 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            projectsList.add(model);
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
+
+            if (endDate.isBefore(DateTime.now())) {
+              if (isAdminOrOwner ||
+                  model.associatedmembers.containsKey(
+                      SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.members
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                projectsList.add(model);
+              }
+            } else {
+              projectsList.add(model);
+            }
           },
         );
         projectSink.add(projectsList);
