@@ -120,7 +120,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                       },
                     ),
                   ),
-                  hasFloatingPlaceholder: false,
                   alignLabelWithHint: true,
                   isDense: true,
                   prefixIcon: Icon(
@@ -141,7 +140,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   hintStyle: TextStyle(
                     color: Colors.black45,
                     fontSize: 13,
-                  ),
+                  ), floatingLabelBehavior: FloatingLabelBehavior.never,
                 ),
               ),
             ),

@@ -681,7 +681,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                   maxLines: 1,
                                   style: Theme.of(widget.parentContext)
                                       .textTheme
-                                      .subhead,
+                                      .subtitle1,
                                 ),
                               ),
                               Container(
@@ -752,7 +752,7 @@ class RequestListItemsState extends State<RequestListItems> {
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(widget.parentContext)
                                   .textTheme
-                                  .subtitle,
+                                  .subtitle2,
                             ),
                           ),
                           // Visibility(

@@ -266,7 +266,7 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(key: _formKey, child: createSevaX, autovalidate: false);
+    return Form(autovalidateMode: AutovalidateMode.disabled, key: _formKey, child: createSevaX);
   }
 
   void moveToTop() {

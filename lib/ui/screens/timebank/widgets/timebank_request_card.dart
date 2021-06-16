@@ -83,7 +83,7 @@ class TimebankRequestCard extends StatelessWidget {
                       subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.subtitle,
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
                     SizedBox(height: 8),
                     Visibility(

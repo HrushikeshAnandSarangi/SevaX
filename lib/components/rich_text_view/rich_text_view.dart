@@ -28,7 +28,7 @@ class RichTextView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _style = Theme.of(context).textTheme.body2;
+    final _style = Theme.of(context).textTheme.bodyText1;
     final words = text.split(' ');
     List<TextSpan> span = [];
     words.forEach((word) {

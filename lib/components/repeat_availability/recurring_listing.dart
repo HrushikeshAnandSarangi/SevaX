@@ -222,7 +222,7 @@ class _RecurringListState extends State<RecurringList> {
                                 widget.requestmodel[index].title,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.subhead,
+                                style: Theme.of(context).textTheme.subtitle1,
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.7,
@@ -230,7 +230,7 @@ class _RecurringListState extends State<RecurringList> {
                                   widget.requestmodel[index].description,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle,
+                                  style: Theme.of(context).textTheme.subtitle2,
                                 ),
                               ),
                               SizedBox(height: 8),
@@ -298,7 +298,7 @@ class _RecurringListState extends State<RecurringList> {
                               Text(
                                 getOfferDescription(
                                     offerDataModel: widget.offerModel[index]),
-                                style: Theme.of(context).textTheme.subtitle,
+                                style: Theme.of(context).textTheme.subtitle2,
                               ),
                               getOfferMetaData(
                                   context: context,

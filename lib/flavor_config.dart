@@ -76,7 +76,7 @@ class FlavorConfig {
               brightness: Brightness.light,
               color: Color(0x0FF766FE0),
               textTheme: TextTheme(
-                title: TextStyle(color: Colors.white),
+                headline6: TextStyle(color: Colors.white),
               ),
               iconTheme: IconThemeData(
                 color: Colors.white,
@@ -157,7 +157,7 @@ class FlavorConfig {
               brightness: Brightness.light,
               color: Color(0x0FF766FE0),
               textTheme: TextTheme(
-                title: TextStyle(color: Colors.white),
+                headline6: TextStyle(color: Colors.white),
               ),
               iconTheme: IconThemeData(
                 color: Colors.white,

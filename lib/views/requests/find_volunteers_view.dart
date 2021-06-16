@@ -112,7 +112,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                     onPressed: () {
                       searchTextController.clear();
                     }),
-                hasFloatingPlaceholder: false,
                 alignLabelWithHint: true,
                 isDense: true,
                 prefixIcon: Icon(
@@ -133,7 +132,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ),
+                ), floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),

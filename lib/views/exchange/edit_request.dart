@@ -466,7 +466,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
     startDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
         dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -710,7 +710,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                             .clear();
                                                       });
                                                     }),
-                                                hasFloatingPlaceholder: false,
                                                 alignLabelWithHint: true,
                                                 isDense: true,
                                                 prefixIcon: Icon(
@@ -746,7 +745,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
-                                                ),
+                                                ), floatingLabelBehavior: FloatingLabelBehavior.never,
                                               ),
                                             ),
 

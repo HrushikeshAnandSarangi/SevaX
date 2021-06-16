@@ -71,7 +71,6 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
             style: TextStyle(color: Colors.white),
             controller: searchTextController,
             decoration: InputDecoration(
-                hasFloatingPlaceholder: false,
                 alignLabelWithHint: true,
                 isDense: true,
                 focusedBorder: UnderlineInputBorder(
@@ -79,7 +78,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
                 hintText: S.of(context).search + ' ' + S.of(context).members,
-                hintStyle: TextStyle(color: Colors.white)),
+                hintStyle: TextStyle(color: Colors.white), floatingLabelBehavior: FloatingLabelBehavior.never),
             // controller: searchTextController,
           ),
         ),

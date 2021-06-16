@@ -176,7 +176,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   BuildContext dialogContext;
   @override
   Widget build(BuildContext context) {
-    textStyle = Theme.of(context).textTheme.title;
+    textStyle = Theme.of(context).textTheme.headline6;
     // Build a Form widget using the formKey we created above
     return Form(
       key: formKey,

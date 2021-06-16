@@ -110,7 +110,6 @@ class _FindVolunteersViewStateForOffer
                     onPressed: () {
                       searchTextController.clear();
                     }),
-                hasFloatingPlaceholder: false,
                 alignLabelWithHint: true,
                 isDense: true,
                 prefixIcon: Icon(
@@ -131,7 +130,7 @@ class _FindVolunteersViewStateForOffer
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ),
+                ), floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),

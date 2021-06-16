@@ -182,7 +182,6 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
                   },
                 ),
               ),
-              hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
               prefixIcon: Icon(
@@ -200,7 +199,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(25.7)),
               hintText: S.of(context).find_timebank_help_text,
-              hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+              hintStyle: TextStyle(color: Colors.black45, fontSize: 14), floatingLabelBehavior: FloatingLabelBehavior.never),
         ),
         SizedBox(height: 20),
         Expanded(

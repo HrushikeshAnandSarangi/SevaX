@@ -281,7 +281,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                   children: <Widget>[
                     Text(
                       usermodel.fullname,
-                      style: Theme.of(parentContext).textTheme.subhead,
+                      style: Theme.of(parentContext).textTheme.subtitle1,
                     ),
                     Text(
                       formattedDate(

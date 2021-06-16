@@ -743,7 +743,6 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                               .clear();
                                                         });
                                                       }),
-                                                  hasFloatingPlaceholder: false,
                                                   alignLabelWithHint: true,
                                                   isDense: true,
                                                   prefixIcon: Icon(
@@ -779,7 +778,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                   hintStyle: TextStyle(
                                                     color: Colors.black45,
                                                     fontSize: 14,
-                                                  ),
+                                                  ), floatingLabelBehavior: FloatingLabelBehavior.never,
                                                 ),
                                               ),
 

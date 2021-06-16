@@ -158,7 +158,7 @@ class RequestCard extends StatelessWidget {
                                   model.title,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
-                                  style: Theme.of(context).textTheme.subhead,
+                                  style: Theme.of(context).textTheme.subtitle1,
                                 ),
                               ),
                               Container(
@@ -251,7 +251,7 @@ class RequestCard extends StatelessWidget {
                               model.description,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle,
+                              style: Theme.of(context).textTheme.subtitle2,
                             ),
                           ),
                           // Visibility(

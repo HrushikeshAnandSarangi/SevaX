@@ -58,7 +58,6 @@ class AllMembersChatState extends State<AllMembersChat>
             style: TextStyle(color: Colors.white),
             controller: searchTextController,
             decoration: InputDecoration(
-              hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
               // suffix: GestureDetector(
@@ -68,7 +67,7 @@ class AllMembersChatState extends State<AllMembersChat>
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white)),
               hintText: 'Search',
-              hintStyle: TextStyle(color: Colors.white),
+              hintStyle: TextStyle(color: Colors.white), floatingLabelBehavior: FloatingLabelBehavior.never,
             ),
             // controller: searchTextController,
           ),
