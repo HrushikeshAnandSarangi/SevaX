@@ -64,7 +64,7 @@ class FeedBubble extends StatelessWidget {
       return Container();
     }
     var imageBanner = news.newsImageUrl == null
-        ? (news.imageScraped == null ? S.of(context).no_data : news.imageScraped)
+        ? (news.imageScraped == null ? "NoData" : news.imageScraped)
         : news.newsImageUrl;
     return GestureDetector(
       onTap: () {
@@ -93,14 +93,14 @@ class FeedBubble extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              height: imageBanner != S.of(context).no_data ? 250 : 0,
+              height: imageBanner != "NoData" ? 250 : 0,
               child: SizedBox.expand(
                 child: ClipRRect(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
-                    child: imageBanner != S.of(context).no_data
+                    child: imageBanner != "NoData"
                         ? FadeInImage(
                             fit: BoxFit.fitWidth,
                             placeholder:

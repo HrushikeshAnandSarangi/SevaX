@@ -918,7 +918,7 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.title != null && news.title != S.of(context).no_data
+                              text: news.title != null && news.title != "NoData"
                                   ? news.title.trim()
                                   : '',
                               onOpen: (url) async {
