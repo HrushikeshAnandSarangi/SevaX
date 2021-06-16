@@ -239,6 +239,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     selectedInstructorModelTemp = widget.requestModel.selectedInstructor;
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
+
+    logger.d(widget.requestModel.location.toString() + "From Database =====================");
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -2119,7 +2121,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           SizedBox(height: 15),
 
-          RequestDescriptionData('Please describe what you require'),
+          RequestDescriptionData(S.of(context).request_description_hint_text_borrow),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
           InkWell(

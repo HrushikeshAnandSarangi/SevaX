@@ -39,7 +39,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
-
+import 'package:sevaexchange/utils/extensions.dart';
 import '../switch_timebank.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -196,7 +196,7 @@ class CreateEditCommunityViewFormState
             if (commFound) {
               setState(() {
                 communityFound = true;
-                errTxt = 'Seva Community name already exists';
+                errTxt = S.of(context).timebank_name_exists;
               });
             } else {
               setState(() {
@@ -385,8 +385,8 @@ class CreateEditCommunityViewFormState
                                 .isProfaneString(value)) {
                               return S.of(context).profanity_text_alert;
                             } else if (value.substring(0, 1).contains('_') &&
-                                !AppConfig.testingEmails
-                                    .contains(SevaCore.of(context).loggedInUser.email)) {
+                                !AppConfig.testingEmails.contains(
+                                    SevaCore.of(context).loggedInUser.email)) {
                               return 'Creating community with "_" is not allowed';
                             } else {
                               enteredName =
@@ -440,7 +440,7 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText('Select categories for your community'),
+                        headingText(S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
@@ -637,7 +637,7 @@ class CreateEditCommunityViewFormState
                           offstage: !widget.isCreateTimebank,
                           child: Row(
                             children: <Widget>[
-                              headingText(L.of(context).test_community),
+                              headingText(S.of(context).sandbox_community),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                                 child: infoButton(
@@ -656,9 +656,9 @@ class CreateEditCommunityViewFormState
                                         if (!testCommunity) {
                                           _showSanBoxdvisory(
                                                   title:
-                                                      'Sandbox Seva Community',
+                                                      S.of(context).sandbox_dialog_title.sentenceCase(),
                                                   description:
-                                                      'Sandbox communities are created for testing purposes?')
+                                                      S.of(context).sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
@@ -697,8 +697,8 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle:
-                                                L.of(context).you_already_created_test_community,
+                                            dialogTitle: S.of(context).you_created_sandbox_community
+                                                ,
                                             err: true);
                                       }
                                     },
@@ -877,7 +877,8 @@ class CreateEditCommunityViewFormState
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    L.of(context).selected_value + '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
+                                    S.of(context).selected_value +
+                                        '${negativeCreditsThreshold} ${S.of(context).seva_credits}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey,
@@ -1412,7 +1413,6 @@ class CreateEditCommunityViewFormState
   }
 
   Widget headingText(String name) {
-    
     return Padding(
       padding: EdgeInsets.only(top: 15),
       child: Text(

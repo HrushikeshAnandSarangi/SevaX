@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
@@ -156,7 +157,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                                   size: 30,
                                 ),
                                 Text(
-                                  "0/1",
+                                  S.of(context).zero_one,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,

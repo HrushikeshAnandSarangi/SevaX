@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -646,7 +647,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 SevaCore.of(context).loggedInUser.email) &&
                             widget.requestItem.isSpeakerCompleted)
                         ? S.of(context).requested_for_completion
-                        : S.of(context).you_are_the_speaker,
+                        : S.of(context).you_are_the_speaker +
+                            widget.requestItem.title,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -679,8 +681,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   TextSpan(
                     text: widget.requestItem.acceptors
                             .contains(SevaCore.of(context).loggedInUser.email)
-                        ? S.of(context).you_are_the_speaker
-                        : S.of(context).you_are_the_speaker,
+                        ? S.of(context).you_are_the_speaker +
+                            widget.requestItem.title
+                        : S.of(context).you_are_the_speaker +
+                            widget.requestItem.title,
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Europa',
@@ -2637,7 +2641,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     addressComponentBorrowRequestForApproved(
                         snapshot.data.documents[0]['selectedAddress']),
                     Text(
-                      "S.of(context).instruction_for_stay",
+                      S.of(context).instruction_for_stay,
                       style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[800],
@@ -2719,7 +2723,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ),
         ),
         Text(
-         "${S.of(context).account_no} : " +
+          "${S.of(context).account_no} : " +
               widget.requestItem.cashModel.achdetails.account_number,
         ),
         Text(
@@ -2727,7 +2731,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               widget.requestItem.cashModel.achdetails.bank_address,
         ),
         Text(
-         "${S.of(context).bank_name} : " + widget.requestItem.cashModel.achdetails.bank_name,
+          "${S.of(context).bank_name} : " +
+              widget.requestItem.cashModel.achdetails.bank_name,
         ),
         Text(
           "${S.of(context).routing_number} : " +
@@ -2749,7 +2754,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Text(
-           S.of(context).donation_address,
+            S.of(context).donation_address,
             style: TextStyle(
               fontSize: 16,
             ),

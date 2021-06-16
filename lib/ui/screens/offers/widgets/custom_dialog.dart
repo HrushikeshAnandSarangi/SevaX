@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 Future<void> errorDialog({BuildContext context, String error}) async {
   await showDialog(
@@ -12,7 +13,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
         actions: <Widget>[
           FlatButton(
             child: Text(
-              'OK',
+            S.of(context).ok,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -41,7 +42,7 @@ Future<bool> confirmationDialog(
         actions: <Widget>[
           FlatButton(
             child: Text(
-              'Cancel',
+             S.of(context).cancel,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -53,7 +54,7 @@ Future<bool> confirmationDialog(
           FlatButton(
             color: Theme.of(context).primaryColor,
             child: Text(
-              'OK',
+             S.of(context).ok,
               style: TextStyle(
                 fontSize: 16,
               ),

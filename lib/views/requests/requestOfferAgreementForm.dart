@@ -174,7 +174,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
                       //Radio Buttons
                       _optionRadioButtonMain<String>(
-                        title: L.of(context).create_new,
+                        title: S.of(context).create_new,
                         value: AgreementDocumentType.NEW.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -184,7 +184,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                         },
                       ),
                       _optionRadioButtonMain<String>(
-                        title: L.of(context).choose_previous_agreement,
+                        title: S.of(context).choose_previous_agreement,
                         value: AgreementDocumentType.TEMPLATE.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -201,7 +201,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                       buildTemplateWidget(),
 
                       _optionRadioButtonMain<String>(
-                        title: L.of(context).no_agrreement,
+                        title: S.of(context).no_agrreement,
                         value: AgreementDocumentType.NO_AGREEMENT.readable,
                         groupvalue: agreementDocumentType,
                         onChanged: (value) {
@@ -224,7 +224,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 documentNameTextField,
                                 SizedBox(height: 17),
                                 Text(
-                                  "S.of(context).usage_term",
+                                  S.of(context).usage_term,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -234,7 +234,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 5),
                                 _optionRadioButtonRoomForm<bool>(
-                                  title: L.of(context).fixed,
+                                  title: S.of(context).fixed,
                                   value: true,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -243,7 +243,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                   },
                                 ),
                                 _optionRadioButtonRoomForm<bool>(
-                                  title: L.of(context).long_term_month_to_month,
+                                  title: S.of(context).long_term_month_to_month,
                                   value: false,
                                   groupvalue: isFixedTerm,
                                   onChanged: (value) {
@@ -262,7 +262,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                       },
                                     ),
                                     Text(
-                                      "S.of(context).quite_hours_allowed",
+                                      S.of(context).quite_hours_allowed,
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -295,7 +295,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "S.of(context).max_occupants",
+                                  S.of(context).max_occupants,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -319,7 +319,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: L
+                                    hintText: S
                                         .of(context)
                                         .request_offer_agreement_hint_text,
                                     hintStyle: TextStyle(
@@ -339,7 +339,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "S.of(context).security_deposits",
+                                  S.of(context).security_deposits,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -364,7 +364,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                           : '',
 
                                   decoration: InputDecoration(
-                                    hintText: L
+                                    hintText: S
                                         .of(context)
                                         .request_offer_agreement_hint_text2,
                                     hintStyle: TextStyle(
@@ -384,7 +384,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                                 ),
                                 SizedBox(height: 17),
                                 Text(
-                                  "S.of(context).person_of_contact_details",
+                                  S.of(context).person_of_contact_details,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -548,7 +548,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         SizedBox(height: 17),
         documentNameTextField,
         Text(
-          "S.of(context).any_specific_conditions",
+          S.of(context).any_specific_conditions,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -569,7 +569,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText: "S.of(context).item_returned_hint_text",
+            hintText: S.of(context).item_returned_hint_text,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -585,7 +585,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          "S.of(context).description_of_item",
+          S.of(context).description_of_item,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -606,7 +606,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText: L.of(context).request_offer_agreement_hint_text3,
+            hintText: S.of(context).request_offer_agreement_hint_text3,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -622,7 +622,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         ),
         SizedBox(height: 17),
         Text(
-          L.of(context).request_offer_agreement_tool_widget_text,
+          S.of(context).request_offer_agreement_tool_widget_text,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -643,7 +643,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 3,
-            hintText: L.of(context).request_offer_agreement_hint_text4,
+            hintText: S.of(context).request_offer_agreement_hint_text4,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -668,7 +668,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          L.of(context).document_name,
+          S.of(context).document_name,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -694,7 +694,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value.isEmpty) {
-              return L.of(context).please_enter_doc_name;
+              return S.of(context).please_enter_doc_name;
             } else {
               documentName = value;
               return null;
@@ -710,7 +710,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          L.of(context).other_details,
+          S.of(context).other_details,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -732,7 +732,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
           decoration: InputDecoration(
             hintMaxLines: 11,
-            hintText: L.of(context).request_offer_agreement_hint_text5,
+            hintText: S.of(context).request_offer_agreement_hint_text5,
             hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
             // labelText: 'No. of volunteers',
           ),
@@ -764,7 +764,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
 
             //Radio Buttons
             _optionRadioButtonMain<String>(
-              title: L.of(context).create_new,
+              title: S.of(context).create_new,
               value: AgreementDocumentType.NEW.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -774,7 +774,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: L.of(context).choose_previous_agreement,
+              title: S.of(context).choose_previous_agreement,
               value: AgreementDocumentType.TEMPLATE.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -783,7 +783,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               },
             ),
             _optionRadioButtonMain<String>(
-              title: L.of(context).no_agrreement,
+              title: S.of(context).no_agrreement,
               value: AgreementDocumentType.NO_AGREEMENT.readable,
               groupvalue: agreementDocumentType,
               onChanged: (value) {
@@ -801,7 +801,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   }
 
   Widget get agreementText {
-    return Text(L.of(context).agreement,
+    return Text(S.of(context).agreement,
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,
@@ -821,7 +821,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
               child: Text(
-                L.of(context).use,
+                S.of(context).use,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {

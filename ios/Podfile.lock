@@ -562,7 +562,6 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
-  - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
@@ -670,8 +669,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geocoding/ios"
   geoflutterfire:
     :path: ".symlinks/plugins/geoflutterfire/ios"
-  geolocator:
-    :path: ".symlinks/plugins/geolocator/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
   google_sign_in:

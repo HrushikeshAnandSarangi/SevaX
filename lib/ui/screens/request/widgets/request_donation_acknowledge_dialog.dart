@@ -4,7 +4,7 @@ import 'package:sevaexchange/labels.dart';
 
 AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
   return AlertDialog(
-    title: Text(L.of(context).enter_the_amount_received),
+    title: Text(S.of(context).enter_the_amount_received),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -20,7 +20,7 @@ AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RaisedButton(
-              child: Text(L.of(context).ack),
+              child: Text(S.of(context).ack),
               onPressed: () {},
             ),
             RaisedButton(
