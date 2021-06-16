@@ -374,7 +374,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(documentName != '' ?  L.of(context).view   : ''),
+                Text(documentName != '' ?  S.of(context).view   : ''),
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.topLeft,

@@ -466,7 +466,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   Widget gettigStatus() {
     return RaisedButton(
       onPressed: null,
-      child: Text(L.of(context).invite_members_group_dots),
+      child: Text(S.of(context).invite_members_group_dots),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),

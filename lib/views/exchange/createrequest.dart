@@ -2217,7 +2217,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
           SizedBox(height: 15),
 
-          RequestDescriptionData(L.of(context).request_descrip_hint_text),
+          RequestDescriptionData(S.of(context).request_descrip_hint_text),
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2369,7 +2369,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
 
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? RequestDescriptionData(L.of(context).request_descrip_hint_text)
+              ? RequestDescriptionData(S.of(context).request_descrip_hint_text)
               : RequestDescriptionData(S.of(context).request_description_hint),
 
           SizedBox(height: 20),

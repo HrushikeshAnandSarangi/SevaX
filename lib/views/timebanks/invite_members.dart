@@ -385,7 +385,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                           leading: Icon(Icons.attachment),
                                           title: Text(
                                             csvFileModel.csvTitle ??
-                                                L.of(context).document_csv,
+                                                S.of(context).document_csv,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           trailing: IconButton(

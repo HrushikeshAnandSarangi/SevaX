@@ -657,7 +657,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 10),
                                   child: TagView(
-                                    tagTitle: L.of(context).public,
+                                    tagTitle: S.of(context).public,
                                   ),
                                 ),
                               ),
