@@ -61,7 +61,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
                         ? S.of(context).success
                         : S.of(context).failure),
                     content: Text(this.isSent == true
-                        ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}."
+                        ? L.of(context).csv_file_sent_successfully_to +" ${SevaCore.of(context).loggedInUser.email}."
                         : S.of(context).general_stream_error),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog

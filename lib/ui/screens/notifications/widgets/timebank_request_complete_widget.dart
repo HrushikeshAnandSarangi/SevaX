@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -159,7 +160,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          'Click button below to review ${userModel.fullname} and complete the task',
+                          L.of(context).click_button_below_to_review +' ${userModel.fullname} '+L.of(context).and_complete_task,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Europa',

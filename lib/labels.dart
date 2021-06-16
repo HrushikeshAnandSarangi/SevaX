@@ -253,6 +253,38 @@ class L {
  String get coming_soon => "Coming Soon";
  String get public => "Public";
  String get document_csv => "Document.CSV"; 
+ String get select_time => "Select time";
+ String get claimed_successfully => 'Claimed Successfully';
+ String get no_result_found => 'No result found';
+ String get try_text => "Try";
+ String get seva_community_groups =>  'Seva Community Groups';
+ String get projects_text => "Projects";
+ String get select_all => "Select All";
+ String get click_button_below_to_review => "Click button below to review";
+ String get and_complete_task => "and complete the task";
+ String get will_be_added_to_request => "will be added to the request.";
+ String get  remove_from_bookmark    => "Remove from bookmarks";
+ String get invitations => 'Invitations';
+ String get attachment => "Attachment";
+ String get zer0_one =>    "0/1";
+ String get report_of => "Report of";
+ String get waiting_acknowledgement => "Waiting acknowledgement";
+ String get add_sponsor_image => 'Add Sponsor image';
+ String get hint_text_number => "123456789";
+String get accept_modified_amount_finalized  => "By Accepting this amount will be finalized";
+String get please_enter_valid_amount =>"Please enter a valid amount";
+String get request_amount_cannot_be_greater => "Requested amount cannot be greater than offered amount!";
+String get name_not_updated =>" name not updated";
+String get timebank_not_updated =>  "Timebank name not updated";
+String get description_not_updated =>  "Description not yet updated";
+String get manage_permissions => "Manage Permissions";
+String get csv_file_sent_successfully_to => "CSV file sent successfully to";
+String get you_will_go_ahead_with_them_for_request    =>" you will go ahead with them for the request.";
+
+
+
+
+
 // String get request_description_hint_text_borrow =>'Please describe what you require';
 // String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
 // String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";

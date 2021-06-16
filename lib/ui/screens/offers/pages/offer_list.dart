@@ -174,7 +174,7 @@ class _OfferListState extends State<OfferList> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 8),
                             child: Text(
-                              "Seva Community Offers",
+                             S.of(context).timebank_offers,
                               style: TextStyle(
                                 fontSize: 18,
                               ),

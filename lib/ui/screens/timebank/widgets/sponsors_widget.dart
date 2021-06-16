@@ -298,7 +298,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                         context: context,
                                         timebankModel: widget.timebankModel);
                                   },
-                                  title: Text('Edit Name'),
+                                  title: Text(S.of(context).edit_name),
                                   trailing: Icon(Icons.edit),
                                 ),
                                 ListTile(
@@ -488,7 +488,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            'Add Sponsor image',
+            L.of(context).add_sponsor_image,
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [

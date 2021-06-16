@@ -118,7 +118,7 @@ class TimeOfferParticipants extends StatelessWidget {
             color: Colors.green,
             onPressed: () {},
             child: Text(
-              'Approved',
+             S.of(context).approved,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -133,7 +133,7 @@ class TimeOfferParticipants extends StatelessWidget {
             color: Colors.red,
             onPressed: () {},
             child: Text(
-              'Declined',
+             S.of(context).declined,
               style: TextStyle(color: Colors.white),
             ),
           )
@@ -171,7 +171,7 @@ class TimeOfferParticipants extends StatelessWidget {
               // );
             },
             child: Text(
-              'Approve',
+              S.of(context).approve,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -190,7 +190,7 @@ class TimeOfferParticipants extends StatelessWidget {
               );
             },
             child: Text(
-              'Decline',
+             S.of(context).decline,
               style: TextStyle(color: Colors.white),
             ),
           )
