@@ -691,17 +691,19 @@ Stream<List<ProjectModel>> getAllProjectListStream(
             DateTime endDate =
                 DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            if (endDate.isBefore(DateTime.now())) {
-              if (isAdminOrOwner ||
-                  model.associatedmembers.containsKey(
-                      SevaCore.of(context).loggedInUser.sevaUserID) ||
-                  model.members
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-                projectsList.add(model);
-              }
-            } else {
+            if (endDate.isAfter(DateTime.now())) {
               projectsList.add(model);
+              //uncomment below for Verve Release //to check only owner/admin/creator/members can view past events
+              // if (isAdminOrOwner ||
+              // model.associatedmembers.containsKey(
+              // SevaCore.of(context).loggedInUser.sevaUserID) ||
+              // model.members
+              // .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              // projectsList.add(model);
+              // }
             }
+            // } else {
+            // projectsList.add(model);
           },
         );
         projectSink.add(projectsList);
@@ -725,12 +727,17 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            if (AppConfig.isTestCommunity) {
-              if (model.liveMode == false) {
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
+
+            if (endDate.isAfter(DateTime.now())) {
+              if (AppConfig.isTestCommunity) {
+                if (model.liveMode == false) {
+                  projectsList.add(model);
+                }
+              } else {
                 projectsList.add(model);
               }
-            } else {
-              projectsList.add(model);
             }
           },
         );
