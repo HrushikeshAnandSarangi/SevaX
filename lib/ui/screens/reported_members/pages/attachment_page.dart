@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/zoom_image.dart';
 
@@ -22,7 +23,7 @@ class Attachment extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-        L.of(context).attachment,
+        S.of(context).attachment,
           style: TextStyle(fontSize: 18),
         ),
       ),

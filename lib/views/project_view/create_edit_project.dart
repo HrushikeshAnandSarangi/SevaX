@@ -558,7 +558,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                   focusedBorder: UnderlineInputBorder(
 //                     borderSide: BorderSide(color: Colors.black54),
 //                   ),
-//                   hintText: L.of(context).hint_text_number,
+//                   hintText: S.of(context).hint_text_number,
 //                   hintStyle: textStyle,
 //                 ),
 //               ),

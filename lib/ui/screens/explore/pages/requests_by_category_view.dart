@@ -99,7 +99,7 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                 return Container(
                   alignment: Alignment.center,
                   height: MediaQuery.of(context).size.height / 2,
-                  child: Text(L.of(context).no_result_found),
+                  child: Text(S.of(context).no_result_found),
                 );
               }
 

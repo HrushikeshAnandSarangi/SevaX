@@ -488,7 +488,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            L.of(context).add_sponsor_image,
+            S.of(context).add_sponsor_image,
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [

@@ -68,14 +68,14 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.groupInviteUserModel.timebankName ??
-                   L.of(context).timebank_not_updated
+                   S.of(context).timebank_not_updated
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
                 widget.groupInviteUserModel.aboutTimebank ??
-                   L.of(context).description_not_updated,
+                   S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

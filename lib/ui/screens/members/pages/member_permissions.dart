@@ -95,7 +95,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         ),
         centerTitle: true,
         title: Text(
-         L.of(context).manage_permissions,
+         S.of(context).manage_permissions,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,

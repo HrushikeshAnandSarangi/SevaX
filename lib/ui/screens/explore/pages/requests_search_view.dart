@@ -35,7 +35,7 @@ class RequestsSearchView extends StatelessWidget {
               return LoadingIndicator();
             }
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Text(L.of(context).no_result_found);
+              return Text(S.of(context).no_result_found);
             }
 
             return ListView.builder(

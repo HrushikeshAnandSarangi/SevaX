@@ -91,7 +91,7 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                 ),
               ),
               Center(
-                child: Text(L.of(context).accept_modified_amount_finalized,
+                child: Text(S.of(context).accept_modified_amount_finalized,
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),

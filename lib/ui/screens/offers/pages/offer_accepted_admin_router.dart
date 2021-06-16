@@ -74,7 +74,7 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
                                 child: Text(S.of(context).participants),
                               ),
                               Tab(
-                                child: Text(L.of(context).invitations),
+                                child: Text(S.of(context).invitations),
                               ),
                               Tab(
                                 child: Text(S.of(context).completed),

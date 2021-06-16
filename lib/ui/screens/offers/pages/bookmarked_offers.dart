@@ -357,7 +357,7 @@ void showDialogForMakingAnOffer({
                               width: double.infinity,
                               child: Center(
                                 child: Text(
-                                  L.of(context).remove_from_bookmark,
+                                  S.of(context).remove_from_bookmark,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white),
                                 ),

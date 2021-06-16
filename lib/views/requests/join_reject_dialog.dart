@@ -73,7 +73,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.requestInvitationModel.requestModel.fullName ??
-                    "${S.of(context).timebank}"+ L.of(context).name_not_updated,
+                    "${S.of(context).timebank}"+ S.of(context).name_not_updated,
               ),
             ),
             Padding(

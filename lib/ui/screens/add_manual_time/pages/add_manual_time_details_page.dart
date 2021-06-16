@@ -93,7 +93,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text(L.of(context).select_time),
+            Text(S.of(context).select_time),
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -197,7 +197,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                               _key.currentState.hideCurrentSnackBar();
                               _key.currentState.showSnackBar(
                                 SnackBar(
-                                  content: Text(L.of(context).claimed_successfully),
+                                  content: Text(S.of(context).claimed_successfully),
                                 ),
                               );
                               Future.delayed(Duration(seconds: 2), () {

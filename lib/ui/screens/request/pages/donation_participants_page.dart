@@ -126,7 +126,7 @@ class DonationParticipantPage extends StatelessWidget {
                                   );
                                 },
                               ),
-                            ): Text(L.of(context).waiting_acknowledgement),
+                            ): Text(S.of(context).waiting_acknowledgement),
             );
           },
           separatorBuilder: (context, index) {

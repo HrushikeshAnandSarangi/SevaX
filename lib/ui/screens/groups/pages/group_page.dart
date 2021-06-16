@@ -63,7 +63,7 @@ class _GroupPageState extends State<GroupPage> {
               snapshot.data.listOfSubTimebanks.isEmpty) {
             return EmptyWidget(
               title: S.of(context).no_groups_found,
-              sub_title:L.of(context).try_text+ S.of(context).creating_one,
+              sub_title:S.of(context).try_text+ S.of(context).creating_one,
             );
           }
           List<TimebankModel> myGroups = [];
@@ -159,7 +159,7 @@ class _GroupPageState extends State<GroupPage> {
                   hide: myGroups.isNotEmpty || otherGroups.isNotEmpty,
                   child: EmptyWidget(
                     title: S.of(context).no_groups_found,
-                    sub_title: L.of(context).try_text + S.of(context).creating_one,
+                    sub_title: S.of(context).try_text + S.of(context).creating_one,
                   ),
                 ),
                 myGroups.isNotEmpty
@@ -195,7 +195,7 @@ class _GroupPageState extends State<GroupPage> {
                     ? [
                         SizedBox(height: 15),
                         Text(
-                        L.of(context).seva_community_groups,
+                        S.of(context).seva_community_groups,
                           style: TextStyle(
                             fontSize: 18,
                           ),

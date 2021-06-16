@@ -53,7 +53,7 @@ class ReportedMemberInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          L.of(context).report_of +"${model.reportedUserName}",
+          S.of(context).report_of +"${model.reportedUserName}",
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,

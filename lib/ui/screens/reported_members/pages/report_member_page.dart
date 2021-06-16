@@ -157,7 +157,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                                   size: 30,
                                 ),
                                 Text(
-                               L.of(context).zer0_one,
+                                  S.of(context).zero_one,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,

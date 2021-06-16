@@ -570,13 +570,13 @@ class _DonationViewState extends State<DonationView> {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_general_text;
                 } else if (int.parse(value) < 1) {
-                  return L.of(context).please_enter_valid_amount;
+                  return S.of(context).please_enter_valid_amount;
                 } else if (!value.isEmpty) {
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return L.of(context).request_amount_cannot_be_greater;
+                    return S.of(context).request_amount_cannot_be_greater;
                   }
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return  L.of(context).request_amount_cannot_be_greater;
+                    return  S.of(context).request_amount_cannot_be_greater;
                   }
                   donationsModel.cashDetails.cashDetails.amountRaised =
                       int.parse(value);

@@ -160,7 +160,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          L.of(context).click_button_below_to_review +' ${userModel.fullname} '+L.of(context).and_complete_task,
+                          S.of(context).click_button_below_to_review +' ${userModel.fullname} '+S.of(context).and_complete_task,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Europa',
