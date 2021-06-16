@@ -934,13 +934,13 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     errorMaxLines: 2,
                     hintText: S.of(context).enter_bio,
                   ),
                   maxLength: 5000,
-                  maxLengthEnforced: true,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
