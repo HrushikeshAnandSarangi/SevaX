@@ -1177,7 +1177,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
       await sendMessageOfferCreator(
           loggedInUser: SevaCore.of(context).loggedInUser,
           message: results['didComment'] ? results['comment'] : "No comments",
-          creatorId: data.classDetails.sevauserid);
+          creatorId: data.classDetails.sevauserid,
+          isFromOfferRequest: true);
       NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
@@ -1256,8 +1257,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             context: context,
             requestTitle: offerTitle,
             isForCreator: true,
-            isOfferReview: true,
-            isFromOfferRequest: isFromOfferRequest,
+            isOfferReview: isFromOfferRequest,
           ),
           reciever: receiver,
           isTimebankMessage: false,
