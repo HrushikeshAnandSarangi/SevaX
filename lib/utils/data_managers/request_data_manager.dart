@@ -688,10 +688,13 @@ Stream<List<ProjectModel>> getAllProjectListStream(
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            projectsList.add(model);
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            // DateTime endDate =
-            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            if (endDate.isAfter(DateTime.now())) {
+              projectsList.add(model);
+            }
+
             //uncomment below for Verve Release //to check only owner/admin/creator/members can view past events
             // if (isAdminOrOwner ||
             // model.associatedmembers.containsKey(
@@ -719,18 +722,18 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            // DateTime endDate =
-            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            // if (endDate.isAfter(DateTime.now())) {
-            if (AppConfig.isTestCommunity) {
-              if (model.liveMode == false) {
+            if (endDate.isAfter(DateTime.now())) {
+              if (AppConfig.isTestCommunity) {
+                if (model.liveMode == false) {
+                  projectsList.add(model);
+                }
+              } else {
                 projectsList.add(model);
               }
-            } else {
-              projectsList.add(model);
             }
-            // }
           },
         );
         projectSink.add(projectsList);
