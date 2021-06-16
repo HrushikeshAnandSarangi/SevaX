@@ -64,7 +64,7 @@
 //     loggedInUser = SevaCore.of(context).loggedInUser;
 //     parentContext = context;
 //     return Scaffold(
-//       resizeToAvoidBottomPadding: true,
+//       resizeToAvoidBottomInset: true,
 //       appBar: AppBar(
 //         leading: IconButton(
 //           onPressed: () => Navigator.of(context).pop(),

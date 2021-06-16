@@ -1,4 +1,5 @@
 import "dart:developer";
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -10,14 +11,15 @@ import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-//import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-import 'requests_tab_view.dart';
-import 'projects_tab_view.dart';
 import 'feeds_tab_view.dart';
 import 'group_tab_view.dart';
 import 'members_tab_view.dart';
 import 'offers_tab_view.dart';
+import 'projects_tab_view.dart';
+//import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
+import 'requests_tab_view.dart';
 
 class SearchPage extends StatefulWidget {
   final HomeDashBoardBloc bloc;
@@ -73,7 +75,6 @@ class _SearchPageState extends State<SearchPage>
       bloc: _bloc,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
@@ -110,8 +111,12 @@ class _SearchPageState extends State<SearchPage>
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  FeedsTabView(communityModel: widget.community,),
-                  RequestsTabView(communityModel: widget.community,),
+                  FeedsTabView(
+                    communityModel: widget.community,
+                  ),
+                  RequestsTabView(
+                    communityModel: widget.community,
+                  ),
                   OffersTabView(),
                   ProjectsTabView(),
                   GroupTabView(),

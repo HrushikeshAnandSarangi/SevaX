@@ -308,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       key: _scaffoldKey,
       body: Stack(
         fit: StackFit.expand,

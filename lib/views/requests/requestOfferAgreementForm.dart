@@ -136,7 +136,6 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
       key: _key,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
