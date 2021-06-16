@@ -842,6 +842,32 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       );
                       break;
 
+                    case NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        timestamp: notification.timestamp,
+                        photoUrl: data.participantDetails.photourl,
+                        title: S.of(context).notifications_feedback_request,
+                        subTitle: UserNotificationMessage
+                                .FEEDBACK_FROM_SIGNUP_MEMBER
+                                .replaceFirst(
+                              '*class',
+                              data.classDetails.classTitle,
+                            ) +
+                            " ",
+                        onPressed: () => _handleFeedBackNotificationAction(
+                          context,
+                          data,
+                          notification.id,
+                          user.email,
+                        ),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+
                     case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
                       var body =
                           WithdrawnRequestBody.fromMap(notification.data);

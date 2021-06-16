@@ -4,7 +4,6 @@ class FeedbackConstants {
   static const ANSWER_TEXT = "text";
   static const SCORE = "score";
 
-
   //FEEDBACK_QUESTIONS_FOR_LENDER_ROOM
   // static const FEEDBACK_QUESTIONS_FOR_LENDER_ROOM_EN = const [
   //   {
@@ -51,7 +50,7 @@ class FeedbackConstants {
   //   },
   // ];
 
-    //FEEDBACK_QUESTIONS_FOR_BORROWER_ROOM
+  //FEEDBACK_QUESTIONS_FOR_BORROWER_ROOM
   // static const FEEDBACK_QUESTIONS_FOR_LENDER_ROOM_EN = const [
   //   {
   //     FEEDBACK_TITLE: "How would you rate your experience?",
@@ -97,8 +96,6 @@ class FeedbackConstants {
   //   },
   // ];
 
-
-
 //FEEDBACK_QUESTIONS_FOR_LENDER_TOOL
   static const FEEDBACK_QUESTIONS_FOR_LENDER_EN = const [
     {
@@ -120,7 +117,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Was the item or place you lent given back in the same condition?",
+      FEEDBACK_TITLE:
+          "Was the item or place you lent given back in the same condition?",
       ANSWERS: [
         {"text": "Yes, just as good", SCORE: 5},
         {"text": "No, not as good condition", SCORE: 4},
@@ -144,8 +142,6 @@ class FeedbackConstants {
       ]
     },
   ];
-
-
 
 //FEEDBACK_QUESTIONS_FOR_BORROWER_TOOL
   static const FEEDBACK_QUESTIONS_FOR_BORROWER_EN = const [
@@ -172,7 +168,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "How satisfied are you with the item or place you borrowed, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied?",
+      FEEDBACK_TITLE:
+          "How satisfied are you with the item or place you borrowed, on a scale between 0-10 where 0 = Not at all Satisfied and 10 = Extremely Satisfied?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -182,7 +179,8 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "How likely are you to borrow from this person again, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely?",
+      FEEDBACK_TITLE:
+          "How likely are you to borrow from this person again, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 6},
         {ANSWER_TEXT: "Good", SCORE: 4},
@@ -192,9 +190,6 @@ class FeedbackConstants {
       ]
     }
   ];
-
-
-
 
 //FEEDBACK_QUESTIONS_FOR_ADMIN
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_EN = const [
