@@ -44,6 +44,8 @@ import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/ui/utils/helpers.dart';
+
 import '../../../../labels.dart';
 
 class PersonalNotifications extends StatefulWidget {
@@ -843,25 +845,26 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       break;
 
                     case NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK:
-                      OneToManyNotificationDataModel data =
-                          OneToManyNotificationDataModel.fromJson(
-                              notification.data);
+                      RequestModel requestModel =
+                          RequestModel.fromMap(notification.data);
 
                       return NotificationCard(
                         isDissmissible: true,
                         timestamp: notification.timestamp,
-                        photoUrl: data.participantDetails.photourl,
+                        entityName: 'Feed Back',
+                        photoUrl: null,
                         title: S.of(context).notifications_feedback_request,
                         subTitle: UserNotificationMessage
                                 .FEEDBACK_FROM_SIGNUP_MEMBER
                                 .replaceFirst(
                               '*class',
-                              data.classDetails.classTitle,
+                              requestModel.title,
                             ) +
                             " ",
-                        onPressed: () => _handleFeedBackNotificationAction(
+                        onPressed: () =>
+                            _handleFeedBackNotificationOneToManyAttendees(
                           context,
-                          data,
+                          requestModel,
                           notification.id,
                           user.email,
                         ),
@@ -1179,11 +1182,56 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     }
   }
 
+  void _handleFeedBackNotificationOneToManyAttendees(
+    BuildContext context,
+    RequestModel requestModel,
+    String notificationId,
+    String email,
+  ) async {
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReviewFeedback(
+          feedbackType: FeedbackType
+              .FOR_ONE_TO_MANY_REQUEST_ATTENDEE, //if new questions then have to change this and update
+        ),
+      ),
+    );
+
+    if (results != null && results.containsKey('selection')) {
+      Firestore.instance.collection("reviews").add(
+        {
+          "reviewer": SevaCore.of(context).loggedInUser.email,
+          "reviewed": requestModel.title,
+          "ratings": results['selection'],
+          "requestId": "testId",
+          "comments":
+              results['didComment'] ? results['comment'] : "No comments",
+          'liveMode': !AppConfig.isTestCommunity,
+        },
+      );
+
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE,
+          results,
+          requestModel,
+          SevaCore.of(context).loggedInUser);
+
+      await sendMessageOfferCreator(
+          loggedInUser: SevaCore.of(context).loggedInUser,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: requestModel.sevaUserId,
+          offerTitle: requestModel.title,
+          isFromOfferRequest: requestModel.isFromOfferRequest);
+      NotificationsRepository.readUserNotification(notificationId, email);
+    }
+  }
+
   Future<void> sendMessageOfferCreator({
     UserModel loggedInUser,
     String offerTitle,
     String creatorId,
     String message,
+    bool isFromOfferRequest,
   }) async {
     UserModel userModel =
         await FirestoreManager.getUserForId(sevaUserId: creatorId);
@@ -1209,6 +1257,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             requestTitle: offerTitle,
             isForCreator: true,
             isOfferReview: true,
+            isFromOfferRequest: isFromOfferRequest,
           ),
           reciever: receiver,
           isTimebankMessage: false,

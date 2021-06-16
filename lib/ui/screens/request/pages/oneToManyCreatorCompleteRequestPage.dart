@@ -557,6 +557,7 @@ class OneToManyCreatorCompleteRequestPageState
 
                                             //Send Feedback notitifications to Attendees
                                             await sendFeedbackNotificationsToAttendees(
+                                                attendeesList: attendeesList,
                                                 requestModel: requestModel,
                                                 context: context);
 

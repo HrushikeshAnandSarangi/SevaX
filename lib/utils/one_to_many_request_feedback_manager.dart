@@ -5,13 +5,17 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
+WriteBatch batch = Firestore.instance.batch();
 
 Future<void> sendFeedbackNotificationsToAttendees(
-    {@required RequestModel requestModel,
+    {@required List attendeesList,
+    @required RequestModel requestModel,
     @required BuildContext context}) async {
   // ONETOMANY_REQUEST_ATTENDEES_FEEDBACK
 // if(requestModel.oneToManyRequestAttenders)
-  for (var attendee in requestModel.oneToManyRequestAttenders) {
+  for (var attendee in attendeesList) {
     NotificationsModel notification = NotificationsModel(
         id: Utils.getUuid(),
         timebankId: FlavorConfig.values.timebankId,
@@ -21,13 +25,18 @@ Future<void> sendFeedbackNotificationsToAttendees(
         type: NotificationType.ONETOMANY_REQUEST_ATTENDEES_FEEDBACK,
         communityId: requestModel.communityId,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        targetUserId: requestModel.selectedInstructor.sevaUserID);
+        targetUserId: attendee['sevaUserID']);
 
-    await Firestore.instance
-        .collection('users')
-        .document(requestModel.selectedInstructor.email)
-        .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+    batch.setData(
+        Firestore.instance
+            .collection('users')
+            .document(attendee['email'])
+            .collection("notifications")
+            .document(notification.id),
+        notification.toMap());
   }
+
+  batch.commit();
+
+  logger.e('Feedback Notifications sent to one to many request Attendees');
 }
