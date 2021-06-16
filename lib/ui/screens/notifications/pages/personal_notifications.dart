@@ -848,6 +848,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               notification.data);
 
                       return NotificationCard(
+                        isDissmissible: true,
                         timestamp: notification.timestamp,
                         photoUrl: data.participantDetails.photourl,
                         title: S.of(context).notifications_feedback_request,
