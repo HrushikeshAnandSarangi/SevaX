@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -30,6 +31,7 @@ Future<void> fetchRemoteConfig() async {
 
 Future<void> initApp(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   FlavorConfig.appFlavor = flavor;
 
   FirebaseMessaging.instance.requestPermission(

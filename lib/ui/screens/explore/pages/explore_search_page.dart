@@ -127,7 +127,10 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: CustomTextButton(
-                    child: Text(S.of(context).search),
+                    child: Text(
+                      S.of(context).search,
+                      style: TextStyle(color: Colors.white),
+                    ),
                     textColor: Colors.white,
                     color: Colors.orange,
                     shape: RoundedRectangleBorder(

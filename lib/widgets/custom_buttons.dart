@@ -22,7 +22,9 @@ class CustomTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        primary: color,
+        backgroundColor: color,
+        // primary: textColor,
+        // onSurface: Colors.black,
         textStyle: TextStyle(color: textColor),
         shape: shape,
         padding: padding,
