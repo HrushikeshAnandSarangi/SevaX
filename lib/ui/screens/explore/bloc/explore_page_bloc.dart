@@ -39,6 +39,7 @@ class ExplorePageBloc {
     ElasticSearchApi.getFeaturedCommunities().then((value) {
       _communities.add(value);
     });
+    logger.e('USER ID CHECK 9:' + isUserLoggedIn.toString());
     if (isUserLoggedIn) {
       FirestoreManager.getPublicOffers().listen((event) {
         _offers.add(event);

@@ -89,17 +89,20 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     _bloc = FindCommunitiesBloc();
 
+    logger.e('USER ID CHECK 8');
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(
-          Duration(milliseconds: 200),
+          Duration(milliseconds: 300),
           () => {
                 _exploreBloc.load(
                   isUserLoggedIn: widget.isUserSignedIn,
-                  sevaUserID: SevaCore.of(context).loggedInUser != null
+                  sevaUserID: widget.isUserSignedIn
                       ? SevaCore.of(context).loggedInUser.sevaUserID
                       : '',
                 ),
               });
+
       // if (isSignedUser) {
       LocationHelper.getLocation().then((value) {
         if (value != null) {
