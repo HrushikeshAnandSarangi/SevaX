@@ -23,9 +23,9 @@ class CustomTextButton extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         backgroundColor: color,
-        // primary: textColor,
+        primary: textColor,
         // onSurface: Colors.black,
-        textStyle: TextStyle(color: textColor),
+        // textStyle: TextStyle(color: textColor),
         shape: shape,
         padding: padding,
       ),

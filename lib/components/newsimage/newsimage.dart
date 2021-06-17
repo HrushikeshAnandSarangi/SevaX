@@ -10,7 +10,6 @@ import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
-import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -376,7 +375,7 @@ class NewsImageState extends State<NewsImage>
           TextButton.icon(
             icon: Icon(Icons.attachment),
             style: TextButton.styleFrom(
-              primary: Colors.grey[200],
+              primary: Colors.grey,
             ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
