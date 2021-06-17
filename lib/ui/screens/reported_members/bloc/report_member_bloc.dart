@@ -9,7 +9,6 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
-import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ReportMemberBloc {
   final _file = BehaviorSubject<File>();
@@ -94,7 +93,7 @@ class ReportMemberBloc {
           "reporterIds": FieldValue.arrayUnion([reportingUserModel.sevaUserID]),
           "timebankIds": FieldValue.arrayUnion([timebankId]),
         },
-        merge: true,
+        SetOptions(merge: true),
       );
       return true;
     } catch (e) {

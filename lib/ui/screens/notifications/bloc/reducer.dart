@@ -1019,7 +1019,7 @@ class PersonalNotificationsRedcerForDonations {
     BuildContext context,
     NotificationsModel notificationsModel,
   }) {
-    final holder = DonationModel.fromMap(notificationsModel.data());
+    final holder = DonationModel.fromMap(notificationsModel.data);
     bool invertGoodsLabel = false;
     if (holder.donationType == RequestType.GOODS &&
         holder.requestIdType == 'offer' &&

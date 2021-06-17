@@ -2,10 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 enum StoragePath {
   Sponsors,
@@ -40,30 +36,30 @@ class StorageRepository {
     return attachmentUrl;
   }
 
-  static Stream<double> uploadWithProgress(
-      File file, StoragePath path, ValueChanged<String> onUpload,
-      {String fileName}) async* {
-    FirebaseStorage _storage = FirebaseStorage.instance;
-    String filePath =
-        "${path.basePath}/${fileName ?? DateTime.now().toString()}.${extension(file.path)}";
-    logger.i(filePath);
-    UploadTask _uploadTask = _storage.ref().child(filePath).putFile(file);
-    yield* _uploadTask.events.transform(
-      StreamTransformer.fromHandlers(
-        handleData: (data, sink) {
-          sink.add(
-            data.snapshot.bytesTransferred / data.snapshot.totalByteCount,
-          );
-        },
-      ),
-    );
-    String attachmentUrl = '';
-    _uploadTask.whenComplete(() async {
-      attachmentUrl = await _storage.ref().getDownloadURL();
-    });
-    if (attachmentUrl == null || attachmentUrl == '') {
-      throw Exception("Upload failed");
-    }
-    onUpload(attachmentUrl);
-  }
+  // static Stream<double> uploadWithProgress(
+  //     File file, StoragePath path, ValueChanged<String> onUpload,
+  //     {String fileName}) async* {
+  //   FirebaseStorage _storage = FirebaseStorage.instance;
+  //   String filePath =
+  //       "${path.basePath}/${fileName ?? DateTime.now().toString()}.${extension(file.path)}";
+  //   logger.i(filePath);
+  //   UploadTask _uploadTask = _storage.ref().child(filePath).putFile(file);
+  //   yield* _uploadTask.events.transform(
+  //     StreamTransformer.fromHandlers(
+  //       handleData: (data, sink) {
+  //         sink.add(
+  //           data.snapshot.bytesTransferred / data.snapshot.totalByteCount,
+  //         );
+  //       },
+  //     ),
+  //   );
+  //   String attachmentUrl = '';
+  //   _uploadTask.whenComplete(() async {
+  //     attachmentUrl = await _storage.ref().getDownloadURL();
+  //   });
+  //   if (attachmentUrl == null || attachmentUrl == '') {
+  //     throw Exception("Upload failed");
+  //   }
+  //   onUpload(attachmentUrl);
+  // }
 }

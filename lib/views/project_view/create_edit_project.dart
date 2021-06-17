@@ -79,18 +79,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   ScrollController _controller = ScrollController();
   var focusNodes = List.generate(5, (_) => FocusNode());
 
-  final _textUpdates = StreamController<String>();
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
   bool makePublicBool = false;
   bool isPulicCheckboxVisible = false;
   CommunityModel communityModel;
-  final _searchText = BehaviorSubject<String>();
+
   final _debouncer = Debouncer(milliseconds: 400);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (!widget.isCreateProject) {
       getData();
