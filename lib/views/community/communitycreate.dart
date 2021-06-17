@@ -266,7 +266,10 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(autovalidateMode: AutovalidateMode.disabled, key: _formKey, child: createSevaX);
+    return Form(
+        autovalidateMode: AutovalidateMode.disabled,
+        key: _formKey,
+        child: createSevaX);
   }
 
   void moveToTop() {
@@ -1010,7 +1013,7 @@ class CreateEditCommunityViewFormState
                                 var connResult =
                                     await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
-                                  Scaffold.of(context).showSnackBar(
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
                                           Text(S.of(context).check_internet),

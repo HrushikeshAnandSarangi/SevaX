@@ -249,13 +249,13 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               //donation approved
               if (_formKey.currentState.validate()) {
                 if (location == null) {
-                  _key.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(S.of(context).location_not_added),
                     ),
                   );
                 } else if (documentName == '') {
-                  _key.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
                           Text("S.of(context).snackbar_select_agreement_type"),

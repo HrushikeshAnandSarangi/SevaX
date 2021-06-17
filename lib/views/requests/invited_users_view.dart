@@ -75,7 +75,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 //          .getDocuments()
 //          .then(
 //        (QuerySnapshot querysnapshot) {
-//          if (favoriteUsers == null) favoriteUsers = List();
+//          if (favoriteUsers == null) favoriteUsers = [];
 //
 //          querysnapshot.documents.forEach(
 //            (DocumentSnapshot user) => favoriteUsers.add(
@@ -97,7 +97,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 //          .getDocuments()
 //          .then(
 //        (QuerySnapshot querysnapshot) {
-//          if (favoriteUsers == null) favoriteUsers = List();
+//          if (favoriteUsers == null) favoriteUsers = [];
 //
 //          querysnapshot.documents.forEach(
 //            (DocumentSnapshot user) => favoriteUsers.add(

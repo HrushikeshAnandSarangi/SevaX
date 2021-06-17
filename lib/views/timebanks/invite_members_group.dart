@@ -36,8 +36,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel parenttimebankModel;
-  var parentTimebankMembersList = List<String>();
-  var groupMembersList = List<String>();
+  var parentTimebankMembersList = [];
+  var groupMembersList = [];
   List<InvitationModel> listInvitationModel;
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
@@ -140,7 +140,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   hintStyle: TextStyle(
                     color: Colors.black45,
                     fontSize: 13,
-                  ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                 ),
               ),
             ),
@@ -349,7 +350,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Europa')),
                   subtitle: invitationStatusText(
-                          status, groupInviteUserModel, groupInviteStatus),
+                      status, groupInviteUserModel, groupInviteStatus),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -379,7 +380,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteUserModel groupInviteUserModel,
       GroupInviteStatus groupInviteStatus) {
     String statusText = getGroupUserStatusTitle(groupInviteStatus);
-    if(groupInviteStatus == GroupInviteStatus.INVITE){
+    if (groupInviteStatus == GroupInviteStatus.INVITE) {
       return Offstage();
     }
 
@@ -394,7 +395,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
     );
     return Text(
-      statusText + S.of(context).on+ date,
+      statusText + S.of(context).on + date,
       style: TextStyle(
           color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
           fontFamily: 'Europa'),
@@ -486,8 +487,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         .collection('notifications')
         .document(notificationId)
         .updateData({
-          'isRead': false,
-          'data.timestamp': timestamp,
+      'isRead': false,
+      'data.timestamp': timestamp,
     });
   }
 

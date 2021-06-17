@@ -290,15 +290,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                                   var connResult =
                                       await Connectivity().checkConnectivity();
                                   if (connResult == ConnectivityResult.none) {
-                                    _scaffoldKey.currentState.showSnackBar(
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content:
                                             Text(S.of(context).check_internet),
                                         action: SnackBarAction(
                                           label: S.of(context).dismiss,
-                                          onPressed: () => _scaffoldKey
-                                              .currentState
-                                              .hideCurrentSnackBar(),
+                                          onPressed: () =>
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar(),
                                         ),
                                       ),
                                     );
@@ -445,13 +445,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -467,15 +467,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                       });
                     } else {
                       await updateCV();
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             S.of(context).uploaded_successfully,
                           ),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -877,12 +877,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
-                        _scaffoldKey.currentState.showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => _scaffoldKey.currentState
+                              onPressed: () => ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar(),
                             ),
                           ),
@@ -978,12 +978,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
-                        _scaffoldKey.currentState.showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => _scaffoldKey.currentState
+                              onPressed: () => ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar(),
                             ),
                           ),

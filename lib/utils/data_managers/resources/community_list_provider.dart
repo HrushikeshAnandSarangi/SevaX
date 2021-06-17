@@ -128,7 +128,7 @@ class RequestApiProvider {
     String sevaUserId,
     String email,
   ) async {
-    List<String> list = List();
+    List<String> list = [];
     list.add(sevaUserId);
 
     var batch = Firestore.instance.batch();
@@ -249,7 +249,7 @@ class CommunityApiProvider {
         }
       }
     } else {
-      user.communities = List();
+      user.communities = [];
     }
     if (!found) {
       user.communities = [

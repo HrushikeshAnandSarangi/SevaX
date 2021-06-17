@@ -133,8 +133,8 @@ class _RequestDonationDisputePageState
         if (value) {
           Navigator.of(context).pop();
         } else {
-          _key.currentState.hideCurrentSnackBar();
-          _key.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("${S.of(context).general_stream_error}."),
             ),
@@ -201,17 +201,17 @@ class _RequestDonationDisputePageState
                 Navigator.of(context).pop();
               } else {
                 progressDialogNew.hide();
-                _key.currentState.hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 if (widget.model.minimumAmount != null &&
                     int.parse(_bloc.cashAmoutVal) <
                         widget.model.minimumAmount) {
-                  _key.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content:
-                            Text(S.of(context).amount_lessthan_donation_amount)),
+                        content: Text(
+                            S.of(context).amount_lessthan_donation_amount)),
                   );
                 } else {
-                  _key.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content:
                             Text("${S.of(context).general_stream_error}.")),
@@ -254,11 +254,12 @@ class _RequestDonationDisputePageState
           break;
         case _AckType.GOODS:
           if (_bloc.goodsRecievedVal.length == 0) {
-            _key.currentState.hideCurrentSnackBar();
-            _key.currentState.showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               action: SnackBarAction(
                 label: S.of(context).dismiss,
-                onPressed: () => _key.currentState.hideCurrentSnackBar(),
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar(),
               ),
               content: Text("${S.of(context).add_goods_donate_empty}."),
             ));
@@ -713,12 +714,13 @@ class _CashFlow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void showScaffold(context, String message) {
-      scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );

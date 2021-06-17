@@ -335,13 +335,13 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
                   if (connResult == ConnectivityResult.none) {
-                    _scaffoldKey.currentState.showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
                           label: S.of(context).dismiss,
-                          onPressed: () =>
-                              _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          onPressed: () => ScaffoldMessenger.of(context)
+                              .hideCurrentSnackBar(),
                         ),
                       ),
                     );

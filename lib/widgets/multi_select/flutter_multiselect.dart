@@ -1,7 +1,5 @@
 library flutter_multiselect;
 
-import 'dart:developer';
-
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +116,9 @@ class MultiSelect extends FormField<dynamic> {
             onSaved: onSaved,
             validator: validator,
             initialValue: initialValue,
-            autovalidate: autovalidate,
+            autovalidateMode: autovalidate
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
             builder: (FormFieldState<dynamic> state) {
               Widget _buildSelectedOptions(dynamic values, state) {
                 Widget selectedOptions;

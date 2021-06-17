@@ -59,8 +59,8 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
 }) async {
   List<String> skillsarr, interestsarr;
 
-  skillsarr = List();
-  interestsarr = List();
+  skillsarr = [];
+  interestsarr = [];
   QuerySnapshot queryData1, queryData2;
   Map<String, dynamic> resultMap = HashMap();
 

@@ -139,7 +139,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
               if (status.data == Status.LOADING) {
                 WidgetsBinding.instance.addPostFrameCallback(
                   (_) {
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
@@ -154,7 +154,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
               if (status.data == Status.ERROR) {
                 WidgetsBinding.instance.addPostFrameCallback(
                   (_) {
-                    Scaffold.of(context).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
@@ -419,15 +419,16 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                           .checkConnectivity();
                                       if (connResult ==
                                           ConnectivityResult.none) {
-                                        _scaffoldKey.currentState.showSnackBar(
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
                                           SnackBar(
                                             content: Text(
                                                 S.of(context).check_internet),
                                             action: SnackBarAction(
                                               label: S.of(context).dismiss,
-                                              onPressed: () => _scaffoldKey
-                                                  .currentState
-                                                  .hideCurrentSnackBar(),
+                                              onPressed: () =>
+                                                  ScaffoldMessenger.of(context)
+                                                      .hideCurrentSnackBar(),
                                             ),
                                           ),
                                         );

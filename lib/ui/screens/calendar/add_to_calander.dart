@@ -9,11 +9,11 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+
 import '../../../flavor_config.dart';
-import '../../../labels.dart';
 
 class AddToCalendar extends StatefulWidget {
   @required

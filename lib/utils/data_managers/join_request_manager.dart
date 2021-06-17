@@ -15,7 +15,7 @@ Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
       .where('user_id', isEqualTo: model.userId);
   QuerySnapshot snapshot = await query.getDocuments();
   DocumentSnapshot document =
-      snapshot.documents?.length > 0 && snapshot.documents != null
+      snapshot.documents.length > 0 && snapshot.documents != null
           ? snapshot.documents.first
           : null;
   if (document != null)
@@ -52,7 +52,7 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   if (snapshot.documents == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  var requestList = [];
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
     requestList.add(model);
@@ -72,7 +72,7 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
   if (snapshot.documents == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  var requestList = [];
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
 
@@ -94,7 +94,7 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
   if (snapshot.documents == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  var requestList = [];
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
 

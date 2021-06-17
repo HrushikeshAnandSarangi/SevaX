@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -23,7 +22,8 @@ class CommunityByCategoryView extends StatefulWidget {
     Key key,
     @required this.model,
     this.isFromNearby = false,
-    this.geoPoint, @required this.isUserSignedIn,
+    this.geoPoint,
+    @required this.isUserSignedIn,
   }) : super(key: key);
   @override
   _CommunityByCategoryViewState createState() =>
@@ -80,7 +80,10 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
                   );
                 }
 
-                return communitiesWidget(snapshot.data,widget.isUserSignedIn,);
+                return communitiesWidget(
+                  snapshot.data,
+                  widget.isUserSignedIn,
+                );
               },
             )
           : FutureBuilder(
@@ -133,7 +136,9 @@ class _CommunityByCategoryViewState extends State<CommunityByCategoryView> {
   }
 }
 
-Widget communitiesWidget(List<CommunityModel> communityList, bool isUserSignedIn,{Widget child}) {
+Widget communitiesWidget(
+    List<CommunityModel> communityList, bool isUserSignedIn,
+    {Widget child}) {
   return Column(
     children: [
       child ?? Container(),

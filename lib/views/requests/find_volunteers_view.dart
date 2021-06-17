@@ -38,7 +38,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
   final searchOnChange = BehaviorSubject<String>();
-  var validItems = List<String>();
+  var validItems = [];
   List<UserModel> users = [];
 
   @override
@@ -132,7 +132,8 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),

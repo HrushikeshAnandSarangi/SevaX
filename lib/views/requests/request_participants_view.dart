@@ -704,7 +704,7 @@ Future<List<UserModel>> getRequestStatus({
   );
 }
 
-List<UserModel> usersRequested = List();
+List<UserModel> usersRequested = [];
 
 class AcceptorItem {
   final String email;

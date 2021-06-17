@@ -41,7 +41,7 @@ class _FindVolunteersViewStateForOffer
   final volunteerUsersBloc = VolunteerFindBloc();
 
   final searchOnChange = BehaviorSubject<String>();
-  // var validItems = List<String>();
+  // var validItems = [];
   List<UserModel> users = [];
 
   @override
@@ -130,7 +130,8 @@ class _FindVolunteersViewStateForOffer
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),

@@ -971,8 +971,8 @@ class _DonationViewState extends State<DonationView> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         if (donationBloc.isSelectedListEmpty) {
-                          _scaffoldKey.currentState.hideCurrentSnackBar();
-                          _scaffoldKey.currentState.showSnackBar(
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                 'Please select the goods that you want to receive',
@@ -1006,7 +1006,7 @@ class _DonationViewState extends State<DonationView> {
                                             widget.offerModel.sevaUserId))
                                 .then((value) {
                               if (value) {
-                                 hideProgress();
+                                hideProgress();
                                 getSuccessDialog(S
                                         .of(context)
                                         .donations_requested
@@ -1256,12 +1256,12 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void showScaffold(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: S.of(context).dismiss,
-          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         ),
       ),
     );

@@ -178,13 +178,13 @@ Future<void> resetPassword(String email, BuildContext mContext) async {
       },
     );
 
-//    _scaffoldKey.currentState.showSnackBar(SnackBar(
+//    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
 //      content: Text(AppLocalizations.of(context)
 //          .translate('login', 'reset_link_message')),
 //      action: SnackBarAction(
 //        label: AppLocalizations.of(context).translate('shared', 'dismiss'),
 //        onPressed: () {
-//          _scaffoldKey.currentState.hideCurrentSnackBar();
+//          ScaffoldMessenger.of(context).hideCurrentSnackBar();
 //        },
 //      ),
 //    ));

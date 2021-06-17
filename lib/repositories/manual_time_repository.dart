@@ -6,7 +6,6 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../flavor_config.dart';
 

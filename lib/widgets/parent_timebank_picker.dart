@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
@@ -57,7 +56,6 @@ void _parentSelectionBottomsheet(
     context: mcontext,
     isScrollControlled: true,
     builder: (BuildContext bc) {
-      var focusNodes = List.generate(1, (_) => FocusNode());
       return Container(
         height: MediaQuery.of(bc).size.height -
             38, //to avoid app bar going out of safe area
@@ -121,7 +119,6 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
   @override
   void initState() {
     super.initState();
-    String _searchText = "";
     final _textUpdates = StreamController<String>();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -129,14 +126,10 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
         .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
+        setState(() {});
       } else {
         communityBloc.fetchCommunities(s);
-        setState(() {
-          _searchText = s;
-        });
+        setState(() {});
       }
     });
   }
@@ -199,7 +192,8 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(25.7)),
               hintText: S.of(context).find_timebank_help_text,
-              hintStyle: TextStyle(color: Colors.black45, fontSize: 14), floatingLabelBehavior: FloatingLabelBehavior.never),
+              hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
+              floatingLabelBehavior: FloatingLabelBehavior.never),
         ),
         SizedBox(height: 20),
         Expanded(

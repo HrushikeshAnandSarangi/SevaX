@@ -304,45 +304,44 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () =>
-                                Scaffold.of(context).hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
                       return;
                     }
-                      if (formKey.currentState.validate()) {
-                        // If the form is valid, we want to show a Snackbar
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (createDialogContext) {
-                              dialogContext = createDialogContext;
-                              return AlertDialog(
-                                title: Text(S.of(context).updating_feed),
-                                content: LinearProgressIndicator(),
-                              );
-                            });
-                        scrapeURLFromSubheading(newsObject.subheading);
-                        scrapeHashTagsFromSubHeadings(newsObject.subheading);
+                    if (formKey.currentState.validate()) {
+                      // If the form is valid, we want to show a Snackbar
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (createDialogContext) {
+                            dialogContext = createDialogContext;
+                            return AlertDialog(
+                              title: Text(S.of(context).updating_feed),
+                              content: LinearProgressIndicator(),
+                            );
+                          });
+                      scrapeURLFromSubheading(newsObject.subheading);
+                      scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
-                        if (newsObject.urlsFromPost.length > 0) {
-                          await scrapeURLDetails(newsObject.urlsFromPost.first);
-                        } else {
-                          newsObject.title = '';
-                          newsObject.imageScraped = S.of(context).no_data;
-                          newsObject.newsImageUrl = '';
-                          newsObject.description = '';
-                        }
-
-                        writeToDB();
+                      if (newsObject.urlsFromPost.length > 0) {
+                        await scrapeURLDetails(newsObject.urlsFromPost.first);
+                      } else {
+                        newsObject.title = '';
+                        newsObject.imageScraped = S.of(context).no_data;
+                        newsObject.newsImageUrl = '';
+                        newsObject.description = '';
                       }
-                    
+
+                      writeToDB();
+                    }
                   },
                   child: Text(
                     S.of(context).update_feed,
@@ -359,7 +358,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   void scrapeURLFromSubheading(String subHeadings) {
-    List<String> scappedURLs = List();
+    List<String> scappedURLs = [];
     RegExp regExp = RegExp(
       r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
       caseSensitive: false,
@@ -377,7 +376,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   void scrapeHashTagsFromSubHeadings(String subHeadings) {
     // HashTag Extraction
-    List<String> hashTags = List();
+    List<String> hashTags = [];
 
     RegExp exp = RegExp(r"([#,@][^\s#\@]*)");
     Iterable<RegExpMatch> matches = exp.allMatches(subHeadings);

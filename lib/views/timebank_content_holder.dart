@@ -918,7 +918,8 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.title != null && news.title != S.of(context).no_data
+                              text: news.title != null &&
+                                      news.title != S.of(context).no_data
                                   ? news.title.trim()
                                   : '',
                               onOpen: (url) async {
@@ -1010,7 +1011,8 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               //feed image
               news.newsImageUrl == null
-                  ? news.imageScraped == null || news.imageScraped == S.of(context).no_data
+                  ? news.imageScraped == null ||
+                          news.imageScraped == S.of(context).no_data
                       ? Offstage()
                       : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
@@ -1111,8 +1113,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                     } else {
                                                       if (news
                                                           .reports.isEmpty) {
-                                                        news.reports =
-                                                            List<String>();
+                                                        news.reports = [];
                                                       }
                                                       Firestore.instance
                                                           .collection('news')

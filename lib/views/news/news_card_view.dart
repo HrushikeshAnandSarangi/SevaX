@@ -968,7 +968,7 @@ class DetailDescription extends StatefulWidget {
   NewsModel data = NewsModel();
   TimebankModel timebankModel;
   UserModel userModel = UserModel();
-  List<String> moreList = List<String>();
+  List<String> moreList = [];
   String userId;
   final bool isFocused;
   DetailDescription(this.data,

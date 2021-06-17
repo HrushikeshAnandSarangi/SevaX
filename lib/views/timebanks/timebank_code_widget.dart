@@ -148,11 +148,11 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                               .of(context)
                                               .copied_to_clipboard),
                                         );
-                                        _scaffoldKey.currentState
+                                        ScaffoldMessenger.of(context)
                                             .showSnackBar(snackbar);
                                       },
                                       child: Text(
-                                       S.of(context).copy_code,
+                                        S.of(context).copy_code,
                                         style: TextStyle(
                                           color: FlavorConfig
                                               .values.theme.primaryColor,

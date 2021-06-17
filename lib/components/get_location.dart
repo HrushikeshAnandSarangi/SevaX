@@ -89,7 +89,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   @override
   void onResponseError(PlacesAutocompleteResponse response) {
     super.onResponseError(response);
-    searchScaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(response.errorMessage)),
     );
   }
@@ -98,7 +98,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   void onResponse(PlacesAutocompleteResponse response) {
     super.onResponse(response);
     if (response != null && response.predictions.isNotEmpty) {
-      // searchScaffoldKey.currentState.showSnackBar(
+      //ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(content: Text("Got answer")),
       // );
     }

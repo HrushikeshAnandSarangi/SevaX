@@ -52,8 +52,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
     })?.catchError((onError) {
       logger.e(onError);
       final snackBar = SnackBar(content: Text(onError.message));
-      _key.currentState.hideCurrentSnackBar();
-      _key.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       // ScaffoldMessenger.of(context).hideCurrentSnackBar();
       // ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
@@ -154,8 +154,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         progressDialog.hide();
                         final snackBar =
                             SnackBar(content: Text(onError.message));
-                        _key.currentState.hideCurrentSnackBar();
-                        _key.currentState.showSnackBar(snackBar);
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         logger.e(onError);
                       });
                     },

@@ -56,7 +56,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   TimebankModel timebankModel;
   final _firestore = Firestore.instance;
 
-  var validItems = List<String>();
+  var validItems = [];
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
 
@@ -240,7 +240,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   borderRadius: BorderRadius.circular(25.7),
                 ),
                 hintText: S.of(context).invite_via_email,
-                hintStyle: TextStyle(color: Colors.black45, fontSize: 13), floatingLabelBehavior: FloatingLabelBehavior.never),
+                hintStyle: TextStyle(color: Colors.black45, fontSize: 13),
+                floatingLabelBehavior: FloatingLabelBehavior.never),
           ),
         ),
         headingTitle(
@@ -429,13 +430,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -466,15 +467,15 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       if (dialogContext != null) {
                         Navigator.pop(dialogContext);
                       }
-                      _scaffoldKey.currentState.showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
                             S.of(context).uploaded_successfully,
                           ),
                           action: SnackBarAction(
                             label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            onPressed: () => ScaffoldMessenger.of(context)
+                                .hideCurrentSnackBar(),
                           ),
                         ),
                       );
@@ -681,7 +682,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     } else if (_permissionStatus.isGranted) {
       _requestDownload(sampleCSVLink);
     } else if (_permissionStatus.isDenied) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context)
@@ -689,12 +690,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).translate('shared', 'dismiss'),
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
     } else if (_permissionStatus.isPermanentlyDenied) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             AppLocalizations.of(context)
@@ -702,7 +703,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).translate('shared', 'dismiss'),
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );

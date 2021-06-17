@@ -14,7 +14,7 @@ class UserModel extends DataModel {
   String fullname;
   List<String> interests;
   List<String> skills;
-  List<String> communities = List();
+  List<String> communities = [];
   String currentCommunity;
   String calendar;
   List<String> membershipTimebanks;
@@ -109,7 +109,6 @@ class UserModel extends DataModel {
       this.completedIntro,
       this.pastHires,
       this.blockedBy,
-      
       this.currentCommunity,
       this.communities,
       this.emailSent,
@@ -175,14 +174,14 @@ class UserModel extends DataModel {
       List<String> pasthires = List.castFrom(map['recommendedTimebank']);
       this.pastHires = pasthires;
     } else {
-      this.pastHires = List();
+      this.pastHires = [];
     }
     if (map.containsKey('recommendedForRequestIds')) {
       List<String> recommendedForRequests =
           List.castFrom(map['recommendedForRequestIds']);
       this.recommendedForRequestIds = recommendedForRequests;
     } else {
-      this.recommendedForRequestIds = List();
+      this.recommendedForRequestIds = [];
     }
     if (map.containsKey('emailSent')) {
       this.emailSent = map['emailSent'] ?? false;
@@ -200,14 +199,14 @@ class UserModel extends DataModel {
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
       this.blockedMembers = blockedMembers;
     } else {
-      this.blockedMembers = List();
+      this.blockedMembers = [];
     }
 
     if (map.containsKey('curatedRequestIds')) {
       List<String> curatedRequests = List.castFrom(map['curatedRequestIds']);
       this.curatedRequestIds = curatedRequests;
     } else {
-      this.curatedRequestIds = List();
+      this.curatedRequestIds = [];
     }
 
     if (map.containsKey('currentCommunity')) {
@@ -227,7 +226,7 @@ class UserModel extends DataModel {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
     } else {
-      this.blockedBy = List();
+      this.blockedBy = [];
     }
 
     if (map.containsKey('bio')) {

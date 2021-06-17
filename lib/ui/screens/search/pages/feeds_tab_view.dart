@@ -85,7 +85,8 @@ class _FeedsTabViewState extends State<FeedsTabView>
                     child: NewsCard(
                       id: news.id,
                       imageUrl: news.newsImageUrl ?? news.imageScraped,
-                      title: news.title != null && news.title != S.of(context).no_data
+                      title: news.title != null &&
+                              news.title != S.of(context).no_data
                           ? news.title.trim()
                           : news.subheading.trim(),
                       userImageUrl: news.userPhotoURL ?? defaultUserImageURL,
@@ -221,7 +222,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       SevaCore.of(mContext).loggedInUser.sevaUserID)) {
                   } else {
                     if (news.reports.isEmpty) {
-                      news.reports = List<String>();
+                      news.reports = [];
                     }
                     news.reports
                         .add(SevaCore.of(mContext).loggedInUser.sevaUserID);

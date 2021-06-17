@@ -18,14 +18,16 @@ class NewsImagePickerHandler {
 
   void openCamera() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    cropImage(image);
+    final pickedFile =
+        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    cropImage(pickedFile.path);
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    cropImage(image);
+    final pickedFile =
+        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    cropImage(pickedFile.path);
   }
 
   void openDocument() async {
@@ -84,10 +86,10 @@ class NewsImagePickerHandler {
     imagePicker.initState();
   }
 
-  Future cropImage(File image) async {
+  Future cropImage(String image) async {
     File croppedFile;
     ImageCropper.cropImage(
-      sourcePath: image.path,
+      sourcePath: image,
       ratioX: 1.0,
       ratioY: 1.0,
       maxWidth: 512,

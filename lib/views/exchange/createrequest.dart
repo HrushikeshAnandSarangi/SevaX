@@ -212,7 +212,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   final TextEditingController searchTextController = TextEditingController();
   final searchOnChange = BehaviorSubject<String>();
   final _textUpdates = StreamController<String>();
-  var validItems = List<String>();
+  var validItems = [];
   bool isAdmin = false;
   UserModel selectedInstructorModel;
   SelectedSpeakerTimeDetails selectedSpeakerTimeDetails =
@@ -778,7 +778,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                   hintStyle: TextStyle(
                                                     color: Colors.black45,
                                                     fontSize: 14,
-                                                  ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                  ),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .never,
                                                 ),
                                               ),
 
@@ -2122,7 +2125,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
   }
 
   Future<void> getCategoryModels(List<String> categoriesList) async {
-    List<CategoryModel> modelList = List();
+    List<CategoryModel> modelList = [];
     for (int i = 0; i < categoriesList.length; i += 1) {
       CategoryModel categoryModel = await FirestoreManager.getCategoryForId(
         categoryID: categoriesList[i],
@@ -2842,12 +2845,13 @@ class RequestCreateFormState extends State<RequestCreateForm>
     // verify f the start and end date time is not same
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
