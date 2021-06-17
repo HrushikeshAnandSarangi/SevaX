@@ -144,7 +144,7 @@ class NewsCardViewState extends State<NewsCardView> {
                 children: <Widget>[
                   newsAuthorAndDate,
                   widget.newsModel.title == null ||
-                          widget.newsModel.title == S.of(context).no_data
+                          widget.newsModel.title == "NoData"
                       ? Offstage()
                       : newsTitle,
                   newsImage,
@@ -355,7 +355,7 @@ class NewsCardViewState extends State<NewsCardView> {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
       child: widget.newsModel.title == null ||
-              widget.newsModel.title == S.of(context).no_data
+              widget.newsModel.title == "NoData"
           ? Offstage()
           : Text(
               widget.newsModel.title.trim(),
@@ -587,7 +587,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get scrappedImage {
     return widget.newsModel.imageScraped == null ||
-            widget.newsModel.imageScraped == S.of(context).no_data
+            widget.newsModel.imageScraped == "NoData"
         ? Offstage()
         //change tag to avoid hero widget issue
         : getImageView(

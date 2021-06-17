@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
+import 'package:sevaexchange/utils/helpers/location_helper.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -475,12 +476,9 @@ class RequestModel extends DataModel {
       this.maxCredits = map['maxCredits'];
     }
 
-    // if (map.containsKey('location')) {
-    //   GeoPoint geoPoint = map['location']['geopoint'];
-
-    //   this.location = Geoflutterfire()
-    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    // }
+    if (map.containsKey('location')) {
+      this.location = getLocation(map);
+    }
 
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
@@ -770,13 +768,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
-    // if (map.containsKey('location')) {
-    //   GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
-    //       map['location']['geopoint']['_longitude']);
 
-    //   this.location = Geoflutterfire()
-    //       .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    // }
+    if (map.containsKey('location')) {
+      this.location = getLocation(map);
+    }
+
     if (map.containsKey('isRecurring')) {
       this.isRecurring = map['isRecurring'];
     }

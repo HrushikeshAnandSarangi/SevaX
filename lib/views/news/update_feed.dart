@@ -335,7 +335,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           await scrapeURLDetails(newsObject.urlsFromPost.first);
                         } else {
                           newsObject.title = '';
-                          newsObject.imageScraped = S.of(context).no_data;
+                          newsObject.imageScraped = "NoData";
                           newsObject.newsImageUrl = '';
                           newsObject.description = '';
                         }

@@ -373,30 +373,28 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         );
                         return;
                       }
-                      
-                        if (formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (createDialogContext) {
-                                dialogContext = createDialogContext;
-                                return AlertDialog(
-                                  title: Text(S.of(context).creating_feed),
-                                  content: LinearProgressIndicator(),
-                                );
-                              });
-                          scrapeURLFromSubheading(subheadingController.text);
-                          scrapeHashTagsFromSubHeadings(
-                              subheadingController.text);
 
-                          if (newsObject.urlsFromPost.length > 0) {
-                            await scrapeURLDetails(
-                                newsObject.urlsFromPost.first);
-                          }
-                          writeToDB();
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (createDialogContext) {
+                              dialogContext = createDialogContext;
+                              return AlertDialog(
+                                title: Text(S.of(context).creating_feed),
+                                content: LinearProgressIndicator(),
+                              );
+                            });
+                        scrapeURLFromSubheading(subheadingController.text);
+                        scrapeHashTagsFromSubHeadings(
+                            subheadingController.text);
+
+                        if (newsObject.urlsFromPost.length > 0) {
+                          await scrapeURLDetails(newsObject.urlsFromPost.first);
                         }
-                      
+                        writeToDB();
+                      }
                     },
                     child: Text(
                       S.of(context).create_feed,
@@ -449,7 +447,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         var result = webScraper.getScrapedData();
         if (result != null) {
           newsObject.title = result.title;
-          newsObject.imageScraped = result.image ??S.of(context).no_data;
+          newsObject.imageScraped = result.image ?? "NoData";
           newsObject.description = result.body;
         }
       }
