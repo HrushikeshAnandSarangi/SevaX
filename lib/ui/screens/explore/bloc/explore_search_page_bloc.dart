@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class ExploreSearchPageBloc {
   final _communityCategory = BehaviorSubject<List<CommunityCategoryModel>>();
@@ -65,7 +66,7 @@ class ExploreSearchPageBloc {
     }
   }
 
-  Future<void> load() async {
+  Future<void> load(String sevaUserID) async {
     FirestoreManager.getSubCategoriesFuture().then((value) {
       _requestCategory.add(value);
     });
@@ -122,8 +123,10 @@ class ExploreSearchPageBloc {
           );
         });
 
+
         ElasticSearchApi.getPublicProjects(
           distanceFilterData: distanceFilterData,
+          sevaUserID: sevaUserID,
         ).then((value) {
           _events.add(value);
         });

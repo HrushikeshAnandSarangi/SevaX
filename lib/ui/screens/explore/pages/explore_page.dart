@@ -28,6 +28,7 @@ import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
@@ -89,7 +90,16 @@ class _ExplorePageState extends State<ExplorePage> {
     _bloc = FindCommunitiesBloc();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
+      Future.delayed(
+          Duration(milliseconds: 200),
+          () => {
+                _exploreBloc.load(
+                  isUserLoggedIn: widget.isUserSignedIn,
+                  sevaUserID: SevaCore.of(context).loggedInUser != null
+                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                      : '',
+                ),
+              });
       // if (isSignedUser) {
       LocationHelper.getLocation().then((value) {
         if (value != null) {

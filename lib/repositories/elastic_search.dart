@@ -574,9 +574,8 @@ class ElasticSearchApi {
     return models;
   }
 
-  static Future<List<ProjectModel>> getPublicProjects({
-    DistanceFilterData distanceFilterData,
-  }) async {
+  static Future<List<ProjectModel>> getPublicProjects(
+      {DistanceFilterData distanceFilterData, String sevaUserID}) async {
     String endPoint = '//elasticsearch/sevaxprojects/_doc/_search?size=1000';
     dynamic body = json.encode({
       "query": {
@@ -601,7 +600,22 @@ class ElasticSearchApi {
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
         DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-        if (endDate.isAfter(DateTime.now())) {
+        logger.e('USER ID CHECK 2:  ' + sevaUserID);
+
+        //explore events listing page
+        if (endDate.isBefore(DateTime.now())) {
+          if (sevaUserID != '' &&
+              (model.creatorId == sevaUserID ||
+                  model.members == sevaUserID ||
+                  model.associatedmembers == sevaUserID)) {
+            if (AppConfig.isTestCommunity != null &&
+                AppConfig.isTestCommunity) {
+              if (!model.liveMode) models.add(model);
+            } else {
+              models.add(model);
+            }
+          }
+        } else {
           if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
             if (!model.liveMode) models.add(model);
           } else {

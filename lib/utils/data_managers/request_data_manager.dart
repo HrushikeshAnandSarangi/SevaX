@@ -710,7 +710,7 @@ Stream<List<ProjectModel>> getAllProjectListStream(
   );
 }
 
-Stream<List<ProjectModel>> getPublicProjects() async* {
+Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
   var data = Firestore.instance
       .collection('projects')
       .where('public', isEqualTo: true)
@@ -728,11 +728,25 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
             DateTime endDate =
                 DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            if (endDate.isAfter(DateTime.now())) {
-              if (AppConfig.isTestCommunity) {
-                if (model.liveMode == false) {
+            logger.e('USER ID CHECK 1:  ' + sevaUserID);
+
+            //main explore page horizontal section
+            if (endDate.isBefore(DateTime.now())) {
+              if (sevaUserID != '' &&
+                  (model.creatorId == sevaUserID ||
+                      model.members == sevaUserID ||
+                      model.associatedmembers == sevaUserID)) {
+                if (AppConfig.isTestCommunity != null &&
+                    AppConfig.isTestCommunity) {
+                  if (!model.liveMode) projectsList.add(model);
+                } else {
                   projectsList.add(model);
                 }
+              }
+            } else {
+              if (AppConfig.isTestCommunity != null &&
+                  AppConfig.isTestCommunity) {
+                if (!model.liveMode) projectsList.add(model);
               } else {
                 projectsList.add(model);
               }
