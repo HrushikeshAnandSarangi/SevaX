@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 // import 'dart:html';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -12,8 +13,6 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_via_zipcode.dart';
-
-import 'log_printer/log_printer.dart';
 
 class SearchManager {
   static Future<http.Response> makeGetRequest({
@@ -104,7 +103,8 @@ class SearchManager {
       communityList =
           await SearchCommunityViaZIPCode.getCommunitiesViaZIPCode(queryString);
     } on NoNearByCommunitesFoundException catch (e) {
-      Crashlytics.instance.log('NoNearByCommunitesViaZIPFoundException');
+      FirebaseCrashlytics.instance
+          .log('NoNearByCommunitesViaZIPFoundException');
     }
 
     List<Map<String, dynamic>> hitList =

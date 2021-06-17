@@ -8,6 +8,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class ReportMemberBloc {
   final _file = BehaviorSubject<File>();
@@ -77,11 +78,10 @@ class ReportMemberBloc {
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
     try {
-      await Firestore.instance
-          .collection('reported_users_list')
-          .document(
+      await CollectionRef.reportedUsersList
+          .doc(
               "${reportedUserModel.sevaUserID}*${reportingUserModel.currentCommunity}")
-          .setData(
+          .set(
         {
           "communityId": reportingUserModel.currentCommunity,
           "reportedId": reportedUserModel.sevaUserID,
@@ -97,7 +97,7 @@ class ReportMemberBloc {
       return true;
     } catch (e) {
       _buttonStatus.add(true);
-      Crashlytics.instance.log(e);
+      FirebaseCrashlytics.instance.log(e);
     }
   }
 

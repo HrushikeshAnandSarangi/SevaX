@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/widgets/add_manual_time_button.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -46,10 +47,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection("timebanknew")
-          .document(widget.timebankData.id)
-          .snapshots(),
+      stream: CollectionRef.timebank.doc(widget.timebankData.id).snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         double balance = 0;
@@ -57,7 +55,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
           balance = AppConfig.isTestCommunity
               ? snapshot.data['sandboxBalance']
               : snapshot.data['balance'].toDouble();
-          timebankModel = TimebankModel.fromMap(snapshot.data.data);
+          timebankModel = TimebankModel.fromMap(snapshot.data.data());
           return widget.isAdmin
               ? Container(
                   padding: const EdgeInsets.only(left: 10.0),

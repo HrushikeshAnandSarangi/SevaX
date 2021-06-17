@@ -38,7 +38,7 @@ void requestAgainDialog(context, DocumentReference ref) {
           FlatButton(
             child: Text(S.of(context).request.toUpperCase()),
             onPressed: () {
-              ref.updateData({
+              ref.update({
                 "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
                     .toString()
                     .split('.')[1]

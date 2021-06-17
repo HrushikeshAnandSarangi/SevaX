@@ -1,6 +1,5 @@
 // import 'dart:convert';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
@@ -488,10 +487,10 @@
 //       barrierDismissible: false,
 //       context: context,
 //       builder: (BuildContext context) {
-//         Firestore.instance
-//             .collection("communities")
-//             .document(widget.user.currentCommunity)
-//             .updateData(
+//         CollectionRef
+//             .communities
+//             .doc(widget.user.currentCommunity)
+//             .update(
 //           {
 //             "payment": {
 //               "status": 200,

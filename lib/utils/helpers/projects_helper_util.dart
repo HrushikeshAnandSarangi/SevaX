@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class DBHelper {
-  static var projectsRef = Firestore.instance.collection('projects');
-  static var chatsRef = Firestore.instance.collection('chatsnew');
+  static var projectsRef = CollectionRef.projects;
+  static var chatsRef = CollectionRef.chats;
   static const MESSAGING_ROOM_PARTICIPANTS = 'messagingRoomParticipants';
   static const PARTICIPATS = 'participants';
   static const PARTICIPANTS_INFO = 'participantInfo';
   static const String NO_MESSAGE = '';
   static const String ASSOCIATED_MEMBERS = 'associatedmembers';
-  static WriteBatch get batch => Firestore.instance.batch();
+  static WriteBatch get batch => CollectionRef.batch;
 }
 
 class ChatContext extends DataModel {

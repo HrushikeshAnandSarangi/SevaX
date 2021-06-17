@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -22,6 +21,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/payment_repository.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/community_category_selector.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -31,7 +31,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
@@ -136,7 +135,7 @@ class CreateEditCommunityViewFormState
   String _billingDetailsError = '';
   String communityImageError = '';
   String enteredName = '';
-  FirebaseUser firebaseUser;
+  User firebaseUser;
 
   var scollContainer = ScrollController();
 
@@ -266,7 +265,10 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(autovalidateMode: AutovalidateMode.disabled, key: _formKey, child: createSevaX);
+    return Form(
+        autovalidateMode: AutovalidateMode.disabled,
+        key: _formKey,
+        child: createSevaX);
   }
 
   void moveToTop() {
@@ -1120,12 +1122,11 @@ class CreateEditCommunityViewFormState
                                           // };
                                         }
 
-                                        await Firestore.instance
-                                            .collection("users")
-                                            .document(SevaCore.of(context)
+                                        await CollectionRef.users
+                                            .doc(SevaCore.of(context)
                                                 .loggedInUser
                                                 .email)
-                                            .updateData({
+                                            .update({
                                           'communities': FieldValue.arrayUnion(
                                               [snapshot.data.community.id]),
                                           'currentCommunity':
@@ -1343,56 +1344,8 @@ class CreateEditCommunityViewFormState
 
   BuildContext dialogContext;
 
-  void checkEmailVerified() {
-    FirebaseAuth.instance.currentUser().then((FirebaseUser firebaseUser) {
-      if (this.firebaseUser != null && this.firebaseUser == firebaseUser) {
-        return;
-      }
-      setState(() {
-        this.firebaseUser = firebaseUser;
-      });
-    });
-  }
-
   bool hasRegisteredLocation() {
     return location != null;
-  }
-
-  Future<String> _showPrivateTimebankAdvisory() {
-    return showDialog<String>(
-        context: context,
-        builder: (BuildContext _context) {
-          return AlertDialog(
-            title: Text(S.of(context).private_timebank_alert),
-            content: Text(S.of(context).private_timebank_alert_hint),
-            actions: <Widget>[
-              RaisedButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                color: Theme.of(context).accentColor,
-                textColor: FlavorConfig.values.buttonTextColor,
-                child: Text(
-                  S.of(context).ok,
-                  style: TextStyle(
-                    fontSize: dialogButtonSize,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(_context, 'Proceed');
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  S.of(context).cancel,
-                  style:
-                      TextStyle(color: Colors.red, fontSize: dialogButtonSize),
-                ),
-                onPressed: () {
-                  Navigator.pop(_context, 'Cancel');
-                },
-              )
-            ],
-          );
-        });
   }
 
   void showProgressDialog(String message) {

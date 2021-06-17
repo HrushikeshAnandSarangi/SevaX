@@ -63,12 +63,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 //  Future<void> delete() async {
-//    await Firestore.instance
-//        .collection('communities')
-//        .getDocuments()
+//    await CollectionRef
+//        .communities
+//        .get()
 //        .then((snapshot) {
 //      for (DocumentSnapshot ds in snapshot.documents) {
-//        if (ds.documentID != '73d0de2c-198b-4788-be64-a804700a88a4') {
+//        if (ds.id != '73d0de2c-198b-4788-be64-a804700a88a4') {
 //          ds.reference.delete();
 //        }
 //      }
@@ -829,7 +829,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -865,7 +865,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -892,12 +892,12 @@ class _LoginPageState extends State<LoginPage> {
     } on NoSuchMethodError catch (error) {
       logger.e(error);
       handleException();
-      Crashlytics.instance.log("No Such methods error in login!");
+      FirebaseCrashlytics.instance.log("No Such methods error in login!");
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
       handlePlatformException(error);
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
     }
     isLoading = false;
     if (user == null) {

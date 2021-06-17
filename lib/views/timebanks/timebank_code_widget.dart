@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:share/share.dart';
 
@@ -152,7 +152,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                                             .showSnackBar(snackbar);
                                       },
                                       child: Text(
-                                       S.of(context).copy_code,
+                                        S.of(context).copy_code,
                                         style: TextStyle(
                                           color: FlavorConfig
                                               .values.theme.primaryColor,
@@ -247,10 +247,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
   }
 
   Future<void> deleteShareCode(String timebankCodeId) async {
-    await Firestore.instance
-        .collection("timebankCodes")
-        .document(timebankCodeId)
-        .delete();
+    await CollectionRef.timebankCodes.doc(timebankCodeId).delete();
   }
 
   Widget headingTitle(String label) {

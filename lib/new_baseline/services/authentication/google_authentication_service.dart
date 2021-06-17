@@ -22,7 +22,7 @@
 //   Future<UserModel> login() async {
 //     log.i('login');
 //     try {
-//       FirebaseUser firebaseUser = await _handleGoogleSignIn();
+//       User firebaseUser = await _handleGoogleSignIn();
 //       return _processUser(firebaseUser);
 //     } on PlatformException catch (error) {
 //       log.e('login: PlatformException { ${error.toString()} }');
@@ -34,7 +34,7 @@
 //   }
 
 //   /// Logout the currently logged in user and clear [GoogleSignIn] and
-//   /// [FirebaseUser] cache
+//   /// [User] cache
 //   Future<void> logout() async {
 //     log.i('logout:');
 //     await _googleSignIn.signOut();
@@ -42,8 +42,8 @@
 //   }
 
 //   /// Initiate a [GoogleSignIn] flow and return the logged in user as a
-//   /// [FirebaseUser]
-//   Future<FirebaseUser> _handleGoogleSignIn() async {
+//   /// [User]
+//   Future<User> _handleGoogleSignIn() async {
 //     log.i('handleGoogleSignIn');
 
 //     GoogleSignInAccount googleUser;
@@ -63,21 +63,21 @@
 //     }
 //     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-//     AuthCredential credential = GoogleAuthProvider.getCredential(
+//     AuthCredential credential = GoogleAuthProvider.credential(
 //       accessToken: googleAuth.accessToken,
 //       idToken: googleAuth.idToken,
 //     );
 
-//     FirebaseUser user = (await _firebaseAuth.signInWithCredential(
+//     User user = (await _firebaseAuth.signInWithCredential(
 //       credential,
-//     )) as FirebaseUser;
+//     )) as User;
 
 //     log.i('handleGoogleSignIn: Got Firebase user');
 //     return user;
 //   }
 
 //   /// Process a [firebaseUser] to a [UserModel]
-//   UserModel _processUser(FirebaseUser firebaseUser) {
+//   UserModel _processUser(User firebaseUser) {
 //     log.i('_processUser: firebaseUser: ${firebaseUser?.uid}');
 //     if (firebaseUser == null) {
 //       log.w('_processUser. Firebase user is null');

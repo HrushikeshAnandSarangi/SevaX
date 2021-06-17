@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +9,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
@@ -374,10 +374,9 @@ class OfferDetails extends StatelessWidget {
                   child: Text(S.of(context).cancel_offer),
                   onPressed: () async {
                     Navigator.of(_context).pop();
-                    await Firestore.instance
-                        .collection('offers')
-                        .document(offerModel.id)
-                        .updateData({'groupOfferDataModel.isCanceled': true});
+                    await CollectionRef.offers
+                        .doc(offerModel.id)
+                        .update({'groupOfferDataModel.isCanceled': true});
                     Navigator.of(context).pop();
                   },
                 ),

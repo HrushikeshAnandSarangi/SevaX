@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
@@ -33,14 +34,13 @@ enum SoftDelete {
 Future<bool> checkExistingRequest({
   String associatedId,
 }) async {
-  return await Firestore.instance
-      .collection("softDeleteRequests")
+  return await CollectionRef.softDeleteRequests
       .where('requestStatus', isEqualTo: 'REQUESTED')
       .where('associatedId', isEqualTo: associatedId)
-      .getDocuments()
+      .get()
       .then(
     (onValue) {
-      return onValue.documents.length > 0;
+      return onValue.docs.length > 0;
     },
   ).catchError((onError) {
     return false;
@@ -250,31 +250,29 @@ WriteBatch registerSoftDeleteRequestFor({
   @required SoftDeleteRequest softDeleteRequest,
   @required SoftDelete softDeleteType,
 }) {
-  WriteBatch batch = Firestore.instance.batch();
-  var registerRequestRef = Firestore.instance
-      .collection("softDeleteRequests")
-      .document(softDeleteRequest.id);
+  WriteBatch batch = CollectionRef.batch;
+  var registerRequestRef =
+      CollectionRef.softDeleteRequests.doc(softDeleteRequest.id);
 
-  var associatedEntity = Firestore.instance
-      .collection(_getType(softDeleteType))
-      .document(softDeleteRequest.associatedId);
-  batch.setData(registerRequestRef, softDeleteRequest.toMap());
-  batch.updateData(associatedEntity, {'requestedSoftDelete': true});
+  var associatedEntity =
+      _getType(softDeleteType).doc(softDeleteRequest.associatedId);
+  batch.set(registerRequestRef, softDeleteRequest.toMap());
+  batch.update(associatedEntity, {'requestedSoftDelete': true});
 
   return batch;
 }
 
-String _getType(SoftDelete softDeleteType) {
+CollectionReference _getType(SoftDelete softDeleteType) {
   switch (softDeleteType) {
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
     case SoftDelete.REQUEST_DELETE_GROUP:
-      return "timebanknew";
+      return CollectionRef.timebank;
 
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return "projects";
+      return CollectionRef.projects;
 
     default:
-      return "NA";
+      return CollectionRef.timebank;
   }
 }
 

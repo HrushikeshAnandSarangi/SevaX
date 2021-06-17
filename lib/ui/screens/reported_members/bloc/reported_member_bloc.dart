@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class ReportedMembersBloc {
   final _reportedMembers = BehaviorSubject<List<ReportedMembersModel>>();
@@ -14,20 +15,20 @@ class ReportedMembersBloc {
       String timebankId, String communityId, bool isFromTimebank) {
     log("fetching members for Seva Community $timebankId");
     Query query = isFromTimebank
-        ? Firestore.instance.collection("reported_users_list").where(
-              "communityId",
-              isEqualTo: communityId,
-            )
-        : Firestore.instance.collection("reported_users_list").where(
-              "timebankIds",
-              arrayContains: timebankId,
-            );
+        ? CollectionRef.reportedUsersList.where(
+            "communityId",
+            isEqualTo: communityId,
+          )
+        : CollectionRef.reportedUsersList.where(
+            "timebankIds",
+            arrayContains: timebankId,
+          );
 
     query.snapshots().listen((QuerySnapshot event) {
       List<ReportedMembersModel> members = [];
-      event.documents.forEach((DocumentSnapshot element) {
+      event.docs.forEach((DocumentSnapshot element) {
         ReportedMembersModel member =
-            ReportedMembersModel.fromMap(element.data);
+            ReportedMembersModel.fromMap(element.data());
         members.add(member);
         log(member.reportedId);
       });

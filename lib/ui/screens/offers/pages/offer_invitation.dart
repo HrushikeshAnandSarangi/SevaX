@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -130,7 +130,8 @@ class _FindVolunteersViewStateForOffer
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),
@@ -176,7 +177,6 @@ class ElasticSearchResultsHolder extends StatefulWidget {
 
 class _ElasticSearchResultsHolderState
     extends State<ElasticSearchResultsHolder> {
-  final _firestore = Firestore.instance;
   HashMap<String, dynamic> userFilterMap = HashMap();
 
   bool checkValidSting(String str) {
@@ -201,12 +201,8 @@ class _ElasticSearchResultsHolderState
       isAdmin = true;
     }
 
-    _firestore
-        .collection('offers')
-        .document(widget.offerId)
-        .snapshots()
-        .listen((model) {
-      offerModel = OfferModel.fromMap(model.data);
+    CollectionRef.offers.doc(widget.offerId).snapshots().listen((model) {
+      offerModel = OfferModel.fromMap(model.data());
 
       offerAcceptors = offerModel.individualOfferDataModel.offerAcceptors;
       offerInvites = offerModel.individualOfferDataModel.offerInvites;
@@ -287,12 +283,8 @@ class _ElasticSearchResultsHolderState
   }
 
   void refresh() {
-    _firestore
-        .collection('offers')
-        .document(widget.offerId)
-        .snapshots()
-        .listen((model) {
-      offerModel = OfferModel.fromMap(model.data);
+    CollectionRef.offers.doc(widget.offerId).snapshots().listen((model) {
+      offerModel = OfferModel.fromMap(model.data());
       try {
         setState(() {
           buildWidget();

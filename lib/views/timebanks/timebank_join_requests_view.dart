@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_slidable/flutter_slidable.dart';
 // import 'package:sevaexchange/constants/sevatitles.dart';
@@ -38,7 +39,7 @@
 //         title: Text('Join Requests'),
 //       ),
 //       body: StreamBuilder<QuerySnapshot>(
-//         stream: Firestore.instance
+//         stream: CollectionRef
 //             .collection('join_requests_timebanks')
 //             .where('timebankid', isEqualTo: widget.timebankModel.id)
 //             .snapshots(),
@@ -109,22 +110,22 @@
 
 //                               timebankModel.members.add(newMember.email);
 
-//                               Firestore.instance
+//                               CollectionRef
 //                                   .collection('timebanks')
-//                                   .document(widget.timebankModel.id)
-//                                   .updateData(timebankModel.toMap());
+//                                   .doc(widget.timebankModel.id)
+//                                   .update(timebankModel.toMap());
 
-//                               Firestore.instance
-//                                   .collection('users')
-//                                   .document(item['requestor_email'])
-//                                   .updateData({
+//                               CollectionRef
+//                                   .users
+//                                   .doc(item['requestor_email'])
+//                                   .update({
 //                                 'membershipTimebanks':
 //                                     FieldValue.arrayUnion([timebankModel.id])
 //                               });
 
-//                               Firestore.instance
+//                               CollectionRef
 //                                   .collection('join_requests_timebanks')
-//                                   .document(timebankModel.id +
+//                                   .doc(timebankModel.id +
 //                                       '*' +
 //                                       item['requestor_email'])
 //                                   .delete();
@@ -137,9 +138,9 @@
 //                             color: Colors.red,
 //                             icon: Icons.delete,
 //                             onTap: () {
-//                               Firestore.instance
+//                               CollectionRef
 //                                   .collection('join_requests_timebanks')
-//                                   .document(timebankModel.id +
+//                                   .doc(timebankModel.id +
 //                                       '*' +
 //                                       item['requestor_email'])
 //                                   .delete();

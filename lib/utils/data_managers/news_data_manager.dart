@@ -7,32 +7,25 @@ import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 import '../app_config.dart';
 import '../location_utility.dart';
 
-
 Geoflutterfire geos = Geoflutterfire();
 Future<void> createNews({@required NewsModel newsObject}) async {
-  await Firestore.instance
-      .collection('news')
-      .document(newsObject.id)
-      .setData(newsObject.toMap());
+  await CollectionRef.feeds.doc(newsObject.id).set(newsObject.toMap());
 }
 
 Future<void> updateNews({@required NewsModel newsObject}) async {
-  await Firestore.instance
-      .collection('news')
-      .document(newsObject.id)
-      .updateData(
+  await CollectionRef.feeds.doc(newsObject.id).update(
         newsObject.toMap(),
       );
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
-  var data = Firestore.instance
-      .collection('news')
+  var data = CollectionRef.feeds
       .where('timebanksposted', arrayContains: timebankID)
       .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
@@ -43,8 +36,8 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
           handleData: (querySnapshot, newsSink) async {
     List<NewsModel> modelList = [];
 
-    querySnapshot.documents.forEach((document) {
-      var newsModel = NewsModel.fromMap(document.data);
+    querySnapshot.docs.forEach((document) {
+      var newsModel = NewsModel.fromMap(document.data());
       modelList.add(newsModel);
     });
 
@@ -58,11 +51,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 }
 
 Future<DocumentSnapshot> getUserInfo(String userEmail) {
-  return Firestore.instance
-      .collection("users")
-      .document(userEmail)
-      .get()
-      .then((onValue) {
+  return CollectionRef.users.doc(userEmail).get().then((onValue) {
     return onValue;
   });
 }
@@ -79,7 +68,7 @@ Stream<List<NewsModel>> getNearNewsStream(
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
 
-  var query = Firestore.instance.collection('news').where(
+  var query = CollectionRef.feeds.where(
     'entity',
     isEqualTo: {
       'entityType': 'timebanks',
@@ -109,7 +98,7 @@ Stream<List<NewsModel>> getNearNewsStream(
     List<NewsModel> modelList = [];
 
     querySnapshot.forEach((document) {
-      var news = NewsModel.fromMap(document.data);
+      var news = NewsModel.fromMap(document.data());
       futures.add(getUserInfo(news.email));
       modelList.add(news);
     });
@@ -136,8 +125,7 @@ Stream<List<NewsModel>> getNearNewsStream(
 }
 
 Stream<List<NewsModel>> getAllNewsStream() async* {
-  var data = Firestore.instance
-      .collection('news')
+  var data = CollectionRef.feeds
       .orderBy('posttimestamp', descending: true)
       .snapshots();
 
@@ -145,15 +133,14 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
       StreamTransformer<QuerySnapshot, List<NewsModel>>.fromHandlers(
           handleData: (querySnapshot, newsSink) {
     List<NewsModel> modelList = [];
-    querySnapshot.documents.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data));
+    querySnapshot.docs.forEach((document) {
+      modelList.add(NewsModel.fromMap(document.data()));
     });
     newsSink.add(modelList);
   }));
 }
 
 Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  
   Position userLocation;
 
   userLocation = await Geolocator.getCurrentPosition();
@@ -168,7 +155,7 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
   }
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('news');
+  var query = CollectionRef.feeds;
   var data = geos.collection(collectionRef: query).within(
       center: center,
       radius: radius.toDouble(),
@@ -180,7 +167,7 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
           handleData: (querySnapshot, newsSink) {
     List<NewsModel> modelList = [];
     querySnapshot.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data));
+      modelList.add(NewsModel.fromMap(document.data()));
     });
     modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
@@ -191,20 +178,16 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
 
 Future<NewsModel> getNewsForId(String newsId) async {
   NewsModel newsModel;
-  await Firestore.instance
-      .collection('news')
-      .document(newsId)
-      .get()
-      .then((snapshot) {
+  await CollectionRef.feeds.doc(newsId).get().then((snapshot) {
     if (snapshot.data == null) return null;
-    newsModel = NewsModel.fromMap(snapshot.data);
+    newsModel = NewsModel.fromMap(snapshot.data());
   });
 
   return newsModel;
 }
 
 Future deleteNews(NewsModel newsModel) async {
-  await Firestore.instance.collection('news').document(newsModel.id).delete();
+  await CollectionRef.feeds.doc(newsModel.id).delete();
 }
 
 Future _getLocation(double latitude, double longitude) async {

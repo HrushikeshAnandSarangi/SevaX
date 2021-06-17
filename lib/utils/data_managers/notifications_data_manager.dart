@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -13,19 +14,15 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import '../utils.dart';
 
 Future<bool> fetchProtectedStatus(String timebankId) async {
-  DocumentSnapshot timebank = await Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
-      .get();
-  return timebank.data['protected'];
+  DocumentSnapshot timebank =
+      await CollectionRef.timebank.doc(timebankId).get();
+  return timebank.data()['protected'];
 }
 
 Future<TimebankModel> fetchTimebankData(String timebankId) async {
-  DocumentSnapshot timebank = await Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
-      .get();
-  return TimebankModel.fromMap(timebank.data);
+  DocumentSnapshot timebank =
+      await CollectionRef.timebank.doc(timebankId).get();
+  return TimebankModel.fromMap(timebank.data());
 }
 
 //Fetch timebank from timebank id
@@ -37,21 +34,19 @@ Future<void> createAcceptRequestNotification({
     case RequestMode.PERSONAL_REQUEST:
       UserModel user =
           await getUserForId(sevaUserId: notificationsModel.targetUserId);
-      await Firestore.instance
-          .collection('users')
-          .document(user.email)
+      await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap());
+          .doc(notificationsModel.id)
+          .set(notificationsModel.toMap());
       break;
 
     case RequestMode.TIMEBANK_REQUEST:
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(notificationsModel.timebankId)
+      await CollectionRef.timebank
+          .doc(notificationsModel.timebankId)
           .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap());
+          .doc(notificationsModel.id)
+          .set(notificationsModel.toMap());
       break;
   }
 }
@@ -70,28 +65,25 @@ Future<void> withdrawAcceptRequestNotification({
   switch (requestModel.requestMode) {
     case RequestMode.TIMEBANK_REQUEST:
       withdrawlNotification.isTimebankNotification = true;
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(requestModel.timebankId)
+      await CollectionRef.timebank
+          .doc(requestModel.timebankId)
           .collection('notifications')
-          .document(withdrawlNotification.id)
-          .setData(withdrawlNotification.toMap());
+          .doc(withdrawlNotification.id)
+          .set(withdrawlNotification.toMap());
 
-      QuerySnapshot snapshotQuery = await Firestore.instance
-          .collection('timebanknew')
-          .document(notificationsModel.timebankId)
+      QuerySnapshot snapshotQuery = await CollectionRef.timebank
+          .doc(notificationsModel.timebankId)
           .collection('notifications')
           .where('type', isEqualTo: 'RequestAccept')
           .where('data.id', isEqualTo: requestModel.id)
           .where('data.email', isEqualTo: requestModel.email)
-          .getDocuments();
-      snapshotQuery.documents.forEach(
+          .get();
+      snapshotQuery.docs.forEach(
         (document) async {
-          await Firestore.instance
-              .collection('timebanknew')
-              .document(notificationsModel.timebankId)
+          await CollectionRef.timebank
+              .doc(notificationsModel.timebankId)
               .collection('notifications')
-              .document(document.documentID)
+              .doc(document.id)
               .delete();
         },
       );
@@ -103,28 +95,25 @@ Future<void> withdrawAcceptRequestNotification({
           await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
       withdrawlNotification.isTimebankNotification = false;
-      await Firestore.instance
-          .collection('users')
-          .document(user.email)
+      await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(withdrawlNotification.id)
-          .setData(withdrawlNotification.toMap());
+          .doc(withdrawlNotification.id)
+          .set(withdrawlNotification.toMap());
 
-      QuerySnapshot querySnapshot = await Firestore.instance
-          .collection('users')
-          .document(user.email)
+      QuerySnapshot querySnapshot = await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
           .where('type', isEqualTo: 'RequestAccept')
           .where('data.id', isEqualTo: requestModel.id)
           .where('data.email', isEqualTo: requestModel.email)
-          .getDocuments();
-      querySnapshot.documents.forEach(
+          .get();
+      querySnapshot.docs.forEach(
         (document) {
-          Firestore.instance
-              .collection('users')
-              .document(user.email)
+          CollectionRef.users
+              .doc(user.email)
               .collection('notifications')
-              .document(document.documentID)
+              .doc(document.id)
               .delete();
         },
       );
@@ -159,24 +148,22 @@ Future<QuerySnapshot> _getQueryForNotification({
 }) async {
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
-      return await Firestore.instance
-          .collection('users')
-          .document(requestModel.email)
+      return await CollectionRef.users
+          .doc(requestModel.email)
           .collection('notifications')
           .where('isRead', isEqualTo: false)
           .where('type', isEqualTo: 'RequestCompleted')
           .where('data.id', isEqualTo: requestModel.id)
-          .getDocuments();
+          .get();
 
     case RequestMode.TIMEBANK_REQUEST:
-      return Firestore.instance
-          .collection('timebanknew')
-          .document(requestModel.timebankId)
+      return CollectionRef.timebank
+          .doc(requestModel.timebankId)
           .collection('notifications')
           .where('isRead', isEqualTo: false)
           .where('type', isEqualTo: 'RequestCompleted')
           .where('data.id', isEqualTo: requestModel.id)
-          .getDocuments();
+          .get();
 
     default:
       return null;
@@ -192,9 +179,9 @@ Future<String> getNotificationId(
   );
 
   var result = "";
-  for (var i = 0; i < notifications.documents.length; i++) {
-    var onValue = notifications.documents[i];
-    var notification = NotificationsModel.fromMap(onValue.data);
+  for (var i = 0; i < notifications.docs.length; i++) {
+    var onValue = notifications.docs[i];
+    var notification = NotificationsModel.fromMap(onValue.data());
     if (notification != null) {
       RequestModel _requestModel = RequestModel.fromMap(notification.data);
       if (_requestModel != null) {
@@ -215,21 +202,19 @@ Future<void> removeAcceptRequestNotification({
   var requestModel = RequestModel.fromMap(model.data);
   switch (requestModel.requestMode) {
     case RequestMode.TIMEBANK_REQUEST:
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
+      await CollectionRef.timebank
+          .doc(model.timebankId)
           .collection('notifications')
-          .document(notificationId)
+          .doc(notificationId)
           .delete();
       break;
 
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.senderUserId);
-      await Firestore.instance
-          .collection('users')
-          .document(user.email)
+      await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(notificationId)
+          .doc(notificationId)
           .delete();
 
       break;
@@ -240,24 +225,22 @@ Future<void> createRequestApprovalNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  Firestore.instance
-      .collection('users')
-      .document(user.email)
+  CollectionRef.users
+      .doc(user.email)
       .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+      .doc(model.id)
+      .set(model.toMap());
 }
 
 Future<void> createApprovalNotificationForMember({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  Firestore.instance
-      .collection('users')
-      .document(user.email)
+  CollectionRef.users
+      .doc(user.email)
       .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+      .doc(model.id)
+      .set(model.toMap());
 }
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
@@ -266,23 +249,21 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
       log('User Email to Notify : ' + user.email);
-      await Firestore.instance
-          .collection('users')
-          .document(user.email)
+      await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true);
+          .doc(model.id)
+          .set(model.toMap(), SetOptions(merge: true));
       break;
 
     case RequestMode.TIMEBANK_REQUEST:
       log('Timabank ID:  ' + model.timebankId);
       log('Model ID: ' + model.id);
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
+      await CollectionRef.timebank
+          .doc(model.timebankId)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true);
+          .doc(model.id)
+          .set(model.toMap(), SetOptions(merge: true));
       break;
   }
 }
@@ -295,15 +276,14 @@ Future<void> processLoans({
   @required String communityId,
 }) async {
   // get all previous loans of this user with in the timebank;
-  var loans = await Firestore.instance
-      .collection("transactions")
+  var loans = await CollectionRef.transactions
       .where('timebankid', isEqualTo: timebankId)
       .where('type', isEqualTo: "ADMIN_DONATE_TOUSER")
       .where('to', isEqualTo: to)
-      .getDocuments()
+      .get()
       .then(
     (onValue) {
-      return onValue.documents;
+      return onValue.docs;
     },
   ).catchError((onError) {
     return null;
@@ -311,21 +291,20 @@ Future<void> processLoans({
   var loanamount = 0;
   if (loans != null) {
     for (var i = 0; i < loans.length; i++) {
-      TransactionModel temp = TransactionModel.fromMap(loans[i].data);
+      TransactionModel temp = TransactionModel.fromMap(loans[i].data());
       loanamount += temp.credits.toInt();
     }
   }
 
   // get all paid loans of this user with in the timebank;
-  var paidloans = await Firestore.instance
-      .collection("transactions")
+  var paidloans = await CollectionRef.transactions
       .where('timebankid', isEqualTo: timebankId)
       .where('type', isEqualTo: "USER_PAYLOAN_TOTIMEBANK")
       .where('from', isEqualTo: to)
-      .getDocuments()
+      .get()
       .then(
     (onValue) {
-      return onValue.documents;
+      return onValue.docs;
     },
   ).catchError((onError) {
     return null;
@@ -333,7 +312,7 @@ Future<void> processLoans({
   var paidamount = 0;
   if (paidloans != null) {
     for (var i = 0; i < paidloans.length; i++) {
-      TransactionModel temp = TransactionModel.fromMap(loans[i].data);
+      TransactionModel temp = TransactionModel.fromMap(loans[i].data());
       paidamount += temp.credits.toInt();
     }
   }
@@ -375,12 +354,11 @@ Future<void> createTaskCompletedApprovedNotification({
   //     break;
   // }
 
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
+  await CollectionRef.users
+      .doc(user.email)
       .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+      .doc(model.id)
+      .set(model.toMap());
 }
 
 // Future<void> createTransactionNotification({
@@ -390,36 +368,34 @@ Future<void> createTaskCompletedApprovedNotification({
 
 //   switch (requestModel.requestMode) {
 //     case RequestMode.TIMEBANK_REQUEST:
-//       await Firestore.instance
-//           .collection('timebanknew')
-//           .document(model.timebankId)
+//       await CollectionRef
+//           .timebank
+//           .doc(model.timebankId)
 //           .collection('notifications')
-//           .document(model.id)
-//           .setData(model.toMap());
+//           .doc(model.id)
+//           .set(model.toMap());
 //       break;
 //     case RequestMode.PERSONAL_REQUEST:
 //       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-//       await Firestore.instance
-//           .collection('users')
-//           .document(user.email)
+//       await CollectionRef
+//           .users
+//           .doc(user.email)
 //           .collection('notifications')
-//           .document(model.id)
-//           .setData(model.toMap());
+//           .doc(model.id)
+//           .set(model.toMap());
 //       break;
 //   }
 // }
 
 Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
   try {
-    await Firestore.instance
-        .collection('claimedRequestStatus')
-        .document(model.id)
-        .updateData({model.timestamp.toString(): model.toMap()});
+    await CollectionRef.claimedRequestStatus
+        .doc(model.id)
+        .update({model.timestamp.toString(): model.toMap()});
   } on Exception catch (exception) {
-    await Firestore.instance
-        .collection('claimedRequestStatus')
-        .document(model.id)
-        .setData({model.timestamp.toString(): model.toMap()});
+    await CollectionRef.claimedRequestStatus
+        .doc(model.id)
+        .set({model.timestamp.toString(): model.toMap()});
   }
 }
 
@@ -430,18 +406,16 @@ Future<void> offerAcceptNotification({
 
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
+      ? await CollectionRef.timebank
+          .doc(model.timebankId)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
+          .doc(model.id)
+          .set(model.toMap())
+      : await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
+          .doc(model.id)
+          .set(model.toMap());
 }
 
 Future<void> offerRejectNotification({
@@ -451,42 +425,38 @@ Future<void> offerRejectNotification({
 
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
+      ? await CollectionRef.timebank
+          .doc(model.timebankId)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
+          .doc(model.id)
+          .set(model.toMap())
+      : await CollectionRef.users
+          .doc(user.email)
           .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
+          .doc(model.id)
+          .set(model.toMap());
 }
 
 Future<void> readUserNotification(
   String notificationId,
   String userEmail,
 ) async {
-  await Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  await CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
-      .document(notificationId)
-      .updateData({
+      .doc(notificationId)
+      .update({
     'isRead': true,
   });
 }
 
 Future<void> unreadUserNotification(
     String notificationId, String userEmail) async {
-  await Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  await CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
-      .document(notificationId)
-      .updateData({
+      .doc(notificationId)
+      .update({
     'isRead': false,
   });
 }
@@ -495,12 +465,11 @@ Future<void> readTimeBankNotification({
   String notificationId,
   String timebankId,
 }) async {
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
+  await CollectionRef.timebank
+      .doc(timebankId)
       .collection('notifications')
-      .document(notificationId)
-      .updateData({
+      .doc(notificationId)
+      .update({
     'isRead': true,
   });
 }
@@ -516,22 +485,20 @@ Future<void> readTimeBankNotificationOneToManyCreatorRejectedCompletion({
         .e('-------------RequestModel id 1: ${requestModel.id}--------------');
     logger.e(
         '-------------Timebank ID 1: ${requestModel.timebankId}--------------');
-    QuerySnapshot snapshotQuery = await Firestore.instance
-        .collection('timebanknew')
-        .document(requestModel.timebankId)
+    QuerySnapshot snapshotQuery = await CollectionRef.timebank
+        .doc(requestModel.timebankId)
         .collection('notifications')
         .where('isRead', isEqualTo: false)
         .where('type', isEqualTo: 'OneToManyRequestCompleted')
         .where('data.id', isEqualTo: requestModel.id)
-        .getDocuments();
-    snapshotQuery.documents.forEach(
+        .get();
+    snapshotQuery.docs.forEach(
       (document) async {
-        await Firestore.instance
-            .collection('timebanknew')
-            .document(requestModel.timebankId)
+        await CollectionRef.timebank
+            .doc(requestModel.timebankId)
             .collection('notifications')
-            .document(document.documentID)
-            .updateData({
+            .doc(document.id)
+            .update({
           'isRead': true,
         });
       },
@@ -550,22 +517,20 @@ Future<void> readUserNotificationOneToManyWhenSpeakerIsInvited({
   if (!fromNotification) {
     logger.e('-------------User Email: ${userEmail}--------------');
     logger.e('-------------RequestModel id: ${requestModel.id}--------------');
-    QuerySnapshot snapshotQuery = await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    QuerySnapshot snapshotQuery = await CollectionRef.users
+        .doc(userEmail)
         .collection('notifications')
         .where('isRead', isEqualTo: false)
         .where('type', isEqualTo: 'OneToManyRequestAccept')
         .where('data.id', isEqualTo: requestModel.id)
-        .getDocuments();
-    snapshotQuery.documents.forEach(
+        .get();
+    snapshotQuery.docs.forEach(
       (document) async {
-        await Firestore.instance
-            .collection('users')
-            .document(userEmail)
+        await CollectionRef.users
+            .doc(userEmail)
             .collection('notifications')
-            .document(document.documentID)
-            .updateData({
+            .doc(document.id)
+            .update({
           'isRead': true,
         });
       },
@@ -588,22 +553,20 @@ Future<void> readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion({
     logger.e('-------------User Email: ${userEmail}--------------');
     logger.e('-------------RequestModel id: ${requestModel.id}--------------');
     try {
-      QuerySnapshot snapshotQuery = await Firestore.instance
-          .collection('users')
-          .document(userEmail)
+      QuerySnapshot snapshotQuery = await CollectionRef.users
+          .doc(userEmail)
           .collection('notifications')
           .where('isRead', isEqualTo: false)
           .where('type', isEqualTo: 'OneToManyCreatorRejectedCompletion')
           .where('data.id', isEqualTo: requestModel.id)
-          .getDocuments();
-      snapshotQuery.documents.forEach(
+          .get();
+      snapshotQuery.docs.forEach(
         (document) async {
-          await Firestore.instance
-              .collection('users')
-              .document(userEmail)
+          await CollectionRef.users
+              .doc(userEmail)
               .collection('notifications')
-              .document(document.documentID)
-              .updateData({
+              .doc(document.id)
+              .update({
             'isRead': true,
           });
         },
@@ -620,9 +583,8 @@ Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,
 }) async* {
-  var data = Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  var data = CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .where(
@@ -635,9 +597,9 @@ Stream<List<NotificationsModel>> getNotifications({
     StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
       handleData: (querySnapshot, notificationSink) {
         List<NotificationsModel> notifications = [];
-        querySnapshot.documents.forEach((documentSnapshot) {
+        querySnapshot.docs.forEach((documentSnapshot) {
           NotificationsModel model = NotificationsModel.fromMap(
-            documentSnapshot.data,
+            documentSnapshot.data(),
           );
           notifications.add(model);
         });
@@ -652,7 +614,7 @@ Future updateUserCommunity({
   String communityId,
   String userEmail,
 }) async {
-  await Firestore.instance.collection('users').document(userEmail).updateData({
+  await CollectionRef.users.doc(userEmail).update({
     'communities': FieldValue.arrayUnion([communityId]),
   });
 }
@@ -661,10 +623,7 @@ Future addMemberToTimebank({
   String timebankId,
   String newUserSevaId,
 }) async {
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
-      .updateData({
+  await CollectionRef.timebank.doc(timebankId).update({
     'members': FieldValue.arrayUnion([newUserSevaId]),
   });
 }
@@ -672,9 +631,8 @@ Future addMemberToTimebank({
 Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
 }) async* {
-  var data = Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
+  var data = CollectionRef.timebank
+      .doc(timebankId)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .orderBy('timestamp', descending: true)
@@ -685,9 +643,9 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
       handleData: (querySnapshot, notificationSink) {
         List<NotificationsModel> notifications = [];
 
-        querySnapshot.documents.forEach((documentSnapshot) {
+        querySnapshot.docs.forEach((documentSnapshot) {
           NotificationsModel model = NotificationsModel.fromMap(
-            documentSnapshot.data,
+            documentSnapshot.data(),
           );
           if (FlavorConfig.appFlavor != Flavor.APP) {
             if (model.type != NotificationType.TransactionDebit)
@@ -722,17 +680,16 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
 Future<bool> isUnreadNotification(String userEmail) async {
   bool isNotification = false;
   List<NotificationsModel> notifications = [];
-  await Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  await CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      .getDocuments()
+      .get()
       .then((QuerySnapshot querySnapshot) {
-    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
       NotificationsModel model = NotificationsModel.fromMap(
-        documentSnapshot.data,
+        documentSnapshot.data(),
       );
       if (model.type != NotificationType.TransactionDebit)
         notifications.add(model);
@@ -750,9 +707,8 @@ Future<List<NotificationsModel>> getCompletedNotifications(
   String communityId,
 ) async {
   List<NotificationsModel> res = [];
-  await Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  await CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
@@ -760,11 +716,11 @@ Future<List<NotificationsModel>> getCompletedNotifications(
         'communityId',
         isEqualTo: communityId,
       )
-      .getDocuments()
+      .get()
       .then((QuerySnapshot querySnapshot) {
-    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
       NotificationsModel model = NotificationsModel.fromMap(
-        documentSnapshot.data,
+        documentSnapshot.data(),
       );
       if (model.type == NotificationType.RequestCompleted) res.add(model);
     });
@@ -776,9 +732,8 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
   String userEmail,
   String communityId,
 ) async* {
-  var data = Firestore.instance
-      .collection('users')
-      .document(userEmail)
+  var data = CollectionRef.users
+      .doc(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
@@ -793,9 +748,9 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
       handleData: (querySnapshot, notificationSink) {
         List<NotificationsModel> notifications = [];
 
-        querySnapshot.documents.forEach((documentSnapshot) {
+        querySnapshot.docs.forEach((documentSnapshot) {
           NotificationsModel model = NotificationsModel.fromMap(
-            documentSnapshot.data,
+            documentSnapshot.data(),
           );
           if (model.type == NotificationType.RequestCompletedApproved) {
             notifications.add(model);

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class OfferCardWidget extends StatelessWidget {
   final String offerId;
@@ -123,10 +123,7 @@ class OfferCardWidget extends StatelessWidget {
                       onPressed: () {
                         if (!offerAcceptors.contains(userModel.sevaUserID) &&
                             !offerInvites.contains(userModel.sevaUserID)) {
-                          Firestore.instance
-                              .collection('offers')
-                              .document(offerId)
-                              .updateData({
+                          CollectionRef.offers.doc(offerId).update({
                             'individualOfferDataModeferInvites':
                                 FieldValue.arrayUnion([userModel.sevaUserID])
                           });
@@ -150,12 +147,11 @@ class OfferCardWidget extends StatelessWidget {
                                 SevaCore.of(context).loggedInUser.sevaUserID
                             ..data = offerModel.toMap();
 
-                          Firestore.instance
-                              .collection('users')
-                              .document(userModel.email)
+                          CollectionRef.users
+                              .doc(userModel.email)
                               .collection('notifications')
-                              .document(notificationModel.id)
-                              .setData(notificationModel.toMap());
+                              .doc(notificationModel.id)
+                              .set(notificationModel.toMap());
                         }
                       },
                       child: Text(

@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/material.dart';
 // import 'package:sevaexchange/models/user_model.dart';
 // import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -66,10 +67,10 @@
 //       (user.currentCommunity.isEmpty ||
 //           user.currentCommunity == null ||
 //           user.currentCommunity == " ")) {
-//     await Firestore.instance
-//         .collection("users")
-//         .document(user.email)
-//         .updateData({
+//     await CollectionRef
+//         .users
+//         .doc(user.email)
+//         .update({
 //       'currentCommunity': user.communities[0],
 //     }).then((_) {
 //       UserModel newUser = user;

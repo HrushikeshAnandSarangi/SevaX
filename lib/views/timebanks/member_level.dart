@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 import '../../flavor_config.dart';
 
@@ -17,7 +18,7 @@ class MembershipManager {
     String associatedName,
     NotificationType notificationType,
   }) async {
-    var batch = Firestore.instance.batch();
+    var batch = CollectionRef.batch;
     NotificationsModel notification = new NotificationsModel(
       communityId: communityId,
       id: Uuid().generateV4(),
@@ -35,15 +36,15 @@ class MembershipManager {
     );
     switch (notificationType) {
       case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
-        batch.updateData(
-          Firestore.instance.collection('communities').document(communityId),
+        batch.update(
+          CollectionRef.communities.doc(communityId),
           {
             'admins': FieldValue.arrayUnion([targetUserId])
           },
         );
 
-        batch.updateData(
-          Firestore.instance.collection('timebanknew').document(timebankId),
+        batch.update(
+          CollectionRef.timebank.doc(timebankId),
           {
             'admins': FieldValue.arrayUnion([targetUserId])
           },
@@ -52,15 +53,15 @@ class MembershipManager {
         break;
 
       case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
-        batch.updateData(
-          Firestore.instance.collection('communities').document(communityId),
+        batch.update(
+          CollectionRef.communities.doc(communityId),
           {
             'admins': FieldValue.arrayRemove([targetUserId])
           },
         );
 
-        batch.updateData(
-          Firestore.instance.collection('timebanknew').document(timebankId),
+        batch.update(
+          CollectionRef.timebank.doc(timebankId),
           {
             'admins': FieldValue.arrayRemove([targetUserId])
           },
@@ -70,12 +71,11 @@ class MembershipManager {
 
       default:
     }
-    batch.setData(
-      Firestore.instance
-          .collection('users')
-          .document(userEmail)
+    batch.set(
+      CollectionRef.users
+          .doc(userEmail)
           .collection('notifications')
-          .document(notification.id),
+          .doc(notification.id),
       notification.toMap(),
     );
     return await batch.commit().then((value) => true).catchError((onError) {
@@ -93,7 +93,7 @@ class MembershipManager {
     String associatedName,
     NotificationType notificationType,
   }) async {
-    var batch = Firestore.instance.batch();
+    var batch = CollectionRef.batch;
     NotificationsModel notification = new NotificationsModel(
       communityId: communityId,
       id: Uuid().generateV4(),
@@ -113,16 +113,16 @@ class MembershipManager {
       case NotificationType.ADMIN_PROMOTED_AS_ORGANIZER:
         log('inside promote');
 
-        batch.updateData(
-          Firestore.instance.collection('communities').document(communityId),
+        batch.update(
+          CollectionRef.communities.doc(communityId),
           {
             'organizers': FieldValue.arrayUnion([targetUserId]),
             'admins': FieldValue.arrayRemove([targetUserId])
           },
         );
 
-        batch.updateData(
-          Firestore.instance.collection('timebanknew').document(timebankId),
+        batch.update(
+          CollectionRef.timebank.doc(timebankId),
           {
             'organizers': FieldValue.arrayUnion([targetUserId]),
             'admins': FieldValue.arrayRemove([targetUserId])
@@ -134,16 +134,16 @@ class MembershipManager {
       case NotificationType.ADMIN_DEMOTED_FROM_ORGANIZER:
         log('inside demote');
 
-        batch.updateData(
-          Firestore.instance.collection('communities').document(communityId),
+        batch.update(
+          CollectionRef.communities.doc(communityId),
           {
             'organizers': FieldValue.arrayRemove([targetUserId]),
             'admins': FieldValue.arrayUnion([targetUserId])
           },
         );
 
-        batch.updateData(
-          Firestore.instance.collection('timebanknew').document(timebankId),
+        batch.update(
+          CollectionRef.timebank.doc(timebankId),
           {
             'organizers': FieldValue.arrayRemove([targetUserId]),
             'admins': FieldValue.arrayUnion([targetUserId])
@@ -154,12 +154,11 @@ class MembershipManager {
 
       default:
     }
-    batch.setData(
-      Firestore.instance
-          .collection('users')
-          .document(userEmail)
+    batch.set(
+      CollectionRef.users
+          .doc(userEmail)
           .collection('notifications')
-          .document(notification.id),
+          .doc(notification.id),
       notification.toMap(),
     );
     return await batch.commit().then((value) => true).catchError((onError) {

@@ -6,6 +6,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -52,13 +53,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
   @override
   void initState() {
     hasPellError = false;
-    Firestore.instance
-        .collection('interests')
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
+    CollectionRef.interests.get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
         if (data[widget.languageCode] != null) {
-          interests[data.documentID] = data[widget.languageCode];
+          interests[data.id] = data[widget.languageCode];
         }
       });
 
@@ -486,10 +484,7 @@ class SkillsAndInterestBloc {
     String interestTitle,
     String interestLanguage,
   }) async {
-    await Firestore.instance
-        .collection('interests')
-        .document(interestId)
-        .setData(
+    await CollectionRef.interests.doc(interestId).set(
       {
         'name': interestTitle?.firstWordUpperCase(),
         'lang': interestLanguage,
@@ -504,7 +499,7 @@ class SkillsAndInterestBloc {
     String skillTitle,
     String skillLanguage,
   }) async {
-    await Firestore.instance.collection('skills').document(skillId).setData(
+    await CollectionRef.skills.doc(skillId).set(
       {
         'name': skillTitle?.firstWordUpperCase(),
         'lang': skillLanguage,

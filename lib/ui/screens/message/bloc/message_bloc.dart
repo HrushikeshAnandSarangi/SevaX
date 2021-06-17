@@ -7,9 +7,9 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class MessageBloc extends BlocBase {
@@ -84,7 +84,7 @@ class MessageBloc extends BlocBase {
             chats.add(chat);
           }
         } else {
-          Crashlytics.instance
+          FirebaseCrashlytics.instance
               .log('Chat issue with same memeber chat id ${chat.id}');
 
           log('chat id is ${chat.id}');
@@ -97,8 +97,7 @@ class MessageBloc extends BlocBase {
         _personalMessageCount.add(unreadCount);
     });
 
-    Firestore.instance
-        .collection("timebanknew")
+    CollectionRef.timebank
         .where("community_id", isEqualTo: communityId)
         .where("admins", arrayContains: userModel.sevaUserID)
         .orderBy("lastMessageTimestamp", descending: true)
@@ -106,7 +105,7 @@ class MessageBloc extends BlocBase {
         .listen((QuerySnapshot query) {
       List<AdminMessageWrapperModel> temp = [];
       int unreadCount = 0;
-      query.documents.forEach((DocumentSnapshot snapshot) {
+      query.docs.forEach((DocumentSnapshot snapshot) {
         TimebankModel model = TimebankModel(snapshot.data);
         if (model.unreadMessageCount > 0) {
           unreadCount++;

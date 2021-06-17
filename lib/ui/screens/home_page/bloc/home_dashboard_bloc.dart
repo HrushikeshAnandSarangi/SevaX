@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -42,14 +42,11 @@ class HomeDashBoardBloc extends BlocBase {
     List<CommunityModel> c = [];
     if (communitiesList != null) {
       communitiesList.forEach((id) async {
-        var value = await Firestore.instance
-            .collection("communities")
-            .document(id)
-            .get();
-        c.add(CommunityModel(value.data));
+        var value = await CollectionRef.communities.doc(id).get();
+        c.add(CommunityModel(value.data()));
         if (id == user.currentCommunity) {
           _selectedCommunity.drain();
-          _selectedCommunity.add(CommunityModel(value.data));
+          _selectedCommunity.add(CommunityModel(value.data()));
         }
         c.sort(
           (a, b) => a.name.toLowerCase().compareTo(
@@ -65,10 +62,7 @@ class HomeDashBoardBloc extends BlocBase {
 
   Future<bool> setDefaultCommunity(
       {CommunityModel community, BuildContext context}) {
-    Firestore.instance
-        .collection('users')
-        .document(SevaCore.of(context).loggedInUser.email)
-        .updateData({
+    CollectionRef.users.doc(SevaCore.of(context).loggedInUser.email).update({
       "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity,
       "currentTimebank": community.primary_timebank
     });

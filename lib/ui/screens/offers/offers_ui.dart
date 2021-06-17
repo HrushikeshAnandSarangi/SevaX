@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/gestures.dart';
 // import 'package:flutter/material.dart';
@@ -467,10 +468,10 @@
 //                           onConfirmed: () {
 //                             var myUserID =
 //                                 SevaCore.of(context).loggedInUser.sevaUserID;
-//                             Firestore.instance
-//                                 .collection("offers")
-//                                 .document(widget.offerModel.id)
-//                                 .updateData({
+//                             CollectionRef
+//                                 offers
+//                                 .doc(widget.offerModel.id)
+//                                 .update({
 //                               'groupOfferDataModel.signedUpMembers':
 //                                   FieldValue.arrayUnion(
 //                                 [myUserID],
@@ -507,10 +508,10 @@
 //                       //         offerDataModel: widget.offerModel)
 //                       //     .contains(
 //                       //         SevaCore.of(context).loggedInUser.sevaUserID);
-//                       // Firestore.instance
-//                       //     .collection("offers")
-//                       //     .document(widget.offerModel.id)
-//                       //     .updateData({
+//                       // CollectionRef
+//                       //     offers
+//                       //     .doc(widget.offerModel.id)
+//                       //     .update({
 //                       //   'offerAcceptors': isAccepted
 //                       //       ? FieldValue.arrayRemove(
 //                       //           [SevaCore.of(context).loggedInUser.sevaUserID])
@@ -545,9 +546,9 @@
 //   Future<void> deleteOffer({
 //     @required OfferModel offerModel,
 //   }) async {
-//     return await Firestore.instance
-//         .collection('offers')
-//         .document(offerModel.id)
+//     return await CollectionRef
+//         .offers
+//         .doc(offerModel.id)
 //         .delete();
 //   }
 // }

@@ -28,7 +28,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -62,7 +62,6 @@ import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../../flavor_config.dart';
-import '../../labels.dart';
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -745,7 +744,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                 hintStyle: TextStyle(
                                                   color: Colors.black45,
                                                   fontSize: 14,
-                                                ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                ),
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior.never,
                                               ),
                                             ),
 
@@ -3106,20 +3107,18 @@ class RequestEditFormState extends State<RequestEditForm> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
 
-    return speakerNotificationDocRefNew = Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    return speakerNotificationDocRefNew = CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id);
+        .doc(notification.id);
   }
 
   //if another speaker is invited then we need to remove the previous speaker from the invited list
@@ -3130,27 +3129,27 @@ class RequestEditFormState extends State<RequestEditForm> {
       String emailPrevious,
       String sevaUserIdNew,
       String emailNew}) async {
-    var batch = Firestore.instance.batch();
+    var batch = CollectionRef.batch;
 
     //remove previous speaker as invited member
-    // batch.updateData(
-    //     Firestore.instance.collection('requests').document(requestID), {
+    // batch.update(
+    //     CollectionRef.requests.doc(requestID), {
     //   'invitedUsers': FieldValue.arrayRemove([sevaUserIdPrevious]),
     // });
-    batch.updateData(
-      Firestore.instance.collection('users').document(emailPrevious),
+    batch.update(
+      CollectionRef.users.doc(emailPrevious),
       {
         'invitedRequests': FieldValue.arrayRemove([requestID])
       },
     );
 
     //Add new speaker as invited member
-    // batch.updateData(
-    //     Firestore.instance.collection('requests').document(requestID), {
+    // batch.update(
+    //     CollectionRef.requests.doc(requestID), {
     //   'invitedUsers': FieldValue.arrayUnion([sevaUserIdNew]),
     // });
-    batch.updateData(
-      Firestore.instance.collection('users').document(emailNew),
+    batch.update(
+      CollectionRef.users.doc(emailNew),
       {
         'invitedRequests': FieldValue.arrayUnion([requestID])
       },
@@ -3699,16 +3698,13 @@ class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
   @override
   void initState() {
     this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore : {};
-    Firestore.instance
-        .collection('donationCategories')
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
+    CollectionRef.donationCategories.get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
-        // suggestionID.add(data.documentID);
-        goods[data.documentID] = data['goodTitle'];
+        // suggestionID.add(data.id);
+        goods[data.id] = data['goodTitle'];
 
-        // ids[data['name']] = data.documentID;
+        // ids[data['name']] = data.id;
       });
       setState(() {
         isDataLoaded = true;
@@ -4025,10 +4021,7 @@ class _GoodsDynamicSelection2State extends State<GoodsDynamicSelection2> {
     String goodsTitle,
     String goodsLanguage,
   }) async {
-    await Firestore.instance
-        .collection('donationCategories')
-        .document(goodsId)
-        .setData(
+    await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle, 'lang': goodsLanguage},
     );
   }

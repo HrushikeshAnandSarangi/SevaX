@@ -1,7 +1,6 @@
 // import 'dart:developer';
 
-// import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/gestures.dart';
 // import 'package:flutter/material.dart';
 // import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -444,9 +443,9 @@
 //     var year = now.year;
 //     var pastPlans = [];
 //     return StreamBuilder(
-//         stream: Firestore.instance
-//             .collection("communities")
-//             .document(SevaCore.of(context).loggedInUser.currentCommunity)
+//         stream: CollectionRef
+//             .communities
+//             .doc(SevaCore.of(context).loggedInUser.currentCommunity)
 //             .snapshots(),
 //         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 //           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -483,9 +482,9 @@
 
 //   Widget cardsHeadingWidget(UserDataBloc _bloc) {
 //     return FutureBuilder(
-//         future: Firestore.instance
-//             .collection('cards')
-//             .document(SevaCore.of(context).loggedInUser.currentCommunity)
+//         future: CollectionRef
+//             .cards
+//             .doc(SevaCore.of(context).loggedInUser.currentCommunity)
 //             .get(),
 //         builder: (context, snapshot) {
 //           String planName = '';

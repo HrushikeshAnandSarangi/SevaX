@@ -344,7 +344,7 @@
 // //            color: Colors.transparent,
 // //            elevation: 0.0,
 // //            onPressed: (){
-// //              //updateData();
+// //              //update();
 // //              print('pressed skip');
 // //            },
 // //          )

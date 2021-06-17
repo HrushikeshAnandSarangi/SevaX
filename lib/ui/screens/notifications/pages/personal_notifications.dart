@@ -1,19 +1,14 @@
 import 'dart:developer';
 
-import 'package:sevaexchange/models/basic_user_details.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntry_page.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -22,13 +17,15 @@ import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/oneToManyInstructorAcceptCard.dart';
-import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManyAccept.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card_oneToManySpeakerReclaims.dart';
+import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -38,13 +35,12 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import '../../../../labels.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -1037,7 +1033,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
-                      Crashlytics().log(
+                      FirebaseCrashlytics.instance.log(
                           "Unhandled notification type ${notification.type} ${notification.id}");
                       return Container();
                   }
@@ -1062,17 +1058,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         communityId: requestModel['communityId'],
         isTimebankNotification: true);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
+    await CollectionRef.timebank
+        .doc(notificationModel.timebankId)
         .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
+        .doc(notificationModel.id)
+        .set(notificationModel.toMap());
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel['id'])
-        .updateData({
+    await CollectionRef.requests.doc(requestModel['id']).update({
       'isSpeakerCompleted': true,
     });
 
@@ -1133,7 +1125,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
 
     if (results != null && results.containsKey('selection')) {
-      Firestore.instance.collection("reviews").add(
+      CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": data.classDetails.classTitle,
@@ -1211,7 +1203,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     // adds review to firestore
     try {
       logger.i('here 1');
-      await Firestore.instance.collection("reviews").add({
+      await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": requestModelNew.email,
         "ratings": results['selection'],
@@ -1382,12 +1374,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
   }
@@ -1411,18 +1402,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         targetUserId: sevaUserId);
 
     requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-        ? await Firestore.instance
-            .collection('users')
-            .document(userEmail)
+        ? await CollectionRef.users
+            .doc(userEmail)
             .collection('notifications')
-            .document(notification.id)
-            .setData(notification.toMap())
-        : await Firestore.instance
-            .collection('timebanknew')
-            .document(timebankId)
+            .doc(notification.id)
+            .set(notification.toMap())
+        : await CollectionRef.timebank
+            .doc(timebankId)
             .collection('notifications')
-            .document(notification.id)
-            .setData(notification.toMap());
+            .doc(notification.id)
+            .set(notification.toMap());
 
     log('SEND FEEDBACK NOTIFICATION TO BORROWER--------------------->>');
   }
@@ -1493,10 +1482,7 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
   approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
   // oneToManyRequestModel.approvedUsers = approvedUsersList.toList();
 
-  await Firestore.instance
-      .collection('requests')
-      .document(oneToManyRequestModel.id)
-      .updateData({
+  await CollectionRef.requests.doc(oneToManyRequestModel.id).update({
     'approvedUsers': approvedUsersList.toList(),
   });
 
@@ -1511,12 +1497,11 @@ Future oneToManySpeakerInviteAcceptedPersonalNotifications(
       communityId: oneToManyRequestModel.communityId,
       isTimebankNotification: true);
 
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(notificationModel.timebankId)
+  await CollectionRef.timebank
+      .doc(notificationModel.timebankId)
       .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+      .doc(notificationModel.id)
+      .set(notificationModel.toMap());
 
   await FirestoreManager.readUserNotificationOneToManyWhenSpeakerIsInvited(
     requestModel: oneToManyRequestModel,
@@ -1553,12 +1538,11 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       communityId: oneToManyRequestModel.communityId,
       isTimebankNotification: true);
 
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(notificationModel.timebankId)
+  await CollectionRef.timebank
+      .doc(notificationModel.timebankId)
       .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap())
+      .doc(notificationModel.id)
+      .set(notificationModel.toMap())
       .then((e) async {
     Set<String> acceptorsList = Set.from(oneToManyRequestModel.acceptors);
     acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
@@ -1571,10 +1555,9 @@ Future oneToManySpeakerInviteRejectedPersonalNotifications(
       sevaUserID: oneToManyRequestModel.sevaUserId,
     );
 
-    await Firestore.instance
-        .collection('requests')
-        .document(oneToManyRequestModel.id)
-        .updateData(oneToManyRequestModel.toMap());
+    await CollectionRef.requests
+        .doc(oneToManyRequestModel.id)
+        .update(oneToManyRequestModel.toMap());
   });
 
   if (dialogContext != null) {
@@ -1608,10 +1591,7 @@ Future oneToManySpeakerInviteAccepted(
   approvedUsersList.add(SevaCore.of(context).loggedInUser.email);
   // requestModel.approvedUsers = approvedUsersList.toList();
 
-  await Firestore.instance
-      .collection('requests')
-      .document(requestModel.id)
-      .updateData({
+  await CollectionRef.requests.doc(requestModel.id).update({
     'approvedUsers': approvedUsersList.toList(),
   });
 
@@ -1626,12 +1606,11 @@ Future oneToManySpeakerInviteAccepted(
       communityId: requestModel.communityId,
       isTimebankNotification: true);
 
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(notificationModel.timebankId)
+  await CollectionRef.timebank
+      .doc(notificationModel.timebankId)
       .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+      .doc(notificationModel.id)
+      .set(notificationModel.toMap());
 
   logger.e(
       '-------------COMES HERE TO CLEAR NOTIFICATION Accepted Scenario--------------');
@@ -1671,12 +1650,11 @@ Future oneToManySpeakerInviteRejected(
       communityId: requestModel.communityId,
       isTimebankNotification: true);
 
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(notificationModel.timebankId)
+  await CollectionRef.timebank
+      .doc(notificationModel.timebankId)
       .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+      .doc(notificationModel.id)
+      .set(notificationModel.toMap());
 
   Set<String> acceptorsList = Set.from(requestModel.acceptors);
   acceptorsList.remove(SevaCore.of(context).loggedInUser.email);
@@ -1704,10 +1682,9 @@ Future oneToManySpeakerInviteRejected(
     sevaUserID: creatorUserModel.sevaUserID,
   );
 
-  await Firestore.instance
-      .collection('requests')
-      .document(requestModel.id)
-      .updateData(requestModel.toMap());
+  await CollectionRef.requests
+      .doc(requestModel.id)
+      .update(requestModel.toMap());
 
   logger.e(
       '-------------COMES HERE TO CLEAR NOTIFICATION Rejected Scenario--------------');
@@ -1749,17 +1726,13 @@ Future oneToManySpeakerRequestCompleted(
       communityId: requestModel.communityId,
       isTimebankNotification: true);
 
-  await Firestore.instance
-      .collection('timebanknew')
-      .document(notificationModel.timebankId)
+  await CollectionRef.timebank
+      .doc(notificationModel.timebankId)
       .collection('notifications')
-      .document(notificationModel.id)
-      .setData(notificationModel.toMap());
+      .doc(notificationModel.id)
+      .set(notificationModel.toMap());
 
-  await Firestore.instance
-      .collection('requests')
-      .document(requestModel.id)
-      .updateData({
+  await CollectionRef.requests.doc(requestModel.id).update({
     'isSpeakerCompleted': true,
   });
 

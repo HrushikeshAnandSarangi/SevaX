@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -32,8 +33,6 @@ class FavoriteUsers extends StatefulWidget {
 enum RequestUserStatus { INVITE, INVITED, APPROVED, REJECTED }
 
 class _FavoriteUsersState extends State<FavoriteUsers> {
-  final _firestore = Firestore.instance;
-
   var validItems;
   bool isAdmin = false;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
@@ -52,12 +51,11 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
       isAdmin = true;
     }
 
-    _firestore
-        .collection('requests')
-        .document(widget.requestModelId)
+    CollectionRef.requests
+        .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data);
+      requestModel = RequestModel.fromMap(reqModel.data());
       setState(() {});
     });
   }
@@ -65,8 +63,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
   Widget build(BuildContext context) {
     loggedinUser = SevaCore.of(context).loggedInUser;
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection("users")
+      stream: CollectionRef.users
           .where(isAdmin ? "favoriteByTimeBank" : "favoriteByMember",
               arrayContains: isAdmin ? widget.timebankId : widget.sevaUserId)
           .snapshots(),
@@ -74,8 +71,8 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
         if (snapshot.hasData && snapshot.data != null) {
           List<UserModel> userList = [];
 
-          snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data, 'fav_users');
+          snapshot.data.docs.forEach((userModel) {
+            UserModel model = UserModel.fromMap(userModel.data(), 'fav_users');
             userList.add(model);
           });
 

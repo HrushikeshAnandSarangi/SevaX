@@ -56,7 +56,7 @@ Future<bool> handleLinkData(
       String communityId = queryParams["communityId"];
       String primaryTimebankId = queryParams["primaryTimebankId"];
 
-      var firebaseUserCred = await FirebaseAuth.instance.currentUser();
+      var firebaseUserCred = await FirebaseAuth.instance.currentUser;
 
       UserModel localUser = await _getSignedInUserDocs(
         userId: firebaseUserCred.uid,

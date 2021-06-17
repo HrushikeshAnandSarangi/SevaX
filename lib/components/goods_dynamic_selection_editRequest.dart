@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
@@ -37,16 +38,13 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   @override
   void initState() {
     this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore : {};
-    Firestore.instance
-        .collection('donationCategories')
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
+    CollectionRef.donationCategories.get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
-        // suggestionID.add(data.documentID);
-        goods[data.documentID] = data['goodTitle'];
+        // suggestionID.add(data.id);
+        goods[data.id] = data['goodTitle'];
 
-        // ids[data['name']] = data.documentID;
+        // ids[data['name']] = data.id;
       });
       setState(() {
         isDataLoaded = true;
@@ -363,10 +361,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
     String goodsTitle,
     String goodsLanguage,
   }) async {
-    await Firestore.instance
-        .collection('donationCategories')
-        .document(goodsId)
-        .setData(
+    await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle, 'lang': goodsLanguage},
     );
   }

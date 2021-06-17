@@ -24,17 +24,18 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/basic_user_details.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/skills_for_requests_widget.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -43,25 +44,26 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
-import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/add_images_for_request.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -70,12 +72,6 @@ import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 import 'package:sevaexchange/widgets/select_category.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
-import 'package:sevaexchange/models/basic_user_details.dart';
-import 'package:sevaexchange/widgets/add_images_for_request.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/utils/extensions.dart';
-import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 
 import '../../labels.dart';
 
@@ -778,7 +774,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                                   hintStyle: TextStyle(
                                                     color: Colors.black45,
                                                     fontSize: 14,
-                                                  ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                  ),
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .never,
                                                 ),
                                               ),
 
@@ -2572,8 +2571,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
   //  void refresh() {
   //   _firestore
-  //       .collection('requests')
-  //       .document(widget.requestModelId)
+  //       .requests
+  //       .doc(widget.requestModelId)
   //       .snapshots()
   //       .listen((reqModel) {
   //     requestModel = RequestModel.fromMap(reqModel.data);
@@ -3303,32 +3302,29 @@ class RequestCreateFormState extends State<RequestCreateForm>
             .sevaUserID, //BlocProvider.of<AuthBloc>(context).user.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
-    return speakerNotificationDocRef = Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    return speakerNotificationDocRef = CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id);
+        .doc(notification.id);
   }
 
   Future updateInvitedSpeakerForRequest(String requestID, String sevaUserId,
       String email, DocumentReference speakerNotificationDocRef) async {
-    var batch = Firestore.instance.batch();
+    var batch = CollectionRef.batch;
 
-    batch.updateData(
-        Firestore.instance.collection('requests').document(requestID), {
+    batch.update(CollectionRef.requests.doc(requestID), {
       'invitedUsers': FieldValue.arrayUnion([sevaUserId]),
       'speakerInviteNotificationDocRef': speakerNotificationDocRef,
     });
 
-    batch.updateData(
-      Firestore.instance.collection('users').document(email),
+    batch.update(
+      CollectionRef.users.doc(email),
       {
         'invitedRequests': FieldValue.arrayUnion([requestID])
       },
@@ -3866,12 +3862,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: timebankModel.creatorId);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(timebankModel.id)
+    await CollectionRef.timebank
+        .doc(timebankModel.id)
         .collection("notifications")
-        .document(notification.id)
-        .setData((notification..isTimebankNotification = true).toMap());
+        .doc(notification.id)
+        .set((notification..isTimebankNotification = true).toMap());
 
     log('writtent to DB');
   }
@@ -3991,12 +3986,10 @@ class ProjectSelectionState extends State<ProjectSelection> {
 
 Future<Map<String, String>> getGoodsFuture() async {
   Map<String, String> goodsVar = {};
-  QuerySnapshot querySnapshot = await Firestore.instance
-      .collection('donationCategories')
-      .orderBy('goodTitle')
-      .getDocuments();
-  querySnapshot.documents.forEach((DocumentSnapshot docData) {
-    goodsVar[docData.documentID] = docData.data['goodTitle'];
+  QuerySnapshot querySnapshot =
+      await CollectionRef.donationCategories.orderBy('goodTitle').get();
+  querySnapshot.docs.forEach((DocumentSnapshot docData) {
+    goodsVar[docData.id] = docData.data['goodTitle'];
   });
   log("goodsVar length ${goodsVar.length.toString()}");
   return goodsVar;

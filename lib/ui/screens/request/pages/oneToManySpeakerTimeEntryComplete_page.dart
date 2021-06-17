@@ -1,18 +1,15 @@
-import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
   final RequestModel requestModel;
@@ -96,7 +93,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               Container(
                                 width: constraints.maxWidth * 0.7,
                                 child: Text(
-                                   S.of(context).speaker_claim_form_field_title,
+                                  S.of(context).speaker_claim_form_field_title,
                                   style: TextStyle(
                                       fontSize: 17.0,
                                       fontWeight: FontWeight.w500),
@@ -131,7 +128,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                           //errorText: S.of(context).enter_hours,
                                           contentPadding:
                                               EdgeInsets.only(bottom: 5),
-                                          hintText:  S
+                                          hintText: S
                                               .of(context)
                                               .speaker_claim_form_field_title_hint,
                                           hintStyle: TextStyle(fontSize: 13),
@@ -246,7 +243,7 @@ class OneToManySpeakerTimeEntryCompleteState
                               Container(
                                 width: constraints.maxWidth * 0.72,
                                 child: Text(
-                                 S.of(context).speaker_claim_form_text_2,
+                                  S.of(context).speaker_claim_form_text_2,
                                   style: TextStyle(
                                       fontSize: 15.0,
                                       fontWeight: FontWeight.w500,
@@ -296,10 +293,9 @@ class OneToManySpeakerTimeEntryCompleteState
                                 requestModel.approvedUsers =
                                     approvedUsersList.toList();
 
-                                await Firestore.instance
-                                    .collection('requests')
-                                    .document(requestModel.id)
-                                    .updateData(requestModel.toMap());
+                                await CollectionRef.requests
+                                    .doc(requestModel.id)
+                                    .update(requestModel.toMap());
 
                                 //Navigator.of(creditRequestDialogContext).pop();
 

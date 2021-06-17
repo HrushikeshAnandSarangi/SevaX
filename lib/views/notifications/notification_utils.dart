@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 void showDialogForIncompleteTransactions({
   SoftDeleteRequestDataHolder deletionRequest,
@@ -45,12 +45,11 @@ Future<void> dismissTimebankNotification({
   String notificationId,
   String timebankId,
 }) async {
-  Firestore.instance
-      .collection("timebanknew")
-      .document(timebankId)
+  CollectionRef.timebank
+      .doc(timebankId)
       .collection("notifications")
-      .document(notificationId)
-      .updateData(
+      .doc(notificationId)
+      .update(
     {"isRead": true},
   );
 }

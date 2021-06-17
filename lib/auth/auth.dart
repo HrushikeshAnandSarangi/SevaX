@@ -27,7 +27,7 @@ class Auth {
     try {
       googleUser = await _googleSignIn.signIn();
     } on Exception catch (error) {
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
       error;
     } catch (error) {
       log('Google sign in exception. Error: ${error.toString()}');
@@ -36,19 +36,20 @@ class Auth {
     if (googleUser == null) return null;
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    AuthCredential credential = GoogleAuthProvider.getCredential(
+    AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    //AuthResult user = await _firebaseAuth.signInWithCredential(credential);
+    //UserCredential user = await _firebaseAuth.signInWithCredential(credential);
 
-//    FirebaseUser user = (await _firebaseAuth.signInWithCredential(
+//    User user = (await _firebaseAuth.signInWithCredential(
 //      credential,
-//    )) as FirebaseUser;
+//    )) as User;
 //
 //    return _processGoogleUser(user);
-    AuthResult _result = await _firebaseAuth.signInWithCredential(credential);
+    UserCredential _result =
+        await _firebaseAuth.signInWithCredential(credential);
 
     return _processGoogleUser(_result.user);
   }
@@ -62,13 +63,12 @@ class Auth {
       switch (result.status) {
         case AuthorizationStatus.authorized:
           final AppleIdCredential _auth = result.credential;
-          final OAuthProvider oAuthProvider =
-              OAuthProvider(providerId: "apple.com");
-          final AuthCredential credential = oAuthProvider.getCredential(
+          final OAuthProvider oAuthProvider = OAuthProvider("apple.com");
+          final AuthCredential credential = oAuthProvider.credential(
             idToken: String.fromCharCodes(_auth.identityToken),
             accessToken: String.fromCharCodes(_auth.authorizationCode),
           );
-          AuthResult _result =
+          UserCredential _result =
               await _firebaseAuth.signInWithCredential(credential);
 
           return _processGoogleUser(
@@ -96,17 +96,17 @@ class Auth {
     @required String email,
     @required String password,
   }) async {
-    AuthResult result;
+    UserCredential result;
     try {
       result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
     } on Exception catch (error) {
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
       throw error;
     } catch (error) {
-      //Crashlytics.instance.log(error.toString());
+      //FirebaseCrashlytics.instance.log(error.toString());
     }
     return _processGoogleUser(result.user);
   }
@@ -118,7 +118,8 @@ class Auth {
     @required String displayName,
   }) async {
     try {
-      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential result =
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -127,7 +128,7 @@ class Auth {
       logger.i(
           "${error.code} ==================================================");
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE')
-        Crashlytics.instance.log(error.toString());
+        FirebaseCrashlytics.instance.log(error.toString());
       throw EmailAlreadyInUseException(error.message);
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
@@ -145,7 +146,7 @@ class Auth {
 
   /// Returns the [UserModel] corresponding to the signed in user.
   Future<UserModel> getLoggedInUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     try {
       UserModel loggedInUser = await FirestoreManager.getUserForId(
         sevaUserId: user.uid,
@@ -158,13 +159,13 @@ class Auth {
   }
 
   Future<UserModel> _processEmailPasswordUser(
-    FirebaseUser user,
+    User user,
     String displayName,
   ) async {
     if (user == null) return null;
 
     UserModel userModel = UserModel(
-      photoURL: user.photoUrl,
+      photoURL: user.photoURL,
       email: user.email,
       fullname: displayName,
       sevaUserID: user.uid,
@@ -174,13 +175,13 @@ class Auth {
     return userModel;
   }
 
-  Future<UserModel> _processGoogleUser(FirebaseUser user, {String name}) async {
+  Future<UserModel> _processGoogleUser(User user, {String name}) async {
     if (user == null) {
       return null;
     }
 
     UserModel userModel = UserModel(
-      photoURL: user.photoUrl,
+      photoURL: user.photoURL,
       fullname: (name != null && name.isNotEmpty) ? name : user.displayName,
       email: user.email,
       sevaUserID: user.uid,

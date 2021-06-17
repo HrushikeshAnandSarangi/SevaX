@@ -15,6 +15,7 @@ import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
@@ -918,7 +919,8 @@ class DiscussionListState extends State<DiscussionList> {
                           Container(
                             margin: EdgeInsets.only(top: 5),
                             child: Umeshify(
-                              text: news.title != null && news.title != S.of(context).no_data
+                              text: news.title != null &&
+                                      news.title != S.of(context).no_data
                                   ? news.title.trim()
                                   : '',
                               onOpen: (url) async {
@@ -1010,7 +1012,8 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               //feed image
               news.newsImageUrl == null
-                  ? news.imageScraped == null || news.imageScraped == S.of(context).no_data
+                  ? news.imageScraped == null ||
+                          news.imageScraped == S.of(context).no_data
                       ? Offstage()
                       : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
@@ -1114,10 +1117,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                         news.reports =
                                                             List<String>();
                                                       }
-                                                      Firestore.instance
-                                                          .collection('news')
-                                                          .document(news.id)
-                                                          .updateData({
+                                                      CollectionRef.feeds
+                                                          .doc(news.id)
+                                                          .update({
                                                         'reports': FieldValue
                                                             .arrayUnion([
                                                           SevaCore.of(context)

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +30,6 @@ class LocationPicker extends StatefulWidget {
   final String selectedAddress;
   // final prefix.Location location = new prefix.Location();
   final Geoflutterfire geo = Geoflutterfire();
-  final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
   LocationPicker({
     this.defaultLocation,
@@ -308,9 +306,10 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          if(mounted)setState(() {
-            target = position.target;
-          });
+          if (mounted)
+            setState(() {
+              target = position.target;
+            });
         },
         onCameraIdle: () {
           _addMarker();

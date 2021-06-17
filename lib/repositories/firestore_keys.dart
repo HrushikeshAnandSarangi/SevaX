@@ -1,48 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum Collections {
-  cards,
-  chatsnew,
-  claimedRequestStatus,
-  communities,
-  csv_files,
-  interests,
-  invitations,
-  join_requests,
-  news,
-  offers,
-  project_templates,
-  projects,
-  remoteConfigurations,
-  reported_users_list,
-  requests,
-  reviews,
-  skills,
-  softDeleteRequests,
-  timebankCodes,
-  timebanknew,
-  transactions,
-  users
-}
-
-class DBCollection {
-  static const String notifications = 'notifications';
-  static const String requests = 'requests';
-  static const String offers = 'offers';
-  static const String cards = 'cards';
-  static const String chats = 'chatsnew';
-  static const String communities = 'communities';
-  static const String csvFiles = 'csv_files';
-  static const String invitations = 'invitations';
-  static const String transactions = 'transactions';
-  static const String donations = 'donations';
-  static const String timebank = 'timebanknew';
-  static const String users = 'users';
-}
-
 class _CollectionNames {
   final String notifications = 'notifications';
   final String requests = 'requests';
+  final String feeds = 'news';
+  final String projects = 'projects';
   final String cards = 'cards';
   final String chats = 'chatsnew';
   final String communities = 'communities';
@@ -52,11 +14,28 @@ class _CollectionNames {
   final String donations = 'donations';
   final String timebank = 'timebanknew';
   final String users = 'users';
+  final String entryExitLogs = 'entryExitLogs';
+  final String joinRequests = 'join_requests';
+  final String manualTimeClaims = 'manualTimeClaims';
+  final String offers = 'offers';
+  final String communityCategories = 'communityCategories';
+  final String reviews = 'reviews';
+  final String donationCategories = 'donationCategories';
+  final String interests = 'interests';
+  final String skills = 'skills';
+  final String reportedUsersList = 'reported_users_list';
+  final String timebankCodes = 'timebankCodes';
+  final String remoteConfigurations = 'remoteConfigurations';
+  final String softDeleteRequests = 'softDeleteRequests';
+  final String claimedRequestStatus = 'claimedRequestStatus';
+  final String projectTemplates = 'project_templates';
+  final String requestCategories = 'requestCategories';
+  final String borrowAgreementTemplates = 'borrowAgreement_templates';
 }
 
 class CollectionRef {
   static final _CollectionNames _collectionNames = _CollectionNames();
-  static final Firestore _firestore = Firestore.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final CollectionReference timebank =
       _firestore.collection(_collectionNames.timebank);
 
@@ -66,17 +45,53 @@ class CollectionRef {
   static final CollectionReference requests =
       _firestore.collection(_collectionNames.requests);
 
+  static final CollectionReference feeds =
+      _firestore.collection(_collectionNames.feeds);
+
+  static final CollectionReference projects =
+      _firestore.collection(_collectionNames.projects);
+
+  static final CollectionReference claimedRequestStatus =
+      _firestore.collection(_collectionNames.claimedRequestStatus);
+
+  static final CollectionReference projectTemplates =
+      _firestore.collection(_collectionNames.projectTemplates);
+
+  static final CollectionReference requestCategories =
+      _firestore.collection(_collectionNames.requestCategories);
+
+  static final CollectionReference softDeleteRequests =
+      _firestore.collection(_collectionNames.softDeleteRequests);
+
+  static final CollectionReference offers =
+      _firestore.collection(_collectionNames.offers);
+
   static final CollectionReference cards =
       _firestore.collection(_collectionNames.cards);
 
-  static final CollectionReference chatsRef =
+  static final CollectionReference chats =
       _firestore.collection(_collectionNames.chats);
+
+  static final CollectionReference donationCategories =
+      _firestore.collection(_collectionNames.donationCategories);
 
   static final CollectionReference communities =
       _firestore.collection(_collectionNames.communities);
 
+  static final CollectionReference interests =
+      _firestore.collection(_collectionNames.interests);
+
+  static final CollectionReference timebankCodes =
+      _firestore.collection(_collectionNames.timebankCodes);
+
+  static final CollectionReference skills =
+      _firestore.collection(_collectionNames.skills);
+
   static final CollectionReference csvFiles =
       _firestore.collection(_collectionNames.csvFiles);
+
+  static final CollectionReference remoteConfigurations =
+      _firestore.collection(_collectionNames.remoteConfigurations);
 
   static final CollectionReference invitations =
       _firestore.collection(_collectionNames.invitations);
@@ -87,6 +102,45 @@ class CollectionRef {
   static final CollectionReference donations =
       _firestore.collection(_collectionNames.donations);
 
+  static final CollectionReference communityCategories =
+      _firestore.collection(_collectionNames.communityCategories);
+
+  static final CollectionReference manualTimeClaims =
+      _firestore.collection(_collectionNames.manualTimeClaims);
+
+  static final CollectionReference borrowAgreementTemplates =
+      _firestore.collection(_collectionNames.borrowAgreementTemplates);
+
   static final CollectionReference users =
       _firestore.collection(_collectionNames.users);
+
+  static final CollectionReference reportedUsersList =
+      _firestore.collection(_collectionNames.reportedUsersList);
+
+  static final CollectionReference joinRequests =
+      _firestore.collection(_collectionNames.joinRequests);
+
+  static CollectionReference notificationGroup =
+      _firestore.collectionGroup(_collectionNames.notifications);
+
+  static CollectionReference reviews =
+      _firestore.collectionGroup(_collectionNames.reviews);
+
+  static CollectionReference entryExitLogs(String path) => _firestore
+      .collection(_collectionNames.timebank)
+      .doc(path)
+      .collection(_collectionNames.entryExitLogs);
+
+  static CollectionReference timebankNotification(String timebankId) =>
+      _firestore
+          .collection(_collectionNames.timebank)
+          .doc(timebankId)
+          .collection(_collectionNames.notifications);
+
+  static CollectionReference userNotification(String email) => _firestore
+      .collection(_collectionNames.users)
+      .doc(email)
+      .collection(_collectionNames.notifications);
+
+  static WriteBatch get batch => _firestore.batch();
 }

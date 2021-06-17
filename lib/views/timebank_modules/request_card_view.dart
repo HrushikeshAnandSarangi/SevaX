@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
@@ -7,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -324,9 +324,6 @@ class _RequestCardViewState extends State<RequestCardView> {
   Future<void> deleteRequest({
     @required RequestModel requestModel,
   }) async {
-    return await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .delete();
+    return await CollectionRef.requests.doc(requestModel.id).delete();
   }
 }

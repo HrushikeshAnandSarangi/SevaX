@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class NotificationWidgetSwitch extends StatefulWidget {
   final bool isTurnedOn;
@@ -23,10 +23,7 @@ class NotificationWidgetSwitch extends StatefulWidget {
     String notificationType,
     bool status,
   }) {
-    Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
-        .updateData(
+    CollectionRef.timebank.doc(timebankId).update(
       {
         'notificationSetting.$adminSevaUserId.$notificationType': status,
       },
@@ -38,7 +35,7 @@ class NotificationWidgetSwitch extends StatefulWidget {
     String notificationType,
     bool status,
   }) {
-    Firestore.instance.collection('users').document(userEmail).updateData(
+    CollectionRef.users.doc(userEmail).update(
       {
         'notificationSetting.$notificationType': status,
       },
@@ -59,35 +56,35 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
-      title: Text(
-        widget.title,
-        style: TextStyle(
-          fontFamily: 'Europa',
-          // fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            title: Text(
+              widget.title,
+              style: TextStyle(
+                fontFamily: 'Europa',
+                // fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            trailing: Transform.scale(
+              scale: 0.8,
+              child: Transform(
+                transform: Matrix4.diagonal3Values(0.9, 0.9, 0),
+                child: CupertinoSwitch(
+                  activeColor: Theme.of(context).primaryColor,
+                  value: switchStatus,
+                  onChanged: (value) {
+                    switchStatus = value;
+                    widget.onPressed(value);
+                    setState(() {});
+                  },
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-      trailing: Transform.scale(
-        scale: 0.8,
-        child: Transform(
-          transform: Matrix4.diagonal3Values(0.9, 0.9, 0),
-          child: CupertinoSwitch(
-            activeColor: Theme.of(context).primaryColor,
-            value: switchStatus,
-            onChanged: (value) {
-              switchStatus = value;
-              widget.onPressed(value);
-              setState(() {});
-            },
-          ),
-        ),
-      ),
-            )
-          ],
-        ),
     );
   }
 }

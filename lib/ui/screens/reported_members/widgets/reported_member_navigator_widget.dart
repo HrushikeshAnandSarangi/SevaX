@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 
 class ReportedMemberNavigatorWidget extends StatefulWidget {
@@ -59,16 +60,15 @@ class _ReportedMemberNavigatorWidgetState
 
   Future<bool> isAnyMemberReported() async {
     bool flag = false;
-    QuerySnapshot snapshot = await Firestore.instance
-        .collection("reported_users_list")
+    QuerySnapshot snapshot = await CollectionRef.reportedUsersList
         .where(
           widget.isTimebankReport ? "communityId" : "timebankIds",
           isEqualTo: widget.isTimebankReport ? widget.communityId : null,
           arrayContains:
               widget.isTimebankReport ? null : widget.timebankModel.id,
         )
-        .getDocuments();
-    if (snapshot.documents.length > 0) {
+        .get();
+    if (snapshot.docs.length > 0) {
       flag = true;
     } else {
       flag = false;

@@ -5,6 +5,7 @@ import 'package:async/async.dart' show StreamGroup;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 export 'package:sevaexchange/utils/data_managers/campaigns_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/news_data_manager.dart';
@@ -20,13 +21,11 @@ class FirestoreService {
       {@required String userEmail}) async* {
     log('getEntityDataListStream: EmailID: $userEmail');
 
-    var campaignSnapshotStream = Firestore.instance
-        .collection('campaigns')
+    var campaignSnapshotStream = CollectionRef.collection('campaigns')
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 
-    var timebankSnapshotStream = Firestore.instance
-        .collection('timebanks')
+    var timebankSnapshotStream = CollectionRef.collection('timebanks')
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 
@@ -34,9 +33,9 @@ class FirestoreService {
       StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
         handleData: (snapshot, campaignSink) {
           List<CampaignModel> modelList = [];
-          snapshot.documents.forEach((documentSnapshot) {
+          snapshot.docs.forEach((documentSnapshot) {
             CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+            model.id = documentSnapshot.id;
             modelList.add(model);
           });
 
@@ -49,9 +48,9 @@ class FirestoreService {
       StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
         handleData: (snapshot, timebankSink) {
           List<TimebankModel> modelList = [];
-          snapshot.documents.forEach((documentSnapshot) {
+          snapshot.docs.forEach((documentSnapshot) {
             TimebankModel model = TimebankModel(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+            model.id = documentSnapshot.id;
             modelList.add(model);
           });
 

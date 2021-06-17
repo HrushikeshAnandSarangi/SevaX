@@ -5,11 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class ChatsRepository {
-  static CollectionReference collectionReference =
-      Firestore.instance.collection("chatsnew");
+  static CollectionReference collectionReference = CollectionRef.chats;
 
   static Stream<List<ChatModel>> getPersonalChats(
       {@required String userId, @required String communityId}) async* {
@@ -40,7 +40,7 @@ class ChatsRepository {
           List<ChatModel> chats = [];
           for (var chatDocument in documents) {
             var chat = ChatModel.fromMap(chatDocument.data);
-            chat.id = chatDocument.documentID;
+            chat.id = chatDocument.id;
             if (chat.interCommunity) {
               if (!chat.showToCommunities.contains(communityId)) {
                 continue;
@@ -56,16 +56,16 @@ class ChatsRepository {
 
   static Future<String> createNewChat(ChatModel chat,
       {String documentId}) async {
-    DocumentReference ref = collectionReference.document(documentId);
-    await ref.setData(
+    DocumentReference ref = collectionReference.doc(documentId);
+    await ref.set(
       chat.toMap(),
       merge: true,
     );
-    return ref.documentID;
+    return ref.id;
   }
 
   static Future<void> removeMember(String chatId, String userId) async {
-    return await collectionReference.document(chatId).setData(
+    return await collectionReference.doc(chatId).set(
       {
         "participants": FieldValue.arrayRemove([userId]),
         "groupDetails": {
@@ -77,10 +77,10 @@ class ChatsRepository {
   }
 
   static Future<void> transferOwnership(String chatId) async {
-    DocumentSnapshot result = await collectionReference.document(chatId).get();
+    DocumentSnapshot result = await collectionReference.doc(chatId).get();
     ChatModel chatModel = ChatModel.fromMap(result.data);
     if (chatModel.participants.length > 0) {
-      await collectionReference.document(chatId).setData(
+      await collectionReference.doc(chatId).set(
         {
           "groupDetails": {
             "admins": FieldValue.arrayUnion(
@@ -97,7 +97,7 @@ class ChatsRepository {
   }
 
   static Future<void> addMember(String chatId, ParticipantInfo userInfo) async {
-    return await collectionReference.document(chatId).setData(
+    return await collectionReference.doc(chatId).set(
       {
         "participantInfo": FieldValue.arrayUnion([userInfo.toMap()]),
         "participants": FieldValue.arrayUnion([userInfo.id])
@@ -107,7 +107,7 @@ class ChatsRepository {
   }
 
   static Future<ChatModel> getChatModel(String chatId) async {
-    DocumentSnapshot result = await collectionReference.document(chatId).get();
+    DocumentSnapshot result = await collectionReference.doc(chatId).get();
     return ChatModel.fromMap(result.data);
   }
 
@@ -117,10 +117,10 @@ class ChatsRepository {
     String imageUrl,
     List<ParticipantInfo> infos,
   ) async {
-    WriteBatch batch = Firestore.instance.batch();
+    WriteBatch batch = CollectionRef.batch;
     if (groupName != null) {
-      batch.setData(
-        collectionReference.document(chatId),
+      batch.set(
+        collectionReference.doc(chatId),
         {
           "groupDetails": {
             "name": groupName,
@@ -130,8 +130,8 @@ class ChatsRepository {
       );
     }
     if (imageUrl != null) {
-      batch.setData(
-        collectionReference.document(chatId),
+      batch.set(
+        collectionReference.doc(chatId),
         {
           "groupDetails": {
             "imageUrl": imageUrl,
@@ -142,8 +142,8 @@ class ChatsRepository {
     }
 
     if (infos != null) {
-      batch.setData(
-        collectionReference.document(chatId),
+      batch.set(
+        collectionReference.doc(chatId),
         {
           "participantInfo": FieldValue.arrayUnion(
             List<dynamic>.from(

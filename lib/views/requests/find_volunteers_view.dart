@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -31,7 +30,7 @@ class FindVolunteersView extends StatefulWidget {
 
 class _FindVolunteersViewState extends State<FindVolunteersView> {
   final TextEditingController searchTextController = TextEditingController();
-  final _firestore = Firestore.instance;
+  final _firestore = CollectionRef;
   bool isAdmin = false;
   final _textUpdates = StreamController<String>();
 
@@ -132,7 +131,8 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                 hintStyle: TextStyle(
                   color: Colors.black45,
                   fontSize: 14,
-                ), floatingLabelBehavior: FloatingLabelBehavior.never,
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
             ),
           ),
@@ -178,7 +178,6 @@ class UserResultViewElastic extends StatefulWidget {
 }
 
 class _UserResultViewElasticState extends State<UserResultViewElastic> {
-  final _firestore = Firestore.instance;
   HashMap<String, dynamic> userFilterMap = HashMap();
 
   bool checkValidSting(String str) {
@@ -199,12 +198,11 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       isAdmin = true;
     }
 
-    _firestore
-        .collection('requests')
-        .document(widget.requestModelId)
+    CollectionRef.requests
+        .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data);
+      requestModel = RequestModel.fromMap(reqModel.data());
       try {
         setState(() {});
       } on Exception catch (error) {
@@ -366,12 +364,11 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   void refresh() {
-    _firestore
-        .collection('requests')
-        .document(widget.requestModelId)
+    CollectionRef.requests
+        .doc(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data);
+      requestModel = RequestModel.fromMap(reqModel.data());
       try {
         setState(() {
           buildWidget();

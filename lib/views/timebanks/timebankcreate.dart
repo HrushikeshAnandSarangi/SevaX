@@ -7,7 +7,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -19,6 +18,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -214,10 +214,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     }
     createTimebank(timebankModel: timebankModel);
 
-    Firestore.instance
-        .collection("communities")
-        .document(SevaCore.of(context).loggedInUser.currentCommunity)
-        .updateData(
+    CollectionRef.communities
+        .doc(SevaCore.of(context).loggedInUser.currentCommunity)
+        .update(
       {
         "timebanks": FieldValue.arrayUnion([id]),
       },
@@ -462,7 +461,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       try {
                         parentTimebank.children.add(timebankModel.id);
                       } catch (e) {
-                        Crashlytics.instance.log(e.toString());
+                        FirebaseCrashlytics.instance.log(e.toString());
                       }
                       updateTimebank(timebankModel: parentTimebank);
                       Navigator.pop(context);
@@ -529,12 +528,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
             targetUserId: user.sevaUserID);
 
-        await Firestore.instance
-            .collection('users')
-            .document(user.email)
+        await CollectionRef.users
+            .doc(user.email)
             .collection("notifications")
-            .document(notification.id)
-            .setData(notification.toMap());
+            .doc(notification.id)
+            .set(notification.toMap());
       });
     }
   }
@@ -693,15 +691,14 @@ WriteBatch createAndSendSponserRequest({
   NotificationsModel notification,
   SponsoredGroupModel sponsoredGroupModel,
 }) {
-  WriteBatch batchWrite = Firestore.instance.batch();
-  batchWrite.setData(
-      Firestore.instance
-          .collection('timebanknew')
-          .document(
+  WriteBatch batchWrite = CollectionRef.batch;
+  batchWrite.set(
+      CollectionRef.timebank
+          .doc(
             targetTimebankId,
           )
           .collection("notifications")
-          .document(notification.id),
+          .doc(notification.id),
       (notification..isTimebankNotification = true).toMap());
   return batchWrite;
 }

@@ -6,7 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -17,8 +17,7 @@ Stream<List<OfferModel>> getOffersStream(
   logger.i("offer list request started");
   // Stopwatch sw = Stopwatch();
   // sw.start();
-  var query = Firestore.instance
-      .collection('offers')
+  var query = CollectionRef.offers
       .where('timebanksPosted', arrayContains: timebankId)
       .where('assossiatedRequest', isNull: true)
       .where('softDelete', isEqualTo: false)
@@ -37,11 +36,11 @@ Stream<List<OfferModel>> getOffersStream(
       handleData: (snapshot, offerSink) async {
         List<OfferModel> offerList = [];
 
-        snapshot.documents.forEach((snapshot) {
-          OfferModel model = OfferModel.fromMap(snapshot.data);
+        snapshot.docs.forEach((snapshot) {
+          OfferModel model = OfferModel.fromMap(snapshot.data());
           log(model.id + '--->' + model.offerType.toString());
 
-          model.id = snapshot.documentID;
+          model.id = snapshot.id;
           model.currentUserLocation = coordinates;
 
           if (model.offerType == OfferType.GROUP_OFFER &&
@@ -78,10 +77,7 @@ Stream<List<OfferModel>> getOffersStream(
 }
 
 Future<void> createOffer({@required OfferModel offerModel}) async {
-  await Firestore.instance
-      .collection('offers')
-      .document(offerModel.id)
-      .setData(offerModel.toMap());
+  await CollectionRef.offers.doc(offerModel.id).set(offerModel.toMap());
 }
 
 Future<void> updateOffersByFields(
@@ -89,18 +85,15 @@ Future<void> updateOffersByFields(
   var futures = <Future>[];
   int i;
   for (i = 0; i < offerIds.length; i++) {
-    futures.add(Firestore.instance
-        .collection('offers')
-        .document(offerIds[i])
-        .updateData(fields));
+    futures.add(CollectionRef.offers.doc(offerIds[i]).update(fields));
   }
   await Future.wait(futures);
 }
 
 Future<List<String>> createRecurringEventsOffer(
     {@required OfferModel offerModel}) async {
-  var batch = Firestore.instance.batch();
-  var db = Firestore.instance;
+  var batch = CollectionRef.batch;
+
   bool lastRound = false;
   DateTime eventStartDate = DateTime.fromMillisecondsSinceEpoch(
           offerModel.groupOfferDataModel.startDate),
@@ -204,7 +197,7 @@ Future<List<String>> createRecurringEventsOffer(
   }
 
   temparr.forEach((tempobj) {
-    batch.setData(db.collection("offers").document(tempobj['id']), tempobj);
+    batch.set(CollectionRef.offers.doc(tempobj['id']), tempobj);
     offerIds.add(tempobj['id']);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['groupOfferDataModel']['startDate']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
@@ -215,8 +208,7 @@ Future<List<String>> createRecurringEventsOffer(
 
 Future<void> updateRecurrenceOffersFrontEnd(
     {@required OfferModel updatedOfferModel}) async {
-  var batch = Firestore.instance.batch();
-  var db = Firestore.instance;
+  var batch = CollectionRef.batch;
   bool lastRound = false;
   String uuidvar = "";
   OfferModel eventData, parentEvent;
@@ -229,13 +221,12 @@ Future<void> updateRecurrenceOffersFrontEnd(
       eventEndDate = DateTime.fromMillisecondsSinceEpoch(
           updatedOfferModel.groupOfferDataModel.endDate);
 
-  QuerySnapshot snapEvents = await db
-      .collection("offers")
+  QuerySnapshot snapEvents = await CollectionRef.offers
       .where("parent_offer_id", isEqualTo: updatedOfferModel.parent_offer_id)
-      .getDocuments();
+      .get();
 
-  snapEvents.documents.forEach((eventDoc) {
-    eventData = OfferModel.fromMap(eventDoc.data);
+  snapEvents.docs.forEach((eventDoc) {
+    eventData = OfferModel.fromMap(eventDoc.data());
     if (eventData.occurenceCount == 1) {
       parentEvent = eventData;
     } else if (eventData.occurenceCount > updatedOfferModel.occurenceCount) {
@@ -339,14 +330,13 @@ Future<void> updateRecurrenceOffersFrontEnd(
   }
 
   temparr.forEach((tempobj) {
-    batch.setData(db.collection("offers").document(tempobj['id']), tempobj);
+    batch.set(CollectionRef.offers.doc(tempobj['id']), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['groupOfferDataModel']['startDate']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
 
   // s2 ---------- update parent request and previous events with end data of updated event model
 
-  batch.updateData(
-      db.collection("offers").document(updatedOfferModel.parent_offer_id), {
+  batch.update(CollectionRef.offers.doc(updatedOfferModel.parent_offer_id), {
     "end": updatedOfferModel.end.toMap(),
     "recurringDays": updatedOfferModel.recurringDays
   });
@@ -355,9 +345,8 @@ Future<void> updateRecurrenceOffersFrontEnd(
 
   if (upcomingEventsArr.length != 0) {
     upcomingEventsArr.forEach((upcomingEvent) {
-      batch.delete(db
-          .collection("offers")
-          .document(upcomingEvent.id)); // delete old upcoming recurrence-events
+      batch.delete(CollectionRef.offers
+          .doc(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
 
@@ -378,35 +367,32 @@ Future<void> updateRecurrenceOffersFrontEnd(
   if (usersIdsList.length > 0) {
     if (usersIdsList.length > 10) {
       for (endIndex = 10; endIndex < usersIdsList.length; endIndex += 10) {
-        futures.add(db
-            .collection("users")
+        futures.add(CollectionRef.users
             .where("sevauserid",
                 whereIn: usersIdsList.sublist(startIndex, endIndex))
-            .getDocuments());
+            .get());
         startIndex = endIndex;
       }
     }
-    futures.add(db
-        .collection("users")
+    futures.add(CollectionRef.users
         .where("sevauserid",
             whereIn: usersIdsList.sublist(startIndex, usersIdsList.length))
-        .getDocuments());
+        .get());
 
     var futuresResult = await Future.wait(futures);
 
     futuresResult.forEach((snapUser) {
       if (!snapUser.documents.isEmpty) {
-        snapUser.documents.forEach((docUser) {
+        snapUser.docs.forEach((docUser) {
           upcomingEventsArr.forEach((OfferModel upcomingEvent) {
             if (upcomingEvent.groupOfferDataModel.signedUpMembers
                 .contains(docUser.data['sevauserid'])) {
               uuidvar = Uuid().generateV4();
-              batch.setData(
-                  db
-                      .collection("users")
-                      .document(docUser.documentID)
+              batch.set(
+                  CollectionRef.users
+                      .doc(docUser.id)
                       .collection("notifications")
-                      .document(uuidvar),
+                      .doc(uuidvar),
                   {
                     'communityId': upcomingEvent.communityId,
                     'data': {
@@ -434,69 +420,63 @@ Future<void> updateRecurrenceOffersFrontEnd(
   await batch.commit();
 }
 
-Stream<List<OfferModel>> getOfferNotificationStream({
-  @required String userId,
-}) async* {
-  var data = Firestore.instance
-      .collection('notifications')
-      .document(userId)
-      .collection('offerRequest')
-      .snapshots();
+// Stream<List<OfferModel>> getOfferNotificationStream({
+//   @required String userId,
+// }) async* {
+//   var data = CollectionRef.collection('notifications')
+//       .doc(userId)
+//       .collection('offerRequest')
+//       .snapshots();
 
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
-      handleData: (snapshot, offerSink) {
-        List<OfferModel> offerList = [];
-        snapshot.documents.forEach((documentSnapshot) {
-          OfferModel offer = OfferModel.fromMap(documentSnapshot.data);
-          offerList.add(offer);
-        });
-        offerSink.add(offerList);
-      },
-    ),
-  );
-}
+//   yield* data.transform(
+//     StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+//       handleData: (snapshot, offerSink) {
+//         List<OfferModel> offerList = [];
+//         snapshot.docs.forEach((documentSnapshot) {
+//           OfferModel offer = OfferModel.fromMap(documentSnapshot.data);
+//           offerList.add(offer);
+//         });
+//         offerSink.add(offerList);
+//       },
+//     ),
+//   );
+// }
 
-Stream<List<RequestModel>> getOfferRequestApprovedNotificationStream({
-  @required String userId,
-}) async* {
-  var data = Firestore.instance
-      .collection('notifications')
-      .document(userId)
-      .collection('offerAccepted')
-      .snapshots();
+// Stream<List<RequestModel>> getOfferRequestApprovedNotificationStream({
+//   @required String userId,
+// }) async* {
+//   var data = CollectionRef.collection('notifications')
+//       .doc(userId)
+//       .collection('offerAccepted')
+//       .snapshots();
 
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
-      handleData: (snapshot, requestSink) {
-        List<RequestModel> requestList = [];
-        snapshot.documents.forEach((document) {
-          RequestModel model = RequestModel.fromMap(document.data);
-          model.id = document.documentID;
-          requestList.add(model);
-        });
-        requestSink.add(requestList);
-      },
-    ),
-  );
-}
+//   yield* data.transform(
+//     StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+//       handleData: (snapshot, requestSink) {
+//         List<RequestModel> requestList = [];
+//         snapshot.docs.forEach((document) {
+//           RequestModel model = RequestModel.fromMap(document.data());
+//           model.id = document.id;
+//           requestList.add(model);
+//         });
+//         requestSink.add(requestList);
+//       },
+//     ),
+//   );
+// }
 
-Future<void> deleteOfferRequestApproval({
-  @required RequestModel request,
-}) async {
-  await Firestore.instance
-      .collection('notifications')
-      .document(request.sevaUserId)
-      .collection('offerAccepted')
-      .document(request.id)
-      .delete();
-}
+// Future<void> deleteOfferRequestApproval({
+//   @required RequestModel request,
+// }) async {
+//   await CollectionRef.collection('notifications')
+//       .doc(request.sevaUserId)
+//       .collection('offerAccepted')
+//       .doc(request.id)
+//       .delete();
+// }
 
 Future<void> updateOfferWithRequest({
   @required OfferModel offer,
 }) async {
-  await Firestore.instance
-      .collection('offers')
-      .document(offer.id)
-      .updateData(offer.toMap());
+  await CollectionRef.offers.doc(offer.id).update(offer.toMap());
 }

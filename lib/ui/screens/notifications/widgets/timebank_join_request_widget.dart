@@ -5,17 +5,14 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
@@ -274,54 +271,49 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   }) {
     //add to timebank members
 
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankRef =
-        Firestore.instance.collection('timebanknew').document(timebankId);
-    var joinRequestReference =
-        Firestore.instance.collection('join_requests').document(joinRequestId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankRef = CollectionRef.timebank.doc(timebankId);
+    var joinRequestReference = CollectionRef.joinRequests.doc(joinRequestId);
 
     var newMemberDocumentReference =
-        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+        CollectionRef.users.doc(newMemberJoinedEmail);
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
     });
 
     if (!isFromGroup) {
-      batch.updateData(newMemberDocumentReference, {
+      batch.update(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
       });
       if (user.communities != null &&
           user.communities.length == 1 &&
           user.communities.elementAt(0) == FlavorConfig.values.timebankId) {
-        batch.updateData(
+        batch.update(
             newMemberDocumentReference, {'currentCommunity': communityId});
       }
-      var addToCommunityRef =
-          Firestore.instance.collection('communities').document(communityId);
-      batch.updateData(addToCommunityRef, {
+      var addToCommunityRef = CollectionRef.communities.doc(communityId);
+      batch.update(addToCommunityRef, {
         'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
       });
     }
 
-    batch.updateData(
+    batch.update(
         joinRequestReference, {'operation_taken': true, 'accepted': true});
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -368,28 +360,25 @@ class TimebankJoinRequestWidget extends StatelessWidget {
   }) {
     //add to timebank members
 
-    WriteBatch batch = Firestore.instance.batch();
-    var joinRequestReference =
-        Firestore.instance.collection('join_requests').document(joinRequestId);
+    WriteBatch batch = CollectionRef.batch;
+    var joinRequestReference = CollectionRef.joinRequests.doc(joinRequestId);
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.updateData(
+    batch.update(
         joinRequestReference, {'operation_taken': true, 'accepted': false});
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,

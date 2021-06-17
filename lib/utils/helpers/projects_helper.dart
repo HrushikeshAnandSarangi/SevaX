@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
 
 import 'projects_helper_util.dart';
@@ -69,12 +70,12 @@ class ProjectMessagingRoomHelper {
   }) {
     var batch = DBHelper.batch;
 
-    batch.updateData(DBHelper.projectsRef.document(projectId), {
+    batch.update(DBHelper.projectsRef.doc(projectId), {
       DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel.sevaUserID:
           FieldValue.increment(-1)
     });
 
-    batch.updateData(DBHelper.chatsRef.document(projectId + "*" + timebankId), {
+    batch.update(DBHelper.chatsRef.doc(projectId + "*" + timebankId), {
       DBHelper.PARTICIPATS: FieldValue.arrayRemove(
         [candidateUserModel.sevaUserID],
       ),
@@ -87,10 +88,7 @@ class ProjectMessagingRoomHelper {
     String projectId,
     String newMemberSignup,
   }) async {
-    await Firestore.instance
-        .collection('projects')
-        .document(projectId)
-        .updateData({
+    await CollectionRef.projects.doc(projectId).update({
       DBHelper.ASSOCIATED_MEMBERS: FieldValue.arrayUnion(
         [newMemberSignup],
       )
@@ -193,12 +191,12 @@ class ProjectMessagingRoomHelper {
       );
     projectModel.associatedMessaginfRoomId = chatModel.id;
 
-    batch.setData(
-      DBHelper.projectsRef.document(projectModel.id),
+    batch.set(
+      DBHelper.projectsRef.doc(projectModel.id),
       projectModel.toMap(),
     );
-    batch.setData(
-      DBHelper.chatsRef.document(chatModel.id),
+    batch.set(
+      DBHelper.chatsRef.doc(chatModel.id),
       chatModel.toMap(),
     );
 
@@ -251,12 +249,12 @@ class ProjectMessagingRoomHelper {
       );
     projectModel.associatedMessaginfRoomId = chatModel.id;
 
-    batch.setData(
-      DBHelper.projectsRef.document(projectModel.id),
+    batch.set(
+      DBHelper.projectsRef.doc(projectModel.id),
       projectModel.toMap(),
     );
-    batch.setData(
-      DBHelper.chatsRef.document(chatModel.id),
+    batch.set(
+      DBHelper.chatsRef.doc(chatModel.id),
       chatModel.shareMessage(),
     );
 
@@ -273,12 +271,12 @@ class ProjectMessagingRoomHelper {
   }) {
     var batch = DBHelper.batch;
 
-    batch.updateData(DBHelper.projectsRef.document(projectId), {
+    batch.update(DBHelper.projectsRef.doc(projectId), {
       DBHelper.ASSOCIATED_MEMBERS + '.' + candidateUserModel.sevaUserID:
           FieldValue.increment(1)
     });
 
-    batch.updateData(DBHelper.chatsRef.document(projectId + "*" + timebankId), {
+    batch.update(DBHelper.chatsRef.doc(projectId + "*" + timebankId), {
       DBHelper.PARTICIPATS: FieldValue.arrayUnion(
         [candidateUserModel.sevaUserID],
       ),

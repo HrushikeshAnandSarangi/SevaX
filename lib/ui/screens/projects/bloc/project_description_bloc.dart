@@ -1,7 +1,6 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
@@ -13,13 +12,9 @@ class ProjectDescriptionBloc extends BlocBase {
   void init(String chatId) {
     logger.e("chat id is $chatId");
     if (chatId == null) return;
-    Firestore.instance
-        .collection("chatsnew")
-        .document(chatId)
-        .snapshots()
-        .listen((event) {
-      var model = ChatModel.fromMap(event.data);
-      model.id = event.documentID;
+    CollectionRef.chats.doc(chatId).snapshots().listen((event) {
+      var model = ChatModel.fromMap(event.data());
+      model.id = event.id;
       _chatModel.add(model);
     });
   }

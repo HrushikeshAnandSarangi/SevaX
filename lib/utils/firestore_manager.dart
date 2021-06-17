@@ -4,6 +4,7 @@ import 'package:async/async.dart' show StreamGroup;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 export 'package:sevaexchange/utils/data_managers/campaigns_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/news_data_manager.dart';
@@ -13,18 +14,15 @@ export 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.da
 export 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/transaction_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
 class FirestoreManager {
   static Stream<List<DataModel>> getEntityDataListStream(
       {@required String userEmail}) async* {
-    var campaignSnapshotStream = Firestore.instance
-        .collection('campaigns')
+    var campaignSnapshotStream = CollectionRef.collection('campaigns')
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 
-    var timebankSnapshotStream = Firestore.instance
-        .collection('timebanknew')
+    var timebankSnapshotStream = CollectionRef.timebank
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 
@@ -32,9 +30,9 @@ class FirestoreManager {
       StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
         handleData: (snapshot, campaignSink) {
           List<CampaignModel> modelList = [];
-          snapshot.documents.forEach((documentSnapshot) {
+          snapshot.docs.forEach((documentSnapshot) {
             CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+            model.id = documentSnapshot.id;
             modelList.add(model);
           });
 
@@ -47,9 +45,9 @@ class FirestoreManager {
       StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
         handleData: (snapshot, timebankSink) {
           List<TimebankModel> modelList = [];
-          snapshot.documents.forEach((documentSnapshot) {
+          snapshot.docs.forEach((documentSnapshot) {
             TimebankModel model = TimebankModel(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+            model.id = documentSnapshot.id;
             modelList.add(model);
           });
 

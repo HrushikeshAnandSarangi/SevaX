@@ -7,8 +7,8 @@ import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
@@ -58,19 +58,18 @@ class _SkillViewNewState extends State<SkillViewNew> {
   @override
   void initState() {
     hasPellError = false;
-    Firestore.instance
-        .collection('skills')
+    CollectionRef.skills
         .orderBy('name')
-        .getDocuments()
+        .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
-        // suggestionID.add(data.documentID);
+        // suggestionID.add(data.id);
         if (data[widget.languageCode] != null) {
-          skills[data.documentID] = data[widget.languageCode];
+          skills[data.id] = data[widget.languageCode];
         }
 
-        // ids[data['name']] = data.documentID;
+        // ids[data['name']] = data.id;
       });
       if (!widget.isFromRequests) {
         if (widget.userModel.skills != null &&

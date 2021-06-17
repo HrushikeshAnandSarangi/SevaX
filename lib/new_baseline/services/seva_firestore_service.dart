@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 import '../models/news_model.dart';
 
-final CollectionReference newsCollection =
-    Firestore.instance.collection('news');
+final CollectionReference newsCollection = CollectionRef.feeds;
 
 class SevaFirestoreService {
   static final SevaFirestoreService _instance = SevaFirestoreService.internal();
@@ -17,10 +17,10 @@ class SevaFirestoreService {
 
   Future<NewsModel> createNews(String title, String description) async {
     final TransactionHandler createTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(newsCollection.document());
+      final DocumentSnapshot ds = await tx.get(newsCollection.doc());
 
       final NewsModel news =
-          NewsModel(id: ds.documentID, title: title, description: description);
+          NewsModel(id: ds.id, title: title, description: description);
       final Map<String, dynamic> data = news.toMap();
 
       await tx.set(ds.reference, data);
@@ -28,7 +28,7 @@ class SevaFirestoreService {
       return data;
     };
 
-    return Firestore.instance.runTransaction(createTransaction).then((mapData) {
+    return CollectionRef.runTransaction(createTransaction).then((mapData) {
       return NewsModel.fromMap(mapData);
     }).catchError((error) {
       log('error: $error');
@@ -52,15 +52,13 @@ class SevaFirestoreService {
 
   Future<dynamic> updateNews(NewsModel news) async {
     final TransactionHandler updateTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds =
-          await tx.get(newsCollection.document(news.id));
+      final DocumentSnapshot ds = await tx.get(newsCollection.doc(news.id));
 
       await tx.update(ds.reference, news.toMap());
       return {'updated': true};
     };
 
-    return Firestore.instance
-        .runTransaction(updateTransaction)
+    return CollectionRef.runTransaction(updateTransaction)
         .then((result) => result['updated'])
         .catchError((error) {
       log('error: $error');
@@ -70,14 +68,13 @@ class SevaFirestoreService {
 
   Future<dynamic> deleteNews(String id) async {
     final TransactionHandler deleteTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(newsCollection.document(id));
+      final DocumentSnapshot ds = await tx.get(newsCollection.doc(id));
 
       await tx.delete(ds.reference);
       return {'deleted': true};
     };
 
-    return Firestore.instance
-        .runTransaction(deleteTransaction)
+    return CollectionRef.runTransaction(deleteTransaction)
         .then((result) => result['deleted'])
         .catchError((error) {
       log('error: $error');

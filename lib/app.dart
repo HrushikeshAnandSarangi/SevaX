@@ -55,18 +55,6 @@ Future<void> initApp(Flavor flavor) async {
   await appLanguage.fetchLocale();
   await fetchRemoteConfig();
 
-  _firebaseMessaging.configure(
-    onMessage: (Map<String, dynamic> message) {
-      return null;
-    },
-    onLaunch: (Map<String, dynamic> message) {
-      return null;
-    },
-    onResume: (Map<String, dynamic> message) {
-      return null;
-    },
-  );
-
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarBrightness: Brightness.light,
     // statusBarColor: Colors.white,
@@ -74,8 +62,7 @@ Future<void> initApp(Flavor flavor) async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      Crashlytics.instance.enableInDevMode = true;
-      FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
       runApp(
         Phoenix(
           child: MainApplication(),
@@ -107,10 +94,11 @@ class MainApplication extends StatelessWidget {
           dispose: (_, b) => b.dispose(),
         ),
         Provider(
-          create: (context)=>HomePageBaseBloc(),
-          dispose: (_,b)=>b.dispose(),
+          create: (context) => HomePageBaseBloc(),
+          dispose: (_, b) => b.dispose(),
         ),
         StreamProvider<UserModel>.value(
+          initialData: null,
           value: userBloc.user,
         ),
       ],

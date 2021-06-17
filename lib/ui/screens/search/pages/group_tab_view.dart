@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
     as prefix0;
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -44,8 +45,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                 loggedInUser: _bloc.user,
                 currentCommunityOfUser: _bloc.community,
               ),
-              Firestore.instance
-                  .collection("join_requests")
+              CollectionRef.joinRequests
                   .where("user_id", isEqualTo: _bloc.user.sevaUserID)
                   .snapshots(),
               (x, y) => GroupData(x, y),
@@ -134,18 +134,18 @@ class _GroupTabViewState extends State<GroupTabView> {
     }
 
     if (querySnapshot != null) {
-      for (int i = 0; i < querySnapshot.documents.length; i++) {
-        DocumentSnapshot snap = querySnapshot.documents[i];
-        if (timebank.id == snap.data['entity_id']) {
-          if (snap.data["accepted"] == false &&
-              snap.data["operation_taken"] == false) {
+      for (int i = 0; i < querySnapshot.docs.length; i++) {
+        DocumentSnapshot snap = querySnapshot.docs[i];
+        if (timebank.id == snap.data()['entity_id']) {
+          if (snap.data()["accepted"] == false &&
+              snap.data()["operation_taken"] == false) {
             return JoinStatus.REQUESTED;
           }
-          if (snap.data["accepted"] == false &&
-              snap.data["operation_taken"] == true) {
+          if (snap.data()["accepted"] == false &&
+              snap.data()["operation_taken"] == true) {
             return JoinStatus.REJECTED;
           }
-          if (snap.data["accepted"] == true) {
+          if (snap.data()["accepted"] == true) {
             return JoinStatus.JOINED;
           }
         }
@@ -197,21 +197,17 @@ class _GroupTabViewState extends State<GroupTabView> {
     NotificationsModel notification,
     JoinRequestModel joinRequestModel,
   }) {
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.setData(
-        Firestore.instance
-            .collection('timebanknew')
-            .document(
+    WriteBatch batchWrite = CollectionRef.batch;
+    batchWrite.set(
+        CollectionRef.timebank
+            .doc(
               subtimebankId,
             )
             .collection("notifications")
-            .document(notification.id),
+            .doc(notification.id),
         notification.toMap());
 
-    batchWrite.setData(
-        Firestore.instance
-            .collection('join_requests')
-            .document(joinRequestModel.id),
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
         joinRequestModel.toMap());
     return batchWrite;
   }

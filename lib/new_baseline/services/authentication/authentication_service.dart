@@ -109,10 +109,10 @@
 //     }
 //   }
 
-//   /// Logout the currently logged in [FirebaseUser]
+//   /// Logout the currently logged in [User]
 //   Future<void> logout() async {
 //     log.i('logout: ');
-//     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+//     User user = await FirebaseAuth.instance.currentUser;
 //     user.providerId;
 //     // TODO: Base the logout process on the provider id
 //     await _googleAuthService.logout();

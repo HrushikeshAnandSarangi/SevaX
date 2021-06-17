@@ -12,8 +12,8 @@ class DonationAcceptedBloc extends BlocBase {
   void init(String requestId) {
     _donationsRepository.getDonationsOfRequest(requestId).listen((event) {
       List<DonationModel> temp = [];
-      event.documents.forEach((element) {
-        DonationModel model = DonationModel.fromMap(element.data);
+      event.docs.forEach((element) {
+        DonationModel model = DonationModel.fromMap(element.data());
         temp.add(model);
       });
       if (!_donations.isClosed) _donations.add(temp);
@@ -34,8 +34,8 @@ class DonationAcceptedOfferBloc extends BlocBase {
   void init(String offerId) {
     _donationsRepository.getDonationsOfOffer(offerId).listen((event) {
       List<DonationModel> temp = [];
-      event.documents.forEach((element) {
-        DonationModel model = DonationModel.fromMap(element.data);
+      event.docs.forEach((element) {
+        DonationModel model = DonationModel.fromMap(element.data());
         temp.add(model);
       });
       if (!_donations.isClosed) _donations.add(temp);

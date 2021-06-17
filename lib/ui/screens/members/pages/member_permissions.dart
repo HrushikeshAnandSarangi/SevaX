@@ -1,17 +1,13 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
-import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class MemberPermissions extends StatefulWidget {
@@ -436,10 +432,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
   }
 
   Future<void> updateQuery() async {
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(widget.timebankModel.id)
-        .updateData(
+    await CollectionRef.timebank.doc(widget.timebankModel.id).update(
       {
         'timebankConfigurations.' +
             selectedRole

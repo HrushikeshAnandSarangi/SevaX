@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
@@ -207,21 +208,19 @@ class SponsorGroupRequestWidget extends StatelessWidget {
   }) {
     //add to timebank members
 
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankRef =
-        Firestore.instance.collection('timebanknew').document(groupId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankRef = CollectionRef.timebank.doc(groupId);
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(parenttimebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(parenttimebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'sponsored': true,
     });
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
     return batch;
   }
@@ -232,15 +231,14 @@ class SponsorGroupRequestWidget extends StatelessWidget {
   }) {
     //add to timebank members
 
-    WriteBatch batch = Firestore.instance.batch();
+    WriteBatch batch = CollectionRef.batch;
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(parenttimebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(parenttimebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
     return batch;
   }

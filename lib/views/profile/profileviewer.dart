@@ -11,6 +11,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -105,7 +106,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       borderColor: Colors.yellow,
                       spacing: 0.0),
                   Text(
-                   S.of(context).trustworthiness,
+                    S.of(context).trustworthiness,
                     style: subTitle,
                   ),
                 ],
@@ -136,7 +137,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     borderColor: Colors.yellow,
                     spacing: 0.0),
                 Text(
-                 S.of(context).reliabilitysocre,
+                  S.of(context).reliabilitysocre,
                   style: subTitle,
                 ),
               ],
@@ -477,13 +478,12 @@ class ProfileViewerState extends State<ProfileViewer> {
   void blockMember(ACTION action) {
     switch (action) {
       case ACTION.BLOCK:
-        Firestore.instance
-            .collection("users")
-            .document(SevaCore.of(context).loggedInUser.email)
-            .updateData({
+        CollectionRef.users
+            .doc(SevaCore.of(context).loggedInUser.email)
+            .update({
           'blockedMembers': FieldValue.arrayUnion([user.sevaUserID])
         });
-        Firestore.instance.collection("users").document(user.email).updateData({
+        CollectionRef.users.doc(user.email).update({
           'blockedBy': FieldValue.arrayUnion(
               [SevaCore.of(context).loggedInUser.sevaUserID])
         });
@@ -498,13 +498,12 @@ class ProfileViewerState extends State<ProfileViewer> {
         break;
 
       case ACTION.UNBLOCK:
-        Firestore.instance
-            .collection("users")
-            .document(SevaCore.of(context).loggedInUser.email)
-            .updateData({
+        CollectionRef.users
+            .doc(SevaCore.of(context).loggedInUser.email)
+            .update({
           'blockedMembers': FieldValue.arrayRemove([user.sevaUserID])
         });
-        Firestore.instance.collection("users").document(user.email).updateData({
+        CollectionRef.users.doc(user.email).update({
           'blockedBy': FieldValue.arrayRemove(
               [SevaCore.of(context).loggedInUser.sevaUserID])
         });
@@ -785,14 +784,13 @@ class ProfileHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         StreamBuilder(
-          stream: Firestore.instance
-              .collection("reviews")
+          stream: CollectionRef.reviews
               .where("reviewed", isEqualTo: email)
               .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
             double r = 0;
             if (snapshot.data != null) {
-              snapshot.data.documents.forEach((data) {
+              snapshot.data.docs.forEach((data) {
                 r += double.parse((data['ratings']));
               });
             }
@@ -1096,14 +1094,13 @@ Future<bool> getReportedStatus({
   String profileUserId,
 }) async {
   bool flag = false;
-  QuerySnapshot query = await Firestore.instance
-      .collection('reported_users_list')
+  QuerySnapshot query = await CollectionRef.reportedUsersList
       .where("reportedId", isEqualTo: profileUserId)
       .where("reporterIds", arrayContains: currentUserId)
       // .where("timebankIds", arrayContains: timebankId)
-      .getDocuments();
-  query.documents.forEach((data) {
-    if (data.data['timebankIds'].contains(timebankId)) {
+      .get();
+  query.docs.forEach((data) {
+    if (data.data()['timebankIds'].contains(timebankId)) {
       flag = true;
     } else {
       flag = false;

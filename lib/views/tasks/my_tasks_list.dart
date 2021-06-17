@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +11,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -304,7 +304,7 @@ class MyTasksListState extends State<MyTaskList> {
     // adds review to firestore
     try {
       logger.i('here 1');
-      await Firestore.instance.collection("reviews").add({
+      await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": requestModelNew.email,
         "ratings": results['selection'],
@@ -630,17 +630,13 @@ class MyTasksListState extends State<MyTaskList> {
         communityId: requestModel.communityId,
         isTimebankNotification: true);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
+    await CollectionRef.timebank
+        .doc(notificationModel.timebankId)
         .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
+        .doc(notificationModel.id)
+        .set(notificationModel.toMap());
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .updateData({
+    await CollectionRef.requests.doc(requestModel.id).update({
       'isSpeakerCompleted': true,
     });
 
@@ -907,7 +903,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                 Row(
                                   children: [
                                     Text(
-                                     "S.of(context).enter_delivery_time",
+                                      "S.of(context).enter_delivery_time",
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),
@@ -1242,7 +1238,7 @@ class TaskCardViewState extends State<TaskCardView> {
     // adds review to firestore
     try {
       logger.i('here 1');
-      await Firestore.instance.collection("reviews").add({
+      await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": requestModel.email,
         "ratings": results['selection'],

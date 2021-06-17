@@ -6,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -108,8 +109,8 @@ class NotificationsBloc extends BlocBase {
         .listen((QuerySnapshot query) {
       List<NotificationsModel> notifications = [];
       personalNotificationsToBeCleared = [];
-      query.documents.forEach((DocumentSnapshot document) {
-        var notification = NotificationsModel.fromMap(document.data);
+      query.docs.forEach((DocumentSnapshot document) {
+        var notification = NotificationsModel.fromMap(document.data());
         if (checkIfDismissible(notification.type)) {
           personalNotificationsToBeCleared.add(notification.id);
         }
@@ -217,14 +218,10 @@ class NotificationsBloc extends BlocBase {
   Future<void> clearAllNotification(String email,
       {List<String> notificationIdsToBeCleared}) async {
     var x = notificationIdsToBeCleared ?? personalNotificationsToBeCleared;
-    WriteBatch batch = Firestore.instance.batch();
+    WriteBatch batch = CollectionRef.batch;
     x.forEach((String id) {
-      batch.updateData(
-        Firestore.instance
-            .collection("users")
-            .document(email)
-            .collection("notifications")
-            .document(id),
+      batch.update(
+        CollectionRef.users.doc(email).collection("notifications").doc(id),
         {"isRead": true},
       );
     });

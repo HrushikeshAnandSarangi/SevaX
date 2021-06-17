@@ -144,13 +144,13 @@ class OfferEarnings extends StatelessWidget {
   }
 
   // void handleActions(context, ParticipantStatus status, String documentId) {
-  //   DocumentReference ref = Firestore.instance
-  //       .collection("offers")
-  //       .document(offerModel.id)
+  //   DocumentReference ref = CollectionRef
+  //       offers
+  //       .doc(offerModel.id)
   //       .collection("offerParticipants")
-  //       .document(documentId);
+  //       .doc(documentId);
   //   if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-  //     ref.updateData(
+  //     ref.update(
   //       {
   //         "status":
   //             ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
@@ -159,7 +159,7 @@ class OfferEarnings extends StatelessWidget {
   //   }
 
   //   if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-  //     ref.updateData(
+  //     ref.update(
   //       {
   //         "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
   //             .toString()
@@ -310,13 +310,13 @@ class OfferDonationRequest extends StatelessWidget {
   }
 
 // void handleActions(context, ParticipantStatus status, String documentId) {
-//   DocumentReference ref = Firestore.instance
-//       .collection("offers")
-//       .document(offerModel.id)
+//   DocumentReference ref = CollectionRef
+//       offers
+//       .doc(offerModel.id)
 //       .collection("offerParticipants")
-//       .document(documentId);
+//       .doc(documentId);
 //   if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-//     ref.updateData(
+//     ref.update(
 //       {
 //         "status":
 //             ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
@@ -325,7 +325,7 @@ class OfferDonationRequest extends StatelessWidget {
 //   }
 
 //   if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-//     ref.updateData(
+//     ref.update(
 //       {
 //         "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
 //             .toString()

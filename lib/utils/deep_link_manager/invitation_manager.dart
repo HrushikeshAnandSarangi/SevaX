@@ -8,12 +8,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -64,14 +63,13 @@ class InvitationManager {
       return InvitationStatus.isInvited(invitation: cacheList[email]);
     }
 
-    var invitationStatus = await Firestore.instance
-        .collection('invitations')
+    var invitationStatus = await CollectionRef.invitations
         .where('data.inviteeEmail', isEqualTo: email)
         .where('data.timebankId', isEqualTo: timebankId)
-        .getDocuments();
-    if (invitationStatus.documents.length > 0) {
+        .get();
+    if (invitationStatus.docs.length > 0) {
       var invitationData =
-          InvitationViaLink.fromMap(invitationStatus.documents.first.data);
+          InvitationViaLink.fromMap(invitationStatus.docs.first.data());
       cacheList[email] = invitationData;
       return InvitationStatus.isInvited(invitation: invitationData);
     } else {
@@ -134,8 +132,7 @@ class InvitationManager {
   Future<bool> registerRecordInDatabase({
     InvitationViaLink invitation,
   }) async {
-    return await Firestore.instance
-        .collection('invitations')
+    return await CollectionRef.invitations
         .add({
           'invitationType': 'INVITATION_FOR_TIMEBANK',
           'data': invitation.toMap(),
@@ -178,36 +175,32 @@ class InvitationManager {
 
     log('CHECK DATA: ' + timebankModel.name + ' ' + timebankModel.id);
 
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankRef = Firestore.instance
-        .collection('timebanknew')
-        .document(primaryTimebankId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankRef = CollectionRef.timebank.doc(primaryTimebankId);
 
     var newMemberDocumentReference =
-        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+        CollectionRef.users.doc(newMemberJoinedEmail);
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
     });
 
-    batch.updateData(newMemberDocumentReference, {
+    batch.update(newMemberDocumentReference, {
       'communities': FieldValue.arrayUnion([communityId]),
       'currentCommunity': communityId,
     });
 
-    var addToCommunityRef =
-        Firestore.instance.collection('communities').document(communityId);
-    batch.updateData(addToCommunityRef, {
+    var addToCommunityRef = CollectionRef.communities.doc(communityId);
+    batch.update(addToCommunityRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
     });
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankModel.id)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankModel.id)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.JOINED_VIA_LINK.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -309,9 +302,8 @@ class OfferInvitationManager {
     String senderSevaUserID,
   }) async {
     //add to invited members
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.updateData(
-        Firestore.instance.collection('requests').document(requestModel.id), {
+    WriteBatch batchWrite = CollectionRef.batch;
+    batchWrite.update(CollectionRef.requests.doc(requestModel.id), {
       'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
     });
 
@@ -322,12 +314,11 @@ class OfferInvitationManager {
       requestModel: requestModel,
       timebankModel: timebankModel,
     );
-    batchWrite.setData(
-      Firestore.instance
-          .collection('users')
-          .document(offerModel.email)
+    batchWrite.set(
+      CollectionRef.users
+          .doc(offerModel.email)
           .collection('notifications')
-          .document(invitationNotification.id),
+          .doc(invitationNotification.id),
       invitationNotification.toMap(),
     );
 

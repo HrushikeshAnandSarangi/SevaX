@@ -7,6 +7,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/zip_code_model.dart';
@@ -61,7 +62,7 @@ class SearchCommunityViaZIPCode {
     var latLngFromZip = latLngFromZipCodeFromJson(response.body);
 
     if (response.statusCode != 200 || latLngFromZip == null) {
-      Crashlytics.instance.log('Quota Exausted');
+      FirebaseCrashlytics.instance.log('Quota Exausted');
       return Future.error(NoNearByCommunitesFoundException());
     }
     if (latLngFromZip.results != null &&
@@ -87,7 +88,7 @@ class SearchCommunityViaZIPCode {
       longitude: location.lng,
     );
 
-    var query = Firestore.instance.collection('communities');
+    var query = CollectionRef.communities;
     return await geo
         .collection(collectionRef: query)
         .within(
@@ -113,7 +114,7 @@ class SearchCommunityViaZIPCode {
 
     communitiesMatched.forEach(
       (documentSnapshot) {
-        CommunityModel model = CommunityModel(documentSnapshot.data);
+        CommunityModel model = CommunityModel(documentSnapshot.data());
         if (AppConfig.isTestCommunity ?? false) {
           if (model.testCommunity && model.softDelete == false) {
             communityList.add(model);

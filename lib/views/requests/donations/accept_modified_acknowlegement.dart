@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -224,17 +225,15 @@ class HandlerForModificationManager {
     ///This notification is always directed towards member
     /// as member can only donate as of now
 
-    var db = Firestore.instance;
-    var batch = Firestore.instance.batch();
-    batch.updateData(
-        db
-            .collection('users')
-            .document(donorEmail)
+    var batch = CollectionRef.batch;
+    batch.update(
+        CollectionRef.users
+            .doc(donorEmail)
             .collection('notifications')
-            .document(notificationId),
+            .doc(notificationId),
         {'isRead': true});
 
-    batch.updateData(db.collection('donations').document(donationId),
+    batch.update(CollectionRef.donations.doc(donationId),
         {'donationStatus': 'MEMBER_ACKNOWLEDGED_MODIFICATION'});
 
     return batch;

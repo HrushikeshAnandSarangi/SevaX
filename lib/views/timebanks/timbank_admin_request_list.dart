@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -366,20 +365,20 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //   }) {
 //     //add to timebank members
 
-//     WriteBatch batch = Firestore.instance.batch();
+//     WriteBatch batch = CollectionRef.batch;
 //     var joinRequestReference =
-//         Firestore.instance.collection('join_requests').document(joinRequestId);
+//         CollectionRef.joinRequests.doc(joinRequestId);
 
-//     var timebankNotificationReference = Firestore.instance
-//         .collection('timebanknew')
-//         .document(timebankId)
+//     var timebankNotificationReference = CollectionRef
+//         .timebank
+//         .doc(timebankId)
 //         .collection("notifications")
-//         .document(notificaitonId);
+//         .doc(notificaitonId);
 
-//     batch.updateData(
+//     batch.update(
 //         joinRequestReference, {'operation_taken': true, 'accepted': false});
 
-//     batch.updateData(timebankNotificationReference, {'isRead': true});
+//     batch.update(timebankNotificationReference, {'isRead': true});
 
 //     return batch;
 //   }
@@ -395,42 +394,42 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //   }) {
 //     //add to timebank members
 
-//     WriteBatch batch = Firestore.instance.batch();
+//     WriteBatch batch = CollectionRef.batch;
 //     var timebankRef =
-//         Firestore.instance.collection('timebanknew').document(timebankId);
+//         CollectionRef.timebank.doc(timebankId);
 //     var joinRequestReference =
-//         Firestore.instance.collection('join_requests').document(joinRequestId);
+//         CollectionRef.joinRequests.doc(joinRequestId);
 
 //     var newMemberDocumentReference =
-//         Firestore.instance.collection('users').document(newMemberJoinedEmail);
+//         CollectionRef.users.doc(newMemberJoinedEmail);
 
-//     var timebankNotificationReference = Firestore.instance
-//         .collection('timebanknew')
-//         .document(timebankId)
+//     var timebankNotificationReference = CollectionRef
+//         .timebank
+//         .doc(timebankId)
 //         .collection("notifications")
-//         .document(notificaitonId);
+//         .doc(notificaitonId);
 
-//     batch.updateData(timebankRef, {
+//     batch.update(timebankRef, {
 //       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
 //     });
 
 //     if (!isFromGroup) {
-//       batch.updateData(newMemberDocumentReference, {
+//       batch.update(newMemberDocumentReference, {
 //         'communities': FieldValue.arrayUnion([communityId]),
 //         'currentCommunity': communityId
 //       });
 
 //       var addToCommunityRef =
-//           Firestore.instance.collection('communities').document(communityId);
-//       batch.updateData(addToCommunityRef, {
+//           CollectionRef.communities.doc(communityId);
+//       batch.update(addToCommunityRef, {
 //         'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
 //       });
 //     }
 
-//     batch.updateData(
+//     batch.update(
 //         joinRequestReference, {'operation_taken': true, 'accepted': true});
 
-//     batch.updateData(timebankNotificationReference, {'isRead': true});
+//     batch.update(timebankNotificationReference, {'isRead': true});
 
 //     return batch;
 //   }
@@ -615,10 +614,10 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 
 //   Widget reportedMemberBuilder(String communityId) {
 //     return FutureBuilder(
-//       future: Firestore.instance
-//           .collection("reported_users_list")
+//       future: CollectionRef
+//           .reportedUsersList
 //           .where("communityId", isEqualTo: communityId)
-//           .getDocuments(),
+//           .get(),
 //       builder: (context, snapshot) {
 //         if (snapshot.hasData && snapshot.data != null) {
 //           return Text(snapshot.data.documents.length.toString());
@@ -1104,10 +1103,10 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                     List<String> admins =
 //                         timebankModel.admins.map((s) => s).toList();
 //                     admins.add(user.sevaUserID);
-//                     Firestore.instance
-//                         .collection('communities')
-//                         .document(timebankModel.communityId)
-//                         .updateData({
+//                     CollectionRef
+//                         .communities
+//                         .doc(timebankModel.communityId)
+//                         .update({
 //                       'admins': FieldValue.arrayUnion([user.sevaUserID]),
 //                     });
 //                     _updateTimebank(timebankModel, admins: admins);
@@ -1130,10 +1129,10 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                     List<String> admins =
 //                         timebankModel.admins.map((s) => s).toList();
 
-//                     Firestore.instance
-//                         .collection('communities')
-//                         .document(timebankModel.communityId)
-//                         .updateData({
+//                     CollectionRef
+//                         .communities
+//                         .doc(timebankModel.communityId)
+//                         .update({
 //                       'admins': FieldValue.arrayRemove([user.sevaUserID]),
 //                     });
 //                     admins.remove(user.sevaUserID);
@@ -1278,12 +1277,12 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //         communityId: communityId,
 //         senderUserId: user.sevaUserID,
 //         targetUserId: timebank.creatorId);
-//     await Firestore.instance
-//         .collection('timebanknew')
-//         .document(timebank.id)
+//     await CollectionRef
+//         .timebank
+//         .doc(timebank.id)
 //         .collection("notifications")
-//         .document(notification.id)
-//         .setData((notification..isTimebankNotification = true).toMap());
+//         .doc(notification.id)
+//         .set((notification..isTimebankNotification = true).toMap());
 //   }
 
 //   Future<Map> showAdvisory({String dialogTitle, String confirmationTitle}) {

@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/manual_time_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -187,6 +187,6 @@ class CreateTransaction {
   static updateMemberBalance({
     TransactionModel transactionModel,
   }) {
-    Firestore.instance.collection('users').document();
+    CollectionRef.users.doc();
   }
 }

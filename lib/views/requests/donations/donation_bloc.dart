@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -216,12 +216,11 @@ class DonationBloc {
         targetUserId: offerModel.sevaUserId,
         data: donationModel.toMap(),
       );
-      await Firestore.instance
-          .collection('users')
-          .document(donor.email)
+      await CollectionRef.users
+          .doc(donor.email)
           .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap());
+          .doc(notificationsModel.id)
+          .set(notificationsModel.toMap());
     } else if (requestModel != null) {
       NotificationsModel notificationsModel = NotificationsModel(
         timebankId: donationModel.timebankId,
@@ -242,20 +241,18 @@ class DonationBloc {
 
       switch (requestModel.requestMode) {
         case RequestMode.TIMEBANK_REQUEST:
-          await Firestore.instance
-              .collection('timebanknew')
-              .document(notificationsModel.timebankId)
+          await CollectionRef.timebank
+              .doc(notificationsModel.timebankId)
               .collection('notifications')
-              .document(notificationsModel.id)
-              .setData(notificationsModel.toMap());
+              .doc(notificationsModel.id)
+              .set(notificationsModel.toMap());
           break;
         case RequestMode.PERSONAL_REQUEST:
-          await Firestore.instance
-              .collection('users')
-              .document(donor.email)
+          await CollectionRef.users
+              .doc(donor.email)
               .collection('notifications')
-              .document(notificationsModel.id)
-              .setData(notificationsModel.toMap());
+              .doc(notificationsModel.id)
+              .set(notificationsModel.toMap());
           break;
       }
     }

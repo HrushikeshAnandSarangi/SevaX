@@ -1,27 +1,24 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
-import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -30,7 +27,6 @@ import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -129,8 +125,7 @@ class _RequestAcceptedSpendingViewOneToManyState
     List<Widget> _transactions = [];
     List<TransactionModel> _transactionsFromDB = [];
 
-    await Firestore.instance
-        .collection('transactions')
+    await CollectionRef.transactions
         .where("isApproved", isEqualTo: true)
         .where('transactionbetween',
             arrayContains: widget.requestModel.timebankId)
@@ -139,14 +134,14 @@ class _RequestAcceptedSpendingViewOneToManyState
                 .id) //because for one to many when transactions are created,
         //we are passing request id as the timebankid field in transactions model
         .orderBy("timestamp", descending: true)
-        .getDocuments()
+        .get()
         .then(
           (value) => {
             logger.i(
                 "==========================>>>>>>>>>> TRANSACTIONS RETURN CHECK " +
-                    value.documents.length.toString()),
-            value.documents.forEach((map) {
-              var model = TransactionModel.fromMap(map.data);
+                    value.docs.length.toString()),
+            value.docs.forEach((map) {
+              var model = TransactionModel.fromMap(map.data());
               _transactionsFromDB.add(model);
             })
           },
@@ -977,7 +972,7 @@ class _RequestAcceptedSpendingViewOneToManyState
       UserModel reciever,
       num credits}) async {
     // adds review to firestore
-    await Firestore.instance.collection("reviews").add({
+    await CollectionRef.reviews.add({
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],

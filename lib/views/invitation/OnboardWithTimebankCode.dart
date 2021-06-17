@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart'
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
@@ -485,20 +486,16 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     prefix0.NotificationsModel notification,
     JoinRequestModel joinRequestModel,
   }) {
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.setData(
-        Firestore.instance
-            .collection('timebanknew')
-            .document(
+    WriteBatch batchWrite = CollectionRef.batch;
+    batchWrite.set(
+        CollectionRef.timebank
+            .doc(
               primaryTimebankId,
             )
             .collection("notifications")
-            .document(notification.id),
+            .doc(notification.id),
         (notification..isTimebankNotification = true).toMap());
-    batchWrite.setData(
-        Firestore.instance
-            .collection('join_requests')
-            .document(joinRequestModel.id),
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
         joinRequestModel.toMap());
 
     return batchWrite;
@@ -618,13 +615,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     TimebankModel timebankModel,
     String timebankTitle,
   }) {
-    var batchUpdate = Firestore.instance.batch();
+    var batchUpdate = CollectionRef.batch;
 
-    var userUpdateRef =
-        Firestore.instance.collection("users").document(onBoardingMemberEmail);
+    var userUpdateRef = CollectionRef.users.doc(onBoardingMemberEmail);
 
-    var communityMembersRef =
-        Firestore.instance.collection("communities").document(communityId);
+    var communityMembersRef = CollectionRef.communities.doc(communityId);
 
     UserAddedModel userAddedModel = UserAddedModel(
         timebankImage: timebankModel.photoUrl,
@@ -643,32 +638,30 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         targetUserId: timebankModel.id,
         isTimebankNotification: true);
 
-    var notificationRef = Firestore.instance
-        .collection("timebanknew")
-        .document(timebankModel.id)
+    var notificationRef = CollectionRef.timebank
+        .doc(timebankModel.id)
         .collection("notifications")
-        .document(notificationModel.id);
+        .doc(notificationModel.id);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankModel.id)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankModel.id)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batchUpdate.setData(notificationRef, notificationModel.toMap());
+    batchUpdate.set(notificationRef, notificationModel.toMap());
 
-    batchUpdate.updateData(userUpdateRef, {
+    batchUpdate.update(userUpdateRef, {
       'communities': FieldValue.arrayUnion([communityId]),
       'currentCommunity': communityId,
       'currentTimebank': timebankModel.id
     });
 
-    batchUpdate.updateData(communityMembersRef, {
+    batchUpdate.update(communityMembersRef, {
       'members': FieldValue.arrayUnion([onBaordingMemberSevaId])
     });
 
     logger.e('JOINED VIA CODE START');
-    batchUpdate.setData(entryExitLogReference, {
+    batchUpdate.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.JOINED_VIA_CODE.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,

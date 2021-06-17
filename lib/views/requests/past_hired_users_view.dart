@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -21,7 +22,10 @@ class PastHiredUsersView extends StatefulWidget {
   final List<UserModel> favouriteMembers;
 
   PastHiredUsersView(
-      {@required this.timebankId, this.requestModel, this.sevaUserId, this.favouriteMembers});
+      {@required this.timebankId,
+      this.requestModel,
+      this.sevaUserId,
+      this.favouriteMembers});
 
   @override
   _PastHiredUsersViewState createState() {
@@ -32,7 +36,6 @@ class PastHiredUsersView extends StatefulWidget {
 enum UserFavoriteStatus { Favorite, NotFavorite }
 
 class _PastHiredUsersViewState extends State<PastHiredUsersView> {
-  final _firestore = Firestore.instance;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
   List<UserModel> users = [];
   List<UserModel> favoriteUsers = [];
@@ -48,27 +51,25 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
     if (isAccessAvailable(timebank.model, widget.sevaUserId)) {
       isAdmin = true;
     }
-    _firestore
-        .collection('requests')
-        .document(widget.requestModel.id)
+    CollectionRef.requests
+        .doc(widget.requestModel.id)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data);
+      requestModel = RequestModel.fromMap(reqModel.data());
       setState(() {});
     });
 
-    _firestore
-        .collection("users")
+    CollectionRef.users
         .where(
           "recommendedTimebank",
           arrayContains: widget.timebankId,
         )
-        .getDocuments()
+        .get()
         .then(
       (QuerySnapshot querysnapshot) {
-        querysnapshot.documents.forEach(
+        querysnapshot.docs.forEach(
           (DocumentSnapshot user) => users.add(
-            UserModel.fromMap(user.data, 'past_hired'),
+            UserModel.fromMap(user.data(), 'past_hired'),
           ),
         );
         if (users.isEmpty) {
@@ -87,8 +88,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
     loggedinUser = SevaCore.of(context).loggedInUser;
 
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection("users")
+      stream: CollectionRef.users
           .where(
             'recommendedTimebank',
             arrayContains: widget.timebankId,
@@ -98,8 +98,8 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
         if (snapshot.hasData && snapshot.data != null) {
           List<UserModel> userList = [];
 
-          snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data, 'past_hired');
+          snapshot.data.docs.forEach((userModel) {
+            UserModel model = UserModel.fromMap(userModel.data(), 'past_hired');
             userList.add(model);
           });
 

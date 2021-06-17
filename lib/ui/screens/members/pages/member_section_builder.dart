@@ -1,18 +1,14 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/dialogs/exit_confirmation_dialog.dart';
@@ -24,7 +20,6 @@ import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -346,12 +341,11 @@ class MemberSectionBuilder extends StatelessWidget {
     );
 
     if (isFromExit) {
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(model.id)
+      await CollectionRef.timebank
+          .doc(model.id)
           .collection('entryExitLogs')
-          .document()
-          .setData({
+          .doc()
+          .set({
         'mode': ExitJoinType.EXIT.readable,
         'modeType': ExitMode.LEFT_THE_COMMUNITY.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -379,12 +373,11 @@ class MemberSectionBuilder extends StatelessWidget {
     }
 
     if (!isFromExit && responseData['deletable'] == true) {
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(timebank.id)
+      await CollectionRef.timebank
+          .doc(timebank.id)
           .collection('entryExitLogs')
-          .document()
-          .setData({
+          .doc()
+          .set({
         'mode': ExitJoinType.EXIT.readable,
         'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
         'timestamp': DateTime.now().millisecondsSinceEpoch,

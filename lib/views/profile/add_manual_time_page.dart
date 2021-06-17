@@ -2,7 +2,7 @@
 // import 'dart:core';
 // import 'dart:developer';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
@@ -303,7 +303,7 @@
 //       addManualTimeModel.email = widget.userModel.email;
 //       addManualTimeModel.sevauserid = widget.userModel.sevaUserID;
 //       addManualTimeModel.id = Utils.getUuid();
-//       await Firestore.instance.collection("add_manual_time").document(addManualTimeModel.id).setData(addManualTimeModel.toMap());
+//       await CollectionRef.collection("add_manual_time").doc(addManualTimeModel.id).set(addManualTimeModel.toMap());
 //       await sendAddManualTimeNotification(addManualTimeModel: addManualTimeModel,);
 
 //   }
@@ -327,11 +327,11 @@
 //           isTimebankNotification: true,
 //       );
 
-//       await Firestore.instance
-//           .collection('timebanknew')
-//           .document(addManualTimeModel.timebankId)
+//       await CollectionRef
+//           .timebank
+//           .doc(addManualTimeModel.timebankId)
 //           .collection("notifications")
-//           .document(notification.id)
-//           .setData(notification.toMap());
+//           .doc(notification.id)
+//           .set(notification.toMap());
 //   }
 // }
