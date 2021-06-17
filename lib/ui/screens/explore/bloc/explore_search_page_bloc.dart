@@ -123,7 +123,6 @@ class ExploreSearchPageBloc {
           );
         });
 
-
         ElasticSearchApi.getPublicProjects(
           distanceFilterData: distanceFilterData,
           sevaUserID: sevaUserID,

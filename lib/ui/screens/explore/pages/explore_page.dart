@@ -117,6 +117,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.e('USER ID CHECK 7');
     var screenWidth = MediaQuery.of(context).size.width;
     return ExplorePageViewHolder(
       hideSearchBar: true,

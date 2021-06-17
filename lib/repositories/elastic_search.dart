@@ -576,6 +576,7 @@ class ElasticSearchApi {
 
   static Future<List<ProjectModel>> getPublicProjects(
       {DistanceFilterData distanceFilterData, String sevaUserID}) async {
+    logger.e('USER ID CHECK 6');
     String endPoint = '//elasticsearch/sevaxprojects/_doc/_search?size=1000';
     dynamic body = json.encode({
       "query": {
@@ -604,7 +605,7 @@ class ElasticSearchApi {
 
         //explore events listing page
         if (endDate.isBefore(DateTime.now())) {
-          if (sevaUserID != '' &&
+          if ((sevaUserID != '' || sevaUserID != '') &&
               (model.creatorId == sevaUserID ||
                   model.members == sevaUserID ||
                   model.associatedmembers == sevaUserID)) {

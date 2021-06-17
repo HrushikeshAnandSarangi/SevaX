@@ -711,6 +711,7 @@ Stream<List<ProjectModel>> getAllProjectListStream(
 }
 
 Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
+  logger.e('USER ID CHECK 5');
   var data = Firestore.instance
       .collection('projects')
       .where('public', isEqualTo: true)
