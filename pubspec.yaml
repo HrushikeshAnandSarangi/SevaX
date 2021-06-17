@@ -147,7 +147,6 @@ flutter:
     - lib/assets/images/cv.png
     - lib/assets/images/apple-id-outline-yes_2x.png
     - lib/assets/images/request_offer_agreement_icon.png
-    - null
     - images/
     - images/card_provider/
 

@@ -1783,7 +1783,6 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0)),
-                              splashColor: Colors.white.withAlpha(40),
                               child: Text(
                                 S.of(context).delete,
                                 textAlign: TextAlign.center,
@@ -1814,7 +1813,6 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),
-                                splashColor: Colors.white.withAlpha(40),
                                 child: Text(
                                   S.of(context).cancel,
                                   textAlign: TextAlign.center,

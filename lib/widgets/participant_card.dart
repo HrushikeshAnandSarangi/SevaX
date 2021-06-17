@@ -218,8 +218,6 @@ class RequestParticipantCard extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
-                            disabledTextColor: Colors.white,
-                            disabledColor: onTap == null ? buttonColor : null,
                             onPressed: onTap,
                           ),
                         ),
