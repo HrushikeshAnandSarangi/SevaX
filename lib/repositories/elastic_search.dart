@@ -607,8 +607,8 @@ class ElasticSearchApi {
         if (endDate.isBefore(DateTime.now())) {
           if ((sevaUserID != '' || sevaUserID != '') &&
               (model.creatorId == sevaUserID ||
-                  model.members == sevaUserID ||
-                  model.associatedmembers == sevaUserID)) {
+                  model.members.contains(sevaUserID) ||
+                  model.associatedmembers.containsKey(sevaUserID))) {
             if (AppConfig.isTestCommunity != null &&
                 AppConfig.isTestCommunity) {
               if (!model.liveMode) models.add(model);

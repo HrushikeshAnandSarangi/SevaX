@@ -695,6 +695,8 @@ Stream<List<ProjectModel>> getAllProjectListStream(
               if (isAdminOrOwner ||
                   model.associatedmembers.containsKey(
                       SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.members
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
                   model.creatorId ==
                       SevaCore.of(context).loggedInUser.sevaUserID) {
                 projectsList.add(model);
@@ -735,8 +737,8 @@ Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
             if (endDate.isBefore(DateTime.now())) {
               if (sevaUserID != '' &&
                   (model.creatorId == sevaUserID ||
-                      model.members == sevaUserID ||
-                      model.associatedmembers == sevaUserID)) {
+                      model.members.contains(sevaUserID) ||
+                      model.associatedmembers.containsKey(sevaUserID))) {
                 if (AppConfig.isTestCommunity != null &&
                     AppConfig.isTestCommunity) {
                   if (!model.liveMode) projectsList.add(model);
