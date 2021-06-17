@@ -79,7 +79,7 @@ class NotificationCard extends StatelessWidget {
                 ),
               ]
             : [],
-        actionPane: SlidableDrawerActionPane(),,
+        actionPane: SlidableDrawerActionPane(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(

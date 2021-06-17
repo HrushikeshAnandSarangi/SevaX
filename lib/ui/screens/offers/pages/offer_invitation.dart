@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -43,6 +44,7 @@ class _FindVolunteersViewStateForOffer
   final searchOnChange = BehaviorSubject<String>();
   // var validItems = [];
   List<UserModel> users = [];
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void initState() {
@@ -60,21 +62,20 @@ class _FindVolunteersViewStateForOffer
       // executes after build
     });
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Stream(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        setState(() {
-          _searchText = s;
-        });
-      }
+        if (s.isEmpty) {
+          setState(() {
+            _searchText = "";
+          });
+        } else {
+          setState(() {
+            _searchText = s;
+          });
+        }
+      });
     });
   }
 

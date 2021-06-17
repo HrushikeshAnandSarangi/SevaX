@@ -187,17 +187,19 @@ Future<String> uploadDocument(
   String name =
       requestId.toString() + '_' + timestampString + '_' + documentName;
 
-  StorageReference ref =
+  Reference ref =
       FirebaseStorage.instance.ref().child('borrow_agreement_docs').child(name);
 
-  StorageUploadTask uploadTask = ref.putFile(
+  UploadTask uploadTask = ref.putFile(
     _path,
-    StorageMetadata(
+    SettableMetadata(
       contentLanguage: 'en',
       customMetadata: <String, String>{'activity': 'CV File'},
     ),
   );
-  String documentURL = await (await uploadTask.onComplete).ref.getDownloadURL();
-
+  String documentURL = '';
+  uploadTask.whenComplete(() async {
+    documentURL = await ref.getDownloadURL();
+  });
   return documentURL;
 }

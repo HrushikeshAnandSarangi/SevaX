@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class ReportMemberPage extends StatefulWidget {
@@ -260,11 +262,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
     if (file == null) {
       progressDialog.hide();
     }
-    StorageUploadTask _uploadTask =
+    UploadTask _uploadTask =
         _storage.ref().child("reports/$filePath.png").putFile(file);
-    StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
-
-    String imageURL = await snapshot.ref.getDownloadURL();
+    String imageURL = '';
+    _uploadTask.whenComplete(() async {
+      imageURL = await _storage.ref().getDownloadURL();
+    });
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     if (profanityImageModel == null) {
       progressDialog.hide();
@@ -281,19 +284,15 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-            }).catchError((e) => logger.e(e));
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {}
+            }).catchError((e) => log(e));
           }
         });
       } else {
-        FirebaseStorage.instance
-            .getReferenceFromUrl(imageURL)
-            .then((reference) {
-          reference.delete();
-        }).catchError((e) => logger.e(e));
+        deleteFireBaseImage(imageUrl: imageURL).then((value) {
+          if (value) {}
+        }).catchError((e) => log(e));
         bloc.uploadImage(file);
         progressDialog.hide();
       }

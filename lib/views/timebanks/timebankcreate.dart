@@ -19,6 +19,7 @@ import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/sponsored_group_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -94,6 +95,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
   String duplicateGroupCheck = 'not_done';
+  final _debouncer = Debouncer(milliseconds: 600);
+
   void initState() {
     super.initState();
     timebankModel.preventAccedentalDelete = true;
@@ -108,36 +111,35 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     // }
     getParentTimebank();
     // ignore: close_sinks
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
-
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 600))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {});
-      } else {
-        duplicateGroupCheck = 'not_done';
-        SearchManager.searchGroupForDuplicate(
-                queryString: s.trim(),
-                communityId: SevaCore.of(context).loggedInUser.currentCommunity)
-            .then((groupFound) {
-          if (groupFound) {
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
+        if (s.isEmpty) {
+          setState(() {});
+        } else {
+          duplicateGroupCheck = 'not_done';
+          SearchManager.searchGroupForDuplicate(
+                  queryString: s.trim(),
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity)
+              .then((groupFound) {
+            if (groupFound) {
+              setState(() {
+                errTxt = S.of(context).group_exists;
+              });
+            } else {
+              setState(() {
+                groupFound = false;
+                errTxt = null;
+              });
+            }
+          }).whenComplete(() {
             setState(() {
-              errTxt = S.of(context).group_exists;
+              duplicateGroupCheck = 'done';
             });
-          } else {
-            setState(() {
-              groupFound = false;
-              errTxt = null;
-            });
-          }
-        }).whenComplete(() {
-          setState(() {
-            duplicateGroupCheck = 'done';
           });
-        });
-      }
+        }
+      });
     });
   }
 

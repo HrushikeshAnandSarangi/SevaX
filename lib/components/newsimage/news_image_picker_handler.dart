@@ -66,8 +66,11 @@ class NewsImagePickerHandler {
 //      print("Unsupported operation" + e.toString());
 //    }
     try {
-      _path = await FilePicker.getFilePath(
-          type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      if (result != null) {
+        _path = result.files.single.path;
+      }
     } on PlatformException catch (e) {
       logger.e("Unsupported operation" + e.toString());
     }

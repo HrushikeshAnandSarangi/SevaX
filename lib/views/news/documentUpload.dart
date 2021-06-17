@@ -42,15 +42,23 @@ class _DocumentUploadState extends State<DocumentUpload> {
     try {
       if (_multiPick) {
         _path = null;
-        _files = await FilePicker.getMultiFile(
+        FilePickerResult result = await FilePicker.platform.pickFiles(
             type: _pickingType,
             allowedExtensions: (_extension?.isNotEmpty ?? false)
                 ? _extension?.replaceAll(' ', '')?.split(',')
                 : null);
+        if (result != null) {
+          _files = result.paths.map((path) => File(path)).toList();
+        } else {
+          // User canceled the picker
+        }
       } else {
         _paths = null;
-        _path = await FilePicker.getFilePath(
-            type: FileType.custom, allowedExtensions: ['pdf']);
+        FilePickerResult result = await FilePicker.platform
+            .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+        if (result != null) {
+          _path = result.files.single.path;
+        }
       }
     } on PlatformException catch (e) {
       logger.e(e);
@@ -96,7 +104,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
                             child: ListTile(
                               leading: Icon(Icons.attachment),
                               title: Text(
-                                globals.newsDocumentName ?? S.of(context).document,
+                                globals.newsDocumentName ??
+                                    S.of(context).document,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -109,7 +118,9 @@ class _DocumentUploadState extends State<DocumentUpload> {
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _path != null ? S.of(context).change_document : S.of(context).add_document,
+                _path != null
+                    ? S.of(context).change_document
+                    : S.of(context).add_document,
               ),
             ),
             onPressed: () {
@@ -124,21 +135,23 @@ class _DocumentUploadState extends State<DocumentUpload> {
   Future<String> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
+    Reference ref = FirebaseStorage.instance
         .ref()
         .child('news_documents')
         .child(SevaCore.of(context).loggedInUser.email +
             timestampString +
             _fileName);
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       File(_path),
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},
       ),
     );
-    String documentURL =
-        await (await uploadTask.onComplete).ref.getDownloadURL();
+    String documentURL = '';
+    uploadTask.whenComplete(() async {
+      documentURL = await ref.getDownloadURL();
+    });
 
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;

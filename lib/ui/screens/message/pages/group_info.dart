@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
@@ -369,19 +370,15 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageUrl)
-                .then((reference) {
-              reference.delete();
-            }).catchError((e) => logger.e(e));
+            deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+              if (value) {}
+            }).catchError((e) => log(e));
           }
         });
       } else {
-        FirebaseStorage.instance
-            .getReferenceFromUrl(imageUrl)
-            .then((reference) {
-          reference.delete();
-        }).catchError((e) => logger.e(e));
+        deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+          if (value) {}
+        }).catchError((e) => log(e));
         bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }

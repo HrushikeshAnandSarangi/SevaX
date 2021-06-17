@@ -16,7 +16,7 @@ class ReportMemberBloc {
   final _buttonStatus = BehaviorSubject<bool>.seeded(false);
   final profanityDetector = ProfanityDetector();
 
-  FirebaseStorage _storage = FirebaseStorage();
+  FirebaseStorage _storage = FirebaseStorage.instance;
   Function(bool) get changeButtonStatus => _buttonStatus.sink.add;
   void onMessageChanged(String value) {
     _message.sink.add(value);
@@ -56,11 +56,12 @@ class ReportMemberBloc {
     String filePath = DateTime.now().toString();
     String attachmentUrl;
     if (_file.value != null) {
-      StorageUploadTask _uploadTask =
+      UploadTask _uploadTask =
           _storage.ref().child("reports/$filePath.png").putFile(_file.value);
-      StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
 
-      attachmentUrl = await snapshot.ref.getDownloadURL();
+      _uploadTask.whenComplete(() async {
+        attachmentUrl = await _storage.ref().getDownloadURL();
+      });
 
       if (attachmentUrl == null || attachmentUrl == '') {
         return Future.value(false);

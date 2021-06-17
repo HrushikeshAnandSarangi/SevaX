@@ -297,22 +297,21 @@ class RequestCreateFormState extends State<RequestCreateForm>
       // executes after build
     });
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Stream(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        volunteerUsersBloc.fetchUsers(s);
-        setState(() {
-          _searchText = s;
-        });
-      }
+        if (s.isEmpty) {
+          setState(() {
+            _searchText = "";
+          });
+        } else {
+          volunteerUsersBloc.fetchUsers(s);
+          setState(() {
+            _searchText = s;
+          });
+        }
+      });
     });
 
     // if ((FlavorConfig.appFlavor == Flavor.APP ||
@@ -3990,7 +3989,7 @@ Future<Map<String, String>> getGoodsFuture() async {
   QuerySnapshot querySnapshot =
       await CollectionRef.donationCategories.orderBy('goodTitle').get();
   querySnapshot.docs.forEach((DocumentSnapshot docData) {
-    goodsVar[docData.id] = docData.data['goodTitle'];
+    goodsVar[docData.id] = docData.data()['goodTitle'];
   });
   log("goodsVar length ${goodsVar.length.toString()}");
   return goodsVar;

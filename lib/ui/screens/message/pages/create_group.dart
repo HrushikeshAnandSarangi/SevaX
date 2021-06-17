@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,6 +14,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
@@ -141,14 +143,11 @@ class CreateGroupPage extends StatelessWidget {
                           // );
 
                           return CustomTextField(
-                            value: snapshot.data != null
-                                    ? snapshot.data
-                                    : null,
-                                controller: _controller,
-                                onChanged: bloc.onGroupNameChanged, 
-                                decoration: InputDecoration(
+                            value: snapshot.data != null ? snapshot.data : null,
+                            controller: _controller,
+                            onChanged: bloc.onGroupNameChanged,
+                            decoration: InputDecoration(
                               errorMaxLines: 2,
-                              
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -162,9 +161,8 @@ class CreateGroupPage extends StatelessWidget {
                                 fontSize: 18,
                                 color: Colors.grey,
                               ),
-                            ),   
+                            ),
                           );
-                          
                         },
                       ),
                       Divider(),
@@ -239,19 +237,16 @@ class CreateGroupPage extends StatelessWidget {
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageUrl)
-                .then((reference) {
-              reference.delete();
-            }).catchError((e) => logger.e(e));
+            deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+              if (value) {}
+            }).catchError((e) => log(e));
+            ;
           }
         });
       } else {
-        FirebaseStorage.instance
-            .getReferenceFromUrl(imageUrl)
-            .then((reference) {
-          reference.delete();
-        }).catchError((e) => logger.e(e));
+        deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+          if (value) {}
+        }).catchError((e) => log(e));
         bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }

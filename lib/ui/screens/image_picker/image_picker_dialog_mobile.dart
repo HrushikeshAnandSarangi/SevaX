@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -12,6 +13,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/image_url_view.dart';
 import 'package:path/path.dart' as pathExt;
 
@@ -249,8 +251,12 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         icon: Icons.picture_as_pdf,
         onTap: () async {
           try {
-            String _path = await FilePicker.getFilePath(
-                type: FileType.custom, allowedExtensions: ['pdf']);
+            String _path = '';
+            FilePickerResult result = await FilePicker.platform
+                .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+            if (result != null) {
+              _path = result.files.single.path;
+            }
             if (_path != null) {
               widget.storPdfFile(File(_path));
             }
@@ -330,19 +336,22 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     } else {
       folderName = 'profile_images/';
     }
-    StorageReference ref = FirebaseStorage.instance
+    Reference ref = FirebaseStorage.instance
         .ref()
         .child(folderName)
         .child(timestampString + '.jpg');
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       file,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': folderName},
       ),
     );
-    // StorageUploadTask uploadTask = ref.putFile(File.)
-    imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    // UploadTask uploadTask = ref.putFile(File.)
+
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
     // imageData =
     // await uploadImageWeb(file, folderName + timestampString + '.jpg');
     // imageURL = imageData.imageUrl;
@@ -399,12 +408,11 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-              imagefile = null;
-            });
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {
+                imagefile = null;
+              }
+            }).catchError((e) => log(e));
           }
         });
       } else {

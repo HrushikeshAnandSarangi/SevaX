@@ -163,11 +163,13 @@ Future<void> createNewMessage({
     log(file.path);
     log(messageRef.id);
     log("started upload");
-    FirebaseStorage _storage = FirebaseStorage();
-    StorageUploadTask _uploadTask =
+    FirebaseStorage _storage = FirebaseStorage.instance;
+    UploadTask _uploadTask =
         _storage.ref().child("chats/${DateTime.now()}.png").putFile(file);
-    StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
-    String attachmentUrl = await snapshot.ref.getDownloadURL();
+    String attachmentUrl = '';
+    _uploadTask.whenComplete(() async {
+      attachmentUrl = await _storage.ref().getDownloadURL();
+    });
     log(attachmentUrl);
     CollectionRef.chats
         .doc(chatId)

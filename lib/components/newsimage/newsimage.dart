@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -66,19 +68,19 @@ class NewsImageState extends State<NewsImage>
   Future<String> uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('newsimages')
-        .child(
-            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
-    StorageUploadTask uploadTask = ref.putFile(
+    Reference ref = FirebaseStorage.instance.ref().child('newsimages').child(
+        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+    UploadTask uploadTask = ref.putFile(
       _image,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
-    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String imageURL = '';
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
 
     await profanityCheck(imageURL: imageURL);
 
@@ -103,12 +105,11 @@ class NewsImageState extends State<NewsImage>
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-              globals.newsImageURL = null;
-            });
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {
+                globals.newsImageURL = null;
+              }
+            }).catchError((e) => log(e));
           } else {}
         });
       } else {
@@ -181,21 +182,23 @@ class NewsImageState extends State<NewsImage>
   Future<String> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
+    Reference ref = FirebaseStorage.instance
         .ref()
         .child('news_documents')
         .child(SevaCore.of(context).loggedInUser.email +
             timestampString +
             _fileName);
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       File(_path),
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Document'},
       ),
     );
-    String documentURL =
-        await (await uploadTask.onComplete).ref.getDownloadURL();
+    String documentURL = '';
+    uploadTask.whenComplete(() async {
+      documentURL = await ref.getDownloadURL();
+    });
 
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;

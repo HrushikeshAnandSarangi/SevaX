@@ -26,6 +26,7 @@ import 'package:sevaexchange/repositories/payment_repository.dart';
 import 'package:sevaexchange/ui/screens/communities/widgets/community_category_selector.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -151,6 +152,8 @@ class CreateEditCommunityViewFormState
   final profanityDetector = ProfanityDetector();
   bool canTestCommunity = false;
   bool testCommunity = false;
+  final _debouncer = Debouncer(milliseconds: 600);
+
   void initState() {
     if (widget.isCreateTimebank == false) {
       getModelData();
@@ -174,38 +177,37 @@ class CreateEditCommunityViewFormState
     //   _fetchCurrentlocation;
     // }
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Stream(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 600))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          errTxt = null;
-        });
-      } else {
-        if (communitynName != s) {
-          setState(() {});
-          SearchManager.searchCommunityForDuplicate(queryString: s.trim())
-              .catchError((onError) {
-            communityFound = false;
+        if (s.isEmpty) {
+          setState(() {
             errTxt = null;
-          }).then((commFound) {
-            if (commFound) {
-              setState(() {
-                communityFound = true;
-                errTxt = 'Seva Community name already exists';
-              });
-            } else {
-              setState(() {
-                communityFound = false;
-                errTxt = null;
-              });
-            }
           });
+        } else {
+          if (communitynName != s) {
+            setState(() {});
+            SearchManager.searchCommunityForDuplicate(queryString: s.trim())
+                .catchError((onError) {
+              communityFound = false;
+              errTxt = null;
+            }).then((commFound) {
+              if (commFound) {
+                setState(() {
+                  communityFound = true;
+                  errTxt = 'Seva Community name already exists';
+                });
+              } else {
+                setState(() {
+                  communityFound = false;
+                  errTxt = null;
+                });
+              }
+            });
+          }
         }
-      }
+      });
     });
   }
 

@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -116,21 +117,23 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
   final TextEditingController searchTextController = TextEditingController();
   static String JOIN;
   static String JOINED;
+  final _debouncer = Debouncer(milliseconds: 500);
+
   @override
   void initState() {
     super.initState();
     final _textUpdates = StreamController<String>();
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 500))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {});
-      } else {
-        communityBloc.fetchCommunities(s);
-        setState(() {});
-      }
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
+
+        if (s.isEmpty) {
+          setState(() {});
+        } else {
+          communityBloc.fetchCommunities(s);
+          setState(() {});
+        }
+      });
     });
   }
 

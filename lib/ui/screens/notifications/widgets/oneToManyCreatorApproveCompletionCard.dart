@@ -84,7 +84,7 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                 ),
               ]
             : [],
-        actionPane: SlidableDrawerActionPane(),,
+        actionPane: SlidableDrawerActionPane(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -163,7 +163,6 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
                     Container(
                       height: 32,
                       child: RaisedButton(
@@ -174,9 +173,7 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     SizedBox(width: 12),
-
                     Container(
                       height: 32,
                       child: RaisedButton(
@@ -192,7 +189,6 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                 ),
 
                 SizedBox(height: 8),
-
               ],
             ),
             //onTap: () => onPressed != null ? onPressed() : null,

@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -54,6 +55,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final profanityDetector = ProfanityDetector();
   BuildContext parentContext;
   String errorText = '';
+  final _debouncer = Debouncer(milliseconds: 500);
+
   @override
   void initState() {
     LocationHelper.getLocation().then((value) {
@@ -62,17 +65,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     super.initState();
 
     final _textUpdates = StreamController<String>();
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
-    Stream(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 500))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {});
-      } else {
-        communityBloc.fetchCommunities(s);
-        setState(() {});
-      }
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
+
+        if (s.isEmpty) {
+          setState(() {});
+        } else {
+          communityBloc.fetchCommunities(s);
+          setState(() {});
+        }
+      });
     });
   }
 

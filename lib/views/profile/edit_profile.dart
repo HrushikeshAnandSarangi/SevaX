@@ -31,6 +31,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
@@ -540,8 +541,11 @@ class _EditProfilePageState extends State<EditProfilePage>
     Map<String, String> _paths;
     try {
       _paths = null;
-      _path = await FilePicker.getFilePath(
-          type: FileType.custom, allowedExtensions: ['pdf']);
+      FilePickerResult result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+      if (result != null) {
+        _path = result.files.single.path;
+      }
     } on PlatformException catch (e) {
       throw e;
     }
@@ -615,17 +619,17 @@ class _EditProfilePageState extends State<EditProfilePage>
     String timestampString = timestamp.toString();
     String name =
         SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
-    StorageReference ref =
+    Reference ref =
         FirebaseStorage.instance.ref().child('cv_files').child(name);
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       File(_path),
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CV File'},
       ),
     );
     String documentURL =
-        await (await uploadTask.onComplete).ref.getDownloadURL();
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
 
     cvName = _fileName;
     cvUrl = documentURL;
@@ -710,14 +714,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-              setState(() {
-                this._saving = false;
-              });
-            });
+            deleteFireBaseImage(imageUrl: imageUrl).then((value) {
+              if (value) {
+                setState(() {
+                  this._saving = false;
+                });
+              }
+            }).catchError((e) => log(e));
           } else {}
         });
       } else {
@@ -1022,19 +1025,23 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future<String> uploadImage(String email) async {
-    StorageReference ref = FirebaseStorage.instance
+    Reference ref = FirebaseStorage.instance
         .ref()
         .child('profile_images')
         .child(email + '.jpg');
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       selectedImage,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
-    // StorageUploadTask uploadTask = ref.putFile(File.)
-    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    // UploadTask uploadTask = ref.putFile(File.)
+    String imageURL = '';
+
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
     return imageURL;
   }
 

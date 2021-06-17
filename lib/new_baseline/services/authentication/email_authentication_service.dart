@@ -1,6 +1,5 @@
 // import 'dart:io';
 
-
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:flutter/services.dart';
@@ -170,13 +169,13 @@
 //   Future<String> uploadImage(File image, String email) async {
 //     log.i('uploadImage: image: ${image.path} ' 'email: $email');
 //     // TODO: Move to file upload service
-//     StorageReference ref = FirebaseStorage.instance
+//     Reference ref = FirebaseStorage.instance
 //         .ref()
 //         .child('profile_images')
 //         .child(email + '.jpg');
-//     StorageUploadTask uploadTask = ref.putFile(
+//     UploadTask uploadTask = ref.putFile(
 //       image,
-//       StorageMetadata(
+//       SettableMetadata(
 //         contentLanguage: 'en',
 //         customMetadata: <String, String>{'activity': 'Profile Image'},
 //       ),

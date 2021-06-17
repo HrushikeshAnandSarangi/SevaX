@@ -537,17 +537,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String timestampString = timestamp.toString();
     String name =
         SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
-    StorageReference ref =
+    Reference ref =
         FirebaseStorage.instance.ref().child('csv_files').child(name);
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       File(_path),
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'CSV File'},
       ),
     );
-    String documentURL =
-        await (await uploadTask.onComplete).ref.getDownloadURL();
+    String documentURL = '';
+
+    uploadTask.whenComplete(() async {
+      documentURL = await ref.getDownloadURL();
+    });
 
     csvFileModel.csvTitle = name;
     csvFileModel.csvUrl = documentURL;

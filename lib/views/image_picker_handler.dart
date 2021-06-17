@@ -16,14 +16,16 @@ class ImagePickerHandler {
 
   void openCamera() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    cropImage(image);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    cropImage(pickedFile.path);
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    cropImage(image);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    cropImage(pickedFile.path);
   }
 
   addImageUrl() async {
@@ -37,11 +39,13 @@ class ImagePickerHandler {
     imagePicker.initState();
   }
 
-  Future cropImage(File image) async {
+  Future cropImage(String image) async {
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
+      sourcePath: image,
+      aspectRatio: CropAspectRatio(
+        ratioX: 1.0,
+        ratioY: 1.0,
+      ),
       maxWidth: 200,
       maxHeight: 200,
     );
