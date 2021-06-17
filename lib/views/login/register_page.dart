@@ -600,13 +600,13 @@ class _RegisterPageState extends State<RegisterPage>
             : () async {
                 var connResult = await Connectivity().checkConnectivity();
                 if (connResult == ConnectivityResult.none) {
-                  _scaffoldKey.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(S.of(context).check_internet),
                       action: SnackBarAction(
                         label: S.of(context).dismiss,
                         onPressed: () =>
-                            _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                       ),
                     ),
                   );
@@ -846,12 +846,13 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -860,14 +861,15 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
               // "Email address already in use, please use a different email!"),
               e._message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1159,12 +1161,13 @@ class _RegisterPageState extends State<RegisterPage>
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1199,12 +1202,13 @@ class _RegisterPageState extends State<RegisterPage>
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -1218,13 +1222,13 @@ class _RegisterPageState extends State<RegisterPage>
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        _scaffoldKey.currentState.showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(S.of(context).validation_error_email_registered),
             action: SnackBarAction(
               label: S.of(context).dismiss,
               onPressed: () {
-                _scaffoldKey.currentState.hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
             ),
           ),
@@ -1255,38 +1259,38 @@ class _RegisterPageState extends State<RegisterPage>
 
   void handlePlatformException(PlatformException error) {
     if (error.message.contains("no user record")) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
             onPressed: () {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
         ),
       );
     } else if (error.message.contains("password")) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).change_password,
             onPressed: () {
               resetPassword(email);
-              _scaffoldKey.currentState.hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
         ),
       );
     } else if (error.message.contains("already")) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).validation_error_email_registered),
           action: SnackBarAction(
             label: S.of(context).dismiss,
             onPressed: () {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
         ),
@@ -1298,12 +1302,12 @@ class _RegisterPageState extends State<RegisterPage>
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
           label: S.of(context).dismiss,
           onPressed: () {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         ),
       ));

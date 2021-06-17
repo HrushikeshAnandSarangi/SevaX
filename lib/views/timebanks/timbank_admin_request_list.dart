@@ -45,8 +45,8 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //   var _coordinatorsWidgets = List<Widget>();
 //   var _membersWidgets = List<Widget>();
 //   var _requestsWidgets = List<Widget>();
-//   var _adminEmails = List<String>();
-//   var _organizerEmails = List<String>();
+//   var _adminEmails = [];
+//   var _organizerEmails = [];
 //   var isProgressBarActive = false;
 //   var debounceValue = Debouncer(milliseconds: 500);
 //   var joinRequestList = List<JoinRequestModel>();
@@ -536,7 +536,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //     canPromoteAdmin =
 //         isOwner(timebankModel, SevaCore.of(context).loggedInUser.sevaUserID);
 //     if (timebankModel.admins == null) {
-//       timebankModel.admins = List<String>();
+//       timebankModel.admins = [];
 //     }
 //     adminsList = Set.from(timebankModel.admins);
 
@@ -581,7 +581,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 
 //   Future loadOrganizers() async {
 //     if (timebankModel.organizers == null) {
-//       timebankModel.organizers = List<String>();
+//       timebankModel.organizers = [];
 //     }
 //     var organizerUserModel = await FirestoreManager.getUserForUserModels(
 //         admins: timebankModel.organizers);
@@ -758,12 +758,12 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                     onPressed: () async {
 //                       var connResult = await Connectivity().checkConnectivity();
 //                       if (connResult == ConnectivityResult.none) {
-//                         _scaffoldKey.currentState.showSnackBar(
+//                         ScaffoldMessenger.of(context).showSnackBar(
 //                           SnackBar(
 //                             content: Text(S.of(context).check_internet),
 //                             action: SnackBarAction(
 //                               label: S.of(context).dismiss,
-//                               onPressed: () => _scaffoldKey.currentState
+//                               onPressed: () => ScaffoldMessenger.of(context)
 //                                   .hideCurrentSnackBar(),
 //                             ),
 //                           ),
@@ -1193,12 +1193,12 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //   void _showFontSizePickerDialog(UserModel user, TimebankModel model) async {
 //     var connResult = await Connectivity().checkConnectivity();
 //     if (connResult == ConnectivityResult.none) {
-//       Scaffold.of(context).showSnackBar(
+//       ScaffoldMessenger.of(context).showSnackBar(
 //         SnackBar(
 //           content: Text(S.of(context).check_internet),
 //           action: SnackBarAction(
 //             label: S.of(context).dismiss,
-//             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+//             onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
 //           ),
 //         ),
 //       );
@@ -1206,12 +1206,12 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //     }
 
 //     if (timebankModel.balance <= 0) {
-//       Scaffold.of(context).showSnackBar(
+//       ScaffoldMessenger.of(context).showSnackBar(
 //         SnackBar(
 //           content: Text(S.of(context).insufficient_credits_to_donate),
 //           action: SnackBarAction(
 //             label: S.of(context).dismiss,
-//             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+//             onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
 //           ),
 //         ),
 //       );

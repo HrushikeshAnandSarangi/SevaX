@@ -1,6 +1,5 @@
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/project_model.dart';
 
 class BorrowAgreementTemplateModel extends DataModel {
   String id;

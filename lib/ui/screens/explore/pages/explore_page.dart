@@ -468,12 +468,6 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 city: landMark ?? '',
                                                 description: model.title,
                                                 onTap: () {
-                                                  bool isAdmin = snapshot
-                                                      .data.admins
-                                                      .contains(
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID);
                                                   if (model.sevaUserId ==
                                                           SevaCore.of(context)
                                                               .loggedInUser

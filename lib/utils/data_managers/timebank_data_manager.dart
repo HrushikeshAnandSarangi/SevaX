@@ -501,7 +501,7 @@ Future<TimebankParticipantsDataHolder> getAllTimebankIdStream(
   var coordinators = model.coordinators;
   var organizers = model.organizers;
   var members = model.members;
-  var allItems = List<String>();
+  var allItems = [];
   allItems.addAll(admins);
   allItems.addAll(coordinators);
   allItems.addAll(members);

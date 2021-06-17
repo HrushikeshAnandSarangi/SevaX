@@ -140,12 +140,13 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   void _showFontSizePickerDialog() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -155,12 +156,13 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (AppConfig.isTestCommunity
         ? this.widget.loggedInUser.sandboxCurrentBalance
         : this.widget.loggedInUser.currentBalance <= 0) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );

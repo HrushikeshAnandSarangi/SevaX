@@ -4,11 +4,9 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -134,7 +132,8 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                                     SevaCore.of(context).loggedInUser.fullname,
                                 adminPhotoUrl:
                                     SevaCore.of(context).loggedInUser.photoURL,
-                                timebankTitle: snapshot.data[index].timebankTitle,
+                                timebankTitle:
+                                    snapshot.data[index].timebankTitle,
                                 memberEmail: user.email,
                                 memberId: user.sevaUserID,
                               );

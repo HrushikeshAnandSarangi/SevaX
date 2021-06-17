@@ -100,12 +100,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   void showScaffold(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         action: SnackBarAction(
           label: S.of(context).dismiss,
-          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
         ),
       ),
     );
@@ -418,7 +418,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             if (status.data == Status.LOADING) {
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
-                  Scaffold.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
                         widget.offerModel == null
@@ -434,7 +434,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
             if (status.data == Status.ERROR) {
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
-                  Scaffold.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
                         widget.offerModel == null
@@ -655,15 +655,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   var connResult =
                                       await Connectivity().checkConnectivity();
                                   if (connResult == ConnectivityResult.none) {
-                                    _scaffoldKey.currentState.showSnackBar(
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content:
                                             Text(S.of(context).check_internet),
                                         action: SnackBarAction(
                                           label: S.of(context).dismiss,
-                                          onPressed: () => _scaffoldKey
-                                              .currentState
-                                              .hideCurrentSnackBar(),
+                                          onPressed: () =>
+                                              ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar(),
                                         ),
                                       ),
                                     );

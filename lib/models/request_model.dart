@@ -296,13 +296,13 @@ class RequestModel extends DataModel {
           List.castFrom(map['recommendedMemberIdsForRequest']);
       this.recommendedMemberIdsForRequest = recommendedMembeIds;
     } else {
-      this.recommendedMemberIdsForRequest = List();
+      this.recommendedMemberIdsForRequest = [];
     }
     if (map.containsKey('categories')) {
       List<String> categories = List.castFrom(map['categories']);
       this.categories = categories;
     } else {
-      this.categories = List();
+      this.categories = [];
     }
 
     if (map.containsKey('allowedCalenderUsers')) {
@@ -546,7 +546,7 @@ class RequestModel extends DataModel {
           List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
-      this.oneToManyRequestAttenders = List();
+      this.oneToManyRequestAttenders = [];
     }
 
     if (map.containsKey("skills")) {
@@ -611,13 +611,13 @@ class RequestModel extends DataModel {
           List.castFrom(map['recommendedMemberIdsForRequest']);
       this.recommendedMemberIdsForRequest = recommendedMembeIds;
     } else {
-      this.recommendedMemberIdsForRequest = List();
+      this.recommendedMemberIdsForRequest = [];
     }
     if (map.containsKey('categories')) {
       List<String> categories = List.castFrom(map['categories']);
       this.categories = categories;
     } else {
-      this.categories = List();
+      this.categories = [];
     }
     if (map.containsKey("skills")) {
       this.skills = Map<String, String>.from(map["skills"] ?? {}) ?? {};
@@ -892,7 +892,7 @@ class RequestModel extends DataModel {
           List.castFrom(map['oneToManyRequestAttenders']);
       this.oneToManyRequestAttenders = oneToManyRequestAttenders;
     } else {
-      this.oneToManyRequestAttenders = List();
+      this.oneToManyRequestAttenders = [];
     }
     if (map.containsKey('communityName')) {
       this.communityName = map['communityName'];

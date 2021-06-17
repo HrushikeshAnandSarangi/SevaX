@@ -47,7 +47,7 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   if (snapshot.docs == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data());
     requestList.add(model);
@@ -66,7 +66,7 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
   if (snapshot.docs == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data());
 
@@ -87,7 +87,7 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
   if (snapshot.docs == null) {
     return [];
   }
-  var requestList = List<JoinRequestModel>();
+  List<JoinRequestModel> requestList = [];
   snapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data());
 

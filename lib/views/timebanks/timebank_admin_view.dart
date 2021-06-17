@@ -43,7 +43,7 @@
 //  var _admins = List<Widget>();
 //  var _coordinators = List<Widget>();
 //  var _members = List<Widget>();
-//  var _adminEmails = List<String>();
+//  var _adminEmails = [];
 //  HashMap<String, int> emailIndexMap = HashMap();
 //  HashMap<int, UserModel> indexToModelMap = HashMap();
 //  HashMap<String, bool> adminToModelMap = HashMap();
@@ -306,7 +306,7 @@
 //
 //  Future loadNextAdmins() async {
 //    if (timebankModel.admins == null) {
-//      timebankModel.admins = List<String>();
+//      timebankModel.admins = [];
 //    }
 //    if (timebankModel.admins.length != 0) {
 //      bool isAdmin = timebankModel.admins.contains(
@@ -372,7 +372,7 @@
 //
 //  Future loadNextCoordinators() async {
 //    if (timebankModel.admins == null) {
-//      timebankModel.coordinators = List<String>();
+//      timebankModel.coordinators = [];
 //    }
 //    if (timebankModel.coordinators.length != 0) {
 //      bool isCoordinator = timebankModel.coordinators.contains(

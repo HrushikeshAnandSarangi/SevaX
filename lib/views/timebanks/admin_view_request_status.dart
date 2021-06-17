@@ -453,7 +453,7 @@
 //  );
 //}
 //
-//List<UserModel> usersRequested = List();
+//List<UserModel> usersRequested = [];
 //
 //class ApprovedMembers extends StatelessWidget {
 //  final RequestModel requestModel;

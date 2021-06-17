@@ -102,7 +102,7 @@
 //             ),
 //             //paddingColumn(),
 //             paddingColumn(),
-//             list(),
+//             [],
 //             paddingColumn(),
 //             _titleRow('Repeat After'),
 //             paddingColumn(),

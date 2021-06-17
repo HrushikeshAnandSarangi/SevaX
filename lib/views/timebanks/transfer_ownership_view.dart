@@ -40,10 +40,10 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  var groupMembersList = List<String>();
+  var groupMembersList = [];
   var ownerGroupsArr;
   UserModel selectedNewOwner = null;
-  var allItems = List<String>();
+  var allItems = [];
   var admins, coordinators, members;
   TimebankModel tbmodel;
   var futures = <Future>[];

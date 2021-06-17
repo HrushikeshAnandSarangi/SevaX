@@ -41,7 +41,7 @@ class _FindVolunteersViewStateForOffer
   final volunteerUsersBloc = VolunteerFindBloc();
 
   final searchOnChange = BehaviorSubject<String>();
-  // var validItems = List<String>();
+  // var validItems = [];
   List<UserModel> users = [];
 
   @override

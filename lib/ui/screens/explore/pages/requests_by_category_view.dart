@@ -129,11 +129,6 @@ class _RequestsByCategoryViewState extends State<RequestsByCategoryView> {
                             }
                             return ExploreEventCard(
                               onTap: () {
-                                bool isAdmin = snapshot.data.admins.contains(
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID);
-
                                 if (request.sevaUserId ==
                                         SevaCore.of(context)
                                             .loggedInUser

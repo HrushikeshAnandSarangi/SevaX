@@ -945,11 +945,11 @@ class _RequestAcceptedSpendingViewOneToManyState
     var user1 =
         await FirestoreManager.getUserForEmail(emailAddress: reviewerEmail);
     if (user1.pastHires == null) {
-      user1.pastHires = List<String>();
+      user1.pastHires = [];
     }
     var hired = user2.sevaUserID.trim();
     if (!user1.pastHires.contains(hired)) {
-      var reportedUsersList = List<String>();
+      var reportedUsersList = [];
       for (var i = 0; i < user1.pastHires.length; i++) {
         reportedUsersList.add(user1.pastHires[i]);
       }

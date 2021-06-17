@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:sevaexchange/models/models.dart';
-
 class SelectedSpeakerTimeDetails {
   int prepTime;
   double speakingTime;

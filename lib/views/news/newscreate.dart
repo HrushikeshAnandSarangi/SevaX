@@ -53,7 +53,7 @@ class NewsCreate extends StatelessWidget {
 
               //           if (_formState.currentState.formKey.currentState.validate()) {
               //             // If the form is valid, we want to show a Snackbar
-              //             Scaffold.of(context).showSnackBar(
+              //             ScaffoldMessenger.of(context).showSnackBar(
               //                 SnackBar(content: Text('Creating Post')));
               //             _formState.currentState.writeToDB();
               //           }
@@ -361,42 +361,40 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
-                        Scaffold.of(context).showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () =>
-                                  Scaffold.of(context).hideCurrentSnackBar(),
+                              onPressed: () => ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
                         return;
                       }
-                      
-                        if (formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (createDialogContext) {
-                                dialogContext = createDialogContext;
-                                return AlertDialog(
-                                  title: Text(S.of(context).creating_feed),
-                                  content: LinearProgressIndicator(),
-                                );
-                              });
-                          scrapeURLFromSubheading(subheadingController.text);
-                          scrapeHashTagsFromSubHeadings(
-                              subheadingController.text);
 
-                          if (newsObject.urlsFromPost.length > 0) {
-                            await scrapeURLDetails(
-                                newsObject.urlsFromPost.first);
-                          }
-                          writeToDB();
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (createDialogContext) {
+                              dialogContext = createDialogContext;
+                              return AlertDialog(
+                                title: Text(S.of(context).creating_feed),
+                                content: LinearProgressIndicator(),
+                              );
+                            });
+                        scrapeURLFromSubheading(subheadingController.text);
+                        scrapeHashTagsFromSubHeadings(
+                            subheadingController.text);
+
+                        if (newsObject.urlsFromPost.length > 0) {
+                          await scrapeURLDetails(newsObject.urlsFromPost.first);
                         }
-                      
+                        writeToDB();
+                      }
                     },
                     child: Text(
                       S.of(context).create_feed,
@@ -414,7 +412,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   void scrapeURLFromSubheading(String subHeadings) {
-    List<String> scappedURLs = List();
+    List<String> scappedURLs = [];
     RegExp regExp = RegExp(
       r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
       caseSensitive: false,
@@ -432,7 +430,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   void scrapeHashTagsFromSubHeadings(String subHeadings) {
     // HashTag Extraction
-    List<String> hashTags = List();
+    List<String> hashTags = [];
 
     RegExp exp = RegExp(r"([#,@][^\s#\@]*)");
     Iterable<RegExpMatch> matches = exp.allMatches(subHeadings);
@@ -449,7 +447,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         var result = webScraper.getScrapedData();
         if (result != null) {
           newsObject.title = result.title;
-          newsObject.imageScraped = result.image ??S.of(context).no_data;
+          newsObject.imageScraped = result.image ?? S.of(context).no_data;
           newsObject.description = result.body;
         }
       }

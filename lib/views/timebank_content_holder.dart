@@ -1114,8 +1114,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                     } else {
                                                       if (news
                                                           .reports.isEmpty) {
-                                                        news.reports =
-                                                            List<String>();
+                                                        news.reports = [];
                                                       }
                                                       CollectionRef.feeds
                                                           .doc(news.id)

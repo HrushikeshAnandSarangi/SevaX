@@ -219,7 +219,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : "Seva " + timebankModel.name +S.of(context).event,
+                      : "Seva " + timebankModel.name + S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -745,12 +745,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
-                        _scaffoldKey.currentState.showSnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
-                              onPressed: () => _scaffoldKey.currentState
+                              onPressed: () => ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar(),
                             ),
                           ),

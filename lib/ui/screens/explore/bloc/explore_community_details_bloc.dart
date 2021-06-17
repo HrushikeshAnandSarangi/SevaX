@@ -6,11 +6,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/community_repository.dart';
 import 'package:sevaexchange/repositories/project_repository.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
-import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
-
-import '../../../../flavor_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ExploreCommunityDetailsBloc {

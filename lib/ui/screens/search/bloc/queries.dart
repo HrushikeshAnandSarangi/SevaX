@@ -52,7 +52,7 @@ class Searches {
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    List<String> timebanksIdArr = List();
+    List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .get();
@@ -246,7 +246,7 @@ class Searches {
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    List<String> timebanksIdArr = List();
+    List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .where('community_id', isEqualTo: loggedInUser.currentCommunity)
@@ -534,7 +534,7 @@ class Searches {
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    List<String> timebanksIdArr = List();
+    List<String> timebanksIdArr = [];
     QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .where('community_id', isEqualTo: loggedInUser.currentCommunity)
@@ -738,7 +738,7 @@ class Searches {
 
   static List<String> getTimebanksAndGroupsOfUser(
       timebanksOfCommunity, timebanksOfUser) {
-    List<String> timebankarr = List();
+    List<String> timebankarr = [];
     timebanksOfCommunity.forEach((tb) {
       if (timebanksOfUser.contains(tb)) {
         timebankarr.add(tb);
@@ -754,9 +754,8 @@ class Searches {
       String language) async {
     Map<String, List<String>> skillsInterestsConsolidated = {};
 
-    List<String> skillsarr = List();
-    List<String> interestsarr = List();
-    String temp = "";
+    List<String> skillsarr = [];
+    List<String> interestsarr = [];
 
     skillsarr = await SearchManager.searchSkills(
         queryString: queryString, language: language);

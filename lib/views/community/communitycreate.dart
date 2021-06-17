@@ -1012,7 +1012,7 @@ class CreateEditCommunityViewFormState
                                 var connResult =
                                     await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
-                                  Scaffold.of(context).showSnackBar(
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
                                           Text(S.of(context).check_internet),

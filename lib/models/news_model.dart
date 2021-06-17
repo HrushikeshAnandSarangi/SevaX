@@ -24,13 +24,13 @@ class NewsModel extends DataModel {
   String placeAddress;
   bool isPinned;
   bool softDelete;
-  List<Comments> comments = List();
-  List<String> urlsFromPost = List();
-  List<String> hashTags = List();
+  List<Comments> comments = [];
+  List<String> urlsFromPost = [];
+  List<String> hashTags = [];
 
   String userPhotoURL;
   String imageScraped = "NoData";
-  List<String> timebanksPosted = List();
+  List<String> timebanksPosted = [];
   bool liveMode;
 
   NewsModel({
@@ -506,9 +506,9 @@ class Comments extends DataModel {
   String fullName;
   String comment;
   String feedId;
-  List<String> mentions = List(); // user ids for future.
-  List<Comments> comments = List();
-  List<String> likes = List();
+  List<String> mentions = []; // user ids for future.
+  List<Comments> comments = [];
+  List<String> likes = [];
   int createdAt;
 
   Comments({
@@ -546,7 +546,7 @@ class Comments extends DataModel {
       List<String> mentions = List.castFrom(map['mentions']);
       this.mentions = mentions;
     } else {
-      this.mentions = List();
+      this.mentions = [];
     }
     if (map.containsKey('comments')) {
       List<Comments> commentsList = [];
@@ -559,7 +559,7 @@ class Comments extends DataModel {
 
       this.comments = commentsList;
     } else {
-      this.comments = List();
+      this.comments = [];
     }
 
     if (map.containsKey('likes')) {

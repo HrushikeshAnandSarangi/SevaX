@@ -222,7 +222,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       SevaCore.of(mContext).loggedInUser.sevaUserID)) {
                   } else {
                     if (news.reports.isEmpty) {
-                      news.reports = List<String>();
+                      news.reports = [];
                     }
                     news.reports
                         .add(SevaCore.of(mContext).loggedInUser.sevaUserID);

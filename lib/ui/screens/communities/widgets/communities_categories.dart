@@ -3,8 +3,6 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_search_page.dart';
 
-import '../../../../labels.dart';
-
 class CommunitiesCategory extends StatelessWidget {
   final Stream<List<CommunityCategoryModel>> stream;
   final ValueChanged<CommunityCategoryModel> onTap;

@@ -301,8 +301,8 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
   }
 
   void _showSnackBar(String message, {bool isLongDuration = false}) {
-    _scaffoldKey.currentState?.hideCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context)?.hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: isLongDuration ? Duration(minutes: 1) : Duration(seconds: 4),
         content: Row(

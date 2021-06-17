@@ -193,8 +193,9 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                             .then(
                           (value) {
                             if (value) {
-                              _key.currentState.hideCurrentSnackBar();
-                              _key.currentState.showSnackBar(
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Claimed Successfully'),
                                 ),
@@ -211,14 +212,15 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                         });
                       } catch (e) {
                         changeLoadingState(false);
-                        _key.currentState.hideCurrentSnackBar();
-                        _key.currentState.showSnackBar(
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(S.of(context).general_stream_error),
                             action: SnackBarAction(
                               label: S.of(context).dismiss,
                               onPressed: () {
-                                _key.currentState.hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
                               },
                             ),
                           ),

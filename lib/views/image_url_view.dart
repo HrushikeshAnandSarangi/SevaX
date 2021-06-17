@@ -16,7 +16,6 @@ import '../flavor_config.dart';
 class ImageUrlView extends StatefulWidget {
   final Function(String link) onLinkCreated;
 
-
   ImageUrlView({this.onLinkCreated});
 
   @override
@@ -168,7 +167,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   }
 
   void scrapeURLFromTextField(String textContent) async {
-    List<String> scappedURLs = List();
+    List<String> scappedURLs = [];
     String scapedUrl;
     RegExp regExp = RegExp(
       r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',

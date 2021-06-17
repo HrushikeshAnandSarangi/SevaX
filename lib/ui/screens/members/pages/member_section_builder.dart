@@ -576,12 +576,13 @@ class MemberSectionBuilder extends StatelessWidget {
       BuildContext context, UserModel user, TimebankModel model) async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -589,12 +590,13 @@ class MemberSectionBuilder extends StatelessWidget {
     }
 
     if (timebank.balance <= 0) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );

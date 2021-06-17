@@ -26,7 +26,6 @@ import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/create_offer_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -38,7 +37,6 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
-import '../../../../labels.dart';
 import 'notifications_bloc.dart';
 
 class PersonalNotificationReducerForRequests {

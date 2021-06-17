@@ -1632,7 +1632,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     );
                   });
 
-              // Scaffold.of(context).showSnackBar(
+              // ScaffoldMessenger.of(context).showSnackBar(
               //   SnackBar(
               //     duration: Duration(seconds: 3),
               //     content: Text(

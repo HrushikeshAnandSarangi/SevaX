@@ -40,7 +40,7 @@ class GroupRequestCommons {
     var hashedList =
         getListHashed(requestModelList: requestList, sevaUserId: sevaUserId);
 
-    List<RequestModelList> consolidatedList = List();
+    List<RequestModelList> consolidatedList = [];
 
     hashedList.forEach((k, v) {
       consolidatedList.add(GroupTitle.create(groupTitle: k));
@@ -59,7 +59,7 @@ class GroupRequestCommons {
       if (req.sevaUserId == sevaUserId) {
         if (hashMap["MyPost"] == null) {
           //create list
-          hashMap["MyPost"] = List();
+          hashMap["MyPost"] = [];
           hashMap["MyPost"].add(req);
         } else {
           //add to existing
@@ -68,7 +68,7 @@ class GroupRequestCommons {
       } else {
         if (hashMap["Others"] == null) {
           //create list
-          hashMap["Others"] = List();
+          hashMap["Others"] = [];
           hashMap["Others"].add(req);
         } else {
           //add to existing
@@ -138,7 +138,7 @@ class GroupOfferCommons {
     var hashedList =
         getListHashed(offerModelList: offerList, sevaUserId: sevaUserId);
 
-    List<OfferModelList> consolidatedList = List();
+    List<OfferModelList> consolidatedList = [];
 
     hashedList.keys.toList()..sort();
 
@@ -161,7 +161,7 @@ class GroupOfferCommons {
       if (offer.sevaUserId == sevaUserId) {
         if (hashMap["MyOffers"] == null) {
           //create list
-          hashMap["MyOffers"] = List();
+          hashMap["MyOffers"] = [];
           hashMap["MyOffers"].add(offer);
         } else {
           //add to existing
@@ -170,7 +170,7 @@ class GroupOfferCommons {
       } else {
         if (hashMap["Others"] == null) {
           //create list
-          hashMap["Others"] = List();
+          hashMap["Others"] = [];
           hashMap["Others"].add(offer);
         } else {
           //add to existing

@@ -211,7 +211,7 @@ class TransactionBloc {
         Query query = CollectionRef.users.where('sevauserid', isEqualTo: from);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs?.length > 0 && snapshot.docs != null
+            snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
                 : null;
         if (document != null)
@@ -224,7 +224,7 @@ class TransactionBloc {
         // credit to user
         query = CollectionRef.users.where('sevauserid', isEqualTo: to);
         snapshot = await query.get();
-        document = snapshot.docs?.length > 0 && snapshot.docs != null
+        document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
             : null;
         if (document != null)
@@ -250,7 +250,7 @@ class TransactionBloc {
         // credit to user
         query = CollectionRef.users.where('sevauserid', isEqualTo: to);
         snapshot = await query.get();
-        document = snapshot.docs?.length > 0 && snapshot.docs != null
+        document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
             : null;
         if (document != null)
@@ -265,7 +265,7 @@ class TransactionBloc {
         Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs?.length > 0 && snapshot.docs != null
+            snapshot.docs != null && snapshot.docs?.length > 0
                 ? snapshot.docs.first
                 : null;
         if (document != null)
@@ -278,7 +278,7 @@ class TransactionBloc {
         Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs?.length > 0 && snapshot.docs != null
+            snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
                 : null;
         if (document != null)
@@ -290,7 +290,7 @@ class TransactionBloc {
 
         query = CollectionRef.users.where('sevauserid', isEqualTo: from);
         snapshot = await query.get();
-        document = snapshot.docs?.length > 0 && snapshot.docs != null
+        document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
             : null;
         if (document != null)
@@ -305,7 +305,7 @@ class TransactionBloc {
         Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.docs?.length > 0 && snapshot.docs != null
+            snapshot.docs != null && snapshot.docs.length > 0
                 ? snapshot.docs.first
                 : null;
         if (document != null)
@@ -316,7 +316,7 @@ class TransactionBloc {
         // credit to user
         query = CollectionRef.users.where('sevauserid', isEqualTo: to);
         snapshot = await query.get();
-        document = snapshot.docs?.length > 0 && snapshot.docs != null
+        document = snapshot.docs != null && snapshot.docs.length > 0
             ? snapshot.docs.first
             : null;
         if (document != null)

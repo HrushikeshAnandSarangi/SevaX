@@ -286,7 +286,7 @@ class _LoginPageState extends State<LoginPage> {
                         onActivityResult['userEmail'] != null &&
                         onActivityResult['userEmail'].toString().isNotEmpty) {
                       resetPassword(onActivityResult['userEmail']);
-                      _scaffoldKey.currentState.hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     } else {}
                   });
                 },
@@ -459,15 +459,15 @@ class _LoginPageState extends State<LoginPage> {
                                 var connResult =
                                     await Connectivity().checkConnectivity();
                                 if (connResult == ConnectivityResult.none) {
-                                  _scaffoldKey.currentState.showSnackBar(
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
                                           Text(S.of(context).check_internet),
                                       action: SnackBarAction(
                                         label: S.of(context).dismiss,
-                                        onPressed: () => _scaffoldKey
-                                            .currentState
-                                            .hideCurrentSnackBar(),
+                                        onPressed: () =>
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
@@ -808,12 +808,13 @@ class _LoginPageState extends State<LoginPage> {
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -844,12 +845,13 @@ class _LoginPageState extends State<LoginPage> {
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(S.of(context).check_internet),
           action: SnackBarAction(
             label: S.of(context).dismiss,
-            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            onPressed: () =>
+                ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ),
         ),
       );
@@ -907,13 +909,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void handleException() {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.of(context).no_user_found),
         action: SnackBarAction(
           label: S.of(context).dismiss,
           onPressed: () {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         ),
       ),
@@ -922,26 +924,26 @@ class _LoginPageState extends State<LoginPage> {
 
   void handlePlatformException(PlatformException error) {
     if (error.message.contains("no user record")) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).dismiss,
             onPressed: () {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
         ),
       );
     } else if (error.message.contains("password")) {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
             label: S.of(context).change_password,
             onPressed: () {
               resetPassword(emailId);
-              _scaffoldKey.currentState.hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
             },
           ),
         ),
@@ -988,12 +990,12 @@ class _LoginPageState extends State<LoginPage> {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
           label: S.of(context).dismiss,
           onPressed: () {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
         ),
       ));

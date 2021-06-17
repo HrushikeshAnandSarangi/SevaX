@@ -38,7 +38,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   final TextEditingController searchTextController = TextEditingController();
 
   final searchOnChange = BehaviorSubject<String>();
-  var validItems = List<String>();
+  var validItems = [];
 
   @override
   void initState() {
@@ -78,7 +78,8 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
                 hintText: S.of(context).search + ' ' + S.of(context).members,
-                hintStyle: TextStyle(color: Colors.white), floatingLabelBehavior: FloatingLabelBehavior.never),
+                hintStyle: TextStyle(color: Colors.white),
+                floatingLabelBehavior: FloatingLabelBehavior.never),
             // controller: searchTextController,
           ),
         ),

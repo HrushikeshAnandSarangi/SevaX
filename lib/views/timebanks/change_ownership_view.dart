@@ -28,10 +28,10 @@
 //   SuggestionsBoxController controller = SuggestionsBoxController();
 //   TextEditingController _textEditingController = TextEditingController();
 
-//   var groupMembersList = List<String>();
+//   var groupMembersList = [];
 //   var ownerGroupsArr;
 //   UserModel selectedNewOwner = null;
-//   var allItems = List<String>();
+//   var allItems = [];
 //   var admins, coordinators, members;
 //   UserModel loggedInUser;
 //   TimebankModel tbmodel;

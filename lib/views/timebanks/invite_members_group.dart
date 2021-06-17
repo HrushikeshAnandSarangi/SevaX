@@ -34,8 +34,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel parenttimebankModel;
-  var parentTimebankMembersList = List<String>();
-  var groupMembersList = List<String>();
+  var parentTimebankMembersList = [];
+  var groupMembersList = [];
   List<InvitationModel> listInvitationModel;
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
