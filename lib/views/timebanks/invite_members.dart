@@ -515,8 +515,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     Map<String, String> _paths;
     try {
       _paths = null;
-      _path = await FilePicker.getFilePath(
-          type: FileType.custom, allowedExtensions: ['csv']);
+      var data = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+        allowMultiple: false,
+      );
+      if (data.isSinglePick) {
+        _path = data.files.first.path;
+      }
     } on PlatformException catch (e) {
       logger.e(e);
     }
