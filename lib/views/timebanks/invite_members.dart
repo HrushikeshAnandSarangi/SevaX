@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path/path.dart' as pathExt;
 import 'package:path_drawing/path_drawing.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
@@ -22,6 +23,7 @@ import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
@@ -37,7 +39,6 @@ import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
-import 'package:path/path.dart' as pathExt;
 
 class InviteAddMembers extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -54,7 +55,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
-  final _firestore = Firestore.instance;
 
   var validItems = [];
   InvitationManager inivitationManager = InvitationManager();
@@ -460,9 +460,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       csvFileModel.sevaUserId =
                           SevaCore.of(context).loggedInUser.sevaUserID;
 
-                      await _firestore
-                          .collection('csv_files')
-                          .add(csvFileModel.toMap());
+                      await CollectionRef.csvFiles.add(csvFileModel.toMap());
 
                       if (dialogContext != null) {
                         Navigator.pop(dialogContext);
@@ -1035,8 +1033,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Stream<List<TimebankCodeModel>> getTimebankCodes({
     String timebankId,
   }) async* {
-    var data = Firestore.instance
-        .collection('timebankCodes')
+    var data = CollectionRef.timebankCodes
         .where('timebankId', isEqualTo: timebankId)
         .snapshots();
 
@@ -1044,9 +1041,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       StreamTransformer<QuerySnapshot, List<TimebankCodeModel>>.fromHandlers(
         handleData: (querySnapshot, timebankCodeSink) {
           List<TimebankCodeModel> timebankCodes = [];
-          querySnapshot.documents.forEach((documentSnapshot) {
+          querySnapshot.docs.forEach((documentSnapshot) {
             timebankCodes.add(TimebankCodeModel.fromMap(
-              documentSnapshot.data,
+              documentSnapshot.data(),
             ));
           });
           timebankCodeSink.add(timebankCodes);
@@ -1141,17 +1138,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     codeModel.timebankCode = timebankCode;
     codeModel.communityId = communityId;
 
-    await Firestore.instance
-        .collection('timebankCodes')
-        .document(codeModel.timebankCodeId)
-        .setData(codeModel.toMap());
+    await CollectionRef.timebankCodes
+        .doc(codeModel.timebankCodeId)
+        .set(codeModel.toMap());
   }
 
   void deleteShareCode(String timebankCodeId) {
-    Firestore.instance
-        .collection("timebankCodes")
-        .document(timebankCodeId)
-        .delete();
+    CollectionRef.timebankCodes.doc(timebankCodeId).delete();
   }
 
   TextStyle get sectionTextStyle {
@@ -1173,36 +1166,32 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String parentTimebankId,
     TimebankModel timebankModel,
   }) {
-    WriteBatch batch = Firestore.instance.batch();
+    WriteBatch batch = CollectionRef.batch;
 
-    var timebankRef =
-        Firestore.instance.collection('timebanknew').document(timebankId);
+    var timebankRef = CollectionRef.timebank.doc(timebankId);
 
-    var addToCommunityRef =
-        Firestore.instance.collection('communities').document(communityId);
+    var addToCommunityRef = CollectionRef.communities.doc(communityId);
 
-    var newMemberDocumentReference =
-        Firestore.instance.collection('users').document(userEmail);
+    var newMemberDocumentReference = CollectionRef.users.doc(userEmail);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([sevaUserId]),
     });
 
-    batch.updateData(addToCommunityRef, {
+    batch.update(addToCommunityRef, {
       'members': FieldValue.arrayUnion([sevaUserId]),
     });
 
-    batch.updateData(newMemberDocumentReference, {
+    batch.update(newMemberDocumentReference, {
       'communities': FieldValue.arrayUnion([communityId]),
     });
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.ADDED_MANUALLY_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -1259,12 +1248,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
   }
 }
 

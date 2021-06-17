@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -112,10 +110,10 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 //                FlatButton(
 //                  child: Text(S.of(context).cancel_offer),
 //                  onPressed: () async {
-//                    await Firestore.instance
-//                        .collection('offers')
-//                        .document(widget.offerModel.id)
-//                        .updateData({'groupOfferDataModel.isCanceled': true});
+//                    await CollectionRef
+//                        .offers
+//                        .doc(widget.offerModel.id)
+//                        .update({'groupOfferDataModel.isCanceled': true});
 //                    ExtendedNavigator.of(context).pop();
 //                  },
 //                ),

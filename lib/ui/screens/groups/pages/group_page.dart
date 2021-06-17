@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -341,7 +342,8 @@ class _GroupCard extends StatelessWidget {
     this.onTap,
     @required this.onButtonPressed,
     @required this.buttonText,
-    this.hideButton = false, this.hideCard = false,
+    this.hideButton = false,
+    this.hideCard = false,
   }) : super(key: key);
 
   final TimebankModel timebank;
@@ -349,7 +351,7 @@ class _GroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HideWidget(
-      hide:hideCard,
+      hide: hideCard,
       child: InkWell(
         onTap: onTap,
         child: Card(
@@ -469,18 +471,14 @@ class CreateJoinRequestManager {
     NotificationsModel notification,
     JoinRequestModel joinRequestModel,
   }) {
-    WriteBatch batchWrite = Firestore.instance.batch();
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(subtimebankId)
+    WriteBatch batchWrite = CollectionRef.batch;
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(subtimebankId)
         .collection("notifications")
-        .document(notification.id);
-    batchWrite.setData(timebankNotificationReference, notification.toMap());
+        .doc(notification.id);
+    batchWrite.set(timebankNotificationReference, notification.toMap());
 
-    batchWrite.setData(
-        Firestore.instance
-            .collection('join_requests')
-            .document(joinRequestModel.id),
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
         joinRequestModel.toMap());
     return batchWrite;
   }

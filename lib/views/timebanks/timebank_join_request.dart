@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:sevaexchange/models/user_model.dart';
 //import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -30,11 +31,11 @@
 //  void _writeToDB() {
 //    int timestamp = DateTime.now().millisecondsSinceEpoch;
 //
-//    Firestore.instance
+//    CollectionRef
 //        .collection('join_requests_timebanks')
-//        .document(
+//        .doc(
 //            '${widget.owner.email}*${widget.timebankModel.createdAt}*${SevaCore.of(context).loggedInUser.email}')
-//        .setData({
+//        .set({
 //      'timebankid': widget.timebankModel.creatorId +
 //          '*' +
 //          widget.timebankModel.createdAt.toString(),

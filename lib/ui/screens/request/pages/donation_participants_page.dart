@@ -13,7 +13,6 @@ import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_car
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
-import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class DonationParticipantPage extends StatelessWidget {
@@ -54,7 +53,9 @@ class DonationParticipantPage extends StatelessWidget {
             log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
               type: requestModel != null ? 'request' : 'offer',
-              name: requestModel != null ? model.donorDetails.name: model.receiverDetails.name,
+              name: requestModel != null
+                  ? model.donorDetails.name
+                  : model.receiverDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
               goods: model.donationStatus == DonationStatus.REQUESTED
                   ? (model.goodsDetails?.requiredGoods != null
@@ -66,7 +67,9 @@ class DonationParticipantPage extends StatelessWidget {
                           model.goodsDetails.donatedGoods.values)
                       : []),
               status: model.donationStatus,
-              photoUrl: requestModel != null ? model.donorDetails.photoUrl: model.receiverDetails.photoUrl,
+              photoUrl: requestModel != null
+                  ? model.donorDetails.photoUrl
+                  : model.receiverDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
               comments: model.goodsDetails.comments,
               timestamp: model.timestamp,
@@ -100,32 +103,35 @@ class DonationParticipantPage extends StatelessWidget {
                         )
                       : model.lastModifiedBy == model.donatedTo
                           ? null
-                          : !(model.donationStatus ==
-                          DonationStatus.PLEDGED && model.requestIdType == 'offer') ?  Container(
-                              height: 20,
-                              child: RaisedButton(
-                                color: Colors.white,
-                                padding: EdgeInsets.zero,
-                                child: Text(
-                                  S.of(context).acknowledge,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          RequestDonationDisputePage(
-                                        model: model,
-                                        notificationId: model.notificationId,
+                          : !(model.donationStatus == DonationStatus.PLEDGED &&
+                                  model.requestIdType == 'offer')
+                              ? Container(
+                                  height: 20,
+                                  child: RaisedButton(
+                                    color: Colors.white,
+                                    padding: EdgeInsets.zero,
+                                    child: Text(
+                                      S.of(context).acknowledge,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black,
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                            ): Text("Waiting acknowledgement"),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RequestDonationDisputePage(
+                                            model: model,
+                                            notificationId:
+                                                model.notificationId,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Text("Waiting acknowledgement"),
             );
           },
           separatorBuilder: (context, index) {
@@ -176,7 +182,7 @@ class DonationParticipantPage extends StatelessWidget {
         );
         break;
       default:
-        Crashlytics.instance.log(
+        FirebaseCrashlytics.instance.log(
             'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
         return DonationButtonActionModel(
           buttonColor: Colors.grey,

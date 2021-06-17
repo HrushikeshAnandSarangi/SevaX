@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -42,12 +42,11 @@ class MessageRoomManager {
       listen: false,
     ).getMemberFromLocalData(userId: participantId);
     log('email ${user.email}');
-    return await Firestore.instance
-        .collection('users')
-        .document(user.email)
+    return await CollectionRef.users
+        .doc(user.email)
         .collection('notifications')
-        .document(notification.id)
-        .setData(notification.toMap())
+        .doc(notification.id)
+        .set(notification.toMap())
         .then((value) => true)
         .catchError((onError) {
       return false;

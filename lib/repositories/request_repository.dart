@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class RequestRepository {
-  static CollectionReference ref = Firestore.instance.collection('requests');
+  static CollectionReference ref = CollectionRef.requests;
 
   static Stream<List<RequestModel>> getAllRequestOfTimebank(
       String timebankId, String userId) async* {
@@ -21,11 +21,11 @@ class RequestRepository {
       StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
         handleData: (snapshot, sink) {
           List<RequestModel> models = [];
-          snapshot.documents.forEach(
+          snapshot.docs.forEach(
             (documentSnapshot) {
               // =========================================++=======
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-              model.id = documentSnapshot.documentID;
+              model.id = documentSnapshot.id;
 
               if (model.accepted) {
                 if (model.sevaUserId == userId) {
@@ -47,8 +47,8 @@ class RequestRepository {
   static Future<RequestModel> getRequestFutureById(
     String requestId,
   ) async {
-    DocumentSnapshot document = await ref.document(requestId).get();
-    return RequestModel.fromMap(document.data);
+    DocumentSnapshot document = await ref.doc(requestId).get();
+    return RequestModel.fromMap(document.data());
   }
 
   static Future<List<RequestModel>> getAllRequestsOfCommunity(
@@ -57,10 +57,10 @@ class RequestRepository {
     var result = await ref
         .where("communityId", isEqualTo: communityId)
         .limit(limit)
-        .getDocuments();
+        .get();
 
     List<RequestModel> models = [];
-    result.documents.forEach((element) {
+    result.docs.forEach((element) {
       models.add(RequestModel.fromMap(element.data));
     });
     return models;

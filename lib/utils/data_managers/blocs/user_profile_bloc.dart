@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -27,15 +27,12 @@ class UserProfileBloc {
       ).listen((userModel) {
         if (communitiesList != null) {
           var futures = communitiesList.map(
-            (e) async => await Firestore.instance
-                .collection("communities")
-                .document(e)
-                .get(),
+            (e) async => await CollectionRef.communities.doc(e).get(),
           );
           Future.wait(futures).then((value) {
             var models = value
                 .map<CommunityModel>(
-                  (e) => CommunityModel(e.data),
+                  (e) => CommunityModel(e.data()),
                 )
                 .toList();
             models.sort(
@@ -66,7 +63,7 @@ class UserProfileBloc {
           community.primary_timebank;
     SevaCore.of(context).loggedInUser.associatedWithTimebanks =
         community.timebanks.length;
-    Firestore.instance.collection('users').document(email).updateData({
+    CollectionRef.users.doc(email).update({
       "currentCommunity": community.id,
       "currentTimebank": community.primary_timebank
     }).then((onValue) {

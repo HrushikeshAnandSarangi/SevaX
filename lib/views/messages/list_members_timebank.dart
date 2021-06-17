@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 // Widget getTimebankMembers() {
 //   var context;
@@ -29,8 +30,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 Stream<List<TimebankModel>> getTimebankDetails({
   String timebankId,
 }) async* {
-  var data = Firestore.instance
-      .collection('timebanknew')
+  var data = CollectionRef.timebank
       .where('timebankId', isEqualTo: timebankId)
       .snapshots();
 
@@ -38,9 +38,9 @@ Stream<List<TimebankModel>> getTimebankDetails({
     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
       handleData: (querySnapshot, timebankCodeSink) {
         List<TimebankModel> timebanks = [];
-        querySnapshot.documents.forEach((documentSnapshot) {
+        querySnapshot.docs.forEach((documentSnapshot) {
           timebanks.add(TimebankModel.fromMap(
-            documentSnapshot.data,
+            documentSnapshot.data(),
           ));
         });
         timebankCodeSink.add(timebanks);
@@ -52,12 +52,8 @@ Stream<List<TimebankModel>> getTimebankDetails({
 Future<TimebankModel> getTimebankDetailsbyFuture({
   String timebankId,
 }) async {
-  return Firestore.instance
-      .collection('timebanknew')
-      .document(timebankId)
-      .get()
-      .then((timebankModel) {
-    return TimebankModel.fromMap(timebankModel.data);
+  return CollectionRef.timebank.doc(timebankId).get().then((timebankModel) {
+    return TimebankModel.fromMap(timebankModel.data());
   }).catchError((onError) {
     return onError;
   });

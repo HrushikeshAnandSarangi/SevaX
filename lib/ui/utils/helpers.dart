@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -71,13 +72,13 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
 
   if (type == FeedbackType.FOR_REQUEST_VOLUNTEER) {
     var temp = results['ratings'];
-    await Firestore.instance.collection('users').document(user.email).setData({
+    await CollectionRef.users.doc(user.email).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
       'trustworthinessscore': averageReview(user.totalReviews,
           ratingCal(temp['2'] + temp['3']), user.trustworthinessscore)
-    }, merge: true);
+    }, SetOptions(merge: true));
   }
 }
 

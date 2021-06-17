@@ -15,6 +15,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManyCreatorCompleteRequestPage.dart';
@@ -313,9 +314,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                     '${widget.requestItem.numberOfApprovals}' +
                                     S.of(context).people_applied_for_request),
                                 StreamBuilder(
-                                    stream: Firestore.instance
-                                        .collection("requests")
-                                        .document(widget.requestItem.id)
+                                    stream: CollectionRef.requests
+                                        .doc(widget.requestItem.id)
                                         .collection('oneToManyAttendeesDetails')
                                         .snapshots(),
                                     builder: (context, snapshot) {
@@ -476,10 +476,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   widget.requestItem.accepted == true,
               child: InkWell(
                 onTap: () async {
-                  await Firestore.instance
-                      .collection('requests')
-                      .document(widget.requestItem.id)
-                      .updateData({'accepted': true});
+                  await CollectionRef.requests
+                      .doc(widget.requestItem.id)
+                      .update({'accepted': true});
                   Navigator.of(context).pop();
                 },
                 child: Container(
@@ -544,10 +543,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
-    var user = await Firestore.instance
-        .collection("users")
-        .document(memberEmail)
-        .get();
+    var user = await CollectionRef.users.doc(memberEmail).get();
 
     return user.data;
   }
@@ -1877,8 +1873,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void applyAction() async {
-    var batch = Firestore.instance.batch();
-    var db = Firestore.instance;
+    var batch = CollectionRef.batch;
     if (widget.requestItem.requestType == RequestType.ONE_TO_MANY_REQUEST) {
       if (widget.requestItem.oneToManyRequestAttenders
           .contains(SevaCore.of(context).loggedInUser.email)) {
@@ -1892,15 +1887,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
         widget.requestItem.oneToManyRequestAttenders = attenders.toList();
         batch.delete(
-          db
-              .collection('requests')
-              .document(widget.requestItem.id)
+          CollectionRef.requests
+              .doc(widget.requestItem.id)
               .collection('oneToManyAttendeesDetails')
-              .document(SevaCore.of(context).loggedInUser.email),
+              .doc(SevaCore.of(context).loggedInUser.email),
         );
 
-        batch.updateData(
-            db.collection('requests').document(widget.requestItem.id),
+        batch.update(CollectionRef.requests.doc(widget.requestItem.id),
             widget.requestItem.toMap());
         await batch.commit();
         Navigator.pop(context);
@@ -1932,16 +1925,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL,
           sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
         );
-        batch.setData(
-            db
-                .collection('requests')
-                .document(widget.requestItem.id)
+        batch.set(
+            CollectionRef.requests
+                .doc(widget.requestItem.id)
                 .collection('oneToManyAttendeesDetails')
-                .document(SevaCore.of(context).loggedInUser.email),
+                .doc(SevaCore.of(context).loggedInUser.email),
             attendeeObject.toMap());
 
-        batch.updateData(
-            db.collection('requests').document(widget.requestItem.id),
+        batch.update(CollectionRef.requests.doc(widget.requestItem.id),
             widget.requestItem.toMap());
         await batch.commit();
 
@@ -2068,12 +2059,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   void _acceptRequest() async {
     CommunityModel communityModel;
-    await Firestore.instance
-        .collection('communities')
-        .document(widget.timebankModel.communityId)
+    await CollectionRef.communities
+        .doc(widget.timebankModel.communityId)
         .get()
         .then((value) {
-      communityModel = CommunityModel(value.data);
+      communityModel = CommunityModel(value.data());
       setState(() {});
     });
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
@@ -2607,9 +2597,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       widget.requestItem.approvedUsers.length > 0
           ? StreamBuilder(
-              stream: Firestore.instance
-                  .collection('requests')
-                  .document(widget.requestItem.id)
+              stream: CollectionRef.requests
+                  .doc(widget.requestItem.id)
                   .collection('borrowRequestAcceptors')
                   .where('acceptorEmail',
                       isEqualTo: widget.requestItem.approvedUsers[0])
@@ -3005,40 +2994,33 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Future fetchRecurringRequestsDocs(RequestModel requestItem) async {
-    recurringRequestsDocs = await Firestore.instance
-        .collection('requests')
+    recurringRequestsDocs = await CollectionRef.requests
         .where('parent_request_id', isEqualTo: requestItem.parent_request_id)
         //.where('autoGenerated', isEqualTo: true)
-        .getDocuments();
+        .get();
   }
 
   WriteBatch deleteParentRequest(RequestModel requestItem) {
-    WriteBatch batch = Firestore.instance.batch();
+    WriteBatch batch = CollectionRef.batch;
     var docs = recurringRequestsDocs.documents;
 
 //below if condition for, if only one request is remaining in the recurring request list.
 //To avoid index error.
     if (docs.length <= 1) {
-      var delete1 =
-          Firestore.instance.collection('requests').document(requestItem.id);
+      var delete1 = CollectionRef.requests.doc(requestItem.id);
       batch.delete(delete1);
     } else if (docs.length > 1) {
       Map<String, dynamic> subsequentDocMap = docs[1].data;
-      String subsequentDocID = docs[1].documentID;
+      String subsequentDocID = docs[1].id;
 
-      var update1 = Firestore.instance
-          .collection('requests')
-          .document(requestItem.parent_request_id);
+      var update1 = CollectionRef.requests.doc(requestItem.parent_request_id);
 
-      var update2 = Firestore.instance
-          .collection('requests')
-          .document(requestItem.parent_request_id);
+      var update2 = CollectionRef.requests.doc(requestItem.parent_request_id);
 
-      var delete2 =
-          Firestore.instance.collection('requests').document(subsequentDocID);
+      var delete2 = CollectionRef.requests.doc(subsequentDocID);
 
-      batch.updateData(update1, subsequentDocMap);
-      batch.updateData(update2, {
+      batch.update(update1, subsequentDocMap);
+      batch.update(update2, {
         'id': requestItem.parent_request_id,
         'isRecurring': true,
         'autoGenerated': false,
@@ -3049,18 +3031,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Future<void> deleteRequest() async {
-    await Firestore.instance
-        .collection('requests')
-        .document(widget.requestItem.id)
-        .delete();
+    await CollectionRef.requests.doc(widget.requestItem.id).delete();
 
     if (widget.requestItem.projectId != null &&
         widget.requestItem.projectId.isNotEmpty) {
       try {
-        Firestore.instance
-            .collection('projects')
-            .document(widget.requestItem.projectId)
-            .updateData({
+        CollectionRef.projects.doc(widget.requestItem.projectId).update({
           'pendingRequests': FieldValue.arrayRemove([widget.requestItem.id])
         });
       } on Exception catch (e) {

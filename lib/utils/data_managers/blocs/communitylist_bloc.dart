@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -207,169 +208,124 @@ class TransactionBloc {
       // TODO burhan suggest to do this in cloud function; current is a background task.
       if (type == RequestMode.PERSONAL_REQUEST) {
         // debit from user
-        Query query = Firestore.instance
-            .collection('users')
-            .where('sevauserid', isEqualTo: from);
-        QuerySnapshot snapshot = await query.getDocuments();
+        Query query = CollectionRef.users.where('sevauserid', isEqualTo: from);
+        QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.documents.length > 0 && snapshot.documents != null
-                ? snapshot.documents.first
+            snapshot.docs != null && snapshot.docs.length > 0
+                ? snapshot.docs.first
                 : null;
         if (document != null)
-          Firestore.instance
-              .collection('users')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
                     ? 'sandboxCurrentBalance'
                     : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
         // credit to user
-        query = Firestore.instance
-            .collection('users')
-            .where('sevauserid', isEqualTo: to);
-        snapshot = await query.getDocuments();
-        document = snapshot.documents?.length > 0 && snapshot.documents != null
-            ? snapshot.documents.first
+        query = CollectionRef.users.where('sevauserid', isEqualTo: to);
+        snapshot = await query.get();
+        document = snapshot.docs != null && snapshot.docs.length > 0
+            ? snapshot.docs.first
             : null;
         if (document != null)
-          Firestore.instance
-              .collection('users')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
                     ? 'sandboxCurrentBalance'
                     : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
-          }, merge: true);
+          }, SetOptions(merge: true));
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
         // debit from timebank
-        Query query = Firestore.instance
-            .collection('timebanknew')
-            .where('id', isEqualTo: timebankid);
-        QuerySnapshot snapshot = await query.getDocuments();
+        Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.documents.length > 0 && snapshot.documents != null
-                ? snapshot.documents.first
+            snapshot.docs?.length > 0 && snapshot.docs != null
+                ? snapshot.docs.first
                 : null;
         if (document != null)
-          Firestore.instance
-              .collection('timebanknew')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.timebank.doc(document.id).set({
             'balance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
         // credit to user
-        query = Firestore.instance
-            .collection('users')
-            .where('sevauserid', isEqualTo: to);
-        snapshot = await query.getDocuments();
-        document = snapshot.documents.length > 0 && snapshot.documents != null
-            ? snapshot.documents.first
+        query = CollectionRef.users.where('sevauserid', isEqualTo: to);
+        snapshot = await query.get();
+        document = snapshot.docs != null && snapshot.docs.length > 0
+            ? snapshot.docs.first
             : null;
         if (document != null)
-          Firestore.instance
-              .collection('users')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
                     ? 'sandboxCurrentBalance'
                     : 'currentBalance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
-          }, merge: true);
+          }, SetOptions(merge: true));
       } else if (type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
         // credit request hours to timebank
-        Query query = Firestore.instance
-            .collection('timebanknew')
-            .where('id', isEqualTo: timebankid);
-        QuerySnapshot snapshot = await query.getDocuments();
+        Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.documents.length > 0 && snapshot.documents != null
-                ? snapshot.documents.first
+            snapshot.docs != null && snapshot.docs?.length > 0
+                ? snapshot.docs.first
                 : null;
         if (document != null)
-          Firestore.instance
-              .collection('timebanknew')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.timebank.doc(document.id).set({
             'balance':
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
       } else if (type == "USER_DONATE_TOTIMEBANK") {
         // debit from timebank
-        Query query = Firestore.instance
-            .collection('timebanknew')
-            .where('id', isEqualTo: timebankid);
-        QuerySnapshot snapshot = await query.getDocuments();
+        Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.documents.length > 0 && snapshot.documents != null
-                ? snapshot.documents.first
+            snapshot.docs != null && snapshot.docs.length > 0
+                ? snapshot.docs.first
                 : null;
         if (document != null)
-          Firestore.instance
-              .collection('timebanknew')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.timebank.doc(document.id).set({
             'balance':
                 FieldValue.increment(num.parse(credits.toStringAsFixed(2)))
-          }, merge: true);
+          }, SetOptions(merge: true));
         // credit to user
 
-        query = Firestore.instance
-            .collection('users')
-            .where('sevauserid', isEqualTo: from);
-        snapshot = await query.getDocuments();
-        document = snapshot.documents.length > 0 && snapshot.documents != null
-            ? snapshot.documents.first
+        query = CollectionRef.users.where('sevauserid', isEqualTo: from);
+        snapshot = await query.get();
+        document = snapshot.docs != null && snapshot.docs.length > 0
+            ? snapshot.docs.first
             : null;
         if (document != null)
-          Firestore.instance
-              .collection('users')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
                     ? 'sandboxCurrentBalance'
                     : 'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
       } else if (type == "ADMIN_DONATE_TOUSER") {
         // debit from timebank
-        Query query = Firestore.instance
-            .collection('timebanknew')
-            .where('id', isEqualTo: timebankid);
-        QuerySnapshot snapshot = await query.getDocuments();
+        Query query = CollectionRef.timebank.where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.get();
         DocumentSnapshot document =
-            snapshot.documents.length > 0 && snapshot.documents != null
-                ? snapshot.documents.first
+            snapshot.docs != null && snapshot.docs.length > 0
+                ? snapshot.docs.first
                 : null;
         if (document != null)
-          Firestore.instance
-              .collection('timebanknew')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.timebank.doc(document.id).set({
             'balance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
         // credit to user
-        query = Firestore.instance
-            .collection('users')
-            .where('sevauserid', isEqualTo: to);
-        snapshot = await query.getDocuments();
-        document = snapshot.documents.length > 0 && snapshot.documents != null
-            ? snapshot.documents.first
+        query = CollectionRef.users.where('sevauserid', isEqualTo: to);
+        snapshot = await query.get();
+        document = snapshot.docs != null && snapshot.docs.length > 0
+            ? snapshot.docs.first
             : null;
         if (document != null)
-          Firestore.instance
-              .collection('users')
-              .document(document.documentID)
-              .setData({
+          CollectionRef.users.doc(document.id).set({
             AppConfig.isTestCommunity
                     ? 'sandboxCurrentBalance'
                     : 'currentBalance':
                 FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
-          }, merge: true);
+          }, SetOptions(merge: true));
       }
     }
   }
@@ -407,10 +363,9 @@ class TransactionBloc {
 
 //    await handleApprovedTransaction(isApproved, from, to, timebankid, type,
 //        num.parse(credits.toStringAsFixed(2)));
-    await Firestore.instance
-        .collection('transactions')
-        .document()
-        .setData(transactionModel.toMap(), merge: true);
+    await CollectionRef.transactions
+        .doc()
+        .set(transactionModel.toMap(), SetOptions(merge: true));
   }
 
 //   updateNewTransaction(
@@ -443,16 +398,16 @@ class TransactionBloc {
 //       fromEmail_Id: fromEmailORId,
 //     );
 //     if (id) {
-//       var document = await Firestore.instance
-//           .collection('transactions')
-//           .document(id)
+//       var document = await CollectionRef
+//           .transactions
+//           .doc(id)
 //           .get();
-//       prevtransactionModel = TransactionModel.fromMap(document.data);
-//       if (document.data != null) {
-//         await Firestore.instance
-//             .collection('transactions')
-//             .document(document.documentID)
-//             .setData(transactionModel.toMap(), merge: true);
+//       prevtransactionModel = TransactionModel.fromMap(document.data());
+//       if (document.data() != null) {
+//         await CollectionRef
+//             .transactions
+//             .doc(document.id)
+//             .set(transactionModel.toMap(), merge: true);
 //         if (!prevtransactionModel.isApproved && isApproved) {
 //           //commented because transaction and balance handling will be done in backend
 
@@ -461,28 +416,28 @@ class TransactionBloc {
 //         }
 //       }
 //     } else {
-//       Query query = Firestore.instance
-//           .collection('transactions')
+//       Query query = CollectionRef
+//           .transactions
 //           .where('typeid', isEqualTo: typeid)
 //           .where('from', isEqualTo: from)
 //           .where('to', isEqualTo: to);
-//       QuerySnapshot snapshot = await query.getDocuments();
+//       QuerySnapshot snapshot = await query.get();
 //       DocumentSnapshot document =
-//           snapshot.documents?.length > 0 && snapshot.documents != null
-//               ? snapshot.documents.first
+//           snapshot.docs?.length > 0 && snapshot.docs != null
+//               ? snapshot.docs.first
 //               : null;
 //       if (document != null)
-//         prevtransactionModel = TransactionModel.fromMap(document.data);
+//         prevtransactionModel = TransactionModel.fromMap(document.data());
 //       if (!prevtransactionModel.isApproved && isApproved) {
 //         //commented because transaction and balance handling will be done in backend
 
 // //        await handleApprovedTransaction(isApproved, from, to, timebankid, type,
 // //            num.parse(credits.toStringAsFixed(2)));
 //       }
-//       return await Firestore.instance
-//           .collection('transactions')
-//           .document(document.documentID)
-//           .setData(transactionModel.toMap(), merge: true);
+//       return await CollectionRef
+//           .transactions
+//           .doc(document.id)
+//           .set(transactionModel.toMap(), merge: true);
 //     }
 //   }
 
@@ -683,48 +638,40 @@ class CommunityCreateEditBloc {
     String communnityId,
   ) async {
     // get the timebanks with the code.
-    Firestore.instance
-        .collection("timebankCodes")
+    CollectionRef.timebankCodes
         .where("timebankCode", isEqualTo: code)
         .where("communityId", isEqualTo: communnityId)
-        .getDocuments()
+        .get()
         .then((QuerySnapshot snapshot) async {
-      if (snapshot.documents.length > 0) {
+      if (snapshot.docs.length > 0) {
         // timabnk code exists , check its validity
 
-        snapshot.documents.forEach((f) async {
-          if (DateTime.now().millisecondsSinceEpoch > f.data['validUpto']) {
+        snapshot.docs.forEach((f) async {
+          if (DateTime.now().millisecondsSinceEpoch > f.data()['validUpto']) {
             await func("code_expired");
           } else {
             //code matche and is alive
             // add to usersOnBoarded
-            if ((f.data['usersOnboarded'] ?? []).contains(
+            if ((f.data()['usersOnboarded'] ?? []).contains(
                 this._createEditCommunity.value.loggedinuser.sevaUserID)) {
               func("code_already_redeemed");
             } else {
-              Firestore.instance
-                  .collection("timebankCodes")
-                  .document(f.documentID)
-                  .updateData({
+              CollectionRef.timebankCodes.doc(f.id).update({
                 'usersOnboarded': FieldValue.arrayUnion(
                     [this._createEditCommunity.value.loggedinuser.sevaUserID])
               });
 
-              Firestore.instance
-                  .collection("timebanknew")
-                  .document(f.data['timebankId'])
-                  .updateData({
+              CollectionRef.timebank.doc(f.data()['timebankId']).update({
                 'members': FieldValue.arrayUnion(
                     [this._createEditCommunity.value.loggedinuser.sevaUserID])
               });
 
-              Firestore.instance
-                  .collection("timebanknew")
-                  .document(f.data['timebankId'])
+              CollectionRef.timebank
+                  .doc(f.data()['timebankId'])
                   .get()
                   .then((DocumentSnapshot timeBank) async {
                 updateUser(timeBank.data);
-                await func(timeBank.data['name'].toString());
+                await func(timeBank.data()['name'].toString());
               });
             }
           }

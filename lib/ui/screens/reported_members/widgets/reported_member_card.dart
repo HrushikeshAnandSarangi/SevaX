@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -11,6 +9,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -251,9 +250,8 @@ class ReportedMemberCard extends StatelessWidget {
                 child: Text(S.of(context).close),
                 textColor: Colors.red,
                 onPressed: () async {
-                  await Firestore.instance
-                      .collection('reported_users_list')
-                      .document(model.reportedId + "*" + model.communityId)
+                  await CollectionRef.reportedUsersList
+                      .doc(model.reportedId + "*" + model.communityId)
                       .delete();
                   Navigator.of(context).pop();
                 },
@@ -339,22 +337,23 @@ class ReportedMemberCard extends StatelessWidget {
               FlatButton(
                 child: Text(S.of(context).close),
                 onPressed: () async {
-                  await Firestore.instance
-                      .collection('reported_users_list')
-                      .document(model.reportedId + "*" + model.communityId)
+                  await CollectionRef.reportedUsersList
+                      .doc(model.reportedId + "*" + model.communityId)
                       .delete();
 
-                  await Firestore.instance
-                      .collection('timebanknew')
-                      .document(timebankId)
+                  await CollectionRef.timebank
+                      .doc(timebankId)
                       .collection('entryExitLogs')
-                      .document()
-                      .setData({
+                      .doc()
+                      .set({
                     'mode': ExitJoinType.EXIT.readable,
                     'modeType': ExitMode.REPORTED_IN_COMMUNITY.readable,
                     'timestamp': DateTime.now().millisecondsSinceEpoch,
                     'communityId': model.communityId,
-                    'isGroup': timebankModel.parentTimebankId == FlavorConfig.values.timebankId ? false : true,
+                    'isGroup': timebankModel.parentTimebankId ==
+                            FlavorConfig.values.timebankId
+                        ? false
+                        : true,
                     'memberDetails': {
                       'email': model.reportedUserEmail,
                       'id': model.reportedId,

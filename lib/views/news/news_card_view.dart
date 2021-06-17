@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -14,6 +13,7 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -983,7 +983,7 @@ class _DetailDescriptionState extends State<DetailDescription> {
   _DetailDescriptionState();
   TextEditingController _textEditingController = TextEditingController();
   // List<Comments> comments = List<Comments>();
-  final dbRef = Firestore.instance;
+  final dbRef = CollectionRef;
   bool isShowSticker;
 
   @override

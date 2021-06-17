@@ -6,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/join_request_repository.dart';
 
 class JoinRequestBloc {
@@ -38,28 +39,25 @@ class JoinRequestBloc {
   }) {
     log('REJECT COMES HERE!');
 
-    WriteBatch batch = Firestore.instance.batch();
-    var joinRequestReference =
-        Firestore.instance.collection('join_requests').document(joinRequestId);
+    WriteBatch batch = CollectionRef.batch;
+    var joinRequestReference = CollectionRef.joinRequests.doc(joinRequestId);
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.updateData(
+    batch.update(
         joinRequestReference, {'operation_taken': true, 'accepted': false});
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.REJECTED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -109,50 +107,45 @@ class JoinRequestBloc {
     String timebankTitle,
     TimebankModel timebankModel,
   }) {
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankRef =
-        Firestore.instance.collection('timebanknew').document(timebankId);
-    var joinRequestReference =
-        Firestore.instance.collection('join_requests').document(joinRequestId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankRef = CollectionRef.timebank.doc(timebankId);
+    var joinRequestReference = CollectionRef.joinRequests.doc(joinRequestId);
 
     var newMemberDocumentReference =
-        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+        CollectionRef.users.doc(newMemberJoinedEmail);
 
-    var timebankNotificationReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var timebankNotificationReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection("notifications")
-        .document(notificaitonId);
+        .doc(notificaitonId);
 
-    var entryExitLogReference = Firestore.instance
-        .collection('timebanknew')
-        .document(timebankId)
+    var entryExitLogReference = CollectionRef.timebank
+        .doc(timebankId)
         .collection('entryExitLogs')
-        .document();
+        .doc();
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
     });
 
     if (!isFromGroup) {
-      batch.updateData(newMemberDocumentReference, {
+      batch.update(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
         'currentCommunity': communityId
       });
 
-      var addToCommunityRef =
-          Firestore.instance.collection('communities').document(communityId);
-      batch.updateData(addToCommunityRef, {
+      var addToCommunityRef = CollectionRef.communities.doc(communityId);
+      batch.update(addToCommunityRef, {
         'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
       });
     }
 
-    batch.updateData(
+    batch.update(
         joinRequestReference, {'operation_taken': true, 'accepted': true});
 
-    batch.updateData(timebankNotificationReference, {'isRead': true});
+    batch.update(timebankNotificationReference, {'isRead': true});
 
-    batch.setData(entryExitLogReference, {
+    batch.set(entryExitLogReference, {
       'mode': ExitJoinType.JOIN.readable,
       'modeType': JoinMode.APPROVED_BY_ADMIN.readable,
       'timestamp': DateTime.now().millisecondsSinceEpoch,

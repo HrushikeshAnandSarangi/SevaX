@@ -1,10 +1,11 @@
-import 'package:sevaexchange/views/core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -34,13 +35,12 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   @override
   void initState() {
     _selectedGoods = widget.selectedGoods ?? {};
-    Firestore.instance
-        .collection('donationCategories')
+    CollectionRef.donationCategories
         .orderBy('goodTitle')
-        .getDocuments()
+        .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
-        goods[data.documentID] = data['goodTitle'];
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
+        goods[data.id] = data['goodTitle'];
       });
       isDataLoaded = true;
       if (this.mounted) {
@@ -294,10 +294,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
     String goodsTitle,
     String goodsLanguage,
   }) async {
-    await Firestore.instance
-        .collection('donationCategories')
-        .document(goodsId)
-        .setData(
+    await CollectionRef.donationCategories.doc(goodsId).set(
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
     );
   }

@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_typeahead/flutter_typeahead.dart';
 // import 'package:sevaexchange/constants/sevatitles.dart';
@@ -504,12 +505,12 @@
 //         communityId: tbmodel.communityId,
 //         senderUserId: loggedInUser.sevaUserID,
 //         targetUserId: selectedNewOwner.sevaUserID);
-//     await Firestore.instance
-//         .collection('users')
-//         .document(selectedNewOwner.email)
+//     await CollectionRef
+//         .users
+//         .doc(selectedNewOwner.email)
 //         .collection("notifications")
-//         .document(notification.id)
-//         .setData(notification.toMap());
+//         .doc(notification.id)
+//         .set(notification.toMap());
 //     if (progressContext != null) {
 //       Navigator.pop(progressContext);
 //     }

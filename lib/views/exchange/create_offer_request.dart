@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -13,23 +12,20 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
-import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
-import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
-import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class CreateOfferRequest extends StatefulWidget {
   final OfferModel offer;
@@ -517,7 +513,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
     OfferModel offerModel,
   }) async {
     var notificationId = utils.Utils.getUuid();
-    WriteBatch batchWrite = Firestore.instance.batch();
+    WriteBatch batchWrite = CollectionRef.batch;
 
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
         requestModel: requestModel,
@@ -542,25 +538,22 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
       isTimebankNotification: false,
     );
 
-    batchWrite.updateData(
-        Firestore.instance.collection('requests').document(requestModel.id), {
+    batchWrite.update(CollectionRef.requests.doc(requestModel.id), {
       'invitedUsers': FieldValue.arrayUnion([offerModel.sevaUserId])
     });
-    batchWrite.setData(
-      Firestore.instance
-          .collection('users')
-          .document(targetUserEmail)
+    batchWrite.set(
+      CollectionRef.users
+          .doc(targetUserEmail)
           .collection("notifications")
-          .document(notification.id),
+          .doc(notification.id),
       notification.toMap(),
     );
 
-    batchWrite.setData(
-        Firestore.instance
-            .collection('offers')
-            .document(widget.offer.id)
+    batchWrite.set(
+        CollectionRef.offers
+            .doc(widget.offer.id)
             .collection('offerAcceptors')
-            .document(notificationId),
+            .doc(notificationId),
         offerAcceptorDocument);
 
     // await createOfferAcceptorDocument(

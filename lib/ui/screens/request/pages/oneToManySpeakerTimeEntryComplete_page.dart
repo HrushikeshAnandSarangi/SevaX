@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -293,10 +293,9 @@ class OneToManySpeakerTimeEntryCompleteState
                                 requestModel.approvedUsers =
                                     approvedUsersList.toList();
 
-                                await Firestore.instance
-                                    .collection('requests')
-                                    .document(requestModel.id)
-                                    .updateData(requestModel.toMap());
+                                await CollectionRef.requests
+                                    .doc(requestModel.id)
+                                    .update(requestModel.toMap());
 
                                 //Navigator.of(creditRequestDialogContext).pop();
 

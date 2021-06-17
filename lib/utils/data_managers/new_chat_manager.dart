@@ -9,26 +9,25 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 Future<void> createChat({
   @required ChatModel chat,
 }) async {
-  return await Firestore.instance
-      .collection('chatsnew')
-      .document(
+  return await CollectionRef.chats
+      .doc(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .setData(chat.toMap(), merge: true);
+      .set(chat.toMap(), SetOptions(merge: true));
 }
 
 Future<void> updateChat({@required ChatModel chat, String userId}) async {
   String key = chat.participants[0] != userId
       ? chat.participants[0]
       : chat.participants[1];
-  return await Firestore.instance
-      .collection('chatsnew')
-      .document(
+  return await CollectionRef.chats
+      .doc(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .setData(
+      .set(
     {
       'softDeletedBy': chat.softDeletedBy,
       'lastMessage': chat.lastMessage,
@@ -37,20 +36,19 @@ Future<void> updateChat({@required ChatModel chat, String userId}) async {
         key: FieldValue.increment(1),
       }
     },
-    merge: true,
+    SetOptions(merge: true),
   );
 }
 
 Future<void> createNewChat({
   @required ChatModel chat,
 }) async {
-  return await Firestore.instance
-      .collection('chatsnew')
-      .document(
+  return await CollectionRef.chats
+      .doc(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .setData(
+      .set(
         chat.toMap(),
-        merge: true,
+        SetOptions(merge: true),
       );
 }
 
@@ -64,15 +62,15 @@ Future<void> createNewChat({
 //   String key = chat.participants[0] != userId
 //       ? chat.participants[0]
 //       : chat.participants[1];
-//   await Firestore.instance
-//       .collection("chatsnew")
-//       .document(
+//   await CollectionRef
+//       .chats
+//       .doc(
 //           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-//       .setData({
+//       .set({
 //     "unreadStatus": {
 //       key: FieldValue.increment(1),
 //     }
-//   }, merge: true);
+//   }, SetOptions(merge: true));
 // }
 
 // updating chatcommunity Id
@@ -81,15 +79,14 @@ Future<void> markMessageAsRead({
   @required ChatModel chat,
   @required String userId,
 }) async {
-  return Firestore.instance
-      .collection('chatsnew')
-      .document(
+  return CollectionRef.chats
+      .doc(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .setData(
+      .set(
     {
       'unreadStatus': {userId: 0}
     },
-    merge: true,
+    SetOptions(merge: true),
   );
 }
 
@@ -103,42 +100,39 @@ Future<void> createNewMessage({
   bool isTimebankMessage = false,
   File file,
 }) async {
-  WriteBatch batch = Firestore.instance.batch();
-  DocumentReference messageRef = Firestore.instance
-      .collection('chatsnew')
-      .document(chatId)
-      .collection('messages')
-      .document();
+  WriteBatch batch = CollectionRef.batch;
+  DocumentReference messageRef =
+      CollectionRef.chats.doc(chatId).collection('messages').doc();
   //Create new messages
-  batch.setData(
+  batch.set(
     messageRef,
     messageModel.toMap(),
   );
   //if sender is admin , mark the previous messages as read
 
   if (isAdmin) {
-    batch.updateData(
-      Firestore.instance.collection("timebanknew").document(timebankId),
+    batch.update(
+      CollectionRef.timebank.doc(timebankId),
       {
         "unreadMessages": FieldValue.arrayRemove([chatId]),
         // "lastMessageTimestamp": null,
       },
     );
-    batch.setData(
-      Firestore.instance.collection("chatsnew").document(chatId),
+    batch.set(
+      CollectionRef.chats.doc(chatId),
       {
         "unreadStatus": {
           timebankId: 0,
         },
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
   //if timebank message add it to timebankModel for count purpose
   if (isTimebankMessage && !isAdmin && timebankId != null) {
-    batch.updateData(
-      Firestore.instance.collection("timebanknew").document(timebankId),
+    batch.update(
+      CollectionRef.timebank.doc(timebankId),
       {
         "unreadMessages": FieldValue.arrayUnion([chatId]),
         "lastMessageTimestamp": FieldValue.serverTimestamp(),
@@ -154,20 +148,20 @@ Future<void> createNewMessage({
     value: (_) => FieldValue.increment(1),
   )..remove(senderId);
 
-  batch.setData(
-    Firestore.instance.collection("chatsnew").document(chatId),
+  batch.set(
+    CollectionRef.chats.doc(chatId),
     {
       'lastMessage': messageModel.message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       "unreadStatus": unreadStatus,
     },
-    merge: true,
+    SetOptions(merge: true),
   );
   batch.commit();
 
   if (messageModel.type == MessageType.IMAGE) {
     log(file.path);
-    log(messageRef.documentID);
+    log(messageRef.id);
     log("started upload");
     FirebaseStorage _storage = FirebaseStorage();
     StorageUploadTask _uploadTask =
@@ -175,26 +169,27 @@ Future<void> createNewMessage({
     StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
     String attachmentUrl = await snapshot.ref.getDownloadURL();
     log(attachmentUrl);
-    Firestore.instance
-        .collection("chatsnew")
-        .document(chatId)
+    CollectionRef.chats
+        .doc(chatId)
         .collection("messages")
-        .document(messageRef.documentID)
-        .setData(
+        .doc(messageRef.id)
+        .set(
       {"data": attachmentUrl},
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 }
 
 Future<DocumentSnapshot> getUserInfo(String userEmail) {
-  return Firestore.instance
-      .collection(isValidEmail(userEmail) ? "users" : "timebanknew")
-      .document(userEmail)
-      .get()
-      .then((onValue) {
-    return onValue;
-  });
+  if (isValidEmail(userEmail)) {
+    return CollectionRef.users.doc(userEmail).get().then((onValue) {
+      return onValue;
+    });
+  } else {
+    return CollectionRef.timebank.doc(userEmail).get().then((onValue) {
+      return onValue;
+    });
+  }
 }
 
 bool isValidEmail(String email) {

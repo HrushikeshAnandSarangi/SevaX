@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TimebankRepository {
-  static final CollectionReference _ref =
-      Firestore.instance.collection("timebanknew");
+  static final CollectionReference _ref = CollectionRef.timebank;
   static Future<List<TimebankModel>> getTimebanksWhichUserIsPartOf(
     String userId,
     String communityId,
@@ -19,10 +19,10 @@ class TimebankRepository {
         .where("community_id", isEqualTo: communityId)
         .where("members", arrayContains: userId)
         .where("softDelete", isEqualTo: false)
-        .getDocuments();
+        .get();
 
-    querySnapshot.documents.forEach((DocumentSnapshot document) {
-      timebanks.add(TimebankModel.fromMap(document.data));
+    querySnapshot.docs.forEach((DocumentSnapshot document) {
+      timebanks.add(TimebankModel.fromMap(document.data()));
     });
     return timebanks;
   }
@@ -35,7 +35,7 @@ class TimebankRepository {
         handleData: (data, sink) {
           List<TimebankModel> timebanks = [];
           try {
-            data.documents.forEach((element) {
+            data.docs.forEach((element) {
               var timebank = TimebankModel.fromMap(element.data);
               timebanks.add(timebank);
             });
@@ -65,10 +65,10 @@ class TimebankRepository {
           .snapshots(),
       (a, b) {
         List<TimebankModel> _timebanks = [];
-        a.documents.forEach((element) {
+        a.docs.forEach((element) {
           _timebanks.add(TimebankModel.fromMap(element.data));
         });
-        b.documents.forEach((element) {
+        b.docs.forEach((element) {
           _timebanks.add(TimebankModel.fromMap(element.data));
         });
 
@@ -78,13 +78,13 @@ class TimebankRepository {
   }
 
   static Stream<TimebankModel> getTimebankStream(String timebankId) async* {
-    var data = _ref.document(timebankId).snapshots();
+    var data = _ref.doc(timebankId).snapshots();
 
     yield* data.transform(
       StreamTransformer.fromHandlers(
         handleData: (document, sink) {
           try {
-            sink.add(TimebankModel.fromMap(document.data));
+            sink.add(TimebankModel.fromMap(document.data()));
           } catch (e) {
             logger.e(e);
             sink.addError(e);
@@ -98,8 +98,7 @@ class TimebankRepository {
   Stream<List<JoinRequestModel>> getJoinRequestsCretedByUserStream({
     @required String userID,
   }) async* {
-    var query = Firestore.instance
-        .collection('join_requests')
+    var query = CollectionRef.joinRequests
         .where('user_id', isEqualTo: userID)
         .snapshots();
 
@@ -108,7 +107,7 @@ class TimebankRepository {
             handleData: (data, sink) {
       List<JoinRequestModel> joinRequests = [];
       try {
-        data.documents.forEach((element) {
+        data.docs.forEach((element) {
           JoinRequestModel joinRequest = JoinRequestModel.fromMap(element.data);
           if (joinRequest.userId == userID) {
             joinRequests.add(joinRequest);

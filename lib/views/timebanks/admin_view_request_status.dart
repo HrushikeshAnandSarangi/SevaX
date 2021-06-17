@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:sevaexchange/constants/sevatitles.dart';
 //import 'package:sevaexchange/models/request_model.dart';
@@ -72,9 +73,9 @@
 //
 //class TimebankRequestsState extends State<TimebankRequests> {
 //  Future<dynamic> getUserDetails({String memberEmail}) async {
-//    var user = await Firestore.instance
-//        .collection("users")
-//        .document(memberEmail)
+//    var user = await CollectionRef
+//        .users
+//        .doc(memberEmail)
 //        .get();
 //
 //    return user.data;
@@ -408,7 +409,7 @@
 //Future<List<UserModel>> getRequestStatus({
 //  @required String requestId,
 //}) async {
-//  Firestore.instance.collection('requests').document(requestId).get().then(
+//  CollectionRef.requests.doc(requestId).get().then(
 //    (requestDetails) async {
 //      var futures = <Future>[];
 //      RequestModel model = RequestModel.fromMap(
@@ -417,9 +418,9 @@
 //
 //      model.approvedUsers.forEach((membersId) {
 //        futures.add(
-//          Firestore.instance
-//              .collection("users")
-//              .document(membersId)
+//          CollectionRef
+//              .users
+//              .doc(membersId)
 //              .get()
 //              .then((onValue) {
 //            return onValue;
@@ -441,7 +442,7 @@
 //Future<RequestModel> getRequestData({
 //  @required String requestId,
 //}) async {
-//  Firestore.instance.collection('requests').document(requestId).get().then(
+//  CollectionRef.requests.doc(requestId).get().then(
 //    (requestDetails) async {
 //      var futures = <Future>[];
 //      RequestModel model = RequestModel.fromMap(
@@ -459,9 +460,9 @@
 //  ApprovedMembers({this.requestModel});
 //
 //  Future<dynamic> getUserDetails({String memberEmail}) async {
-//    var user = await Firestore.instance
-//        .collection("users")
-//        .document(memberEmail)
+//    var user = await CollectionRef
+//        .users
+//        .doc(memberEmail)
 //        .get();
 //
 //    return user.data;

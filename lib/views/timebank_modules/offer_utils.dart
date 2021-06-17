@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
@@ -145,10 +146,9 @@ Future<void> deleteOffer({
             color: Theme.of(context).accentColor,
             textColor: FlavorConfig.values.buttonTextColor,
             onPressed: () async {
-              await Firestore.instance
-                  .collection("offers")
-                  .document(offerId)
-                  .updateData({'softDelete': true});
+              await CollectionRef.offers
+                  .doc(offerId)
+                  .update({'softDelete': true});
               Navigator.of(dialogContext).pop();
               Navigator.pop(context);
             },
@@ -163,13 +163,13 @@ Future<void> deleteOffer({
 }
 
 void removeBookmark(String offerId, String userId) {
-  Firestore.instance.collection("offers").document(offerId).updateData({
+  CollectionRef.offers.doc(offerId).update({
     'individualOfferDataModel.offerAcceptors': FieldValue.arrayRemove([userId])
   });
 }
 
 void addBookMark(String offerId, String userId) {
-  Firestore.instance.collection("offers").document(offerId).updateData({
+  CollectionRef.offers.doc(offerId).update({
     'individualOfferDataModel.offerAcceptors': FieldValue.arrayUnion([userId])
   });
 }
@@ -196,12 +196,11 @@ Future<bool> offerActions(
     );
 
     CommunityModel communityMoel;
-    await Firestore.instance
-        .collection('communities')
-        .document(SevaCore.of(context).loggedInUser.currentCommunity)
+    await CollectionRef.communities
+        .doc(SevaCore.of(context).loggedInUser.currentCommunity)
         .get()
         .then((value) {
-      communityMoel = CommunityModel(value.data);
+      communityMoel = CommunityModel(value.data());
     });
 
     if (hasSufficientCreditsResult.hasSuffiientCredits) {
@@ -301,7 +300,7 @@ void updateOffer({
   @required String memberPhotoUrl,
   @required String timebankId,
 }) {
-  Firestore.instance.collection("offers").document(offerId).updateData(
+  CollectionRef.offers.doc(offerId).update(
     {
       'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
         [userId],

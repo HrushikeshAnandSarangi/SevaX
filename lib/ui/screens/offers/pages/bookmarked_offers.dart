@@ -5,6 +5,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -27,8 +28,7 @@ class BookmarkedOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection("offers")
+      stream: CollectionRef.offers
           .where('individualOfferDataModeferAcceptors',
               arrayContains: sevaUserId)
           .snapshots(),
@@ -38,8 +38,8 @@ class BookmarkedOffers extends StatelessWidget {
         }
         List<OfferModel> bookmarkedOffers = [];
         OfferModel model;
-        snapshot.data.documents.forEach((offer) {
-          model = OfferModel.fromMap(offer.data);
+        snapshot.data.docs.forEach((offer) {
+          model = OfferModel.fromMap(offer.data());
           if (model.timebanksPosted != null &&
               model.timebanksPosted.contains(timebankModel.id))
             bookmarkedOffers.add(model);
@@ -149,10 +149,9 @@ void showDialogForMakingAnOffer({
     context: parentContext,
     builder: (BuildContext viewContext) {
       return FutureBuilder(
-        future: Firestore.instance
-            .collection("users")
+        future: CollectionRef.users
             .where("sevauserid", isEqualTo: model.sevaUserId)
-            .getDocuments(),
+            .get(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return AlertDialog(
@@ -195,7 +194,7 @@ void showDialogForMakingAnOffer({
             );
           }
           UserModel userModel = UserModel.fromMap(
-            snapshot.data.documents[0].data,
+            snapshot.data.docs[0].data(),
             'bookmarked_offers',
           );
           return AlertDialog(

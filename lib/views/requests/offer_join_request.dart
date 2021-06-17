@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -6,6 +5,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -120,12 +120,11 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                     onPressed: () async {
                       //Once approvedp
                       CommunityModel communityModel = CommunityModel({});
-                      await Firestore.instance
-                          .collection('communities')
-                          .document(widget.userModel.currentCommunity)
+                      await CollectionRef.communities
+                          .doc(widget.userModel.currentCommunity)
                           .get()
                           .then((value) {
-                        communityModel = CommunityModel(value.data);
+                        communityModel = CommunityModel(value.data());
                         setState(() {});
                       });
                       AcceptorModel acceptorModel = AcceptorModel(
@@ -211,12 +210,11 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
       notificationId: notificationId,
     );
 
-    Firestore.instance
-        .collection('offers')
-        .document(offerId)
+    CollectionRef.offers
+        .doc(offerId)
         .collection('offerAcceptors')
-        .document(notificationId)
-        .updateData({
+        .doc(notificationId)
+        .update({
       'status': 'REJECTED',
     });
     FirestoreManager.readUserNotification(notificationId, userModel.email);
@@ -240,16 +238,15 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
     );
 
     //Update accetor document
-    Firestore.instance
-        .collection('offers')
-        .document(offerId)
+    CollectionRef.offers
+        .doc(offerId)
         .collection('offerAcceptors')
-        .document(notificationId)
-        .updateData({
+        .doc(notificationId)
+        .update({
       'status': 'ACCEPTED',
     });
 
-    Firestore.instance.collection('offers').document(offerId).updateData({
+    CollectionRef.offers.doc(offerId).update({
       'individualOfferDataModel.isAccepted': true,
     });
 

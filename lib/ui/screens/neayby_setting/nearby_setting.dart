@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/strings.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -267,7 +267,7 @@ class NearbySettingBloc {
 
   static isMiles({String email, bool val}) async {
     _debouncer.run(() async {
-      await Firestore.instance.collection('users').document(email).updateData({
+      await CollectionRef.users.doc(email).update({
         'nearbySettings.isMiles': val,
       });
     });
@@ -286,7 +286,7 @@ class NearbySettingBloc {
 
   static udpateNearbyRadius(
       {String email, int radius, int selectedRadioVal}) async {
-    await Firestore.instance.collection('users').document(email).updateData({
+    await CollectionRef.users.doc(email).update({
       'nearbySettings.radius': radius,
       'nearbySettings.isMiles':
           selectedRadioVal == NearbySettingBloc.MILES_SELECTION ? true : false,

@@ -303,7 +303,8 @@ class ElasticSearchApi {
       });
     } on NoNearByCommunitesFoundException catch (e) {
       logger.i("NoNearByCommunitesViaZIPFoundException");
-      Crashlytics.instance.log('NoNearByCommunitesViaZIPFoundException');
+      FirebaseCrashlytics.instance
+          .log('NoNearByCommunitesViaZIPFoundException');
     }
 
     String endPoint = '//elasticsearch/sevaxcommunities/_doc/_search';

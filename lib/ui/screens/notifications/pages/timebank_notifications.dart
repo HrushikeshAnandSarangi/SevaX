@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +20,7 @@ import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -290,14 +290,13 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     },
                     onPressed: () async {
                       RequestModel newRequestModel;
-                      await Firestore.instance
-                          .collection('requests')
-                          .document(model.id)
+                      await CollectionRef.requests
+                          .doc(model.id)
                           .get()
                           .then((returnedModel) {
                         newRequestModel =
-                            RequestModel.fromMap(returnedModel.data);
-                        log("request returned is: ${returnedModel.data['title']}");
+                            RequestModel.fromMap(returnedModel.data());
+                        log("request returned is: ${returnedModel.data()['title']}");
                         setState(() {});
                       });
 
@@ -950,7 +949,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
-                Crashlytics().log(
+                FirebaseCrashlytics.instance.log(
                     "Unhandled timebank notification type ${notification.type} ${notification.id}");
                 return Container();
                 break;
@@ -1104,7 +1103,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     // adds review to firestore
     try {
       logger.i('here 1');
-      await Firestore.instance.collection("reviews").add({
+      await CollectionRef.reviews.add({
         "reviewer": SevaCore.of(context).loggedInUser.email,
         "reviewed": requestModelNew.email,
         "ratings": results['selection'],
@@ -1284,12 +1283,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
   }
@@ -1312,12 +1310,11 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: sevaUserId);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     log('WRITTEN TO DB--------------------->>');
   }

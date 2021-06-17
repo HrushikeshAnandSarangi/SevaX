@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -27,7 +27,6 @@ class InvitedUsersView extends StatefulWidget {
 class _InvitedUsersViewState extends State<InvitedUsersView> {
   var validItems;
   bool isAdmin = false;
-  final _firestore = Firestore.instance;
   List<UserModel> favoriteUsers;
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
@@ -45,39 +44,38 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
       isAdmin = true;
     }
 
-    _firestore
-        .collection('requests')
-        .document(widget.requestModel.id)
+    CollectionRef.requests
+        .doc(widget.requestModel.id)
         .snapshots()
         .listen((reqModel) {
-      requestModel = RequestModel.fromMap(reqModel.data);
+      requestModel = RequestModel.fromMap(reqModel.data());
       setState(() {});
     });
 
 //    _firestore
-//        .collection('users')
+//        .users
 //        .where(isAdmin ? "favoriteByTimeBank" : "favoriteByMember",
 //            arrayContains: isAdmin ? widget.timebankId : widget.sevaUserId)
 //        .snapshots()
 //        .listen((usermodelList) {
-//      usermodelList.documents.forEach((usermodel) {
+//      usermodelList.docs.forEach((usermodel) {
 //        favoriteUsers.add(UserModel.fromMap(usermodel.data));
 //      });
 //    });
 
 //    if (isAdmin) {
 //      _firestore
-//          .collection("users")
+//          .users
 //          .where(
 //            'favoriteByTimeBank',
 //            arrayContains: timebank.model.id,
 //          )
-//          .getDocuments()
+//          .get()
 //          .then(
 //        (QuerySnapshot querysnapshot) {
 //          if (favoriteUsers == null) favoriteUsers = [];
 //
-//          querysnapshot.documents.forEach(
+//          querysnapshot.docs.forEach(
 //            (DocumentSnapshot user) => favoriteUsers.add(
 //              UserModel.fromMap(
 //                user.data,
@@ -89,17 +87,17 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 //      );
 //    } else {
 //      _firestore
-//          .collection("users")
+//          .users
 //          .where(
 //            'favoriteByMember',
 //            arrayContains: widget.sevaUserId,
 //          )
-//          .getDocuments()
+//          .get()
 //          .then(
 //        (QuerySnapshot querysnapshot) {
 //          if (favoriteUsers == null) favoriteUsers = [];
 //
-//          querysnapshot.documents.forEach(
+//          querysnapshot.docs.forEach(
 //            (DocumentSnapshot user) => favoriteUsers.add(
 //              UserModel.fromMap(
 //                user.data,
@@ -376,10 +374,10 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   Future<void> addToFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
 
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
-        .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember'
+    await CollectionRef
+        .users
+        .doc(userModel.email)
+        .update({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember'
         : FieldValue.arrayUnion([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
     });
 
@@ -388,10 +386,10 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   Future<void> removeFromFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
 
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
-        .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember' :
+    await CollectionRef
+        .users
+        .doc(userModel.email)
+        .update({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember' :
     FieldValue.arrayRemove([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
     });
 

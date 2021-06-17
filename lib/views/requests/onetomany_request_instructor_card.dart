@@ -104,12 +104,12 @@ class OneToManyInstructorCard extends StatelessWidget {
   //     targetUserId: userModel.sevaUserID,
   //   );
 
-  //   await Firestore.instance
-  //       .collection('users')
-  //       .document(userModel.email)
+  //   await CollectionRef
+  //       .users
+  //       .doc(userModel.email)
   //       .collection("notifications")
-  //       .document(notification.id)
-  //       .setData(notification.toMap());
+  //       .doc(notification.id)
+  //       .set(notification.toMap());
   // }
 
 }

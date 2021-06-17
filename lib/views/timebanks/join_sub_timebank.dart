@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -420,21 +421,17 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     prefix0.NotificationsModel notification,
     JoinRequestModel joinRequestModel,
   }) {
-    WriteBatch batchWrite = Firestore.instance.batch();
-    batchWrite.setData(
-        Firestore.instance
-            .collection('timebanknew')
-            .document(
+    WriteBatch batchWrite = CollectionRef.batch;
+    batchWrite.set(
+        CollectionRef.timebank
+            .doc(
               subtimebankId,
             )
             .collection("notifications")
-            .document(notification.id),
+            .doc(notification.id),
         (notification..isTimebankNotification = true).toMap());
 
-    batchWrite.setData(
-        Firestore.instance
-            .collection('join_requests')
-            .document(joinRequestModel.id),
+    batchWrite.set(CollectionRef.joinRequests.doc(joinRequestModel.id),
         joinRequestModel.toMap());
     return batchWrite;
   }
@@ -528,17 +525,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
 Future<List<TimebankModel>> getTimebanksForCommunity(
     {String userId, String communityId, String primaryTimebankId}) async {
-//  DocumentSnapshot documentSnapshot = await Firestore.instance.collection('communities').document(communityId).get();
+//  DocumentSnapshot documentSnapshot = await CollectionRef.communities.doc(communityId).get();
 //  Map<String, dynamic> dataMap = documentSnapshot.data;
 //  CommunityModel communityModel = CommunityModel(dataMap);
   List<TimebankModel> timebankList = [];
-  return Firestore.instance
-      .collection('timebanknew')
+  return CollectionRef.timebank
       .where('community_id', isEqualTo: communityId)
-      .getDocuments()
+      .get()
       .then((QuerySnapshot timebankModel) {
-    timebankModel.documents.forEach((timebank) {
-      var model = TimebankModel.fromMap(timebank.data);
+    timebankModel.docs.forEach((timebank) {
+      var model = TimebankModel.fromMap(timebank.data());
       if (model.id != primaryTimebankId &&
           !model.softDelete &&
           (model.private == false ||

@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'dart:async';
 // import 'package:meta/meta.dart';
 // import 'package:sevaexchange/base/base_service.dart';
@@ -11,10 +12,10 @@
 //     @required UserModel user,
 //   }) async {
 //     // log.i('createUser: UserModel: $user');
-//     return await Firestore.instance
-//         .collection('users')
-//         .document(user.email)
-//         .setData(user.toMap());
+//     return await CollectionRef
+//         .users
+//         .doc(user.email)
+//         .set(user.toMap());
 //   }
 
 //   /// update a [user]
@@ -22,10 +23,10 @@
 //     @required UserModel user,
 //   }) async {
 //     // log.i('updateUser: UserModel: $user');
-//     return await Firestore.instance
-//         .collection('users')
-//         .document(user.email)
-//         .updateData(user.toMap());
+//     return await CollectionRef
+//         .users
+//         .doc(user.email)
+//         .update(user.toMap());
 //   }
 
 //   /// get user by seva ID [sevaUserId] as future
@@ -35,12 +36,12 @@
 //         "Seva UserId cannot be null or empty");
 
 //     UserModel userModel;
-//     await Firestore.instance
-//         .collection('users')
+//     await CollectionRef
+//         .users
 //         .where('sevauserid', isEqualTo: sevaUserId)
-//         .getDocuments()
+//         .get()
 //         .then((QuerySnapshot querySnapshot) {
-//       querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+//       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
 //         userModel = UserModel.fromMap(documentSnapshot.data);
 //       });
 //     });
@@ -57,9 +58,9 @@
 //         'User Email cannot be null or empty');
 
 //     UserModel userModel;
-//     DocumentSnapshot documentSnapshot = await Firestore.instance
-//         .collection('users')
-//         .document(emailAddress)
+//     DocumentSnapshot documentSnapshot = await CollectionRef
+//         .users
+//         .doc(emailAddress)
 //         .get();
 
 //     if (documentSnapshot == null || documentSnapshot.data == null) {
@@ -76,8 +77,8 @@
 //     assert(sevaUserId != null && sevaUserId.isNotEmpty,
 //         "Seva UserId cannot be null or empty");
 
-//     var data = Firestore.instance
-//         .collection('users')
+//     var data = CollectionRef
+//         .users
 //         .where('sevauserid', isEqualTo: sevaUserId)
 //         .snapshots();
 
@@ -87,9 +88,9 @@
 //           DocumentSnapshot documentSnapshot = snapshot.documents[0];
 //           UserModel model = UserModel.fromMap(documentSnapshot.data);
 
-//           DocumentSnapshot walletSnapshot = await Firestore.instance
+//           DocumentSnapshot walletSnapshot = await CollectionRef
 //               .collection('wallet')
-//               .document(model.email)
+//               .doc(model.email)
 //               .get();
 
 //           model.sevaUserID = sevaUserId;
@@ -105,16 +106,16 @@
 //     assert(userEmailAddress != null && userEmailAddress.isNotEmpty,
 //         'User Email cannot be null or empty');
 
-//     var userDataStream = Firestore.instance
-//         .collection('users')
-//         .document(userEmailAddress)
+//     var userDataStream = CollectionRef
+//         .users
+//         .doc(userEmailAddress)
 //         .snapshots();
 
 //     yield* userDataStream.transform(
 //       StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
 //         handleData: (snapshot, userSink) {
 //           UserModel model = UserModel.fromMap(snapshot.data);
-//           model.sevaUserID = snapshot.documentID;
+//           model.sevaUserID = snapshot.id;
 //           userSink.add(model);
 //         },
 //       ),

@@ -5,13 +5,14 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
-  final FirebaseUser firebaseUser;
+  final User firebaseUser;
   final String email;
   final bool emailSent;
 
@@ -30,10 +31,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     if (!widget.emailSent) {
-      Firestore.instance
-          .collection('users')
-          .document(widget.email)
-          .setData({'emailSent': true}, merge: true).then(
+      CollectionRef.users
+          .doc(widget.email)
+          .set({'emailSent': true}, SetOptions(merge: true)).then(
         (_) => widget.firebaseUser
             .sendEmailVerification()
             .then((onValue) => {
@@ -46,7 +46,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.initState();
   }
 
-  void sendVerificationEmail(FirebaseUser user, {VoidCallback onSuccess}) {
+  void sendVerificationEmail(User user, {VoidCallback onSuccess}) {
     user?.sendEmailVerification()?.then((onValue) {
       onSuccess?.call();
     })?.catchError((onError) {

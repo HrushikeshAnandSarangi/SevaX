@@ -4,6 +4,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -27,10 +28,8 @@ class _MembersTabViewState extends State<MembersTabView> {
   }
 
   void getAllSkillsInterests() async {
-    skillsListSnap =
-        await Firestore.instance.collection('skills').getDocuments();
-    interestsListSnap =
-        await Firestore.instance.collection('interests').getDocuments();
+    skillsListSnap = await CollectionRef.skills.get();
+    interestsListSnap = await CollectionRef.interests.get();
   }
 
   @override

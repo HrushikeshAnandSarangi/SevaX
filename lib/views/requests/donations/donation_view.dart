@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +8,7 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -105,13 +105,13 @@ class _DonationViewState extends State<DonationView> {
 
   void getCommunity() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Firestore.instance
-          .collection('communities')
-          .document(SevaCore.of(context).loggedInUser.currentCommunity)
+      CollectionRef.communities
+          .doc(SevaCore.of(context).loggedInUser.currentCommunity)
           .get()
           .then((value) {
-        logger.i(">>>>>>>>>>>" + CommunityModel(value.data).toMap().toString());
-        donationBloc.addCommunity(CommunityModel(value.data));
+        logger
+            .i(">>>>>>>>>>>" + CommunityModel(value.data()).toMap().toString());
+        donationBloc.addCommunity(CommunityModel(value.data()));
       });
     });
   }

@@ -5,6 +5,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -35,16 +36,15 @@ class _SkillsForRequestsState extends State<SkillsForRequests> {
 
   @override
   void initState() {
-    Firestore.instance
-        .collection('skills')
+    CollectionRef.skills
         .orderBy('name')
-        .getDocuments()
+        .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
+      querySnapshot.docs.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
-        // suggestionID.add(data.documentID);
+        // suggestionID.add(data.id);
         if (data[widget.languageCode] != null) {
-          skills[data.documentID] = data[widget.languageCode];
+          skills[data.id] = data[widget.languageCode];
         }
       });
 

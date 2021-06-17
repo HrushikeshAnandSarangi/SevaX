@@ -40,28 +40,28 @@ class ManualTimeModel {
   String timebankId;
   String communityName;
   bool liveMode;
-  factory ManualTimeModel.fromSnapshot(DocumentSnapshot snapshot) =>
-      ManualTimeModel(
-        id: snapshot.documentID,
-        communityId: snapshot.data["communityId"],
-        communityName: snapshot.data["communityName"],
-        typeId: snapshot.data['typeId'],
-        type: _manualTypeMap[snapshot.data['type']],
-        status: snapshot.data.containsKey('status')
-            ? _claimStatusMap[snapshot.data['status']]
-            : ClaimStatus.NoAction,
-        actionBy: snapshot.data["actionBy"],
-        reason: snapshot.data["reason"],
-        claimedTime: snapshot.data["claimedTime"],
-        userDetails: UserDetails.fromMap(snapshot.data["userDetails"]),
-        relatedNotificationId: snapshot.data["relatedNotificationId"],
-        timestamp: snapshot.data["timestamp"],
-        claimedBy: _claimedByMap[snapshot.data['claimedBy']],
-        timebankId: snapshot.data['timebankId'],
-        liveMode: snapshot.data.containsKey('liveMode')
-            ? snapshot.data['liveMode']
-            : true,
-      );
+  factory ManualTimeModel.fromSnapshot(DocumentSnapshot snapshot) {
+    var data = snapshot.data();
+    return ManualTimeModel(
+      id: snapshot.id,
+      communityId: data["communityId"],
+      communityName: data["communityName"],
+      typeId: data['typeId'],
+      type: _manualTypeMap[data['type']],
+      status: data.containsKey('status')
+          ? _claimStatusMap[data['status']]
+          : ClaimStatus.NoAction,
+      actionBy: data["actionBy"],
+      reason: data["reason"],
+      claimedTime: data["claimedTime"],
+      userDetails: UserDetails.fromMap(data["userDetails"]),
+      relatedNotificationId: data["relatedNotificationId"],
+      timestamp: data["timestamp"],
+      claimedBy: _claimedByMap[data['claimedBy']],
+      timebankId: data['timebankId'],
+      liveMode: data.containsKey('liveMode') ? data['liveMode'] : true,
+    );
+  }
 
   factory ManualTimeModel.fromMap(Map<String, dynamic> map) => ManualTimeModel(
         id: map["id"],

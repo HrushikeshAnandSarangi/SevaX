@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
@@ -16,6 +15,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -130,7 +130,7 @@ class _SplashViewState extends State<SplashView> {
       '91512', // channel ID
       'General', // channel name
       'General notifications', //channel description
-      importance: Importance.High,
+      importance: Importance.high,
     );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -400,7 +400,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<String> _getLoggedInUserId() async {
     //  String userId = await PreferenceManager.loggedInUserId;
-    String userId = (await FirebaseAuth.instance.currentUser())?.uid;
+    String userId = (await FirebaseAuth.instance.currentUser)?.uid;
 
     // UserData.shared.userId = userId;
 
@@ -431,10 +431,7 @@ class _SplashViewState extends State<SplashView> {
             loggedInUser.currentCommunity == null) &&
         loggedInUser.communities.length != 0) {
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-      await Firestore.instance
-          .collection("users")
-          .document(loggedInUser.email)
-          .updateData({
+      await CollectionRef.users.doc(loggedInUser.email).update({
         'currentCommunity': loggedInUser.communities[0],
       });
     }
@@ -493,23 +490,19 @@ class _SplashViewState extends State<SplashView> {
       _navigateToCoreView(loggedInUser);
     }
 
-    await FirebaseAuth.instance
-        .currentUser()
-        .then((FirebaseUser firebaseUser) async {
-      if (firebaseUser != null) {
-        if (!firebaseUser.isEmailVerified) {
-          await Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => VerifyEmail(
-                  firebaseUser: firebaseUser,
-                  email: loggedInUser.email,
-                  emailSent: loggedInUser.emailSent,
-                ),
+    if (FirebaseAuth.instance.currentUser != null) {
+      if (!FirebaseAuth.instance.currentUser.emailVerified) {
+        await Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => VerifyEmail(
+                firebaseUser: FirebaseAuth.instance.currentUser,
+                email: loggedInUser.email,
+                emailSent: loggedInUser.emailSent,
               ),
-              (Route<dynamic> route) => false);
-        }
+            ),
+            (Route<dynamic> route) => false);
       }
-    });
+    }
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
@@ -537,8 +530,7 @@ class _SplashViewState extends State<SplashView> {
 
     if (loggedInUser.communities == null ||
         loggedInUser.communities.isEmpty ||
-        !loggedInUser.skipCreateCommunityPage
-        ) {
+        !loggedInUser.skipCreateCommunityPage) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
@@ -559,10 +551,9 @@ class _SplashViewState extends State<SplashView> {
     );
 
     if (results != null && results['response'] == "SKIP") {
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'seenIntro': true})
+      await CollectionRef.users
+          .doc(loggedInUser.email)
+          .update({'seenIntro': true})
           .then((onValue) {})
           .catchError((onError) {});
     }
@@ -596,10 +587,9 @@ class _SplashViewState extends State<SplashView> {
     );
 
     if (results != null && results['response'] == "ACCEPTED") {
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'acceptedEULA': true})
+      await CollectionRef.users
+          .doc(loggedInUser.email)
+          .update({'acceptedEULA': true})
           .then((onValue) {})
           .catchError((onError) {});
     }

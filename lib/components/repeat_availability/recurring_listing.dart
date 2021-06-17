@@ -8,6 +8,8 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
@@ -23,7 +25,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
+
 import '../../flavor_config.dart';
 
 enum ComingToRecurringFrom {
@@ -67,19 +69,15 @@ class _RecurringListingState extends State<RecurringListing> {
   }
 
   Future<void> getTimebankForId(timebankId) async {
-    DocumentSnapshot timebankDoc = await Firestore.instance
-        .collection("timebanknew")
-        .document(timebankId)
-        .get();
-    timebankModel = TimebankModel.fromMap(timebankDoc.data);
+    DocumentSnapshot timebankDoc =
+        await CollectionRef.timebank.doc(timebankId).get();
+    timebankModel = TimebankModel.fromMap(timebankDoc.data());
   }
 
   Future<CommunityModel> getCommunityForId(communityId) async {
-    DocumentSnapshot communityDoc = await Firestore.instance
-        .collection("communities")
-        .document(communityId)
-        .get();
-    return CommunityModel(communityDoc.data);
+    DocumentSnapshot communityDoc =
+        await CollectionRef.communities.doc(communityId).get();
+    return CommunityModel(communityDoc.data());
   }
 
   @override

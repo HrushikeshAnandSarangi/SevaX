@@ -18,6 +18,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -28,28 +29,21 @@ import '../../flavor_config.dart';
 Future<void> createUser({
   @required UserModel user,
 }) async {
-  return await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .setData(user.toMap());
+  return await CollectionRef.users.doc(user.email).set(user.toMap());
 }
 
 Future<void> updateUser({
   @required UserModel user,
 }) async {
-  return await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .setData(user.toMap(), merge: true);
+  return await CollectionRef.users
+      .doc(user.email)
+      .set(user.toMap(), SetOptions(merge: true));
 }
 
 Future<void> updateUserLanguage({
   @required UserModel user,
 }) async {
-  return await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .updateData({
+  return await CollectionRef.users.doc(user.email).update({
     'language': user.language,
   });
 }
@@ -62,16 +56,15 @@ Future<int> getUserDonatedGoodsAndAmount({
 }) async {
   int totalGoodsOrAmount = 0;
   try {
-    await Firestore.instance
-        .collection('donations')
+    await CollectionRef.donations
         .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('donorSevaUserId', isEqualTo: sevaUserId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
-        .getDocuments()
+        .get()
         .then((data) {
-      data.documents.forEach((documentSnapshot) {
+      data.docs.forEach((documentSnapshot) {
         DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data);
+            DonationModel.fromMap(documentSnapshot.data());
         if (donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
             totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
@@ -96,16 +89,15 @@ Future<int> getTimebankRaisedAmountAndGoods({
 }) async {
   int totalGoodsOrAmount = 0;
   try {
-    await Firestore.instance
-        .collection('donations')
+    await CollectionRef.donations
         .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('timebankId', isEqualTo: timebankId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
-        .getDocuments()
+        .get()
         .then((data) {
-      data.documents.forEach((documentSnapshot) {
+      data.docs.forEach((documentSnapshot) {
         DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data);
+            DonationModel.fromMap(documentSnapshot.data());
         if (donationModel.donatedToTimebank &&
             donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
@@ -129,7 +121,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
   Geoflutterfire geo = Geoflutterfire();
 
   String userEmail =
-      userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
+      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email;
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -153,7 +145,7 @@ Future<DeviceDetails> getAndUpdateDeviceDetailsOfUser(
 
   AppConfig.loggedInEmail = userEmailId;
   deviceDetails.location = location;
-  await Firestore.instance.collection("users").document(userEmail).updateData({
+  await CollectionRef.users.doc(userEmail).update({
     'deviceDetails': deviceDetails.toMap(),
   });
   return deviceDetails;
@@ -166,7 +158,7 @@ Future<DeviceDetails> addCreationSourceOfUser(
   Geoflutterfire geo = Geoflutterfire();
 
   String userEmail =
-      userEmailId ?? (await FirebaseAuth.instance.currentUser())?.email;
+      userEmailId ?? (await FirebaseAuth.instance.currentUser)?.email;
   DeviceDetails deviceDetails = DeviceDetails();
   if (Platform.isAndroid) {
     var androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -194,7 +186,7 @@ Future<DeviceDetails> addCreationSourceOfUser(
   }
   deviceDetails.location = location;
   deviceDetails.timestamp = DateTime.now().millisecondsSinceEpoch;
-  await Firestore.instance.collection("users").document(userEmail).updateData({
+  await CollectionRef.users.doc(userEmail).update({
     'creationSource': deviceDetails.toMap(),
   });
   return deviceDetails;
@@ -205,16 +197,15 @@ Future<int> getRequestRaisedGoods({
 }) async {
   int totalGoods = 0;
   try {
-    await Firestore.instance
-        .collection('donations')
+    await CollectionRef.donations
         .where('donationType', isEqualTo: 'GOODS')
         .where('donationStatus', isEqualTo: 'ACKNOWLEDGED')
         .where('requestId', isEqualTo: requestId)
-        .getDocuments()
+        .get()
         .then((data) {
-      data.documents.forEach((documentSnapshot) {
+      data.docs.forEach((documentSnapshot) {
         DonationModel donationModel =
-            DonationModel.fromMap(documentSnapshot.data);
+            DonationModel.fromMap(documentSnapshot.data());
 
         totalGoods += donationModel.goodsDetails.donatedGoods.values.length;
       });
@@ -230,15 +221,13 @@ Stream<List<DonationModel>> getDonationList(
   var data;
 
   if (userId != null) {
-    data = Firestore.instance
-        .collection('donations')
+    data = CollectionRef.donations
         .where('donorSevaUserId', isEqualTo: userId)
         .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .orderBy("timestamp", descending: true)
         .snapshots();
   } else {
-    data = Firestore.instance
-        .collection('donations')
+    data = CollectionRef.donations
         .where('timebankId', isEqualTo: timebankId)
         .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('donatedToTimebank', isEqualTo: true)
@@ -249,8 +238,8 @@ Stream<List<DonationModel>> getDonationList(
     StreamTransformer<QuerySnapshot, List<DonationModel>>.fromHandlers(
       handleData: (snapshot, donationSink) {
         List<DonationModel> donationsList = [];
-        snapshot.documents.forEach((document) {
-          DonationModel model = DonationModel.fromMap(document.data);
+        snapshot.docs.forEach((document) {
+          DonationModel model = DonationModel.fromMap(document.data());
           if (model.donationStatus == DonationStatus.ACKNOWLEDGED)
             donationsList.add(model);
         });
@@ -272,8 +261,7 @@ Future<Map<String, UserModel>> getUserForUserModels(
 
 Stream<List<UserModel>> getRecommendedUsersStream(
     {@required String requestId}) async* {
-  var data = Firestore.instance
-      .collection('users')
+  var data = CollectionRef.users
       .where('recommendedForRequestIds', arrayContains: requestId)
       .snapshots();
 
@@ -281,10 +269,10 @@ Stream<List<UserModel>> getRecommendedUsersStream(
     StreamTransformer<QuerySnapshot, List<UserModel>>.fromHandlers(
       handleData: (snapshot, usersListSink) {
         List<UserModel> modelList = [];
-        snapshot.documents.forEach(
+        snapshot.docs.forEach(
           (documentSnapshot) {
             UserModel model =
-                UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+                UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
             modelList.add(model);
           },
         );
@@ -301,13 +289,13 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       "Seva UserId cannot be null or empty");
 
   UserModel userModel;
-  await Firestore.instance
-      .collection('users')
+  await CollectionRef.users
       .where('sevauserid', isEqualTo: sevaUserId)
-      .getDocuments()
+      .get()
       .then((QuerySnapshot querySnapshot) {
-    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+    querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+      userModel =
+          UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
     });
   });
 
@@ -322,12 +310,12 @@ Future<UserModel> getUserForEmail({
 
   UserModel userModel;
   DocumentSnapshot documentSnapshot =
-      await Firestore.instance.collection('users').document(emailAddress).get();
+      await CollectionRef.users.doc(emailAddress).get();
 
   if (documentSnapshot == null || documentSnapshot.data == null) {
     return null;
   }
-  userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+  userModel = UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
   return userModel;
 }
 
@@ -412,17 +400,16 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
 Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
-  var data = Firestore.instance
-      .collection('users')
+  var data = CollectionRef.users
       .where('sevauserid', isEqualTo: sevaUserId)
       .snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) async {
-        DocumentSnapshot documentSnapshot = snapshot.documents[0];
+        DocumentSnapshot documentSnapshot = snapshot.docs[0];
         UserModel model =
-            UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+            UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
 
         model.sevaUserID = sevaUserId;
         userSink.add(model);
@@ -434,14 +421,13 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
 Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
-  return Firestore.instance
-      .collection('users')
+  return CollectionRef.users
       .where('sevauserid', isEqualTo: sevaUserId)
-      .getDocuments()
+      .get()
       .then((snapshot) {
-    DocumentSnapshot documentSnapshot = snapshot.documents[0];
+    DocumentSnapshot documentSnapshot = snapshot.docs[0];
     UserModel model =
-        UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
+        UserModel.fromMap(documentSnapshot.data(), 'user_data_manager');
     return model;
   }).catchError((onError) {
     return UserModel();
@@ -452,16 +438,14 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   assert(userEmailAddress != null && userEmailAddress.isNotEmpty,
       'User Email cannot be null or empty');
 
-  var userDataStream = Firestore.instance
-      .collection('users')
-      .document(userEmailAddress)
-      .snapshots();
+  var userDataStream = CollectionRef.users.doc(userEmailAddress).snapshots();
 
   yield* userDataStream.transform(
     StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) {
-        UserModel model = UserModel.fromMap(snapshot.data, 'user_data_manager');
-        // model.sevaUserID = snapshot.documentID;
+        UserModel model =
+            UserModel.fromMap(snapshot.data(), 'user_data_manager');
+        // model.sevaUserID = snapshot.id;
         userSink.add(model);
       },
     ),
@@ -505,12 +489,11 @@ Future storeRemoveMemberLog({
   String adminPhotoUrl,
   String timebankTitle,
 }) async {
-  var response = Firestore.instance
-      .collection('timebanknew')
-      .document(timebankModel.id)
+  var response = CollectionRef.timebank
+      .doc(timebankModel.id)
       .collection('entryExitLogs')
-      .document()
-      .setData({
+      .doc()
+      .set({
     'mode': ExitJoinType.EXIT.readable,
     'modeType': ExitMode.REMOVED_BY_ADMIN.readable,
     'timestamp': DateTime.now().millisecondsSinceEpoch,

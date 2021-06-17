@@ -27,6 +27,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_exit_community_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -809,9 +810,8 @@ class _RegisterPageState extends State<RegisterPage>
 
       logger.i('----- START OF JOINED SEVAX GLOBAL LOG CODE -------');
 
-      await Firestore.instance
-          .collection('timebanknew')
-          .document(FlavorConfig.values.timebankId)
+      await CollectionRef.timebank
+          .doc(FlavorConfig.values.timebankId)
           .collection('entryExitLogs')
           .add({
         'mode': ExitJoinType.JOIN.readable,
@@ -877,7 +877,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-      Crashlytics.instance.log(error.toString());
+      FirebaseCrashlytics.instance.log(error.toString());
       error;
       log('createUser: error: ${error.toString()}');
       return null;

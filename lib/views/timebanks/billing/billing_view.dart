@@ -1,6 +1,6 @@
 // import 'dart:async';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:sevaexchange/flavor_config.dart';
@@ -188,31 +188,31 @@
 //   }) {
 //     //add to timebank members
 
-//     WriteBatch batch = Firestore.instance.batch();
+//     WriteBatch batch = CollectionRef.batch;
 //     var timebankRef =
-//         Firestore.instance.collection('timebanknew').document(primaryTimebank);
+//         CollectionRef.timebank.doc(primaryTimebank);
 
-//     var personalNotifications = Firestore.instance
-//         .collection('users')
-//         .document(adminEmail)
+//     var personalNotifications = CollectionRef
+//         .users
+//         .doc(adminEmail)
 //         .collection("notifications")
-//         .document(notificaitonId);
+//         .doc(notificaitonId);
 
 //     var addToCommunityRef =
-//         Firestore.instance.collection('communities').document(communityId);
+//         CollectionRef.communities.doc(communityId);
 
-//     batch.updateData(addToCommunityRef, {
+//     batch.update(addToCommunityRef, {
 //       'created_by': adminId,
 //       'primary_email': adminEmail,
 //       'billing_address': widget.communityModel.billing_address.toMap()
 //     });
 
-//     batch.updateData(timebankRef, {
+//     batch.update(timebankRef, {
 //       "creator_id": adminId,
 //       "email_id": adminEmail,
 //     });
 
-//     batch.updateData(personalNotifications, {'isRead': true});
+//     batch.update(personalNotifications, {'isRead': true});
 
 //     return batch;
 //   }
@@ -452,10 +452,10 @@
 //         if (isSuccess) {
 //           Future.delayed(Duration(milliseconds: 600), () {
 //             // Here we need to update the payment to false
-//             Firestore.instance
-//                 .collection('communities')
-//                 .document(communityId)
-//                 .updateData({
+//             CollectionRef
+//                 .communities
+//                 .doc(communityId)
+//                 .update({
 //               'payment.message': 'Syncing payment data',
 //               "payment.payment_success": false,
 //               'payment.status': SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE,

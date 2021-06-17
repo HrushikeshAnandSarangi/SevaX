@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/material.dart';
 // import 'package:sevaexchange/models/notifications_model.dart';
 // import 'package:sevaexchange/models/user_model.dart';
@@ -22,14 +23,14 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     Firestore.instance
-//         .collection('timebanknew')
-//         .document(widget.timebankId)
+//     CollectionRef
+//         .timebank
+//         .doc(widget.timebankId)
 //         .collection('notifications')
 //         .snapshots()
 //         .listen((QuerySnapshot data) {
 //       notifications = [];
-//       data.documents.forEach((DocumentSnapshot n) {
+//       data.docs.forEach((DocumentSnapshot n) {
 //         NotificationsModel notification = NotificationsModel.fromMap(n.data);
 //         if (!users.containsKey(notification.senderUserId)) {
 //           setUserData(notification.senderUserId);
@@ -92,9 +93,9 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return FutureBuilder<DocumentSnapshot>(
-//         future: Firestore.instance
-//             .collection('users')
-//             .document(notificationModel.senderUserId)
+//         future: CollectionRef
+//             .users
+//             .doc(notificationModel.senderUserId)
 //             .get(),
 //         builder: (context, snapshot) {
 //           return Dismissible(

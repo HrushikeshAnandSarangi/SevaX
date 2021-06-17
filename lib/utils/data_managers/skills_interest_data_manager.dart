@@ -12,10 +12,10 @@ Future<List<String>> getSkillsForTimebank({
   log('getSkillsForTimebankId: $timebankId');
   try {
     QuerySnapshot data =
-        await Firestore.instance.collection('constants').getDocuments();
-    List dataList = data.documents
-        .where((document) => document.documentID == timebankId)
-        .map((document) => document.data)
+        await FirebaseFirestore.instance.collection('constants').get();
+    List dataList = data.docs
+        .where((document) => document.id == timebankId)
+        .map((document) => document.data())
         .toList();
 
     Map dataMap = dataList != null && dataList.isNotEmpty ? dataList.first : {};
@@ -35,10 +35,10 @@ Future<List<String>> getInterestsForTimebank({
   log('getSkillsForTimebankId: $timebankId');
   try {
     QuerySnapshot data =
-        await Firestore.instance.collection('constants').getDocuments();
-    List dataList = data.documents
-        .where((document) => document.documentID == timebankId)
-        .map((document) => document.data)
+        await FirebaseFirestore.instance.collection('constants').get();
+    List dataList = data.docs
+        .where((document) => document.id == timebankId)
+        .map((document) => document.data())
         .toList();
 
     Map dataMap = dataList != null && dataList.isNotEmpty ? dataList.first : {};
@@ -74,9 +74,9 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
     interestsarr = await SearchManager.getInterests(
         interestList: interestsIdList, languageCode: languageCode);
 //    queryData2 =
-//        await Firestore.instance.collection('interests').getDocuments();
-//    queryData2.documents.forEach((docsnapshot) {
-//      if (interestsIdList.contains(docsnapshot.documentID)) {
+//        await CollectionRef.interests.get();
+//    queryData2.docs.forEach((docsnapshot) {
+//      if (interestsIdList.contains(docsnapshot.id)) {
 //        interestsarr.add(docsnapshot.data[languageCode] != null
 //            ? docsnapshot.data[languageCode]
 //            : docsnapshot.data["name"]);

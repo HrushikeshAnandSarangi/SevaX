@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 import '../flavor_config.dart';
@@ -12,15 +13,15 @@ import '../flavor_config.dart';
 class ManualTimeRepository {
   static final String _userCollection = "users";
 
-  static Firestore _firestore = Firestore.instance;
+  static Firestore _firestore = CollectionRef;
   static final String _timebankCollection = "timebanknew";
   static String _notificationCollection = "notifications";
 
-  static final _ref = Firestore.instance.collection('manualTimeClaims');
+  static final _ref = CollectionRef.collection('manualTimeClaims');
 
   static Future<void> createClaim(ManualTimeModel model) async {
     assert(model.id != null);
-    await _ref.document(model.id).setData(model.toMap());
+    await _ref.doc(model.id).set(model.toMap());
   }
 
   static Future<bool> approveManualCreditClaim({
@@ -79,11 +80,11 @@ class ManualTimeRepository {
   }) {
     assert(model.status != ClaimStatus.NoAction);
     assert(model.actionBy != null);
-    var batchWrite = Firestore.instance.batch();
+    var batchWrite = CollectionRef.batch;
 
     //Update Model in collection
-    batchWrite.updateData(
-      _ref.document(model.id),
+    batchWrite.update(
+      _ref.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -91,20 +92,20 @@ class ManualTimeRepository {
     );
 
     // Create Transaction for reciever
-    batchWrite.setData(
-      _firestore.collection('transactions').document(),
+    batchWrite.set(
+      _firestore.transactions.doc(),
       memberTransactionModel.toMap(),
     );
 
     // Create Transaction for timebank
-    batchWrite.setData(
-      _firestore.collection('transactions').document(),
+    batchWrite.set(
+      _firestore.transactions.doc(),
       timebankTransaction.toMap(),
     );
 
     // //Update Balance
-    // batchWrite.updateData(
-    //   _firestore.document(model.userDetails.email),
+    // batchWrite.update(
+    //   _firestore.doc(model.userDetails.email),
     //   {
     //     AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
     //         FieldValue.increment(model.claimedTime / 60),
@@ -115,12 +116,12 @@ class ManualTimeRepository {
     // var notificationsModel = _getCreditNotification(
     //   model: model,
     // );
-    // batchWrite.setData(
+    // batchWrite.set(
     //   _firestore
-    //       .collection('users')
-    //       .document(model.userDetails.email)
+    //       .users
+    //       .doc(model.userDetails.email)
     //       .collection('notifications')
-    //       .document(notificationsModel.id),
+    //       .doc(notificationsModel.id),
     //   notificationsModel.toMap(),
     // );
 
@@ -136,11 +137,11 @@ class ManualTimeRepository {
   }) {
     assert(model.status != ClaimStatus.NoAction);
     assert(model.actionBy != null);
-    var batchWrite = Firestore.instance.batch();
+    var batchWrite = CollectionRef.batch;
 
     //Update Model in collection
-    batchWrite.updateData(
-      _ref.document(model.id),
+    batchWrite.update(
+      _ref.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -148,20 +149,20 @@ class ManualTimeRepository {
     );
 
     // Create Transaction for reciever
-    batchWrite.setData(
-      _firestore.collection('transactions').document(),
+    batchWrite.set(
+      _firestore.transactions.doc(),
       memberTransactionModel.toMap(),
     );
 
     // Create Transaction for reciever
-    batchWrite.setData(
-      _firestore.collection('transactions').document(),
+    batchWrite.set(
+      _firestore.transactions.doc(),
       timebankTransaction.toMap(),
     );
 
     //Update Balance
-    // batchWrite.updateData(
-    //   _firestore.collection('users').document(model.userDetails.email),
+    // batchWrite.update(
+    //   _firestore.users.doc(model.userDetails.email),
     //   {
     //     AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
     //         FieldValue.increment(model.claimedTime / 60),
@@ -173,7 +174,7 @@ class ManualTimeRepository {
       model: model,
       user: userModel,
     );
-    batchWrite.setData(
+    batchWrite.set(
       getNotificationDocumentReference(
         model: notificationModel,
         userEmail: model.userDetails.email,
@@ -185,23 +186,22 @@ class ManualTimeRepository {
     // var notificationsModel = _getCreditNotification(
     //   model: model,
     // );
-    // batchWrite.setData(
+    // batchWrite.set(
     //   _firestore
-    //       .collection('users')
-    //       .document(model.userDetails.email)
+    //       .users
+    //       .doc(model.userDetails.email)
     //       .collection('notifications')
-    //       .document(notificationsModel.id),
+    //       .doc(notificationsModel.id),
     //   notificationsModel.toMap(),
     // );
 
     //Clear notification
     if (notificationId != null && notificationId != '') {
-      batchWrite.updateData(
-        _firestore
-            .collection('timebanknew')
-            .document(model.timebankId)
+      batchWrite.update(
+        _firestore.timebank
+            .doc(model.timebankId)
             .collection('notifications')
-            .document(notificationId),
+            .doc(notificationId),
         {
           'isRead': true,
         },
@@ -215,11 +215,11 @@ class ManualTimeRepository {
     @required String notificationId,
     @required UserModel userModel,
   }) {
-    var batchWrite = Firestore.instance.batch();
+    var batchWrite = CollectionRef.batch;
 
     //Update Model in collection
-    batchWrite.updateData(
-      _ref.document(model.id),
+    batchWrite.update(
+      _ref.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -231,7 +231,7 @@ class ManualTimeRepository {
       model: model,
       user: userModel,
     );
-    batchWrite.setData(
+    batchWrite.set(
       getNotificationDocumentReference(
         model: notificationModel,
         userEmail: model.userDetails.email,
@@ -241,12 +241,11 @@ class ManualTimeRepository {
 
     //Clear notification
     if (notificationId != null) {
-      batchWrite.updateData(
-        _firestore
-            .collection('timebanknew')
-            .document(model.timebankId)
+      batchWrite.update(
+        _firestore.timebank
+            .doc(model.timebankId)
             .collection('notifications')
-            .document(notificationId),
+            .doc(notificationId),
         {
           'isRead': true,
         },
@@ -324,15 +323,15 @@ class ManualTimeRepository {
     if (model.isTimebankNotification) {
       ref = _firestore
           .collection(_timebankCollection)
-          .document(model.timebankId)
+          .doc(model.timebankId)
           .collection(_notificationCollection);
     } else {
       ref = _firestore
           .collection(_userCollection)
-          .document(userEmail)
+          .doc(userEmail)
           .collection(_notificationCollection);
     }
-    return ref.document(model.id);
+    return ref.doc(model.id);
   }
 
   static NotificationsModel getNotificationModel({

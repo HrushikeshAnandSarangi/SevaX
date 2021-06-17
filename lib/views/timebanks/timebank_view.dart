@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:flutter/material.dart' as prefix2;
 //import 'package:sevaexchange/constants/sevatitles.dart';
@@ -303,16 +304,16 @@
 //                                                                      timebankModel
 //                                                                          .creatorId);
 //
-//                                                      await Firestore.instance
-//                                                          .collection('users')
-//                                                          .document(
+//                                                      await CollectionRef
+//                                                          .users
+//                                                          .doc(
 //                                                              timebankCreator
 //                                                                  .email)
 //                                                          .collection(
 //                                                              "notifications")
-//                                                          .document(
+//                                                          .doc(
 //                                                              notification.id)
-//                                                          .setData(notification
+//                                                          .set(notification
 //                                                              .toMap());
 //
 //                                                      Navigator.of(

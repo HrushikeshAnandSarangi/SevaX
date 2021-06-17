@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -7,6 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 class GroupJoinRejectDialogView extends StatefulWidget {
   final GroupInviteUserModel groupInviteUserModel;
@@ -146,21 +145,19 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
   }
 
   WriteBatch addMemberToGroup() {
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankRef = Firestore.instance
-        .collection('timebanknew')
-        .document(widget.groupInviteUserModel.groupId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankRef =
+        CollectionRef.timebank.doc(widget.groupInviteUserModel.groupId);
 
-    var userNotificationReference = Firestore.instance
-        .collection('users')
-        .document(widget.userModel.email)
+    var userNotificationReference = CollectionRef.users
+        .doc(widget.userModel.email)
         .collection("notifications")
-        .document(widget.notificationId);
+        .doc(widget.notificationId);
 
-    batch.updateData(timebankRef, {
+    batch.update(timebankRef, {
       'members': FieldValue.arrayUnion([widget.userModel.sevaUserID]),
     });
-    batch.updateData(userNotificationReference, {'isRead': true});
+    batch.update(userNotificationReference, {'isRead': true});
     return batch;
   }
 
@@ -182,27 +179,23 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
     String userEmail,
     String invitationId,
   }) async {
-    QuerySnapshot invitationSnap = await Firestore.instance
-        .collection('invitations')
+    QuerySnapshot invitationSnap = await CollectionRef.invitations
         .where('data.notificationId', isEqualTo: widget.notificationId)
-        .getDocuments();
+        .get();
     String invitationId;
-    invitationSnap.documents.forEach((doc) {
-      invitationId = doc.documentID;
+    invitationSnap.docs.forEach((doc) {
+      invitationId = doc.id;
     });
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-    await Firestore.instance
-        .collection('invitations')
-        .document(invitationId)
-        .updateData(
-            {'data.declined': true, 'data.declinedTimestamp': timestamp});
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.invitations
+        .doc(invitationId)
+        .update({'data.declined': true, 'data.declinedTimestamp': timestamp});
+    await CollectionRef.users
+        .doc(userEmail)
         .collection('notifications')
-        .document(widget.notificationId)
-        .updateData({
+        .doc(widget.notificationId)
+        .update({
       'isRead': true,
       'data.declined': true,
       'data.timestamp': timestamp,

@@ -3,7 +3,7 @@
 // import 'dart:convert';
 // import 'dart:developer';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:rxdart/rxdart.dart';
@@ -267,10 +267,10 @@
 //                               requestModel.approvedUsers =
 //                                   approvedUsersList.toList();
 
-//                               await Firestore.instance
-//                                   .collection('requests')
-//                                   .document(requestModel.id)
-//                                   .updateData(requestModel.toMap());
+//                               await CollectionRef
+//                                   .requests
+//                                   .doc(requestModel.id)
+//                                   .update(requestModel.toMap());
 
 //                               widget.onFinish();
 

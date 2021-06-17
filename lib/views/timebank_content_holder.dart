@@ -15,6 +15,7 @@ import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
@@ -1115,10 +1116,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                           .reports.isEmpty) {
                                                         news.reports = [];
                                                       }
-                                                      Firestore.instance
-                                                          .collection('news')
-                                                          .document(news.id)
-                                                          .updateData({
+                                                      CollectionRef.feeds
+                                                          .doc(news.id)
+                                                          .update({
                                                         'reports': FieldValue
                                                             .arrayUnion([
                                                           SevaCore.of(context)

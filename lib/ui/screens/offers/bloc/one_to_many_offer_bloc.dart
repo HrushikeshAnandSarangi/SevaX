@@ -198,9 +198,9 @@ class OneToManyOfferBloc extends BlocBase {
   }
 
   // void checkPublicAvailability(String timebankId, String sevaUserId) {
-  //   Firestore.instance
-  //       .collection('timebanknew')
-  //       .document(timebankId)
+  //   CollectionRef
+  //       .timebank
+  //       .doc(timebankId)
   //       .get()
   //       .then((value) {
   //     final model = TimebankModel.fromMap(value.data);

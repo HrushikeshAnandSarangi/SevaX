@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 
@@ -30,34 +31,32 @@ class ChatBloc {
 
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =
-    await Firestore.instance.collection("chatsnew").document(chatId).get();
-    ChatModel chatModel = ChatModel.fromMap(chatModelSnapshot.data);
-    chatModel.id = chatModelSnapshot.documentID;
+        await CollectionRef.chats.doc(chatId).get();
+    ChatModel chatModel = ChatModel.fromMap(chatModelSnapshot.data());
+    chatModel.id = chatModelSnapshot.id;
     Stream<QuerySnapshot> querySnapshot;
 
     if (chatModel.deletedBy.containsKey(userId)) {
       int timestamp = chatModel.deletedBy[userId];
-      querySnapshot = Firestore.instance
-          .collection('chatsnew')
-          .document(chatModel.id)
+      querySnapshot = CollectionRef.chats
+          .doc(chatModel.id)
           .collection('messages')
           .where("timestamp", isGreaterThan: timestamp)
           .orderBy("timestamp")
           .snapshots();
     } else {
-      querySnapshot = Firestore.instance
-          .collection('chatsnew')
-          .document(chatModel.id)
+      querySnapshot = CollectionRef.chats
+          .doc(chatModel.id)
           .collection('messages')
           .orderBy("timestamp")
           .snapshots();
     }
     querySnapshot.listen((QuerySnapshot event) {
       List<MessageModel> messages = [];
-      event.documents.forEach((DocumentSnapshot document) {
-        MessageModel model = MessageModel.fromMap(document.data);
+      event.docs.forEach((DocumentSnapshot document) {
+        MessageModel model = MessageModel.fromMap(document.data());
 
-        model.id = document.documentID;
+        model.id = document.id;
         messages.add(model);
       });
       if (!_messages.isClosed) _messages.add(messages);
@@ -99,23 +98,23 @@ class ChatBloc {
     String chatId,
     String userId,
   }) async {
-    return Firestore.instance.collection('chatsnew').document(chatId).setData(
+    return CollectionRef.chats.doc(chatId).set(
       {
         'unreadStatus': {userId: 0}
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
   Future<void> clearChat(String chatId, String userId) async {
-    return Firestore.instance.collection('chatsnew').document(chatId).setData(
+    return CollectionRef.chats.doc(chatId).set(
       {
         "softDeletedBy": FieldValue.arrayUnion([userId]),
         "deletedBy": {
           userId: DateTime.now().millisecondsSinceEpoch,
         }
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
@@ -132,10 +131,10 @@ class ChatBloc {
   }
 
   Future<void> removeMember(
-      String chatId,
-      String userId,
-      bool isCreator,
-      ) async {
+    String chatId,
+    String userId,
+    bool isCreator,
+  ) async {
     await ChatsRepository.removeMember(chatId, userId);
     if (isCreator) {
       await ChatsRepository.transferOwnership(chatId);

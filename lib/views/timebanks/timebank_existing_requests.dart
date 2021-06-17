@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -7,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -446,12 +446,11 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
         senderUserId: sevaUserID,
         targetUserId: userModel.sevaUserID);
 
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
+    await CollectionRef.users
+        .doc(userModel.email)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     // if (dialogLoadingContext != null) {
     //  Navigator.pop(dialogLoadingContext);

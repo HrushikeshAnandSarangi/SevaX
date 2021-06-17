@@ -3,20 +3,19 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/community_category_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 mixin CommunityRepository {
-  static CollectionReference _ref =
-      Firestore.instance.collection('communities');
-  static CollectionReference _categoriesRef =
-      Firestore.instance.collection('communityCategories');
+  static CollectionReference _ref = CollectionRef.communities;
+  static CollectionReference _categoriesRef = CollectionRef.communityCategories;
 
   static Future<List<CommunityCategoryModel>> getCommunityCategories() async {
-    var result = await _categoriesRef.getDocuments();
+    var result = await _categoriesRef.get();
     List<CommunityCategoryModel> models = [];
-    result.documents.forEach((document) {
-      models.add(CommunityCategoryModel.fromMap(document.data));
+    result.docs.forEach((document) {
+      models.add(CommunityCategoryModel.fromMap(document.data()));
     });
     return models;
   }
@@ -29,7 +28,7 @@ mixin CommunityRepository {
           List<CommunityModel> _communities = [];
 
           try {
-            data.documents.forEach((element) {
+            data.docs.forEach((element) {
               var community = CommunityModel(element.data);
               _communities.add(community);
             });
@@ -48,7 +47,7 @@ mixin CommunityRepository {
   }
 
   static Future<CommunityModel> getCommunity(String communityId) async {
-    var result = await _ref.document(communityId).get();
+    var result = await _ref.doc(communityId).get();
     return result.exists ? CommunityModel(result.data) : null;
   }
 
@@ -61,7 +60,7 @@ mixin CommunityRepository {
 
     yield* data.map<List<CommunityModel>>((event) {
       List<CommunityModel> models = [];
-      event.documents.forEach((element) {
+      event.docs.forEach((element) {
         models.add(CommunityModel(element.data));
       });
       return models;
@@ -73,10 +72,10 @@ mixin CommunityRepository {
         .where("private", isEqualTo: false)
         .where("softDelete", isEqualTo: false)
         .limit(10)
-        .getDocuments();
+        .get();
 
     List<CommunityModel> models = [];
-    data.documents.forEach((element) {
+    data.docs.forEach((element) {
       CommunityModel model = CommunityModel(element.data);
       if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
         if (model.testCommunity) models.add(model);

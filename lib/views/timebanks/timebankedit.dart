@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 //import 'package:sevaexchange/globals.dart' as globals;
@@ -70,12 +71,12 @@
 //  }
 //
 //  void _updateToDB() {
-//    Firestore.instance
+//    CollectionRef
 //        .collection('timebanks')
-//        .document(widget.timebankModel.creatorId +
+//        .doc(widget.timebankModel.creatorId +
 //            '*' +
 //            widget.timebankModel.createdAt.toString())
-//        .updateData({
+//        .update({
 //      'timebankname': _timeBankName,
 //      'missionstatement': _missionStatement,
 //      'primaryemail': _primaryEmail,

@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/category_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 
@@ -52,13 +53,12 @@ class Searches {
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
-    QuerySnapshot timebankSnap = await Firestore.instance
-        .collection("timebanknew")
+    QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
-        .getDocuments();
-    timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != FlavorConfig.values.timebankId) {
-        timebanksIdArr.add(doc.documentID);
+        .get();
+    timebankSnap.docs.forEach((DocumentSnapshot doc) {
+      if (doc.id != FlavorConfig.values.timebankId) {
+        timebanksIdArr.add(doc.id);
       }
     });
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -128,14 +128,13 @@ class Searches {
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
-    QuerySnapshot timebankSnap = await Firestore.instance
-        .collection("timebanknew")
+    QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .where('community_id', isEqualTo: loggedInUser.currentCommunity)
-        .getDocuments();
-    timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != FlavorConfig.values.timebankId) {
-        timebanksIdArr.add(doc.documentID);
+        .get();
+    timebankSnap.docs.forEach((DocumentSnapshot doc) {
+      if (doc.id != FlavorConfig.values.timebankId) {
+        timebanksIdArr.add(doc.id);
       }
     });
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -248,14 +247,13 @@ class Searches {
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
-    QuerySnapshot timebankSnap = await Firestore.instance
-        .collection("timebanknew")
+    QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .where('community_id', isEqualTo: loggedInUser.currentCommunity)
-        .getDocuments();
-    timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != FlavorConfig.values.timebankId) {
-        timebanksIdArr.add(doc.documentID);
+        .get();
+    timebankSnap.docs.forEach((DocumentSnapshot doc) {
+      if (doc.id != FlavorConfig.values.timebankId) {
+        timebanksIdArr.add(doc.id);
       }
     });
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -537,14 +535,13 @@ class Searches {
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = [];
-    QuerySnapshot timebankSnap = await Firestore.instance
-        .collection("timebanknew")
+    QuerySnapshot timebankSnap = await CollectionRef.timebank
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .where('community_id', isEqualTo: loggedInUser.currentCommunity)
-        .getDocuments();
-    timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != FlavorConfig.values.timebankId) {
-        timebanksIdArr.add(doc.documentID);
+        .get();
+    timebankSnap.docs.forEach((DocumentSnapshot doc) {
+      if (doc.id != FlavorConfig.values.timebankId) {
+        timebanksIdArr.add(doc.id);
       }
     });
     // List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -759,7 +756,6 @@ class Searches {
 
     List<String> skillsarr = [];
     List<String> interestsarr = [];
-    String temp = "";
 
     skillsarr = await SearchManager.searchSkills(
         queryString: queryString, language: language);
@@ -769,16 +765,16 @@ class Searches {
     log('data skilll ${skillsarr}');
     log('data inter ${interestsarr}');
 
-//    allSkills.documents.forEach((skillDoc) {
+//    allSkills.docs.forEach((skillDoc) {
 //      temp = skillDoc.data['name'].toLowerCase();
 //      if (temp.contains(queryString.toLowerCase())) {
-//        skillsarr.add(skillDoc.documentID);
+//        skillsarr.add(skillDoc.id);
 //      }
 //    });
-//    allInterests.documents.forEach((interestDoc) {
+//    allInterests.docs.forEach((interestDoc) {
 //      temp = interestDoc.data['name'].toLowerCase();
 //      if (temp.contains(queryString)) {
-//        interestsarr.add(interestDoc.documentID);
+//        interestsarr.add(interestDoc.id);
 //      }
 //    });
 

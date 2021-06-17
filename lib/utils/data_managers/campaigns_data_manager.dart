@@ -1,5 +1,6 @@
 // import 'dart:async';
 // import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 // import 'package:meta/meta.dart';
 
@@ -7,7 +8,7 @@
 
 // Stream<List<CampaignModel>> getCampaignsForUserStream(
 //     {@required String userEmail}) async* {
-//   var data = Firestore.instance
+//   var data = CollectionRef
 //       .collection('campaigns')
 //       .where('membersemail', isEqualTo: userEmail)
 //       .snapshots();
@@ -16,9 +17,9 @@
 //     StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
 //       handleData: (snapshot, campaignSink) {
 //         List<CampaignModel> modelList = [];
-//         snapshot.documents.forEach((documentSnapshot) {
+//         snapshot.docs.forEach((documentSnapshot) {
 //           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
-//           model.id = documentSnapshot.documentID;
+//           model.id = documentSnapshot.id;
 //           modelList.add(model);
 //         });
 
@@ -36,9 +37,9 @@
 //   List<String> campaignIdList = [];
 //   List<CampaignModel> campaignModelList = [];
 
-//   await Firestore.instance
-//       .collection('users')
-//       .document(userEmail)
+//   await CollectionRef
+//       .users
+//       .doc(userEmail)
 //       .get()
 //       .then((DocumentSnapshot documentSnapshot) {
 //     Map<String, dynamic> dataMap = documentSnapshot.data;
@@ -61,14 +62,14 @@
 //       'Campaign ID cannot be null or empty');
 
 //   CampaignModel campaignModel;
-//   await Firestore.instance
+//   await CollectionRef
 //       .collection('campaigns')
-//       .document(campaignId)
+//       .doc(campaignId)
 //       .get()
 //       .then((DocumentSnapshot documentSnapshot) {
 //     Map<String, dynamic> dataMap = documentSnapshot.data;
 //     campaignModel = CampaignModel.fromMap(dataMap);
-//     campaignModel.id = documentSnapshot.documentID;
+//     campaignModel.id = documentSnapshot.id;
 //   });
 
 //   return campaignModel;
@@ -82,7 +83,7 @@
 //         timebankModel.id.isNotEmpty,
 //   );
 
-//   var data = Firestore.instance
+//   var data = CollectionRef
 //       .collection('campaigns')
 //       .where('parent_timebank', isEqualTo: timebankModel.id)
 //       .snapshots();
@@ -92,9 +93,9 @@
 //       handleData: (snapshot, campaignSink) {
 //         List<CampaignModel> models = [];
 
-//         snapshot.documents.forEach((documentSnapshot) {
+//         snapshot.docs.forEach((documentSnapshot) {
 //           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
-//           model.id = documentSnapshot.documentID;
+//           model.id = documentSnapshot.id;
 //           models.add(model);
 //         });
 
@@ -108,16 +109,16 @@
 //     {@required String campaignId}) async* {
 //   assert(campaignId != null && campaignId.isNotEmpty);
 
-//   var data = Firestore.instance
+//   var data = CollectionRef
 //       .collection('campaigns')
-//       .document(campaignId)
+//       .doc(campaignId)
 //       .snapshots();
 
 //   yield* data.transform(
 //     StreamTransformer<DocumentSnapshot, CampaignModel>.fromHandlers(
 //       handleData: (snapshot, campaignSink) {
 //         CampaignModel model = CampaignModel.fromMap(snapshot.data);
-//         model.id = snapshot.documentID;
+//         model.id = snapshot.id;
 //         campaignSink.add(model);
 //       },
 //     ),

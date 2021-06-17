@@ -6,6 +6,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -192,10 +193,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               ownerGroupsArr.forEach(
                 (group) {
                   futures.add(
-                    Firestore.instance
-                        .collection('timebanknew')
-                        .document(group['id'])
-                        .updateData(
+                    CollectionRef.timebank.doc(group['id']).update(
                       {
                         "creator_id": tbmodel.creatorId,
                         "email_id": tbmodel.emailId,
@@ -240,10 +238,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               //  print("new owner creator id is ${selectedNewOwner.sevaUserID}");
               ownerGroupsArr.forEach((group) {
                 futures.add(
-                  Firestore.instance
-                      .collection('timebanknew')
-                      .document(group['id'])
-                      .updateData(
+                  CollectionRef.timebank.doc(group['id']).update(
                     {
                       "creator_id": selectedNewOwner.sevaUserID,
                       "email_id": selectedNewOwner.email,
@@ -462,12 +457,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         senderUserId: widget.memberSevaUserId,
         targetUserId: tbmodel.creatorId);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(tbmodel.id)
+    await CollectionRef.timebank
+        .doc(tbmodel.id)
         .collection("notifications")
-        .document(notification.id)
-        .setData((notification..isTimebankNotification = true).toMap());
+        .doc(notification.id)
+        .set((notification..isTimebankNotification = true).toMap());
   }
 }
 

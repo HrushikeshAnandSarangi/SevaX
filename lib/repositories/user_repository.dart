@@ -7,19 +7,19 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class UserRepository {
-  static CollectionReference ref = Firestore.instance.collection("users");
-  static CollectionReference timebankRef =
-      Firestore.instance.collection("timebanknew");
+  static CollectionReference ref = CollectionRef.users;
+  static CollectionReference timebankRef = CollectionRef.timebank;
 
   //Fetch user details
   static Future<UserModel> fetchUserById(String userId) async {
     QuerySnapshot query =
-        await ref.where("sevauserid", isEqualTo: userId).getDocuments();
+        await ref.where("sevauserid", isEqualTo: userId).get();
     if (query.documents.length == 0) {
       throw Exception("No user Found");
     }
@@ -28,7 +28,7 @@ class UserRepository {
 
   static Future<String> fetchUserEmailById(String userId) async {
     QuerySnapshot query =
-        await ref.where("sevauserid", isEqualTo: userId).getDocuments();
+        await ref.where("sevauserid", isEqualTo: userId).get();
     if (query.documents.length == 0) {
       throw Exception("No user Found");
     }
@@ -45,17 +45,17 @@ class UserRepository {
     String userToBeBlockedEmail;
     userToBeBlockedEmail = blockedUserEmail ??
         await UserRepository.fetchUserEmailById(blockedUserId);
-    WriteBatch batch = Firestore.instance.batch();
-    batch.setData(
-      ref.document(userToBeBlockedEmail),
+    WriteBatch batch = CollectionRef.batch;
+    batch.set(
+      ref.doc(userToBeBlockedEmail),
       {
         'blockedBy': FieldValue.arrayUnion([userId])
       },
       merge: true,
     );
 
-    batch.setData(
-      ref.document(loggedInUserEmail),
+    batch.set(
+      ref.doc(loggedInUserEmail),
       {
         'blockedMembers': FieldValue.arrayUnion([blockedUserId])
       },
@@ -73,17 +73,17 @@ class UserRepository {
     String userToBeBlockedEmail;
     userToBeBlockedEmail = unblockedUserEmail ??
         await UserRepository.fetchUserEmailById(unblockedUserId);
-    WriteBatch batch = Firestore.instance.batch();
-    batch.setData(
-      ref.document(userToBeBlockedEmail),
+    WriteBatch batch = CollectionRef.batch;
+    batch.set(
+      ref.doc(userToBeBlockedEmail),
       {
         'blockedBy': FieldValue.arrayRemove([userId])
       },
       merge: true,
     );
 
-    batch.setData(
-      ref.document(loggedInUserEmail),
+    batch.set(
+      ref.doc(loggedInUserEmail),
       {
         'blockedMembers': FieldValue.arrayRemove([unblockedUserId])
       },
@@ -105,23 +105,23 @@ class UserRepository {
     QuerySnapshot querySnapshot = await ref
         .where("communities", arrayContains: communityId)
         .orderBy("fullname")
-        .getDocuments();
+        .get();
 
-    querySnapshot.documents.forEach((DocumentSnapshot document) {
-      var user = UserModel.fromMap(document.data, 'user chat repo');
+    querySnapshot.docs.forEach((DocumentSnapshot document) {
+      var user = UserModel.fromMap(document.data(), 'user chat repo');
       if (!isMemberBlocked(user, userId)) {
         if (timebankModel != null && !isAdmin) {
-          if (isAccessAvailable(timebankModel, document.data["sevauserid"]))
+          if (isAccessAvailable(timebankModel, document.data()["sevauserid"]))
             members.add(ParticipantInfo(
-              id: document.data["sevauserid"],
-              name: document.data["fullname"],
-              photoUrl: document.data["photourl"],
+              id: document.data()["sevauserid"],
+              name: document.data()["fullname"],
+              photoUrl: document.data()["photourl"],
             ));
         } else {
           members.add(ParticipantInfo(
-            id: document.data["sevauserid"],
-            name: document.data["fullname"],
-            photoUrl: document.data["photourl"],
+            id: document.data()["sevauserid"],
+            name: document.data()["fullname"],
+            photoUrl: document.data()["photourl"],
           ));
         }
       }
@@ -131,8 +131,7 @@ class UserRepository {
   }
 
   static Stream<UserModel> getUserStream(String email) async* {
-    var data =
-        Firestore.instance.collection("users").document(email).snapshots();
+    var data = CollectionRef.users.doc(email).snapshots();
     yield* data.transform(
       StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
         handleData: (snapshot, sink) {
@@ -154,7 +153,7 @@ class UserRepository {
       StreamTransformer<QuerySnapshot, List<UserModel>>.fromHandlers(
         handleData: (data, sink) {
           List<UserModel> _users = [];
-          data.documents.forEach((element) {
+          data.docs.forEach((element) {
             try {
               _users.add(UserModel.fromMap(element.data, 'User Repository'));
             } catch (e) {
@@ -169,7 +168,7 @@ class UserRepository {
   }
 
   static Future<UserModel> fetchUserByEmail(String email) async {
-    DocumentSnapshot doc = await ref.document(email).get();
+    DocumentSnapshot doc = await ref.doc(email).get();
     if (doc?.data != null) {
       throw Exception("No user Found");
     }
@@ -178,7 +177,7 @@ class UserRepository {
 
   static Future<void> changeUserCommunity(
       String email, String communityId, String timebankId) async {
-    await ref.document(email).setData(
+    await ref.doc(email).set(
       {'currentCommunity': communityId, 'currentTimebank': timebankId},
       merge: true,
     );
@@ -190,12 +189,11 @@ class UserRepository {
     String timebankId,
     bool isPromote,
   ) async {
-    WriteBatch batch = Firestore.instance.batch();
-    var timebankReference = timebankRef.document(timebankId);
-    var communityRef =
-        Firestore.instance.collection("communities").document(communityId);
+    WriteBatch batch = CollectionRef.batch;
+    var timebankReference = timebankRef.doc(timebankId);
+    var communityRef = CollectionRef.communities.doc(communityId);
 
-    batch.updateData(
+    batch.update(
       timebankReference,
       {
         'admins': isPromote
@@ -204,7 +202,7 @@ class UserRepository {
       },
     );
 
-    batch.updateData(
+    batch.update(
       communityRef,
       {
         'admins': isPromote

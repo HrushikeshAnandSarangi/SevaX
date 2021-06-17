@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/widgets/user_profile_image.dart';
@@ -234,12 +235,11 @@ class RequestCardWidget extends StatelessWidget {
       targetUserId: userModel.sevaUserID,
     );
 
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
+    await CollectionRef.users
+        .doc(userModel.email)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
   }
 
   Future<void> addToFavoriteList(
@@ -247,7 +247,7 @@ class RequestCardWidget extends StatelessWidget {
       String loggedInUserId,
       String timebankId,
       RequestMode requestMode}) async {
-    await Firestore.instance.collection('users').document(email).updateData({
+    await CollectionRef.users.doc(email).update({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayUnion(
         [isAdmin ? timebankId : loggedInUserId],
@@ -260,7 +260,7 @@ class RequestCardWidget extends StatelessWidget {
       String timeBankId,
       String loggedInUserId,
       RequestMode requestMode}) async {
-    await Firestore.instance.collection('users').document(email).updateData({
+    await CollectionRef.users.doc(email).update({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(
         [isAdmin ? timeBankId : loggedInUserId],

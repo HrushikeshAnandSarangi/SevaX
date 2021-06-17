@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -11,6 +9,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_community_details.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
@@ -305,10 +304,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         widget.isFromHome ? Container() : createCommunity(),
         FlatButton(
           onPressed: () async {
-            await Firestore.instance
-                .collection("users")
-                .document(widget.loggedInUser.email)
-                .updateData(
+            await CollectionRef.users.doc(widget.loggedInUser.email).update(
               {
                 'skipCreateCommunityPage': true,
               },

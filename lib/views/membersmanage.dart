@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 //import 'package:sevaexchange/models/user_model.dart';
@@ -89,15 +90,15 @@
 //
 //                          timebankSnapshotModel.members = existingMembers;
 //
-//                          Firestore.instance
+//                          CollectionRef
 //                              .collection('timebanks')
-//                              .document(timebankSnapshotModel.id)
-//                              .updateData(timebankSnapshotModel.toMap());
+//                              .doc(timebankSnapshotModel.id)
+//                              .update(timebankSnapshotModel.toMap());
 //
-//                          Firestore.instance
-//                              .collection('users')
-//                              .document(userModel.email)
-//                              .updateData({
+//                          CollectionRef
+//                              .users
+//                              .doc(userModel.email)
+//                              .update({
 //                            'membershipTimebanks':
 //                                FieldValue.arrayRemove([timebankModel.id])
 //                          });

@@ -4,6 +4,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/offer_dialogs.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -25,25 +26,23 @@ class OfferBloc extends BlocBase {
       _completedParticipants.stream;
 
   void init() {
-    Firestore.instance
-        .collection("offers")
-        .document(offerModel.id)
+    CollectionRef.offers
+        .doc(offerModel.id)
         .collection("offerParticipants")
         .snapshots()
         .listen((QuerySnapshot snap) {
       List<OfferParticipantsModel> offer = [];
-      snap.documents.forEach((DocumentSnapshot doc) {
+      snap.docs.forEach((DocumentSnapshot doc) {
         OfferParticipantsModel model =
-            OfferParticipantsModel.fromJson(doc.data);
-        model.id = doc.documentID;
+            OfferParticipantsModel.fromJson(doc.data());
+        model.id = doc.id;
         offer.add(model);
       });
       _participants.add(offer);
     });
 
-    Firestore.instance
-        .collection("offers")
-        .document(offerModel.id)
+    CollectionRef.offers
+        .doc(offerModel.id)
         .collection("offerAcceptors")
         .snapshots()
         .listen((QuerySnapshot snap) async {
@@ -52,10 +51,10 @@ class OfferBloc extends BlocBase {
 
       List<TimeOfferParticipantsModel> offer = [];
       List<TimeOfferParticipantsModel> completedParticipants = [];
-      snap.documents.forEach((DocumentSnapshot doc) {
+      snap.docs.forEach((DocumentSnapshot doc) {
         TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(doc.data);
-        model.id = doc.documentID;
+            TimeOfferParticipantsModel.fromJSON(doc.data());
+        model.id = doc.id;
         offer.add(model);
 
         if (completedParticipantsFromTransactions
@@ -73,15 +72,14 @@ class OfferBloc extends BlocBase {
   }) async {
     var completedParticipants = <String>[];
 
-    await Firestore.instance
-        .collection('transactions')
+    await CollectionRef.transactions
         .where('typeid', isEqualTo: associatedOfferId)
-        .getDocuments()
+        .get()
         .then(
           (value) => {
-            logger.i(" >>>>>>>> " + value.documents.length.toString()),
-            value.documents.forEach((map) {
-              var model = TransactionModel.fromMap(map.data);
+            logger.i(" >>>>>>>> " + value.docs.length.toString()),
+            value.docs.forEach((map) {
+              var model = TransactionModel.fromMap(map.data());
               completedParticipants.add(model.from);
             })
           },
@@ -90,14 +88,13 @@ class OfferBloc extends BlocBase {
   }
 
   void handleRequestActions(context, index, ParticipantStatus status) {
-    DocumentReference ref = Firestore.instance
-        .collection("offers")
-        .document(offerModel.id)
+    DocumentReference ref = CollectionRef.offers
+        .doc(offerModel.id)
         .collection("offerParticipants")
-        .document(_participants.value[index].id);
+        .doc(_participants.value[index].id);
 
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-      ref.updateData(
+      ref.update(
         {
           "status":
               ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
@@ -105,7 +102,7 @@ class OfferBloc extends BlocBase {
       );
     }
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-      ref.updateData(
+      ref.update(
         {
           "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
               .toString()
@@ -130,21 +127,19 @@ class OfferBloc extends BlocBase {
     String notificationId,
     @required String hostEmail,
   }) {
-    var batch = Firestore.instance.batch();
+    var batch = CollectionRef.batch;
 
-    batch.updateData(
-        Firestore.instance
-            .collection("offers")
-            .document(offerId)
+    batch.update(
+        CollectionRef.offers
+            .doc(offerId)
             .collection("offerAcceptors")
-            .document(acceptorDocumentId),
+            .doc(acceptorDocumentId),
         {"status": action.readable});
 
-    batch.delete(Firestore.instance
-        .collection('users')
-        .document(hostEmail)
+    batch.delete(CollectionRef.users
+        .doc(hostEmail)
         .collection('notifications')
-        .document(notificationId));
+        .doc(notificationId));
 
     batch.commit();
   }

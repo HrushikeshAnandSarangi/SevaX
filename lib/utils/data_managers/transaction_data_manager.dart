@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
-import 'package:meta/meta.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 
 Future makeTransaction({
   @required TransactionModel transaction,
 }) async {
-  DocumentSnapshot fromDocument = await Firestore.instance
-      .collection('wallet')
-      .document(transaction.from)
-      .get();
+  DocumentSnapshot fromDocument =
+      await CollectionRef.collection('wallet').doc(transaction.from).get();
 
-  DocumentSnapshot toDocument = await Firestore.instance
-      .collection('wallet')
-      .document(transaction.to)
-      .get();
+  DocumentSnapshot toDocument =
+      await CollectionRef.collection('wallet').doc(transaction.to).get();
 
   num fromBalance;
   if (fromDocument != null && fromDocument.data != null) {
@@ -28,45 +25,40 @@ Future makeTransaction({
   }
   toBalance = (toBalance ?? 0) + transaction.credits;
 
-  await Firestore.instance
-      .collection('wallet')
-      .document(transaction.from)
-      .setData({'currentBalance': fromBalance});
+  await CollectionRef.collection('wallet')
+      .doc(transaction.from)
+      .set({'currentBalance': fromBalance});
 
-  await Firestore.instance
-      .collection('wallet')
-      .document(transaction.to)
-      .setData({'currentBalance': toBalance});
+  await CollectionRef.collection('wallet')
+      .doc(transaction.to)
+      .set({'currentBalance': toBalance});
 }
 
 Stream<List<RequestModel>> getTransactionsForUser({
   @required String userId,
 }) async* {
-  var credit = await Firestore.instance
-      .collection('requests')
-      .where('sevauserid', isEqualTo: userId)
-      .getDocuments();
+  var credit =
+      await CollectionRef.requests.where('sevauserid', isEqualTo: userId).get();
 
-  var debit = await Firestore.instance
-      .collection('requests')
+  var debit = await CollectionRef.requests
       .where('approvedUserId', isEqualTo: userId)
-      .getDocuments();
+      .get();
 
   List<RequestModel> requestModelList = [];
 
   // TODO: Fix this hack
 
-//  credit.documents.forEach((documentSnapshot) {
+//  credit.docs.forEach((documentSnapshot) {
 //    RequestModel requestModel = RequestModel.fromMap(documentSnapshot.data);
-//    requestModel.id = documentSnapshot.documentID;
+//    requestModel.id = documentSnapshot.id;
 //    if (requestModel.transaction != null) {
 //      requestModelList.add(requestModel);
 //    }
 //  });
 //
-//  debit.documents.forEach((documentSnapshot) {
+//  debit.docs.forEach((documentSnapshot) {
 //    RequestModel requestModel = RequestModel.fromMap(documentSnapshot.data);
-//    requestModel.id = documentSnapshot.documentID;
+//    requestModel.id = documentSnapshot.id;
 //    if (requestModel.transaction != null) {
 //      requestModelList.add(requestModel);
 //    }

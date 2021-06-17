@@ -1,6 +1,7 @@
 //import 'dart:async';
 //
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:meta/meta.dart';
 //import 'package:sevaexchange/models/timebank_model.dart';
 //
@@ -15,9 +16,9 @@
 //    List<String> timeBankIdList = [];
 //    List<TimebankModel> timeBankModelList = [];
 //
-//    await Firestore.instance
-//        .collection('users')
-//        .document(userEmail)
+//    await CollectionRef
+//        .users
+//        .doc(userEmail)
 //        .get()
 //        .then((DocumentSnapshot documentSnapshot) {
 //      Map<String, dynamic> dataMap = documentSnapshot.data;
@@ -39,7 +40,7 @@
 //  Stream<List<TimebankModel>> getTimebanksForUserStream(
 //      {@required String userEmail}) async* {
 //    // log.i('getTimebanksForUserStream: UserEmail: $userEmail');
-//    var data = Firestore.instance
+//    var data = CollectionRef
 //        .collection('timebanks')
 //        .where('membersemail', isEqualTo: userEmail)
 //        .snapshots();
@@ -48,10 +49,10 @@
 //      StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
 //        handleData: (snapshot, timebankSink) {
 //          List<TimebankModel> modelList = [];
-//          snapshot.documents.forEach(
+//          snapshot.docs.forEach(
 //            (documentSnapshot) {
 //              TimebankModel model = TimebankModel(documentSnapshot.data);
-//              model.id = documentSnapshot.documentID;
+//              model.id = documentSnapshot.id;
 //              modelList.add(model);
 //            },
 //          );
@@ -65,10 +66,10 @@
 //  /// Update Timebank [model]
 //  Future updateTimebank({TimebankModel model}) async {
 //    // log.i('updateTimebank: TimebankModel: $model');
-//    await Firestore.instance
+//    await CollectionRef
 //        .collection('timebanks')
-//        .document(model.id)
-//        .updateData(model.toMap());
+//        .doc(model.id)
+//        .update(model.toMap());
 //  }
 //
 //  /// Get a particular Timebank by it's ID[timebankId]
@@ -78,14 +79,14 @@
 //        'Time bank ID cannot be null or empty');
 //
 //    TimebankModel timeBankModel;
-//    await Firestore.instance
+//    await CollectionRef
 //        .collection('timebanks')
-//        .document(timebankId)
+//        .doc(timebankId)
 //        .get()
 //        .then((DocumentSnapshot documentSnapshot) {
 //      Map<String, dynamic> dataMap = documentSnapshot.data;
 //      timeBankModel = TimebankModel(dataMap);
-//      timeBankModel.id = documentSnapshot.documentID;
+//      timeBankModel.id = documentSnapshot.id;
 //    });
 //
 //    return timeBankModel;
@@ -95,16 +96,16 @@
 //  Stream<TimebankModel> getTimebankModelStream(
 //      {@required String timebankId}) async* {
 //    // log.i('getTimebankModelStream: TimebankID: $timebankId');
-//    var data = Firestore.instance
+//    var data = CollectionRef
 //        .collection('timebanks')
-//        .document(timebankId)
+//        .doc(timebankId)
 //        .snapshots();
 //
 //    yield* data.transform(
 //      StreamTransformer<DocumentSnapshot, TimebankModel>.fromHandlers(
 //        handleData: (snapshot, modelSink) {
 //          TimebankModel model = TimebankModel(snapshot.data);
-//          model.id = snapshot.documentID;
+//          model.id = snapshot.id;
 //          modelSink.add(model);
 //        },
 //      ),

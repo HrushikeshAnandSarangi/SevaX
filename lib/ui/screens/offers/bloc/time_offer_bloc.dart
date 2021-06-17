@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/offer_dialogs.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TimeOfferBloc extends BlocBase {
   final _participants = BehaviorSubject<List<TimeOfferParticipantsModel>>();
@@ -15,17 +15,16 @@ class TimeOfferBloc extends BlocBase {
       _participants.stream;
 
   void init() {
-    Firestore.instance
-        .collection("offers")
-        .document(offerModel.id)
+    CollectionRef.offers
+        .doc(offerModel.id)
         .collection("offerParticipants")
         .snapshots()
         .listen((QuerySnapshot snap) {
       List<TimeOfferParticipantsModel> offer = [];
-      snap.documents.forEach((DocumentSnapshot doc) {
+      snap.docs.forEach((DocumentSnapshot doc) {
         TimeOfferParticipantsModel model =
-            TimeOfferParticipantsModel.fromJSON(doc.data);
-        model.id = doc.documentID;
+            TimeOfferParticipantsModel.fromJSON(doc.data());
+        model.id = doc.id;
         offer.add(model);
       });
       _participants.add(offer);
@@ -33,14 +32,13 @@ class TimeOfferBloc extends BlocBase {
   }
 
   void handleRequestActions(context, index, ParticipantStatus status) {
-    DocumentReference ref = Firestore.instance
-        .collection("offers")
-        .document(offerModel.id)
+    DocumentReference ref = CollectionRef.offers
+        .doc(offerModel.id)
         .collection("offerParticipants")
-        .document(_participants.value[index].id);
+        .doc(_participants.value[index].id);
 
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-      ref.updateData(
+      ref.update(
         {
           "status":
               ParticipantStatus.NO_ACTION_FROM_CREATOR.toString().split('.')[1],
@@ -48,7 +46,7 @@ class TimeOfferBloc extends BlocBase {
       );
     }
     if (status == ParticipantStatus.NO_ACTION_FROM_CREATOR) {
-      ref.updateData(
+      ref.update(
         {
           "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
               .toString()

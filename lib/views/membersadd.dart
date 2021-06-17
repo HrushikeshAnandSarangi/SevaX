@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:flutter/material.dart';
 //import 'package:sevaexchange/constants/sevatitles.dart';
 //import 'package:sevaexchange/globals.dart' as globals;
@@ -38,8 +39,8 @@
 //      ),
 //      body: SafeArea(
 //        child: StreamBuilder<QuerySnapshot>(
-//          stream: Firestore.instance
-//              .collection('users')
+//          stream: CollectionRef
+//              .users
 //              .where('email', isEqualTo: _searchValue)
 //              .snapshots(),
 //          builder:

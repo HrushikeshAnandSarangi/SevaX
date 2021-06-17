@@ -11,6 +11,7 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -42,13 +43,12 @@ class OneToManyCreatorCompleteRequestPageState
 
     Future.delayed(Duration(milliseconds: 500));
 
-    Firestore.instance
-        .collection("requests")
-        .document(widget.requestModel.id)
+    CollectionRef.requests
+        .doc(widget.requestModel.id)
         .collection('oneToManyAttendeesDetails')
-        .getDocuments()
+        .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((doc) {
+      querySnapshot.docs.forEach((doc) {
         attendeesList.add(doc.data);
         tempAttendeesList.add(doc.data);
       });
@@ -505,10 +505,9 @@ class OneToManyCreatorCompleteRequestPageState
                                             }
 
                                             //make request accepted true
-                                            await Firestore.instance
-                                                .collection('requests')
-                                                .document(requestModel.id)
-                                                .updateData({
+                                            await CollectionRef.requests
+                                                .doc(requestModel.id)
+                                                .update({
                                               'accepted': true,
                                               'approvedUsers':
                                                   [], //so that we don't see it in pending tasks
@@ -535,13 +534,13 @@ class OneToManyCreatorCompleteRequestPageState
                                             //             .selectedInstructor
                                             //             .sevaUserID);
 
-                                            // await Firestore.instance
-                                            //     .collection('users')
-                                            //     .document(requestModel
+                                            // await CollectionRef
+                                            //     .users
+                                            //     .doc(requestModel
                                             //         .selectedInstructor.email)
                                             //     .collection("notifications")
-                                            //     .document(notification.id)
-                                            //     .setData(notification.toMap());
+                                            //     .doc(notification.id)
+                                            //     .set(notification.toMap());
 
                                             //make the relevant notification is read true
                                             await FirestoreManager

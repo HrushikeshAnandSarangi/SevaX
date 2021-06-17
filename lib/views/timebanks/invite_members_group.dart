@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -473,18 +474,14 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   void resendNotification({String userEmail, String notificationId}) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    await Firestore.instance
-        .collection('invitations')
-        .document(invitationModel.id)
-        .updateData({
+    await CollectionRef.invitations.doc(invitationModel.id).update({
       'data.timestamp': timestamp,
     });
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection('notifications')
-        .document(notificationId)
-        .updateData({
+        .doc(notificationId)
+        .update({
       'isRead': false,
       'data.timestamp': timestamp,
     });
@@ -494,19 +491,15 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       {String notificationId, String userEmail}) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    await Firestore.instance
-        .collection('invitations')
-        .document(invitationModel.id)
-        .updateData({
+    await CollectionRef.invitations.doc(invitationModel.id).update({
       'data.timestamp': timestamp,
       'data.declined': false,
     });
-    await Firestore.instance
-        .collection('users')
-        .document(userEmail)
+    await CollectionRef.users
+        .doc(userEmail)
         .collection('notifications')
-        .document(notificationId)
-        .updateData({
+        .doc(notificationId)
+        .update({
       'isRead': false,
       'data.declined': false,
       'data.timestamp': timestamp,
@@ -550,12 +543,11 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: userModel.sevaUserID);
     await FirestoreManager.createJoinInvite(invitationModel: invitationModel);
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
+    await CollectionRef.users
+        .doc(userModel.email)
         .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
+        .doc(notification.id)
+        .set(notification.toMap());
 
     // setState(() {});
   }

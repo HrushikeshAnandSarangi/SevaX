@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -8,6 +7,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/acceptor_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -61,7 +61,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.requestInvitationModel.requestModel.title ?? S.of(context).anonymous,
+                widget.requestInvitationModel.requestModel.title ??
+                    S.of(context).anonymous,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -79,7 +80,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 widget.requestInvitationModel.requestModel.description ??
-                  S.of(context).description_not_updated,
+                    S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -113,12 +114,11 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     onPressed: () async {
                       //Once approvedp
                       CommunityModel communityModel = CommunityModel({});
-                      await Firestore.instance
-                          .collection('communities')
-                          .document(widget.userModel.currentCommunity)
+                      await CollectionRef.communities
+                          .doc(widget.userModel.currentCommunity)
                           .get()
                           .then((value) {
-                        communityModel = CommunityModel(value.data);
+                        communityModel = CommunityModel(value.data());
                         setState(() {});
                       });
                       AcceptorModel acceptorModel = AcceptorModel(
@@ -173,7 +173,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
                         Navigator.of(context).pop();
                       }
-
                     },
                   ),
                 ),
@@ -234,11 +233,11 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     UserModel userModel,
   }) {
     rejectInviteRequest(
-      requestId: model.requestModel.id,
-      rejectedUserId: userModel.sevaUserID,
-      notificationId: notificationId,
-      acceptedUserEmail: userModel.email, model: model
-    );
+        requestId: model.requestModel.id,
+        rejectedUserId: userModel.sevaUserID,
+        notificationId: notificationId,
+        acceptedUserEmail: userModel.email,
+        model: model);
 
     FirestoreManager.readUserNotification(notificationId, userModel.email);
   }
@@ -267,12 +266,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     var uuid = utils.Utils.getUuid();
 
     //Create accetor document
-    Firestore.instance
-        .collection('offers')
-        .document(offerId)
-        .collection('offerId')
-        .document(uuid)
-        .setData({
+    CollectionRef.offers.doc(offerId).collection('offerId').doc(uuid).set({
       'acceptorNotificationId': notificationId,
       'communityId': acceptorModel.communityId,
       'id': uuid,

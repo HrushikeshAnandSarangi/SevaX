@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class NotificationsRepository {
@@ -12,7 +13,7 @@ class NotificationsRepository {
   static final String _userCollection = "users";
   static final String _timebankCollection = "timebanknew";
 
-  static Firestore _firestore = Firestore.instance;
+  static Firestore _firestore = CollectionRef;
 
   static Future<void> createNotification(
     NotificationsModel model,
@@ -22,15 +23,15 @@ class NotificationsRepository {
     if (model.isTimebankNotification) {
       ref = _firestore
           .collection(_timebankCollection)
-          .document(model.timebankId)
+          .doc(model.timebankId)
           .collection(_notificationCollection);
     } else {
       ref = _firestore
           .collection(_userCollection)
-          .document(userEmail)
+          .doc(userEmail)
           .collection(_notificationCollection);
     }
-    await ref.document(model.id).setData(model.toMap());
+    await ref.doc(model.id).set(model.toMap());
   }
 
   static Stream<QuerySnapshot> getUserNotifications(
@@ -39,7 +40,7 @@ class NotificationsRepository {
   ) {
     return _firestore
         .collection(_userCollection)
-        .document(userEmail)
+        .doc(userEmail)
         .collection(_notificationCollection)
         .where('isRead', isEqualTo: false)
         .where('communityId', isEqualTo: communityId)
@@ -52,7 +53,7 @@ class NotificationsRepository {
   ) {
     return _firestore
         .collection(_timebankCollection)
-        .document(timebankId)
+        .doc(timebankId)
         .collection(_notificationCollection)
         .where('isRead', isEqualTo: false)
         .orderBy("timestamp", descending: true)
@@ -73,8 +74,8 @@ class NotificationsRepository {
       StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
         handleData: (data, sink) {
           List<NotificationsModel> notifications = [];
-          data.documents.forEach((document) {
-            notifications.add(NotificationsModel.fromMap(document.data));
+          data.docs.forEach((document) {
+            notifications.add(NotificationsModel.fromMap(document.data()));
           });
           sink.add(notifications);
         },
@@ -117,12 +118,11 @@ class NotificationsRepository {
       senderUserId: user.sevaUserID,
       targetUserId: timebank.creatorId,
     );
-    await Firestore.instance
-        .collection(_timebankCollection)
-        .document(timebank.id)
+    await CollectionRef.collection(_timebankCollection)
+        .doc(timebank.id)
         .collection(_notificationCollection)
-        .document(notification.id)
-        .setData(
+        .doc(notification.id)
+        .set(
           (notification..isTimebankNotification = true).toMap(),
         );
   }
@@ -133,10 +133,10 @@ class NotificationsRepository {
   ) async {
     await _firestore
         .collection(_userCollection)
-        .document(userEmail)
+        .doc(userEmail)
         .collection(_notificationCollection)
-        .document(notificationId)
-        .updateData({
+        .doc(notificationId)
+        .update({
       'isRead': true,
     });
   }

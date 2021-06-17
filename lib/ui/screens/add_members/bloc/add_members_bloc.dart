@@ -1,6 +1,7 @@
 //import 'dart:collection';
 //
 //import 'package:cloud_firestore/cloud_firestore.dart';
+
 //import 'package:rxdart/rxdart.dart';
 //import 'package:sevaexchange/models/timebank_model.dart';
 //import 'package:sevaexchange/models/user_model.dart';
@@ -14,19 +15,19 @@
 //  void getCommunityMembersExcludingTimebankMembers(
 //      String communityId, String timebankId) {
 //    CombineLatestStream.combine2(
-//        Firestore.instance
-//            .collection('users')
+//        CollectionRef
+//            .users
 //            .where('communities', arrayContains: communityId)
 //            .snapshots(),
-//        Firestore.instance
-//            .collection('timebanknew')
-//            .document(timebankId)
+//        CollectionRef
+//            .timebank
+//            .doc(timebankId)
 //            .snapshots(),
 //        (u, t) => AddMemberModel(u, t)).listen((AddMemberModel model) {
 //      TimebankModel timebank = TimebankModel(model.timebank.data);
 //      HashSet timebankMembers = HashSet.from(timebank.members);
 //      List<UserModel> users = [];
-//      model.users.documents.forEach((DocumentSnapshot snap) {
+//      model.users.docs.forEach((DocumentSnapshot snap) {
 //        UserModel user = UserModel.fromMap(snap.data, 'add_members_bloc');
 //        if (!timebankMembers.contains(user.sevaUserID)) users.add(user);
 //      });
@@ -35,13 +36,13 @@
 //  }
 //
 //  void getCommunityMembers(String communityId) {
-//    Firestore.instance
-//        .collection('users')
+//    CollectionRef
+//        .users
 //        .where('communities', arrayContains: communityId)
 //        .snapshots()
 //        .listen((QuerySnapshot snapshot) {
 //      List<UserModel> users = [];
-//      snapshot.documents.forEach((DocumentSnapshot snap) {
+//      snapshot.docs.forEach((DocumentSnapshot snap) {
 //        UserModel user = UserModel.fromMap(snap.data, 'add_members_bloc');
 //        users.add(user);
 //      });
@@ -63,10 +64,10 @@
 //
 //  void addMemberToTimebank(String communityId, String timebankId) {
 //    if (selectedMembers.isNotEmpty) {
-//      Firestore.instance
-//          .collection("timebanknew")
-//          .document(timebankId)
-//          .updateData(
+//      CollectionRef
+//          .timebank
+//          .doc(timebankId)
+//          .update(
 //        {
 //          "members": FieldValue.arrayUnion(
 //            selectedMembers.toList(),
