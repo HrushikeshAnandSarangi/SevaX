@@ -370,9 +370,11 @@ class NewsImageState extends State<NewsImage>
                           ),
                         ),
                 ),
-          CustomTextButton.icon(
+          TextButton.icon(
             icon: Icon(Icons.attachment),
-            color: Colors.grey[200],
+            style: TextButton.styleFrom(
+              primary: Colors.grey[200],
+            ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(

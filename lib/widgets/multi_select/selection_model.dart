@@ -197,7 +197,7 @@ class _SelectionModalState extends State<SelectionModal> {
                       style: Theme.of(context).primaryTextTheme.button,
                     ),
                   ),
-                  CustomElevatedButton.icon(
+                  ElevatedButton.icon(
                     icon: Icon(
                       widget.saveButtonIcon ?? Icons.save,
                       size: 20.0,
@@ -218,12 +218,18 @@ class _SelectionModalState extends State<SelectionModal> {
                             });
                             Navigator.pop(context, selectedValues);
                           },
-                    color: widget.saveButtonColor ??
-                        Theme.of(context).primaryColor,
-                    textColor: widget.saveButtonTextColor ?? Colors.white,
+                    style: ElevatedButton.styleFrom(
+                      primary: widget.saveButtonColor ??
+                          Theme.of(context).primaryColor,
+                    ),
                     label: Text(
                       widget.saveButtonText ?? S.of(context).done,
-                      style: Theme.of(context).primaryTextTheme.button,
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .button
+                          .merge(TextStyle(
+                            color: widget.saveButtonTextColor ?? Colors.white,
+                          )),
                     ),
                   )
                 ]),

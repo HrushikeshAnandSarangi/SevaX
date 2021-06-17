@@ -339,7 +339,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(top: 35, bottom: 50.0),
-                      child: CustomTextButton.icon(
+                      child: TextButton.icon(
                         icon: Icon(Icons.arrow_back_ios,
                             color: Theme.of(context).accentColor),
                         onPressed: () {

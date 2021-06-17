@@ -787,7 +787,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                CustomTextButton.icon(
+                                TextButton.icon(
                                   icon: Icon(
                                     Icons.add_location,
                                     color: Theme.of(context).primaryColor,

@@ -105,9 +105,11 @@ class _DocumentUploadState extends State<DocumentUpload> {
                           ),
                         ),
                 ),
-          CustomTextButton.icon(
+          TextButton.icon(
             icon: Icon(Icons.attach_file),
-            color: Colors.grey[200],
+            style: TextButton.styleFrom(
+              primary: Colors.grey[200],
+            ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
