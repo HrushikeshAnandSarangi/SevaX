@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 //BuildContext buildContext;
 Future<void> fetchLinkData() async {
@@ -165,7 +166,7 @@ Future<void> resetPassword(String email, BuildContext mContext) async {
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).close,
               ),

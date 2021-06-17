@@ -241,7 +241,7 @@
 //                    children: <Widget>[
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: FlavorConfig.values.theme.primaryColor,
 //                          child: Text(
 //                            'Approve',
@@ -262,7 +262,7 @@
 //                      ),
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: Theme.of(context).accentColor,
 //                          child: Text(
 //                            'Decline',
@@ -615,7 +615,7 @@
 ////
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: FlavorConfig.values.theme.primaryColor,
 //                          child: Text(
 //                            'Approve',
@@ -640,7 +640,7 @@
 //                      ),
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: Theme.of(context).accentColor,
 //                          child: Text(
 //                            'Decline',

@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_w
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestWidget extends StatelessWidget {
   final RequestModel model;
@@ -158,7 +159,7 @@ class TimebankRequestWidget extends StatelessWidget {
                                 textAlign: TextAlign.center)),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).approve,
@@ -203,7 +204,7 @@ class TimebankRequestWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).decline,

@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ProjectTemplateView extends StatefulWidget {
   final bool isCreateProject;
@@ -69,7 +70,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
         ),
         centerTitle: true,
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             onPressed: () {
               if (isProjectTemplateSelected &&
                   selectedProjectTemplate == null) {
@@ -291,7 +292,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           content: Text(S.of(context).select_template),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

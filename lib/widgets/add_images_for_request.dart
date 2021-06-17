@@ -3,15 +3,16 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 
 import '../flavor_config.dart';
-typedef StringpListCallback = void Function(
-    List<String> imageUrls);
+
+typedef StringpListCallback = void Function(List<String> imageUrls);
+
 class AddImagesForRequest extends StatefulWidget {
   final StringpListCallback onLinksCreated;
   final List<String> selectedList;
-
 
   AddImagesForRequest({this.onLinksCreated, this.selectedList});
 
@@ -20,16 +21,14 @@ class AddImagesForRequest extends StatefulWidget {
 }
 
 class _AddImagesForRequestState extends State<AddImagesForRequest> {
-  List<String> imageUrls=[];
+  List<String> imageUrls = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     if (widget.selectedList != null) {
       imageUrls.addAll(widget.selectedList);
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
@@ -40,14 +39,16 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-           S.of(context).add_image,
+            S.of(context).add_image,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
           ),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           Text(
             S.of(context).images_help_convey_theme_of_request,
             style: TextStyle(
@@ -56,15 +57,16 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
               color: Colors.black,
             ),
           ),
-          SizedBox(height: 15,),
-
+          SizedBox(
+            height: 15,
+          ),
           Container(
-             height: 142,
+            height: 142,
             // width: 700,
             decoration: BoxDecoration(
               border: DashPathBorder.all(
                 dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
-               // borderSide: Border.all(color: FlavorConfig.values.theme.primaryColor),
+                // borderSide: Border.all(color: FlavorConfig.values.theme.primaryColor),
               ),
             ),
             child: Column(
@@ -83,13 +85,13 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 Text(
-                 S.of(context).only_images_types_allowed,
+                  S.of(context).only_images_types_allowed,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey, fontSize: 11),
                 ),
                 Center(
-                  child: RaisedButton(
-                    onPressed: (){
+                  child: CustomElevatedButton(
+                    onPressed: () {
                       showDialog(
                           context: context,
                           builder: (BuildContext dialogContext) {
@@ -117,65 +119,61 @@ class _AddImagesForRequestState extends State<AddImagesForRequest> {
               ],
             ),
           ),
-           SizedBox(height: 8,),
-           Container(
-             height: 100,
-             child: ListView(
-               shrinkWrap: true,
-               scrollDirection: Axis.horizontal,
-               children:
-                 List.generate(
-                   imageUrls.length,
-                       (index) => Stack(
-                     children: <Widget>[
-                       InkWell(
-                         onTap: (){
-                           showDialog(
-                               context: context,
-                               builder: (BuildContext dialogContext) {
-                                 return FullScreenImage(
-                                  imageUrl: imageUrls[index],
-                                 );
-                               });
-                         },
-                         child: Container(
-                           width:100,
-                           height:100,
-                           child: Padding(
-                               padding: const EdgeInsets.all(8.0),
-                               child: Image.network(imageUrls[index])),
-                         ),
-                       ),
-                       Align(
-                         alignment: Alignment.topRight,
-                         child: InkWell(
-                           onTap: () {
-                             imageUrls.removeAt(index);
-                             widget.onLinksCreated(imageUrls);
-                             setState(() {
-                             });
-                           },
-                           child: Container(
-                             decoration: BoxDecoration(
-                               shape: BoxShape.circle,
-                               color: Colors.white,
-                             ),
-                             child: Icon(
-                               Icons.cancel,
-                               color: Colors.red,
-                             ),
-                           ),
-                         ),
-                       ),
-                     ],
-                   ),
-                 ),
-
-
-             ),
-           ),
-
-
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            height: 100,
+            child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(
+                imageUrls.length,
+                (index) => Stack(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return FullScreenImage(
+                                imageUrl: imageUrls[index],
+                              );
+                            });
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.network(imageUrls[index])),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: () {
+                          imageUrls.removeAt(index);
+                          widget.onLinksCreated(imageUrls);
+                          setState(() {});
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

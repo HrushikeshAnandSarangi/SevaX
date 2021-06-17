@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestCard extends StatelessWidget {
   final bool isRecurring;
@@ -137,7 +138,7 @@ class TimebankRequestCard extends StatelessWidget {
                                 margin: EdgeInsets.only(top: 10, bottom: 10),
                                 width: 100,
                                 height: 32,
-                                child: FlatButton(
+                                child: CustomTextButton(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),

@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/requestOfferAgreementForm.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../labels.dart';
@@ -238,7 +239,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
       children: <Widget>[
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(
@@ -297,7 +298,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
         SizedBox(width: 5),
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(
@@ -408,7 +409,7 @@ class _AcceptBorrowRequestState extends State<AcceptBorrowRequest> {
               margin: EdgeInsets.only(right: 12),
               width: 100,
               height: 32,
-              child: FlatButton(
+              child: CustomTextButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

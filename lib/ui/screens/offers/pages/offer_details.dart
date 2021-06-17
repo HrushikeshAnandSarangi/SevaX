@@ -25,6 +25,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -112,7 +113,7 @@ class OfferDetails extends StatelessWidget {
                           Container(
                             height: 30,
                             width: 80,
-                            child: FlatButton(
+                            child: CustomTextButton(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
@@ -291,7 +292,7 @@ class OfferDetails extends StatelessWidget {
           Container(
             height: 30,
             width: 90,
-            child: FlatButton(
+            child: CustomTextButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -364,13 +365,13 @@ class OfferDetails extends StatelessWidget {
               title: Text(S.of(context).cancel_offer),
               content: Text(S.of(context).cancel_offer_confirmation),
               actions: [
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   onPressed: () {
                     Navigator.of(_context).pop();
                   },
                 ),
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).cancel_offer),
                   onPressed: () async {
                     Navigator.of(_context).pop();
@@ -492,7 +493,7 @@ class OfferDetails extends StatelessWidget {
                       ),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: FlatButton(
+                      child: CustomTextButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -584,7 +585,7 @@ class OfferDetails extends StatelessWidget {
                               offerModel),
                       role: memberType(timebankModel,
                           SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: FlatButton(
+                      child: CustomTextButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -655,7 +656,7 @@ class OfferDetails extends StatelessWidget {
       margin: EdgeInsets.only(right: 10),
       width: isAccepted ? 150 : 120,
       height: 32,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -827,7 +828,7 @@ class OfferDetails extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(

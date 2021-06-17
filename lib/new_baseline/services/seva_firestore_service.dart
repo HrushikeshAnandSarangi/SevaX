@@ -28,7 +28,9 @@ class SevaFirestoreService {
       return data;
     };
 
-    return CollectionRef.runTransaction(createTransaction).then((mapData) {
+    return FirebaseFirestore.instance
+        .runTransaction(createTransaction)
+        .then((mapData) {
       return NewsModel.fromMap(mapData);
     }).catchError((error) {
       log('error: $error');
@@ -58,7 +60,8 @@ class SevaFirestoreService {
       return {'updated': true};
     };
 
-    return CollectionRef.runTransaction(updateTransaction)
+    return FirebaseFirestore.instance
+        .runTransaction(updateTransaction)
         .then((result) => result['updated'])
         .catchError((error) {
       log('error: $error');
@@ -74,7 +77,8 @@ class SevaFirestoreService {
       return {'deleted': true};
     };
 
-    return CollectionRef.runTransaction(deleteTransaction)
+    return FirebaseFirestore.instance
+        .runTransaction(deleteTransaction)
         .then((result) => result['deleted'])
         .catchError((error) {
       log('error: $error');

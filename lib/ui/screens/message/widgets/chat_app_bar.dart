@@ -6,6 +6,7 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/editDeleteIconWidget.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 enum MessageMenu {
   BLOCK,
@@ -145,7 +146,7 @@ class ChatAppBar extends PreferredSize {
         return [
           PopupMenuItem(
             child: textAndIconWidget(
-                        Icons.delete, S.of(context).delete_chat, context),
+                Icons.delete, S.of(context).delete_chat, context),
             value: MessageMenu.CLEAR_CHAT,
           ),
           ...!isBlockEnabled
@@ -191,7 +192,7 @@ class ChatAppBar extends PreferredSize {
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: Colors.white,
@@ -205,7 +206,7 @@ class ChatAppBar extends PreferredSize {
                 Navigator.of(context).pop("SUCCESS");
               },
             ),
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 cancelLabel,
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),

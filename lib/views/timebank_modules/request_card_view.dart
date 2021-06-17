@@ -14,6 +14,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class RequestCardView extends StatefulWidget {
   final RequestModel requestItem;
@@ -91,7 +92,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                               .of(context)
                               .request_delete_confirmation_message),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               child: Text(
                                 S.of(context).no,
                                 style: TextStyle(
@@ -102,7 +103,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                                 Navigator.pop(viewcontext);
                               },
                             ),
-                            FlatButton(
+                            CustomTextButton(
                               child: Text(
                                 S.of(context).yes,
                                 style: TextStyle(
@@ -247,7 +248,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             color: Theme.of(context).accentColor,
                             onPressed: widget.requestItem.sevaUserId ==
                                     SevaCore.of(context).loggedInUser.sevaUserID
@@ -281,7 +282,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                             ? Offstage()
                             : Container(
                                 padding: EdgeInsets.all(8.0),
-                                child: RaisedButton(
+                                child: CustomElevatedButton(
                                   color: Theme.of(context).accentColor,
                                   onPressed: widget.requestItem.approvedUsers
                                               .length <

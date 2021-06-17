@@ -6,6 +6,7 @@ import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_insufficient_credits_model.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
   final UserInsufficentCreditsModel userInsufficientModel;
@@ -81,7 +82,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.accentColor,
                     child: Text(
                       S.of(context).message,
@@ -93,7 +94,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
                 ),
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).donate,

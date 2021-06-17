@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class GroupInfoPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
         actions: <Widget>[
           Offstage(
             offstage: !isAdmin,
-            child: FlatButton(
+            child: CustomTextButton(
               child: Text(
                 S.of(context).save,
                 style: TextStyle(fontSize: 16, color: Colors.white),

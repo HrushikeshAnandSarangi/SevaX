@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_w
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankJoinRequestWidget extends StatelessWidget {
   final NotificationsModel notification;
@@ -200,7 +201,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).allow,
@@ -217,7 +218,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).reject,

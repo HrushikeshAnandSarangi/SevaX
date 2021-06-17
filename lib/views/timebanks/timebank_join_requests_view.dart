@@ -53,7 +53,7 @@
 //                 children: snapshot.data.documents
 //                     .map(
 //                       (item) => Slidable(
-//                         actionPane: SlidableDrawerActionPane(),,
+//                         actionPane: SlidableDrawerActionPane(),
 //                         actionExtentRatio: 0.25,
 //                         child: Container(
 //                           padding: EdgeInsets.only(left: 5.0),
@@ -65,7 +65,7 @@
 //                                 backgroundImage:
 //                                     NetworkImage(item['requestor_photourl'] ?? defaultUserImageURL),
 //                               ),
-//                               FlatButton(
+//                               CustomTextButton(
 //                                 onPressed: () {
 //                                   Navigator.push(
 //                                     context,

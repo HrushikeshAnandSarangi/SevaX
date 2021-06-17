@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -561,7 +562,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           return AlertDialog(
             content: Text(L.of(context).please_switch_to_access + message),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.orange,
                 onPressed: () {
                   _profileBloc.setDefaultCommunity(
@@ -587,7 +588,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           return AlertDialog(
             content: Text(L.of(context).please_join_seva_to_access + message),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.red,
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(S.of(context).ok),

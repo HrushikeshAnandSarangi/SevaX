@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -11,6 +10,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ParentTimebankPickerWidget extends StatelessWidget {
   final ValueChanged<CommunityModel> onChanged;
@@ -27,7 +27,7 @@ class ParentTimebankPickerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     BuildContext parentContext;
     parentContext = context;
-    return RaisedButton(
+    return CustomElevatedButton(
       textColor: color,
       elevation: 0,
       child: Container(
@@ -296,7 +296,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
         },
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        RaisedButton(
+        CustomElevatedButton(
           onPressed: communityModel.name != selectedTimebank
               ? () {
                   this.widget.onChanged(communityModel);

@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
 class JoinRequestSectionBuilder extends StatelessWidget {
@@ -65,7 +66,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                               model: userSnapshot.data,
                             ),
                           ),
-                          RaisedButton(
+                          CustomElevatedButton(
                             child: Text(S.of(context).approve),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
@@ -103,7 +104,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             },
                           ),
                           SizedBox(width: 12),
-                          RaisedButton(
+                          CustomElevatedButton(
                             child: Text(S.of(context).reject),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),

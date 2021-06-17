@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class OfferCardWidget extends StatelessWidget {
@@ -115,7 +116,7 @@ class OfferCardWidget extends StatelessWidget {
                   Container(
                     height: 40,
                     padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
                       textColor: Colors.white,

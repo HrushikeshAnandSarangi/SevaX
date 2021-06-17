@@ -189,7 +189,7 @@
 //                       )
 //                     : Offstage(),
 //                 Spacer(),
-//                 FlatButton(
+//                 CustomTextButton(
 //                   shape: RoundedRectangleBorder(
 //                     borderRadius: BorderRadius.circular(8),
 //                   ),
@@ -305,7 +305,7 @@
 //             ),
 //           ),
 //           actions: <Widget>[
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(
 //                 S.of(context).ok,
 //               ),
@@ -336,7 +336,7 @@
 //                           Row(
 //                               children: <Widget>[
 //                                   Spacer(),
-//                                   RaisedButton(
+//                                   CustomElevatedButton(
 //                                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
 //                                       color: Theme.of(context).accentColor,
 //                                       textColor: FlavorConfig.values.buttonTextColor,
@@ -361,7 +361,7 @@
 
 //                                       },
 //                                   ),
-//                                   FlatButton(
+//                                   CustomTextButton(
 //                                       child: Text(
 //                                           S.of(context).no,
 //                                           style: TextStyle(
@@ -388,7 +388,7 @@
 //           title: Text(S.of(context).billable_transactions),
 //           content: Text(msg),
 //           actions: <Widget>[
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).ok),
 //               onPressed: () {
 //                 Navigator.of(context).pop();
@@ -432,7 +432,7 @@
 //                   content: Text("Please contact Sevax support for downgrading your plan",
 //                   ),
 //                   actions: <Widget>[
-//                       FlatButton(
+//                       CustomTextButton(
 //                           child: Text(S.of(context).close),
 //                           onPressed: () {
 //                               Navigator.of(context).pop();
@@ -458,7 +458,7 @@
 //                 : isSuccess == 0 ? "Please clear your dues and try again !" : S.of(context).general_stream_error,
 //           ),
 //           actions: <Widget>[
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close),
 //               onPressed: () {
 //                 Navigator.of(context).pop();

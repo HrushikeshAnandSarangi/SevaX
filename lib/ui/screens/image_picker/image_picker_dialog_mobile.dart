@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/components/sevaavatar/image_picker_handler.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -15,7 +16,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/image_url_view.dart';
-import 'package:path/path.dart' as pathExt;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ImagePickerDialogMobile extends StatefulWidget {
   final ImagePickerType imagePickerType;

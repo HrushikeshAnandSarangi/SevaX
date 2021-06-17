@@ -250,7 +250,7 @@
 //                       Container(
 //                         alignment: Alignment.center,
 //                         padding: EdgeInsets.all(5.0),
-//                         child: RaisedButton(
+//                         child: CustomElevatedButton(
 //                           onPressed: () async {
 //                             if (_formKey.currentState.validate()) {
 //                               LinearProgressIndicator();
@@ -291,7 +291,7 @@
 //                       Container(
 //                         alignment: Alignment.center,
 //                         padding: EdgeInsets.all(8.0),
-//                         child: RaisedButton(
+//                         child: CustomElevatedButton(
 //                           onPressed: () {
 //                             UserModel loggedInUser =
 //                                 SevaCore.of(context).loggedInUser;

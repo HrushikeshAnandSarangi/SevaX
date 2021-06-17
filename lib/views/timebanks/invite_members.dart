@@ -38,6 +38,7 @@ import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebank_code_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:share/share.dart';
 
 class InviteAddMembers extends StatefulWidget {
@@ -426,7 +427,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               padding: const EdgeInsets.only(top: 5),
               child: Container(
                 height: 30,
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -593,7 +594,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           content: Text(S.of(context).csv_large_file_message),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -776,7 +777,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String inviteeEmail,
     TimebankModel timebankModel,
   }) {
-    return RaisedButton(
+    return CustomElevatedButton(
       onPressed: () async {
         inivitationManager.showProgress(
           title: S.of(context).sending_invitation,
@@ -817,7 +818,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget resendInvitation({InvitationViaLink invitation}) {
-    return RaisedButton(
+    return CustomElevatedButton(
       onPressed: () async {
         inivitationManager.showProgress(
             title: S.of(context).sending_invitation);
@@ -842,7 +843,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget gettigStatus() {
-    return RaisedButton(
+    return CustomElevatedButton(
       onPressed: null,
       child: Text('...'),
       color: Colors.indigo,
@@ -892,7 +893,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         onPressed: !isJoined
                             ? () async {
                                 await addMemberToTimebank(
@@ -1073,7 +1074,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             ],
           ),
           actions: <Widget>[
-            RaisedButton(
+            CustomElevatedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -1106,7 +1107,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 );
               },
             ),
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).cancel,
                 style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
@@ -1269,7 +1270,7 @@ getExtensionAlertDialog({BuildContext context, String message}) {
         content: new Text(message),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
-          new FlatButton(
+          new CustomTextButton(
             textColor: Colors.red,
             child: new Text(S.of(context).close),
             onPressed: () {

@@ -24,6 +24,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../timebank_content_holder.dart';
 
@@ -105,7 +106,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //          Offstage(
 //            offstage: true,
 //            child: widget.isFromDash
-//                ? FlatButton(
+//                ? CustomTextButton(
 //                    child: Text(
 //                      "Continue",
 //                      style: TextStyle(
@@ -354,7 +355,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 7),
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       color: userStatus == S.of(context).join
                           ? Theme.of(context).accentColor
                           : Colors.grey,

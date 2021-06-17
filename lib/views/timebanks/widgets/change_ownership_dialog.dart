@@ -149,7 +149,7 @@
 //               children: <Widget>[
 //                 Container(
 //                   width: double.infinity,
-//                   child: RaisedButton(
+//                   child: CustomElevatedButton(
 //                     color: FlavorConfig.values.theme.primaryColor,
 //                     child: Text(
 //                       S.of(context).accept,
@@ -179,7 +179,7 @@
 //                 ),
 //                 Container(
 //                   width: double.infinity,
-//                   child: RaisedButton(
+//                   child: CustomElevatedButton(
 //                     color: Theme.of(context).accentColor,
 //                     child: Text(
 //                       S.of(context).decline,
@@ -276,7 +276,7 @@
 //           content: Text(S.of(context).ownership_success),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).ok),
 //               onPressed: () {
 //                 resetAndLoad();
@@ -307,7 +307,7 @@
 //               Row(
 //                 children: [
 //                   Spacer(),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     child: Text(S.of(context).cancel,
 //                         style: TextStyle(
 //                             fontSize: dialogButtonSize, color: Colors.red)),
@@ -315,7 +315,7 @@
 //                       Navigator.of(context).pop();
 //                     },
 //                   ),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     color: Theme.of(mContext).accentColor,
 //                     textColor: FlavorConfig.values.buttonTextColor,
 //                     child: Text(
@@ -663,7 +663,7 @@
 //     Widget _continueBtn() {
 //       return Padding(
 //         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
-//         child: RaisedButton(
+//         child: CustomElevatedButton(
 //           child: Text(
 //             S.of(context).continue_text,
 //             style: Theme.of(bc).primaryTextTheme.button,

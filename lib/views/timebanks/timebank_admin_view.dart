@@ -326,7 +326,7 @@
 //          _adminEmails.add(user.email);
 //          if (isAdmin) {
 //            var widget = Slidable(
-//              actionPane: SlidableDrawerActionPane(),,
+//              actionPane: SlidableDrawerActionPane(),
 //              actions: <Widget>[
 //                IconSlideAction(
 //                  icon: Icons.close,
@@ -391,7 +391,7 @@
 //          _adminEmails.add(user.email);
 //          if (isCoordinator) {
 //            var widget = Slidable(
-//              actionPane: SlidableDrawerActionPane(),,
+//              actionPane: SlidableDrawerActionPane(),
 //              actions: <Widget>[
 //                IconSlideAction(
 //                  icon: Icons.close,
@@ -538,7 +538,7 @@
 //              UserModel user = snapshot.data;
 //              if (isAdmin) {
 //                return Slidable(
-//                  actionPane: SlidableDrawerActionPane(),,
+//                  actionPane: SlidableDrawerActionPane(),
 //                  actions: <Widget>[
 //                    IconSlideAction(
 //                      icon: Icons.close,
@@ -674,7 +674,7 @@
 //                      Container(
 //                        width: double.infinity,
 //                        child: isAdmin && model.admins.length > 1
-//                            ? FlatButton(
+//                            ? CustomTextButton(
 //                                child: Text(
 //                                  S.of(context).remove_as_admin,
 //                                ),
@@ -697,7 +697,7 @@
 //                              )
 //                            : isAdmin
 //                                ? Offstage()
-//                                : FlatButton(
+//                                : CustomTextButton(
 //                                    child: Text(
 //                                      S.of(context).add_as_admin,
 //                                    ),
@@ -721,7 +721,7 @@
 //                      ),
 //                      Container(
 //                        width: double.infinity,
-//                        child: FlatButton(
+//                        child: CustomTextButton(
 //                          child: Text(
 //                            S.of(context).view_profile,
 //                          ),
@@ -744,7 +744,7 @@
 //                        width: double.infinity,
 //                        child: isAdmin
 //                            ? Offstage()
-//                            : FlatButton(
+//                            : CustomTextButton(
 //                                child: Text(
 //                                  S.of(context).remove_member,
 //                                ),
@@ -765,7 +765,7 @@
 //                      ),
 //                      Container(
 //                        width: double.infinity,
-//                        child: FlatButton(
+//                        child: CustomTextButton(
 //                          child: Text(
 //                            S.of(context).proceed,
 //                          ),
@@ -904,7 +904,7 @@
 //              ),
 //            ),
 //            actions: <Widget>[
-//              FlatButton(
+//              CustomTextButton(
 //                child: Text(
 //                  S.of(context).cancel,
 //                  style: TextStyle(
@@ -915,7 +915,7 @@
 //                  Navigator.of(viewContext).pop({'PROCEED': false});
 //                },
 //              ),
-//              FlatButton(
+//              CustomTextButton(
 //                child: Text(
 //                  S.of(context).proceed,
 //                  style: TextStyle(

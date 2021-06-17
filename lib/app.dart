@@ -31,14 +31,13 @@ Future<void> fetchRemoteConfig() async {
 Future<void> initApp(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = flavor;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  _firebaseMessaging.requestNotificationPermissions(
-    IosNotificationSettings(
-      alert: true,
-      badge: true,
-      sound: true,
-    ),
+
+  FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
   );
+
   ConnectionStatusSingleton connectionStatus =
       ConnectionStatusSingleton.getInstance();
   connectionStatus.initialize();

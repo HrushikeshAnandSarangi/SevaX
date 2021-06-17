@@ -94,8 +94,7 @@ class _IntroSliderState extends State<IntroSlider> {
               padding: const EdgeInsets.only(left: 0, bottom: 8),
               child: Row(
                 children: [
-                  FlatButton(
-                    color: Colors.transparent,
+                  TextButton(
                     onPressed: widget.onSkip,
                     child: Row(
                       children: [
@@ -142,8 +141,7 @@ class _IntroSliderState extends State<IntroSlider> {
                   ),
                   Spacer(),
                   reachedEnd
-                      ? FlatButton(
-                          color: Colors.transparent,
+                      ? TextButton(
                           onPressed: widget.onSkip,
                           child: Row(
                             children: [
@@ -163,8 +161,7 @@ class _IntroSliderState extends State<IntroSlider> {
                             ],
                           ),
                         )
-                      : FlatButton(
-                          color: Colors.transparent,
+                      : TextButton(
                           onPressed: () {
                             _controller.animateToPage(
                                 _controller.page.toInt() + 1,

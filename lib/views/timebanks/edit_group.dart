@@ -3,7 +3,6 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -17,6 +16,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
@@ -341,7 +341,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(
               alignment: Alignment.center,
-              child: RaisedButton(
+              child: CustomElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate() &&
                       (errTxt == null || errTxt == "")) {
@@ -560,7 +560,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   //       Center(
   //         child: Padding(
   //           padding: const EdgeInsets.all(16.0),
-  //           child: FlatButton.icon(
+  //           child: CustomTextButton.icon(
   //             icon: Icon(Icons.add_location),
   //             label: Text(
   //               selectedAddress == null || selectedAddress.isEmpty
@@ -600,7 +600,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   //         padding: const EdgeInsets.symmetric(vertical: 5.0),
   //         child: Container(
   //           alignment: Alignment.center,
-  //           child: RaisedButton(
+  //           child: CustomElevatedButton(
   //             // color: Colors.blue,
   //             color: Colors.red,
   //             onPressed: () {
@@ -639,7 +639,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

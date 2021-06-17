@@ -36,6 +36,7 @@ import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../globals.dart' as globals;
@@ -197,7 +198,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               ),
               child: Container(
                 width: 134,
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text(
@@ -327,7 +328,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                         height: 35,
                         width: 105,
                         child: Center(
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             shape: StadiumBorder(),
                             child: Text(
                               S.of(context).replace_cv,
@@ -443,7 +444,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               padding: const EdgeInsets.only(top: 5),
               child: Container(
                 height: 30,
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -868,7 +869,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -902,7 +903,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       isLoading = false;
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -969,7 +970,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1005,7 +1006,7 @@ class _EditProfilePageState extends State<EditProfilePage>
 //                            });
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -1069,7 +1070,7 @@ class _EditProfilePageState extends State<EditProfilePage>
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1087,7 +1088,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       //     context, SevaCore.of(context).loggedInUser.email);
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
@@ -1147,7 +1148,7 @@ getAlertDialog(BuildContext context) {
         content: Text(S.of(context).validation_error_file_size),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
-          FlatButton(
+          CustomTextButton(
             child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(context).pop();

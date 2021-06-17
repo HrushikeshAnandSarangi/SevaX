@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/bloc/add_manual_time_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class AddMnualTimeDetailsPage extends StatefulWidget {
   final String typeId;
@@ -174,7 +175,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
               ),
             ),
             SizedBox(height: 20),
-            RaisedButton(
+            CustomElevatedButton(
               child: Text(S.of(context).manual_time_button_text),
               onPressed: isLoading
                   ? null

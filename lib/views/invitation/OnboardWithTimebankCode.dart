@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -240,7 +241,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        FlatButton(
+                        CustomTextButton(
                           child: Text(
                             S.of(context).join_timebank_request_invite,
                             textAlign: TextAlign.center,
@@ -273,7 +274,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           ),
           SizedBox(
             width: 134,
-            child: RaisedButton(
+            child: CustomElevatedButton(
               onPressed: () {
                 this._checkFields();
               },
@@ -299,7 +300,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                         padding: EdgeInsets.all(30.0),
                       ),
                       Expanded(
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
 
                             child: Text(
                               'Join',
@@ -409,7 +410,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               ),
               Row(
                 children: <Widget>[
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -435,7 +436,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       }
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -716,7 +717,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           content: Text(dialogSubTitle),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).dismiss,
                 style: TextStyle(

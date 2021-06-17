@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-// import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -10,6 +8,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 
@@ -64,7 +63,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
                         : S.of(context).general_stream_error),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
-                      FlatButton(
+                      CustomTextButton(
                         child: Text(S.of(context).ok.toUpperCase()),
                         onPressed: () {
                           Navigator.of(viewcontext).pop();

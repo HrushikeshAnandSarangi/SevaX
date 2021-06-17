@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
   final String userId;
@@ -38,7 +39,7 @@ class RequestAcceptedWidget extends StatelessWidget {
         UserModel user = snapshot.data;
 
         return Slidable(
-          delegate: SlidableBehindDelegate(),
+          actionPane: SlidableBehindActionPane(),
           actions: <Widget>[],
           secondaryActions: <Widget>[],
           child: GestureDetector(
@@ -165,7 +166,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).primaryColor,
                         child: Text(
                           S.of(context).approve,
@@ -202,7 +203,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).decline,

@@ -1,8 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
@@ -60,14 +59,14 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                             S.of(context).delete_notification_confirmation,
                           ),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () =>
                                   {Navigator.of(dialogContext).pop()},
                               child: Text(
                                 S.of(context).cancel,
                               ),
                             ),
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () async {
                                 onDismissed();
                                 Navigator.of(dialogContext).pop();
@@ -165,7 +164,7 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                   children: [
                     Container(
                       height: 32,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         onPressed: onPressedAccept,
                         child: Text(
                           S.of(context).approve,
@@ -176,7 +175,7 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                     SizedBox(width: 12),
                     Container(
                       height: 32,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         onPressed: onPressedReject,
                         child: Text(

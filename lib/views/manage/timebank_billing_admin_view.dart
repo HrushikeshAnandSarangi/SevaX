@@ -180,7 +180,7 @@
 //                 ? Container()
 //                 : _bloc.community.subscriptionCancelled ? Padding(
 //                   padding: EdgeInsets.only(right: 12, left: 10),
-//                   child: FlatButton(
+//                   child: CustomTextButton(
 //                       onPressed: (){},
 //                       shape: RoundedRectangleBorder(
 //                           borderRadius: new BorderRadius.circular(10.0),
@@ -208,7 +208,7 @@
 //                         Row(
 //                         children: [
 //                           Spacer(),
-//                             FlatButton(
+//                             CustomTextButton(
 //                             child: Text(
 //                               S.of(context).cancel_subscription,
 //                               style: TextStyle(
@@ -257,7 +257,7 @@
 //               Row(
 //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //                 children: <Widget>[
-//                   RaisedButton(
+//                   CustomElevatedButton(
 //                     padding: EdgeInsets.fromLTRB(14, 5, 14, 5),
 //                     color: Theme.of(context).accentColor,
 //                     textColor: FlavorConfig.values.buttonTextColor,
@@ -293,7 +293,7 @@
 //                       });
 //                     },
 //                   ),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     child: Text(
 //                       S.of(context).no,
 //                       style: TextStyle(
@@ -863,7 +863,7 @@
 //     Widget _continueBtn(controller) {
 //       return Padding(
 //         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
-//         child: RaisedButton(
+//         child: CustomElevatedButton(
 //           child: Text(
 //             S.of(context).continue_text,
 //             style: Theme.of(parentContext).primaryTextTheme.button,
@@ -969,7 +969,7 @@
 //                     : S.of(context).general_stream_error,
 //           ),
 //           actions: <Widget>[
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close,
 //                   style: TextStyle(
 //                       color: isSuccess == 1 ? Colors.green : Colors.red)),
@@ -1087,7 +1087,7 @@
 //                 valueText(" \$125.00"),
 //                 Align(
 //                   alignment: Alignment.bottomLeft,
-//                   child: RaisedButton(
+//                   child: CustomElevatedButton(
 //                     padding:
 //                         EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 5),
 //                     color: Colors.red[800],

@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SponsorGroupRequestWidget extends StatelessWidget {
   final NotificationsModel notification;
@@ -148,7 +149,7 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).approve,
@@ -165,7 +166,7 @@ class SponsorGroupRequestWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).reject,

@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/image_picker/image_picker_dialog_mobile.
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -137,7 +138,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                                 ),
                               ),
                               actions: <Widget>[
-                                FlatButton(
+                                CustomTextButton(
                                   onPressed: () {
                                     Navigator.of(dialogContext).pop();
                                   },
@@ -304,7 +305,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                             ),
                           ),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () {
                                 Navigator.of(dialogContext).pop();
                               },
@@ -408,7 +409,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
@@ -442,7 +443,7 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
                       }
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -481,14 +482,14 @@ class _SponsorsWidgetState extends State<SponsorsWidget> {
             style: TextStyle(fontSize: 15.0),
           ),
           actions: [
-            RaisedButton(
+            CustomElevatedButton(
               onPressed: () async {
                 chooseImage(
                     context: context, timebankModel: timebankModel, name: name);
               },
               child: Text(S.of(context).choose_image),
             ),
-            FlatButton(
+            CustomTextButton(
                 onPressed: () async {
                   SponsorDataModel sponsorModel = SponsorDataModel(
                       name: name,

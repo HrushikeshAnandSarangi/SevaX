@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/switch_timebank.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TransferOwnerShipView extends StatefulWidget {
   final String timebankId;
@@ -169,7 +170,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        FlatButton(
+        CustomTextButton(
           onPressed: () {
             Navigator.pop(context);
           },
@@ -179,7 +180,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           ),
           textColor: Colors.grey,
         ),
-        FlatButton(
+        CustomTextButton(
           child: Text(
               widget.isComingFromExit
                   ? S.of(context).exit
@@ -404,7 +405,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           content: Text(S.of(context).user_removal_success),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -425,7 +426,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           content: Text(S.of(context).error_occured),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               textColor: Colors.red,
               onPressed: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SevaCoinWidget extends StatelessWidget {
   final double amount;
@@ -12,7 +13,7 @@ class SevaCoinWidget extends StatelessWidget {
     return Container(
       height: 60,
       padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-      child: RaisedButton(
+      child: CustomElevatedButton(
         shape: StadiumBorder(),
         color: Colors.white,
         child: Row(

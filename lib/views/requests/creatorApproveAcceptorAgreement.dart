@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.da
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class CreatorApproveAcceptorAgreeement extends StatefulWidget {
@@ -61,8 +62,8 @@ class _CreatorApproveAcceptorAgreeementState
         centerTitle: true,
         title: Text(
           widget.requestModel.roomOrTool == 'ROOM'
-              ? 'Accept Room Borrow Request' 
-              : 'Accept Item Borrow request', 
+              ? 'Accept Room Borrow Request'
+              : 'Accept Item Borrow request',
           style: TextStyle(
               fontFamily: "Europa", fontSize: 19, color: Colors.white),
         ),
@@ -114,8 +115,7 @@ class _CreatorApproveAcceptorAgreeementState
             SizedBox(width: 15),
             Container(
               width: 250,
-              child: Text(
-                  "S.of(context).terms_acknowledgement_text",
+              child: Text("S.of(context).terms_acknowledgement_text",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -137,7 +137,7 @@ class _CreatorApproveAcceptorAgreeementState
       children: <Widget>[
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Theme.of(context).primaryColor,
             child: Text(
@@ -161,7 +161,7 @@ class _CreatorApproveAcceptorAgreeementState
         SizedBox(width: 5),
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Theme.of(context).accentColor,
             child: Text(
@@ -185,7 +185,7 @@ class _CreatorApproveAcceptorAgreeementState
         SizedBox(width: 5),
         Container(
           height: 32,
-          child: RaisedButton(
+          child: CustomElevatedButton(
             padding: EdgeInsets.only(left: 11, right: 11),
             color: Colors.grey[300],
             child: Text(
@@ -251,7 +251,7 @@ class _CreatorApproveAcceptorAgreeementState
                     ? "S.of(context).review_before_proceding_text"
                     : "S.of(context).lender_not_accepted_request_msg",
                 style: TextStyle(fontSize: 15),
-                softWrap: true, 
+                softWrap: true,
               ),
             ),
             Image(
@@ -263,16 +263,16 @@ class _CreatorApproveAcceptorAgreeementState
         ),
         SizedBox(height: 20),
         widget.requestModel.hasBorrowAgreement
-            ?
-        Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.grey[200])),
-          alignment: Alignment.center,
-          width: 300,
-          height: 360,
-          child: SfPdfViewer.network(widget.requestModel.borrowAgreementLink),
-        )
-        : Container(),
+            ? Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.grey[200])),
+                alignment: Alignment.center,
+                width: 300,
+                height: 360,
+                child: SfPdfViewer.network(
+                    widget.requestModel.borrowAgreementLink),
+              )
+            : Container(),
         SizedBox(height: 20),
         widget.requestModel.hasBorrowAgreement
             ? Container(
@@ -280,7 +280,7 @@ class _CreatorApproveAcceptorAgreeementState
                 margin: EdgeInsets.only(right: 12),
                 width: 155,
                 height: 32,
-                child: FlatButton(
+                child: CustomTextButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

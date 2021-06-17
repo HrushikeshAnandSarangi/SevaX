@@ -50,6 +50,7 @@ import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -1108,7 +1109,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                               child: Center(
                                 child: Container(
                                   // width: 150,
-                                  child: RaisedButton(
+                                  child: CustomElevatedButton(
                                     onPressed: editRequest,
                                     child: Text(
                                       S
@@ -2821,7 +2822,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 child: AlertDialog(
                   title: Text(S.of(context).this_is_repeating_event),
                   actions: [
-                    FlatButton(
+                    CustomTextButton(
                       child: Text(
                         S.of(context).edit_this_event,
                         style: TextStyle(
@@ -2837,7 +2838,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                    CustomTextButton(
                       child: Text(
                         S.of(context).edit_subsequent_event,
                         style: TextStyle(
@@ -2862,7 +2863,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         Navigator.pop(context);
                       },
                     ),
-                    FlatButton(
+                    CustomTextButton(
                       child: Text(
                         S.of(context).cancel,
                         style: TextStyle(
@@ -3384,7 +3385,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           return AlertDialog(
             title: Text(S.of(context).insufficient_credits_for_request),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -3407,7 +3408,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -3455,7 +3456,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
-      child: RaisedButton(
+      child: CustomElevatedButton(
         child: Text(selectedUsers != null && selectedUsers.length > 0
             ? "${selectedUsers.length} ${S.of(context).members_selected(selectedUsers.length)}"
             : memberAssignment),
@@ -3547,7 +3548,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
@@ -3558,7 +3559,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   Navigator.of(viewContext).pop({'PROCEED': false});
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(

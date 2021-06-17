@@ -175,7 +175,7 @@
 //     return Row(
 //       mainAxisAlignment: MainAxisAlignment.end,
 //       children: <Widget>[
-//         FlatButton(
+//         CustomTextButton(
 //           onPressed: () {
 //             Navigator.pop(context);
 //           },
@@ -185,7 +185,7 @@
 //           ),
 //           textColor: Colors.grey,
 //         ),
-//         FlatButton(
+//         CustomTextButton(
 //           child: Text(S.of(context).change,
 //               style:
 //                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
@@ -285,7 +285,7 @@
 //           content: Text(S.of(context).ownership_success),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).ok),
 //               onPressed: () {
 //                 //  resetAndLoad();
@@ -321,7 +321,7 @@
 //           content: Text(message),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close),
 //               textColor: Colors.red,
 //               onPressed: () {
@@ -449,7 +449,7 @@
 //           ),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close),
 //               onPressed: () {
 //                 Navigator.of(context).pop();
@@ -471,7 +471,7 @@
 //           content: Text(S.of(context).ownership_transfer_error),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close),
 //               textColor: Colors.red,
 //               onPressed: () {

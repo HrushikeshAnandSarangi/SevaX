@@ -24,6 +24,7 @@ import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -488,7 +489,7 @@ class _VirtualRequestsState extends State<VirtualRequests> {
                                           EdgeInsets.only(top: 10, bottom: 10),
                                       width: 100,
                                       height: 32,
-                                      child: FlatButton(
+                                      child: CustomTextButton(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20),

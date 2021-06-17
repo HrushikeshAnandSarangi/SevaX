@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'calendar_widget.dart';
 import 'date_time_selector_widget.dart';
@@ -144,11 +145,17 @@ class CalendarPickerState extends State<CalendarPicker> {
                                   ? ((endDate.minute / 15).round() * 15) % 60
                                   : ((startDate.minute / 15).round() * 15) % 60,
                           ispm: selectionType == SelectionType.START_DATE
-                              ? startDate.hour >= 12 ? "PM" : "AM"
+                              ? startDate.hour >= 12
+                                  ? "PM"
+                                  : "AM"
                               : startDate.millisecondsSinceEpoch <
                                       endDate.millisecondsSinceEpoch
-                                  ? endDate.hour >= 12 ? "PM" : "AM"
-                                  : startDate.hour >= 12 ? "PM" : "AM",
+                                  ? endDate.hour >= 12
+                                      ? "PM"
+                                      : "AM"
+                                  : startDate.hour >= 12
+                                      ? "PM"
+                                      : "AM",
                           onTimeSelected: (hour, minute, ispm) {
                             setState(() {
                               if (selectionType == SelectionType.START_DATE) {
@@ -199,7 +206,7 @@ class CalendarPickerState extends State<CalendarPicker> {
             child: Text(S.of(context).validation_error_end_date_greater),
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

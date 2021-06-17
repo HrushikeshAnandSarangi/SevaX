@@ -12,6 +12,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/requests/offer_join_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class TimeOfferParticipants extends StatelessWidget {
@@ -114,7 +115,7 @@ class TimeOfferParticipants extends StatelessWidget {
     switch (status) {
       case OfferAcceptanceStatus.ACCEPTED:
         return [
-          RaisedButton(
+          CustomElevatedButton(
             color: Colors.green,
             onPressed: () {},
             child: Text(
@@ -129,7 +130,7 @@ class TimeOfferParticipants extends StatelessWidget {
 
       case OfferAcceptanceStatus.REJECTED:
         return [
-          RaisedButton(
+          CustomElevatedButton(
             color: Colors.red,
             onPressed: () {},
             child: Text(
@@ -141,7 +142,7 @@ class TimeOfferParticipants extends StatelessWidget {
 
       case OfferAcceptanceStatus.REQUESTED:
         return [
-          RaisedButton(
+          CustomElevatedButton(
             color: Colors.green,
             onPressed: () {
               showDialog(
@@ -178,7 +179,7 @@ class TimeOfferParticipants extends StatelessWidget {
           SizedBox(
             width: 5,
           ),
-          RaisedButton(
+          CustomElevatedButton(
             color: Colors.red,
             onPressed: () {
               bloc.updateOfferAcceptorAction(

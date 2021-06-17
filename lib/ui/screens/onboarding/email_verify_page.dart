@@ -9,6 +9,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
@@ -132,7 +133,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 28),
-                  child: FlatButton(
+                  child: CustomTextButton(
                     child: Text(S.of(context).resend_email),
                     onPressed: () {
                       progressDialog = ProgressDialog(
@@ -182,7 +183,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             left: 40,
             right: 40,
             bottom: 20,
-            child: RaisedButton(
+            child: CustomElevatedButton(
               child: Text(S.of(context).sign_in),
               onPressed: () {
                 _signOut(context);
@@ -216,7 +217,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             S.of(context).verification_sent_desc,
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).ok,
                 //

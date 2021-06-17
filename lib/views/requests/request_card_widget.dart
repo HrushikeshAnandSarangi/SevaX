@@ -7,6 +7,7 @@ import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class RequestCardWidget extends StatelessWidget {
@@ -175,7 +176,7 @@ class RequestCardWidget extends StatelessWidget {
                     ),*/
                     height: 40,
                     padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
                       textColor: Colors.white,

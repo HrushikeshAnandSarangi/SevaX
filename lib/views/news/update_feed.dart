@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class UpdateNewsFeed extends StatelessWidget {
@@ -300,7 +301,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment(0, 1),
                 padding: const EdgeInsets.only(top: 10.0),
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   shape: StadiumBorder(),
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();

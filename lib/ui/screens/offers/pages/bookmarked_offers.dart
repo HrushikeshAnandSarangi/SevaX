@@ -14,6 +14,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
@@ -259,7 +260,7 @@ void showDialogForMakingAnOffer({
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
+                      CustomElevatedButton(
                         child: Container(
                           width: double.infinity,
                           child: Text(
@@ -299,7 +300,7 @@ void showDialogForMakingAnOffer({
                           );
                         },
                       ),
-                      RaisedButton(
+                      CustomElevatedButton(
                         child: Container(
                           width: double.infinity,
                           child: Text(
@@ -347,7 +348,7 @@ void showDialogForMakingAnOffer({
                       ),
                       HideWidget(
                         hide: hideCancelBookMark,
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           color: Theme.of(context).primaryColor,
                           child: Container(
                               width: double.infinity,
@@ -364,7 +365,7 @@ void showDialogForMakingAnOffer({
                           },
                         ),
                       ),
-                      RaisedButton(
+                      CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Container(
                             width: double.infinity,

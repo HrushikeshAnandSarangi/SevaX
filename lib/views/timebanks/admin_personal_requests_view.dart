@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -234,7 +235,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     content: Text(
                         '${widget.userModel.fullname} ${S.of(context).already_added}'),
                     actions: <Widget>[
-                      FlatButton(
+                      CustomTextButton(
                         child: Text(
                           S.of(context).ok,
                           style: TextStyle(
@@ -259,7 +260,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     content: Text(
                         '${S.of(context).are_you_sure} add ${widget.userModel.fullname} to ${S.of(context).request}'),
                     actions: <Widget>[
-                      FlatButton(
+                      CustomTextButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                         color: Theme.of(context).accentColor,
                         textColor: FlavorConfig.values.buttonTextColor,
@@ -290,7 +291,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                           Navigator.of(context).pop();
                         },
                       ),
-                      FlatButton(
+                      CustomTextButton(
                         child: Text(
                           S.of(context).cancel,
                           style: TextStyle(color: Colors.red),
@@ -375,7 +376,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                                   margin: EdgeInsets.all(10),
                                   width: 100,
                                   height: 32,
-                                  child: FlatButton(
+                                  child: CustomTextButton(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),

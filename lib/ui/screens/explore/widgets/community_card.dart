@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class CommunityCard extends StatelessWidget {
   const CommunityCard(
@@ -81,18 +82,13 @@ class CommunityCard extends StatelessWidget {
             ],
           ),
           Spacer(),
-          RaisedButton(
+          CustomElevatedButton(
             elevation: 0,
             child: Text(
               buttonLabel,
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
+                  fontSize: 14, fontWeight: FontWeight.w400, color: textColor),
             ),
-            disabledColor: buttonColor ?? Colors.white,
-            disabledElevation: 0,
-            disabledTextColor: textColor,
             onPressed: onbuttonPress,
             color: buttonColor ?? Colors.white,
             textColor: textColor,

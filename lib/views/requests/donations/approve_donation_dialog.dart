@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ApproveDonationDialog extends StatelessWidget {
   final DonationApproveModel donationApproveModel;
@@ -100,7 +101,7 @@ class ApproveDonationDialog extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: double.infinity,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
                         S.of(context).acknowledge,
@@ -118,7 +119,7 @@ class ApproveDonationDialog extends StatelessWidget {
 //                  ),
 //                  Container(
 //                    width: double.infinity,
-//                    child: RaisedButton(
+//                    child: CustomElevatedButton(
 //                      color: FlavorConfig.values.theme.primaryColor,
 //                      child: Text(
 //                        S.of(context).modify,
@@ -137,7 +138,7 @@ class ApproveDonationDialog extends StatelessWidget {
                   ),
                   Container(
                     width: double.infinity,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       color: Theme.of(context).accentColor,
                       child: Text(
                         S.of(context).message,

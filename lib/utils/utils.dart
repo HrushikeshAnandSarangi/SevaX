@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:usage/uuid/uuid.dart';
 
 import '../flavor_config.dart';
@@ -154,7 +155,7 @@ void showAdminAccessMessage({BuildContext context}) {
         content: Text(S.of(context).sevax_global_creation_error),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
-          FlatButton(
+          CustomTextButton(
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
             color: Theme.of(context).accentColor,
             textColor: FlavorConfig.values.buttonTextColor,

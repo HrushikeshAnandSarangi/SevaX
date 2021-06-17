@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExplorePageAppBar extends PreferredSize {
@@ -54,7 +55,7 @@ class ExplorePageAppBar extends PreferredSize {
                   },
                 ),
                 appBarButton(
-                   S.of(context).log_in,
+                  S.of(context).log_in,
                   () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -101,7 +102,7 @@ class ExplorePageAppBar extends PreferredSize {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: Icon(Icons.search),
-                        suffixIcon: FlatButton(
+                        suffixIcon: CustomTextButton(
                           child: Text(S.of(context).search),
                           textColor: Colors.white,
                           color: Colors.orange,
@@ -123,8 +124,8 @@ class ExplorePageAppBar extends PreferredSize {
     );
   }
 
-  FlatButton appBarButton(String text, VoidCallback onTap) {
-    return FlatButton(
+  CustomTextButton appBarButton(String text, VoidCallback onTap) {
+    return CustomTextButton(
       padding: EdgeInsets.zero,
       child: Text(text),
       textColor: Colors.white,

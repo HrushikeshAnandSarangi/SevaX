@@ -24,6 +24,7 @@ import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
@@ -311,7 +312,7 @@ class _RecurringListState extends State<RecurringList> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: <Widget>[
-                                    FlatButton(
+                                    CustomTextButton(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
@@ -578,7 +579,7 @@ class _RecurringListState extends State<RecurringList> {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(

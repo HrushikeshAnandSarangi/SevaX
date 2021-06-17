@@ -22,6 +22,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -317,7 +318,7 @@ class _GroupPageState extends State<GroupPage> {
           content: Text(S.of(context).protected_timebank_group_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(_context).pop();
@@ -370,7 +371,7 @@ class _GroupCard extends StatelessWidget {
                 Spacer(),
                 HideWidget(
                   hide: hideButton,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     child: Text(buttonText),
                     onPressed: onButtonPressed,
                   ),

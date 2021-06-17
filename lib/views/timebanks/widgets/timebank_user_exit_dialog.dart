@@ -3,6 +3,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankUserExitDialogView extends StatelessWidget {
   final UserExitModel userExitModel;
@@ -67,10 +68,10 @@ class TimebankUserExitDialogView extends StatelessWidget {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                     S.of(context).ok,
+                      S.of(context).ok,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

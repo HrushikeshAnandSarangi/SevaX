@@ -89,7 +89,7 @@
 //       //                         'Are you sure you want to delete this offer?',
 //       //                       ),
 //       //                       actions: <Widget>[
-//       //                         FlatButton(
+//       //                         CustomTextButton(
 //       //                           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
 //       //                           color: Theme.of(context).accentColor,
 //       //                           textColor: FlavorConfig.values.buttonTextColor,
@@ -105,7 +105,7 @@
 //       //                             Navigator.pop(context);
 //       //                           },
 //       //                         ),
-//       //                         FlatButton(
+//       //                         CustomTextButton(
 //       //                           child: Text(
 //       //                             'No',
 //       //                             style: TextStyle(
@@ -218,7 +218,7 @@
 //                                               child: Container(
 //                                                 height: 30,
 //                                                 width: 80,
-//                                                 child: FlatButton(
+//                                                 child: CustomTextButton(
 //                                                   shape: RoundedRectangleBorder(
 //                                                     borderRadius:
 //                                                         BorderRadius.circular(
@@ -420,7 +420,7 @@
 //                 child: Container(
 //                   width: 100,
 //                   height: 32,
-//                   child: FlatButton(
+//                   child: CustomTextButton(
 //                     shape: RoundedRectangleBorder(
 //                       borderRadius: BorderRadius.circular(20),
 //                     ),

@@ -35,6 +35,7 @@ import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
@@ -1061,7 +1062,7 @@ class DiscussionListState extends State<DiscussionList> {
                                               content: Text(
                                                   S.of(context).feed_reported),
                                               actions: <Widget>[
-                                                FlatButton(
+                                                CustomTextButton(
                                                   child: Text(
                                                     S.of(context).ok,
                                                     style: TextStyle(
@@ -1092,7 +1093,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                     .report_feed_confirmation_message,
                                               ),
                                               actions: <Widget>[
-                                                FlatButton(
+                                                CustomTextButton(
                                                   padding: EdgeInsets.fromLTRB(
                                                       20, 5, 20, 5),
                                                   color: Theme.of(context)
@@ -1131,7 +1132,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                         .pop();
                                                   },
                                                 ),
-                                                FlatButton(
+                                                CustomTextButton(
                                                   child: Text(
                                                     S.of(context).cancel,
                                                     style: TextStyle(

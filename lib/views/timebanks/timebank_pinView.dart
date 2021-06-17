@@ -133,7 +133,7 @@
 //                      padding: EdgeInsets.all(10.0),
 //                    ),
 //                    Expanded(
-//                      child: RaisedButton(
+//                      child: CustomElevatedButton(
 //                        //splashColor: Colors.white,
 //                        focusColor: Colors.blue,
 //                        highlightColor: Colors.white,
@@ -150,7 +150,7 @@
 //                      padding: EdgeInsets.all(10.0),
 //                    ),
 //                    Expanded(
-//                      child: RaisedButton(
+//                      child: CustomElevatedButton(
 //                          child: Text(
 //                            'NEXT',
 //                          ),

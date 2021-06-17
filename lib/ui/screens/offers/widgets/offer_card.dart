@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 
@@ -173,7 +174,7 @@ class OfferCard extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              FlatButton(
+                              CustomTextButton(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),

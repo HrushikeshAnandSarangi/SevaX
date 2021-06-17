@@ -40,6 +40,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class PersonalNotifications extends StatefulWidget {
@@ -98,7 +99,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           children: [
             Align(
               alignment: Alignment.centerRight,
-              child: FlatButton(
+              child: CustomTextButton(
                 padding: EdgeInsets.zero,
                 child: Text(S.of(context).clear_all),
                 textColor: Colors.blue,
@@ -334,7 +335,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       .of(context)
                                       .oneToManyRequestSpeakerAcceptRequest),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    CustomTextButton(
                                       color: Theme.of(context).primaryColor,
                                       child: Text(
                                         S.of(context).yes,
@@ -348,7 +349,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         Navigator.of(viewContext).pop();
                                       },
                                     ),
-                                    FlatButton(
+                                    CustomTextButton(
                                       color: Theme.of(context).accentColor,
                                       child: Text(
                                         S.of(context).no,
@@ -387,7 +388,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                       .of(context)
                                       .speaker_reject_invite_dialog),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    CustomTextButton(
                                       color: Theme.of(context).primaryColor,
                                       child: Text(
                                         S.of(context).yes,
@@ -401,7 +402,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         await onDismissed();
                                       },
                                     ),
-                                    FlatButton(
+                                    CustomTextButton(
                                       color: Theme.of(context).accentColor,
                                       child: Text(
                                         S.of(context).no,
@@ -942,7 +943,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               title: Text(
                                   S.of(context).item_received_alert_dialouge),
                               actions: [
-                                FlatButton(
+                                CustomTextButton(
                                   onPressed: () {
                                     Navigator.of(_context).pop();
                                   },
@@ -953,7 +954,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                         color: Theme.of(context).accentColor),
                                   ),
                                 ),
-                                FlatButton(
+                                CustomTextButton(
                                   onPressed: () async {
                                     Navigator.of(_context).pop();
 

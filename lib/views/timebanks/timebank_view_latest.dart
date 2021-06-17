@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 
 class TimeBankAboutView extends StatefulWidget {
@@ -461,7 +462,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
         return AlertDialog(
           title: Text(S.of(context).admin_cannot_create_message),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).close,
                 style: TextStyle(

@@ -8,6 +8,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/repositories/manual_time_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 void manualTimeActionDialog(
   BuildContext context,
@@ -106,7 +107,7 @@ void manualTimeActionDialog(
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).approve,
@@ -144,7 +145,7 @@ void manualTimeActionDialog(
                 ),
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
                       S.of(context).reject,

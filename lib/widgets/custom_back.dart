@@ -9,7 +9,7 @@ class CustomBackButton extends StatelessWidget {
     return Container(
       alignment: Alignment.topLeft,
       padding: EdgeInsets.only(top: 5, bottom: 5.0),
-      child: FlatButton.icon(
+      child: TextButton.icon(
         icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).accentColor),
         onPressed: onBackPressed,
         label: Text(

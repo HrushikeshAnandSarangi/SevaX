@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
@@ -291,7 +292,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         comingFrom: ComingFrom.Projects,
                         upgradeDetails:
                             AppConfig.upgradePlanBannerModel.calendar_sync,
-                        transaction_matrix_type:S.of(context).calender_sync,
+                        transaction_matrix_type: S.of(context).calender_sync,
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
@@ -367,7 +368,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
@@ -411,7 +412,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           content: Text(S.of(context).not_authorized_create_request),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -460,7 +461,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   padding: EdgeInsets.only(
                     right: 10,
                   ),
-                  child: FlatButton(
+                  child: CustomTextButton(
                     onPressed: () {},
                     child: Text(
                       S.of(context).add_requests,
@@ -786,7 +787,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                FlatButton.icon(
+                                TextButton.icon(
                                   icon: Icon(
                                     Icons.add_location,
                                     color: Theme.of(context).primaryColor,

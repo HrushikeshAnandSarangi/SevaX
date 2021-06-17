@@ -67,7 +67,7 @@
 //       appBar: AppBar(
 //         title: Text(S.of(context).availablity),
 //         actions: <Widget>[
-//           FlatButton(
+//           CustomTextButton(
 //               child: Text(
 //                 S.of(context).save,
 //                 style: theme.textTheme.body1.copyWith(
@@ -331,7 +331,7 @@
 // //              ),
 // //            ],
 // //          ),
-// //          RaisedButton(
+// //          CustomElevatedButton(
 // //            focusColor: Colors.blue,
 // //            highlightColor: Colors.white,
 // //            child: Text('Never',style: TextStyle(
@@ -421,7 +421,7 @@
 //               ),
 //             ],
 //           ),
-//           RaisedButton(
+//           CustomElevatedButton(
 //             focusColor: Colors.blue,
 //             highlightColor: Colors.white,
 //             child: Text(

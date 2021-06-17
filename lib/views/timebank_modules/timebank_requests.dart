@@ -32,6 +32,7 @@ import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
@@ -91,7 +92,7 @@ class RequestsState extends State<RequestsModule> {
                             padding: EdgeInsets.only(
                               right: 10,
                             ),
-                            child: FlatButton(
+                            child: CustomTextButton(
                               onPressed: () {},
                               child: Text(
                                 S.of(context).my_requests,
@@ -244,7 +245,7 @@ class RequestsState extends State<RequestsModule> {
               Text(S.of(context).protected_timebank_request_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(_context).pop();
@@ -407,7 +408,7 @@ class RequestListItemsState extends State<RequestListItems> {
                           SevaCore.of(context).loggedInUser.sevaUserID);
                   return formatListFrom(
                     consolidatedList: consolidatedList,
-                    currentCoords:  currentLocation.data ,
+                    currentCoords: currentLocation.data,
                   );
               }
             },
@@ -783,7 +784,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                           EdgeInsets.only(top: 10, bottom: 10),
                                       width: 100,
                                       height: 32,
-                                      child: FlatButton(
+                                      child: CustomTextButton(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20),

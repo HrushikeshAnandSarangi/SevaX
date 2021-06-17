@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -20,6 +19,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -817,7 +817,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
         Container(
           height: 37,
           width: 150,
-          child: RaisedButton(
+          child: CustomElevatedButton(
               padding: EdgeInsets.only(left: 11, right: 11),
               color: Theme.of(context).primaryColor,
               child: Text(
@@ -1250,7 +1250,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      FlatButton(
+                      CustomTextButton(
                         onPressed: () {
                           Navigator.pop(viewContext);
                         },
@@ -1262,7 +1262,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                         ),
                         textColor: Colors.grey,
                       ),
-                      FlatButton(
+                      CustomTextButton(
                         child: Text(S.of(context).save,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,

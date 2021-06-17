@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class ExploreSearchPage extends StatefulWidget {
@@ -125,7 +126,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.search),
-                  suffixIcon: FlatButton(
+                  suffixIcon: CustomTextButton(
                     child: Text(S.of(context).search),
                     textColor: Colors.white,
                     color: Colors.orange,
@@ -499,7 +500,9 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(S.of(context).any_category.firstWordUpperCase(),),
+                              child: Text(
+                                S.of(context).any_category.firstWordUpperCase(),
+                              ),
                             ),
                             ...selectedCommunityCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(
@@ -549,7 +552,10 @@ class ExploreSearchTabBar extends StatelessWidget {
                           items: <DropdownMenuItem<String>>[
                             DropdownMenuItem(
                               value: '_',
-                              child: Text(S.of(context).any_category.firstWordUpperCase()),
+                              child: Text(S
+                                  .of(context)
+                                  .any_category
+                                  .firstWordUpperCase()),
                             ),
                             ...selectedRequestCategoryWithData.data.data.map(
                               (e) => DropdownMenuItem(

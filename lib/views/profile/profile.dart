@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -197,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         // Container(
                         //     height:50,
                         //     padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-                        //     child: RaisedButton(
+                        //     child: CustomElevatedButton(
                         //         shape:StadiumBorder(),
                         //         onPressed: () async {
                         //             Navigator.of(context).push(
@@ -463,7 +464,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
@@ -474,7 +475,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.of(viewContext).pop({'PROCEED': false});
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(

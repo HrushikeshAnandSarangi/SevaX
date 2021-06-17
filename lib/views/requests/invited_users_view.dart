@@ -345,7 +345,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                     ),*/ /*
                     height: 40,
                     padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                         shape: StadiumBorder(),
                         color: Colors.indigo,
                         textColor: Colors.white,

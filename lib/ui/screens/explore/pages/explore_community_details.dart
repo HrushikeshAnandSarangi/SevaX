@@ -33,6 +33,7 @@ import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ExploreCommunityDetails extends StatefulWidget {
   final String communityId;
@@ -192,7 +193,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                   ],
                                 ),
                                 Spacer(),
-                                // FlatButton(
+                                // CustomTextButton(
                                 //   color: Colors.grey[300],
                                 //   shape: RoundedRectangleBorder(
                                 //     borderRadius: BorderRadius.circular(8),
@@ -203,7 +204,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                                 //   ),
                                 //   onPressed: () {},
                                 // ),
-                                FlatButton(
+                                CustomTextButton(
                                   color: Colors.grey[300],
                                   textColor: Theme.of(context).primaryColor,
                                   shape: RoundedRectangleBorder(
@@ -664,7 +665,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
                 .join_community_alert
                 .replaceAll(" **CommunityName", '')),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.red,
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(S.of(context).ok),
@@ -689,7 +690,7 @@ class _ExploreCommunityDetailsState extends State<ExploreCommunityDetails> {
           return AlertDialog(
             content: Text(S.of(context).switch_community),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.orange,
                 onPressed: () {
                   _profileBloc.setDefaultCommunity(
@@ -726,7 +727,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
         title: Text(S.of(context).access_not_available),
         content: Text(message),
         actions: [
-          FlatButton(
+          CustomTextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
@@ -734,7 +735,7 @@ void showSignInAlertMessage({BuildContext context, String message}) {
                 S.of(context).cancel,
                 style: TextStyle(color: Colors.deepOrange),
               )),
-          FlatButton(
+          CustomTextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               Navigator.of(context).push(

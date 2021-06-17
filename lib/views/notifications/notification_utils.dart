@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 void showDialogForIncompleteTransactions({
   SoftDeleteRequestDataHolder deletionRequest,
@@ -23,7 +24,7 @@ void showDialogForIncompleteTransactions({
         // title: Text(deletionRequest.entityTitle.trim()),
         content: Text(reason),
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             child: Text(
               S.of(context).dismiss,
               style: TextStyle(

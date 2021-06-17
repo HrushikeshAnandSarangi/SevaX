@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class BlockedMembersPage extends StatefulWidget {
   final String timebankId;
@@ -166,7 +167,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
               height: 50,
               child: isLoading
                   ? LoadingIndicator()
-                  : FlatButton(
+                  : CustomTextButton(
                       child: Text(
                         "${S.of(context).unblock} $name?",
                         style: TextStyle(

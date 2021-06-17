@@ -20,6 +20,7 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 
@@ -67,7 +68,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                         padding: EdgeInsets.only(
                           right: 0,
                         ),
-                        child: FlatButton(
+                        child: CustomTextButton(
                           onPressed: () {},
                           child: Text(
                             S.of(context).projects,
@@ -303,7 +304,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(mContext).ok,
                 style: TextStyle(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../globals.dart' as globals;
 import '../core.dart';
@@ -112,9 +113,11 @@ class _DocumentUploadState extends State<DocumentUpload> {
                           ),
                         ),
                 ),
-          FlatButton.icon(
+          TextButton.icon(
             icon: Icon(Icons.attach_file),
-            color: Colors.grey[200],
+            style: TextButton.styleFrom(
+              primary: Colors.grey[200],
+            ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(

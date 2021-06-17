@@ -55,6 +55,7 @@ import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_member_insufficent_credits_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -363,7 +364,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                             title:
                                 Text(S.of(context).reject_request_completion),
                             actions: <Widget>[
-                              FlatButton(
+                              CustomTextButton(
                                 color: Theme.of(context).primaryColor,
                                 child: Text(
                                   S.of(context).yes,
@@ -384,7 +385,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                   );
                                 },
                               ),
-                              FlatButton(
+                              CustomTextButton(
                                 color: Theme.of(context).accentColor,
                                 child: Text(
                                   S.of(context).no,
@@ -447,7 +448,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         title: Text(
                             'If you have you received your item/place back click the button below to complete this.'), //label to be created later (borrow request)
                         actions: [
-                          FlatButton(
+                          CustomTextButton(
                             onPressed: () {
                               Navigator.of(_context).pop();
                             },
@@ -458,7 +459,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                                   color: Theme.of(context).accentColor),
                             ),
                           ),
-                          FlatButton(
+                          CustomTextButton(
                             onPressed: () async {
                               Navigator.of(_context).pop();
 

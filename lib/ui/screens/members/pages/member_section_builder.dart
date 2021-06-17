@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/member_level.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class MemberSectionBuilder extends StatelessWidget {
@@ -468,7 +469,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${S.of(context).clear_transaction}"),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
@@ -536,7 +537,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).cancel),
                   textColor: Colors.red,
                   onPressed: () {
@@ -557,7 +558,7 @@ class MemberSectionBuilder extends StatelessWidget {
               content: Text(S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {

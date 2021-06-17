@@ -10,6 +10,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 import '../spell_check_manager.dart';
@@ -329,7 +330,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
             // Spacer(),
             SizedBox(
               width: 134,
-              child: RaisedButton(
+              child: CustomElevatedButton(
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
                   if (connResult == ConnectivityResult.none) {
@@ -357,7 +358,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 ),
               ),
             ),
-            FlatButton(
+            CustomTextButton(
               onPressed: () {
                 widget.onSkipped();
               },

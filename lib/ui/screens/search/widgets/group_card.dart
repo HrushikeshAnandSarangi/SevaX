@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class GroupCard extends StatelessWidget {
   final String image;
@@ -60,7 +61,7 @@ class GroupCard extends StatelessWidget {
                 ),
                 Container(
                   height: 30,
-                  child: FlatButton(
+                  child: CustomTextButton(
                     shape: StadiumBorder(),
                     color: Colors.grey[300],
                     textColor: Theme.of(context).primaryColor,

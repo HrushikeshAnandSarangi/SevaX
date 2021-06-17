@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -107,7 +108,7 @@ class TimebankRequests extends StatelessWidget {
                       }
                       TimebankModel timebankModel = snapshot.data;
                       return Slidable(
-                        delegate: SlidableBehindDelegate(),
+                        actionPane: SlidableBehindActionPane(),
                         actions: <Widget>[],
                         secondaryActions: <Widget>[],
                         child: FutureBuilder<Object>(
@@ -202,11 +203,11 @@ class TimebankRequests extends StatelessWidget {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  getBio(context,userModel),
+                  getBio(context, userModel),
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                     S.of(context).reason_to_join,
+                      S.of(context).reason_to_join,
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: 16,
@@ -225,7 +226,7 @@ class TimebankRequests extends StatelessWidget {
                     //  mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      RaisedButton(
+                      CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).allow,
@@ -247,7 +248,7 @@ class TimebankRequests extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(4.0),
                       ),
-                      RaisedButton(
+                      CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).reject,
@@ -298,7 +299,7 @@ class TimebankRequests extends StatelessWidget {
     );
   }
 
-  Widget getBio(BuildContext context,UserModel userModel) {
+  Widget getBio(BuildContext context, UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
         return Center(

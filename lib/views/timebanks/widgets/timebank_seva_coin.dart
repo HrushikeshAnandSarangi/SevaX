@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimeBankSevaCoin extends StatefulWidget {
   final UserModel loggedInUser;
@@ -127,7 +128,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     return Container(
       height: 45,
       padding: const EdgeInsets.only(left: 8.0),
-      child: RaisedButton(
+      child: CustomElevatedButton(
         onPressed: _showFontSizePickerDialog,
         child: Text(
           S.of(context).donate,
@@ -301,7 +302,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
       ),
       actions: <Widget>[
-        RaisedButton(
+        CustomElevatedButton(
           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
@@ -326,7 +327,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             }
           },
         ),
-        FlatButton(
+        CustomTextButton(
           child: Text(
             S.of(context).cancel,
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),

@@ -29,6 +29,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class LoginPage extends StatefulWidget {
@@ -209,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Row(
                                   children: [
-                                    FlatButton(
+                                    CustomTextButton(
                                       padding:
                                           EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       color: Theme.of(context).accentColor,
@@ -234,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                                         });
                                       },
                                     ),
-                                    FlatButton(
+                                    CustomTextButton(
                                       child: Text(
                                         S.of(context).cancel,
                                         style: TextStyle(
@@ -338,7 +339,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(top: 35, bottom: 50.0),
-                      child: FlatButton.icon(
+                      child: TextButton.icon(
                         icon: Icon(Icons.arrow_back_ios,
                             color: Theme.of(context).accentColor),
                         onPressed: () {
@@ -442,7 +443,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       width: 145,
                       height: 39,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         shape: StadiumBorder(),
                         color: Color(0x0FF766FE0),
                         child: Text(
@@ -657,7 +658,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: emails
             .map(
-              (e) => FlatButton(
+              (e) => CustomTextButton(
                 child: Text(e),
                 onPressed: () {
                   emailId = e;
@@ -1102,7 +1103,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
+              CustomTextButton(
                 child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(context).pop();

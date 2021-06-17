@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class OneToManySpeakerTimeEntryComplete extends StatefulWidget {
   final RequestModel requestModel;
@@ -266,7 +267,7 @@ class OneToManySpeakerTimeEntryCompleteState
                         Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(5.0),
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 showDialog(
@@ -323,7 +324,7 @@ class OneToManySpeakerTimeEntryCompleteState
                         Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             onPressed: () {
                               ParticipantInfo sender = ParticipantInfo(
                                 id: SevaCore.of(context)

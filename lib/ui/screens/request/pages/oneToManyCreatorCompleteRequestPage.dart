@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
   final RequestModel requestModel;
@@ -372,7 +373,7 @@ class OneToManyCreatorCompleteRequestPageState
                         Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(5.0),
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             onPressed: () async {
                               showDialog(
                                   context: context,
@@ -382,7 +383,7 @@ class OneToManyCreatorCompleteRequestPageState
                                           .of(context)
                                           .oneToManyRequestCreatorCompletingRequestDialog),
                                       actions: <Widget>[
-                                        FlatButton(
+                                        CustomTextButton(
                                           color: Theme.of(context).primaryColor,
                                           child: Text(
                                             S.of(context).yes,
@@ -556,7 +557,7 @@ class OneToManyCreatorCompleteRequestPageState
                                             //Navigator.of(context).pop();
                                           },
                                         ),
-                                        FlatButton(
+                                        CustomTextButton(
                                           color: Theme.of(context).accentColor,
                                           child: Text(
                                             S.of(context).no,
@@ -586,7 +587,7 @@ class OneToManyCreatorCompleteRequestPageState
                         Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             onPressed: () {
                               UserModel loggedInUser =
                                   SevaCore.of(context).loggedInUser;
