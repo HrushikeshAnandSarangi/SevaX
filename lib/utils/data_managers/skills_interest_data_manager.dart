@@ -61,21 +61,11 @@ Future<Map<String, dynamic>> getUserSkillsInterests({
 
   skillsarr = [];
   interestsarr = [];
-  QuerySnapshot queryData1, queryData2;
   Map<String, dynamic> resultMap = HashMap();
 
   if (skillsIdList != null && skillsIdList.length != 0) {
     skillsarr = await SearchManager.getSkills(
         skillsList: skillsIdList, languageCode: languageCode);
-    //queryData1 = await Firestore.instance.collection('skills').getDocuments();
-//    queryData1.documents.forEach((docsnapshot) {
-//      if (skillsIdList.contains(docsnapshot.documentID)) {
-//        if (docsnapshot.data != null)
-//          skillsarr.add(docsnapshot.data[languageCode] != null
-//              ? docsnapshot.data[languageCode]
-//              : docsnapshot.data["name"]);
-//      }
-//    });
 
     resultMap["skills"] = skillsarr;
   }

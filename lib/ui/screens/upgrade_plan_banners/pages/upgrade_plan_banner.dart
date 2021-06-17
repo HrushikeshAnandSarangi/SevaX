@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -163,7 +162,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                         style: TextStyle(fontSize: 16),
                       )
                     : Text(
-                         L.of(context).upgrade_plan_disable_msg3,
+                        L.of(context).upgrade_plan_disable_msg3,
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16),
                       ),

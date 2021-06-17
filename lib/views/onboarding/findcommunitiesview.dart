@@ -61,7 +61,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       if (mounted) setState(() {});
     });
     super.initState();
-    String _searchText = "";
 
     final _textUpdates = StreamController<String>();
     searchTextController
@@ -70,14 +69,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
+        setState(() {});
       } else {
         communityBloc.fetchCommunities(s);
-        setState(() {
-          _searchText = s;
-        });
+        setState(() {});
       }
     });
   }
@@ -298,7 +293,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 borderSide: BorderSide(color: Colors.white),
                 borderRadius: BorderRadius.circular(25.7)),
             hintText: S.of(context).find_timebank_help_text,
-            hintStyle: TextStyle(color: Colors.black45, fontSize: 14), floatingLabelBehavior: FloatingLabelBehavior.never,
+            hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
+            floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
         ),
         SizedBox(height: 20),

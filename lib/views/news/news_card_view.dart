@@ -1538,7 +1538,7 @@ class _Annotator {
   List<_Annotation> _getSourceAnnotations(
       List<RegExpMatch> tags, String copiedText) {
     TextRange previousItem;
-    final result = List<_Annotation>();
+    final result = [];
     for (var tag in tags) {
       if (previousItem == null) {
         if (tag.start > 0) {

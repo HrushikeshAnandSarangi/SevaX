@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:sevaexchange/models/models.dart';
-
 class BasicUserDetails {
   String fullname;
   String email;

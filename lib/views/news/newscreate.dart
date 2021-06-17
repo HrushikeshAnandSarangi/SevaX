@@ -270,6 +270,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     return S.of(context).profanity_text_alert;
                                   }
                                   newsObject.subheading = value;
+                                  return null;
                                 },
                               ),
                             )),
@@ -452,7 +453,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         }
       }
       return;
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return;
     }
 

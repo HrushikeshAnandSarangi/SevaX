@@ -124,21 +124,6 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   Widget build(context) {
-    var temp = point;
-    var render;
-    if (temp != null) {
-      render = LocationConfimationCard(
-        locationDataModel: locationDataFromSearch.location == null
-            ? LocationDataModel(
-                address == null ? "" : address,
-                temp.latitude,
-                temp.longitude,
-              )
-            : locationDataFromSearch,
-      );
-    } else {
-      render = Text("");
-    }
     return Scaffold(
       appBar: AppBar(
         // iconTheme: IconThemeData(color: Colors.black),
@@ -308,9 +293,10 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          if(mounted)setState(() {
-            target = position.target;
-          });
+          if (mounted)
+            setState(() {
+              target = position.target;
+            });
         },
         onCameraIdle: () {
           _addMarker();

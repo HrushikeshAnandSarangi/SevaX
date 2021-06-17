@@ -90,7 +90,7 @@ class DonationBloc {
             notificationId, notify.email);
       }
       return true;
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       _errorMessage.add("net_error");
     }
     return false;
@@ -137,7 +137,7 @@ class DonationBloc {
               notificationId, donor.email);
         }
         return true;
-      } on Exception catch (e) {
+      } on Exception catch (_) {
         _errorMessage.add("net_error");
       }
     }
@@ -192,7 +192,7 @@ class DonationBloc {
       }
 
       return true;
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       _errorMessage.add('net_error');
     }
 

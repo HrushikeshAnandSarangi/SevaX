@@ -97,7 +97,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   void initState() {
     super.initState();
     timebankModel.preventAccedentalDelete = true;
-    var _searchText = "";
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
@@ -116,9 +115,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         .debounceTime(Duration(milliseconds: 600))
         .forEach((s) {
       if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
+        setState(() {});
       } else {
         duplicateGroupCheck = 'not_done';
         SearchManager.searchGroupForDuplicate(

@@ -29,7 +29,6 @@ class ManageTimebankSeva extends StatefulWidget {
 }
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
-  var _indextab = 0;
   String planId = "";
   CommunityModel communityModel = CommunityModel({});
   bool isSuperAdmin = false;

@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
@@ -16,13 +17,12 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-//import 'package:sevaexchange/utils/log_printer/log_printer.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class RequestsTabView extends StatelessWidget {
   final CommunityModel communityModel;
 
-  const RequestsTabView({Key key, @required this.communityModel}) : super(key: key);
+  const RequestsTabView({Key key, @required this.communityModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext mcontext) {

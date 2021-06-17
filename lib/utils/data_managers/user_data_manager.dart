@@ -332,7 +332,7 @@ Future<UserModel> getUserForEmail({
 }
 
 class UserModelListMoreStatus {
-  var userModelList = List<UserModel>();
+  var userModelList = [];
   bool lastPage = false;
 }
 

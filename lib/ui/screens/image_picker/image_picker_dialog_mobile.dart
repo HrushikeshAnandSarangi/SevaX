@@ -210,14 +210,16 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         title: S.of(context).camera,
         icon: Icons.add_circle_outline,
         onTap: () async {
-          var image = await ImagePicker.pickImage(source: ImageSource.camera);
-          String _extension = pathExt.extension(image.path).split('?').first;
+          final picker = ImagePicker();
+          final pickedFile = await picker.getImage(source: ImageSource.camera);
+          String _extension =
+              pathExt.extension(pickedFile.path).split('?').first;
 
           if (_extension == 'gif' || _extension == '.gif') {
             showProgressDialog(parentContext);
-            uploadImage(image);
+            uploadImage(File(pickedFile.path));
           } else {
-            cropImage(image);
+            cropImage(pickedFile.path);
           }
         });
   }
@@ -227,14 +229,16 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
         title: S.of(context).gallery,
         icon: Icons.add_circle_outline,
         onTap: () async {
-          var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-          String _extension = pathExt.extension(image.path).split('?').first;
+          final picker = ImagePicker();
+          final pickedFile = await picker.getImage(source: ImageSource.gallery);
+          String _extension =
+              pathExt.extension(pickedFile.path).split('?').first;
 
           if (_extension == 'gif' || _extension == '.gif') {
             showProgressDialog(parentContext);
-            uploadImage(image);
+            uploadImage(File(pickedFile.path));
           } else {
-            cropImage(image);
+            cropImage(pickedFile.path);
           }
         });
   }
@@ -351,9 +355,9 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
     return imageURL;
   }
 
-  Future cropImage(File image) async {
+  Future cropImage(String path) async {
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
+      sourcePath: path,
       ratioX: 1.0,
       ratioY: 1.0,
       maxWidth: 200,

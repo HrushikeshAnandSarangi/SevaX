@@ -48,17 +48,6 @@ class BorrowAgreementPdf {
 
     String borrowAgreementLinkFinal = '';
 
-    Widget _rowText(String text, String value) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(text),
-          SizedBox(width: 30),
-          Text(value),
-        ],
-      );
-    }
-
     pdf.addPage(
       MultiPage(
         pageFormat:

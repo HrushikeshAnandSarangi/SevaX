@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class OneToManyInstructorAcceptCard extends StatelessWidget {
@@ -163,7 +161,6 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
                     Container(
                       height: 32,
                       child: RaisedButton(
@@ -174,9 +171,7 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     SizedBox(width: 12),
-
                     Container(
                       height: 32,
                       child: RaisedButton(
@@ -192,7 +187,6 @@ class OneToManyInstructorAcceptCard extends StatelessWidget {
                 ),
 
                 SizedBox(height: 8),
-
               ],
             ),
             //onTap: () => onPressed != null ? onPressed() : null,

@@ -3069,32 +3069,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
   }
 
-  void _showProtectedTimebankMessage() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text(S.of(context).protected_timebank),
-          content: Text(S.of(context).protected_timebank_alert_dialog),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              textColor: Colors.red,
-              child: Text(
-                S.of(context).close,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _settingModalBottomSheet(context) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,

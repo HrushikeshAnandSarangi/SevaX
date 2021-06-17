@@ -1,10 +1,8 @@
 library intro_slider;
 
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
-
-
 
 class IntroSlider extends StatefulWidget {
   // final List<Widget> data;
@@ -102,7 +100,7 @@ class _IntroSliderState extends State<IntroSlider> {
                     child: Row(
                       children: [
                         Text(
-                         'skip',
+                          'skip',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,

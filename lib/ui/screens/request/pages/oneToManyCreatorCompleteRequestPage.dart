@@ -1,31 +1,20 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
   final RequestModel requestModel;
@@ -154,7 +143,9 @@ class OneToManyCreatorCompleteRequestPageState
                                                                 .selectedInstructor
                                                                 .fullname ==
                                                             null)
-                                                    ? L.of(context).name_not_available
+                                                    ? L
+                                                        .of(context)
+                                                        .name_not_available
                                                     : requestModel
                                                         .selectedInstructor
                                                         .fullname,
@@ -253,7 +244,7 @@ class OneToManyCreatorCompleteRequestPageState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                               L.of(context).attended_by,
+                                L.of(context).attended_by,
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w600),
                               ),

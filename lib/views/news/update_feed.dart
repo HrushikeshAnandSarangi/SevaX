@@ -214,6 +214,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     .validation_error_general_text;
                               }
                               newsObject.subheading = value;
+                              return null;
                             },
                           ),
                         ),

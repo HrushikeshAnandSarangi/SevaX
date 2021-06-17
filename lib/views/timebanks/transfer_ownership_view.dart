@@ -38,7 +38,6 @@ class TransferOwnerShipView extends StatefulWidget {
 class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   var groupMembersList = [];
   var ownerGroupsArr;
   UserModel selectedNewOwner = null;

@@ -18,15 +18,15 @@ class NewsImagePickerHandler {
 
   void openCamera() async {
     imagePicker.dismissDialog();
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.camera);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
     cropImage(pickedFile.path);
   }
 
   void openGallery() async {
     imagePicker.dismissDialog();
-    final pickedFile =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
     cropImage(pickedFile.path);
   }
 
@@ -45,7 +45,6 @@ class NewsImagePickerHandler {
     //List<File> _files;
     String _fileName;
     String _path;
-    Map<String, String> _paths;
 //    String _extension;
 //    bool _loadingPath = false;
 //    bool _multiPick = false;
@@ -67,7 +66,6 @@ class NewsImagePickerHandler {
 //      print("Unsupported operation" + e.toString());
 //    }
     try {
-      _paths = null;
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['pdf']);
     } on PlatformException catch (e) {

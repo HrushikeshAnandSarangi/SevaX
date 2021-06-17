@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
@@ -8,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
