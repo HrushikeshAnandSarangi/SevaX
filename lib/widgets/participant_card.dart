@@ -5,6 +5,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ParticipantCard extends StatelessWidget {
   final Padding padding;
@@ -209,7 +210,7 @@ class RequestParticipantCard extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: Container(
                           height: 30,
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             color: buttonColor,
                             child: Text(
                               buttonTitle,

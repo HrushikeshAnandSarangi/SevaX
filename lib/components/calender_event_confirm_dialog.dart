@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../flavor_config.dart';
 
@@ -20,12 +21,14 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(L.of(context).do_you_want_to_add + '$title ${isrequest ? 'request' : 'offer'}'+ L.of(context).event_to_calender),
+          Text(L.of(context).do_you_want_to_add +
+              '$title ${isrequest ? 'request' : 'offer'}' +
+              L.of(context).event_to_calender),
           SizedBox(height: 10),
           Row(
             children: <Widget>[
               Spacer(),
-              FlatButton(
+              CustomTextButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
@@ -35,7 +38,7 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
                 ),
                 onPressed: addToCalender,
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).no,
                   style: TextStyle(color: Colors.red, fontFamily: 'Europa'),

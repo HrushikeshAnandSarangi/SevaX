@@ -102,16 +102,22 @@ class _CombinedDateTimePickerState extends State<CombinedDateTimePicker> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FlatButton(
-                textColor: Theme.of(context).primaryColor,
-                child: Text('Cancel'),
+              TextButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 },
               ),
-              FlatButton(
-                textColor: Theme.of(context).primaryColor,
-                child: Text('OK'),
+              TextButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop(selectedDateTime);
                 },

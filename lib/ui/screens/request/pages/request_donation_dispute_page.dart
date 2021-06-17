@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -109,7 +110,7 @@ class _RequestDonationDisputePageState
           return AlertDialog(
             title: Text(S.of(context).enter_valid_amount),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -398,7 +399,7 @@ class _RequestDonationDisputePageState
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  RaisedButton(
+                  CustomElevatedButton(
                     child: Text(
                         widget.model.donationStatus == DonationStatus.REQUESTED
                             ? S.of(context).donate
@@ -406,7 +407,7 @@ class _RequestDonationDisputePageState
                     onPressed: () => actionExecute(_key),
                   ),
                   SizedBox(width: 12),
-                  RaisedButton(
+                  CustomElevatedButton(
                     child: Text(S.of(context).message),
                     color: Colors.orange,
                     textColor: Colors.white,

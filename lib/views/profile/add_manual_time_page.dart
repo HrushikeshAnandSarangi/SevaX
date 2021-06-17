@@ -205,7 +205,7 @@
 //       return Row(
 //           mainAxisAlignment: MainAxisAlignment.end,
 //           children: <Widget>[
-//               FlatButton(
+//               CustomTextButton(
 //                   child: Text(
 //                       S.of(context).add,
 //                       style:
@@ -225,7 +225,7 @@
 //                       _showAddManualTimeConfirmationDialog(context);
 //                   },
 //               ),
-//               FlatButton(
+//               CustomTextButton(
 //                   onPressed: () {
 //                       Navigator.pop(context);
 //                   },
@@ -257,7 +257,7 @@
 //                           Row(
 //                               children: <Widget>[
 //                                   Spacer(),
-//                                   RaisedButton(
+//                                   CustomElevatedButton(
 //                                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
 //                                       color: Theme.of(context).accentColor,
 //                                       textColor: FlavorConfig.values.buttonTextColor,
@@ -273,7 +273,7 @@
 //                                           await addManualTimeFunc();
 //                                       },
 //                                   ),
-//                                   FlatButton(
+//                                   CustomTextButton(
 //                                       child: Text(
 //                                           S.of(context).no,
 //                                           style: TextStyle(

@@ -1,21 +1,18 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/creatorApproveAcceptorAgreement.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestWidget extends StatelessWidget {
   final RequestModel model;
@@ -59,28 +56,28 @@ class TimebankRequestWidget extends StatelessWidget {
               photoUrl: user.photoURL,
               entityName: user.fullname,
               onPressed: () {
-                if(model.requestType == RequestType.BORROW) {
+                if (model.requestType == RequestType.BORROW) {
                   Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CreatorApproveAcceptorAgreeement(
-                          requestModel: model,
-                          timeBankId: model.timebankId,
-                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                          parentContext: context,
-                          acceptorUserModel: user,
-                          notificationId: notification.id,
-                          //onTap: () async {},
-                        ),
+                    MaterialPageRoute(
+                      builder: (context) => CreatorApproveAcceptorAgreeement(
+                        requestModel: model,
+                        timeBankId: model.timebankId,
+                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        parentContext: context,
+                        acceptorUserModel: user,
+                        notificationId: notification.id,
+                        //onTap: () async {},
                       ),
-                    );
+                    ),
+                  );
                 } else {
-                showDialogForApproval(
-                  context: context,
-                  userModel: user,
-                  notificationId: notification.id,
-                  requestModel: model,
-                );
-               }
+                  showDialogForApproval(
+                    context: context,
+                    userModel: user,
+                    notificationId: notification.id,
+                    requestModel: model,
+                  );
+                }
               },
             );
           },
@@ -162,7 +159,7 @@ class TimebankRequestWidget extends StatelessWidget {
                                 textAlign: TextAlign.center)),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           S.of(context).approve,
@@ -207,7 +204,7 @@ class TimebankRequestWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).decline,

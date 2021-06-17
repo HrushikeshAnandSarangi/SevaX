@@ -187,7 +187,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
               ),
               Container(
                 child: Center(
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     onPressed: () {
                       updateConfigurations().then(
                         (value) => Navigator.of(context).pop(),

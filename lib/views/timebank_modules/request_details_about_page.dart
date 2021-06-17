@@ -38,6 +38,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/approveBorrowRequest.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:sevaexchange/widgets/full_screen_widget.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -700,7 +701,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get acceptOneToManySpeakerRequest {
     return Container(
       width: MediaQuery.of(context).size.width * 0.25,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -730,7 +731,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   title:
                       Text(S.of(context).oneToManyRequestSpeakerAcceptRequest),
                   actions: <Widget>[
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).primaryColor,
                       child: Text(
                         S.of(context).yes,
@@ -744,7 +745,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         Navigator.of(context).pop();
                       },
                     ),
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).accentColor,
                       child: Text(
                         S.of(context).no,
@@ -781,7 +782,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get rejectOneToManySpeakerRequest {
     return Container(
       width: MediaQuery.of(context).size.width * 0.25,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -810,7 +811,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 return AlertDialog(
                   title: Text(S.of(context).speaker_reject_invite_dialog),
                   actions: <Widget>[
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).primaryColor,
                       child: Text(
                         S.of(context).yes,
@@ -824,7 +825,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         // await onDismissed();
                       },
                     ),
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).accentColor,
                       child: Text(
                         S.of(context).no,
@@ -845,7 +846,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get speakerWithdrawOneToManyRequest {
     return Container(
       width: MediaQuery.of(context).size.width * 0.25,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -875,7 +876,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   title:
                       Text(S.of(context).oneToManyRequestSpeakerWithdrawDialog),
                   actions: <Widget>[
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).primaryColor,
                       child: Text(
                         S.of(context).yes,
@@ -888,7 +889,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         // await onDismissed();
                       },
                     ),
-                    FlatButton(
+                    CustomTextButton(
                       color: Theme.of(context).accentColor,
                       child: Text(
                         S.of(context).no,
@@ -909,7 +910,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   Widget get speakerCompleteOneToManyRequest {
     return Container(
       width: MediaQuery.of(context).size.width * 0.29,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -955,7 +956,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           //       return AlertDialog(
           //         title: Text('Are you sure you want to complete the request?'),
           //         actions: <Widget>[
-          //           FlatButton(
+          //           CustomTextButton(
           //             color: Theme.of(context).primaryColor,
           //             child: Text(
           //               S.of(context).yes,
@@ -969,7 +970,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           //               // await onDismissed();
           //             },
           //           ),
-          //           FlatButton(
+          //           CustomTextButton(
           //             color: Theme.of(context).accentColor,
           //             child: Text(
           //               S.of(context).no,
@@ -1055,7 +1056,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       margin: EdgeInsets.only(right: 5),
       width: 100,
       height: 32,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -1115,7 +1116,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       margin: EdgeInsets.only(right: 5),
       width: 100,
       height: 32,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -1322,7 +1323,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     margin: EdgeInsets.only(right: 5),
                     width: 100,
                     height: 32,
-                    child: FlatButton(
+                    child: CustomTextButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -1396,7 +1397,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SizedBox(width: 5),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.29,
-                  child: FlatButton(
+                  child: CustomTextButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -1442,7 +1443,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       //       return AlertDialog(
                       //         title: Text('Are you sure you want to complete the request?'),
                       //         actions: <Widget>[
-                      //           FlatButton(
+                      //           CustomTextButton(
                       //             color: Theme.of(context).primaryColor,
                       //             child: Text(
                       //               S.of(context).yes,
@@ -1458,7 +1459,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       //               // await onDismissed();
                       //             },
                       //           ),
-                      //           FlatButton(
+                      //           CustomTextButton(
                       //             color: Theme.of(context).accentColor,
                       //             child: Text(
                       //               S.of(context).no,
@@ -1570,7 +1571,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           margin: EdgeInsets.only(right: 5),
           width: 100,
           height: 32,
-          child: FlatButton(
+          child: CustomTextButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -1602,7 +1603,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     return AlertDialog(
                       title: Text(S.of(context).reject_request_completion),
                       actions: <Widget>[
-                        FlatButton(
+                        CustomTextButton(
                           color: Theme.of(context).primaryColor,
                           child: Text(
                             S.of(context).yes,
@@ -1618,7 +1619,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 .then((e) => Navigator.of(context).pop());
                           },
                         ),
-                        FlatButton(
+                        CustomTextButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
                             S.of(context).no,
@@ -1648,7 +1649,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           margin: EdgeInsets.only(right: 5),
           width: 100,
           height: 32,
-          child: FlatButton(
+          child: CustomTextButton(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -1783,7 +1784,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       margin: EdgeInsets.only(right: 5),
       width: 100,
       height: 32,
-      child: FlatButton(
+      child: CustomTextButton(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -1827,7 +1828,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         actionType: 'accept_requests',
         role: memberType(
             widget.timebankModel, SevaCore.of(context).loggedInUser.sevaUserID),
-        child: FlatButton(
+        child: CustomTextButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -2526,7 +2527,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       width: 90,
       child: widget.requestItem.sevaUserId ==
               SevaCore.of(context).loggedInUser.sevaUserID
-          ? FlatButton(
+          ? CustomTextButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -2888,7 +2889,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 //                margin: EdgeInsets.only(right: 5),
 //                width: 100,
 //                height: 32,
-//                child: FlatButton(
+//                child: CustomTextButton(
 //                  shape: RoundedRectangleBorder(
 //                    borderRadius: BorderRadius.circular(20),
 //                  ),
@@ -2944,14 +2945,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             S.of(context).delete_request_confirmation,
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               onPressed: () => {Navigator.of(dialogContext).pop()},
               child: Text(
                 S.of(context).cancel,
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
             ),
-            FlatButton(
+            CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -3056,7 +3057,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           content: Text(S.of(context).protected_timebank_alert_dialog),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               textColor: Colors.red,
               child: Text(
                 S.of(context).close,
@@ -3205,7 +3206,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(
@@ -3234,7 +3235,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             content: Text(S.of(context).withdraw_request_failure),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
+              CustomTextButton(
                 child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(context).pop();

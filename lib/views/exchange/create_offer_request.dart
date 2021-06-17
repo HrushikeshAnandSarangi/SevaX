@@ -25,6 +25,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class CreateOfferRequest extends StatefulWidget {
@@ -132,7 +133,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: Center(
                               child: Container(
-                                child: RaisedButton(
+                                child: CustomElevatedButton(
                                   onPressed: createRequest,
                                   child: Text(
                                     S
@@ -443,7 +444,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           return AlertDialog(
             title: Text(S.of(context).insufficient_credits_for_request),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -466,7 +467,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

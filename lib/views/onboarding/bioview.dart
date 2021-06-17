@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 typedef StringCallback = void Function(String bio);
 
@@ -132,7 +133,7 @@ class _BioViewState extends State<BioView> {
                 ),
                 SizedBox(
                   width: 134,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         widget.onSave(bio);
@@ -147,7 +148,7 @@ class _BioViewState extends State<BioView> {
                     // shape: StadiumBorder(),
                   ),
                 ),
-                FlatButton(
+                CustomTextButton(
                   onPressed: () {
                     widget.onSkipped();
                   },

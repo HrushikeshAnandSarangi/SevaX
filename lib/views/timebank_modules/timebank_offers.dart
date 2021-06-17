@@ -53,7 +53,7 @@
 //                       children: [
 //                         Container(
 //                           padding: EdgeInsets.only(right: 10),
-//                           child: FlatButton(
+//                           child: CustomTextButton(
 //                             onPressed: () {},
 //                             child: Text(
 //                               S.of(context).my_offers,

@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 extension ConfigurationCheckExtension on ConfigurationCheck {
   static String getIndividualOffertype(RequestType individualOfferType) {
@@ -98,7 +99,7 @@ Widget permissionsAlertDialog(BuildContext context) {
     content: Text(
         "This action is restricted for you by the owner of this Seva Community."),
     actions: [
-      FlatButton(
+      CustomTextButton(
         onPressed: () => Navigator.of(context).pop(),
         child: Text(
           S.of(context).ok,

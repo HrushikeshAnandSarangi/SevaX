@@ -1,10 +1,8 @@
 library intro_slider;
 
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
-
-
 
 class IntroSlider extends StatefulWidget {
   // final List<Widget> data;
@@ -96,13 +94,12 @@ class _IntroSliderState extends State<IntroSlider> {
               padding: const EdgeInsets.only(left: 0, bottom: 8),
               child: Row(
                 children: [
-                  FlatButton(
-                    color: Colors.transparent,
+                  TextButton(
                     onPressed: widget.onSkip,
                     child: Row(
                       children: [
                         Text(
-                         'skip',
+                          'skip',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -144,8 +141,7 @@ class _IntroSliderState extends State<IntroSlider> {
                   ),
                   Spacer(),
                   reachedEnd
-                      ? FlatButton(
-                          color: Colors.transparent,
+                      ? TextButton(
                           onPressed: widget.onSkip,
                           child: Row(
                             children: [
@@ -165,8 +161,7 @@ class _IntroSliderState extends State<IntroSlider> {
                             ],
                           ),
                         )
-                      : FlatButton(
-                          color: Colors.transparent,
+                      : TextButton(
                           onPressed: () {
                             _controller.animateToPage(
                                 _controller.page.toInt() + 1,

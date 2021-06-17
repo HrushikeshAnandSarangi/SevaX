@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:path/path.dart' as pathExt;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
@@ -12,12 +13,11 @@ import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_s
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../globals.dart' as globals;
 import 'news_image_picker_handler.dart';
-
-import 'package:path/path.dart' as pathExt;
 
 class NewsImage extends StatefulWidget {
   final String photoCredits;
@@ -166,7 +166,7 @@ class NewsImageState extends State<NewsImage>
           content: Text(S.of(context).validation_error_file_size),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -370,7 +370,7 @@ class NewsImageState extends State<NewsImage>
                           ),
                         ),
                 ),
-          FlatButton.icon(
+          CustomTextButton.icon(
             icon: Icon(Icons.attachment),
             color: Colors.grey[200],
             label: Padding(

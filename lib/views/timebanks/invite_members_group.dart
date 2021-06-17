@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 
@@ -291,7 +292,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         onPressed: null,
                         child: Text(JOINED,
                             style: TextStyle(fontFamily: 'Europa')),
@@ -406,7 +407,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteStatus groupInviteStatus}) {
     if (groupInviteStatus == GroupInviteStatus.INVITED ||
         groupInviteStatus == GroupInviteStatus.DECLINED) {
-      return RaisedButton(
+      return CustomElevatedButton(
         onPressed: () {
           if (groupInviteStatus == GroupInviteStatus.INVITED) {
             setState(() {
@@ -429,7 +430,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         shape: StadiumBorder(),
       );
     } else {
-      return RaisedButton(
+      return CustomElevatedButton(
         onPressed: () {
           setState(() {
             sendInvitationNotification(userModel: user);
@@ -461,7 +462,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 
   Widget gettigStatus() {
-    return RaisedButton(
+    return CustomElevatedButton(
       onPressed: null,
       child: Text('...'),
       color: Colors.indigo,

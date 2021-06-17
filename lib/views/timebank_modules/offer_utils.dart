@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/svea_credits_manager.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -132,7 +133,7 @@ Future<void> deleteOffer({
           S.of(context).delete_offer_confirmation,
         ),
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
             },
@@ -141,7 +142,7 @@ Future<void> deleteOffer({
               style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
             ),
           ),
-          FlatButton(
+          CustomTextButton(
             padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
             color: Theme.of(context).accentColor,
             textColor: FlavorConfig.values.buttonTextColor,

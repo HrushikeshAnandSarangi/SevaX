@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/intro_slider.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -27,7 +28,7 @@ class AboutApp extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-              child: Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -68,8 +69,8 @@ class AboutApp extends StatelessWidget {
                 navigateToWebView(
                   aboutMode: AboutMode(
                       title: S.of(context).help,
-                      urlToHit:
-                          AppConfig.remoteConfig.getString('help_videos_admin')),
+                      urlToHit: AppConfig.remoteConfig
+                          .getString('help_videos_admin')),
                   context: context,
                 );
               },
@@ -87,7 +88,7 @@ class AboutApp extends StatelessWidget {
                 'Glossaries',
                 'glossariesLink',
               ),
-             'Glossaries',
+              'Glossaries',
             ),
             getHelpButton(
               context,
@@ -145,7 +146,6 @@ class AboutApp extends StatelessWidget {
         context: context,
       );
     };
-
   }
 
   Widget getHelpButton(BuildContext context, Function onTap, String title) {
@@ -219,7 +219,7 @@ class AboutApp extends StatelessWidget {
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
+              CustomTextButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
@@ -249,7 +249,7 @@ class AboutApp extends StatelessWidget {
                   }
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).close,
                   style: TextStyle(

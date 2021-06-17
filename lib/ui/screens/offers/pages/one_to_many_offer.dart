@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -411,7 +412,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             upgradeDetails: AppConfig
                                 .upgradePlanBannerModel.onetomany_offers,
                             transaction_matrix_type: "onetomany_offers",
-                            child: RaisedButton(
+                            child: CustomElevatedButton(
                               onPressed: status.data == Status.LOADING
                                   ? () {}
                                   : () async {
@@ -472,7 +473,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                               .of(context)
                                                               .this_is_repeating_event),
                                                           actions: [
-                                                            FlatButton(
+                                                            CustomTextButton(
                                                               child: Text(
                                                                 S
                                                                     .of(context)
@@ -502,7 +503,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                                     context);
                                                               },
                                                             ),
-                                                            FlatButton(
+                                                            CustomTextButton(
                                                               child: Text(
                                                                 S
                                                                     .of(context)
@@ -533,7 +534,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                                                     context);
                                                               },
                                                             ),
-                                                            FlatButton(
+                                                            CustomTextButton(
                                                               child: Text(
                                                                 S
                                                                     .of(context)

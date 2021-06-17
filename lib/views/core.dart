@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SevaCore extends InheritedWidget {
   UserModel loggedInUser;
@@ -37,7 +38,7 @@ class SevaCore extends InheritedWidget {
     return false;
   }
 
-  Future<Widget>  errorDialogueBox (BuildContext context)async {
+  Future<Widget> errorDialogueBox(BuildContext context) async {
     var status = await _checkInternet;
     if (status) {
       return null;
@@ -63,7 +64,7 @@ class SevaCore extends InheritedWidget {
           ),
           SizedBox(height: 10),
           SizedBox(width: 10),
-          FlatButton(
+          CustomTextButton(
             color: Colors.yellow,
             child: Text(
               S.of(context).ok,

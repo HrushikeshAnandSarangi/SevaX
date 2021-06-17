@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class TimebankRequestCompletedWidget extends StatelessWidget {
   final NotificationsModel notification;
@@ -175,7 +176,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
                             S.of(context).review,
@@ -202,7 +203,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       ),
                       Container(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
                             S.of(context).close,
@@ -303,7 +304,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
                             S.of(context).approve,
@@ -330,7 +331,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       ),
                       Container(
                         width: double.infinity,
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
                             S.of(context).reject,

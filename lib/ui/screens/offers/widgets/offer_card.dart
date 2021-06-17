@@ -4,11 +4,9 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 
@@ -97,7 +95,8 @@ class OfferCard extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TagView(
-                                tagTitle: offerType.readbable(requestType, context),
+                                tagTitle:
+                                    offerType.readbable(requestType, context),
                               ),
                             ),
                             Visibility(
@@ -175,7 +174,7 @@ class OfferCard extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              FlatButton(
+                              CustomTextButton(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),

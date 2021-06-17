@@ -16,6 +16,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
 import 'package:sevaexchange/ui/utils/location_helper.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'get_location.dart';
 
@@ -255,7 +256,7 @@ class _LocationPickerState extends State<LocationPicker> {
           content: Text(
               '${FlavorConfig.values.appName} requires permission to access your location.'),
           actions: <Widget>[
-            RaisedButton(
+            CustomElevatedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               child: Text(
@@ -269,7 +270,7 @@ class _LocationPickerState extends State<LocationPicker> {
                 AppSettings.openAppSettings();
               },
             ),
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).cancel,
                 style: TextStyle(

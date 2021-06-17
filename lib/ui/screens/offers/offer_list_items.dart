@@ -24,6 +24,7 @@ import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -404,7 +405,7 @@ class OfferListItems extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
 //                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         child: Text(
                           S.of(context).do_it_later,

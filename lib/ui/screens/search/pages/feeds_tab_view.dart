@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -181,7 +182,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
             title: Text(S.of(context).already_reported),
             content: Text(S.of(context).feed_reported),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -207,7 +208,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
             ),
             content: Text(S.of(context).report_feed_confirmation_message),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(mContext).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
@@ -234,7 +235,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                   setState(() {});
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(color: Colors.red),

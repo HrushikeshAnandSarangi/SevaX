@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../flavor_config.dart';
@@ -243,7 +244,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                   ),
                   Container(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: CustomTextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -278,7 +279,7 @@ class AddToCalendarState extends State<AddToCalendar> {
         child: Row(
           children: [
             icon,
-            FlatButton(
+            CustomTextButton(
               onPressed: () => onPressed(),
               child: Text(
                 title,

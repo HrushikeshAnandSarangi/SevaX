@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
@@ -30,6 +29,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -593,7 +593,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 ),
               ),
               // Center(
-              //   child: FlatButton.icon(
+              //   child: CustomTextButton.icon(
               //     icon: Icon(Icons.add_location),
               //     label: Container(
               //       child: Text(
@@ -741,7 +741,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
                   alignment: Alignment.center,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {
@@ -972,7 +972,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -1126,7 +1126,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      FlatButton(
+                      CustomTextButton(
                         onPressed: () {
                           Navigator.pop(viewContext);
                         },
@@ -1138,7 +1138,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         ),
                         textColor: Colors.grey,
                       ),
-                      FlatButton(
+                      CustomTextButton(
                         child: Text(S.of(context).save,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,

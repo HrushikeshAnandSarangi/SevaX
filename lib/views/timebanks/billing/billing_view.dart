@@ -166,7 +166,7 @@
 //           content: Text(S.of(context).ownership_success),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).ok),
 //               onPressed: () {
 //                 resetAndLoad();
@@ -385,7 +385,7 @@
 //           content: Text(S.of(context).already_default_card),
 //           actions: <Widget>[
 //             // usually buttons at the bottom of the dialog
-//             FlatButton(
+//             CustomTextButton(
 //               child: Text(S.of(context).close),
 //               onPressed: () {
 //                 Navigator.of(_context).pop();
@@ -411,7 +411,7 @@
 //               Row(
 //                 mainAxisAlignment: MainAxisAlignment.center,
 //                 children: <Widget>[
-//                   RaisedButton(
+//                   CustomElevatedButton(
 //                     child: Text(S.of(context).confirm),
 //                     onPressed: () {
 //                       //showProgressDialog('Adding default card');
@@ -425,7 +425,7 @@
 //                     },
 //                   ),
 //                   SizedBox(width: 10),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     color: Colors.white,
 //                     child: Text(S.of(context).cancel),
 //                     onPressed: () {
@@ -487,7 +487,7 @@
 //                   children: [
 //                     Text(S.of(context).general_stream_error),
 //                     SizedBox(height: 12),
-//                     RaisedButton(
+//                     CustomElevatedButton(
 //                       child: Text(S.of(context).ok),
 //                       onPressed: () {
 //                         Navigator.of(context).pop();

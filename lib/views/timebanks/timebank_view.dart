@@ -167,7 +167,7 @@
 //                            ? Offstage()
 //                            : timebankModel.members.contains(loggedInUser)
 //                                ? Offstage()
-//                                : FlatButton(
+//                                : CustomTextButton(
 //                                    child: Text(
 //                                        'Request to join this ${FlavorConfig.values.timebankTitle}'),
 //                                    textColor: Theme.of(context).accentColor,
@@ -220,7 +220,7 @@
 //                                                SizedBox(
 //                                                  height: 15,
 //                                                ),
-//                                                FlatButton(
+//                                                CustomTextButton(
 //                                                  padding: EdgeInsets.fromLTRB(
 //                                                      10, 5, 5, 5),
 //                                                  color: Theme.of(context)
@@ -322,7 +322,7 @@
 //                                                    }
 //                                                  },
 //                                                ),
-//                                                FlatButton(
+//                                                CustomTextButton(
 //                                                  child: Text(
 //                                                    "Cancel",
 //                                                    style: TextStyle(
@@ -344,7 +344,7 @@
 //                        timebankModel.admins.contains(loggedInUser) ||
 //                                widget.superAdminTimebankModel.admins
 //                                    .contains(loggedInUser)
-//                            ? FlatButton(
+//                            ? CustomTextButton(
 //                                child: Text(
 //                                  'Edit $timebankName',
 //                                  style: TextStyle(fontWeight: FontWeight.bold),
@@ -365,7 +365,7 @@
 //                            : Offstage(),
 //                        !timebankModel.members.contains(loggedInUser)
 //                            ? Offstage()
-//                            : FlatButton(
+//                            : CustomTextButton(
 //                                onPressed: () {
 //                                  Navigator.push(
 //                                    context,
@@ -378,7 +378,7 @@
 //                              ),
 //                        !timebankModel.members.contains(loggedInUser)
 //                            ? Offstage()
-//                            : FlatButton(
+//                            : CustomTextButton(
 //                                child: Text(
 //                                  'View Members',
 //                                  style: TextStyle(
@@ -488,7 +488,7 @@
 //                        ),
 //                        Padding(
 //                          padding: EdgeInsets.only(left: 3.0),
-//                          child: FlatButton(
+//                          child: CustomTextButton(
 //                            child: Text(
 //                              '${timebankModel.phoneNumber}',
 //                              style: TextStyle(
@@ -513,7 +513,7 @@
 //                        ),
 //                        Padding(
 //                          padding: EdgeInsets.only(left: 3.0),
-//                          child: FlatButton(
+//                          child: CustomTextButton(
 //                            child: Text(
 //                              '${timebankModel.emailId}',
 //                              style: TextStyle(
@@ -611,7 +611,7 @@
 //  Widget _showManageMembersButton(BuildContext context) {
 //    assert(timebankModel.id != null);
 //    if (timebankModel.admins.contains(UserData.shared.user.sevaUserID)) {
-//      return FlatButton(
+//      return CustomTextButton(
 //        onPressed: () {
 //          Navigator.push(
 //            context,
@@ -640,7 +640,7 @@
 //    timebankModel.members.forEach(
 //      (member) {
 //        list.add(
-//          FlatButton(
+//          CustomTextButton(
 //            onPressed: () {
 //              Navigator.of(context).push(
 //                MaterialPageRoute(

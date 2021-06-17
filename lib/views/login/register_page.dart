@@ -38,6 +38,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../globals.dart' as globals;
 import '../image_picker_handler.dart';
@@ -594,7 +595,7 @@ class _RegisterPageState extends State<RegisterPage>
     return SizedBox(
       height: 39,
       width: 134,
-      child: RaisedButton(
+      child: CustomElevatedButton(
         onPressed: isLoading
             ? null
             : () async {
@@ -630,7 +631,7 @@ class _RegisterPageState extends State<RegisterPage>
                           title: Text(S.of(context).add_photo),
                           content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               child: Text(
                                 S.of(context).skip_and_register,
                                 style: TextStyle(
@@ -651,7 +652,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 isLoading = false;
                               },
                             ),
-                            FlatButton(
+                            CustomTextButton(
                               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                               color: Theme.of(context).accentColor,
                               textColor: FlavorConfig.values.buttonTextColor,

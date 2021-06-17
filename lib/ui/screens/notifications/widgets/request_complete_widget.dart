@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class RequestCompleteWidget extends StatelessWidget {
   final RequestModel model;
@@ -139,7 +140,7 @@ class RequestCompleteWidget extends StatelessWidget {
         return AlertDialog(
           title: Text(dialogText),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).ok,
                 style: TextStyle(
@@ -228,7 +229,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         child: Text(
                           S.of(context).approve,
                           style: TextStyle(color: Colors.white),
@@ -248,7 +249,7 @@ class RequestCompleteWidget extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
                           S.of(context).reject,

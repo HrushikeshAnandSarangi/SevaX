@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
@@ -175,7 +176,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -200,7 +201,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       _signOut(context);
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
@@ -307,7 +308,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         // This container holds the align
         widget.isFromHome ? Container() : createCommunity(),
-        FlatButton(
+        CustomTextButton(
           onPressed: () async {
             await CollectionRef.users.doc(widget.loggedInUser.email).update(
               {
@@ -415,7 +416,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         },
       ),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        RaisedButton(
+        CustomElevatedButton(
           onPressed: communityModel.id !=
                   SevaCore.of(context).loggedInUser.currentCommunity
               ? () {
@@ -581,7 +582,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         child: Container(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              CustomElevatedButton(
                 child: Text(
                   S.of(context).create_timebank,
                   style: Theme.of(context).primaryTextTheme.button,
@@ -645,7 +646,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
@@ -656,7 +657,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   Navigator.of(viewContext).pop({'PROCEED': false});
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(

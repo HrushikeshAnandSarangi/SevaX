@@ -27,6 +27,7 @@ import 'package:sevaexchange/utils/svea_credits_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -370,7 +371,7 @@ class _RequestAcceptedSpendingViewOneToManyState
               trailing: Container(
                 height: 40,
                 padding: EdgeInsets.only(bottom: 10),
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   shape: StadiumBorder(),
                   color: Colors.indigo,
                   textColor: Colors.white,
@@ -521,7 +522,7 @@ class _RequestAcceptedSpendingViewOneToManyState
           return AlertDialog(
             title: Text(dialogText),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -611,7 +612,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                       children: <Widget>[
                         Container(
                           width: double.infinity,
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             color: FlavorConfig.values.theme.primaryColor,
                             child: Text(
                               S.of(context).approve,
@@ -650,7 +651,7 @@ class _RequestAcceptedSpendingViewOneToManyState
                         ),
                         Container(
                           width: double.infinity,
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             color: Theme.of(context).accentColor,
                             child: Text(
                               S.of(context).reject,

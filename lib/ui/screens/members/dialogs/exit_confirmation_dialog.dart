@@ -54,7 +54,7 @@ Future exitTimebankOrGroup({
             Row(
               children: <Widget>[
                 Spacer(),
-                FlatButton(
+                CustomTextButton(
                   padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                   color: Theme.of(context).accentColor,
                   textColor: FlavorConfig.values.buttonTextColor,
@@ -71,7 +71,7 @@ Future exitTimebankOrGroup({
                     }
                   },
                 ),
-                FlatButton(
+                CustomTextButton(
                   child: Text(
                     S.of(context).cancel,
                     style: TextStyle(

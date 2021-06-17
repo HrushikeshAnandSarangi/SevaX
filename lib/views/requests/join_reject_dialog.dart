@@ -11,6 +11,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class JoinRejectDialogView extends StatefulWidget {
   final RequestInvitationModel requestInvitationModel;
@@ -104,7 +105,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).accept,
@@ -181,7 +182,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                 ),
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
                       S.of(context).decline,

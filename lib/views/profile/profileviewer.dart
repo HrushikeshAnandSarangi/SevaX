@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 //TODO update bio and remove un-necessary stuff
@@ -544,7 +545,7 @@ class ProfileViewerState extends State<ProfileViewer> {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  FlatButton(
+                  CustomTextButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -559,7 +560,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                           : Navigator.of(context).pop("BLOCK");
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(

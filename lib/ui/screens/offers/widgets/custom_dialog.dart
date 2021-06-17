@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 Future<void> errorDialog({BuildContext context, String error}) async {
   await showDialog(
@@ -10,7 +11,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
         ),
         title: Text(error),
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             child: Text(
               'OK',
               style: TextStyle(
@@ -39,7 +40,7 @@ Future<bool> confirmationDialog(
         ),
         title: Text(title),
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             child: Text(
               'Cancel',
               style: TextStyle(
@@ -50,7 +51,7 @@ Future<bool> confirmationDialog(
               Navigator.of(viewContext).pop();
             },
           ),
-          FlatButton(
+          CustomTextButton(
             color: Theme.of(context).primaryColor,
             child: Text(
               'OK',

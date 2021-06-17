@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
@@ -10,6 +9,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ProjectTemplateView extends StatefulWidget {
   final bool isCreateProject;
@@ -84,7 +84,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
         ),
         centerTitle: true,
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             onPressed: () {
               if (isProjectTemplateSelected &&
                   selectedProjectTemplate == null) {
@@ -306,7 +306,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           content: Text(S.of(context).select_template),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();

@@ -64,6 +64,7 @@ import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -1291,7 +1292,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                     const EdgeInsets.symmetric(vertical: 30.0),
                                 child: Center(
                                   child: Container(
-                                    child: RaisedButton(
+                                    child: CustomElevatedButton(
                                       onPressed: createRequest,
                                       child: Text(
                                         S
@@ -3599,7 +3600,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 .insufficientSevaCreditsDialog
                 .replaceFirst('***', credits.toString())),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -3622,7 +3623,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(
@@ -3657,7 +3658,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
-      child: RaisedButton(
+      child: CustomElevatedButton(
         child: Text(selectedUsers != null && selectedUsers.length > 0
             ? "${selectedUsers.length} ${S.of(context).members_selected(selectedUsers.length)}"
             : memberAssignment),
@@ -3811,7 +3812,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).cancel,
                   style: TextStyle(
@@ -3822,7 +3823,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   Navigator.of(viewContext).pop({'PROCEED': false});
                 },
               ),
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).proceed,
                   style: TextStyle(

@@ -468,7 +468,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${S.of(context).clear_transaction}"),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
@@ -536,7 +536,7 @@ class MemberSectionBuilder extends StatelessWidget {
                   "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).cancel),
                   textColor: Colors.red,
                   onPressed: () {
@@ -557,7 +557,7 @@ class MemberSectionBuilder extends StatelessWidget {
               content: Text(S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {

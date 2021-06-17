@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../flavor_config.dart';
 
@@ -131,7 +132,7 @@ Future<bool> showAdvisoryBeforeDeletion({
               ),
             )),
         actions: <Widget>[
-          RaisedButton(
+          CustomElevatedButton(
             onPressed: () {
               Navigator.pop(contextDialog);
             },
@@ -139,7 +140,7 @@ Future<bool> showAdvisoryBeforeDeletion({
               S.of(context).cancel,
             ),
           ),
-          FlatButton(
+          CustomTextButton(
             color: Colors.white,
             onPressed: () async {
               if (!_formKey.currentState.validate()) {
@@ -294,7 +295,7 @@ Future<bool> _showAccedentalDeleteConfirmation({
               ),
         ),
         actions: <Widget>[
-          RaisedButton(
+          CustomElevatedButton(
             onPressed: () {
               Navigator.pop(accedentalDialogContext);
               return true;
@@ -321,7 +322,7 @@ Future<bool> _showRequestProcessingWithStatus({BuildContext context}) {
           S.of(context).deletion_request_progress_description,
         ),
         actions: <Widget>[
-          RaisedButton(
+          CustomElevatedButton(
             onPressed: () {
               Navigator.pop(_showRequestProcessingWithStatusContext);
               return true;
@@ -399,7 +400,7 @@ Future<bool> showFinalResultConfirmation(
               : S.of(context).request_failure_message,
         ),
         actions: <Widget>[
-          RaisedButton(
+          CustomElevatedButton(
             onPressed: () async {
               await Future.delayed(Duration(milliseconds: 800), () {
                 Navigator.pop(context);
@@ -449,7 +450,7 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
             S.of(context).profanity_image_alert + ' ' + content,
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -481,7 +482,7 @@ Future<void> showFailedLoadImage({
             S.of(context).failed_load_image,
           ),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,

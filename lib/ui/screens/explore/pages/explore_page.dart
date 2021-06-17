@@ -36,6 +36,7 @@ import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 import '../../../../l10n/l10n.dart';
@@ -155,7 +156,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             child: Container(
                               width: 120,
                               height: 32,
-                              child: RaisedButton(
+                              child: CustomElevatedButton(
                                 padding: EdgeInsets.only(left: 8, right: 8),
                                 color: Color.fromRGBO(245, 166, 35, 1),
                                 child: Text(

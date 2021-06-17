@@ -65,7 +65,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                               model: userSnapshot.data,
                             ),
                           ),
-                          RaisedButton(
+                          CustomElevatedButton(
                             child: Text(S.of(context).approve),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
@@ -103,7 +103,7 @@ class JoinRequestSectionBuilder extends StatelessWidget {
                             },
                           ),
                           SizedBox(width: 12),
-                          RaisedButton(
+                          CustomElevatedButton(
                             child: Text(S.of(context).reject),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),

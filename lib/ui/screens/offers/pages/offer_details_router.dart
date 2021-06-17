@@ -101,13 +101,13 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 //              title: Text(S.of(context).cancel_offer),
 //              content: Text(S.of(context).cancel_offer_confirmation),
 //              actions: [
-//                FlatButton(
+//                CustomTextButton(
 //                  child: Text(S.of(context).close),
 //                  onPressed: () {
 //                    ExtendedNavigator.of(context).pop();
 //                  },
 //                ),
-//                FlatButton(
+//                CustomTextButton(
 //                  child: Text(S.of(context).cancel_offer),
 //                  onPressed: () async {
 //                    await CollectionRef

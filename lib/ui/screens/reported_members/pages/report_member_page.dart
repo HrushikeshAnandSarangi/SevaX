@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class ReportMemberPage extends StatefulWidget {
@@ -205,7 +206,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
               builder: (context, snapshot) {
                 bool isEnabled =
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
-                return RaisedButton(
+                return CustomElevatedButton(
                   child: Text(
                     S.of(context).report,
                   ),

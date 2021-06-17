@@ -76,7 +76,7 @@
 //              children: <Widget>[
 //                Container(
 //                  width: double.infinity,
-//                  child: RaisedButton(
+//                  child: CustomElevatedButton(
 //                    color: FlavorConfig.values.theme.primaryColor,
 //                    child: Text(
 //                      'Ok',

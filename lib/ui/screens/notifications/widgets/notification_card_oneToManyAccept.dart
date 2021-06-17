@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class NotificationCardOneToManyAccept extends StatelessWidget {
@@ -59,14 +60,14 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                             S.of(context).delete_notification_confirmation,
                           ),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () =>
                                   {Navigator.of(dialogContext).pop()},
                               child: Text(
                                 S.of(context).cancel,
                               ),
                             ),
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () async {
                                 onDismissed();
                                 Navigator.of(dialogContext).pop();
@@ -139,7 +140,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.19),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
@@ -156,7 +157,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                   SizedBox(width: 12),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: FlavorConfig.values.theme.accentColor,
                       child: Text(

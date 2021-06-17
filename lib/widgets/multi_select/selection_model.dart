@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class SelectionModal extends StatefulWidget {
   @override
@@ -187,7 +188,7 @@ class _SelectionModalState extends State<SelectionModal> {
                 alignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  RaisedButton(
+                  CustomElevatedButton(
                     onPressed: () {
                       Navigator.pop(context, null);
                     },
@@ -196,7 +197,7 @@ class _SelectionModalState extends State<SelectionModal> {
                       style: Theme.of(context).primaryTextTheme.button,
                     ),
                   ),
-                  RaisedButton.icon(
+                  CustomElevatedButton.icon(
                     icon: Icon(
                       widget.saveButtonIcon ?? Icons.save,
                       size: 20.0,

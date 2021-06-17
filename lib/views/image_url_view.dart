@@ -10,6 +10,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../flavor_config.dart';
 
@@ -64,7 +65,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             onPressed: () {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
@@ -243,7 +244,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           content: Text(S.of(context).image_url_alert_desc),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,

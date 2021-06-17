@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class CreateGroupPage extends StatelessWidget {
@@ -36,7 +37,7 @@ class CreateGroupPage extends StatelessWidget {
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
-          FlatButton(
+          CustomTextButton(
             child: Text(
               S.of(context).create,
               style: TextStyle(fontSize: 16, color: Colors.white),
@@ -141,14 +142,11 @@ class CreateGroupPage extends StatelessWidget {
                           // );
 
                           return CustomTextField(
-                            value: snapshot.data != null
-                                    ? snapshot.data
-                                    : null,
-                                controller: _controller,
-                                onChanged: bloc.onGroupNameChanged, 
-                                decoration: InputDecoration(
+                            value: snapshot.data != null ? snapshot.data : null,
+                            controller: _controller,
+                            onChanged: bloc.onGroupNameChanged,
+                            decoration: InputDecoration(
                               errorMaxLines: 2,
-                              
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -162,9 +160,8 @@ class CreateGroupPage extends StatelessWidget {
                                 fontSize: 18,
                                 color: Colors.grey,
                               ),
-                            ),   
+                            ),
                           );
-                          
                         },
                       ),
                       Divider(),

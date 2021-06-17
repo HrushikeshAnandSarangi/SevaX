@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
@@ -1294,7 +1295,7 @@ class _DonationViewState extends State<DonationView> {
       padding: const EdgeInsets.only(top: 5),
       child: Container(
         height: 30,
-        child: RaisedButton(
+        child: CustomElevatedButton(
           textColor: textColor ?? Colors.white,
           onPressed: onPressed,
           child: Text(
@@ -1344,7 +1345,7 @@ class _DonationViewState extends State<DonationView> {
               data),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.of(context).pop();

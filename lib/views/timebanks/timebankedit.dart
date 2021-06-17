@@ -115,7 +115,7 @@
 //                  Padding(
 //                    padding: const EdgeInsets.symmetric(vertical: 5.0),
 //                    child: Container(
-//                        child: FlatButton(
+//                        child: CustomTextButton(
 //                      // color: Colors.blue,
 //                      onPressed: () {
 //                        // Validate will return true if the form is valid, or false if
@@ -285,7 +285,7 @@
 //              // Text(sevaUserID),
 //              Padding(
 //                  padding: EdgeInsets.only(top: 8.0),
-//                  child: FlatButton(
+//                  child: CustomTextButton(
 //                    onPressed: () {
 //                      Navigator.push(
 //                        context,
@@ -314,7 +314,7 @@
 //                  )),
 //              Padding(
 //                padding: EdgeInsets.only(top: 8.0),
-//                child: FlatButton(
+//                child: CustomTextButton(
 //                  onPressed: () {
 //                    Navigator.push(
 //                      context,

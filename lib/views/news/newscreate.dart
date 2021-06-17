@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class NewsCreate extends StatelessWidget {
@@ -288,7 +289,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           upgradeDetails:
                               AppConfig.upgradePlanBannerModel.parent_timebanks,
                           transaction_matrix_type: "parent_timebanks",
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             textColor: Colors.green,
                             elevation: 0,
                             child: Container(
@@ -357,7 +358,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Container(
                 child: SizedBox(
                   width: 200,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
                       if (connResult == ConnectivityResult.none) {

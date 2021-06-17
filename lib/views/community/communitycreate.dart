@@ -33,6 +33,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
@@ -1007,7 +1008,7 @@ class CreateEditCommunityViewFormState
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
                           child: Container(
                             alignment: Alignment.center,
-                            child: RaisedButton(
+                            child: CustomElevatedButton(
                               onPressed: () async {
                                 var connResult =
                                     await Connectivity().checkConnectivity();
@@ -1312,7 +1313,7 @@ class CreateEditCommunityViewFormState
                 title: Text(title),
                 content: Text(description),
                 actions: <Widget>[
-                  RaisedButton(
+                  CustomElevatedButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -1326,7 +1327,7 @@ class CreateEditCommunityViewFormState
                       Navigator.of(_context).pop(true);
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).no,
                       style: TextStyle(
@@ -1856,7 +1857,7 @@ class CreateEditCommunityViewFormState
     Widget _continueBtn(controller) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
-        child: RaisedButton(
+        child: CustomElevatedButton(
           child: Text(
             S.of(context).continue_text,
             style: Theme.of(context).primaryTextTheme.button,
@@ -1940,7 +1941,7 @@ class CreateEditCommunityViewFormState
           return AlertDialog(
             title: Text(dialogTitle),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(
                   S.of(context).ok,
                   style: TextStyle(

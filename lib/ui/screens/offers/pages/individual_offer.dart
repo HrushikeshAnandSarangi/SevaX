@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
@@ -648,7 +649,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           },
                         ),
                         SizedBox(height: 20),
-                        RaisedButton(
+                        CustomElevatedButton(
                           onPressed: status.data == Status.LOADING
                               ? () {}
                               : () async {

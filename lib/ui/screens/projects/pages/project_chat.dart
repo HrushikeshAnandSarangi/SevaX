@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/screens/projects/bloc/project_description_bloc.d
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 enum ChatViewContext { PROJECT, REQUEST, MEMBER_CHAT_LIST, UNDEFINED }
 
@@ -64,7 +65,7 @@ class _ProjectChatViewState extends State<ProjectChatView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(L.of(context).join_community_to_view_updates),
-                  RaisedButton(
+                  CustomElevatedButton(
                     child: Text(L.of(context).join_chat),
                     onPressed: () {
                       ChatsRepository.addMember(

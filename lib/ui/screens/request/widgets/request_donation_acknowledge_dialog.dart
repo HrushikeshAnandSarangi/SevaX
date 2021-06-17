@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
   return AlertDialog(
@@ -19,11 +20,11 @@ AlertDialog requestDonationAcknowledgementDialog(BuildContext context) {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RaisedButton(
+            CustomElevatedButton(
               child: Text(L.of(context).ack),
               onPressed: () {},
             ),
-            RaisedButton(
+            CustomElevatedButton(
               color: Colors.red,
               child: Text(S.of(context).cancel),
               onPressed: () {

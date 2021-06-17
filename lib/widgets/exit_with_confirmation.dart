@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ExitWithConfirmation extends StatelessWidget {
   final Widget child;
@@ -31,13 +32,13 @@ class ExitWithConfirmation extends StatelessWidget {
               S.of(context).cancel_editing_confirmation,
             ),
             actions: [
-              FlatButton(
+              CustomTextButton(
                 onPressed: () {
                   Navigator.of(_context).pop(false);
                 },
                 child: Text(S.of(context).no),
               ),
-              FlatButton(
+              CustomTextButton(
                 onPressed: () {
                   Navigator.of(_context).pop(true);
                 },

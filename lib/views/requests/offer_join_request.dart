@@ -9,6 +9,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class OfferJoinRequestDialog extends StatefulWidget {
   // final RequestInvitationModel requestInvitationModel;
@@ -110,7 +111,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).accept,
@@ -153,7 +154,7 @@ class _OfferJoinRequestDialogState extends State<OfferJoinRequestDialog> {
                 ),
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
                       S.of(context).decline,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class MemberCardWithSingleAction extends StatelessWidget {
   final String name;
@@ -67,7 +68,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
           // ),
           Container(
             height: 30,
-            child: RaisedButton(
+            child: CustomElevatedButton(
               color: buttonColor,
               child: Text(status),
               onPressed: action,

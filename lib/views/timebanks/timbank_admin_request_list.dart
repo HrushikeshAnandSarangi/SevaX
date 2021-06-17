@@ -7,6 +7,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 // class TimebankRequestAdminPage extends StatefulWidget {
 //   final String timebankId;
@@ -745,7 +746,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //               Row(
 //                 children: <Widget>[
 //                   Spacer(),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
 //                     color: Theme.of(context).accentColor,
 //                     textColor: FlavorConfig.values.buttonTextColor,
@@ -805,7 +806,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                       }
 //                     },
 //                   ),
-//                   FlatButton(
+//                   CustomTextButton(
 //                     child: Text(
 //                       S.of(context).cancel,
 //                       style: TextStyle(
@@ -1294,7 +1295,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //               dialogTitle,
 //             ),
 //             actions: <Widget>[
-//               FlatButton(
+//               CustomTextButton(
 //                 child: Text(
 //                   S.of(context).cancel,
 //                   style: TextStyle(
@@ -1305,7 +1306,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                   Navigator.of(viewContext).pop({'PROCEED': false});
 //                 },
 //               ),
-//               FlatButton(
+//               CustomTextButton(
 //                 child: Text(
 //                   confirmationTitle ?? S.of(context).yes,
 //                   style: TextStyle(
@@ -1563,7 +1564,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                   "${S.of(context).clear_transaction} "),
 //               actions: <Widget>[
 //                 // usually buttons at the bottom of the dialog
-//                 FlatButton(
+//                 CustomTextButton(
 //                   child: Text(S.of(context).cancel),
 //                   textColor: Colors.red,
 //                   onPressed: () {
@@ -1587,7 +1588,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //               content: Text(S.of(context).remove_self_from_group_error),
 //               actions: <Widget>[
 //                 // usually buttons at the bottom of the dialog
-//                 FlatButton(
+//                 CustomTextButton(
 //                   child: Text(S.of(context).close),
 //                   textColor: Colors.red,
 //                   onPressed: () {
@@ -1645,7 +1646,7 @@ import 'package:sevaexchange/ui/utils/debouncer.dart';
 //                   "${S.of(context).clear_transaction}"),
 //               actions: <Widget>[
 //                 // usually buttons at the bottom of the dialog
-//                 FlatButton(
+//                 CustomTextButton(
 //                   child: Text(S.of(context).close),
 //                   textColor: Colors.red,
 //                   onPressed: () {
@@ -1728,7 +1729,7 @@ class CustomRaisedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var btn = RaisedButton(
+    var btn = CustomElevatedButton(
       padding: EdgeInsets.all(0),
       color: (action == Actions.Approve ||
               action == Actions.Promote ||
@@ -1826,7 +1827,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
       ),
       actions: <Widget>[
-        RaisedButton(
+        CustomElevatedButton(
           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
@@ -1851,7 +1852,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             }
           },
         ),
-        FlatButton(
+        CustomTextButton(
           child: Text(
             S.of(context).cancel,
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),

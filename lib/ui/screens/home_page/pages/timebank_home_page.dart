@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/notAccepted_tasks.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../../../flavor_config.dart';
@@ -151,7 +152,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                 padding: EdgeInsets.only(
                                   right: 10,
                                 ),
-                                child: FlatButton(
+                                child: CustomTextButton(
                                   onPressed: () {},
                                   child: Text(
                                     S.of(context).your_groups,
@@ -282,7 +283,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           content: Text(S.of(context).protected_timebank_group_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            FlatButton(
+            CustomTextButton(
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(_context).pop();

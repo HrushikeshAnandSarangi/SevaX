@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
@@ -36,8 +37,9 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing:
-          !isDissmissible && onPressedApprove == null && onPressedReject == null,
+      absorbing: !isDissmissible &&
+          onPressedApprove == null &&
+          onPressedReject == null,
       child: Slidable(
         actionExtentRatio: 0.25,
         actions: isDissmissible
@@ -59,14 +61,14 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                             S.of(context).delete_notification_confirmation,
                           ),
                           actions: <Widget>[
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () =>
                                   {Navigator.of(dialogContext).pop()},
                               child: Text(
                                 S.of(context).cancel,
                               ),
                             ),
-                            FlatButton(
+                            CustomTextButton(
                               onPressed: () async {
                                 onDismissed();
                                 Navigator.of(dialogContext).pop();
@@ -83,7 +85,7 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                 ),
               ]
             : [],
-        actionPane: SlidableDrawerActionPane(),,
+        actionPane: SlidableDrawerActionPane(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -139,7 +141,7 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.19),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
@@ -153,12 +155,10 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                           onPressedApprove != null ? onPressedApprove() : null,
                     ),
                   ),
-
                   SizedBox(width: 12),
-
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       padding: EdgeInsets.zero,
                       color: FlavorConfig.values.theme.accentColor,
                       child: Text(
@@ -174,9 +174,7 @@ class NotificationCardOneToManyCompletedApproval extends StatelessWidget {
                   ),
                 ],
               ),
-
               SizedBox(height: MediaQuery.of(context).size.width * 0.04),
-
             ],
           ),
         ),

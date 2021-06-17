@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class DonationParticipantPage extends StatelessWidget {
   final RequestModel requestModel;
@@ -78,7 +79,7 @@ class DonationParticipantPage extends StatelessWidget {
                   : model.donationStatus == DonationStatus.REQUESTED
                       ? Container(
                           height: 20,
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             color: Colors.white,
                             padding: EdgeInsets.zero,
                             child: Text(
@@ -107,7 +108,7 @@ class DonationParticipantPage extends StatelessWidget {
                                   model.requestIdType == 'offer')
                               ? Container(
                                   height: 20,
-                                  child: RaisedButton(
+                                  child: CustomElevatedButton(
                                     color: Colors.white,
                                     padding: EdgeInsets.zero,
                                     child: Text(

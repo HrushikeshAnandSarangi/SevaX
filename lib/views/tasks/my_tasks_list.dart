@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -482,7 +483,7 @@ class MyTasksListState extends State<MyTaskList> {
                         ? Text(S.of(context).requested_for_completion)
                         : Container(
                             height: 35,
-                            child: RaisedButton(
+                            child: CustomElevatedButton(
                               padding: EdgeInsets.zero,
                               color: FlavorConfig.values.theme.primaryColor,
                               child: Text(
@@ -1090,7 +1091,7 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(8.0),
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         onPressed: () {
                           subject.add(0);
                         },
@@ -1118,7 +1119,7 @@ class TaskCardViewState extends State<TaskCardView> {
             title: Text(title),
             content: Text(content),
             actions: <Widget>[
-              FlatButton(
+              CustomTextButton(
                 child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(buildContext).pop();

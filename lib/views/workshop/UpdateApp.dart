@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:store_redirect/store_redirect.dart';
 // import 'package:open_appstore/open_appstore.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class UpdateView extends StatefulWidget {
   final VoidCallback onSkipped;
@@ -32,14 +33,14 @@ class UpdateAppState extends State<UpdateView> {
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
             !widget.isForced
-                ? FlatButton(
+                ? CustomTextButton(
                     onPressed: () {
                       widget.onSkipped();
                     },
                     child: Text(S.of(context).skip),
                   )
                 : Offstage(),
-            RaisedButton(
+            CustomElevatedButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
                 StoreRedirect.redirect(
@@ -47,7 +48,7 @@ class UpdateAppState extends State<UpdateView> {
                     iOSAppId: "456DU6XRWC.com.sevaexchange.app");
               },
               child: Text(
-               S.of(context).update_app,
+                S.of(context).update_app,
                 style: TextStyle(color: Colors.white),
               ),
             )
@@ -57,7 +58,7 @@ class UpdateAppState extends State<UpdateView> {
           margin: EdgeInsets.all(25),
           alignment: Alignment.center,
           child: Text(
-           S.of(context).update_msg,
+            S.of(context).update_msg,
             style: TextStyle(
               fontSize: 16.0,
             ),

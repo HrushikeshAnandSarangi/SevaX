@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class CustomDialogs {
   static Future<bool> generalConfirmationDialogWithMessage(
@@ -11,13 +12,13 @@ class CustomDialogs {
           builder: (_context) => AlertDialog(
             title: Text(title),
             actions: [
-              FlatButton(
+              CustomTextButton(
                 onPressed: () {
                   Navigator.of(_context).pop(false);
                 },
                 child: Text(S.of(context).no),
               ),
-              FlatButton(
+              CustomTextButton(
                 onPressed: () {
                   Navigator.of(_context).pop(true);
                 },
@@ -39,7 +40,7 @@ class CustomDialogs {
           builder: (_context) => AlertDialog(
             title: Text(title),
             actions: [
-              FlatButton(
+              CustomTextButton(
                 onPressed: () {
                   Navigator.of(_context).pop(true);
                 },

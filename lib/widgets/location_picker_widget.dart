@@ -3,6 +3,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class LocationPickerWidget extends StatelessWidget {
   final ValueChanged<LocationDataModel> onChanged;
@@ -19,7 +20,7 @@ class LocationPickerWidget extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return FlatButton.icon(
+    return CustomTextButton.icon(
       icon: Icon(Icons.add_location),
       textColor: color,
       label: Container(

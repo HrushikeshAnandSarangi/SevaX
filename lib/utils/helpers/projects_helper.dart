@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper_util.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'projects_helper_util.dart';
 
@@ -36,7 +37,7 @@ class ProjectMessagingRoomHelper {
             'Since you are volunteering for this event, you’ve been added to the messaging room. You may leave this room at any time.',
           ),
           actions: [
-            FlatButton(
+            CustomTextButton(
               onPressed: () async {
                 Navigator.pop(_);
               },

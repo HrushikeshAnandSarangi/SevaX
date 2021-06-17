@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class LocationConfimationCard extends StatelessWidget {
@@ -60,7 +61,7 @@ class LocationConfimationCard extends StatelessWidget {
               Container(
                 height: 50,
                 width: double.infinity,
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -78,14 +79,14 @@ class LocationConfimationCard extends StatelessWidget {
                       );
                       return;
                     }
-                    
+
                     if (locData.location.contains("*")) {
                       locData.location =
                           locationDataModel.location.split('*')[1];
                     }
 
                     log(locationDataModel.location);
-                    
+
                     Navigator.pop(
                       context,
                       locData,

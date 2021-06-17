@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../flavor_config.dart';
 
@@ -148,7 +148,8 @@ void showDialogFromInfoWindow(
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        details[infoKeyMapper[type]] ?? S.of(context).sandbox_dialog_subtitle, //??
+                        details[infoKeyMapper[type]] ??
+                            S.of(context).sandbox_dialog_subtitle, //??
                         // infoDescriptionMapper[key],
                         style: TextStyle(
                           fontSize: 16,
@@ -158,7 +159,7 @@ void showDialogFromInfoWindow(
                     ),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: FlatButton(
+                      child: CustomTextButton(
                         child: Text(S.of(context).ok),
                         onPressed: () {
                           Navigator.of(_context).pop();

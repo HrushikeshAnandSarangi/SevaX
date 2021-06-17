@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -50,8 +51,7 @@ class _OffersTabViewState extends State<OffersTabView> {
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(L.of(context).no_search_result_found)
-                );
+                    child: Text(L.of(context).no_search_result_found));
               }
 
               //Todo UPDATE_REQUIRED
@@ -224,7 +224,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                         child: Text(
                           S.of(context).skip_for_now,
                           style: TextStyle(

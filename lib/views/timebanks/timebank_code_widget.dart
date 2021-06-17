@@ -4,6 +4,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:share/share.dart';
 
 import '../../flavor_config.dart';
@@ -191,7 +192,7 @@ class _TimebankCodeWidgetState extends State<TimebankCodeWidget> {
                       style: TextStyle(fontSize: 36, color: Colors.black54),
                     )),
                     Center(
-                      child: RaisedButton(
+                      child: CustomElevatedButton(
                         onPressed: () {
                           Share.share(
                             shareText(

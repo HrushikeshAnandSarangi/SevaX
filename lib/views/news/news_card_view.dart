@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
@@ -748,7 +749,7 @@ class NewsCardViewState extends State<NewsCardView> {
               Row(
                 children: <Widget>[
                   Spacer(),
-                  RaisedButton(
+                  CustomElevatedButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
@@ -766,7 +767,7 @@ class NewsCardViewState extends State<NewsCardView> {
                       _deleteNews(parentContext);
                     },
                   ),
-                  FlatButton(
+                  CustomTextButton(
                     child: Text(
                       S.of(context).cancel,
                       style: TextStyle(
@@ -1778,7 +1779,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                         child: ButtonTheme(
                             height: 35.0,
                             minWidth: 110.0,
-                            child: RaisedButton(
+                            child: CustomElevatedButton(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0)),
@@ -1809,7 +1810,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                           child: ButtonTheme(
                               height: 35.0,
                               minWidth: 110.0,
-                              child: RaisedButton(
+                              child: CustomElevatedButton(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.0)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'EULAgreement.dart';
 
@@ -89,7 +90,7 @@ class EulaAgreementState extends State<EulaAgreement> {
                       SizedBox(
                           // height: 39,
                           width: 220,
-                          child: RaisedButton(
+                          child: CustomElevatedButton(
                             onPressed: userAcceptanceStatus
                                 ? () {
                                     Navigator.pop(

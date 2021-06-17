@@ -11,16 +11,14 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
-import 'package:sevaexchange/ui/screens/timebank/widgets/sponsors_widget.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -564,7 +562,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           return AlertDialog(
             content: Text(L.of(context).please_switch_to_access + message),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.orange,
                 onPressed: () {
                   _profileBloc.setDefaultCommunity(
@@ -590,7 +588,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           return AlertDialog(
             content: Text(L.of(context).please_join_seva_to_access + message),
             actions: [
-              RaisedButton(
+              CustomElevatedButton(
                 color: Colors.red,
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: Text(S.of(context).ok),
@@ -645,7 +643,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                         height: 20,
                       ),
                       Text(
-                       L.of(context).no_events_available,
+                        L.of(context).no_events_available,
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.black,

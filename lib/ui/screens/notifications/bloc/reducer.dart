@@ -34,6 +34,7 @@ import 'package:sevaexchange/views/requests/offer_join_request.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -67,7 +68,7 @@ class PersonalNotificationReducerForRequests {
           title: Text(deletionRequest.entityTitle.trim()),
           content: Text(reason),
           actions: <Widget>[
-            FlatButton(
+            CustomTextButton(
               child: Text(
                 S.of(context).dismiss,
                 style: TextStyle(
@@ -427,7 +428,7 @@ class PersonalNotificationReducerForRequests {
                 Row(
                   children: <Widget>[
                     Spacer(),
-                    FlatButton(
+                    CustomTextButton(
                       child: Text(
                         S.of(context).do_it_later,
                         style: TextStyle(

@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class GroupJoinRejectDialogView extends StatefulWidget {
   final GroupInviteUserModel groupInviteUserModel;
@@ -95,7 +96,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
                       S.of(context).accept,
@@ -117,7 +118,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                 ),
                 Container(
                   width: double.infinity,
-                  child: RaisedButton(
+                  child: CustomElevatedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
                       S.of(context).decline,

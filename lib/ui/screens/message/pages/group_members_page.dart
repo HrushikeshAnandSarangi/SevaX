@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/member_card.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class GroupMembersPage extends StatelessWidget {
@@ -53,7 +54,7 @@ class GroupMembersPage extends StatelessWidget {
                         Offstage(
                           offstage: !BlocProvider.of<CreateChatBloc>(context)
                               .isSelectionEnabled,
-                          child: FlatButton(
+                          child: CustomTextButton(
                             child: Text('Select All'),
                             textColor: Theme.of(context).primaryColor,
                             onPressed: () {

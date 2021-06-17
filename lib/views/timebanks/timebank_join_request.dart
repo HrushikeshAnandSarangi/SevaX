@@ -67,7 +67,7 @@
 //                    padding: const EdgeInsets.symmetric(vertical: 5.0),
 //                    child: Container(
 //                      alignment: Alignment(1.0, 0.0),
-//                      child: FlatButton(
+//                      child: CustomTextButton(
 //                        // color: Colors.blue,
 //                        onPressed: () {
 //                          // Validate will return true if the form is valid, or false if

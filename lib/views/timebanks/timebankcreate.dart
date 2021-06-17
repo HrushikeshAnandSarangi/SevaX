@@ -28,6 +28,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -442,7 +443,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Offstage();
                 TimebankModel parentTimebank = snapshot.data;
-                return RaisedButton(
+                return CustomElevatedButton(
                   // color: Colors.blue,
                   onPressed: () {
                     if (errTxt != null ||
@@ -599,7 +600,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )
         : Padding(
             padding: EdgeInsets.only(top: 8.0),
-            child: FlatButton(
+            child: CustomTextButton(
               onPressed: () async {
                 addVolunteers();
               },

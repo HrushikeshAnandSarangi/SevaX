@@ -8,15 +8,15 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 import 'package:sevaexchange/widgets/tag_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/widgets/distance_from_current_location.dart';
 
 class RequestCard extends StatelessWidget {
   final RequestModel model;
@@ -284,7 +284,7 @@ class RequestCard extends StatelessWidget {
                                           EdgeInsets.only(top: 10, bottom: 10),
                                       width: 100,
                                       height: 32,
-                                      child: FlatButton(
+                                      child: CustomTextButton(
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20),

@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -220,7 +221,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             Container(
                               height: 40,
                               padding: EdgeInsets.only(bottom: 10),
-                              child: RaisedButton(
+                              child: CustomElevatedButton(
                                 shape: StadiumBorder(),
                                 color: Colors.indigo,
                                 textColor: Colors.white,
@@ -243,7 +244,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             Container(
                               height: 40,
                               padding: EdgeInsets.only(bottom: 10),
-                              child: RaisedButton(
+                              child: CustomElevatedButton(
                                 shape: StadiumBorder(),
                                 color: Colors.redAccent,
                                 textColor: Colors.white,
@@ -268,7 +269,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             Container(
                               height: 40,
                               padding: EdgeInsets.only(bottom: 10),
-                              child: RaisedButton(
+                              child: CustomElevatedButton(
                                 shape: StadiumBorder(),
                                 color: Colors.green,
                                 textColor: Colors.white,
@@ -304,7 +305,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 height: 40,
                 //width: 120,
                 padding: EdgeInsets.only(bottom: 10),
-                child: RaisedButton(
+                child: CustomElevatedButton(
                   shape: StadiumBorder(),
                   color: HexColor('#64C328'),
                   textColor: Colors.white,
@@ -327,7 +328,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     height: 40,
                     //width: 120,
                     padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
+                    child: CustomElevatedButton(
                       shape: StadiumBorder(),
                       color: HexColor('#64C328'),
                       textColor: Colors.white,
@@ -350,7 +351,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         height: 45,
                         //width: 120,
                         padding: EdgeInsets.only(bottom: 10),
-                        child: RaisedButton(
+                        child: CustomElevatedButton(
                           shape: StadiumBorder(),
                           color: HexColor('#64C328'),
                           textColor: Colors.white,
@@ -487,7 +488,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 //                    children: <Widget>[
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: FlavorConfig.values.theme.primaryColor,
 //                          child: Text(
 //                            S.of(context).approve,
@@ -512,7 +513,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 //                      ),
 //                      Container(
 //                        width: double.infinity,
-//                        child: RaisedButton(
+//                        child: CustomElevatedButton(
 //                          color: Theme.of(context).accentColor,
 //                          child: Text(
 //                            S.of(context).decline,

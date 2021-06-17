@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
@@ -246,7 +247,7 @@ class ReportedMemberCard extends StatelessWidget {
             content: Text(S.of(context).user_removed_from_group),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
+              CustomTextButton(
                 child: Text(S.of(context).close),
                 textColor: Colors.red,
                 onPressed: () async {
@@ -276,7 +277,7 @@ class ReportedMemberCard extends StatelessWidget {
                   "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
@@ -297,7 +298,7 @@ class ReportedMemberCard extends StatelessWidget {
               content: Text(S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
@@ -334,7 +335,7 @@ class ReportedMemberCard extends StatelessWidget {
             content: Text(S.of(context).user_removed_from_timebank),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
+              CustomTextButton(
                 child: Text(S.of(context).close),
                 onPressed: () async {
                   await CollectionRef.reportedUsersList
@@ -395,7 +396,7 @@ class ReportedMemberCard extends StatelessWidget {
                   "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                FlatButton(
+                CustomTextButton(
                   child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
