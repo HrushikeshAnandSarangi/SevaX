@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
@@ -28,12 +29,9 @@ class InvoicePdf {
       "November",
       "December"
     ];
-    PdfImage _logo = PdfImage.file(
-      pdf.document,
-      bytes: (await rootBundle.load('images/invoice_seva_logo.jpg'))
-          .buffer
-          .asUint8List(),
-    );
+    final ByteData bytes =
+        await rootBundle.load('images/invoice_seva_logo.jpg');
+    final Uint8List byteList = bytes.buffer.asUint8List();
 
     Widget _rowText(String text, String value) {
       return Row(
@@ -69,8 +67,9 @@ class InvoicePdf {
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             decoration: BoxDecoration(
-                border:
-                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+              border:
+                  Border(bottom: BorderSide(width: 0.5, color: PdfColors.grey)),
+            ),
             child: Text(
               'Invoice',
               style: Theme.of(context)
@@ -97,7 +96,9 @@ class InvoicePdf {
             child: AspectRatio(
               aspectRatio: 3 / 2,
               child: Image(
-                _logo,
+                MemoryImage(
+                  byteList,
+                ),
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -177,19 +178,12 @@ class InvoicePdf {
             cellStyle: TextStyle(fontSize: 14),
             headerStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             headerDecoration: BoxDecoration(
-              border: BoxBorder(
-                bottom: true,
-                top: false,
-                color: PdfColors.grey,
-                width: 1,
-              ),
+              border:
+                  Border(bottom: BorderSide(width: 1, color: PdfColors.grey)),
             ),
             rowDecoration: BoxDecoration(
-              border: BoxBorder(
-                bottom: true,
-                color: PdfColors.grey,
-                width: 1,
-              ),
+              border:
+                  Border(bottom: BorderSide(width: 1, color: PdfColors.grey)),
             ),
             headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
             data: List.generate(
@@ -231,7 +225,7 @@ class InvoicePdf {
 //    final String path = 'C://invoice.pdf';
     log("path to pdf file is " + path);
     final File file = File(path);
-    await file.writeAsBytes(pdf.save());
+    await file.writeAsBytes(await pdf.save());
     material.Navigator.of(context).push(
       material.MaterialPageRoute(
         builder: (_) => InvoiceScreen(
