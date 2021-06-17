@@ -160,15 +160,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   @override
   void didChangeDependencies() {
-    FirestoreManager.FirestoreManager.getEntityDataListStream(
-      userEmail: SevaCore.of(context).loggedInUser.email,
-    ).listen(
-      (dataList) {
-        setState(() {
-          dataList.forEach((data) => this.dataList.add(data));
-        });
-      },
-    );
+    // FirestoreManager.FirestoreManager.getEntityDataListStream(
+    //   userEmail: SevaCore.of(context).loggedInUser.email,
+    // ).listen(
+    //   (dataList) {
+    //     setState(() {
+    //       dataList.forEach((data) => this.dataList.add(data));
+    //     });
+    //   },
+    // );
     super.didChangeDependencies();
   }
 

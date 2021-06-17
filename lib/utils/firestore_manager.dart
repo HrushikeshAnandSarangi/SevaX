@@ -17,45 +17,45 @@ export 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 class FirestoreManager {
   static Stream<List<DataModel>> getEntityDataListStream(
       {@required String userEmail}) async* {
-    var campaignSnapshotStream = CollectionRef.collection('campaigns')
-        .where('membersemail', arrayContains: userEmail)
-        .snapshots();
+    // var campaignSnapshotStream = CollectionRef.collection('campaigns')
+    //     .where('membersemail', arrayContains: userEmail)
+    //     .snapshots();
 
     var timebankSnapshotStream = CollectionRef.timebank
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 
-    var campaignStream = campaignSnapshotStream.transform(
-      StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
-        handleData: (snapshot, campaignSink) {
-          List<CampaignModel> modelList = [];
-          snapshot.docs.forEach((documentSnapshot) {
-            CampaignModel model =
-                CampaignModel.fromMap(documentSnapshot.data());
-            model.id = documentSnapshot.id;
-            modelList.add(model);
-          });
+    // var campaignStream = campaignSnapshotStream.transform(
+    //   StreamTransformer<QuerySnapshot, List<CampaignModel>>.fromHandlers(
+    //     handleData: (snapshot, campaignSink) {
+    //       List<CampaignModel> modelList = [];
+    //       snapshot.docs.forEach((documentSnapshot) {
+    //         CampaignModel model =
+    //             CampaignModel.fromMap(documentSnapshot.data());
+    //         model.id = documentSnapshot.id;
+    //         modelList.add(model);
+    //       });
+    //
+    //       campaignSink.add(modelList);
+    //     },
+    //   ),
+    // );
 
-          campaignSink.add(modelList);
-        },
-      ),
-    );
-
-    var timebankStream = timebankSnapshotStream.transform(
-      StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
-        handleData: (snapshot, timebankSink) {
-          List<TimebankModel> modelList = [];
-          snapshot.docs.forEach((documentSnapshot) {
-            TimebankModel model = TimebankModel(documentSnapshot.data());
-            model.id = documentSnapshot.id;
-            modelList.add(model);
-          });
-
-          timebankSink.add(modelList);
-        },
-      ),
-    );
-
-    yield* StreamGroup.merge([campaignStream, timebankStream]);
+    //   var timebankStream = timebankSnapshotStream.transform(
+    //     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+    //       handleData: (snapshot, timebankSink) {
+    //         List<TimebankModel> modelList = [];
+    //         snapshot.docs.forEach((documentSnapshot) {
+    //           TimebankModel model = TimebankModel(documentSnapshot.data());
+    //           model.id = documentSnapshot.id;
+    //           modelList.add(model);
+    //         });
+    //
+    //         timebankSink.add(modelList);
+    //       },
+    //     ),
+    //   );
+    //
+    //   yield* StreamGroup.merge([campaignStream, timebankStream]);
   }
 }
