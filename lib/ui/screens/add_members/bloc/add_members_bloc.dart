@@ -24,7 +24,7 @@
 //            .doc(timebankId)
 //            .snapshots(),
 //        (u, t) => AddMemberModel(u, t)).listen((AddMemberModel model) {
-//      TimebankModel timebank = TimebankModel(model.timebank.data);
+//      TimebankModel timebank = TimebankModel(model.timebank.data());
 //      HashSet timebankMembers = HashSet.from(timebank.members);
 //      List<UserModel> users = [];
 //      model.users.docs.forEach((DocumentSnapshot snap) {

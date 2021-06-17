@@ -106,7 +106,7 @@ class MessageBloc extends BlocBase {
       List<AdminMessageWrapperModel> temp = [];
       int unreadCount = 0;
       query.docs.forEach((DocumentSnapshot snapshot) {
-        TimebankModel model = TimebankModel(snapshot.data);
+        TimebankModel model = TimebankModel(snapshot.data());
         if (model.unreadMessageCount > 0) {
           unreadCount++;
         }

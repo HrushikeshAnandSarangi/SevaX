@@ -20,7 +20,7 @@
 // class PaymentsBloc {
 //   final _repository = Repository();
 //   final _paymentsController = BehaviorSubject<PaymentsController>();
-//   Observable<PaymentsController> get paymentsController =>
+//   Stream<PaymentsController> get paymentsController =>
 //       _paymentsController.stream;
 
 //   paymentsBloc() {

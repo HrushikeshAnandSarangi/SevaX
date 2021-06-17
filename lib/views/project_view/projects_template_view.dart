@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
@@ -39,20 +38,6 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
     ///getTemplate();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
-
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          //_searchText = "";
-        });
-      } else {
-        setState(() {
-          // _searchText = s;
-        });
-      }
-    });
   }
 
   @override

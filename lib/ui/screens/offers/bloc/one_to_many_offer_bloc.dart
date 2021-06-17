@@ -203,7 +203,7 @@ class OneToManyOfferBloc extends BlocBase {
   //       .doc(timebankId)
   //       .get()
   //       .then((value) {
-  //     final model = TimebankModel.fromMap(value.data);
+  //     final model = TimebankModel.fromMap(value.data());
   //     isAdminChanged(model.admins.contains(sevaUserId) ||
   //         model.organizers.contains(sevaUserId));
   //   });

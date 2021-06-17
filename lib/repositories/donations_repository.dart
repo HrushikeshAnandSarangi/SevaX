@@ -44,7 +44,7 @@ class DonationsRepository {
   }) async {
     try {
       var donationModel =
-          DonationModel.fromMap(acknowledgementNotification.data);
+          DonationModel.fromMap(acknowledgementNotification.data());
       var batch = CollectionRef.batch;
       batch.update(_donationRef.doc(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
@@ -126,7 +126,7 @@ class DonationsRepository {
   }) async {
     try {
       var donationModel =
-          DonationModel.fromMap(acknowledgementNotification.data);
+          DonationModel.fromMap(acknowledgementNotification.data());
 
       var batch = CollectionRef.batch;
       batch.update(_donationRef.doc(donationId), {

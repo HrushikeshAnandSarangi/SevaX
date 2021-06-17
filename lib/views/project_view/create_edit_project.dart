@@ -20,6 +20,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -84,6 +85,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool makePublicBool = false;
   bool isPulicCheckboxVisible = false;
   CommunityModel communityModel;
+  final _searchText = BehaviorSubject<String>();
+  final _debouncer = Debouncer(milliseconds: 400);
 
   @override
   void initState() {
@@ -108,30 +111,28 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     getCommunity();
     setState(() {});
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
-
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {});
-      } else {
-        if (templateName != s) {
-          SearchManager.searchTemplateForDuplicate(queryString: s)
-              .then((commFound) {
-            if (commFound) {
-              setState(() {
-                templateFound = true;
-              });
-            } else {
-              setState(() {
-                templateFound = false;
-              });
-            }
-          });
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        if (searchTextController.text.isEmpty) {
+          setState(() {});
+        } else {
+          if (templateName != searchTextController.text) {
+            SearchManager.searchTemplateForDuplicate(
+                    queryString: searchTextController.text)
+                .then((commFound) {
+              if (commFound) {
+                setState(() {
+                  templateFound = true;
+                });
+              } else {
+                setState(() {
+                  templateFound = false;
+                });
+              }
+            });
+          }
         }
-      }
+      });
     });
   }
 

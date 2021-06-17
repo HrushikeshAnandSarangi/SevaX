@@ -63,7 +63,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  FirebaseStorage _storage = FirebaseStorage();
+  FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
   void initState() {

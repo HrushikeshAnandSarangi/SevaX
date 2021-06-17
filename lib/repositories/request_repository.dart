@@ -24,7 +24,8 @@ class RequestRepository {
           snapshot.docs.forEach(
             (documentSnapshot) {
               // =========================================++=======
-              RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+              RequestModel model =
+                  RequestModel.fromMap(documentSnapshot.data());
               model.id = documentSnapshot.id;
 
               if (model.accepted) {

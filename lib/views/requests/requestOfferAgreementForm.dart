@@ -12,6 +12,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/ui/screens/borrow_agreement/borrow_agreement_pdf.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -81,6 +82,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _formDialogKey = GlobalKey<FormState>();
+  final _debouncer = Debouncer(milliseconds: 400);
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
     // searchTextController
     //     .addListener(() => _textUpdates.add(searchTextController.text));
     //
-    // Observable(_textUpdates.stream)
+    // Stream(_textUpdates.stream)
     //     .debounceTime(Duration(milliseconds: 400))
     //     .forEach((s) {
     //   if (s.isEmpty) {
@@ -105,30 +107,29 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
     //   }
     // });
 
-    searchTextController2
-        .addListener(() => _textUpdates2.add(searchTextController2.text));
+    searchTextController2.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Observable(_textUpdates2.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-      } else {
-        if (templateName != s) {
-          SearchManager.searchBorrowAgrrementTemplateForDuplicate(
-                  queryString: s)
-              .then((commFound) {
-            if (commFound) {
-              setState(() {
-                templateFound = true;
-              });
-            } else {
-              setState(() {
-                templateFound = false;
-              });
-            }
-          });
+        if (s.isEmpty) {
+        } else {
+          if (templateName != s) {
+            SearchManager.searchBorrowAgrrementTemplateForDuplicate(
+                    queryString: s)
+                .then((commFound) {
+              if (commFound) {
+                setState(() {
+                  templateFound = true;
+                });
+              } else {
+                setState(() {
+                  templateFound = false;
+                });
+              }
+            });
+          }
         }
-      }
+      });
     });
   }
 

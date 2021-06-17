@@ -64,7 +64,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     final _textUpdates = StreamController<String>();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
-    Observable(_textUpdates.stream)
+    Stream(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {

@@ -69,8 +69,10 @@ class UserImagePickerHandler {
   Future cropImage(File image) async {
     File croppedFile = await ImageCropper.cropImage(
       sourcePath: image.path,
-      ratioX: isAspectRatioFixed ? 1.0 : null,
-      ratioY: isAspectRatioFixed ? 1.0 : null,
+      aspectRatio: CropAspectRatio(
+        ratioX: isAspectRatioFixed ? 1.0 : null,
+        ratioY: isAspectRatioFixed ? 1.0 : null,
+      ),
       maxWidth: isAspectRatioFixed ? 512 : null,
       maxHeight: isAspectRatioFixed ? 512 : null,
     );

@@ -11,6 +11,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
@@ -63,6 +64,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   String errTxt;
   final _textUpdates = StreamController<String>();
   final profanityDetector = ProfanityDetector();
+  final _debouncer = Debouncer(milliseconds: 400);
 
   void initState() {
     super.initState();
@@ -76,36 +78,35 @@ class EditGroupFormState extends State<EditGroupForm> {
     searchTextController =
         TextEditingController(text: widget.timebankModel.name);
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 600))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        if (widget.timebankModel.name != s) {
-          SearchManager.searchGroupForDuplicate(
-                  queryString: s.trim(),
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity)
-              .then((groupFound) {
-            if (groupFound) {
-              setState(() {
-                errTxt = 'Group name already exists';
-              });
-            } else {
-              setState(() {
-                groupFound = false;
-                errTxt = null;
-              });
-            }
+        if (s.isEmpty) {
+          setState(() {
+            _searchText = "";
           });
+        } else {
+          if (widget.timebankModel.name != s) {
+            SearchManager.searchGroupForDuplicate(
+                    queryString: s.trim(),
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity)
+                .then((groupFound) {
+              if (groupFound) {
+                setState(() {
+                  errTxt = 'Group name already exists';
+                });
+              } else {
+                setState(() {
+                  groupFound = false;
+                  errTxt = null;
+                });
+              }
+            });
+          }
         }
-      }
+      });
     });
   }
 

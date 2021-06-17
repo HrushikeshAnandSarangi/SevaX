@@ -358,8 +358,10 @@ class _ImagePickerDialogMobileState extends State<ImagePickerDialogMobile> {
   Future cropImage(String path) async {
     File croppedFile = await ImageCropper.cropImage(
       sourcePath: path,
-      ratioX: 1.0,
-      ratioY: 1.0,
+      aspectRatio: CropAspectRatio(
+        ratioX: 1.0,
+        ratioY: 1.0,
+      ),
       maxWidth: 200,
       maxHeight: 200,
     );

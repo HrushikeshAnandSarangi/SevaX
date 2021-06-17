@@ -21,7 +21,7 @@
 //        .doc(userEmail)
 //        .get()
 //        .then((DocumentSnapshot documentSnapshot) {
-//      Map<String, dynamic> dataMap = documentSnapshot.data;
+//      Map<String, dynamic> dataMap = documentSnapshot.data();
 //      List timeBankList = dataMap['membershipTimebanks'];
 //      timeBankIdList = List.castFrom(timeBankList);
 //    });
@@ -51,7 +51,7 @@
 //          List<TimebankModel> modelList = [];
 //          snapshot.docs.forEach(
 //            (documentSnapshot) {
-//              TimebankModel model = TimebankModel(documentSnapshot.data);
+//              TimebankModel model = TimebankModel(documentSnapshot.data());
 //              model.id = documentSnapshot.id;
 //              modelList.add(model);
 //            },
@@ -84,7 +84,7 @@
 //        .doc(timebankId)
 //        .get()
 //        .then((DocumentSnapshot documentSnapshot) {
-//      Map<String, dynamic> dataMap = documentSnapshot.data;
+//      Map<String, dynamic> dataMap = documentSnapshot.data();
 //      timeBankModel = TimebankModel(dataMap);
 //      timeBankModel.id = documentSnapshot.id;
 //    });

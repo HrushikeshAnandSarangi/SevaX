@@ -18,7 +18,7 @@
 //       handleData: (snapshot, campaignSink) {
 //         List<CampaignModel> modelList = [];
 //         snapshot.docs.forEach((documentSnapshot) {
-//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
+//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data());
 //           model.id = documentSnapshot.id;
 //           modelList.add(model);
 //         });
@@ -42,7 +42,7 @@
 //       .doc(userEmail)
 //       .get()
 //       .then((DocumentSnapshot documentSnapshot) {
-//     Map<String, dynamic> dataMap = documentSnapshot.data;
+//     Map<String, dynamic> dataMap = documentSnapshot.data();
 //     List timeBankList = dataMap['membership_campaigns'];
 //     campaignIdList = List.castFrom(timeBankList);
 //   });
@@ -67,7 +67,7 @@
 //       .doc(campaignId)
 //       .get()
 //       .then((DocumentSnapshot documentSnapshot) {
-//     Map<String, dynamic> dataMap = documentSnapshot.data;
+//     Map<String, dynamic> dataMap = documentSnapshot.data();
 //     campaignModel = CampaignModel.fromMap(dataMap);
 //     campaignModel.id = documentSnapshot.id;
 //   });
@@ -94,7 +94,7 @@
 //         List<CampaignModel> models = [];
 
 //         snapshot.docs.forEach((documentSnapshot) {
-//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
+//           CampaignModel model = CampaignModel.fromMap(documentSnapshot.data());
 //           model.id = documentSnapshot.id;
 //           models.add(model);
 //         });

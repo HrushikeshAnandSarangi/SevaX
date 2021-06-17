@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -39,11 +40,11 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   final searchOnChange = BehaviorSubject<String>();
   var validItems = [];
   List<UserModel> users = [];
-
+  final _searchText = BehaviorSubject<String>();
+  final _debouncer = Debouncer(milliseconds: 400);
   @override
   void initState() {
     super.initState();
-    String _searchText = "";
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FirestoreManager.getAllTimebankIdStream(
@@ -60,22 +61,17 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
       // executes after build
     });
 
-    searchTextController
-        .addListener(() => _textUpdates.add(searchTextController.text));
+    searchTextController.addListener(() {
+      _debouncer.run(() {
+        String s = searchTextController.text;
 
-    Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
-        .forEach((s) {
-      if (s.isEmpty) {
-        setState(() {
-          _searchText = "";
-        });
-      } else {
-        volunteerUsersBloc.fetchUsers(s);
-        setState(() {
-          _searchText = s;
-        });
-      }
+        if (s.isEmpty) {
+          setState(() {});
+        } else {
+          volunteerUsersBloc.fetchUsers(s);
+          setState(() {});
+        }
+      });
     });
   }
 

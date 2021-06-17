@@ -1091,7 +1091,7 @@ class RequestModel extends DataModel {
     }
     if (this.location != null) {
       object['location'] =
-          this.location.data; //Map<String, dynamic>.from(this.location.data);
+          this.location.data; //Map<String, dynamic>.from(this.location.data());
     }
     if (this.id != null) {
       object['id'] = this.id;

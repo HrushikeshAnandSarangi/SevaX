@@ -6,7 +6,7 @@ class FeedsRepository {
     NewsModel newsModel;
     await CollectionRef.feeds.doc(newsId).get().then((snapshot) {
       if (snapshot.data == null) return null;
-      newsModel = NewsModel.fromMap(snapshot.data);
+      newsModel = NewsModel.fromMap(snapshot.data());
     });
     return newsModel;
   }

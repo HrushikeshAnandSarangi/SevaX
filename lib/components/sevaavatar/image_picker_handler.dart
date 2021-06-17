@@ -74,8 +74,10 @@ class ImagePickerHandler {
     File croppedFile;
     ImageCropper.cropImage(
       sourcePath: path,
-      ratioX: 1.0,
-      ratioY: 1.0,
+      aspectRatio: CropAspectRatio(
+        ratioX: 1.0,
+        ratioY: 1.0,
+      ),
       maxWidth: 200,
       maxHeight: 200,
     ).then((value) {

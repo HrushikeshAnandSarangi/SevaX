@@ -295,8 +295,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                           .get()
                           .then((returnedModel) {
                         newRequestModel =
-                            RequestModel.fromMap(returnedModel.data());
-                        log("request returned is: ${returnedModel.data()['title']}");
+                            RequestModel.fromMap(returnedModel.data);
+                        log("request returned is: ${returnedModel.data['title']}");
                         setState(() {});
                       });
 

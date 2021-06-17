@@ -36,7 +36,7 @@ class TimebankRepository {
           List<TimebankModel> timebanks = [];
           try {
             data.docs.forEach((element) {
-              var timebank = TimebankModel.fromMap(element.data);
+              var timebank = TimebankModel.fromMap(element.data());
               timebanks.add(timebank);
             });
             sink.add(timebanks);
@@ -66,10 +66,10 @@ class TimebankRepository {
       (a, b) {
         List<TimebankModel> _timebanks = [];
         a.docs.forEach((element) {
-          _timebanks.add(TimebankModel.fromMap(element.data));
+          _timebanks.add(TimebankModel.fromMap(element.data()));
         });
         b.docs.forEach((element) {
-          _timebanks.add(TimebankModel.fromMap(element.data));
+          _timebanks.add(TimebankModel.fromMap(element.data()));
         });
 
         return _timebanks;
@@ -108,7 +108,8 @@ class TimebankRepository {
       List<JoinRequestModel> joinRequests = [];
       try {
         data.docs.forEach((element) {
-          JoinRequestModel joinRequest = JoinRequestModel.fromMap(element.data);
+          JoinRequestModel joinRequest =
+              JoinRequestModel.fromMap(element.data());
           if (joinRequest.userId == userID) {
             joinRequests.add(joinRequest);
           }

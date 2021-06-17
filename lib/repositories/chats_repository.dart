@@ -39,7 +39,7 @@ class ChatsRepository {
         handleData: (documents, sink) {
           List<ChatModel> chats = [];
           for (var chatDocument in documents) {
-            var chat = ChatModel.fromMap(chatDocument.data);
+            var chat = ChatModel.fromMap(chatDocument.data());
             chat.id = chatDocument.id;
             if (chat.interCommunity) {
               if (!chat.showToCommunities.contains(communityId)) {
@@ -78,7 +78,7 @@ class ChatsRepository {
 
   static Future<void> transferOwnership(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    ChatModel chatModel = ChatModel.fromMap(result.data);
+    ChatModel chatModel = ChatModel.fromMap(result.data());
     if (chatModel.participants.length > 0) {
       await collectionReference.doc(chatId).set(
         {
@@ -108,7 +108,7 @@ class ChatsRepository {
 
   static Future<ChatModel> getChatModel(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    return ChatModel.fromMap(result.data);
+    return ChatModel.fromMap(result.data());
   }
 
   static Future<void> editGroup(

@@ -23,10 +23,8 @@ class CommunityFindBloc {
   final _timebanksFetcher = PublishSubject<TimebankListModel>();
   final searchOnChange = BehaviorSubject<String>();
 
-  Observable<CommunityListModel> get allCommunities =>
-      _communitiesFetcher.stream;
-  Observable<TimebankListModel> get allSiblingTimebanks =>
-      _timebanksFetcher.stream;
+  Stream<CommunityListModel> get allCommunities => _communitiesFetcher.stream;
+  Stream<TimebankListModel> get allSiblingTimebanks => _timebanksFetcher.stream;
 
   fetchCommunities(name) async {
     CommunityListModel communityListModel = CommunityListModel();
@@ -76,7 +74,7 @@ class VolunteerFindBloc {
   final _usersFetcher = PublishSubject<UserListModel>();
   final searchOnChange = BehaviorSubject<String>();
 
-  Observable<UserListModel> get allUsers => _usersFetcher.stream;
+  Stream<UserListModel> get allUsers => _usersFetcher.stream;
 
   fetchUsers(name) async {
     UserListModel userListModel = UserListModel();
@@ -183,7 +181,7 @@ class UserModelController {
 
 class UserBloc {
   final _userController = BehaviorSubject<UserModelController>();
-  Observable<UserModelController> get getLoggedInUser => _userController.stream;
+  Stream<UserModelController> get getLoggedInUser => _userController.stream;
   UserBloc() {
     _userController.add(UserModelController());
   }
@@ -198,7 +196,7 @@ class TransactionBloc {
   final _repository = Repository();
   final _transactionController = PublishSubject<TransactionController>();
 
-  Observable<TransactionController> get trasactionController =>
+  Stream<TransactionController> get trasactionController =>
       _transactionController.stream;
 
   handleApprovedTransaction(
@@ -494,7 +492,7 @@ class TimebankController {
 class TimeBankBloc {
   final _repository = Repository();
   final _timebankController = BehaviorSubject<TimebankController>();
-  Observable<TimebankController> get timebankController =>
+  Stream<TimebankController> get timebankController =>
       _timebankController.stream;
 
   TimeBankBloc() {
@@ -558,7 +556,7 @@ class CommunityCreateEditBloc {
   final _repository = Repository();
   final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
 
-  Observable<CommunityCreateEditController> get createEditCommunity =>
+  Stream<CommunityCreateEditController> get createEditCommunity =>
       _createEditCommunity.stream;
 
   CommunityCreateEditBloc() {

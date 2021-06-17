@@ -29,7 +29,7 @@ Future<TimebankModel> fetchTimebankData(String timebankId) async {
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
-  var requestModel = RequestModel.fromMap(notificationsModel.data);
+  var requestModel = RequestModel.fromMap(notificationsModel.data());
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user =

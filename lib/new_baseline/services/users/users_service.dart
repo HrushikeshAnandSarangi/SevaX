@@ -42,7 +42,7 @@
 //         .get()
 //         .then((QuerySnapshot querySnapshot) {
 //       querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
-//         userModel = UserModel.fromMap(documentSnapshot.data);
+//         userModel = UserModel.fromMap(documentSnapshot.data());
 //       });
 //     });
 
@@ -63,10 +63,10 @@
 //         .doc(emailAddress)
 //         .get();
 
-//     if (documentSnapshot == null || documentSnapshot.data == null) {
+//     if (documentSnapshot == null || documentSnapshot.data() == null) {
 //       return null;
 //     }
-//     userModel = UserModel.fromMap(documentSnapshot.data);
+//     userModel = UserModel.fromMap(documentSnapshot.data());
 
 //     return userModel;
 //   }
@@ -86,7 +86,7 @@
 //       StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
 //         handleData: (snapshot, userSink) async {
 //           DocumentSnapshot documentSnapshot = snapshot.documents[0];
-//           UserModel model = UserModel.fromMap(documentSnapshot.data);
+//           UserModel model = UserModel.fromMap(documentSnapshot.data());
 
 //           DocumentSnapshot walletSnapshot = await CollectionRef
 //               .collection('wallet')

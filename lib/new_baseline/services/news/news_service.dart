@@ -114,7 +114,7 @@ class NewsService {
 //      StreamTransformer<QuerySnapshot, NewsModel>.fromHandlers(
 //        handleData: (snapshot, userSink) async {
 //          DocumentSnapshot documentSnapshot = snapshot.documents[0];
-//          NewsModel model = NewsModel.fromMap(documentSnapshot.data);
+//          NewsModel model = NewsModel.fromMap(documentSnapshot.data());
 //
 //
 //          model.id = id;

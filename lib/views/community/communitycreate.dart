@@ -177,7 +177,7 @@ class CreateEditCommunityViewFormState
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
 
-    Observable(_textUpdates.stream)
+    Stream(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 600))
         .forEach((s) {
       if (s.isEmpty) {

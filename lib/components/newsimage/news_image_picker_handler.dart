@@ -88,8 +88,10 @@ class NewsImagePickerHandler {
     File croppedFile;
     ImageCropper.cropImage(
       sourcePath: image,
-      ratioX: 1.0,
-      ratioY: 1.0,
+      aspectRatio: CropAspectRatio(
+        ratioX: 1.0,
+        ratioY: 1.0,
+      ),
       maxWidth: 512,
       maxHeight: 512,
     ).then((value) {

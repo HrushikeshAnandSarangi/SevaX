@@ -31,7 +31,8 @@ class FirestoreManager {
         handleData: (snapshot, campaignSink) {
           List<CampaignModel> modelList = [];
           snapshot.docs.forEach((documentSnapshot) {
-            CampaignModel model = CampaignModel.fromMap(documentSnapshot.data);
+            CampaignModel model =
+                CampaignModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             modelList.add(model);
           });
@@ -46,7 +47,7 @@ class FirestoreManager {
         handleData: (snapshot, timebankSink) {
           List<TimebankModel> modelList = [];
           snapshot.docs.forEach((documentSnapshot) {
-            TimebankModel model = TimebankModel(documentSnapshot.data);
+            TimebankModel model = TimebankModel(documentSnapshot.data());
             model.id = documentSnapshot.id;
             modelList.add(model);
           });
