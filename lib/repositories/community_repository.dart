@@ -61,7 +61,7 @@ mixin CommunityRepository {
     yield* data.map<List<CommunityModel>>((event) {
       List<CommunityModel> models = [];
       event.docs.forEach((element) {
-        models.add(CommunityModel(element.data));
+        models.add(CommunityModel(element.data()));
       });
       return models;
     });

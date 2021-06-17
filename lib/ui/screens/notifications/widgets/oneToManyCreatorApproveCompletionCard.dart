@@ -84,7 +84,7 @@ class OneToManyCreatorApproveCompletionCard extends StatelessWidget {
                 ),
               ]
             : [],
-        delegate: SlidableDrawerDelegate(),
+        actionPane: SlidableDrawerActionPane(),,
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(

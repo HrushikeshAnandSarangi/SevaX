@@ -326,7 +326,7 @@
 //          _adminEmails.add(user.email);
 //          if (isAdmin) {
 //            var widget = Slidable(
-//              delegate: SlidableDrawerDelegate(),
+//              actionPane: SlidableDrawerActionPane(),,
 //              actions: <Widget>[
 //                IconSlideAction(
 //                  icon: Icons.close,
@@ -391,7 +391,7 @@
 //          _adminEmails.add(user.email);
 //          if (isCoordinator) {
 //            var widget = Slidable(
-//              delegate: SlidableDrawerDelegate(),
+//              actionPane: SlidableDrawerActionPane(),,
 //              actions: <Widget>[
 //                IconSlideAction(
 //                  icon: Icons.close,
@@ -538,7 +538,7 @@
 //              UserModel user = snapshot.data;
 //              if (isAdmin) {
 //                return Slidable(
-//                  delegate: SlidableDrawerDelegate(),
+//                  actionPane: SlidableDrawerActionPane(),,
 //                  actions: <Widget>[
 //                    IconSlideAction(
 //                      icon: Icons.close,

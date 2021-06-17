@@ -7,29 +7,21 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
-import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class DonationsRepository {
-  static final CollectionReference _donationRef = CollectionRef.collection(
-    DBCollection.donations,
-  );
-
-  static final CollectionReference _requestRef = CollectionRef.collection(
-    DBCollection.requests,
-  );
-  static final CollectionReference _offersRef = CollectionRef.collection(
-    DBCollection.offers,
-  );
-
   Stream<QuerySnapshot> getDonationsOfRequest(String requestId) {
-    return _donationRef.where('requestId', isEqualTo: requestId).snapshots();
+    return CollectionRef.donations
+        .where('requestId', isEqualTo: requestId)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> getDonationsOfOffer(String offerId) {
-    return _donationRef.where('requestId', isEqualTo: offerId).snapshots();
+    return CollectionRef.donations
+        .where('requestId', isEqualTo: offerId)
+        .snapshots();
   }
 
   Future<void> donateOfferCreatorPledge({
@@ -46,7 +38,7 @@ class DonationsRepository {
       var donationModel =
           DonationModel.fromMap(acknowledgementNotification.data());
       var batch = CollectionRef.batch;
-      batch.update(_donationRef.doc(donationId), {
+      batch.update(CollectionRef.donations.doc(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
         if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
@@ -62,9 +54,10 @@ class DonationsRepository {
       log("=========STG 1");
 
       // mark current notificaiton as read with offer creator
-      var notificationReference = CollectionRef.collection(
-        isTimebankNotification ? DBCollection.timebank : DBCollection.users,
-      ).doc(associatedId).collection(DBCollection.notifications);
+
+      CollectionReference notificationReference = isTimebankNotification
+          ? CollectionRef.timebankNotification(associatedId)
+          : CollectionRef.userNotification(associatedId);
       batch.update(
         notificationReference.doc(notificationId),
         {'isRead': true},
@@ -77,24 +70,16 @@ class DonationsRepository {
       if (operatoreMode == OperatingMode.CREATOR &&
           donationModel.donatedToTimebank) {
         notificationReferenceForDonor =
-            CollectionRef.collection(DBCollection.users)
-                .doc(donationModel.receiverDetails
-                    .email) // this email is reference of reciever for offer
-                .collection(DBCollection.notifications);
+            CollectionRef.userNotification(donationModel.receiverDetails.email);
         // direct towards timebank
       } else {
         //direct it towards creator
         if (donationModel.donatedToTimebank) {
           notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.timebank)
-                  .doc(donationModel.timebankId)
-                  .collection(DBCollection.notifications);
+              CollectionRef.timebankNotification(donationModel.timebankId);
         } else {
-          notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.users)
-                  .doc(donationModel.receiverDetails
-                      .email) // this email is reference of reciever for offer
-                  .collection(DBCollection.notifications);
+          notificationReferenceForDonor = CollectionRef.userNotification(
+              donationModel.receiverDetails.email);
         }
       }
 
@@ -129,7 +114,7 @@ class DonationsRepository {
           DonationModel.fromMap(acknowledgementNotification.data());
 
       var batch = CollectionRef.batch;
-      batch.update(_donationRef.doc(donationId), {
+      batch.update(CollectionRef.donations.doc(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
         if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
@@ -145,7 +130,7 @@ class DonationsRepository {
           donationModel.requestIdType == 'request') {
         if (requestType == RequestType.CASH) {
           batch.update(
-            _requestRef.doc(donationModel.requestId),
+            CollectionRef.requests.doc(donationModel.requestId),
             {
               'cashModeDetails.amountRaised':
                   FieldValue.increment(donationModel.cashDetails.pledgedAmount),
@@ -158,7 +143,7 @@ class DonationsRepository {
           donationModel.requestIdType == 'offer') {
         if (requestType == RequestType.CASH) {
           batch.update(
-            _offersRef.doc(donationModel.requestId),
+            CollectionRef.offers.doc(donationModel.requestId),
             {
               'cashModeDetails.amountRaised':
                   FieldValue.increment(donationModel.cashDetails.pledgedAmount),
@@ -170,9 +155,15 @@ class DonationsRepository {
       }
 
       log("================  $associatedId ============");
-      var notificationReference = CollectionRef.collection(
-        isTimebankNotification ? DBCollection.timebank : DBCollection.users,
-      ).doc(associatedId).collection(DBCollection.notifications);
+
+      CollectionReference notificationReference;
+
+      if (isTimebankNotification) {
+        notificationReference =
+            CollectionRef.timebankNotification(associatedId);
+      } else {
+        notificationReference = CollectionRef.userNotification(associatedId);
+      }
       batch.update(
         notificationReference.doc(notificationId),
         {'isRead': true},
@@ -182,9 +173,7 @@ class DonationsRepository {
       var notificationReferenceForDonor;
       if (donationStatus == DonationStatus.ACKNOWLEDGED) {
         notificationReferenceForDonor =
-            CollectionRef.collection(DBCollection.users)
-                .doc(donationModel.donorDetails.email)
-                .collection(DBCollection.notifications);
+            CollectionRef.userNotification(donationModel.donorDetails.email);
         acknowledgementNotification.isTimebankNotification = false;
         acknowledgementNotification.isRead = false;
         //donor member reference
@@ -192,9 +181,7 @@ class DonationsRepository {
         if (operatoreMode == OperatingMode.CREATOR &&
             donationModel.donatedToTimebank) {
           notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.users)
-                  .doc(donationModel.donorDetails.email)
-                  .collection(DBCollection.notifications);
+              CollectionRef.userNotification(donationModel.donorDetails.email);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
 
@@ -204,30 +191,22 @@ class DonationsRepository {
             donationModel.requestIdType == 'request') {
           //direct it towards creator
           notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.timebank)
-                  .doc(donationModel.timebankId)
-                  .collection(DBCollection.notifications);
+              CollectionRef.timebankNotification(donationModel.timebankId);
         } else if (operatoreMode != OperatingMode.CREATOR &&
             donationModel.requestIdType == 'offer') {
-          notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.users)
-                  .doc(donationModel.receiverDetails.email)
-                  .collection(DBCollection.notifications);
+          notificationReferenceForDonor = CollectionRef.userNotification(
+              donationModel.receiverDetails.email);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         } else if (operatoreMode == OperatingMode.CREATOR &&
             donationModel.requestIdType == 'offer') {
           notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.users)
-                  .doc(donationModel.donorDetails.email)
-                  .collection(DBCollection.notifications);
+              CollectionRef.userNotification(donationModel.donorDetails.email);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         } else {
-          notificationReferenceForDonor =
-              CollectionRef.collection(DBCollection.users)
-                  .doc(donationModel.requestId.split('*')[0])
-                  .collection(DBCollection.notifications);
+          notificationReferenceForDonor = CollectionRef.userNotification(
+              donationModel.requestId.split('*')[0]);
           acknowledgementNotification.isTimebankNotification = false;
           acknowledgementNotification.isRead = false;
         }
@@ -254,13 +233,12 @@ class DonationsRepository {
     // Make notificaiton as read for the moderator
 
     var batch = CollectionRef.batch;
-    batch.update(_donationRef.doc(donationId), {
+    batch.update(CollectionRef.donations.doc(donationId), {
       'donationStatus': DonationStatus.MODIFIED.toString().split('.')[1],
     });
-    var notificationReference = CollectionRef.collection(
-            isTimebankNotification ? 'timebanknew' : 'users')
-        .doc(associatedId)
-        .collection('notifications');
+    CollectionReference notificationReference = isTimebankNotification
+        ? CollectionRef.timebankNotification(associatedId)
+        : CollectionRef.userNotification(associatedId);
 
     batch.update(
       notificationReference.doc(notificationId),

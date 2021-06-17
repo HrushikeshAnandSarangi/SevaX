@@ -15,7 +15,7 @@ class ProjectRepository {
 
     List<ProjectModel> models = [];
     data.docs.forEach((element) {
-      models.add(ProjectModel.fromMap(element.data));
+      models.add(ProjectModel.fromMap(element.data()));
     });
     return models;
   }

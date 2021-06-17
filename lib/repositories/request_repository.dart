@@ -62,7 +62,7 @@ class RequestRepository {
 
     List<RequestModel> models = [];
     result.docs.forEach((element) {
-      models.add(RequestModel.fromMap(element.data));
+      models.add(RequestModel.fromMap(element.data()));
     });
     return models;
   }

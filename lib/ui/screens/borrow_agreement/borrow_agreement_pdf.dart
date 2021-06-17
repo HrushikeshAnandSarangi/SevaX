@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart' as material;
@@ -39,12 +40,9 @@ class BorrowAgreementPdf {
 
     final Document pdf = Document();
 
-    PdfImage _logo = PdfImage.file(
-      pdf.document,
-      bytes: (await rootBundle.load('images/invoice_seva_logo.jpg'))
-          .buffer
-          .asUint8List(),
-    );
+    final ByteData bytes =
+        await rootBundle.load('images/invoice_seva_logo.jpg');
+    final Uint8List byteList = bytes.buffer.asUint8List();
 
     String borrowAgreementLinkFinal = '';
 
@@ -62,8 +60,9 @@ class BorrowAgreementPdf {
             margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             decoration: BoxDecoration(
-                border:
-                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+              border:
+                  Border(bottom: BorderSide(width: 0.5, color: PdfColors.grey)),
+            ),
             child: Text(
               isRequest
                   ? 'Borrow Request Agreement'
@@ -92,7 +91,9 @@ class BorrowAgreementPdf {
             child: AspectRatio(
               aspectRatio: 3 / 2,
               child: Image(
-                _logo,
+                MemoryImage(
+                  byteList,
+                ),
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -137,7 +138,7 @@ class BorrowAgreementPdf {
     log("path to pdf file is " + path);
 
     final File file = File(path);
-    await file.writeAsBytes(pdf.save());
+    await file.writeAsBytes(await pdf.save());
 
     log("requestModel check   " + requestModel.id.toString());
     borrowAgreementLinkFinal =

@@ -28,17 +28,17 @@ class ChatsRepository {
       personalChats,
       publicChats,
       (personal, public) {
-        logger.i("${personal.documents.length}:${public.documents.length}");
+        logger.i("${personal.docs.length}:${public.docs.length}");
 
-        return [...personal.documents, ...public.documents];
+        return [...personal.docs, ...public.docs];
       },
     );
 
     yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<ChatModel>>.fromHandlers(
-        handleData: (documents, sink) {
+        handleData: (docs, sink) {
           List<ChatModel> chats = [];
-          for (var chatDocument in documents) {
+          for (var chatDocument in docs) {
             var chat = ChatModel.fromMap(chatDocument.data());
             chat.id = chatDocument.id;
             if (chat.interCommunity) {
@@ -59,7 +59,7 @@ class ChatsRepository {
     DocumentReference ref = collectionReference.doc(documentId);
     await ref.set(
       chat.toMap(),
-      merge: true,
+      SetOptions(merge: true),
     );
     return ref.id;
   }
@@ -72,7 +72,7 @@ class ChatsRepository {
           "admins": FieldValue.arrayRemove([userId]),
         }
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
@@ -91,7 +91,7 @@ class ChatsRepository {
             )
           },
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
   }
@@ -102,7 +102,7 @@ class ChatsRepository {
         "participantInfo": FieldValue.arrayUnion([userInfo.toMap()]),
         "participants": FieldValue.arrayUnion([userInfo.id])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
@@ -126,7 +126,7 @@ class ChatsRepository {
             "name": groupName,
           }
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
     if (imageUrl != null) {
@@ -137,7 +137,7 @@ class ChatsRepository {
             "imageUrl": imageUrl,
           }
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
 
@@ -154,7 +154,7 @@ class ChatsRepository {
           ),
           "participants": List<dynamic>.from(infos.map((x) => x.id))
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
     return batch.commit();

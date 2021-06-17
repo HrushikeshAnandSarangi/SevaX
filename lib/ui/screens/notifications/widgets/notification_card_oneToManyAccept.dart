@@ -83,7 +83,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                 ),
               ]
             : [],
-        delegate: SlidableDrawerDelegate(),
+        actionPane: SlidableDrawerActionPane(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(
@@ -153,9 +153,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                           onPressedAccept != null ? onPressedAccept() : null,
                     ),
                   ),
-
                   SizedBox(width: 12),
-
                   Container(
                     height: MediaQuery.of(context).size.width * 0.07,
                     child: RaisedButton(
@@ -174,9 +172,7 @@ class NotificationCardOneToManyAccept extends StatelessWidget {
                   ),
                 ],
               ),
-
               SizedBox(height: MediaQuery.of(context).size.width * 0.04),
-
             ],
           ),
         ),

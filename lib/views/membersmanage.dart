@@ -54,7 +54,7 @@
 //
 //                  UserModel userModel = userSnapshot.data;
 //                  return Slidable(
-//                    delegate: SlidableDrawerDelegate(),
+//                    actionPane: SlidableDrawerActionPane(),,
 //                    actionExtentRatio: 0.25,
 //                    child: Container(
 //                      color: Colors.white,

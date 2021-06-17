@@ -20,19 +20,19 @@ class UserRepository {
   static Future<UserModel> fetchUserById(String userId) async {
     QuerySnapshot query =
         await ref.where("sevauserid", isEqualTo: userId).get();
-    if (query.documents.length == 0) {
+    if (query.docs.length == 0) {
       throw Exception("No user Found");
     }
-    return UserModel.fromMap(query.documents[0].data, 'user_api');
+    return UserModel.fromMap(query.docs[0].data(), 'user_api');
   }
 
   static Future<String> fetchUserEmailById(String userId) async {
     QuerySnapshot query =
         await ref.where("sevauserid", isEqualTo: userId).get();
-    if (query.documents.length == 0) {
+    if (query.docs.length == 0) {
       throw Exception("No user Found");
     }
-    return query.documents[0].data["email"];
+    return query.docs[0].data()["email"];
   }
 
 //Block a member
@@ -51,7 +51,7 @@ class UserRepository {
       {
         'blockedBy': FieldValue.arrayUnion([userId])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
 
     batch.set(
@@ -59,7 +59,7 @@ class UserRepository {
       {
         'blockedMembers': FieldValue.arrayUnion([blockedUserId])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
     batch.commit();
   }
@@ -79,7 +79,7 @@ class UserRepository {
       {
         'blockedBy': FieldValue.arrayRemove([userId])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
 
     batch.set(
@@ -87,7 +87,7 @@ class UserRepository {
       {
         'blockedMembers': FieldValue.arrayRemove([unblockedUserId])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
     batch.commit();
   }
@@ -135,7 +135,7 @@ class UserRepository {
     yield* data.transform(
       StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
         handleData: (snapshot, sink) {
-          sink.add(UserModel.fromMap(snapshot.data, 'User Repository'));
+          sink.add(UserModel.fromMap(snapshot.data(), 'User Repository'));
         },
         handleError: (error, _, sink) => sink.addError(error),
       ),
@@ -155,7 +155,7 @@ class UserRepository {
           List<UserModel> _users = [];
           data.docs.forEach((element) {
             try {
-              _users.add(UserModel.fromMap(element.data, 'User Repository'));
+              _users.add(UserModel.fromMap(element.data(), 'User Repository'));
             } catch (e) {
               logger.e(e);
               sink.addError('Something went wrong ${e.toString()}');
@@ -172,14 +172,14 @@ class UserRepository {
     if (doc?.data != null) {
       throw Exception("No user Found");
     }
-    return UserModel.fromMap(doc.data, 'user_api');
+    return UserModel.fromMap(doc.data(), 'user_api');
   }
 
   static Future<void> changeUserCommunity(
       String email, String communityId, String timebankId) async {
     await ref.doc(email).set(
       {'currentCommunity': communityId, 'currentTimebank': timebankId},
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 

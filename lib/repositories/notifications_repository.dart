@@ -9,27 +9,15 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class NotificationsRepository {
-  static String _notificationCollection = "notifications";
-  static final String _userCollection = "users";
-  static final String _timebankCollection = "timebanknew";
-
-  static Firestore _firestore = CollectionRef;
-
   static Future<void> createNotification(
     NotificationsModel model,
     String userEmail,
   ) async {
     CollectionReference ref;
     if (model.isTimebankNotification) {
-      ref = _firestore
-          .collection(_timebankCollection)
-          .doc(model.timebankId)
-          .collection(_notificationCollection);
+      ref = CollectionRef.timebankNotification(model.timebankId);
     } else {
-      ref = _firestore
-          .collection(_userCollection)
-          .doc(userEmail)
-          .collection(_notificationCollection);
+      ref = CollectionRef.userNotification(userEmail);
     }
     await ref.doc(model.id).set(model.toMap());
   }
@@ -38,10 +26,7 @@ class NotificationsRepository {
     String userEmail,
     String communityId,
   ) {
-    return _firestore
-        .collection(_userCollection)
-        .doc(userEmail)
-        .collection(_notificationCollection)
+    return CollectionRef.userNotification(userEmail)
         .where('isRead', isEqualTo: false)
         .where('communityId', isEqualTo: communityId)
         .orderBy("timestamp", descending: true)
@@ -51,10 +36,7 @@ class NotificationsRepository {
   static Stream<QuerySnapshot> getTimebankNotifications(
     String timebankId,
   ) {
-    return _firestore
-        .collection(_timebankCollection)
-        .doc(timebankId)
-        .collection(_notificationCollection)
+    return CollectionRef.timebankNotification(timebankId)
         .where('isRead', isEqualTo: false)
         .orderBy("timestamp", descending: true)
         .snapshots();
@@ -62,8 +44,7 @@ class NotificationsRepository {
 
   static Stream<List<NotificationsModel>> getAllTimebankNotifications(
       String communityId) async* {
-    var data = _firestore
-        .collectionGroup("notifications")
+    var data = CollectionRef.notificationGroup
         .where("isTimebankNotification", isEqualTo: true)
         .where("communityId", isEqualTo: communityId)
         .where("isRead", isEqualTo: false)
@@ -86,7 +67,7 @@ class NotificationsRepository {
   // static Stream<QuerySnapshot> getAllTimebankNotifications(
   //   String communityId,
   // ) {
-  //   return _firestore
+  //   return CollectionRef
   //       .collectionGroup("notifications")
   //       .where("isTimebankNotification", isEqualTo: true)
   //       .where("communityId", isEqualTo: communityId)
@@ -118,9 +99,7 @@ class NotificationsRepository {
       senderUserId: user.sevaUserID,
       targetUserId: timebank.creatorId,
     );
-    await CollectionRef.collection(_timebankCollection)
-        .doc(timebank.id)
-        .collection(_notificationCollection)
+    await CollectionRef.timebankNotification(timebank.id)
         .doc(notification.id)
         .set(
           (notification..isTimebankNotification = true).toMap(),
@@ -131,12 +110,7 @@ class NotificationsRepository {
     String notificationId,
     String userEmail,
   ) async {
-    await _firestore
-        .collection(_userCollection)
-        .doc(userEmail)
-        .collection(_notificationCollection)
-        .doc(notificationId)
-        .update({
+    await CollectionRef.userNotification(userEmail).doc(notificationId).update({
       'isRead': true,
     });
   }

@@ -53,7 +53,7 @@
 //                 children: snapshot.data.documents
 //                     .map(
 //                       (item) => Slidable(
-//                         delegate: SlidableDrawerDelegate(),
+//                         actionPane: SlidableDrawerActionPane(),,
 //                         actionExtentRatio: 0.25,
 //                         child: Container(
 //                           padding: EdgeInsets.only(left: 5.0),
