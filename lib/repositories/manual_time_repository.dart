@@ -11,17 +11,9 @@ import 'package:sevaexchange/utils/app_config.dart';
 import '../flavor_config.dart';
 
 class ManualTimeRepository {
-  static final String _userCollection = "users";
-
-  static Firestore _firestore = CollectionRef;
-  static final String _timebankCollection = "timebanknew";
-  static String _notificationCollection = "notifications";
-
-  static final _ref = CollectionRef.collection('manualTimeClaims');
-
   static Future<void> createClaim(ManualTimeModel model) async {
     assert(model.id != null);
-    await _ref.doc(model.id).set(model.toMap());
+    await CollectionRef.manualTimeClaims.doc(model.id).set(model.toMap());
   }
 
   static Future<bool> approveManualCreditClaim({
@@ -84,7 +76,7 @@ class ManualTimeRepository {
 
     //Update Model in collection
     batchWrite.update(
-      _ref.doc(model.id),
+      CollectionRef.manualTimeClaims.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -93,13 +85,13 @@ class ManualTimeRepository {
 
     // Create Transaction for reciever
     batchWrite.set(
-      _firestore.transactions.doc(),
+      CollectionRef.transactions.doc(),
       memberTransactionModel.toMap(),
     );
 
     // Create Transaction for timebank
     batchWrite.set(
-      _firestore.transactions.doc(),
+      CollectionRef.transactions.doc(),
       timebankTransaction.toMap(),
     );
 
@@ -141,7 +133,7 @@ class ManualTimeRepository {
 
     //Update Model in collection
     batchWrite.update(
-      _ref.doc(model.id),
+      CollectionRef.manualTimeClaims.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -150,19 +142,19 @@ class ManualTimeRepository {
 
     // Create Transaction for reciever
     batchWrite.set(
-      _firestore.transactions.doc(),
+      CollectionRef.transactions.doc(),
       memberTransactionModel.toMap(),
     );
 
     // Create Transaction for reciever
     batchWrite.set(
-      _firestore.transactions.doc(),
+      CollectionRef.transactions.doc(),
       timebankTransaction.toMap(),
     );
 
     //Update Balance
     // batchWrite.update(
-    //   _firestore.users.doc(model.userDetails.email),
+    //   CollectionRef.users.doc(model.userDetails.email),
     //   {
     //     AppConfig.isTestCommunity ? 'sandboxCurrentBalance' : 'currentBalance':
     //         FieldValue.increment(model.claimedTime / 60),
@@ -187,7 +179,7 @@ class ManualTimeRepository {
     //   model: model,
     // );
     // batchWrite.set(
-    //   _firestore
+    //   CollectionRef
     //       .users
     //       .doc(model.userDetails.email)
     //       .collection('notifications')
@@ -198,7 +190,7 @@ class ManualTimeRepository {
     //Clear notification
     if (notificationId != null && notificationId != '') {
       batchWrite.update(
-        _firestore.timebank
+        CollectionRef.timebank
             .doc(model.timebankId)
             .collection('notifications')
             .doc(notificationId),
@@ -219,7 +211,7 @@ class ManualTimeRepository {
 
     //Update Model in collection
     batchWrite.update(
-      _ref.doc(model.id),
+      CollectionRef.manualTimeClaims.doc(model.id),
       {
         "status": model.status.toString().split('.')[1],
         "actionBy": model.actionBy,
@@ -242,7 +234,7 @@ class ManualTimeRepository {
     //Clear notification
     if (notificationId != null) {
       batchWrite.update(
-        _firestore.timebank
+        CollectionRef.timebank
             .doc(model.timebankId)
             .collection('notifications')
             .doc(notificationId),
@@ -321,15 +313,9 @@ class ManualTimeRepository {
   }) {
     CollectionReference ref;
     if (model.isTimebankNotification) {
-      ref = _firestore
-          .collection(_timebankCollection)
-          .doc(model.timebankId)
-          .collection(_notificationCollection);
+      ref = CollectionRef.timebankNotification(model.timebankId);
     } else {
-      ref = _firestore
-          .collection(_userCollection)
-          .doc(userEmail)
-          .collection(_notificationCollection);
+      ref = CollectionRef.userNotification(userEmail);
     }
     return ref.doc(model.id);
   }

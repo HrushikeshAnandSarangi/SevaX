@@ -28,18 +28,18 @@ class ChatsRepository {
       personalChats,
       publicChats,
       (personal, public) {
-        logger.i("${personal.documents.length}:${public.documents.length}");
+        logger.i("${personal.docs.length}:${public.docs.length}");
 
-        return [...personal.documents, ...public.documents];
+        return [...personal.docs, ...public.docs];
       },
     );
 
     yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<ChatModel>>.fromHandlers(
-        handleData: (documents, sink) {
+        handleData: (docs, sink) {
           List<ChatModel> chats = [];
-          for (var chatDocument in documents) {
-            var chat = ChatModel.fromMap(chatDocument.data);
+          for (var chatDocument in docs) {
+            var chat = ChatModel.fromMap(chatDocument.data());
             chat.id = chatDocument.id;
             if (chat.interCommunity) {
               if (!chat.showToCommunities.contains(communityId)) {
@@ -59,7 +59,7 @@ class ChatsRepository {
     DocumentReference ref = collectionReference.doc(documentId);
     await ref.set(
       chat.toMap(),
-      merge: true,
+      SetOptions(merge: true),
     );
     return ref.id;
   }
@@ -72,13 +72,13 @@ class ChatsRepository {
           "admins": FieldValue.arrayRemove([userId]),
         }
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
   static Future<void> transferOwnership(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    ChatModel chatModel = ChatModel.fromMap(result.data);
+    ChatModel chatModel = ChatModel.fromMap(result.data());
     if (chatModel.participants.length > 0) {
       await collectionReference.doc(chatId).set(
         {
@@ -91,7 +91,7 @@ class ChatsRepository {
             )
           },
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
   }
@@ -102,13 +102,13 @@ class ChatsRepository {
         "participantInfo": FieldValue.arrayUnion([userInfo.toMap()]),
         "participants": FieldValue.arrayUnion([userInfo.id])
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
   static Future<ChatModel> getChatModel(String chatId) async {
     DocumentSnapshot result = await collectionReference.doc(chatId).get();
-    return ChatModel.fromMap(result.data);
+    return ChatModel.fromMap(result.data());
   }
 
   static Future<void> editGroup(
@@ -126,7 +126,7 @@ class ChatsRepository {
             "name": groupName,
           }
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
     if (imageUrl != null) {
@@ -137,7 +137,7 @@ class ChatsRepository {
             "imageUrl": imageUrl,
           }
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
 
@@ -154,7 +154,7 @@ class ChatsRepository {
           ),
           "participants": List<dynamic>.from(infos.map((x) => x.id))
         },
-        merge: true,
+        SetOptions(merge: true),
       );
     }
     return batch.commit();

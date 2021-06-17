@@ -29,7 +29,7 @@ mixin CommunityRepository {
 
           try {
             data.docs.forEach((element) {
-              var community = CommunityModel(element.data);
+              var community = CommunityModel(element.data());
               _communities.add(community);
             });
             sink.add(_communities);
@@ -48,7 +48,7 @@ mixin CommunityRepository {
 
   static Future<CommunityModel> getCommunity(String communityId) async {
     var result = await _ref.doc(communityId).get();
-    return result.exists ? CommunityModel(result.data) : null;
+    return result.exists ? CommunityModel(result.data()) : null;
   }
 
   static Stream<List<CommunityModel>> getFeatureCommunities() async* {
@@ -61,7 +61,7 @@ mixin CommunityRepository {
     yield* data.map<List<CommunityModel>>((event) {
       List<CommunityModel> models = [];
       event.docs.forEach((element) {
-        models.add(CommunityModel(element.data));
+        models.add(CommunityModel(element.data()));
       });
       return models;
     });
@@ -76,7 +76,7 @@ mixin CommunityRepository {
 
     List<CommunityModel> models = [];
     data.docs.forEach((element) {
-      CommunityModel model = CommunityModel(element.data);
+      CommunityModel model = CommunityModel(element.data());
       if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
         if (model.testCommunity) models.add(model);
       } else {

@@ -24,7 +24,8 @@ class RequestRepository {
           snapshot.docs.forEach(
             (documentSnapshot) {
               // =========================================++=======
-              RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+              RequestModel model =
+                  RequestModel.fromMap(documentSnapshot.data());
               model.id = documentSnapshot.id;
 
               if (model.accepted) {
@@ -61,7 +62,7 @@ class RequestRepository {
 
     List<RequestModel> models = [];
     result.docs.forEach((element) {
-      models.add(RequestModel.fromMap(element.data));
+      models.add(RequestModel.fromMap(element.data()));
     });
     return models;
   }
