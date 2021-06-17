@@ -691,14 +691,17 @@ Stream<List<ProjectModel>> getAllProjectListStream(
             DateTime endDate =
                 DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            if (endDate.isAfter(DateTime.now())) {
+            if (endDate.isBefore(DateTime.now())) {
+              if (isAdminOrOwner ||
+                  model.associatedmembers.containsKey(
+                      SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.creatorId ==
+                      SevaCore.of(context).loggedInUser.sevaUserID) {
+                projectsList.add(model);
+              }
+            } else {
               projectsList.add(model);
             }
-
-            //uncomment below for Verve Release //to check only owner/admin/creator/members can view past events
-            // if (isAdminOrOwner ||
-            // model.associatedmembers.containsKey(
-            // SevaCore.of(context).loggedInUser.sevaUserID) ||
           },
         );
         projectSink.add(projectsList);
