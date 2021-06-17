@@ -39,7 +39,7 @@ class RequestAcceptedWidget extends StatelessWidget {
         UserModel user = snapshot.data;
 
         return Slidable(
-          delegate: SlidableBehindDelegate(),
+          actionPane: SlidableBehindActionPane(),
           actions: <Widget>[],
           secondaryActions: <Widget>[],
           child: GestureDetector(

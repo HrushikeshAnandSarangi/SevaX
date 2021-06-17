@@ -8,6 +8,7 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/utils/helpers/configurations_list.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class MemberPermissions extends StatefulWidget {

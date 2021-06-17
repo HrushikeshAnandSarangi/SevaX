@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/members/bloc/join_request_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/widgets/short_profile_card.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:shimmer/shimmer.dart';
 
 class JoinRequestSectionBuilder extends StatelessWidget {

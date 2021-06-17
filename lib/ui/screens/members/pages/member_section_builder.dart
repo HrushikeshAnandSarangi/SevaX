@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/member_level.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_dialogs/custom_dialog.dart';
 
 class MemberSectionBuilder extends StatelessWidget {

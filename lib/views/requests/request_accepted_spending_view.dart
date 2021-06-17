@@ -377,7 +377,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       TransactionModel transactionModel) {
     if (user == null || user.sevaUserID == null) return Offstage();
     return Slidable(
-        delegate: SlidableBehindDelegate(),
+        actionPane: SlidableBehindActionPane(),
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
@@ -510,7 +510,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
     if (user == null || user.sevaUserID == null) return Offstage();
     return Slidable(
-        delegate: SlidableBehindDelegate(),
+        actionPane: SlidableBehindActionPane(),
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(

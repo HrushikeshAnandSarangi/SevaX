@@ -321,7 +321,7 @@ class _RequestAcceptedSpendingViewOneToManyState
       TransactionModel transactionModel) {
     if (user == null || user.sevaUserID == null) return Offstage();
     return Slidable(
-        delegate: SlidableBehindDelegate(),
+        actionPane: SlidableBehindActionPane(),
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
