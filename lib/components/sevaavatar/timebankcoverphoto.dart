@@ -4,26 +4,25 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
-import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 
-class ProjectAvtaar extends StatefulWidget {
-  final String photoUrl;
+class TimebankCoverPhoto extends StatefulWidget {
+  final String coverUrl;
 
-  ProjectAvtaar({this.photoUrl});
+  TimebankCoverPhoto({this.coverUrl});
 
-  _ProjectsAvtaarState createState() => _ProjectsAvtaarState();
+  _TimebankCoverPhotoState createState() => _TimebankCoverPhotoState();
 }
 
 @override
-class _ProjectsAvtaarState extends State<ProjectAvtaar>
+class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
     with TickerProviderStateMixin, ImagePickerListener {
   File _image;
   AnimationController _controller;
@@ -36,18 +35,17 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     String timestampString = timestamp.toString();
     StorageReference ref = FirebaseStorage.instance
         .ref()
-        .child('projects_avtaar')
+        .child('timebanklogos')
         .child(
             SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
     StorageUploadTask uploadTask = ref.putFile(
       _image,
       StorageMetadata(
         contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'Projects Logo'},
+        customMetadata: <String, String>{'activity': 'Timebank Logo'},
       ),
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
-
     await profanityCheck(imageURL: imageURL);
 
     return imageURL;
@@ -58,7 +56,9 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {
-        globals.projectsAvtaarURL = null;
+        setState(() {
+          globals.timebankCoverURL = null;
+        });
       });
     } else {
       profanityStatusModel =
@@ -74,14 +74,14 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
                 .then((reference) {
               reference.delete();
               setState(() {
-                globals.projectsAvtaarURL = null;
+                globals.timebankCoverURL = null;
               });
-            }).catchError((e) => logger.e(e));
-          }
+            });
+          } else {}
         });
       } else {
         setState(() {
-          globals.projectsAvtaarURL = imageURL;
+          globals.timebankCoverURL = imageURL;
         });
       }
     }
@@ -91,7 +91,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   void userImage(dynamic _image, type) {
     if (type == 'stock_image') {
       setState(() {
-        globals.projectsAvtaarURL = _image;
+        globals.timebankCoverURL = _image;
       });
     } else {
       setState(() {
@@ -113,7 +113,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = ImagePickerHandler(this, _controller, false);
+    imagePicker = ImagePickerHandler(this, _controller, true);
     imagePicker.init();
   }
 
@@ -126,10 +126,8 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
-    var widthOfAvtar = (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-        ? 150.0
-        : 150.0;
+    var widthOfCover = 620.0;
+    var heightOfCover = 150.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
@@ -138,74 +136,103 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
                 margin: EdgeInsets.only(top: 20),
                 child: Container(
                   color: Colors.grey[100],
+                  width: 620,
                   height: 150,
-                  width: 150,
                   child: Center(
                     child: Container(
-                      height: 50,
-                      width: 50,
                       child: CircularProgressIndicator(),
                     ),
                   ),
                 ),
               )
             : Container(
-                width: widthOfAvtar,
-                height: widthOfAvtar,
-                child: globals.projectsAvtaarURL == null
+                width: widthOfCover,
+                height: heightOfCover,
+                child: globals.timebankCoverURL == null
                     ? Stack(
                         children: <Widget>[
-                          defaultAvtarWidget,
+                          sevaXdeafaultImage,
                         ],
                       )
                     : Container(
-                        child: CircleAvatar(
-                          radius: 40.0,
-                          // child: CachedNetworkImage(
-                          //   imageUrl: avatarURL,
-                          //   placeholder: CircularProgressIndicator(),
-                          // ),
-                          backgroundImage:
-                              NetworkImage(globals.projectsAvtaarURL),
-                          backgroundColor: const Color(0xFF778899),
+                        width: 620,
+                        height: 150,
+                        child: Image(
+                          fit: BoxFit.cover,
+                          width: 620,
+                          height: 150,
+                          image: NetworkImage(globals.timebankCoverURL ??
+                              defaultCameraImageURL),
                         ),
                       ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 3.0,
+                        color: Colors.black12,
+                        offset: Offset(0.0, 0.75),
+                      )
+                    ]),
               ),
-      ),
-    );
-  }
-
-  Widget get defaultAvtarWidget {
-    return (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-        ? sevaXdeafaultImage
-        : sevaXdeafaultImage;
-  }
-
-  Widget get humanityFirstdefaultImage {
-    return Container(
-      child: CircleAvatar(
-        radius: 40.0,
-        backgroundImage: AssetImage('lib/assets/images/genericlogo.png'),
       ),
     );
   }
 
   Widget get sevaXdeafaultImage {
     return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(widget.photoUrl ?? defaultCameraImageURL),
-                fit: BoxFit.cover),
-            borderRadius: BorderRadius.all(Radius.circular(75.0)),
-            boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
+      width: 620,
+      height: 150,
+      child: widget.coverUrl != null
+          ? Image(
+              image: NetworkImage(
+                widget.coverUrl ?? defaultCameraImageURL,
+              ),
+              fit: BoxFit.cover,
+            )
+          : Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: NetworkImage(addImageIcon),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    L.of(context).add_cover_picture,
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
+                  // SizedBox(
+                  //   height: 8,
+                  // ),
+                  // Text(
+                  //   L.of(context).or_drag_and_drop,
+                  //   style: TextStyle(fontSize: 12),
+                  // ),
+                ],
+              ),
+            ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 3.0,
+              color: Colors.black12,
+              offset: Offset(0.0, 0.75),
+            )
+          ]),
+    );
   }
 
   @override
   addWebImageUrl() {
-    // TODO: implement addWebImageUrl
     if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
-      globals.projectsAvtaarURL = globals.webImageUrl;
+      globals.timebankCoverURL = globals.webImageUrl;
       setState(() {});
     }
   }

@@ -11,6 +11,7 @@ bool isMobile = true;
 String posterAvatarURL;
 
 String timebankAvatarURL;
+String timebankCoverURL;
 
 String projectsAvtaarURL;
 

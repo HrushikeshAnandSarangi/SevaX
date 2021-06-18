@@ -11,6 +11,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -166,6 +167,7 @@ class CreateEditCommunityViewFormState
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
+    globals.timebankCoverURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
@@ -322,6 +324,18 @@ class CreateEditCommunityViewFormState
                             padding: EdgeInsets.all(5.0),
                             child: Column(
                               children: <Widget>[
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                widget.isCreateTimebank
+                                    ? TimebankCoverPhoto()
+                                    : TimebankCoverPhoto(
+                                        coverUrl:
+                                            communityModel.cover_url ?? "",
+                                      ),
+                                SizedBox(
+                                  height: 25,
+                                ),
                                 widget.isCreateTimebank
                                     ? TimebankAvatar()
                                     : TimebankAvatar(
@@ -440,7 +454,8 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText(S.of(context).select_categories_community_headding),
+                        headingText(
+                            S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
@@ -655,10 +670,13 @@ class CreateEditCommunityViewFormState
                                       if (!canTestCommunity) {
                                         if (!testCommunity) {
                                           _showSanBoxdvisory(
-                                                  title:
-                                                      S.of(context).sandbox_dialog_title.sentenceCase(),
-                                                  description:
-                                                      S.of(context).sandbox_community_description)
+                                                  title: S
+                                                      .of(context)
+                                                      .sandbox_dialog_title
+                                                      .sentenceCase(),
+                                                  description: S
+                                                      .of(context)
+                                                      .sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
@@ -697,8 +715,9 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle: S.of(context).you_created_sandbox_community
-                                                ,
+                                            dialogTitle: S
+                                                .of(context)
+                                                .you_created_sandbox_community,
                                             err: true);
                                       }
                                     },
@@ -1065,12 +1084,14 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.UpdateCommunityDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
+                                          globals.timebankCoverURL,
                                           location,
                                         );
                                         // creation of default timebank;
                                         snapshot.data.UpdateTimebankDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
+                                          globals.timebankCoverURL,
                                         );
                                         // updating the community with default timebank id
                                         snapshot.data.community.timebanks = [
@@ -1146,6 +1167,7 @@ class CreateEditCommunityViewFormState
                                         });
 
                                         globals.timebankAvatarURL = null;
+                                        globals.timebankCoverURL = null;
                                         globals.webImageUrl = null;
 
                                         Navigator.pop(dialogContext);
@@ -1188,11 +1210,17 @@ class CreateEditCommunityViewFormState
                                     showProgressDialog(
                                       S.of(context).updating_timebank,
                                     );
-                                    if (globals.timebankAvatarURL != null) {
+                                    if (globals.timebankAvatarURL != null ||
+                                        globals.timebankCoverURL != null) {
                                       communityModel.logo_url =
                                           globals.timebankAvatarURL;
                                       timebankModel.photoUrl =
                                           globals.timebankAvatarURL;
+
+                                      communityModel.cover_url =
+                                          globals.timebankCoverURL;
+                                      timebankModel.coverUrl =
+                                          globals.timebankCoverURL;
                                     }
 
                                     timebankModel.name =
@@ -1219,6 +1247,7 @@ class CreateEditCommunityViewFormState
                                         .then((onValue) {});
 
                                     globals.timebankAvatarURL = null;
+                                    globals.timebankCoverURL = null;
                                     globals.webImageUrl = null;
                                     if (dialogContext != null) {
                                       Navigator.pop(dialogContext);

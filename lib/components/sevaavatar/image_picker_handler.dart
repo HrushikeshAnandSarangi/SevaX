@@ -15,8 +15,9 @@ class ImagePickerHandler {
   ImagePickerDialog imagePicker;
   AnimationController _controller;
   ImagePickerListener _listener;
+  bool isCover;
 
-  ImagePickerHandler(this._listener, this._controller);
+  ImagePickerHandler(this._listener, this._controller, this.isCover);
 
   void openCamera() async {
     imagePicker.dismissDialog();
@@ -72,10 +73,10 @@ class ImagePickerHandler {
     File croppedFile;
     ImageCropper.cropImage(
       sourcePath: path,
-      ratioX: 1.0,
+      ratioX: isCover ? 2.0 : 1.0,
       ratioY: 1.0,
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: isCover ? 620 : 200,
+      maxHeight: isCover ? 150 : 200,
     ).then((value) {
       if (value != null) {
         croppedFile = value;
