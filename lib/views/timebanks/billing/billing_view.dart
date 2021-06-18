@@ -1,12 +1,10 @@
 // import 'dart:async';
 
-
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:sevaexchange/flavor_config.dart';
 // import 'package:sevaexchange/l10n/l10n.dart';
 // import 'package:sevaexchange/models/change_ownership_model.dart';
-// import 'package:sevaexchange/models/user_cards_model.dart';
 // import 'package:sevaexchange/models/user_model.dart';
 // import 'package:sevaexchange/new_baseline/models/community_model.dart';
 // import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -15,7 +13,6 @@
 // import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 // import 'package:sevaexchange/views/core.dart';
 // import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-// import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 
 // import '../../../main_app.dart';

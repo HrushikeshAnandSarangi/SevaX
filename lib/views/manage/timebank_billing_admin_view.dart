@@ -1,12 +1,10 @@
 // import 'dart:developer';
 
-
 // import 'package:flutter/gestures.dart';
 // import 'package:flutter/material.dart';
 // import 'package:sevaexchange/components/ProfanityDetector.dart';
 // import 'package:sevaexchange/constants/sevatitles.dart';
 // import 'package:sevaexchange/l10n/l10n.dart';
-// import 'package:sevaexchange/models/billing_plan_details.dart';
 // import 'package:sevaexchange/models/user_model.dart';
 // import 'package:sevaexchange/new_baseline/models/card_model.dart';
 // import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -17,7 +15,6 @@
 // import 'package:sevaexchange/utils/bloc_provider.dart';
 // import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 // import 'package:sevaexchange/views/core.dart';
-// import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 // import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
 // import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 // import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';

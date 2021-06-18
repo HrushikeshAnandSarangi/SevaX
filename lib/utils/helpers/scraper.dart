@@ -1,6 +1,5 @@
 // import 'package:html/parser.dart';
 // import 'package:http/http.dart' as http;
-// import 'package:sevaexchange/models/news_model.dart';
 
 // Future<NewsModel> fetchPosts({String url, NewsModel newsObject}) async {
 //   var response;
