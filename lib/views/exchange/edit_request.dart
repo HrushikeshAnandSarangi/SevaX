@@ -2829,11 +2829,11 @@ class RequestEditFormState extends State<RequestEditForm> {
               return WillPopScope(
                 onWillPop: () {},
                 child: AlertDialog(
-                  title: Text(S.of(context).this_is_repeating_event),
+                  title: Text("This is a repeating request."),
                   actions: [
                     FlatButton(
                       child: Text(
-                        S.of(context).edit_this_event,
+                        "Edit this request only.",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.red,
@@ -2849,7 +2849,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                     ),
                     FlatButton(
                       child: Text(
-                        S.of(context).edit_subsequent_event,
+                        "Edit subsequent requests.",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.red,
