@@ -19,6 +19,7 @@ import 'package:sevaexchange/widgets/umeshify.dart';
 import 'package:sevaexchange/widgets/user_profile_image.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'create_edit_project.dart';
 
@@ -79,14 +80,38 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    AspectRatio(
-                      aspectRatio: 3 / 2,
-                      child: Image.network(
-                        projectModel.photoUrl ?? defaultProjectImageURL,
-                        fit: BoxFit.cover,
-                        height: 200,
-                      ),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: <Widget>[
+                        AspectRatio(
+                          aspectRatio: 3 / 2,
+                          child: Image.network(
+                            projectModel.cover_url ?? defaultProjectImageURL,
+                            fit: BoxFit.cover,
+                            height: 200,
+                          ),
+                        ),
+                        Positioned(
+                          child: Container(
+                            child: CachedNetworkImage(
+                              imageUrl: (projectModel.photoUrl == null ||
+                                      projectModel.photoUrl == '')
+                                  ? defaultUserImageURL
+                                  : projectModel.photoUrl,
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 70,
+                              placeholder: (context, url) {
+                                return LoadingIndicator();
+                              },
+                            ),
+                          ),
+                          left: 13.0,
+                          bottom: -38.0,
+                        ),
+                      ],
                     ),
+                    SizedBox(height: 10),
                     projectModel.creatorId ==
                             SevaCore.of(context).loggedInUser.sevaUserID
                         ? Container(

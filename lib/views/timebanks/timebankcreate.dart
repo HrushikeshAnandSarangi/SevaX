@@ -31,6 +31,8 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/labels.dart';
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
@@ -99,6 +101,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.preventAccedentalDelete = true;
     var _searchText = "";
     globals.timebankAvatarURL = null;
+    globals.timebankCoverURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
@@ -174,6 +177,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     ];
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
     timebankModel.photoUrl = globals.timebankAvatarURL;
+    timebankModel.cover_url = globals.timebankCoverURL;
     timebankModel.createdAt = timestamp;
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
     timebankModel.organizers = [SevaCore.of(context).loggedInUser.sevaUserID];
@@ -225,6 +229,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     sendInviteNotification();
 
     globals.timebankAvatarURL = null;
+    globals.timebankCoverURL = null;
     globals.webImageUrl = null;
     globals.addedMembersId = [];
   }
@@ -259,6 +264,16 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           padding: EdgeInsets.all(5.0),
           child: Column(
             children: <Widget>[
+              TimebankCoverPhoto(),
+              SizedBox(height: 10),
+              Text(
+                "${L.of(context).cover_picture_label_group}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(height: 25),
               TimebankAvatar(),
               SizedBox(height: 5),
               Text(
@@ -642,6 +657,7 @@ Future assembleAndSendRequest({
   String adminId,
   String communityId,
   String timebankPhotoUrl,
+  String timebankCoverUrl,
   String creatorName,
   String creatorPhotoUrl,
 }) async {
@@ -650,6 +666,7 @@ Future assembleAndSendRequest({
       timebankName: timebankName,
       subtimebankId: subTimebankId,
       timebankPhotoUrl: timebankPhotoUrl,
+      timebankCoverUrl: timebankCoverUrl,
       creatorName: creatorName,
       creatorPhotoUrl: creatorPhotoUrl);
 
@@ -713,6 +730,7 @@ SponsoredGroupModel _assembleSponsoredRequestModel({
   String subtimebankId,
   String timebankName,
   String timebankPhotoUrl,
+  String timebankCoverUrl,
 }) {
   return SponsoredGroupModel(
     timebankId: subtimebankId,
@@ -720,6 +738,7 @@ SponsoredGroupModel _assembleSponsoredRequestModel({
     creatorName: creatorName,
     userPhotoUrl: creatorPhotoUrl,
     timebankPhotUrl: timebankPhotoUrl,
+    timebankCoverUrl: timebankCoverUrl,
     timestamp: DateTime.now().millisecondsSinceEpoch,
     creatorId: creatorId,
     notificationId: utils.Utils.getUuid(),

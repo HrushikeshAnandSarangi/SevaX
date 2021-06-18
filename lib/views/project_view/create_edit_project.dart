@@ -36,6 +36,7 @@ import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+import 'package:sevaexchange/components/sevaavatar/project_cover_photo.dart';
 
 import '../../flavor_config.dart';
 
@@ -220,7 +221,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : S.of(context).seva + timebankModel.name + S.of(context).event,
+                      : S.of(context).seva +
+                          timebankModel.name +
+                          S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -269,6 +272,30 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   padding: EdgeInsets.all(5.0),
                   child: Column(
                     children: <Widget>[
+                      widget.isCreateProject
+                          ? widget.projectTemplateModel != null
+                              ? ProjectCoverPhoto(
+                                  cover_url:
+                                      widget.projectTemplateModel.cover_url ??
+                                          defaultProjectImageURL)
+                              : ProjectCoverPhoto()
+                          : ProjectCoverPhoto(
+                              cover_url: projectModel.cover_url != null
+                                  ? projectModel.cover_url ??
+                                      defaultProjectImageURL
+                                  : defaultProjectImageURL,
+                            ),
+                      Text(''),
+                      !widget.isCreateProject
+                          ? Text(
+                              "${L.of(context).cover_picture_label_event}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(height: 25),
                       widget.isCreateProject
                           ? widget.projectTemplateModel != null
                               ? ProjectAvtaar(
@@ -802,6 +829,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.pendingRequests = [];
                           projectModel.timebankId = widget.timebankId;
                           projectModel.photoUrl = globals.projectsAvtaarURL;
+                          projectModel.cover_url = globals.projectsCoverURL;
                           projectModel.emailId = projectModel.emailId ??
                               SevaCore.of(context).loggedInUser.email;
                           projectModel.location = location;
@@ -827,6 +855,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectTemplateModel.templateName = templateName;
                             projectTemplateModel.photoUrl =
                                 projectModel.photoUrl;
+                            projectTemplateModel.cover_url =
+                                projectModel.cover_url;
                             projectTemplateModel.description =
                                 projectModel.description;
                             projectTemplateModel.registrationLink =
@@ -861,6 +891,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           // await FirestoreManager.createProject(
                           //     projectModel: projectModel);
                           globals.projectsAvtaarURL = null;
+                          globals.projectsCoverURL = null;
                           globals.webImageUrl = null;
 
                           if (dialogContext != null) {
@@ -893,6 +924,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectModel.photoUrl = globals.projectsAvtaarURL;
                           }
 
+                          if (globals.projectsCoverURL != null) {
+                            projectModel.cover_url = globals.projectsCoverURL;
+                          }
+
                           if (projectModel.startTime == 0 ||
                               projectModel.endTime == 0) {
                             showDialogForTitle(
@@ -916,6 +951,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           await FirestoreManager.updateProject(
                               projectModel: projectModel);
                           globals.projectsAvtaarURL = null;
+                          globals.projectsCoverURL = null;
                           globals.webImageUrl = null;
 
                           if (dialogContext != null) {

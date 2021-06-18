@@ -542,6 +542,8 @@ class L {
   String get add_cover_picture => "Add Cover Picture";
   String get or_drag_and_drop => "or drag and drop";
   String get cover_picture_label => "Seva Community Cover Picture";
+  String get cover_picture_label_group => "Group Cover Picture";
+  String get cover_picture_label_event => "Event Cover Picture";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->

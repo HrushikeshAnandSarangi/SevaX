@@ -141,14 +141,11 @@ class CreateGroupPage extends StatelessWidget {
                           // );
 
                           return CustomTextField(
-                            value: snapshot.data != null
-                                    ? snapshot.data
-                                    : null,
-                                controller: _controller,
-                                onChanged: bloc.onGroupNameChanged, 
-                                decoration: InputDecoration(
+                            value: snapshot.data != null ? snapshot.data : null,
+                            controller: _controller,
+                            onChanged: bloc.onGroupNameChanged,
+                            decoration: InputDecoration(
                               errorMaxLines: 2,
-                              
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -162,9 +159,8 @@ class CreateGroupPage extends StatelessWidget {
                                 fontSize: 18,
                                 color: Colors.grey,
                               ),
-                            ),   
+                            ),
                           );
-                          
                         },
                       ),
                       Divider(),

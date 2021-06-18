@@ -14,6 +14,7 @@ String timebankAvatarURL;
 String timebankCoverURL;
 
 String projectsAvtaarURL;
+String projectsCoverURL;
 
 String campaignAvatarURL;
 String messagingRoomImageUrl;

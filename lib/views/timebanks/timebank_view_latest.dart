@@ -95,14 +95,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         widget.timebankModel.cover_url ?? defaultGroupImageURL,
                     fit: BoxFit.cover,
                     height: 200,
-                    errorWidget: (context, url, error) => Container(
-                        height: 80,
-                        child: Center(
-                          child: Text(
-                            S.of(context).no_image_available,
-                            textAlign: TextAlign.center,
-                          ),
-                        )),
+                    errorWidget: (context, url, error) => Image(
+                      fit: BoxFit.cover,
+                      width: 620,
+                      height: 180,
+                      image: NetworkImage(defaultGroupImageURL),
+                    ),
                     placeholder: (context, url) {
                       return LoadingIndicator();
                     },
@@ -111,11 +109,16 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 Positioned(
                   child: Container(
                     child: CachedNetworkImage(
-                      imageUrl:
-                          widget.timebankModel.photoUrl ?? defaultUserImageURL,
+                      imageUrl: (widget.timebankModel.photoUrl == null ||
+                              widget.timebankModel.photoUrl == '')
+                          ? defaultUserImageURL
+                          : widget.timebankModel.photoUrl,
                       fit: BoxFit.cover,
                       width: 100,
                       height: 70,
+                      placeholder: (context, url) {
+                        return LoadingIndicator();
+                      },
                     ),
                   ),
                   left: 13.0,
