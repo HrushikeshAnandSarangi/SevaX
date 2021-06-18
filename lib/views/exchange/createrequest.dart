@@ -2916,7 +2916,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          requestModel.goodsDonationDetails.requiredGoods == null) {
+          (requestModel.goodsDonationDetails.requiredGoods == null ||
+              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
