@@ -166,7 +166,7 @@ class RequestCard extends StatelessWidget {
                                     EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                                 child: Center(
                                   child: Visibility(
-                                    visible: model.isRecurring,
+                                    visible: model.isRecurring ?? false,
                                     child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -194,7 +194,7 @@ class RequestCard extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Visibility(
-                            visible: !model.isRecurring,
+                            visible: !(model.isRecurring ?? false),
                             child: Wrap(
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: <Widget>[
