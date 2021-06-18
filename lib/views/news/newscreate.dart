@@ -295,8 +295,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             elevation: 0,
                             child: Container(
                               constraints: BoxConstraints.loose(
-                                Size(MediaQuery.of(context).size.width - 200,
-                                    50),
+                                Size(
+                                  MediaQuery.of(context).size.width - 200,
+                                  50,
+                                ),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -312,7 +314,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 ],
                               ),
                             ),
-                            color: Colors.grey[200],
+                            // color: Colors.grey[200],
                             onPressed: () async {
                               FocusScope.of(context).unfocus();
                               _silblingTimebankSelectionBottomsheet(

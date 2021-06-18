@@ -159,6 +159,9 @@ class _ExplorePageState extends State<ExplorePage> {
                               child: CustomElevatedButton(
                                 padding: EdgeInsets.only(left: 8, right: 8),
                                 color: Color.fromRGBO(245, 166, 35, 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
                                 child: Text(
                                   S.of(context).search,
                                   style: TextStyle(

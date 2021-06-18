@@ -375,7 +375,7 @@ class NewsImageState extends State<NewsImage>
           TextButton.icon(
             icon: Icon(Icons.attachment),
             style: TextButton.styleFrom(
-              primary: Colors.grey[200],
+              primary: Colors.grey,
             ),
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),

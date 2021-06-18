@@ -35,7 +35,7 @@ class LocationPickerWidget extends StatelessWidget {
         ),
       ),
       style: TextButton.styleFrom(
-        primary: Colors.grey[200],
+        primary: Colors.grey,
       ),
       onPressed: () async {
         await Navigator.push(

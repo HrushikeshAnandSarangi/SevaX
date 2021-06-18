@@ -485,7 +485,7 @@ Future<void> showFailedLoadImage({
             CustomTextButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
+              textColor: Colors.white,
               child: Text(
                 S.of(context).ok,
                 style: TextStyle(
