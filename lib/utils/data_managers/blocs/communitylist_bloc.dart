@@ -110,9 +110,10 @@ class CommunityCreateEditController {
     timebank.preventAccedentalDelete = true;
   }
 
-  UpdateCommunityDetails(user, timebankimageurl, location) {
+  UpdateCommunityDetails(user, timebankimageurl, location, coverUrl) {
     this.community.id = Utils.getUuid();
     this.community.logo_url = timebankimageurl;
+    this.community.cover_url = coverUrl;
     this.community.created_at =
         DateTime.now().millisecondsSinceEpoch.toString();
     this.community.created_by = user.sevaUserID;
@@ -125,11 +126,12 @@ class CommunityCreateEditController {
     this.community.isCreatedFromWeb = false;
   }
 
-  UpdateTimebankDetails(user, timebankimageurl) {
+  UpdateTimebankDetails(user, timebankimageurl, coverUrl) {
     this.timebank.updateValueByKey('id', Utils.getUuid());
     this.timebank.updateValueByKey('name', this.community.name);
     this.timebank.updateValueByKey('creatorId', user.sevaUserID);
     this.timebank.updateValueByKey('photoUrl', timebankimageurl);
+    this.timebank.updateValueByKey('coverUrl', coverUrl);
     this
         .timebank
         .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -127,7 +129,7 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
   Widget build(BuildContext context) {
     // _getAvatarURL();
     var widthOfCover = 620.0;
-    var heightOfCover = 150.0;
+    var heightOfCover = 180.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
@@ -137,7 +139,7 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                 child: Container(
                   color: Colors.grey[100],
                   width: 620,
-                  height: 150,
+                  height: 180,
                   child: Center(
                     child: Container(
                       child: CircularProgressIndicator(),
@@ -156,13 +158,13 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                       )
                     : Container(
                         width: 620,
-                        height: 150,
+                        height: 180,
                         child: Image(
                           fit: BoxFit.cover,
                           width: 620,
-                          height: 150,
-                          image: NetworkImage(globals.timebankCoverURL ??
-                              defaultCameraImageURL),
+                          height: 180,
+                          image: NetworkImage(
+                              globals.timebankCoverURL ?? defaultGroupImageURL),
                         ),
                       ),
                 decoration: BoxDecoration(
@@ -181,23 +183,39 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
   }
 
   Widget get sevaXdeafaultImage {
-    return Container(
-      width: 620,
-      height: 150,
-      child: widget.coverUrl != null
-          ? Image(
+    return (widget.coverUrl != null && widget.coverUrl != '')
+        ? Container(
+            width: 620,
+            height: 180,
+            child: Image(
               image: NetworkImage(
-                widget.coverUrl ?? defaultCameraImageURL,
+                widget.coverUrl ?? defaultGroupImageURL,
               ),
               fit: BoxFit.cover,
-            )
-          : Container(
+            ),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 3.0,
+                    color: Colors.black12,
+                    offset: Offset(0.0, 0.75),
+                  )
+                ]),
+          )
+        : Container(
+            width: 620,
+            height: 180,
+            child: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
-                    image: NetworkImage(addImageIcon),
+                  CachedNetworkImage(
+                    imageUrl: addImageIcon,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
                   SizedBox(
                     height: 8,
@@ -216,17 +234,17 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                 ],
               ),
             ),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 3.0,
-              color: Colors.black12,
-              offset: Offset(0.0, 0.75),
-            )
-          ]),
-    );
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 3.0,
+                    color: Colors.black12,
+                    offset: Offset(0.0, 0.75),
+                  )
+                ]),
+          );
   }
 
   @override

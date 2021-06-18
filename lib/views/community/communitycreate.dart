@@ -324,22 +324,35 @@ class CreateEditCommunityViewFormState
                             padding: EdgeInsets.all(5.0),
                             child: Column(
                               children: <Widget>[
-                                SizedBox(
-                                  height: 10,
-                                ),
+                                widget.isCreateTimebank
+                                    ? SizedBox(
+                                        height: 10,
+                                      )
+                                    : Container(),
                                 widget.isCreateTimebank
                                     ? TimebankCoverPhoto()
                                     : TimebankCoverPhoto(
-                                        coverUrl:
-                                            communityModel.cover_url ?? "",
+                                        coverUrl: (communityModel.cover_url ==
+                                                    null ||
+                                                communityModel.cover_url == '')
+                                            ? null
+                                            : communityModel.cover_url,
                                       ),
+                                Text(''),
+                                Text(
+                                  "${L.of(context).cover_picture_label}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                                 SizedBox(
                                   height: 25,
                                 ),
                                 widget.isCreateTimebank
                                     ? TimebankAvatar()
                                     : TimebankAvatar(
-                                        photoUrl: communityModel.logo_url ?? "",
+                                        photoUrl: communityModel.logo_url ?? '',
                                       ),
                                 Text(''),
                                 Text(
@@ -1084,8 +1097,8 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.UpdateCommunityDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
-                                          globals.timebankCoverURL,
                                           location,
+                                          globals.timebankCoverURL,
                                         );
                                         // creation of default timebank;
                                         snapshot.data.UpdateTimebankDetails(
@@ -1210,17 +1223,25 @@ class CreateEditCommunityViewFormState
                                     showProgressDialog(
                                       S.of(context).updating_timebank,
                                     );
-                                    if (globals.timebankAvatarURL != null ||
-                                        globals.timebankCoverURL != null) {
+
+                                    logger.e('UPDATE CHECK 3: ' +
+                                        globals.timebankAvatarURL.toString());
+                                    logger.e('UPDATE CHECK 4: ' +
+                                        globals.timebankCoverURL.toString());
+
+                                    if (globals.timebankAvatarURL != null) {
                                       communityModel.logo_url =
                                           globals.timebankAvatarURL;
                                       timebankModel.photoUrl =
                                           globals.timebankAvatarURL;
+                                    }
 
+                                    if (globals.timebankCoverURL != null) {
                                       communityModel.cover_url =
                                           globals.timebankCoverURL;
-                                      timebankModel.coverUrl =
+                                      timebankModel.cover_url =
                                           globals.timebankCoverURL;
+                                      setState(() {});
                                     }
 
                                     timebankModel.name =
