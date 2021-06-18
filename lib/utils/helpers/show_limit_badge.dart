@@ -120,7 +120,9 @@ class TransactionLimitCheck extends StatelessWidget {
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         ViewerRole viewRole = initViewerRole(_userBloc);
-        bool isBillingFailed =!(_userBloc.community.payment != null && _userBloc.community.payment.containsKey('payment_success') && (_userBloc.community.payment['payment_success'] ?? false));
+        bool isBillingFailed = !(_userBloc.community.payment != null &&
+            _userBloc.community.payment.containsKey('payment_success') &&
+            (_userBloc.community.payment['payment_success'] ?? false));
 
         // bool exaustedLimit = getTransactionStatus(
         //   communityModel: _userBloc.community,
@@ -361,8 +363,8 @@ String getMessage({
   if (isBillingFailed ?? false) {
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin: S.of(context).limit_badge_billing_failed,
-      forCreator: S.of(context).limit_badge_billing_failed,
+      forAdmin: "Billing Failed, please contact owner. ",
+      forCreator: "Billing Failed, please visit web.sevaxapp.com to configure.",
       forMember: S.of(context).limit_badge_contact_admin,
     );
   }
