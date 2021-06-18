@@ -60,7 +60,6 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/requests/onetomany_request_instructor_card.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
-import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/add_images_for_request.dart';
@@ -3999,4 +3998,12 @@ Future<Map<String, String>> getGoodsFuture() async {
 enum BorrowRequestType {
   TOOL,
   ROOM,
+}
+
+class SevaBillingPlans {
+  static String NEIGHBOUR_HOOD_PLAN = 'neighbourhood_plan';
+  static String COMMUNITY_PLAN = 'tall_plan';
+  static String COMMUNITY_PLUS = 'community_plus_plan';
+  static String NON_PROFIT = 'grande_plan';
+  static String ENTERPRISE = 'venti_plan';
 }

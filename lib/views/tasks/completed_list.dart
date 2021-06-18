@@ -5,22 +5,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-class CompletedListPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            S.of(context).completed_tasks,
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        body: CompletedList());
-  }
-}
-
 // TODO: Fix the hacks
 
 class CompletedList extends StatefulWidget {
@@ -74,7 +58,7 @@ class _CompletedListState extends State<CompletedList> {
             requestList.elementAt(requestList.length - index - 1);
 
         TransactionModel transmodel;
-      
+
         if (model.transactions.length > 0) {
           transmodel = model.transactions.firstWhere((transaction) {
             return transaction.to ==
@@ -108,22 +92,21 @@ class _CompletedListState extends State<CompletedList> {
               },
             ),
             trailing: () {
-              transmodel == null 
+              transmodel == null
                   ? Text('0')
-                  : 
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text('${transmodel.credits}'),
-                      Text(S.of(context).seva_credits,
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.2,
-                          )),
-                    ],
-                  );
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text('${transmodel.credits}'),
+                        Text(S.of(context).seva_credits,
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.2,
+                            )),
+                      ],
+                    );
             }(),
             subtitle: FutureBuilder(
               future:

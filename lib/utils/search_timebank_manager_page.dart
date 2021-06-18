@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/search_view.dart';
 
 class SearchTimebankMemberElastic extends StatefulWidget {
   String timebankId;
@@ -344,4 +343,11 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       color: Colors.grey,
     );
   }
+}
+
+enum SearchType {
+  USER,
+  NEWS,
+  OFFER,
+  REQUEST,
 }

@@ -4,7 +4,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
@@ -120,7 +119,9 @@ class TransactionLimitCheck extends StatelessWidget {
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         ViewerRole viewRole = initViewerRole(_userBloc);
-        bool isBillingFailed =!(_userBloc.community.payment != null && _userBloc.community.payment.containsKey('payment_success') && (_userBloc.community.payment['payment_success'] ?? false));
+        bool isBillingFailed = !(_userBloc.community.payment != null &&
+            _userBloc.community.payment.containsKey('payment_success') &&
+            (_userBloc.community.payment['payment_success'] ?? false));
 
         // bool exaustedLimit = getTransactionStatus(
         //   communityModel: _userBloc.community,
@@ -210,30 +211,6 @@ class TransactionLimitCheck extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-bool getTransactionStatus({
-  CommunityModel communityModel,
-}) {
-  int activeCount = 0;
-  if ((communityModel.payment['planId'] ==
-              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
-          communityModel.subscriptionCancelled) &&
-      communityModel.billingQuota != null) {
-    List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
-        SevaPlansBillingConfig.billingPlans[communityModel.payment['planId']]
-            ['action']);
-
-    neighbourhoodPlanBillableTransactions.forEach((billableItem) {
-      if (communityModel.billingQuota.containsKey(billableItem)) {
-        activeCount += communityModel.billingQuota[billableItem];
-      }
-    });
-    return activeCount >=
-        SevaPlansBillingConfig.plansLimit[communityModel.payment['planId']];
-  } else {
-    return false;
   }
 }
 
