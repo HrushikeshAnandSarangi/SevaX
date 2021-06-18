@@ -892,6 +892,52 @@ class DiscussionListState extends State<DiscussionList> {
                 ),
               ),
               //Pinning ui
+
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0, right: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    UserProfileImage(
+                      photoUrl: news.userPhotoURL,
+                      email: news.email,
+                      userId: news.sevaUserId,
+                      height: 40,
+                      width: 40,
+                      timebankModel: widget.timebankModel,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            news.fullName != null && news.fullName != ""
+                                ? news.fullName.trim()
+                                : S.of(context).user_name_not_availble,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 7,
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          document(
+                              newsDocumentName: news.newsDocumentName,
+                              newsDocumentUrl: news.newsDocumentUrl),
+                          //  SizedBox(height: 10),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
                 child: Row(
@@ -963,51 +1009,6 @@ class DiscussionListState extends State<DiscussionList> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, right: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    UserProfileImage(
-                      photoUrl: news.userPhotoURL,
-                      email: news.email,
-                      userId: news.sevaUserId,
-                      height: 40,
-                      width: 40,
-                      timebankModel: widget.timebankModel,
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            news.fullName != null && news.fullName != ""
-                                ? news.fullName.trim()
-                                : S.of(context).user_name_not_availble,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 7,
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          document(
-                              newsDocumentName: news.newsDocumentName,
-                              newsDocumentUrl: news.newsDocumentUrl),
-                          //  SizedBox(height: 10),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
               //feed image
               news.newsImageUrl == null
                   ? news.imageScraped == null || news.imageScraped == "NoData"
@@ -1016,7 +1017,6 @@ class DiscussionListState extends State<DiscussionList> {
                   : getImageView(news.id, news.newsImageUrl),
 
               //feed options
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 0.0, top: 4, right: 15),
                 child: !isFromMessage
