@@ -1232,6 +1232,7 @@ enum RequestPaymentType {
   ZELLEPAY,
   PAYPAL,
   VENMO,
+  SWIFT,
 }
 
 enum ContantsSeva { USER_DONATE_TOTIMEBANK }
@@ -1249,4 +1250,5 @@ Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "ZELLEPAY": RequestPaymentType.ZELLEPAY,
   "PAYPAL": RequestPaymentType.PAYPAL,
   "VENMO": RequestPaymentType.VENMO,
+  "SWIFT": RequestPaymentType.SWIFT,
 };

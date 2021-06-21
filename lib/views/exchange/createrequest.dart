@@ -1684,6 +1684,49 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ]);
   }
 
+  Widget RequestPaymentSwift(RequestModel requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {
+              updateExitWithConfirmationValue(context, 7, value);
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Ex: Swift ID',
+              hintStyle: hintTextStyle,
+            ),
+            // initialValue: widget.offer != null && widget.isOfferRequest
+            //     ? getOfferDescription(
+            //         offerDataModel: widget.offer,
+            //       )
+            //     : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.cashModel.zelleId = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'ID cannot be empty';
+              } else if (value.length < 8) {
+                return 'Enter valid Swift ID';
+              } else {
+                requestModel.cashModel.swiftId = value;
+                return null;
+              }
+            },
+          )
+        ]);
+  }
+
   Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1723,6 +1766,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
           },
         ),
         _optionRadioButton<RequestPaymentType>(
+          title: 'Swift',
+          value: RequestPaymentType.PAYPAL,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton<RequestPaymentType>(
           title: 'Venmo',
           value: RequestPaymentType.VENMO,
           groupvalue: requestModel.cashModel.paymentType,
@@ -1746,7 +1798,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 ? RequestPaymentPaypal(requestModel)
                 : requestModel.cashModel.paymentType == RequestPaymentType.VENMO
                     ? RequestPaymentVenmo(requestModel)
-                    : RequestPaymentZellePay(requestModel),
+                    : requestModel.cashModel.paymentType ==
+                            RequestPaymentType.SWIFT
+                        ? RequestPaymentSwift(requestModel)
+                        : RequestPaymentZellePay(requestModel),
       ],
     );
   }
