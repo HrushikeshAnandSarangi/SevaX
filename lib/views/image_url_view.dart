@@ -235,7 +235,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
       } else {
         log('HERE 2');
 
-        if (widget.isCover) {
+        if (widget.isCover != null && widget.isCover) {
           showLoaderDialog();
           log('HERE 3');
           //crop functionality for stock image selection for cover photo

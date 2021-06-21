@@ -99,7 +99,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           child: CachedNetworkImage(
                             imageUrl: (projectModel.photoUrl == null ||
                                     projectModel.photoUrl == '')
-                                ? defaultUserImageURL
+                                ? defaultProjectImageURL
                                 : projectModel.photoUrl,
                             fit: BoxFit.cover,
                             width: 100,
