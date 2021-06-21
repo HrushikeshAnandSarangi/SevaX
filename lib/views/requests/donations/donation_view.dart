@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -58,6 +59,8 @@ class _DonationViewState extends State<DonationView> {
   String none = '';
 
   var focusNodes = List.generate(16, (_) => FocusNode());
+  final profanityDetector = ProfanityDetector();
+
   @override
   void initState() {
     donationsModel.id = Utils.getUuid();
@@ -288,7 +291,7 @@ class _DonationViewState extends State<DonationView> {
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
-              widget.offerModel.cashModel.paypalId = value;
+              donationsModel.cashDetails.cashDetails.paypalId = value;
             },
             validator: (value) {
               donationsModel.cashDetails.cashDetails.paypalId = value;
@@ -317,8 +320,9 @@ class _DonationViewState extends State<DonationView> {
             ),
             keyboardType: TextInputType.multiline,
             maxLines: 1,
+            maxLength: 11,
             onSaved: (value) {
-              widget.offerModel.cashModel.swiftId = value;
+              donationsModel.cashDetails.cashDetails.swiftId = value;
             },
             validator: (value) {
               if (value.isEmpty) {
@@ -326,7 +330,7 @@ class _DonationViewState extends State<DonationView> {
               } else if (value.length < 8) {
                 return 'Enter valid Swift ID';
               } else {
-                widget.offerModel.cashModel.swiftId = value;
+                donationsModel.cashDetails.cashDetails.swiftId = value;
                 return null;
               }
             },
@@ -694,6 +698,8 @@ class _DonationViewState extends State<DonationView> {
                                 RequestPaymentType.SWIFT
                             ? RequestPaymentSwift(widget.offerModel)
                             : RequestPaymentZellePay(widget.offerModel),
+            SizedBox(height: 15),
+            OtherDetailsWidget(),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -1417,5 +1423,48 @@ class _DonationViewState extends State<DonationView> {
     return OutlineInputBorder(
         borderSide: BorderSide(color: Colors.grey[600], width: 0.5),
         borderRadius: BorderRadius.circular(5));
+  }
+
+  Widget OtherDetailsWidget() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).other_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
+            focusNode: focusNodes[0],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[1]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_details,
+              hintStyle: hintTextStyle,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              donationsModel.cashDetails.cashDetails.others = value;
+            },
+            validator: (value) {
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                donationsModel.cashDetails.cashDetails.others = value;
+                return null;
+              }
+            },
+          ),
+        ]);
   }
 }

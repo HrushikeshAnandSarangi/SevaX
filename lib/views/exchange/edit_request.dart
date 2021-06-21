@@ -1523,6 +1523,15 @@ class RequestEditFormState extends State<RequestEditForm> {
               setState(() => {});
             }),
         _optionRadioButton(
+          title: 'Swift',
+          value: RequestPaymentType.SWIFT,
+          groupvalue: requestModel.cashModel.paymentType,
+          onChanged: (value) {
+            widget.requestModel.cashModel.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton(
             title: 'Venmo',
             value: RequestPaymentType.VENMO,
             groupvalue: requestModel.cashModel.paymentType,
@@ -1538,9 +1547,59 @@ class RequestEditFormState extends State<RequestEditForm> {
               widget.requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
-        getPaymentInformation
+        getPaymentInformation,
+        SizedBox(
+          height: 15,
+        ),
+        OtherDetailsWidget(),
       ],
     );
+  }
+
+  Widget OtherDetailsWidget() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).other_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
+            focusNode: focusNodes[0],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[1]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_details,
+              hintStyle: hintTextStyle,
+            ),
+            keyboardType: TextInputType.multiline,
+            initialValue: widget.requestModel.cashModel.others != null
+                ? widget.requestModel.cashModel.others
+                : '',
+            maxLines: 1,
+            onSaved: (value) {
+              widget.requestModel.cashModel.others = value;
+            },
+            validator: (value) {
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                widget.requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
+        ]);
   }
 
   Widget get getPaymentInformation {
@@ -1556,10 +1615,52 @@ class RequestEditFormState extends State<RequestEditForm> {
 
       case RequestPaymentType.VENMO:
         return RequestPaymentVenmo(widget.requestModel);
+      case RequestPaymentType.SWIFT:
+        return RequestPaymentSwift(widget.requestModel);
 
       default:
         return RequestPaymentACH(widget.requestModel);
     }
+  }
+
+  Widget RequestPaymentSwift(RequestModel requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Ex: Swift ID',
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.requestModel.cashModel.swiftId != null
+                ? widget.requestModel.cashModel.swiftId
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            maxLength: 11,
+            onSaved: (value) {
+              widget.requestModel.cashModel.swiftId = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'ID cannot be empty';
+              } else if (value.length < 8) {
+                return 'Enter valid Swift ID';
+              } else {
+                widget.requestModel.cashModel.swiftId = value;
+                return null;
+              }
+            },
+          )
+        ]);
   }
 
   //  Widget BorrowToolTitleField(hintTextDesc) {

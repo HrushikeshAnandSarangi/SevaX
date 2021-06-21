@@ -41,17 +41,19 @@ CashModel cashModelFromMap(String str) => CashModel.fromMap(json.decode(str));
 String cashModelToMap(CashModel data) => json.encode(data.toMap());
 
 class CashModel {
-  CashModel(
-      {this.amountRaised = 0,
-      this.paymentType,
-      this.donors,
-      this.minAmount,
-      this.targetAmount,
-      this.achdetails,
-      this.paypalId,
-      this.zelleId,
-      this.venmoId,
-      this.swiftId});
+  CashModel({
+    this.amountRaised = 0,
+    this.paymentType,
+    this.donors,
+    this.minAmount,
+    this.targetAmount,
+    this.achdetails,
+    this.paypalId,
+    this.zelleId,
+    this.venmoId,
+    this.swiftId,
+    this.others,
+  });
 
   int amountRaised = 0;
   RequestPaymentType paymentType;
@@ -63,6 +65,7 @@ class CashModel {
   String paypalId;
   String venmoId;
   String swiftId;
+  String others;
 
   factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         paymentType: json["paymentType"] == null
@@ -73,7 +76,9 @@ class CashModel {
                     ? RequestPaymentType.ZELLEPAY
                     : json["paymentType"] == 'RequestPaymentType.VENMO'
                         ? RequestPaymentType.VENMO
-                        : RequestPaymentType.PAYPAL,
+                        : json["paymentType"] == 'RequestPaymentType.SWIFT'
+                            ? RequestPaymentType.SWIFT
+                            : RequestPaymentType.PAYPAL,
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
         donors: json["donors"] == null
@@ -89,6 +94,7 @@ class CashModel {
         zelleId: json["zelleId"] == null ? null : json["zelleId"],
         venmoId: json["venmoId"] == null ? null : json["venmoId"],
         swiftId: json["swiftId"] == null ? null : json["swiftId"],
+        others: json["others"] == null ? null : json["others"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -102,5 +108,6 @@ class CashModel {
         'paypalId': paypalId == null ? null : paypalId,
         'venmoId': venmoId == null ? null : venmoId,
         'swiftId': swiftId == null ? null : swiftId,
+        'others': others == null ? null : others,
       };
 }

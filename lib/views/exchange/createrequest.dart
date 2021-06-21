@@ -1710,6 +1710,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             //     : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
+            maxLength: 11,
             onSaved: (value) {
               requestModel.cashModel.swiftId = value;
             },
@@ -1724,6 +1725,49 @@ class RequestCreateFormState extends State<RequestCreateForm>
               }
             },
           )
+        ]);
+  }
+
+  Widget OtherDetailsWidget() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).other_details,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
+            focusNode: focusNodes[0],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[1]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).other_details,
+              hintStyle: hintTextStyle,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.cashModel.others = value;
+            },
+            validator: (value) {
+              if (!value.isEmpty && profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                requestModel.cashModel.others = value;
+                return null;
+              }
+            },
+          ),
         ]);
   }
 
@@ -1802,6 +1846,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             RequestPaymentType.SWIFT
                         ? RequestPaymentSwift(requestModel)
                         : RequestPaymentZellePay(requestModel),
+        SizedBox(
+          height: 15,
+        ),
+        OtherDetailsWidget()
       ],
     );
   }
