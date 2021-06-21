@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../flavor_config.dart';
 
@@ -48,6 +49,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   void initState() {
     super.initState();
   }
+
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -321,12 +324,14 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Future<String> _uploadImage(File _image, BuildContext context) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
+    FirebaseUser user = await _firebaseAuth.currentUser();
     StorageReference ref = FirebaseStorage.instance
         .ref()
         .child('cover_photo')
-        .child('userEmail' +
+        .child(user.email +
+            '_' +
             timestampString +
-            '.jpg'); //need to pass user email here for reference
+            '.jpg'); //need to pass timebank name here for reference?
     StorageUploadTask uploadTask = ref.putFile(
       _image,
       StorageMetadata(
