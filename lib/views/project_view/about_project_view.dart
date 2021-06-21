@@ -75,182 +75,193 @@ class _AboutProjectViewState extends State<AboutProjectView> {
       body: isDataLoaded
           ? SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: <Widget>[
-                        AspectRatio(
-                          aspectRatio: 3 / 2,
-                          child: Image.network(
-                            projectModel.cover_url ?? defaultProjectImageURL,
-                            fit: BoxFit.cover,
-                            height: 200,
-                          ),
-                        ),
-                        Positioned(
-                          child: Container(
-                            child: CachedNetworkImage(
-                              imageUrl: (projectModel.photoUrl == null ||
-                                      projectModel.photoUrl == '')
-                                  ? defaultUserImageURL
-                                  : projectModel.photoUrl,
-                              fit: BoxFit.cover,
-                              width: 100,
-                              height: 70,
-                              placeholder: (context, url) {
-                                return LoadingIndicator();
-                              },
-                            ),
-                          ),
-                          left: 13.0,
-                          bottom: -38.0,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    projectModel.creatorId ==
-                            SevaCore.of(context).loggedInUser.sevaUserID
-                        ? Container(
-                            width: double.infinity,
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateEditProject(
-                                      timebankId: widget.timebankModel.id,
-                                      isCreateProject: false,
-                                      projectId: projectModel.id,
-                                      projectTemplateModel: null,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                S.of(context).edit,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Europa',
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    headingText(S.of(context).title),
-                    Text(projectModel.name ?? ""),
-                    headingText(S.of(context).mission_statement),
-                    SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(
-                            getTimeFormattedString(
-                              projectModel.startTime,
-                            ),
-                            style: TextStyle(color: Colors.grey, fontSize: 12)),
-                        SizedBox(width: 2),
-                        Icon(
-                          Icons.remove,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          getTimeFormattedString(
-                            projectModel.endTime,
-                          ),
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text(projectModel.description ?? ""),
-                    (projectModel.registrationLink == null ||
-                            projectModel.registrationLink == '')
-                        ? Container()
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headingText(S.of(context).registration_link),
-                              SizedBox(height: 10),
-                              Umeshify(
-                                text: projectModel.registrationLink,
-                                onOpen: (link) async {
-                                  if (await canLaunch(link)) {
-                                    await launch(link);
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                    headingText(S.of(context).organizer),
-                    SizedBox(height: 10),
-                    Row(
-                      children: <Widget>[
-                        UserProfileImage(
-                          photoUrl: user.photoURL,
-                          email: user.email,
-                          userId: user.sevaUserID,
-                          height: 60,
-                          width: 60,
-                          timebankModel: widget.timebankModel,
-                        ),
-                        SizedBox(width: 10),
-                        Text(user.fullname ?? ""),
-                        SizedBox(width: 30),
-                        Text(
-                          timeAgo
-                              .format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      projectModel.createdAt),
-                                  locale: Locale(AppConfig.prefs
-                                          .getString('language_code'))
-                                      .toLanguageTag())
-                              .replaceAll('hours ago', 'h'),
-                          style: TextStyle(
-                            fontFamily: 'Europa',
-                            color: Colors.black38,
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      AspectRatio(
+                        aspectRatio: 3 / 2,
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          height: 180,
+                          imageUrl:
+                              projectModel.cover_url ?? defaultProjectImageURL,
+                          placeholder: (context, url) {
+                            return LoadingIndicator();
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        child: Container(
+                          child: CachedNetworkImage(
+                            imageUrl: (projectModel.photoUrl == null ||
+                                    projectModel.photoUrl == '')
+                                ? defaultUserImageURL
+                                : projectModel.photoUrl,
+                            fit: BoxFit.cover,
+                            width: 100,
+                            height: 70,
+                            placeholder: (context, url) {
+                              return LoadingIndicator();
+                            },
+                          ),
+                        ),
+                        left: 13.0,
+                        bottom: -38.0,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
                         projectModel.creatorId ==
                                 SevaCore.of(context).loggedInUser.sevaUserID
-                            ? addManualTime
+                            ? Container(
+                                width: double.infinity,
+                                child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateEditProject(
+                                          timebankId: widget.timebankModel.id,
+                                          isCreateProject: false,
+                                          projectId: projectModel.id,
+                                          projectTemplateModel: null,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    S.of(context).edit,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontFamily: 'Europa',
+                                        fontWeight: FontWeight.bold,
+                                        color: FlavorConfig
+                                            .values.theme.primaryColor,
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                              )
                             : Container(),
-                        utils.isDeletable(
-                          contentCreatorId: projectModel.creatorId,
-                          context: context,
-                          communityCreatorId: widget
-                                  .timebankModel.managedCreatorIds.isNotEmpty
-                              ? widget.timebankModel.managedCreatorIds
-                                  .elementAt(0)
-                              : isPrimaryTimebank(
-                                      parentTimebankId:
-                                          widget.timebankModel.parentTimebankId)
-                                  ? widget.timebankModel.creatorId
-                                  : widget
-                                      .timebankModel.managedCreatorIds.first,
-                          timebankCreatorId: widget.timebankModel.creatorId,
+                        headingText(S.of(context).title),
+                        Text(projectModel.name ?? ""),
+                        headingText(S.of(context).mission_statement),
+                        SizedBox(height: 8),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                getTimeFormattedString(
+                                  projectModel.startTime,
+                                ),
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12)),
+                            SizedBox(width: 2),
+                            Icon(
+                              Icons.remove,
+                              size: 14,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              getTimeFormattedString(
+                                projectModel.endTime,
+                              ),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(projectModel.description ?? ""),
+                        (projectModel.registrationLink == null ||
+                                projectModel.registrationLink == '')
+                            ? Container()
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  headingText(S.of(context).registration_link),
+                                  SizedBox(height: 10),
+                                  Umeshify(
+                                    text: projectModel.registrationLink,
+                                    onOpen: (link) async {
+                                      if (await canLaunch(link)) {
+                                        await launch(link);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                        headingText(S.of(context).organizer),
+                        SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            UserProfileImage(
+                              photoUrl: user.photoURL,
+                              email: user.email,
+                              userId: user.sevaUserID,
+                              height: 60,
+                              width: 60,
+                              timebankModel: widget.timebankModel,
+                            ),
+                            SizedBox(width: 10),
+                            Text(user.fullname ?? ""),
+                            SizedBox(width: 30),
+                            Text(
+                              timeAgo
+                                  .format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          projectModel.createdAt),
+                                      locale: Locale(AppConfig.prefs
+                                              .getString('language_code'))
+                                          .toLanguageTag())
+                                  .replaceAll('hours ago', 'h'),
+                              style: TextStyle(
+                                fontFamily: 'Europa',
+                                color: Colors.black38,
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            projectModel.creatorId ==
+                                    SevaCore.of(context).loggedInUser.sevaUserID
+                                ? addManualTime
+                                : Container(),
+                            utils.isDeletable(
+                              contentCreatorId: projectModel.creatorId,
+                              context: context,
+                              communityCreatorId: widget.timebankModel
+                                      .managedCreatorIds.isNotEmpty
+                                  ? widget.timebankModel.managedCreatorIds
+                                      .elementAt(0)
+                                  : isPrimaryTimebank(
+                                          parentTimebankId: widget
+                                              .timebankModel.parentTimebankId)
+                                      ? widget.timebankModel.creatorId
+                                      : widget.timebankModel.managedCreatorIds
+                                          .first,
+                              timebankCreatorId: widget.timebankModel.creatorId,
+                            )
+                                ? deleteProject
+                                : Container(),
+                          ],
                         )
-                            ? deleteProject
-                            : Container(),
                       ],
-                    )
-                  ],
-                ),
-              ),
-            )
+                    ),
+                  ),
+                ])))
           : LoadingIndicator(),
     );
   }
