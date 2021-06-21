@@ -1711,7 +1711,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.cashModel.zelleId = value;
+              requestModel.cashModel.swiftId = value;
             },
             validator: (value) {
               if (value.isEmpty) {
@@ -1767,7 +1767,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         ),
         _optionRadioButton<RequestPaymentType>(
           title: 'Swift',
-          value: RequestPaymentType.PAYPAL,
+          value: RequestPaymentType.SWIFT,
           groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
             requestModel.cashModel.paymentType = value;

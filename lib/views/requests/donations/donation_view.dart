@@ -298,6 +298,42 @@ class _DonationViewState extends State<DonationView> {
         ]);
   }
 
+  Widget RequestPaymentSwift(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: (value) {},
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: 'Ex: Swift ID',
+              hintStyle: hintTextStyle,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.offerModel.cashModel.swiftId = value;
+            },
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'ID cannot be empty';
+              } else if (value.length < 8) {
+                return 'Enter valid Swift ID';
+              } else {
+                widget.offerModel.cashModel.swiftId = value;
+                return null;
+              }
+            },
+          )
+        ]);
+  }
+
   Widget RequestPaymentVenmo(OfferModel offerModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,9 +350,6 @@ class _DonationViewState extends State<DonationView> {
               hintText: S.of(context).email_hint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: donationsModel.cashDetails.cashDetails != null
-                ? donationsModel.cashDetails.cashDetails.targetAmount
-                : "0",
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
@@ -623,6 +656,16 @@ class _DonationViewState extends State<DonationView> {
                   setState(() => {});
                 }),
             _optionRadioButton(
+              title: 'Swift',
+              value: RequestPaymentType.SWIFT,
+              groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+              onChanged: (value) {
+                donationsModel.cashDetails.cashDetails.paymentType = value;
+
+                setState(() => {});
+              },
+            ),
+            _optionRadioButton(
                 title: 'Venmo',
                 value: RequestPaymentType.VENMO,
                 groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
@@ -647,7 +690,10 @@ class _DonationViewState extends State<DonationView> {
                     : donationsModel.cashDetails.cashDetails.paymentType ==
                             RequestPaymentType.VENMO
                         ? RequestPaymentVenmo(widget.offerModel)
-                        : RequestPaymentZellePay(widget.offerModel),
+                        : donationsModel.cashDetails.cashDetails.paymentType ==
+                                RequestPaymentType.SWIFT
+                            ? RequestPaymentSwift(widget.offerModel)
+                            : RequestPaymentZellePay(widget.offerModel),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
