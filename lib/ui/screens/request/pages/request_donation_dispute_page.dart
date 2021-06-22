@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -364,6 +365,7 @@ class _RequestDonationDisputePageState
                           ? widget.model.minimumAmount.toString()
                           : widget.model.cashDetails.cashDetails.amountRaised
                               .toString(),
+                      others: widget.model.cashDetails.cashDetails.others,
                     )
                   : _GoodsFlow(
                       status: widget.model.donationStatus,
@@ -629,6 +631,7 @@ class _CashFlow extends StatelessWidget {
     this.creatorName,
     this.requestMode,
     this.minAmount,
+    this.others,
   })  : _bloc = bloc,
         super(key: key);
   final model;
@@ -642,6 +645,7 @@ class _CashFlow extends StatelessWidget {
   final String currency;
   final String timebankName;
   final String creatorName;
+  final String others;
   final RequestMode requestMode;
   final OperatingMode operatingMode;
   final scaffoldKey;
@@ -747,6 +751,29 @@ class _CashFlow extends StatelessWidget {
                   fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.normal),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            HideWidget(
+              hide: others == null,
+              child: Text(
+                'Other Details',
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              others ?? '',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 20,

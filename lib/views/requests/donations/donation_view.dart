@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
@@ -1242,6 +1243,26 @@ class _DonationViewState extends State<DonationView> {
             ),
             SizedBox(
               height: 20,
+            ),
+            HideWidget(
+              hide: widget.requestModel.cashModel.others == null,
+              child: Text(
+                'Other Details',
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              widget.requestModel.cashModel.others ?? '',
+              style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
