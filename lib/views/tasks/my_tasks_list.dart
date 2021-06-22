@@ -7,18 +7,16 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -74,17 +72,14 @@ class MyTasksListState extends State<MyTaskList> {
   final subjectBorrow = ReplaySubject<int>();
 
   RequestModel requestModelNew;
+  Stream<dynamic> myTasksStream;
 
-  Stream<List<RequestModel>> myTasksStream;
+  List<Widget> widgetList = [];
+
   @override
   void initState() {
     super.initState();
-    myTasksStream = FirestoreManager.getTaskStreamForUserWithEmail(
-      userEmail: widget.email,
-      userId: widget.sevaUserId,
-      context: context,
-    );
-
+    myTasksStream = ToDo.getToDoList(widget.email, widget.sevaUserId);
     subjectBorrow
         .transform(ThrottleStreamTransformer(
             (_) => TimerStream(true, const Duration(seconds: 1))))
@@ -96,7 +91,7 @@ class MyTasksListState extends State<MyTaskList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<RequestModel>>(
+    return StreamBuilder<dynamic>(
       stream: myTasksStream,
       builder: (streamContext, snapshot) {
         if (!snapshot.hasData) {
@@ -105,183 +100,32 @@ class MyTasksListState extends State<MyTaskList> {
             child: LoadingIndicator(),
           );
         }
-        List<RequestModel> requestModelList = snapshot.data;
-        if (requestModelList.length == 0) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 58.0),
+
+        widgetList.clear();
+
+        widgetList = ToDo.classifyToDos(
+            context: context,
+            toDoSink: snapshot.data,
+            requestCallback: (requestModel) {
+              requestModelNew = requestModel;
+            });
+
+        if (widgetList.length == 0)
+          return Center(
             child: Text(
-              S.of(context).no_pending_task,
-              textAlign: TextAlign.center,
+              'No To Do\'s',
             ),
           );
-        }
+
         return ListView.builder(
           physics: NeverScrollableScrollPhysics(),
-          itemCount: requestModelList.length,
+          itemCount: widgetList.length,
           itemBuilder: (listContext, index) {
-            RequestModel model = requestModelList[index];
-            requestModelNew = model;
-
-            if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                    model.accepted == false
-                //&& model.isSpeakerCompleted == false
-                ) {
-              return getOneToManyTaskWidget(
-                  model, SevaCore.of(context).loggedInUser.timezone, context);
-            } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                model.accepted == true) {
-              return Container();
-            } else {
-              return getTaskWidget(
-                model,
-                SevaCore.of(context).loggedInUser.timezone,
-                context,
-              );
-            }
+            return widgetList[index];
           },
         );
       },
     );
-  }
-
-  Widget getTaskWidget(
-    RequestModel model,
-    String userTimezone,
-    BuildContext context,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          shadows: shadowList,
-        ),
-        child: InkWell(
-          onTap: () {
-            logger.e('TYPEE: ------>  ' + model.requestType.toString());
-            logger.e('FIRST CLICK 1');
-
-            if (model.requestType == RequestType.BORROW) {
-              subjectBorrow.add(0);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => BorrowRequestFeedBackView(
-              //       requestModel: model,
-              //     ),
-              //   ),
-              // );
-            } else {
-              logger.e('FIRST CLICK 2');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TaskCardView(
-                    requestModel: model,
-                    userTimezone: userTimezone,
-                  ),
-                ),
-              );
-              // return TaskCardView(
-              //   requestModel: model,
-              //   userTimezone: userTimezone,
-              // );
-            }
-          },
-          child: ListTile(
-            title: Text(
-              model.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(model.fullName),
-                SizedBox(height: 4),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  //runAlignment: WrapAlignment.center,
-                  spacing: 8,
-                  children: <Widget>[
-                    Text(
-                      getTimeFormattedString(model.requestStart, userTimezone),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                      size: 14,
-                    ),
-                    Text(
-                      getTimeFormattedString(model.requestEnd, userTimezone),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
-            ),
-            onTap: () {
-              logger.e('TYPEE: ------>  ' + model.requestType.toString());
-
-              if (model.requestType == RequestType.BORROW) {
-                logger.e('SECOND CLICK 1');
-                subjectBorrow.add(0);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => BorrowRequestFeedBackView(
-                //       requestModel: model,
-                //     ),
-                //   ),
-                // );
-              } else {
-                logger.e('SECOND CLICK 2');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskCardView(
-                      requestModel: model,
-                      userTimezone: userTimezone,
-                    ),
-                  ),
-                );
-                // return TaskCardView(
-                //   requestModel: model,
-                //   userTimezone: userTimezone,
-                // );
-              }
-            },
-          ),
-        ),
-      ),
-    );
-    // return FutureBuilder<UserModel>(
-    //     future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasError) return Text(snapshot.error.toString());
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return taskShimmer;
-    //       }
-
-    //       UserModel user = snapshot.data;
-
-    //       if (user == null) {
-    //         return Container();
-    //       }
-
-    //       // DateFormat format = DateFormat(
-    //       //     'dd/MM/yy hh:mm a',
-    //       //     Locale(getLangTag())
-    //       //         .toLanguageTag());
-
-    //     });
   }
 
   void checkForReviewBorrowRequests() async {
@@ -434,102 +278,6 @@ class MyTasksListState extends State<MyTaskList> {
         });
   }
 
-  Widget getOneToManyTaskWidget(
-    RequestModel model,
-    String userTimezone,
-    BuildContext context,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          shadows: shadowList,
-        ),
-        child: InkWell(
-          onTap: () {
-            return null;
-          },
-          child: ListTile(
-            title: Text(
-              model.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(model.fullName),
-                // SizedBox(height: 4),
-                // Text(
-                //   timeAgo.format(
-                //     DateTime.fromMillisecondsSinceEpoch(
-                //       model.requestStart,
-                //     ),
-                //     locale: S.of(context).localeName == 'sn'
-                //         ? 'en'
-                //         : S.of(context).localeName,
-                //   ),
-                // ),
-                SizedBox(height: 8),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  //runAlignment: WrapAlignment.center,
-                  spacing: 8,
-                  children: <Widget>[
-                    model.isSpeakerCompleted
-                        ? Text(S.of(context).requested_for_completion)
-                        : Container(
-                            height: 35,
-                            child: RaisedButton(
-                              padding: EdgeInsets.zero,
-                              color: FlavorConfig.values.theme.primaryColor,
-                              child: Text(
-                                S.of(context).speaker_claim_credits,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Europa',
-                                    fontSize: 12),
-                              ),
-                              onPressed: () async {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return OneToManySpeakerTimeEntryComplete(
-                                        requestModel: model,
-                                        onFinish: () async {
-                                          await oneToManySpeakerCompletesRequest(
-                                              context, model);
-                                        },
-                                        fromNotification: false,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                    SizedBox(height: 4),
-                  ],
-                ),
-                SizedBox(height: 5),
-              ],
-            ),
-            leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
-            ),
-            onTap: () {
-              return null;
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   String getTime(int timeInMilliseconds, String timezoneAbb) {
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
@@ -616,40 +364,6 @@ class MyTasksListState extends State<MyTaskList> {
         model.color = Color.fromRGBO(237, 230, 110, 1.0);
         return 'lib/assets/images/yellow.png';
     }
-  }
-
-  Future oneToManySpeakerCompletesRequest(
-      BuildContext context, RequestModel requestModel) async {
-    NotificationsModel notificationModel = NotificationsModel(
-        timebankId: requestModel.timebankId,
-        targetUserId: requestModel.sevaUserId,
-        data: requestModel.toMap(),
-        type: NotificationType.OneToManyRequestCompleted,
-        id: utils.Utils.getUuid(),
-        isRead: false,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        communityId: requestModel.communityId,
-        isTimebankNotification: true);
-
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
-        .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
-
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .updateData({
-      'isSpeakerCompleted': true,
-    });
-
-    await FirestoreManager
-        .readUserNotificationOneToManyWhenSpeakerIsRejectedCompletion(
-            requestModel: requestModel,
-            userEmail: SevaCore.of(context).loggedInUser.email,
-            fromNotification: false);
   }
 }
 
@@ -908,7 +622,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                 Row(
                                   children: [
                                     Text(
-                                     S.of(context).enter_delivery_time,
+                                      S.of(context).enter_delivery_time,
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w500),

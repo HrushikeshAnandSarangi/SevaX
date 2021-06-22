@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/pending_tasks.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -10,24 +11,28 @@ class NotAcceptedTaskList extends StatefulWidget {
 }
 
 class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
-  List<RequestModel> requestList = [];
+  List<Widget> peningItems = [];
   //List<UserModel> userList = [];
 
-  Stream<List<RequestModel>> requestStream;
+  Stream<dynamic> requestStream;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    requestStream = FirestoreManager.getNotAcceptedRequestStream(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID);
+
+    requestStream = PendingTasks.getPendingTasks(
+      loggedInmemberId: SevaCore.of(context).loggedInUser.sevaUserID,
+      loggedinMemberEmail: SevaCore.of(context).loggedInUser.email,
+    );
+
     requestStream.listen(
       (list) {
         if (!mounted) return;
-        setState(() {
-          requestList = list;
-          return requestList;
-        });
+        peningItems = PendingTasks.classifyPendingTasks(
+          pendingSink: list,
+          context: context,
+        );
+        setState(() {});
       },
     );
   }
@@ -39,7 +44,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
 
   @override
   Widget build(BuildContext context) {
-    if (requestList.length == 0) {
+    if (peningItems.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),
         child: Text(
@@ -49,48 +54,48 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
       );
     }
     return ListView.builder(
-      // physics: NeverScrollableScrollPhysics(),
+      itemCount: peningItems.length,
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        RequestModel model = requestList.elementAt(index);
+        return peningItems[index];
 
-        return Card(
-          child: ListTile(
-            title: Text(model.title),
-            leading: FutureBuilder(
-              future:
-                  FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return CircleAvatar();
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircleAvatar();
-                }
-                UserModel user = snapshot.data;
-                return CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(user.photoURL ?? defaultUserImageURL),
-                );
-              },
-            ),
-            subtitle: FutureBuilder(
-              future:
-                  FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('');
-                }
-                UserModel user = snapshot.data;
-                return Text('${user.fullname}');
-              },
-            ),
-          ),
-        );
+        // return Card(
+        //   child: ListTile(
+        //     title: Text(model.title),
+        //     leading: FutureBuilder(
+        //       future:
+        //           FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+        //       builder: (context, snapshot) {
+        //         if (snapshot.hasError) {
+        //           return CircleAvatar();
+        //         }
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return CircleAvatar();
+        //         }
+        //         UserModel user = snapshot.data;
+        //         return CircleAvatar(
+        //           backgroundImage:
+        //               NetworkImage(user.photoURL ?? defaultUserImageURL),
+        //         );
+        //       },
+        //     ),
+        //     subtitle: FutureBuilder(
+        //       future:
+        //           FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+        //       builder: (context, snapshot) {
+        //         if (snapshot.hasError) {
+        //           return Text('');
+        //         }
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return Text('');
+        //         }
+        //         UserModel user = snapshot.data;
+        //         return Text('${user.fullname}');
+        //       },
+        //     ),
+        //   ),
+        // );
       },
-      itemCount: requestList.length,
     );
   }
 }

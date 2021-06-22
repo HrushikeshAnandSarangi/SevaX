@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -29,23 +30,23 @@ class CompletedList extends StatefulWidget {
 }
 
 class _CompletedListState extends State<CompletedList> {
-  List<RequestModel> requestList = [];
-  //List<UserModel> userList = [];
+  List<Widget> completedTasks = [];
 
-  Stream<List<RequestModel>> requestStream;
+  Stream<Object> requestStream;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    requestStream = FirestoreManager.getCompletedRequestStream(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID);
+    requestStream = CompletedTasks.getCompletedTasks(
+      loggedinMemberEmail: SevaCore.of(context).loggedInUser.email,
+      loggedInmemberId: SevaCore.of(context).loggedInUser.sevaUserID,
+    );
     requestStream.listen(
       (list) {
         if (!mounted) return;
         setState(() {
-          requestList = list;
-          return requestList;
+          completedTasks = CompletedTasks.classifyCompletedTasks(
+              completedSink: list, context: context);
         });
       },
     );
@@ -58,7 +59,7 @@ class _CompletedListState extends State<CompletedList> {
 
   @override
   Widget build(BuildContext context) {
-    if (requestList.length == 0) {
+    if (completedTasks.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),
         child:
@@ -66,84 +67,84 @@ class _CompletedListState extends State<CompletedList> {
       );
     }
     return ListView.builder(
-      // physics: NeverScrollableScrollPhysics(),
-      itemCount: requestList.length,
-
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: completedTasks.length,
       itemBuilder: (context, index) {
-        RequestModel model =
-            requestList.elementAt(requestList.length - index - 1);
+        return completedTasks[index];
 
-        TransactionModel transmodel;
-      
-        if (model.transactions.length > 0) {
-          transmodel = model.transactions.firstWhere((transaction) {
-            return transaction.to ==
-                SevaCore.of(context).loggedInUser.sevaUserID;
-          });
-        }
+        // RequestModel model =
+        //     requestList.elementAt(requestList.length - index - 1);
 
-        return Card(
-          child: ListTile(
-            title: Text(model.title),
-            leading: FutureBuilder(
-              future:
-                  FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return CircleAvatar();
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircleAvatar();
-                }
-                UserModel user = snapshot.data;
-                if (user == null) {
-                  return CircleAvatar(
-                    backgroundImage: NetworkImage(defaultUserImageURL),
-                  );
-                }
-                return CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(user.photoURL ?? defaultUserImageURL),
-                );
-              },
-            ),
-            trailing: () {
-              transmodel == null 
-                  ? Text('0')
-                  : 
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text('${transmodel.credits}'),
-                      Text(S.of(context).seva_credits,
-                          style: TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.2,
-                          )),
-                    ],
-                  );
-            }(),
-            subtitle: FutureBuilder(
-              future:
-                  FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('');
-                }
-                UserModel user = snapshot.data;
-                if (user == null) {
-                  return Text('');
-                }
-                return Text('${user.fullname}');
-              },
-            ),
-          ),
-        );
+        // TransactionModel transmodel;
+
+        // if (model.transactions.length > 0) {
+        //   transmodel = model.transactions.firstWhere((transaction) {
+        //     return transaction.to ==
+        //         SevaCore.of(context).loggedInUser.sevaUserID;
+        //   });
+        // }
+
+        // return Card(
+        //   child: ListTile(
+        //     title: Text(model.title),
+        //     leading: FutureBuilder(
+        //       future:
+        //           FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+        //       builder: (context, snapshot) {
+        //         if (snapshot.hasError) {
+        //           return CircleAvatar();
+        //         }
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return CircleAvatar();
+        //         }
+        //         UserModel user = snapshot.data;
+        //         if (user == null) {
+        //           return CircleAvatar(
+        //             backgroundImage: NetworkImage(defaultUserImageURL),
+        //           );
+        //         }
+        //         return CircleAvatar(
+        //           backgroundImage:
+        //               NetworkImage(user.photoURL ?? defaultUserImageURL),
+        //         );
+        //       },
+        //     ),
+        //     trailing: () {
+        //       transmodel == null
+        //           ? Text('0')
+        //           : Column(
+        //               mainAxisSize: MainAxisSize.min,
+        //               crossAxisAlignment: CrossAxisAlignment.center,
+        //               children: <Widget>[
+        //                 Text('${transmodel.credits}'),
+        //                 Text(S.of(context).seva_credits,
+        //                     style: TextStyle(
+        //                       fontSize: 9,
+        //                       fontWeight: FontWeight.w600,
+        //                       letterSpacing: -0.2,
+        //                     )),
+        //               ],
+        //             );
+        //     }(),
+        //     subtitle: FutureBuilder(
+        //       future:
+        //           FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+        //       builder: (context, snapshot) {
+        //         if (snapshot.hasError) {
+        //           return Text('');
+        //         }
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return Text('');
+        //         }
+        //         UserModel user = snapshot.data;
+        //         if (user == null) {
+        //           return Text('');
+        //         }
+        //         return Text('${user.fullname}');
+        //       },
+        //     ),
+        //   ),
+        // );
       },
     );
   }
