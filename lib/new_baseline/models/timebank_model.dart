@@ -286,7 +286,7 @@ class TimebankModel extends DataModel {
       "address": address == null ? null : address,
       "creator_id": creatorId == null ? null : creatorId,
       "photo_url": photoUrl == null ? null : photoUrl,
-      "cover_url": photoUrl == null ? null : cover_url,
+      "cover_url": cover_url == null ? null : cover_url,
       "created_at": createdAt == null ? null : createdAt,
       "admins":
           admins == null ? null : List<dynamic>.from(admins.map((x) => x)),
