@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -16,7 +17,11 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/feeds/share_feed_component/bloc/share_feed_bloc_component.dart';
+import 'package:sevaexchange/ui/screens/feeds/share_feed_component/states/share_feed_screen.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/bloc/members_bloc.dart';
 import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
@@ -522,6 +527,8 @@ class DiscussionListState extends State<DiscussionList> {
   StreamController<List<NewsModel>> newsStream;
   List<String> sortOrderArr = ["Latest", "Likes"];
   String sortOrderVal = "Latest";
+  SearchSegmentBloc searchSegmentBloc;
+  List<UserModel> membersInTimebank = [];
 
   @override
   void initState() {
@@ -1152,49 +1159,11 @@ class DiscussionListState extends State<DiscussionList> {
                                   )
                                 : Offstage(),
                           ),
-                          getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Icon(
-                                Icons.share,
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                            ),
-                            () {
-                              // SHARE ICON ON TAP
-                              if (SevaCore.of(context)
-                                      .loggedInUser
-                                      .associatedWithTimebanks >
-                                  1) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SelectTimeBankNewsShare(
-                                            news,
-                                          )),
-                                );
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectMembersFromTimebank(
-                                      timebankId: SevaCore.of(context)
-                                          .loggedInUser
-                                          .currentTimebank,
-                                      newsModel: news,
-                                      isFromShare: true,
-                                      selectionMode:
-                                          MEMBER_SELECTION_MODE.SHARE_FEED,
-                                      userSelected: HashMap(),
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
+                          ShareFeedsComponent(
+                            feedToShare: news,
+                            timebankId: widget.timebankId,
+                            searchSegmentBloc: getSearchBlocForShare(),
+                            loggedInUser: SevaCore.of(context).loggedInUser,
                           ),
 
                           getOptionButtons(
@@ -1280,6 +1249,30 @@ class DiscussionListState extends State<DiscussionList> {
         ),
       ),
     );
+  }
+
+  SearchSegmentBloc getSearchBlocForShare() {
+    if (membersInTimebank.length == 0) {
+      TimebankModel currentTimebankModel;
+
+      final _membersBloc = Provider.of<MembersBloc>(context, listen: false);
+      final _homePageBaseBloc =
+          Provider.of<HomePageBaseBloc>(context, listen: false);
+      currentTimebankModel = _homePageBaseBloc
+          .getTimebankModelFromCurrentCommunity(widget.timebankId);
+
+      currentTimebankModel.members.forEach((element) {
+        membersInTimebank.add(
+          _membersBloc.getMemberFromLocalData(
+            userId: element,
+          ),
+        );
+      });
+
+      searchSegmentBloc = SearchSegmentBloc();
+      searchSegmentBloc.init(listOfMembersInTimebank: membersInTimebank);
+    }
+    return searchSegmentBloc;
   }
 
   Widget getImageView(String newsId, String urlToLoad) {

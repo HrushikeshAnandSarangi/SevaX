@@ -88,7 +88,7 @@ class ChatModel {
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap(),
-        "chatContext": chatContext?.toMap() ?? {},
+        "chatContext": chatContext != null ? chatContext.toMap() ?? {} : {},
         "showToCommunities":
             List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
         "interCommunity": interCommunity ?? false,
