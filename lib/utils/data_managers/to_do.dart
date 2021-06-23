@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,76 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
+import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
+import '../../flavor_config.dart';
 import '../../labels.dart';
 
 class ToDo {
+  static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
+    String loggedInMemberEmail,
+  }) async* {
+    yield* Firestore.instance
+        .collection('requests')
+        .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
+        .where('request_end',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+                handleData: (data, sink) {
+      List<RequestModel> requestList = [];
+      data.documents.forEach((element) {
+        requestList.add(RequestModel.fromMap(element.data));
+      });
+      return sink.add(requestList);
+    }));
+  }
+
+  static Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
+    @required String userEmail,
+    @required String userId,
+    BuildContext context,
+  }) async* {
+    var data = Firestore.instance
+        .collection('requests')
+        .where('approvedUsers', arrayContains: userEmail)
+        .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+        .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+        handleData: (snapshot, requestSink) {
+          log('REQUESTS LIST:  ' + snapshot.documents.length.toString());
+          List<RequestModel> requestModelList = [];
+          snapshot.documents.forEach((documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            bool isCompletedByUser = false;
+
+            model.transactions?.forEach((transaction) {
+              if (transaction.to == userId) isCompletedByUser = true;
+            });
+            if ((!isCompletedByUser &&
+                (model.requestType == RequestType.TIME ||
+                    model.requestType == RequestType.ONE_TO_MANY_REQUEST))) {
+              requestModelList.add(model);
+            }
+          });
+
+          requestSink.add(requestModelList);
+        },
+      ),
+    );
+    // END OF CODE correction mentioned above
+  }
+
   static Stream<List<OfferModel>> getOneToManyOffersCreated(
     String loggedInmemberEmail,
   ) async* {
@@ -70,22 +132,27 @@ class ToDo {
     loggedinMemberEmail,
     loggedInmemberId,
   ) {
-    return CombineLatestStream.combine3(
-        FirestoreManager.getTaskStreamForUserWithEmail(
+    return CombineLatestStream.combine4(
+        getTaskStreamForUserWithEmail(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
         ),
         getSignedUpOffersStream(loggedInmemberId),
         getOneToManyOffersCreated(loggedinMemberEmail),
+        getSignedUpOneToManyRequests(
+          loggedInMemberEmail: loggedinMemberEmail,
+        ),
         (
           pendingClaims,
           acceptedOneToManyOffers,
           oneToManyOffersCreated,
+          acceptedOneToManyRequests,
         ) =>
             [
               pendingClaims,
               acceptedOneToManyOffers,
               oneToManyOffersCreated,
+              acceptedOneToManyRequests,
             ]);
   }
 
@@ -93,8 +160,10 @@ class ToDo {
     @required List<dynamic> toDoSink,
     @required ValueChanged<RequestModel> requestCallback,
     @required BuildContext context,
+    @required ValueChanged<int> feedbackCallback,
   }) {
     List<Widget> widgetList = [];
+
     List<RequestModel> requestList = toDoSink[0];
     requestList.forEach((model) {
       requestCallback(model);
@@ -106,7 +175,14 @@ class ToDo {
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
             onTap: model.isSpeakerCompleted
-                ? showDialog(context: context)
+                ? CompletedTasks.showMyTaskDialog(
+                    context: context,
+                    title:
+                        L.of(context).to_do_one_to_many_request_speaker_title,
+                    subTitle: L
+                        .of(context)
+                        .to_do_one_to_many_request_speaker_subtitle,
+                  )
                 : () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -123,7 +199,7 @@ class ToDo {
                       ),
                     );
                   },
-            tag: L.of(context).one_to_many_attende,
+            tag: L.of(context).one_to_many_request_speaker,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -138,7 +214,7 @@ class ToDo {
             title: model.title,
             onTap: () {
               if (model.requestType == RequestType.BORROW) {
-                // subjectBorrow.add(0);
+                feedbackCallback(0);
               } else {
                 Navigator.push(
                   context,
@@ -156,15 +232,19 @@ class ToDo {
       }
     });
 
-    //Signed up One to many Offers
+    //Signed up One to many Offers attendee
     List<OfferModel> offersList = toDoSink[1];
     offersList.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () => _showMyDialog(context),
+          onTap: () => CompletedTasks.showMyTaskDialog(
+            context: context,
+            title: L.of(context).to_do_one_to_many_offer_attende_title,
+            subTitle: L.of(context).to_do_one_to_many_offer_attende_subtitle,
+          ),
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
-          tag: L.of(context).one_to_many_attende,
+          tag: L.of(context).one_to_many_offer_attende,
           timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
       );
@@ -174,11 +254,31 @@ class ToDo {
     List<OfferModel> createdOneToManyOffers = toDoSink[2];
     createdOneToManyOffers.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () => _showMyDialog(context),
+        onTap: () => CompletedTasks.showMyTaskDialog(
+          context: context,
+          title: L.of(context).to_do_one_to_many_offer_speaker_title,
+          subTitle: L.of(context).to_do_one_to_many_offer_speaker_subtitle,
+        ),
         title: element.groupOfferDataModel.classTitle,
         subTitle: element.groupOfferDataModel.classDescription,
-        tag: L.of(context).one_to_many_speaker,
+        tag: L.of(context).one_to_many_offer_speaker,
         timeInMilliseconds: element.groupOfferDataModel.startDate,
+      ));
+    });
+
+    //Attendee for one to many request
+    List<RequestModel> acceptedOneToManyRequests = toDoSink[3];
+    acceptedOneToManyRequests.forEach((element) {
+      widgetList.add(ToDoCard(
+        onTap: () => CompletedTasks.showMyTaskDialog(
+          context: context,
+          title: L.of(context).to_do_one_to_many_request_attende_title,
+          subTitle: L.of(context).to_do_one_to_many_request_attende_subtitle,
+        ),
+        title: element.title,
+        subTitle: element.description,
+        tag: L.of(context).one_to_many_request_attende,
+        timeInMilliseconds: element.requestStart,
       ));
     });
 
@@ -217,34 +317,6 @@ class ToDo {
             requestModel: requestModel,
             userEmail: SevaCore.of(context).loggedInUser.email,
             fromNotification: false);
-  }
-
-  static Future<void> _showMyDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }
 
@@ -304,13 +376,16 @@ class ToDoCard extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              bottom: 12,
+          HideWidget(
+            hide: subTitle.isEmpty,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 8.0,
+                right: 8.0,
+                bottom: 12,
+              ),
+              child: Text(subTitle),
             ),
-            child: Text(subTitle),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 12),

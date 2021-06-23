@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -15,6 +16,25 @@ import 'package:sevaexchange/views/core.dart';
 import '../../labels.dart';
 
 class CompletedTasks {
+  static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
+    String loggedInMemberEmail,
+  }) async* {
+    yield* Firestore.instance
+        .collection('requests')
+        .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
+        .where('request_end', isLessThan: DateTime.now().millisecondsSinceEpoch)
+        .snapshots()
+        .transform(
+            StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+                handleData: (data, sink) {
+      List<RequestModel> requestList = [];
+      data.documents.forEach((element) {
+        requestList.add(RequestModel.fromMap(element.data));
+      });
+      return sink.add(requestList);
+    }));
+  }
+
   static Stream<List<OfferModel>> getCompletedOneToManyOffersCreated(
     String loggedInmemberEmail,
   ) async* {
@@ -67,22 +87,25 @@ class CompletedTasks {
     loggedinMemberEmail,
     loggedInmemberId,
   }) {
-    return CombineLatestStream.combine3(
+    return CombineLatestStream.combine4(
         FirestoreManager.getCompletedRequestStream(
           userEmail: loggedinMemberEmail,
           userId: loggedInmemberId,
         ),
         getCompletedSignedUpOffersStream(loggedInmemberId),
         getCompletedOneToManyOffersCreated(loggedinMemberEmail),
+        getSignedUpOneToManyRequests(loggedInMemberEmail: loggedinMemberEmail),
         (
           pendingClaims,
           acceptedOneToManyOffers,
           oneToManyOffersCreated,
+          signedUpOneToManyRequests,
         ) =>
             [
               pendingClaims,
               acceptedOneToManyOffers,
               oneToManyOffersCreated,
+              signedUpOneToManyRequests,
             ]);
   }
 
@@ -100,8 +123,13 @@ class CompletedTasks {
             title: model.title,
             subTitle: model.description,
             timeInMilliseconds: model.requestStart,
-            onTap: null,
-            tag: L.of(context).one_to_many_attende,
+            onTap: () => showMyTaskDialog(
+              context: context,
+              title: L.of(context).completed_one_to_many_request_speaker_title,
+              subTitle:
+                  L.of(context).completed_one_to_many_request_speaker_subtitle,
+            ),
+            tag: L.of(context).one_to_many_request_speaker,
           ),
         );
       } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
@@ -120,15 +148,20 @@ class CompletedTasks {
       }
     });
 
-    //Signed up One to many Offers
+    //Signed up One to many Offers attendde
     List<OfferModel> offersList = completedSink[1];
     offersList.forEach((element) {
       widgetList.add(
         ToDoCard(
-          onTap: () => _showMyDialog(context),
+          onTap: () => showMyTaskDialog(
+            context: context,
+            title: L.of(context).completed_one_to_many_offer_attende_title,
+            subTitle:
+                L.of(context).completed_one_to_many_offer_attende_subtitle,
+          ),
           title: element.groupOfferDataModel.classTitle,
           subTitle: element.groupOfferDataModel.classDescription,
-          tag: L.of(context).one_to_many_attende,
+          tag: L.of(context).one_to_many_offer_attende,
           timeInMilliseconds: element.groupOfferDataModel.startDate,
         ),
       );
@@ -138,11 +171,32 @@ class CompletedTasks {
     List<OfferModel> createdOneToManyOffers = completedSink[2];
     createdOneToManyOffers.forEach((element) {
       widgetList.add(ToDoCard(
-        onTap: () => _showMyDialog(context),
+        onTap: () => showMyTaskDialog(
+          context: context,
+          subTitle: L.of(context).completed_one_to_many_offer_speaker_subtitle,
+          title: L.of(context).completed_one_to_many_offer_speaker_title,
+        ),
         title: element.groupOfferDataModel.classTitle,
         subTitle: element.groupOfferDataModel.classDescription,
-        tag: L.of(context).one_to_many_speaker,
+        tag: L.of(context).one_to_many_offer_speaker,
         timeInMilliseconds: element.groupOfferDataModel.startDate,
+      ));
+    });
+
+    //Attendee for one to many request
+    List<RequestModel> acceptedOneToManyRequests = completedSink[3];
+    acceptedOneToManyRequests.forEach((element) {
+      widgetList.add(ToDoCard(
+        onTap: () => showMyTaskDialog(
+          context: context,
+          subTitle:
+              L.of(context).completed_one_to_many_request_attende_subtitle,
+          title: L.of(context).completed_one_to_many_request_attende_title,
+        ),
+        title: element.title,
+        subTitle: element.description,
+        tag: L.of(context).one_to_many_request_attende,
+        timeInMilliseconds: element.requestStart,
       ));
     });
 
@@ -183,24 +237,27 @@ class CompletedTasks {
             fromNotification: false);
   }
 
-  static Future<void> _showMyDialog(BuildContext context) async {
+  static Future<void> showMyTaskDialog({
+    BuildContext context,
+    @required String title,
+    @required String subTitle,
+  }) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: Text(title),
           content: SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
+              children: <Widget>[
+                Text(subTitle),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Approve'),
+              child: Text(S.of(context).dismiss),
               onPressed: () {
                 Navigator.of(context).pop();
               },

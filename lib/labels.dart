@@ -4,11 +4,62 @@ class L {
   L.of(BuildContext context) {}
 
   String get to_do => "To Do";
-  String get one_to_many_attende => "One to Many Offer Attende";
-  String get one_to_many_speaker => "One to Many Offer Speaker";
+  String get one_to_many_offer_attende => "One to Many Offer Attende";
+  String get one_to_many_offer_speaker => "One to Many Offer Speaker";
   String get time_request_volunteer => "Time Request Volunteer";
+  String get time_offer_volunteer => "Accepted Time Offer";
   String get one_to_many_request_speaker => "One to Many Request Speaker";
   String get one_to_many_request_attende => "One to Many Request attende";
+
+  String get completed_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_offer_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+
+//ToDO List
+
+  String get to_do_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_offer_speaker_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+
+
+
+
+
+
 
 //   String get browse_requests_by_category => "Browse requests by category";
 

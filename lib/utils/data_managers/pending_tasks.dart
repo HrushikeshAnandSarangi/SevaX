@@ -45,8 +45,7 @@ class PendingTasks {
     yield* Firestore.instance
         .collectionGroup('offerAcceptors')
         .where('status', isEqualTo: 'ACCEPTED')
-        .where('participantDetails.sevauserid',
-            isEqualTo: "Q9cfkvDta9S2PVkeOD7l8C7cmID3")
+        .where('participantDetails.sevauserid', isEqualTo: loggedInmemberId)
         .snapshots()
         .transform(StreamTransformer<QuerySnapshot,
             List<TimeOfferParticipantsModel>>.fromHandlers(
@@ -97,7 +96,7 @@ class PendingTasks {
           subTitle: model.description,
           timeInMilliseconds: model.requestStart,
           onTap: null,
-          tag: L.of(context).one_to_many_attende,
+          tag: L.of(context).time_request_volunteer,
         ),
       );
     });
@@ -108,9 +107,9 @@ class PendingTasks {
       widgetList.add(
         ToDoCard(
           onTap: () => _showMyDialog(context),
-          title: 'Some title',
-          subTitle: element.requestTitle,
-          tag: L.of(context).one_to_many_attende,
+          title: element.requestTitle,
+          subTitle: '',
+          tag: L.of(context).time_offer_volunteer,
           timeInMilliseconds: element.requestEndDate,
         ),
       );

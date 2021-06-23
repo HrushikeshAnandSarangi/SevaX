@@ -1680,60 +1680,7 @@ Future<void> acceptInviteRequest({
   }
 }
 
-Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
-  @required String userEmail,
-  @required String userId,
-  BuildContext context,
-}) async* {
-  /* TODO needs flow correction need to be corrected as below when tasks introduced- Eswar
-  *   var data = Firestore.instance
-      .collection('users')
-      .document(userEmail)
-      .collection('tasks')
-      .snapshots();
-      *
-      * */
-  var data = Firestore.instance
-      .collection('requests')
-      .where('approvedUsers', arrayContains: userEmail)
-      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
-      .snapshots();
 
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
-      handleData: (snapshot, requestSink) {
-        log('REQUESTS LIST:  ' + snapshot.documents.length.toString());
-        // TODO needs flow correction to Tasks model need to be corrected
-        List<RequestModel> requestModelList = [];
-        snapshot.documents.forEach((documentSnapshot) {
-          RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-          model.id = documentSnapshot.documentID;
-          bool isCompletedByUser = false;
-
-          log('TYPE:  ' +
-              model.requestType.toString() +
-              '  ' +
-              isCompletedByUser.toString());
-
-          model.transactions?.forEach((transaction) {
-            if (transaction.to == userId) isCompletedByUser = true;
-          });
-          if ((!isCompletedByUser &&
-              (model.requestType == RequestType.TIME ||
-                  model.requestType == RequestType.ONE_TO_MANY_REQUEST
-              //|| model.requestType == RequestType.BORROW
-              ))) {
-            // model.timebankId/
-            requestModelList.add(model);
-          }
-        });
-
-        requestSink.add(requestModelList);
-      },
-    ),
-  );
-  // END OF CODE correction mentioned above
-}
 
 Future<RequestModel> getRequestFutureById({
   @required String requestId,

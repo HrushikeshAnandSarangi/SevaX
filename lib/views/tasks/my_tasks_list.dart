@@ -101,14 +101,16 @@ class MyTasksListState extends State<MyTaskList> {
           );
         }
 
-        widgetList.clear();
-
         widgetList = ToDo.classifyToDos(
-            context: context,
-            toDoSink: snapshot.data,
-            requestCallback: (requestModel) {
-              requestModelNew = requestModel;
-            });
+          context: context,
+          toDoSink: snapshot.data,
+          requestCallback: (requestModel) {
+            requestModelNew = requestModel;
+          },
+          feedbackCallback: (int value) {
+            subjectBorrow.add(value);
+          },
+        );
 
         if (widgetList.length == 0)
           return Center(
@@ -227,7 +229,7 @@ class MyTasksListState extends State<MyTaskList> {
 
   void startTransaction() async {
     // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-    logger.e('comes here 1');
+    // logger.e('comes here 1');
 
     //doing below since in RequestModel if != null nothing happens
     //so manually removing user from task
