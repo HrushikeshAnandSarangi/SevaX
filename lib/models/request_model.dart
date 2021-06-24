@@ -1226,6 +1226,7 @@ enum RequestType {
   GOODS,
   BORROW,
   ONE_TO_MANY_REQUEST,
+  LENDING,
 }
 enum RequestPaymentType {
   ACH,
@@ -1243,7 +1244,7 @@ Map<String, RequestType> requestTypeMapper = {
   "GOODS": RequestType.GOODS,
   "BORROW": RequestType.BORROW,
   "ONE_TO_MANY_REQUEST": RequestType.ONE_TO_MANY_REQUEST,
-  "BORROW": RequestType.BORROW,
+  "LENDING": RequestType.LENDING,
 };
 Map<String, RequestPaymentType> requestPaymentTypeMapper = {
   "ACH": RequestPaymentType.ACH,

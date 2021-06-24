@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/lending_offer_participants.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/ui/utils/offer_dialogs.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -16,11 +17,15 @@ class OfferBloc extends BlocBase {
       BehaviorSubject<List<TimeOfferParticipantsModel>>();
   final _timeOfferParticipants =
       BehaviorSubject<List<TimeOfferParticipantsModel>>();
+  final _timeOfferParticipants2 =
+      BehaviorSubject<List<LendingOfferParticipantsModel>>();
   OfferModel offerModel;
 
   Stream<List<OfferParticipantsModel>> get participants => _participants.stream;
   Stream<List<TimeOfferParticipantsModel>> get timeOfferParticipants =>
       _timeOfferParticipants.stream;
+  Stream<List<LendingOfferParticipantsModel>> get timeOfferParticipants2 =>
+      _timeOfferParticipants2.stream;
 
   Stream<List<TimeOfferParticipantsModel>> get completedParticipants =>
       _completedParticipants.stream;
@@ -50,12 +55,17 @@ class OfferBloc extends BlocBase {
           await getCompletedMembers(associatedOfferId: offerModel.id);
 
       List<TimeOfferParticipantsModel> offer = [];
+      List<LendingOfferParticipantsModel> offer2 = []; //TEMP TO BE DELETED
       List<TimeOfferParticipantsModel> completedParticipants = [];
       snap.docs.forEach((DocumentSnapshot doc) {
         TimeOfferParticipantsModel model =
             TimeOfferParticipantsModel.fromJSON(doc.data());
+        LendingOfferParticipantsModel model2 =
+            LendingOfferParticipantsModel.fromJSON(
+                doc.data()); //TEMP TO BE DELETED
         model.id = doc.id;
         offer.add(model);
+        offer2.add(model2); //TEMP TO BE DELETED
 
         if (completedParticipantsFromTransactions
             .contains(model.participantDetails.sevauserid)) {
@@ -63,6 +73,7 @@ class OfferBloc extends BlocBase {
         }
       });
       _timeOfferParticipants.add(offer);
+      _timeOfferParticipants2.add(offer2); //TEMP TO BE DELETED
       _completedParticipants.add(completedParticipants);
     });
   }

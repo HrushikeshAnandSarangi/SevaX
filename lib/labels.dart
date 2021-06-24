@@ -547,6 +547,9 @@ class L {
       "I acknowledge that you can lend the item(s) on the mentioned dates.";
   String get lending_approve_terms_place =>
       "I acknowledge that you can lend the place on the mentioned dates.";
+  String get lending => "Lending";
+  String get cannot_approve_multiple_borrowers =>
+      "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
