@@ -531,6 +531,22 @@ class L {
 
 //   String get sandbox_dialog_subtitle =>
 //       "Sandbox Seva communities are created for instructional purposes only. Any credits earned or debited will not count towards your account."; //done in web
+
+//Lending Offer Labels Below
+  String get approve_lending_offer => "Approve Lending Offer";
+  String get date_to_borrow_and_return => "Date to borrow and return";
+  String get date_to_check_in_out => "Date to Check In and Check Out";
+  String get addditional_instructions => "Additional Instructions";
+  String get addditional_instructions_error_text =>
+      "Please enter additional instructions";
+  String get additional_instructions_hint_item =>
+      "Ex: Lawnmower is available next door";
+  String get additional_instructions_hint_place =>
+      "Ex: Keys are available next door";
+  String get lending_approve_terms_item =>
+      "I acknowledge that you can lend the item(s) on the mentioned dates.";
+  String get lending_approve_terms_place =>
+      "I acknowledge that you can lend the place on the mentioned dates.";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
