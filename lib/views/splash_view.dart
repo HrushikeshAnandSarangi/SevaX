@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/components/lending_borrow_widgets/approve_lending_offer.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
@@ -563,8 +562,7 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToLoginPage() async {
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) =>
-            ApproveLendingOffer(), //ExplorePage(isUserSignedIn: false),
+        builder: (context) => ExplorePage(isUserSignedIn: false),
       ),
     );
   }
