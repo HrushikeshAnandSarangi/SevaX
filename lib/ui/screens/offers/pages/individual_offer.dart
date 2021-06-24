@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -23,6 +24,8 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
+
+import '../../../../labels.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -224,7 +227,23 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   _bloc.onTypeChanged(data);
                                   setState(() {});
                                 }),
-                          )
+                          ),
+                          _optionRadioButton(
+                              title: L.of(context).lending_offer,
+                              value: RequestType.LENDING_OFFER,
+                              groupvalue: snapshot.data != null
+                                  ? snapshot.data
+                                  : RequestType.TIME,
+                              onChanged: (data) {
+                                AppConfig.helpIconContextMember =
+                                    HelpContextMemberType.lending_offers;
+                                title_hint =
+                                    L.of(context).lending_offer_title_hint;
+                                description_hint =
+                                    L.of(context).lending_offer_desc_hint;
+                                _bloc.onTypeChanged(data);
+                                setState(() {});
+                              }),
                         ],
                       ),
                     )
@@ -513,7 +532,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? TimeRequest()
                                   : type == RequestType.CASH
                                       ? CashRequest()
-                                      : GoodsRequest();
+                                      : type == RequestType.LENDING_OFFER
+                                          ? LendingOffer()
+                                          : GoodsRequest();
                             }),
                         // SizedBox(height: 10),
                         // Container(
@@ -753,5 +774,25 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
       ),
     );
+  }
+
+  Widget LendingOffer() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddUpdateLendingPlace();
+                  },
+                ),
+              );
+            },
+            child: Text('Select a place for lending*'),
+          )
+        ]);
   }
 }

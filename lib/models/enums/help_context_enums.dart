@@ -14,6 +14,7 @@ enum HelpContextMemberType {
   money_offers,
   goods_offers,
   one_to_many_offers,
+  lending_offers,
 }
 
 enum HelpContextAdminType {
@@ -30,6 +31,7 @@ enum HelpContextAdminType {
   money_offers,
   goods_offers,
   one_to_many_offers,
+  lending_offers,
 }
 
 extension MemberValues on HelpContextMemberType {

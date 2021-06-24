@@ -25,6 +25,8 @@ class L {
 //       "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
   String get add_to_calender => "Add to calender";
+  String get profanity_text_alert =>
+      'The SevaX App has a policy of not allowing profane or explicit language. Please revise your text.';
 
 //   String get bundlePricingInfoButton =>
 //       'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
@@ -550,6 +552,36 @@ class L {
   String get lending => "Lending";
   String get cannot_approve_multiple_borrowers =>
       "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
+//below labels yet to be added
+  String get add_new_place => "Add New Place";
+  String get update_place => "Update Place";
+  String get add_images_to_place => "Add One/Multiple Images of the place";
+  String get name_of_place => "Name of your place";
+  String get name_of_place_hint => "Apartment sunshine 3";
+  String get amenities => "Amenities";
+  String get amenities_hint => "Please select Amenities guests can utilize";
+  String get no_of_guests => "Number of guests";
+  String get bed_roooms => "Bed Rooms for guests";
+  String get bath_rooms => "Bath Rooms";
+  String get common_spaces => "Common Spaces";
+  String get house_rules => "House Rules";
+  String get add_place => "Add Place";
+  String get lending_offer => "Lending Offer";
+  String get lending_offer_title_hint => "Ex:Lawnmower";
+  String get lending_offer_desc_hint => "Describe your lending";
+  String get validation_error_place_name => "Please enter name of your place";
+  String get validation_error_no_of_guests =>
+      "Please enter no of guests can stay";
+  String get validation_error_no_of_rooms =>
+      "Please enter no of rooms available";
+  String get validation_error_no_of_bathrooms =>
+      "Please enter no of bath rooms available";
+  String get validation_error_common_spaces => "Please specify common spaces";
+  String get validation_error_house_rules => "Please specify house rules";
+  String get validation_error_amenities => "Please select amenities";
+  String get validation_error_house_images => "Please add place images";
+  String get common_spaces_hint => "Ex: Sofa bed 1, Couch 1, Floor Mattress 1";
+  String get house_rules_hint => "Ex: Smoking allowed";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->

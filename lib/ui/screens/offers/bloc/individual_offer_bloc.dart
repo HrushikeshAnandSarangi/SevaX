@@ -289,7 +289,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
       } else if (_type.value == RequestType.GOODS) {
         if (_goodsDonationDetails.value.requiredGoods == null ||
             _goodsDonationDetails.value.requiredGoods.length == 0) {
-          _goodsDonationDetails.addError(ValidationErrors.emptyErrorCash);
+          _goodsDonationDetails.addError(ValidationErrors.emptyErrorGoods);
           flag = true;
         }
       }
