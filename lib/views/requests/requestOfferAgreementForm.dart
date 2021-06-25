@@ -107,30 +107,30 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
     //   }
     // });
 
-    searchTextController2.addListener(() {
-      _debouncer.run(() {
-        String s = searchTextController.text;
+    // searchTextController2.addListener(() {
+    //   _debouncer.run(() {
+    //     String s = searchTextController.text;
 
-        if (s.isEmpty) {
-        } else {
-          if (templateName != s) {
-            SearchManager.searchBorrowAgrrementTemplateForDuplicate(
-                    queryString: s)
-                .then((commFound) {
-              if (commFound) {
-                setState(() {
-                  templateFound = true;
-                });
-              } else {
-                setState(() {
-                  templateFound = false;
-                });
-              }
-            });
-          }
-        }
-      });
-    });
+    //     if (s.isEmpty) {
+    //     } else {
+    //       if (templateName != s) {
+    //         // SearchManager.searchBorrowAgrrementTemplateForDuplicate(
+    //         //         queryString: s)
+    //             .then((commFound) {
+    //           if (commFound) {
+    //             setState(() {
+    //               templateFound = true;
+    //             });
+    //           } else {
+    //             setState(() {
+    //               templateFound = false;
+    //             });
+    //           }
+    //         });
+    //       }
+    //     }
+    //   });
+    // });
   }
 
   @override
@@ -864,9 +864,9 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
                           isPetsAllowed;
                       borrowAgreementTemplateModel.isQuietHoursAllowed =
                           isQuietHoursAllowed;
-                      await FirestoreManager.createBorrowAgreementTemplate(
-                          borrowAgreementTemplateModel:
-                              borrowAgreementTemplateModel);
+                      // await FirestoreManager.createBorrowAgreementTemplate(
+                      //     borrowAgreementTemplateModel:
+                      //         borrowAgreementTemplateModel);
                     }
                     // Step 1
                     //if save as template option is true, store template data in
@@ -1086,51 +1086,51 @@ class _RequestOfferAgreementFormState extends State<RequestOfferAgreementForm> {
       return getEmptyWidget(
           S.of(context).validation_error_search_min_characters);
     } else {
-      return StreamBuilder<List<BorrowAgreementTemplateModel>>(
-        stream: SearchManager.searchBorrowAgreementTemplate(
-            queryString: searchTextController.text),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            Text(snapshot.error.toString());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: SizedBox(
-                height: 25,
-                width: 25,
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
+      // return StreamBuilder<List<BorrowAgreementTemplateModel>>(
+      //   stream: SearchManager.searchBorrowAgreementTemplate(
+      //       queryString: searchTextController.text),
+      //   builder: (context, snapshot) {
+      // if (snapshot.hasError) {
+      //   Text(snapshot.error.toString());
+      // }
+      // if (snapshot.connectionState == ConnectionState.waiting) {
+      //   return Center(
+      //     child: SizedBox(
+      //       height: 25,
+      //       width: 25,
+      //       child: CircularProgressIndicator(),
+      //     ),
+      //   );
+      // }
 
-          List<BorrowAgreementTemplateModel> borrowAgreementTemplateList =
-              snapshot.data;
+      // List<BorrowAgreementTemplateModel> borrowAgreementTemplateList =
+      //     snapshot.data;
 
-          if (borrowAgreementTemplateList == null ||
-              borrowAgreementTemplateList.length == 0) {
-            return getEmptyWidget(S.of(context).no_templates_found);
-          }
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: borrowAgreementTemplateList.length,
-            itemBuilder: (context, index) {
-              BorrowAgreementTemplateModel borrowAgreementTemplateModel =
-                  borrowAgreementTemplateList[index];
-              return RadioListTile(
-                value: index,
-                groupValue: value,
-                activeColor: primaryColor,
-                onChanged: (ind) => setState(() {
-                  value = ind;
-                  selectedBorrowAgreementTemplate =
-                      borrowAgreementTemplateList[ind];
-                }),
-                title: Text(borrowAgreementTemplateModel.templateName),
-              );
-            },
-          );
-        },
-      );
+      // if (borrowAgreementTemplateList == null ||
+      //     borrowAgreementTemplateList.length == 0) {
+      //   return getEmptyWidget(S.of(context).no_templates_found);
+      // }
+      // return ListView.builder(
+      //   shrinkWrap: true,
+      //   itemCount: borrowAgreementTemplateList.length,
+      //   itemBuilder: (context, index) {
+      //     BorrowAgreementTemplateModel borrowAgreementTemplateModel =
+      //         borrowAgreementTemplateList[index];
+      //     return RadioListTile(
+      //       value: index,
+      //       groupValue: value,
+      //       activeColor: primaryColor,
+      //       onChanged: (ind) => setState(() {
+      //         value = ind;
+      //         selectedBorrowAgreementTemplate =
+      //             borrowAgreementTemplateList[ind];
+      //       }),
+      //       title: Text(borrowAgreementTemplateModel.templateName),
+      //     );
+      //   },
+      // );
+      // },
+      // );
     }
   }
 

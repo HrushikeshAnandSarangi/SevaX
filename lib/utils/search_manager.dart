@@ -7,8 +7,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
+// import 'package:sevaexchange/new_baseline/models/borrow_agreement_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -198,12 +199,11 @@ class SearchManager {
   }
 
   //searcch borrow agreement template
-  static Stream<List<BorrowAgreementTemplateModel>>
-      searchBorrowAgreementTemplate({
+  static Stream<List<AgreementTemplateModel>> searchAgreementTemplate({
     @required queryString,
   }) async* {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreementTemplates/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -224,10 +224,10 @@ class SearchManager {
 
     log('hit ${hitList}');
 
-    List<BorrowAgreementTemplateModel> templatesList = [];
+    List<AgreementTemplateModel> templatesList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      var template = BorrowAgreementTemplateModel.fromMap(sourceMap);
+      var template = AgreementTemplateModel.fromMap(sourceMap);
 
       if (template.softDelete == false) {
         templatesList.add(template);
@@ -269,10 +269,10 @@ class SearchManager {
 //    }
   }
 
-  static Future<bool> searchBorrowAgrrementTemplateForDuplicate(
+  static Future<bool> searchAgrrementTemplateForDuplicate(
       {@required String queryString}) async {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/borrowagreement_templates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreementTemplates/_doc/_search';
 
     dynamic body = json.encode({
       "query": {

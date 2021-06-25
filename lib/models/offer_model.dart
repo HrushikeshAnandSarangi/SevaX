@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/extensions.dart';
@@ -24,6 +25,8 @@ extension OfferTypeExtension on OfferType {
           return S.of(context).goods;
         case RequestType.TIME:
           return S.of(context).time;
+        case RequestType.LENDING_OFFER:
+          return L.of(context).lending;
         default:
           return 'Individual'; //Label to be created
       }

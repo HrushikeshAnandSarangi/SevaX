@@ -25,6 +25,10 @@ enum InfoType {
   VirtualRequest,
   TestCommunity,
   VirtualOffers,
+  Borrow_Liability_For_Damage,
+  Borrow_Use_Disclaimer,
+  Borrow_Delivery_Return,
+  Borrow_Maintain_Repair,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -45,6 +49,10 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.VirtualRequest: "virtualRequest",
   InfoType.TestCommunity: "testCommunity",
   InfoType.VirtualOffers: "virtualOffers",
+  InfoType.Borrow_Liability_For_Damage: "borrowLiabilityForDamage",
+  InfoType.Borrow_Use_Disclaimer: "borrowUseDisclaimer",
+  InfoType.Borrow_Delivery_Return: "borrowDeliveryReturn",
+  InfoType.Borrow_Maintain_Repair: "borrowMaintainRepair",
 };
 
 Widget infoButton({
