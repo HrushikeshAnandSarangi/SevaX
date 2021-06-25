@@ -197,6 +197,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           agreementDocumentType = value;
                           saveAsTemplate = false;
                           searchTextController.clear();
+                          specificConditionsController.clear();
+                          documentNameController.clear();
+                          agreementTemplateModel = null;
                           setState(() => {});
                         },
                       ),
@@ -229,6 +232,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           agreementDocumentType = value;
                           saveAsTemplate = false;
                           searchTextController.clear();
+                          specificConditionsController.clear();
+                          documentNameController.clear();
+                          agreementTemplateModel = null;
                           setState(() => {});
                         },
                       ),
@@ -622,6 +628,9 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 agreementDocumentType = value;
                 saveAsTemplate = false;
                 searchTextController.clear();
+                specificConditionsController.clear();
+                documentNameController.clear();
+                agreementTemplateModel = null;
                 setState(() => {});
               },
             ),
@@ -643,6 +652,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 agreementDocumentType = value;
                 saveAsTemplate = false;
                 searchTextController.clear();
+                specificConditionsController.clear();
+                agreementTemplateModel = null;
                 setState(() => {});
               },
             ),
