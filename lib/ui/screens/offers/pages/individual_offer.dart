@@ -9,9 +9,11 @@ import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/add_update_lending_place.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/select_lending_place.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -22,10 +24,12 @@ import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
 import '../../../../labels.dart';
+import 'lending_place_card_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -48,6 +52,7 @@ class IndividualOffer extends StatefulWidget {
 class _IndividualOfferState extends State<IndividualOffer> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
+
   CommunityModel communityModel;
   String selectedAddress;
   CustomLocation customLocation;
@@ -59,7 +64,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _availabilityController = TextEditingController();
   TextEditingController _minimumCreditsController = TextEditingController();
-
+  LendingPlaceModel lendingPlaceModel;
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
   FocusNode _availability = FocusNode();
@@ -781,18 +786,109 @@ class _IndividualOfferState extends State<IndividualOffer> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
+          Container(
+            alignment: Alignment.bottomLeft,
+            child: CupertinoSegmentedControl<int>(
+              unselectedColor: Colors.grey[200],
+              selectedColor: Theme.of(context).primaryColor,
+              children: {
+                0: Padding(
+                  padding: EdgeInsets.only(left: 14, right: 14),
+                  child: Text(
+                    L.of(context).place, //Label to be created
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ),
+                1: Padding(
+                  padding: EdgeInsets.only(left: 14, right: 14),
+                  child: Text(
+                    L.of(context).items, //Label to be created
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                ),
+              },
+
+              borderColor: Colors.grey,
+              padding: EdgeInsets.only(left: 0.0, right: 0.0),
+              groupValue: _bloc.lendingOfferType,
+              onValueChanged: (int val) {
+                if (val != _bloc.lendingOfferType) {
+                  setState(() {
+                    if (val == 0) {
+                      _bloc.lendingOfferType = 0;
+                    } else {
+                      _bloc.lendingOfferType = 1;
+                    }
+                    _bloc.lendingOfferType = val;
+                  });
+                }
+              },
+              //groupValue: sharedValue,
+            ),
+          ),
+          SizedBox(height: 20),
           InkWell(
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return AddUpdateLendingPlace();
+                    return AddUpdateLendingPlace(
+                      lendingPlaceModel: null,
+                      onPlaceCreateUpdate: (LendingPlaceModel model) {
+                        lendingPlaceModel = model;
+                        setState(() {});
+                      },
+                    );
                   },
                 ),
               );
             },
-            child: Text('Select a place for lending*'),
-          )
+            child: Text(
+              'Select a place for lending*',
+              style: TextStyle(
+                fontSize: 16,
+                //fontWeight: FontWeight.bold,
+                fontFamily: 'Europa',
+                color: Colors.black,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SelectLendingPlace(onSelected: (LendingPlaceModel model) {
+            _bloc.onLendingModelAdded(model);
+          }),
+          SizedBox(
+            height: 10,
+          ),
+          StreamBuilder<LendingPlaceModel>(
+              stream: _bloc.lendingPlaceModelStream,
+              builder: (context, snapshot) {
+                if (snapshot.data == null || snapshot.hasError) {
+                  return Container();
+                }
+                return LendingPlaceCardWidget(
+                  lendingPlaceModel: snapshot.data,
+                  onDelete: () {
+                    _bloc.onLendingModelAdded(null);
+                  },
+                  onEdit: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return AddUpdateLendingPlace(
+                            lendingPlaceModel: snapshot.data,
+                            onPlaceCreateUpdate: (LendingPlaceModel model) {
+                              _bloc.onLendingModelAdded(model);
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              })
         ]);
   }
 }

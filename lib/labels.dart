@@ -576,7 +576,7 @@ class L {
   String get amenities_hint => "Please select Amenities guests can utilize";
   String get no_of_guests => "Number of guests";
   String get bed_roooms => "Bed Rooms for guests";
-  String get bath_rooms => "Bath Rooms";
+  String get bath_rooms => "Bath Room(s)";
   String get common_spaces => "Common Spaces";
   String get house_rules => "House Rules";
   String get add_place => "Add Place";
@@ -596,6 +596,16 @@ class L {
   String get validation_error_house_images => "Please add place images";
   String get common_spaces_hint => "Ex: Sofa bed 1, Couch 1, Floor Mattress 1";
   String get house_rules_hint => "Ex: Smoking allowed";
+  String get place => "Place";
+  String get items => "Item(s)";
+  String get updating_place => "Updating place";
+  String get creating_place => "Creating Place";
+  String get bed_rooms => "Bedroom(s)";
+  String get guests => "Guest(s)";
+  String get creating_place_error =>
+      "There was error creating your place, Please try again.";
+  String get updating_place_error =>
+      "There was error creating your place, Please try again.";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->

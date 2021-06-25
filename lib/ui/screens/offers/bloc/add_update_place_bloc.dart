@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/lending_place_model.dart';
+import 'package:sevaexchange/repositories/lending_offer_repo.dart';
+import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 import '../../../../labels.dart';
 
@@ -15,7 +20,12 @@ class AddUpdatePlaceBloc extends BlocBase {
   final _house_rules = BehaviorSubject<String>();
   final _house_images = BehaviorSubject<List<String>>();
   final profanityDetector = ProfanityDetector();
-  final _amenities = BehaviorSubject<Map<String, String>>();
+  final _amenities = BehaviorSubject<Map<String, dynamic>>();
+  final _message = BehaviorSubject<String>();
+  final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
+  final _model = BehaviorSubject<LendingPlaceModel>();
+
+  Stream<Status> get status => _status.stream;
 
   Stream<String> get placeName => _placeName.stream;
   Stream<String> get noOfGuests => _no_of_guests.stream;
@@ -24,6 +34,8 @@ class AddUpdatePlaceBloc extends BlocBase {
   Stream<String> get commonSpaces => _commonSpaces.stream;
   Stream<String> get houseRules => _house_rules.stream;
   Stream<List<String>> get houseImages => _house_images.stream;
+  Stream<Map<String, dynamic>> get amenitiesDetails => _amenities.stream;
+  Stream<String> get message => _message.stream;
 
   Function(String value) get onPlaceNameChanged => _placeName.sink.add;
   Function(String value) get onNoOfGuestsChanged => _no_of_guests.sink.add;
@@ -31,13 +43,75 @@ class AddUpdatePlaceBloc extends BlocBase {
   Function(String value) get onBathRoomsChanged => _no_of_bathRooms.sink.add;
   Function(String value) get onCommonSpacesChanged => _commonSpaces.sink.add;
   Function(String value) get onHouseRulesChanged => _house_rules.sink.add;
+  Function(List<String> value) get onHouseImageAdded => _house_images.sink.add;
+  Function(Map<String, dynamic>) get amenitiesChanged => _amenities.sink.add;
 
-  Future<void> createLendingOfferPlace() async {
-    if (!errorCheck()) {}
+  void loadData(LendingPlaceModel lendingPlaceModel) {
+    _house_images.add(lendingPlaceModel.houseImages.toList());
+    _amenities.add(lendingPlaceModel.amenities);
   }
 
-  Future<void> updateLendingOfferPlace() async {
-    if (!errorCheck()) {}
+  Map<String, dynamic> getSelectedAmenities() {
+    return _amenities.value;
+  }
+
+  LendingPlaceModel getLendingPlaceModel() {
+    return _model.value;
+  }
+
+  void createLendingOfferPlace({UserModel creator}) {
+    LendingPlaceModel placeModel;
+    if (!errorCheck()) {
+      if (_amenities.value.values == null ||
+          _amenities.value.values.length < 1) {
+        _message.add('amenities');
+      } else {
+        _message.add('create');
+        var timestamp = DateTime.now().millisecondsSinceEpoch;
+
+        placeModel = LendingPlaceModel(
+            id: Utils.getUuid(),
+            placeName: _placeName.value,
+            noOfGuests: int.parse(_no_of_guests.value),
+            noOfRooms: int.parse(_no_of_rooms.value),
+            noOfBathRooms: int.parse(_no_of_bathRooms.value),
+            commonSpace: _commonSpaces.value,
+            houseRules: _house_rules.value,
+            houseImages: _house_images.value.toList(),
+            creatorId: creator.sevaUserID,
+            email: creator.email,
+            timestamp: timestamp,
+            amenities: _amenities.value);
+        LendingOffersRepo.addNewLendingPlace(model: placeModel).then((_) {
+          _model.add(placeModel);
+          _status.add(Status.COMPLETE);
+        }).catchError((e) => _status.add(Status.ERROR));
+      }
+    }
+  }
+
+  void updateLendingOfferPlace({LendingPlaceModel model}) async {
+    LendingPlaceModel placeModel = model;
+    if (!errorCheck()) {
+      if (_amenities.value.values == null ||
+          _amenities.value.values.length < 1) {
+        _message.add('amenities');
+      } else {
+        placeModel.amenities = _amenities.value;
+        placeModel.placeName = _placeName.value;
+        placeModel.houseImages = _house_images.value.toList();
+        placeModel.noOfRooms = int.parse(_no_of_rooms.value);
+        placeModel.noOfGuests = int.parse(_no_of_guests.value);
+        placeModel.noOfBathRooms = int.parse(_no_of_bathRooms.value);
+        placeModel.commonSpace = _commonSpaces.value;
+        placeModel.houseRules = _house_rules.value;
+
+        LendingOffersRepo.updateNewLendingPlace(model: placeModel).then((_) {
+          _model.add(placeModel);
+          _status.add(Status.COMPLETE);
+        }).catchError((e) => _status.add(Status.ERROR));
+      }
+    }
   }
 
   ///[ERROR CHECKS] TO Validate input
