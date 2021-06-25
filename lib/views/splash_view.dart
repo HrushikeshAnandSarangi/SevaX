@@ -20,7 +20,6 @@ import 'package:sevaexchange/ui/screens/auth/bloc/user_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/intro_slider.dart';
-import 'package:sevaexchange/ui/screens/offers/pages/agreementForm.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
@@ -705,12 +704,7 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: AgreementForm(
-            isOffer: true,
-            placeOrItem: 'PLACE',
-            timebankId: 'testtimebankid',
-            communityId: 'testcommunityid',
-          ), //HomePageRouter(),
+          child: HomePageRouter(),
         ),
       ),
       (Route<dynamic> route) => false,
