@@ -233,7 +233,8 @@ class L {
 
   String get enter_delivery_time => 'Enter Delivery Time';
 
-  String get choose_document => "Choose Document";
+  String get choose_item_agreement => "Select Item(s) Agreement";
+  String get choose_place_agreement => "Select Place Agreement";
 
   String get usage_term => "Usage term*";
 
@@ -252,6 +253,9 @@ class L {
   String get item_returned_hint_text =>
       'Ex: item must be returned in the same condition.';
   String get description_of_item => "Description of item(s)";
+
+  String get place_returned_hint_text =>
+      'Ex: place must be returned in the same condition.';
 
   String get attending => "Attending";
 
@@ -552,6 +556,16 @@ class L {
   String get lending => "Lending";
   String get cannot_approve_multiple_borrowers =>
       "You cannot approve multiple borrowers at once. Currently the items are with  **name. Once returned you can approve this request.";
+
+  String get borrower_responsibilities => "Borrower Responsibilities";
+  String get borrower_responsibilities_subtext =>
+      "Please check applicable sections to be added in the agreement.";
+  String get liability_damage => "Liability for damage";
+  String get use_disclaimer => "Use/Disclaimer";
+  String get delivery_return_equipment => "Delivery and Return of Equipment";
+  String get maintain_repair => "Maintenance and Repair";
+  String get place_agreement_name_hint => "Ex: House for the weekend..";
+
 //below labels yet to be added
   String get add_new_place => "Add New Place";
   String get update_place => "Update Place";

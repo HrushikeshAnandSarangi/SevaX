@@ -30,7 +30,7 @@ class _CollectionNames {
   final String claimedRequestStatus = 'claimedRequestStatus';
   final String projectTemplates = 'project_templates';
   final String requestCategories = 'requestCategories';
-  final String borrowAgreementTemplates = 'borrowAgreement_templates';
+  final String agreementTemplates = 'agreementTemplates';
 }
 
 class CollectionRef {
@@ -108,8 +108,8 @@ class CollectionRef {
   static final CollectionReference manualTimeClaims =
       _firestore.collection(_collectionNames.manualTimeClaims);
 
-  static final CollectionReference borrowAgreementTemplates =
-      _firestore.collection(_collectionNames.borrowAgreementTemplates);
+  static final CollectionReference agreementTemplates =
+      _firestore.collection(_collectionNames.agreementTemplates);
 
   static final CollectionReference users =
       _firestore.collection(_collectionNames.users);
