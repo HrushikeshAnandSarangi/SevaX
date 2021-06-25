@@ -203,7 +203,7 @@ class SearchManager {
     @required queryString,
   }) async* {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreementTemplates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -272,7 +272,7 @@ class SearchManager {
   static Future<bool> searchAgrrementTemplateForDuplicate(
       {@required String queryString}) async {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreementTemplates/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/agreement_templates/_doc/_search';
 
     dynamic body = json.encode({
       "query": {

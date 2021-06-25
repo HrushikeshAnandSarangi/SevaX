@@ -19,27 +19,26 @@ class AgreementTemplateModel extends DataModel {
   bool isDeliveryReturn;
   bool isMaintainRepair;
   bool isOffer;
-  Map data;
 
-  AgreementTemplateModel(
-      {this.id,
-      this.creatorId,
-      this.creatorEmail,
-      this.timebankId,
-      this.communityId,
-      this.templateName,
-      this.createdAt,
-      this.softDelete,
-      this.documentName,
-      this.placeOrItem,
-      this.otherDetails,
-      this.specificConditions,
-      this.isDamageLiability,
-      this.isUseDisclaimer,
-      this.isDeliveryReturn,
-      this.isMaintainRepair,
-      this.isOffer,
-      this.data});
+  AgreementTemplateModel({
+    this.id,
+    this.creatorId,
+    this.creatorEmail,
+    this.timebankId,
+    this.communityId,
+    this.templateName,
+    this.createdAt,
+    this.softDelete,
+    this.documentName,
+    this.placeOrItem,
+    this.otherDetails,
+    this.specificConditions,
+    this.isDamageLiability,
+    this.isUseDisclaimer,
+    this.isDeliveryReturn,
+    this.isMaintainRepair,
+    this.isOffer,
+  });
 
   factory AgreementTemplateModel.fromMap(Map<String, dynamic> json) =>
       AgreementTemplateModel(
@@ -55,6 +54,7 @@ class AgreementTemplateModel extends DataModel {
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
         documentName:
             json["documentName"] == null ? null : json["documentName"],
+        placeOrItem: json["placeOrItem"] == null ? null : json["placeOrItem"],
         otherDetails:
             json["otherDetails"] == null ? null : json["otherDetails"],
         specificConditions: json["specificConditions"] == null
@@ -70,7 +70,6 @@ class AgreementTemplateModel extends DataModel {
         isMaintainRepair:
             json["isMaintainRepair"] == null ? null : json["isMaintainRepair"],
         isOffer: json["isOffer"] == null ? false : json["isOffer"],
-        data: json.containsKey("data") ? json["data"] : {},
       );
 
   Map<String, dynamic> toMap() => {
@@ -83,6 +82,7 @@ class AgreementTemplateModel extends DataModel {
         "created_at": createdAt == null ? null : createdAt,
         "softDelete": softDelete ?? false,
         "documentName": documentName == null ? null : documentName,
+        "placeOrItem": placeOrItem == null ? null : placeOrItem,
         "otherDetails": otherDetails == null ? null : otherDetails,
         "specificConditions":
             specificConditions == null ? null : specificConditions,
@@ -92,11 +92,10 @@ class AgreementTemplateModel extends DataModel {
         "isDeliveryReturn": isDeliveryReturn == null ? null : isDeliveryReturn,
         "isMaintainRepair": isMaintainRepair == null ? null : isMaintainRepair,
         "isOffer": isOffer ?? false,
-        //data is already a map
       };
 
   @override
   String toString() {
-    return 'AgreementTemplateModel{id: $id, creatorId: $creatorId, creatorEmail: $creatorEmail, documentName: $documentName, otherDetails: $otherDetails, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, specificConditions: $specificConditions,  createdAt: $createdAt, softDelete: $softDelete, isOffer: $isOffer, placeOrItem: $placeOrItem, isDamageLiability: $isDamageLiability, isUseDisclaimer: $isUseDisclaimer, isDeliveryReturn: $isDeliveryReturn, isMaintainRepair: $isMaintainRepair, data: $data}';
+    return 'AgreementTemplateModel{id: $id, creatorId: $creatorId, creatorEmail: $creatorEmail, documentName: $documentName, otherDetails: $otherDetails, templateName: $templateName, timebankId: $timebankId, communityId: $communityId, specificConditions: $specificConditions,  createdAt: $createdAt, softDelete: $softDelete, isOffer: $isOffer, placeOrItem: $placeOrItem, isDamageLiability: $isDamageLiability, isUseDisclaimer: $isUseDisclaimer, isDeliveryReturn: $isDeliveryReturn, isMaintainRepair: $isMaintainRepair}';
   }
 }

@@ -707,7 +707,9 @@ class _SplashViewState extends State<SplashView> {
           loggedInUser: loggedInUser,
           child: AgreementForm(
             isOffer: true,
-            placeOrItem: 'ITEM',
+            placeOrItem: 'PLACE',
+            timebankId: 'testtimebankid',
+            communityId: 'testcommunityid',
           ), //HomePageRouter(),
         ),
       ),

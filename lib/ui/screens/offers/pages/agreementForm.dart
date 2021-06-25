@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/agreement_form__selection_model.dart';
 import 'package:sevaexchange/models/agreement_template_model.dart';
 import 'package:sevaexchange/models/enums/lending_borrow_enums.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -22,6 +24,8 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -31,20 +35,16 @@ import 'package:sevaexchange/utils/extensions.dart';
 class AgreementForm extends StatefulWidget {
   final bool isOffer;
   final String placeOrItem;
-  final RequestModel requestModel;
+  // final LendingOfferModel lendingOfferModel;
   // final LendingOfferModel lendingOfferModel;
   final String timebankId;
   final String communityId;
-  final void Function(String agreementLinkFinal, String documentName)
-      onPdfCreated;
 
   AgreementForm({
     this.isOffer, // @required this.isOffer,
     this.placeOrItem, // @required this.placeOrItem,
     this.timebankId, // @required this.timebankId,
     this.communityId, // @required this.communityId,
-    this.onPdfCreated, // @required this.onPdfCreated,
-    this.requestModel,
     // this.lendingOfferModel,
   });
 
@@ -56,13 +56,16 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   String agreementDocumentType = AgreementDocumentType.NEW.readable;
   TextEditingController searchTextController = TextEditingController();
   TextEditingController searchTextController2 = TextEditingController();
+  TextEditingController specificConditionsController = TextEditingController();
+  TextEditingController documentNameController = TextEditingController();
   Color primaryColor = FlavorConfig.values.theme.primaryColor;
   AgreementTemplateModel selectedAgreementTemplate;
   AgreementTemplateModel agreementTemplateModel = AgreementTemplateModel();
+  AgreementFormSelectionModel agreementFormSelectionModel =
+      AgreementFormSelectionModel();
   bool saveAsTemplate = false;
   String templateName = '';
   bool templateFound = false;
-  String agreementLinkFinal = '';
   int value;
 
 // Form Related Values
@@ -72,15 +75,17 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   bool isDeliveryReturn = false;
   bool isMaintainRepair = false;
   String specificConditions = '';
+  String otherDetails = '';
+  String agreementLink = '';
   // String otherDetails = '';
 
   final _formKey = GlobalKey<FormState>();
+  final _formKeyElastic = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   final _formDialogKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     final _debouncer = Debouncer(milliseconds: 600);
@@ -142,6 +147,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    log('TYPE: ' + agreementDocumentType);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       // resizeToAvoidBottomPadding: true,
@@ -164,8 +170,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
         ),
       ),
       body: SingleChildScrollView(
-        child: agreementDocumentType ==
-                AgreementDocumentType.NO_AGREEMENT.readable
+        child: (agreementDocumentType ==
+                AgreementDocumentType.NO_AGREEMENT.readable)
             ? noAgreementWidget
             : Form(
                 key: _formKey,
@@ -190,6 +196,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         onChanged: (value) {
                           agreementDocumentType = value;
                           saveAsTemplate = false;
+                          searchTextController.clear();
                           setState(() => {});
                         },
                       ),
@@ -204,11 +211,15 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                       ),
 
                       //Below two widgets for previous templates created
-                      searchFieldWidget(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      buildTemplateWidget(),
+                      agreementDocumentType ==
+                              AgreementDocumentType.TEMPLATE.readable
+                          ? searchFieldWidget()
+                          : Container(),
+
+                      agreementDocumentType ==
+                              AgreementDocumentType.TEMPLATE.readable
+                          ? buildTemplateWidget()
+                          : Container(),
 
                       _optionRadioButtonMain<String>(
                         title: S.of(context).no_agrreement,
@@ -217,6 +228,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                         onChanged: (value) {
                           agreementDocumentType = value;
                           saveAsTemplate = false;
+                          searchTextController.clear();
                           setState(() => {});
                         },
                       ),
@@ -268,7 +280,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Checkbox(
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
-                                value: isDamageLiability,
+                                value: selectedAgreementTemplate != null
+                                    ? selectedAgreementTemplate
+                                            .isDamageLiability ??
+                                        isDamageLiability
+                                    : isDamageLiability,
                                 onChanged: (Value) {
                                   setState(() {
                                     isDamageLiability = Value;
@@ -298,7 +314,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Checkbox(
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
-                                value: isUseDisclaimer,
+                                value: selectedAgreementTemplate != null
+                                    ? selectedAgreementTemplate
+                                            .isUseDisclaimer ??
+                                        isUseDisclaimer
+                                    : isUseDisclaimer,
                                 onChanged: (Value) {
                                   setState(() {
                                     isUseDisclaimer = Value;
@@ -328,7 +348,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Checkbox(
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
-                                value: isDeliveryReturn,
+                                value: selectedAgreementTemplate != null
+                                    ? selectedAgreementTemplate
+                                            .isDeliveryReturn ??
+                                        isDeliveryReturn
+                                    : isDeliveryReturn,
                                 onChanged: (Value) {
                                   setState(() {
                                     isDeliveryReturn = Value;
@@ -358,7 +382,11 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               Checkbox(
                                 checkColor: Colors.white,
                                 activeColor: Colors.green,
-                                value: isMaintainRepair,
+                                value: selectedAgreementTemplate != null
+                                    ? selectedAgreementTemplate
+                                            .isMaintainRepair ??
+                                        isMaintainRepair
+                                    : isMaintainRepair,
                                 onChanged: (Value) {
                                   setState(() {
                                     isMaintainRepair = Value;
@@ -386,9 +414,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                               specificConditions = enteredValue;
                               setState(() {});
                             },
-                            initialValue: selectedAgreementTemplate != null
-                                ? selectedAgreementTemplate.documentName ?? ''
-                                : '',
+                            // initialValue: specificConditions,
+                            controller: specificConditionsController,
                             decoration: InputDecoration(
                               hintText: widget.placeOrItem ==
                                       LendingType.PLACE.readable
@@ -545,6 +572,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
           ),
         ),
         TextFormField(
+          controller: documentNameController,
           onFieldSubmitted: (v) {
             FocusScope.of(context).unfocus();
           },
@@ -552,9 +580,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             documentName = enteredValue;
             setState(() {});
           },
-          initialValue: selectedAgreementTemplate != null
-              ? selectedAgreementTemplate.documentName
-              : '',
+          // initialValue: documentName,
           decoration: InputDecoration(
             hintText: widget.placeOrItem == LendingType.PLACE.readable
                 ? L.of(context).place_agreement_name_hint
@@ -595,6 +621,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               onChanged: (value) {
                 agreementDocumentType = value;
                 saveAsTemplate = false;
+                searchTextController.clear();
                 setState(() => {});
               },
             ),
@@ -607,6 +634,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 setState(() => {});
               },
             ),
+
             _optionRadioButtonMain<String>(
               title: S.of(context).no_agrreement,
               value: AgreementDocumentType.NO_AGREEMENT.readable,
@@ -614,6 +642,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               onChanged: (value) {
                 agreementDocumentType = value;
                 saveAsTemplate = false;
+                searchTextController.clear();
                 setState(() => {});
               },
             ),
@@ -652,62 +681,91 @@ class _OfferAgreementFormState extends State<AgreementForm> {
               onPressed: () async {
                 if (agreementDocumentType ==
                     AgreementDocumentType.NO_AGREEMENT.readable) {
-                  widget.onPdfCreated(agreementLinkFinal,
-                      documentName); // do we need this if no agreement? just show after pop that no agreement was selected
+                  //update text on voidcallback funtion for previous page that no agreement was selected
                   Navigator.of(context).pop();
                 } else {
-                  if (_formKey.currentState.validate()) {
-                    if (saveAsTemplate) {
-                      agreementTemplateModel.documentName = documentName;
-                      agreementTemplateModel.id = Utils.getUuid();
-                      agreementTemplateModel.timebankId = widget.timebankId;
-                      agreementTemplateModel.communityId = widget.communityId;
-                      agreementTemplateModel.createdAt =
-                          DateTime.now().millisecondsSinceEpoch;
-                      agreementTemplateModel.isOffer = widget.isOffer;
-                      agreementTemplateModel.placeOrItem = widget.placeOrItem;
+                  if (agreementDocumentType ==
+                      AgreementDocumentType.TEMPLATE.readable) {
+                    //update on voidcallback the final model details (check also if user has edited anything from template prefilled data)
+                    // Navigator.of(context).pop();
+                    log('PREVIOUS TEMPLATE DONE');
+                  } else {
+                    if (_formKey.currentState.validate()) {
+                      // <<<-- First - Check and Save Template
+                      if (saveAsTemplate) {
+                        agreementTemplateModel.documentName = documentName;
+                        agreementTemplateModel.templateName = templateName;
+                        agreementTemplateModel.creatorEmail =
+                            SevaCore.of(context).loggedInUser.email;
+                        agreementTemplateModel.creatorId =
+                            SevaCore.of(context).loggedInUser.sevaUserID;
+                        agreementTemplateModel.id = Utils.getUuid();
+                        agreementTemplateModel.timebankId = widget.timebankId;
+                        agreementTemplateModel.communityId = widget.communityId;
+                        agreementTemplateModel.createdAt =
+                            DateTime.now().millisecondsSinceEpoch;
+                        agreementTemplateModel.isOffer = widget.isOffer;
+                        agreementTemplateModel.placeOrItem = widget.placeOrItem;
+                        agreementTemplateModel.isDamageLiability =
+                            isDamageLiability;
+                        agreementTemplateModel.isUseDisclaimer =
+                            isUseDisclaimer;
+                        agreementTemplateModel.isDeliveryReturn =
+                            isDeliveryReturn;
+                        agreementTemplateModel.isMaintainRepair =
+                            isMaintainRepair;
+                        agreementTemplateModel.specificConditions =
+                            specificConditions;
+                        agreementTemplateModel.softDelete = false;
 
-                      agreementTemplateModel.isDamageLiability =
-                          isDamageLiability;
-                      agreementTemplateModel.isUseDisclaimer = isUseDisclaimer;
-                      agreementTemplateModel.isDeliveryReturn =
-                          isDeliveryReturn;
-                      agreementTemplateModel.isMaintainRepair =
-                          isMaintainRepair;
+                        agreementTemplateModel.otherDetails = otherDetails;
 
-                      agreementTemplateModel.specificConditions =
-                          specificConditions;
-                      agreementTemplateModel.softDelete = false;
+                        await FirestoreManager.createBorrowAgreementTemplate(
+                            agreementTemplateModel: agreementTemplateModel);
+                        log('TEMPLATE SAVED');
+                      }
+                      // <<<-- Second - Save Form agreementFormSelectionModel as Map in LendingOfferModel ---->>>
 
-                      // await FirestoreManager.createBorrowAgreementTemplate(
-                      //     agreementTemplateModel: agreementTemplateModel);
+                      // agreementFormSelectionModel.createdAt =
+                      //     DateTime.now().millisecondsSinceEpoch;
+                      // agreementFormSelectionModel.documentName = documentName;
+                      // agreementFormSelectionModel.placeOrItem =
+                      //     widget.placeOrItem;
+                      // // agreementFormSelectionModel.otherDetails = otherDetails; //not sure if needed yet
+                      // agreementFormSelectionModel.specificConditions =
+                      //     specificConditions;
+                      // agreementFormSelectionModel.isDamageLiability =
+                      //     isDamageLiability;
+                      // agreementFormSelectionModel.isDeliveryReturn =
+                      //     isDeliveryReturn;
+                      // agreementFormSelectionModel.isMaintainRepair =
+                      //     isMaintainRepair;
+                      // agreementFormSelectionModel.isUseDisclaimer =
+                      //     isUseDisclaimer;
+                      // agreementFormSelectionModel.isOffer = widget.isOffer;
+                      //agreementFormSelectionModel to be stored into LendingOfferModel
 
-                      //FOR LENDING OFFER WE WILL SAVE THE AGREEMENT TEMPLATE AND CREATE PDF LATER
+                      // Navigator.of(context).pop;
+                      log('NEW TEMPLATED CREATED');
+                    } else {
+                      log('HERE 5');
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext _context) {
+                          return AlertDialog(
+                            content: Text(S.of(context).something_went_wrong),
+                            actions: [
+                              CustomTextButton(
+                                child: Text(S.of(context).close),
+                                onPressed: () {
+                                  Navigator.of(_context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
-                    // Step 1
-                    //if save as template option is true, store template data in
-                    //   collection 'borrowAgreement_templates'
-
-                    //       Step 2
-                    //     2.1 - Generate agreement pdf according to template (pending)
-                    //   2.2 - Then store pdf in Storage and obtain download url
-
-                    //FOR BELOW NEED TO CREATE ANOTHER PDF CLASS FOR LENDING OFFERS and will be used
-                    //when Borrower accepts agreement
-
-                    // agreementLinkFinal =
-                    //     await BorrowAgreementPdf().borrowAgreementPdf(
-                    //   context,
-                    //   widget.requestModel,
-                    //   documentName,
-                    //   widget.isOffer,
-                    //   widget.placeOrItem,
-                    //   specificConditions,
-                    // );
-
-                    // widget.onPdfCreated(agreementLinkFinal, documentName);
-
-                    Navigator.of(context).pop;
                   }
                 }
               }),
@@ -802,72 +860,81 @@ class _OfferAgreementFormState extends State<AgreementForm> {
   }
 
   Widget searchFieldWidget() {
+    log('HERE 1');
+
     if (agreementDocumentType != AgreementDocumentType.TEMPLATE.readable) {
+      log('HERE 2');
       return Container();
     }
-    return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 10),
-      child: TextFormField(
-        controller: searchTextController,
-        decoration: InputDecoration(
-          isDense: true,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 30, right: 10),
+          child: TextFormField(
+            controller: searchTextController,
+            key: _formKeyElastic,
+            decoration: InputDecoration(
+              isDense: true,
 
-          // labelText: "Enter Email",
-          hintText: S.of(context).search_template_hint,
-          fillColor: Colors.white,
+              // labelText: "Enter Email",
+              hintText: S.of(context).search_template_hint,
+              fillColor: Colors.white,
 
-          alignLabelWithHint: true,
-          prefixIcon: Icon(
-            Icons.search,
-            size: 20,
-            color: Colors.grey,
-          ),
-          contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 0.0, 10.0),
-
-          suffixIcon: Offstage(
-            offstage: searchTextController.text.length == 0,
-            child: IconButton(
-              splashColor: Colors.transparent,
-              icon: Icon(
-                Icons.clear,
-                color: Colors.black54,
+              alignLabelWithHint: true,
+              prefixIcon: Icon(
+                Icons.search,
+                size: 20,
+                color: Colors.grey,
               ),
-              onPressed: () {
-                //searchTextController.clear();
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  searchTextController.clear();
-                  //if (selectedProjectTemplate != null) {
-                  //  selectedProjectTemplate = null;
-                  //}
-                });
-              },
+              contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 0.0, 10.0),
+
+              suffixIcon: Offstage(
+                offstage: searchTextController.text.length == 0,
+                child: IconButton(
+                  splashColor: Colors.transparent,
+                  icon: Icon(
+                    Icons.clear,
+                    color: Colors.black54,
+                  ),
+                  onPressed: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      searchTextController.clear();
+                      //if (selectedProjectTemplate != null) {
+                      //  selectedProjectTemplate = null;
+                      //}
+                    });
+                  },
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
             ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-            ),
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.sentences,
+            style: TextStyle(fontSize: 16.0),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(50),
+            ],
           ),
         ),
-        keyboardType: TextInputType.text,
-        textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(fontSize: 16.0),
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(50),
-        ],
-      ),
+        SizedBox(height: 5),
+      ],
     );
   }
 
   Widget buildTemplateWidget() {
+    log('HERE 3');
     if (agreementDocumentType != AgreementDocumentType.TEMPLATE.readable) {
       return Container();
     } else if (searchTextController.text.trim().length < 3) {
@@ -910,6 +977,10 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 onChanged: (ind) => setState(() {
                   value = ind;
                   selectedAgreementTemplate = agreementTemplateList[ind];
+                  documentNameController.text =
+                      selectedAgreementTemplate.documentName;
+                  specificConditionsController.text =
+                      selectedAgreementTemplate.specificConditions;
                 }),
                 title: Text(borrowAgreementTemplateModel.templateName),
               );
