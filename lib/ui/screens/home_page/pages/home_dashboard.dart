@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
@@ -15,6 +16,7 @@ import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_listing_page.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
+import 'package:sevaexchange/ui/utils/seva_analytics.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -69,6 +71,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       data.forEach((model) {
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {
           selectedCommunity = model;
+
+          Catalyst.recordAccessTime(communityId: selectedCommunity.id);
+
           SevaCore.of(context).loggedInUser.currentTimebank =
               model.primary_timebank;
           SevaCore.of(context).loggedInUser.associatedWithTimebanks =
