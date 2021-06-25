@@ -606,16 +606,6 @@ class L {
       "There was error creating your place, Please try again.";
   String get updating_place_error =>
       "There was error creating your place, Please try again.";
-
-  String get additional_instructions_hint_place => "Ex: Smoking allowed";
-  String get additional_instructions_hint_item => "Ex: Smoking allowed";
-  String get addditional_instructions_error_text => "Ex: Smoking allowed";
-  String get addditional_instructions => "Ex: Smoking allowed";
-  String get date_to_check_in_out => "Ex: Smoking allowed";
-  String get date_to_borrow_and_return => "Ex: Smoking allowed";
-  String get lending_approve_terms_place => "Ex: Smoking allowed";
-  String get lending_approve_terms_item => "Ex: Smoking allowed";
-  String get approve_lending_offer => "Ex: Smoking allowed";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->
