@@ -199,7 +199,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           searchTextController.clear();
                           specificConditionsController.clear();
                           documentNameController.clear();
-                          agreementTemplateModel = null;
+                          selectedAgreementTemplate = null;
                           setState(() => {});
                         },
                       ),
@@ -234,7 +234,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                           searchTextController.clear();
                           specificConditionsController.clear();
                           documentNameController.clear();
-                          agreementTemplateModel = null;
+                          selectedAgreementTemplate = null;
                           setState(() => {});
                         },
                       ),
@@ -630,7 +630,7 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 searchTextController.clear();
                 specificConditionsController.clear();
                 documentNameController.clear();
-                agreementTemplateModel = null;
+                selectedAgreementTemplate = null;
                 setState(() => {});
               },
             ),
@@ -653,7 +653,8 @@ class _OfferAgreementFormState extends State<AgreementForm> {
                 saveAsTemplate = false;
                 searchTextController.clear();
                 specificConditionsController.clear();
-                agreementTemplateModel = null;
+                documentNameController.clear();
+                selectedAgreementTemplate = null;
                 setState(() => {});
               },
             ),
@@ -981,19 +982,22 @@ class _OfferAgreementFormState extends State<AgreementForm> {
             itemBuilder: (context, index) {
               AgreementTemplateModel borrowAgreementTemplateModel =
                   agreementTemplateList[index];
-              return RadioListTile(
-                value: index,
-                groupValue: value,
-                activeColor: primaryColor,
-                onChanged: (ind) => setState(() {
-                  value = ind;
-                  selectedAgreementTemplate = agreementTemplateList[ind];
-                  documentNameController.text =
-                      selectedAgreementTemplate.documentName;
-                  specificConditionsController.text =
-                      selectedAgreementTemplate.specificConditions;
-                }),
-                title: Text(borrowAgreementTemplateModel.templateName),
+              return Padding(
+                padding: const EdgeInsets.only(left: 14),
+                child: ListTile(
+                  // value: index,
+                  // groupValue: value,
+                  // activeColor: primaryColor,
+                  onTap: () => setState(() {
+                    value = index;
+                    selectedAgreementTemplate = agreementTemplateList[index];
+                    documentNameController.text =
+                        selectedAgreementTemplate.documentName;
+                    specificConditionsController.text =
+                        selectedAgreementTemplate.specificConditions;
+                  }),
+                  title: Text(borrowAgreementTemplateModel.templateName),
+                ),
               );
             },
           );
