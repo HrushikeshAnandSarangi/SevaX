@@ -7,19 +7,20 @@ import 'dart:convert';
 
 class LendingPlaceModel {
   LendingPlaceModel({
-    @required this.placeName,
-    @required this.noOfGuests,
-    @required this.noOfRooms,
-    @required this.noOfBathRooms,
-    @required this.commonSpace,
-    @required this.houseRules,
-    @required this.houseImages,
-    @required this.creatorId,
-    @required this.email,
-    @required this.timestamp,
-    @required this.amenities,
+    this.id,
+    this.placeName,
+    this.noOfGuests,
+    this.noOfRooms,
+    this.noOfBathRooms,
+    this.commonSpace,
+    this.houseRules,
+    this.houseImages,
+    this.creatorId,
+    this.email,
+    this.timestamp,
+    this.amenities,
   });
-
+  String id;
   String placeName;
   int noOfGuests;
   int noOfRooms;
@@ -30,7 +31,7 @@ class LendingPlaceModel {
   String creatorId;
   String email;
   int timestamp;
-  Map<String, String> amenities;
+  Map<String, dynamic> amenities;
 
   factory LendingPlaceModel.fromJson(String str) =>
       LendingPlaceModel.fromMap(json.decode(str));
@@ -39,6 +40,7 @@ class LendingPlaceModel {
 
   factory LendingPlaceModel.fromMap(Map<String, dynamic> json) =>
       LendingPlaceModel(
+          id: json["id"] == null ? null : json["id"],
           placeName: json["placeName"] == null ? null : json["placeName"],
           noOfGuests: json["no_of_guests"] == null
               ? null
@@ -62,9 +64,10 @@ class LendingPlaceModel {
           timestamp: json["timestamp"] == null ? null : json["timestamp"],
           amenities: json["amenities"] == null
               ? {}
-              : Map<String, String>.from(json["amenities"] ?? {}) ?? {});
+              : Map<String, dynamic>.from(json["amenities"] ?? {}) ?? {});
 
   Map<String, dynamic> toMap() => {
+        "id": id == null ? null : id,
         "placeName": placeName == null ? null : placeName,
         "no_of_guests": noOfGuests == null ? null : noOfGuests,
         "no_of_rooms": noOfRooms == null ? null : noOfRooms,

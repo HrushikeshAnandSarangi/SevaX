@@ -689,6 +689,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
       String imageUrl =
           await uploadImage(SevaCore.of(context).loggedInUser.email);
+      log("link ${imageUrl.toString()}");
 
       await profanityCheck(imageURL: imageUrl, storagePath: imageUrl);
     }
@@ -1040,9 +1041,9 @@ class _EditProfilePageState extends State<EditProfilePage>
     // UploadTask uploadTask = ref.putFile(File.)
     String imageURL = '';
 
-    uploadTask.whenComplete(() async {
-      imageURL = await ref.getDownloadURL();
-    });
+    imageURL =
+        await (await uploadTask.whenComplete(() => null)).ref.getDownloadURL();
+
     return imageURL;
   }
 

@@ -31,6 +31,8 @@ class _CollectionNames {
   final String projectTemplates = 'project_templates';
   final String requestCategories = 'requestCategories';
   final String borrowAgreementTemplates = 'borrowAgreement_templates';
+  final String amenities = 'amenities';
+  final String lendingItems = 'lendingItems';
 }
 
 class CollectionRef {
@@ -143,4 +145,8 @@ class CollectionRef {
       .collection(_collectionNames.notifications);
 
   static WriteBatch get batch => _firestore.batch();
+  static final CollectionReference amenities =
+      _firestore.collection(_collectionNames.amenities);
+  static final CollectionReference lendingItems =
+      _firestore.collection(_collectionNames.lendingItems);
 }
