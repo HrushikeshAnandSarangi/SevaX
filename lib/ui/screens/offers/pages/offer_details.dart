@@ -122,7 +122,20 @@ class OfferDetails extends StatelessWidget {
                                 S.of(context).edit,
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onPressed: () => _onEdit(context),
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => IndividualOffer(
+                                      offerModel: offerModel,
+                                      timebankId: offerModel.timebankId,
+                                      loggedInMemberUserId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID,
+                                      timebankModel: timebankModel,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           oneToManyOfferCancellation(context),

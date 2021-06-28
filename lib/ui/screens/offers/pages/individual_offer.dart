@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/common_help_icon.dart';
+import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/goods_dynamic_selection_editRequest.dart';
+import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/enums/help_context_enums.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -11,6 +16,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
@@ -18,9 +25,11 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/open_scope_checkbox_widget.dart';
 
@@ -45,6 +54,8 @@ class IndividualOffer extends StatefulWidget {
 class _IndividualOfferState extends State<IndividualOffer> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
+  final OneToManyOfferBloc _one_to_many_bloc = OneToManyOfferBloc();
+
   CommunityModel communityModel;
   String selectedAddress;
   CustomLocation customLocation;
@@ -57,32 +68,73 @@ class _IndividualOfferState extends State<IndividualOffer> {
   TextEditingController _availabilityController = TextEditingController();
   TextEditingController _minimumCreditsController = TextEditingController();
 
+  //one_to_many
+  TextEditingController _one_to_many_titleController = TextEditingController();
+  TextEditingController _preparationController = TextEditingController();
+  TextEditingController _classHourController = TextEditingController();
+  TextEditingController _sizeClassController = TextEditingController();
+  TextEditingController _classDescriptionController = TextEditingController();
+  End end = End();
+  String title = '';
+  bool closePage = true;
+
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
   FocusNode _availability = FocusNode();
   FocusNode _minimumCredits = FocusNode();
-  var focusNodes = List.generate(8, (_) => FocusNode());
+  List<FocusNode> oneToManyFocusNodes;
+
+  RequestType offerType;
+
   @override
   void initState() {
-    AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
-    _bloc.onTypeChanged(RequestType.TIME);
+    oneToManyFocusNodes = List.generate(5, (_) => FocusNode());
+
     if (widget.offerModel != null) {
-      _bloc.loadData(widget.offerModel);
-      _titleController.text = widget.offerModel.individualOfferDataModel.title;
-      _descriptionController.text =
-          widget.offerModel.individualOfferDataModel.description;
-      _minimumCreditsController.text =
-          widget.offerModel.individualOfferDataModel.minimumCredits.toString();
-      _availabilityController.text =
-          widget.offerModel.individualOfferDataModel.schedule;
+      if (widget.offerModel.offerType == OfferType.INDIVIDUAL_OFFER) {
+        _bloc.loadData(widget.offerModel);
+        _titleController.text =
+            widget.offerModel.individualOfferDataModel.title;
+        _descriptionController.text =
+            widget.offerModel.individualOfferDataModel.description;
+        _minimumCreditsController.text = widget
+            .offerModel.individualOfferDataModel.minimumCredits
+            .toString();
+        _availabilityController.text =
+            widget.offerModel.individualOfferDataModel.schedule;
+        offerType = widget.offerModel.type;
+        _bloc.onTypeChanged(widget.offerModel.type);
+      } else {
+        _one_to_many_bloc.loadData(widget.offerModel);
+        _one_to_many_titleController.text =
+            widget.offerModel.groupOfferDataModel.classTitle;
+        _preparationController.text = widget
+            .offerModel.groupOfferDataModel.numberOfPreperationHours
+            .toString();
+        _classHourController.text =
+            widget.offerModel.groupOfferDataModel.numberOfClassHours.toString();
+        _sizeClassController.text =
+            widget.offerModel.groupOfferDataModel.sizeOfClass.toString();
+        _classDescriptionController.text =
+            widget.offerModel.groupOfferDataModel.classDescription;
+        offerType = RequestType.ONE_TO_MANY_OFFER;
+        _bloc.onTypeChanged(RequestType.ONE_TO_MANY_OFFER);
+      }
+
       AppConfig.helpIconContextMember =
           widget.offerModel.type == RequestType.TIME
               ? HelpContextMemberType.time_offers
               : widget.offerModel.type == RequestType.CASH
                   ? HelpContextMemberType.money_offers
-                  : HelpContextMemberType.goods_offers;
-    }
+                  : widget.offerModel.type == RequestType.ONE_TO_MANY_OFFER
+                      ? HelpContextMemberType.one_to_many_offers
+                      : HelpContextMemberType.goods_offers;
+    } else {
+      AppConfig.helpIconContextMember = HelpContextMemberType.time_offers;
 
+      _bloc.onTypeChanged(RequestType.TIME);
+      offerType = RequestType.TIME;
+    }
     super.initState();
     getCommunity();
     _bloc.errorMessage.listen((event) {
@@ -90,6 +142,15 @@ class _IndividualOfferState extends State<IndividualOffer> {
         //hideProgress();
         showScaffold(
             event == 'goods' ? S.of(context).select_goods_category : null);
+      }
+    });
+    _one_to_many_bloc.classSizeError.listen((error) {
+      if (error != null) {
+        log(error);
+        errorDialog(
+          context: context,
+          error: getValidationError(context, error),
+        );
       }
     });
   }
@@ -115,6 +176,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   void dispose() {
     _bloc.dispose();
+    _one_to_many_bloc.dispose();
     _title.dispose();
     _description.dispose();
     _availability.dispose();
@@ -122,7 +184,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
     _descriptionController.dispose();
     _availabilityController.dispose();
     _minimumCreditsController.dispose();
-
+    _one_to_many_titleController.dispose();
+    _preparationController.dispose();
+    _classHourController.dispose();
+    _sizeClassController.dispose();
+    _classDescriptionController.dispose();
     super.dispose();
   }
 
@@ -137,101 +203,128 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   Widget RequestTypeWidget() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          StreamBuilder<RequestType>(
-              stream: _bloc.type,
-              builder: (context, snapshot) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).offer_type,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      StreamBuilder<RequestType>(
+          stream: _bloc.type,
+          builder: (context, snapshot) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  S.of(context).offer_type,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+                TransactionsMatrixCheck(
+                  upgradeDetails:
+                      AppConfig.upgradePlanBannerModel.cash_donation,
+                  transaction_matrix_type: "cash_goods_offers",
+                  comingFrom: ComingFrom.Offers,
+                  child: Column(
+                    children: <Widget>[
+                      ConfigurationCheck(
+                        actionType: 'create_time_offers',
+                        role: memberType(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID),
+                        child: _optionRadioButton(
+                          title: S.of(context).request_type_time,
+                          value: RequestType.TIME,
+                          groupvalue: snapshot.data != null
+                              ? snapshot.data
+                              : RequestType.TIME,
+                          onChanged: (data) {
+                            AppConfig.helpIconContextMember =
+                                HelpContextMemberType.time_offers;
+                            _bloc.onTypeChanged(data);
+                            title_hint = S.of(context).offer_title_hint;
+                            description_hint =
+                                S.of(context).offer_description_hint;
+                            offerType = data;
+
+                            setState(() {});
+                          },
+                        ),
                       ),
-                    ),
-                    TransactionsMatrixCheck(
-                      upgradeDetails:
-                          AppConfig.upgradePlanBannerModel.cash_donation,
-                      transaction_matrix_type: "cash_goods_offers",
-                      comingFrom: ComingFrom.Offers,
-                      child: Column(
-                        children: <Widget>[
-                          ConfigurationCheck(
-                            actionType: 'create_time_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
-                            child: _optionRadioButton(
-                              title: S.of(context).request_type_time,
-                              value: RequestType.TIME,
+                      ConfigurationCheck(
+                        actionType: 'create_money_offers',
+                        role: memberType(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID),
+                        child: _optionRadioButton(
+                            title: S.of(context).request_type_cash,
+                            value: RequestType.CASH,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data
+                                : RequestType.TIME,
+                            onChanged: (data) {
+                              AppConfig.helpIconContextMember =
+                                  HelpContextMemberType.money_offers;
+                              _bloc.onTypeChanged(data);
+                              title_hint = S.of(context).cash_offer_title_hint;
+                              description_hint =
+                                  S.of(context).cash_offer_desc_hint;
+                              offerType = data;
+
+                              setState(() {});
+                            }),
+                      ),
+                      ConfigurationCheck(
+                        actionType: 'create_goods_offers',
+                        role: memberType(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID),
+                        child: _optionRadioButton(
+                            title: S.of(context).request_type_goods,
+                            value: RequestType.GOODS,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data
+                                : RequestType.TIME,
+                            onChanged: (data) {
+                              AppConfig.helpIconContextMember =
+                                  HelpContextMemberType.goods_offers;
+                              title_hint = S.of(context).goods_offer_title_hint;
+                              description_hint =
+                                  S.of(context).goods_offer_desc_hint;
+                              _bloc.onTypeChanged(data);
+                              offerType = data;
+                              setState(() {});
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.onetomany_offers,
+                        transaction_matrix_type: "onetomany_offers",
+                        comingFrom: ComingFrom.Offers,
+                        child: ConfigurationCheck(
+                          actionType: 'one_to_many_offer',
+                          role: memberType(widget.timebankModel,
+                              SevaCore.of(context).loggedInUser.sevaUserID),
+                          child: _optionRadioButton(
+                              title: S.of(context).one_to_many,
+                              value: RequestType.ONE_TO_MANY_OFFER,
                               groupvalue: snapshot.data != null
                                   ? snapshot.data
                                   : RequestType.TIME,
                               onChanged: (data) {
                                 AppConfig.helpIconContextMember =
-                                    HelpContextMemberType.time_offers;
+                                    HelpContextMemberType.one_to_many_offers;
                                 _bloc.onTypeChanged(data);
-                                title_hint = S.of(context).offer_title_hint;
-                                description_hint =
-                                    S.of(context).offer_description_hint;
+                                offerType = data;
+
                                 setState(() {});
-                              },
-                            ),
-                          ),
-                          ConfigurationCheck(
-                            actionType: 'create_money_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
-                            child: _optionRadioButton(
-                                title: S.of(context).request_type_cash,
-                                value: RequestType.CASH,
-                                groupvalue: snapshot.data != null
-                                    ? snapshot.data
-                                    : RequestType.TIME,
-                                onChanged: (data) {
-                                  AppConfig.helpIconContextMember =
-                                      HelpContextMemberType.money_offers;
-                                  _bloc.onTypeChanged(data);
-                                  title_hint =
-                                      S.of(context).cash_offer_title_hint;
-                                  description_hint =
-                                      S.of(context).cash_offer_desc_hint;
-                                  setState(() {});
-                                }),
-                          ),
-                          ConfigurationCheck(
-                            actionType: 'create_goods_offers',
-                            role: memberType(widget.timebankModel,
-                                SevaCore.of(context).loggedInUser.sevaUserID),
-                            child: _optionRadioButton(
-                                title: S.of(context).request_type_goods,
-                                value: RequestType.GOODS,
-                                groupvalue: snapshot.data != null
-                                    ? snapshot.data
-                                    : RequestType.TIME,
-                                onChanged: (data) {
-                                  AppConfig.helpIconContextMember =
-                                      HelpContextMemberType.goods_offers;
-                                  title_hint =
-                                      S.of(context).goods_offer_title_hint;
-                                  description_hint =
-                                      S.of(context).goods_offer_desc_hint;
-                                  _bloc.onTypeChanged(data);
-                                  setState(() {});
-                                }),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              })
-        ]);
+                              }),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );
+          })
+    ]);
   }
 
   Widget TimeRequest() {
@@ -408,7 +501,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
           : null,
       body: SafeArea(
         child: StreamBuilder<Status>(
-          stream: _bloc.status,
+          stream: offerType == RequestType.ONE_TO_MANY_OFFER
+              ? _one_to_many_bloc.status
+              : _bloc.status,
           builder: (context, status) {
             if (status.data == Status.COMPLETE) {
               WidgetsBinding.instance.addPostFrameCallback(
@@ -460,49 +555,59 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             ? RequestTypeWidget()
                             // ? Container()
                             : Container(),
-                        StreamBuilder<String>(
-                          stream: _bloc.title,
-                          builder: (context, snapshot) {
-                            return CustomTextField(
-                              controller: _titleController,
-                              currentNode: _title,
-                              nextNode: _description,
-                              value: snapshot.data,
-                              heading: "${S.of(context).title}*",
-                              onChanged: (String value) {
-                                _bloc.onTitleChanged(value);
-                                // title = value;
-                              },
-                              hint: title_hint != null
-                                  ? title_hint
-                                  : S.of(context).offer_title_hint,
-                              maxLength: null,
-                              error:
-                                  getValidationError(context, snapshot.error),
-                            );
-                          },
+                        HideWidget(
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          child: StreamBuilder<String>(
+                            stream: _bloc.title,
+                            builder: (context, snapshot) {
+                              return CustomTextField(
+                                controller: _titleController,
+                                currentNode: _title,
+                                nextNode: _description,
+                                value: snapshot.data,
+                                heading: "${S.of(context).title}*",
+                                onChanged: (String value) {
+                                  _bloc.onTitleChanged(value);
+                                  // title = value;
+                                },
+                                hint: title_hint != null
+                                    ? title_hint
+                                    : S.of(context).offer_title_hint,
+                                maxLength: null,
+                                error:
+                                    getValidationError(context, snapshot.error),
+                              );
+                            },
+                          ),
                         ),
-                        SizedBox(height: 30),
-                        StreamBuilder<String>(
-                          stream: _bloc.offerDescription,
-                          builder: (context, snapshot) {
-                            return CustomTextField(
-                              controller: _descriptionController,
-                              currentNode: _description,
-                              nextNode: _availability,
-                              value: snapshot.data,
-                              heading: "${S.of(context).offer_description}*",
-                              onChanged: _bloc.onOfferDescriptionChanged,
-                              hint: description_hint != null
-                                  ? description_hint
-                                  : S.of(context).offer_description_hint,
-                              maxLength: 500,
-                              error:
-                                  getValidationError(context, snapshot.error),
-                            );
-                          },
+                        HideWidget(
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 30)),
+                        HideWidget(
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          child: StreamBuilder<String>(
+                            stream: _bloc.offerDescription,
+                            builder: (context, snapshot) {
+                              return CustomTextField(
+                                controller: _descriptionController,
+                                currentNode: _description,
+                                nextNode: _availability,
+                                value: snapshot.data,
+                                heading: "${S.of(context).offer_description}*",
+                                onChanged: _bloc.onOfferDescriptionChanged,
+                                hint: description_hint != null
+                                    ? description_hint
+                                    : S.of(context).offer_description_hint,
+                                maxLength: 500,
+                                error:
+                                    getValidationError(context, snapshot.error),
+                              );
+                            },
+                          ),
                         ),
-                        SizedBox(height: 20),
+                        HideWidget(
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 20)),
                         StreamBuilder<RequestType>(
                             stream: _bloc.type,
                             builder: (context, snapshot) {
@@ -513,7 +618,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   ? TimeRequest()
                                   : type == RequestType.CASH
                                       ? CashRequest()
-                                      : GoodsRequest();
+                                      : type == RequestType.ONE_TO_MANY_OFFER
+                                          ? OneToManyOffer()
+                                          : GoodsRequest();
                             }),
                         // SizedBox(height: 10),
                         // Container(
@@ -559,29 +666,37 @@ class _IndividualOfferState extends State<IndividualOffer> {
                         //     //groupValue: sharedValue,
                         //   ),
                         // ),
-                        SizedBox(height: 25),
-                        StreamBuilder<CustomLocation>(
-                            stream: _bloc.location,
-                            builder: (context, snapshot) {
-                              return LocationPickerWidget(
-                                selectedAddress: snapshot.data?.address,
-                                location: snapshot.data?.location,
-                                color: snapshot.error == null
-                                    ? Colors.green
-                                    : Colors.red,
-                                onChanged: (LocationDataModel dataModel) {
-                                  _bloc.onLocatioChanged(
-                                    CustomLocation(
-                                      dataModel.geoPoint,
-                                      dataModel.location,
-                                    ),
-                                  );
-                                },
-                              );
-                            }),
-                        SizedBox(height: 20),
+                        HideWidget(
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 25)),
+                        HideWidget(
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          child: StreamBuilder<CustomLocation>(
+                              stream: _bloc.location,
+                              builder: (context, snapshot) {
+                                return LocationPickerWidget(
+                                  selectedAddress: snapshot.data?.address,
+                                  location: snapshot.data?.location,
+                                  color: snapshot.error == null
+                                      ? Colors.green
+                                      : Colors.red,
+                                  onChanged: (LocationDataModel dataModel) {
+                                    _bloc.onLocatioChanged(
+                                      CustomLocation(
+                                        dataModel.geoPoint,
+                                        dataModel.location,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
+                        ),
+                        HideWidget(
+                            hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                            child: SizedBox(height: 20)),
                         Offstage(
-                          offstage: AppConfig.isTestCommunity,
+                          offstage: AppConfig.isTestCommunity ||
+                              offerType == RequestType.ONE_TO_MANY_OFFER,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: StreamBuilder<bool>(
@@ -610,138 +725,353 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 }),
                           ),
                         ),
-                        StreamBuilder<bool>(
-                          initialData: false,
-                          stream: _bloc.isPublicVisible,
-                          builder: (context, snapshot) {
-                            return snapshot.data
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: StreamBuilder<bool>(
-                                        initialData: false,
-                                        stream: _bloc.makePublicValue,
-                                        builder: (context, snapshot) {
-                                          return ConfigurationCheck(
-                                            actionType: 'create_public_offer',
-                                            role: memberType(
-                                                widget.timebankModel,
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID),
-                                            child: OpenScopeCheckBox(
-                                                infoType:
-                                                    InfoType.OpenScopeOffer,
-                                                isChecked: snapshot.data,
-                                                checkBoxTypeLabel:
-                                                    CheckBoxType.type_Offers,
-                                                onChangedCB: (bool val) {
-                                                  if (snapshot.data != val) {
-                                                    _bloc
-                                                        .onOfferMadePublic(val);
-                                                    setState(() {});
-                                                  }
-                                                }),
-                                          );
-                                        }),
-                                  )
-                                : Container();
-                          },
+                        HideWidget(
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          child: StreamBuilder<bool>(
+                            initialData: false,
+                            stream: _bloc.isPublicVisible,
+                            builder: (context, snapshot) {
+                              return snapshot.data
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: StreamBuilder<bool>(
+                                          initialData: false,
+                                          stream: _bloc.makePublicValue,
+                                          builder: (context, snapshot) {
+                                            return ConfigurationCheck(
+                                              actionType: 'create_public_offer',
+                                              role: memberType(
+                                                  widget.timebankModel,
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID),
+                                              child: OpenScopeCheckBox(
+                                                  infoType:
+                                                      InfoType.OpenScopeOffer,
+                                                  isChecked: snapshot.data,
+                                                  checkBoxTypeLabel:
+                                                      CheckBoxType.type_Offers,
+                                                  onChangedCB: (bool val) {
+                                                    if (snapshot.data != val) {
+                                                      _bloc.onOfferMadePublic(
+                                                          val);
+                                                      setState(() {});
+                                                    }
+                                                  }),
+                                            );
+                                          }),
+                                    )
+                                  : Container();
+                            },
+                          ),
                         ),
                         SizedBox(height: 20),
-                        CustomElevatedButton(
-                          onPressed: status.data == Status.LOADING
-                              ? () {}
-                              : () async {
-                                  var connResult =
-                                      await Connectivity().checkConnectivity();
-                                  if (connResult == ConnectivityResult.none) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(S.of(context).check_internet),
-                                        action: SnackBarAction(
-                                          label: S.of(context).dismiss,
-                                          onPressed: () =>
-                                              ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar(),
-                                        ),
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  if (widget.offerModel == null) {
-                                    if (SevaCore.of(context)
-                                            .loggedInUser
-                                            .calendarId !=
-                                        null) {
-                                      _bloc.allowedCalenderEvent = true;
-                                      await _bloc.createOrUpdateOffer(
-                                          user:
-                                              SevaCore.of(context).loggedInUser,
-                                          timebankId: widget.timebankId,
-                                          communityName:
-                                              communityModel.name ?? '');
-                                    } else {
-                                      _bloc.allowedCalenderEvent = true;
-                                      await _bloc.createOrUpdateOffer(
-                                          user:
-                                              SevaCore.of(context).loggedInUser,
-                                          timebankId: widget.timebankId,
-                                          communityName:
-                                              communityModel.name ?? '');
-                                      if (_bloc.offerCreatedBool) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return AddToCalendar(
-                                                  isOfferRequest: false,
-                                                  offer: _bloc.mainOfferModel,
-                                                  requestModel: null,
-                                                  userModel: null,
-                                                  eventsIdsArr: _bloc.offerIds);
-                                            },
+                        HideWidget(
+                          hide: offerType != RequestType.ONE_TO_MANY_OFFER,
+                          child: TransactionsMatrixCheck(
+                            comingFrom: ComingFrom.Offers,
+                            upgradeDetails: AppConfig
+                                .upgradePlanBannerModel.onetomany_offers,
+                            transaction_matrix_type: "onetomany_offers",
+                            child: CustomElevatedButton(
+                              onPressed: status.data == Status.LOADING
+                                  ? () {}
+                                  : () async {
+                                      var connResult = await Connectivity()
+                                          .checkConnectivity();
+                                      if (connResult ==
+                                          ConnectivityResult.none) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                S.of(context).check_internet),
+                                            action: SnackBarAction(
+                                              label: S.of(context).dismiss,
+                                              onPressed: () =>
+                                                  ScaffoldMessenger.of(context)
+                                                      .hideCurrentSnackBar(),
+                                            ),
                                           ),
                                         );
+                                        return;
                                       }
-                                    }
-                                  } else {
-                                    _bloc.updateIndividualOffer(
-                                      widget.offerModel,
-                                    );
-                                  }
-                                },
-                          child: status.data == Status.LOADING
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
+                                      FocusScope.of(context).unfocus();
+                                      if (OfferDurationWidgetState
+                                                  .starttimestamp !=
+                                              0 &&
+                                          OfferDurationWidgetState
+                                                  .endtimestamp !=
+                                              0) {
+                                        _one_to_many_bloc.startTime =
+                                            OfferDurationWidgetState
+                                                .starttimestamp;
+                                        _one_to_many_bloc.endTime =
+                                            OfferDurationWidgetState
+                                                .endtimestamp;
+                                        if (_one_to_many_bloc.endTime <=
+                                            _one_to_many_bloc.startTime) {
+                                          errorDialog(
+                                            context: context,
+                                            error: S
+                                                .of(context)
+                                                .validation_error_end_date_greater,
+                                          );
+                                          return;
+                                        }
+                                        if (widget.offerModel == null) {
+                                          await createOneToManyOfferFunc();
+                                        } else {
+                                          if (widget.offerModel.autoGenerated ||
+                                              widget.offerModel.isRecurring) {
+                                            showDialog(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder:
+                                                    (BuildContext viewContext) {
+                                                  return WillPopScope(
+                                                      onWillPop: () {},
+                                                      child: AlertDialog(
+                                                          title: Text(S
+                                                              .of(context)
+                                                              .this_is_repeating_event),
+                                                          actions: [
+                                                            CustomTextButton(
+                                                              child: Text(
+                                                                S
+                                                                    .of(context)
+                                                                    .edit_this_event,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    fontFamily:
+                                                                        'Europa'),
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.pop(
+                                                                    viewContext);
+                                                                _one_to_many_bloc
+                                                                        .autoGenerated =
+                                                                    widget
+                                                                        .offerModel
+                                                                        .autoGenerated;
+                                                                _one_to_many_bloc
+                                                                        .isRecurring =
+                                                                    widget
+                                                                        .offerModel
+                                                                        .isRecurring;
+
+                                                                await updateOneToManyOfferFunc(
+                                                                    0);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                            CustomTextButton(
+                                                              child: Text(
+                                                                S
+                                                                    .of(context)
+                                                                    .edit_subsequent_event,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    fontFamily:
+                                                                        'Europa'),
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.pop(
+                                                                    viewContext);
+                                                                _one_to_many_bloc
+                                                                        .autoGenerated =
+                                                                    widget
+                                                                        .offerModel
+                                                                        .autoGenerated;
+                                                                _one_to_many_bloc
+                                                                        .isRecurring =
+                                                                    widget
+                                                                        .offerModel
+                                                                        .isRecurring;
+
+                                                                await updateOneToManyOfferFunc(
+                                                                    1);
+
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                            CustomTextButton(
+                                                              child: Text(
+                                                                S
+                                                                    .of(context)
+                                                                    .cancel,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: Colors
+                                                                        .red,
+                                                                    fontFamily:
+                                                                        'Europa'),
+                                                              ),
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.pop(
+                                                                    viewContext);
+                                                              },
+                                                            ),
+                                                          ]));
+                                                });
+                                          } else {
+                                            updateOneToManyOfferFunc(2);
+                                          }
+                                        }
+                                      } else {
+                                        errorDialog(
+                                          context: context,
+                                          error: S
+                                              .of(context)
+                                              .offer_start_end_date,
+                                        );
+                                      }
+                                    },
+                              child: status.data == Status.LOADING
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Text(
+                                          widget.offerModel == null
+                                              ? S.of(context).creating_offer
+                                              : S.of(context).updating_offer,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
                                       widget.offerModel == null
-                                          ? S.of(context).creating_offer
-                                          : S.of(context).updating_offer,
+                                          ? S.of(context).create_offer
+                                          : S.of(context).update_offer,
                                       style: TextStyle(fontSize: 16),
                                     ),
-                                    SizedBox(width: 8),
-                                    Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        HideWidget(
+                          hide: offerType == RequestType.ONE_TO_MANY_OFFER,
+                          child: CustomElevatedButton(
+                            onPressed: status.data == Status.LOADING
+                                ? () {}
+                                : () async {
+                                    var connResult = await Connectivity()
+                                        .checkConnectivity();
+                                    if (connResult == ConnectivityResult.none) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              S.of(context).check_internet),
+                                          action: SnackBarAction(
+                                            label: S.of(context).dismiss,
+                                            onPressed: () =>
+                                                ScaffoldMessenger.of(context)
+                                                    .hideCurrentSnackBar(),
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    if (widget.offerModel == null) {
+                                      if (SevaCore.of(context)
+                                              .loggedInUser
+                                              .calendarId !=
+                                          null) {
+                                        _bloc.allowedCalenderEvent = true;
+                                        await _bloc.createOrUpdateOffer(
+                                            user: SevaCore.of(context)
+                                                .loggedInUser,
+                                            timebankId: widget.timebankId,
+                                            communityName:
+                                                communityModel.name ?? '');
+                                      } else {
+                                        _bloc.allowedCalenderEvent = true;
+                                        await _bloc.createOrUpdateOffer(
+                                            user: SevaCore.of(context)
+                                                .loggedInUser,
+                                            timebankId: widget.timebankId,
+                                            communityName:
+                                                communityModel.name ?? '');
+                                        if (_bloc.offerCreatedBool) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return AddToCalendar(
+                                                    isOfferRequest: false,
+                                                    offer: _bloc.mainOfferModel,
+                                                    requestModel: null,
+                                                    userModel: null,
+                                                    eventsIdsArr:
+                                                        _bloc.offerIds);
+                                              },
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      _bloc.updateIndividualOffer(
+                                        widget.offerModel,
+                                      );
+                                    }
+                                  },
+                            child: status.data == Status.LOADING
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                        widget.offerModel == null
+                                            ? S.of(context).creating_offer
+                                            : S.of(context).updating_offer,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  widget.offerModel == null
-                                      ? S.of(context).create_offer
-                                      : S.of(context).update_offer,
-                                  style: TextStyle(fontSize: 16),
-                                ),
+                                    ],
+                                  )
+                                : Text(
+                                    widget.offerModel == null
+                                        ? S.of(context).create_offer
+                                        : S.of(context).update_offer,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                          ),
                         ),
                       ],
                     ),
@@ -753,5 +1083,291 @@ class _IndividualOfferState extends State<IndividualOffer> {
         ),
       ),
     );
+  }
+
+  Widget OneToManyOffer() {
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _one_to_many_bloc.title,
+          builder: (_, snapshot) {
+            return CustomTextField(
+              controller: _one_to_many_titleController,
+              currentNode: oneToManyFocusNodes[0],
+              nextNode: oneToManyFocusNodes[1],
+              // formatters: <TextInputFormatter>[
+              //   WhitelistingTextInputFormatter(
+              //       RegExp("[a-zA-Z0-9_ ]*"))
+              // ],
+              value: snapshot.data != null ? snapshot.data : null,
+              heading: "${S.of(context).title}*",
+              onChanged: _one_to_many_bloc.onTitleChanged,
+              hint: S.of(context).one_to_many_offer_hint,
+              maxLength: null,
+              error: getValidationError(context, snapshot.error),
+            );
+          },
+        ),
+        SizedBox(height: 20),
+        OfferDurationWidget(
+          title: S.of(context).offer_duration,
+          startTime: widget.offerModel != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  widget.offerModel.groupOfferDataModel.startDate,
+                )
+              : null,
+          endTime: widget.offerModel != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  widget.offerModel.groupOfferDataModel.endDate,
+                )
+              : null,
+        ),
+        SizedBox(height: 20),
+        widget.offerModel == null
+            ? RepeatWidget()
+            : Visibility(
+                visible: widget.offerModel.isRecurring == true ||
+                    widget.offerModel.autoGenerated == true,
+                child: Container(
+                  child: EditRepeatWidget(
+                      requestModel: null, offerModel: widget.offerModel),
+                ),
+              ),
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _one_to_many_bloc.preparationHours,
+          builder: (_, snapshot) {
+            return CustomTextField(
+              controller: _preparationController,
+              currentNode: oneToManyFocusNodes[1],
+              nextNode: oneToManyFocusNodes[2],
+              value: snapshot.data != null ? snapshot.data : null,
+              heading: "${S.of(context).offer_prep_hours} *",
+              onChanged: _one_to_many_bloc.onPreparationHoursChanged,
+              hint: S.of(context).offer_prep_hours_required,
+              error: getValidationError(context, snapshot.error),
+              keyboardType: TextInputType.number,
+            );
+          },
+        ),
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _one_to_many_bloc.classHours,
+          builder: (_, snapshot) {
+            return CustomTextField(
+              controller: _classHourController,
+              currentNode: oneToManyFocusNodes[2],
+              nextNode: oneToManyFocusNodes[3],
+              value: snapshot.data != null ? snapshot.data : null,
+              heading: "${S.of(context).offer_number_class_hours} *",
+              onChanged: _one_to_many_bloc.onClassHoursChanged,
+              hint: S.of(context).offer_number_class_hours_required,
+              error: getValidationError(context, snapshot.error),
+              keyboardType: TextInputType.number,
+            );
+          },
+        ),
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _one_to_many_bloc.classSize,
+          builder: (_, snapshot) {
+            return CustomTextField(
+              controller: _sizeClassController,
+              currentNode: oneToManyFocusNodes[3],
+              nextNode: oneToManyFocusNodes[4],
+              value: snapshot.data != null ? snapshot.data : null,
+              heading: "${S.of(context).offer_size_class} *",
+              onChanged: _one_to_many_bloc.onClassSizeChanged,
+              hint: S.of(context).offer_enter_participants,
+              error: getValidationError(context, snapshot.error),
+              keyboardType: TextInputType.number,
+            );
+          },
+        ),
+        SizedBox(height: 20),
+        StreamBuilder<String>(
+          stream: _one_to_many_bloc.classDescription,
+          builder: (_, snapshot) {
+            return CustomTextField(
+              controller: _classDescriptionController,
+              currentNode: oneToManyFocusNodes[4],
+              value: snapshot.data != null ? snapshot.data : null,
+              heading: "${S.of(context).offer_class_description} *",
+              onChanged: _one_to_many_bloc.onclassDescriptionChanged,
+              hint: S.of(context).offer_description_error,
+              maxLength: 500,
+              error: getValidationError(context, snapshot.error),
+              keyboardType: TextInputType.multiline,
+            );
+          },
+        ),
+        SizedBox(height: 12),
+        Text(S.of(context).onetomany_createoffer_note),
+        SizedBox(height: 35),
+        StreamBuilder<CustomLocation>(
+            stream: _one_to_many_bloc.location,
+            builder: (_, snapshot) {
+              return LocationPickerWidget(
+                location: snapshot.data?.location,
+                selectedAddress: snapshot.data?.address,
+                color: snapshot.error == null ? Colors.green : Colors.red,
+                onChanged: (LocationDataModel dataModel) {
+                  _one_to_many_bloc.onLocatioChanged(
+                    CustomLocation(
+                      dataModel.geoPoint,
+                      dataModel.location,
+                    ),
+                  );
+                },
+              );
+            }),
+        SizedBox(height: 20),
+        HideWidget(
+          hide: AppConfig.isTestCommunity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: StreamBuilder<bool>(
+                stream: _one_to_many_bloc.makeVirtualValue,
+                builder: (context, snapshot) {
+                  return ConfigurationCheck(
+                    actionType: S.of(context).create_virtual_offer,
+                    role: memberType(widget.timebankModel,
+                        SevaCore.of(context).loggedInUser.sevaUserID),
+                    child: OpenScopeCheckBox(
+                        infoType: InfoType.VirtualOffers,
+                        isChecked: snapshot.data,
+                        checkBoxTypeLabel: CheckBoxType.type_VirtualOffers,
+                        onChangedCB: (bool val) {
+                          if (snapshot.data != val) {
+                            _one_to_many_bloc.onOfferMadeVirtual(val);
+                            log('value ${val}');
+                            setState(() {});
+                          }
+                        }),
+                  );
+                }),
+          ),
+        ),
+        StreamBuilder<bool>(
+            initialData: false,
+            stream: _bloc.isVisible,
+            builder: (context, snapshot) {
+              return snapshot.data
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: StreamBuilder<bool>(
+                          stream: _one_to_many_bloc.makePublicValue,
+                          builder: (context, snapshot) {
+                            return ConfigurationCheck(
+                              actionType: S.of(context).create_public_offer,
+                              role: memberType(widget.timebankModel,
+                                  SevaCore.of(context).loggedInUser.sevaUserID),
+                              child: OpenScopeCheckBox(
+                                  infoType: InfoType.OpenScopeOffer,
+                                  isChecked: snapshot.data,
+                                  checkBoxTypeLabel: CheckBoxType.type_Offers,
+                                  onChangedCB: (bool val) {
+                                    if (snapshot.data != val) {
+                                      _one_to_many_bloc.onOfferMadePublic(val);
+                                      log('value ${val}');
+                                      setState(() {});
+                                    }
+                                  }),
+                            );
+                          }),
+                    )
+                  : Container();
+            }),
+      ],
+    );
+  }
+
+  void createOneToManyOfferFunc() async {
+    _one_to_many_bloc.autoGenerated = false;
+    _one_to_many_bloc.isRecurring = RepeatWidgetState.isRecurring;
+    if (_one_to_many_bloc.isRecurring) {
+      _one_to_many_bloc.recurringDays = RepeatWidgetState.getRecurringdays();
+      _one_to_many_bloc.occurenceCount = 1;
+      end.endType = RepeatWidgetState.endType == 0
+          ? S.of(context).on
+          : S.of(context).after;
+      end.on = end.endType == "on"
+          ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
+          : null;
+      end.after = (end.endType == S.of(context).after
+          ? int.parse(RepeatWidgetState.after)
+          : null);
+      _one_to_many_bloc.end = end;
+    }
+
+    if (_one_to_many_bloc.isRecurring) {
+      if (_one_to_many_bloc.recurringDays.length == 0) {
+        errorDialog(context: context, error: S.of(context).recurringDays_err);
+        return;
+      }
+    }
+
+    if (SevaCore.of(context).loggedInUser.calendarId != null) {
+      _one_to_many_bloc.allowedCalenderEvent = true;
+
+      await _one_to_many_bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId,
+          communityName: communityModel.name ?? '');
+    } else {
+      _one_to_many_bloc.allowedCalenderEvent = false;
+
+      await _one_to_many_bloc.createOneToManyOffer(
+          user: SevaCore.of(context).loggedInUser,
+          timebankId: widget.timebankId,
+          communityName: communityModel.name ?? '');
+      log("creation statusss - ${_bloc.offerCreatedBool}");
+      if (_bloc.offerCreatedBool) {
+        log("inside if with ${_bloc.offerCreatedBool}");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddToCalendar(
+                  isOfferRequest: null,
+                  offer: _bloc.mainOfferModel,
+                  requestModel: null,
+                  userModel: null,
+                  eventsIdsArr: _bloc.offerIds);
+            },
+          ),
+        ).then((_) {
+          logger.i("came back from cal page");
+        });
+      }
+    }
+  }
+
+  void updateOneToManyOfferFunc(int editType) async {
+    if (_one_to_many_bloc.isRecurring || _one_to_many_bloc.autoGenerated) {
+      _one_to_many_bloc.recurringDays =
+          EditRepeatWidgetState.getRecurringdays();
+      _one_to_many_bloc.occurenceCount = widget.offerModel.occurenceCount;
+      end.endType = EditRepeatWidgetState.endType == 0
+          ? S.of(context).on
+          : S.of(context).after;
+      end.on = end.endType == S.of(context).on
+          ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
+          : null;
+      end.after = (end.endType == S.of(context).after
+          ? int.parse(EditRepeatWidgetState.after)
+          : null);
+      _one_to_many_bloc.end = end;
+    }
+
+    if (_one_to_many_bloc.isRecurring || _one_to_many_bloc.autoGenerated) {
+      if (_one_to_many_bloc.recurringDays.length == 0) {
+        errorDialog(context: context, error: S.of(context).recurringDays_err);
+        return;
+      }
+    }
+
+    _one_to_many_bloc.updateOneToManyOffer(widget.offerModel, editType);
   }
 }

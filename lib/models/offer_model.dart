@@ -336,6 +336,8 @@ class OfferModel extends DataModel {
         this.type = RequestType.CASH;
       } else if (map['requestType'] == "GOODS") {
         this.type = RequestType.GOODS;
+      } else if (map['requestType'] == "ONE_TO_MANY_OFFER") {
+        this.type = RequestType.ONE_TO_MANY_OFFER;
       } else {
         this.type = RequestType.TIME;
       }
