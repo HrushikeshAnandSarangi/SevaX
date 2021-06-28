@@ -36,6 +36,7 @@ class UpgradePlanBannerModel {
     this.public_to_sevax_global,
     this.community_sponsors,
     this.admin_role_customization,
+    this.cash_goods_offers,
   });
   BannerDetails pin_feeds;
   BannerDetails multi_lang;
@@ -68,6 +69,7 @@ class UpgradePlanBannerModel {
   BannerDetails public_to_sevax_global;
   BannerDetails community_sponsors;
   BannerDetails admin_role_customization;
+  BannerDetails cash_goods_offers;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
       UpgradePlanBannerModel(
@@ -165,6 +167,9 @@ class UpgradePlanBannerModel {
             : null,
         admin_role_customization: json.containsKey("admin_role_customization")
             ? BannerDetails.fromJson(json["admin_role_customization"])
+            : null,
+        cash_goods_offers: json.containsKey("cash_goods_offers")
+            ? BannerDetails.fromJson(json["cash_goods_offers"])
             : null,
       );
 }

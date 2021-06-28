@@ -203,128 +203,137 @@ class _IndividualOfferState extends State<IndividualOffer> {
   }
 
   Widget RequestTypeWidget() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      StreamBuilder<RequestType>(
-          stream: _bloc.type,
-          builder: (context, snapshot) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  S.of(context).offer_type,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                TransactionsMatrixCheck(
-                  upgradeDetails:
-                      AppConfig.upgradePlanBannerModel.cash_donation,
-                  transaction_matrix_type: "cash_goods_offers",
-                  comingFrom: ComingFrom.Offers,
-                  child: Column(
-                    children: <Widget>[
-                      ConfigurationCheck(
-                        actionType: 'create_time_offers',
-                        role: memberType(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID),
-                        child: _optionRadioButton(
-                          title: S.of(context).request_type_time,
-                          value: RequestType.TIME,
-                          groupvalue: snapshot.data != null
-                              ? snapshot.data
-                              : RequestType.TIME,
-                          onChanged: (data) {
-                            AppConfig.helpIconContextMember =
-                                HelpContextMemberType.time_offers;
-                            _bloc.onTypeChanged(data);
-                            title_hint = S.of(context).offer_title_hint;
-                            description_hint =
-                                S.of(context).offer_description_hint;
-                            offerType = data;
-
-                            setState(() {});
-                          },
-                        ),
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<RequestType>(
+              stream: _bloc.type,
+              builder: (context, snapshot) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.of(context).offer_type,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
                       ),
-                      ConfigurationCheck(
-                        actionType: 'create_money_offers',
-                        role: memberType(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID),
-                        child: _optionRadioButton(
-                            title: S.of(context).request_type_cash,
-                            value: RequestType.CASH,
-                            groupvalue: snapshot.data != null
-                                ? snapshot.data
-                                : RequestType.TIME,
-                            onChanged: (data) {
-                              AppConfig.helpIconContextMember =
-                                  HelpContextMemberType.money_offers;
-                              _bloc.onTypeChanged(data);
-                              title_hint = S.of(context).cash_offer_title_hint;
-                              description_hint =
-                                  S.of(context).cash_offer_desc_hint;
-                              offerType = data;
-
-                              setState(() {});
-                            }),
-                      ),
-                      ConfigurationCheck(
-                        actionType: 'create_goods_offers',
-                        role: memberType(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID),
-                        child: _optionRadioButton(
-                            title: S.of(context).request_type_goods,
-                            value: RequestType.GOODS,
-                            groupvalue: snapshot.data != null
-                                ? snapshot.data
-                                : RequestType.TIME,
-                            onChanged: (data) {
-                              AppConfig.helpIconContextMember =
-                                  HelpContextMemberType.goods_offers;
-                              title_hint = S.of(context).goods_offer_title_hint;
-                              description_hint =
-                                  S.of(context).goods_offer_desc_hint;
-                              _bloc.onTypeChanged(data);
-                              offerType = data;
-                              setState(() {});
-                            }),
-                      ),
-                      TransactionsMatrixCheck(
-                        upgradeDetails:
-                            AppConfig.upgradePlanBannerModel.onetomany_offers,
-                        transaction_matrix_type: "onetomany_offers",
-                        comingFrom: ComingFrom.Offers,
-                        child: ConfigurationCheck(
-                          actionType: 'one_to_many_offer',
+                    ),
+                    Column(
+                      children: <Widget>[
+                        ConfigurationCheck(
+                          actionType: 'create_time_offers',
                           role: memberType(widget.timebankModel,
                               SevaCore.of(context).loggedInUser.sevaUserID),
                           child: _optionRadioButton(
-                              title: S.of(context).one_to_many,
-                              value: RequestType.ONE_TO_MANY_OFFER,
-                              groupvalue: snapshot.data != null
-                                  ? snapshot.data
-                                  : RequestType.TIME,
-                              onChanged: (data) {
-                                AppConfig.helpIconContextMember =
-                                    HelpContextMemberType.one_to_many_offers;
-                                _bloc.onTypeChanged(data);
-                                offerType = data;
+                            title: S.of(context).request_type_time,
+                            value: RequestType.TIME,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data
+                                : RequestType.TIME,
+                            onChanged: (data) {
+                              AppConfig.helpIconContextMember =
+                                  HelpContextMemberType.time_offers;
+                              _bloc.onTypeChanged(data);
+                              title_hint = S.of(context).offer_title_hint;
+                              description_hint =
+                                  S.of(context).offer_description_hint;
+                              offerType = data;
 
-                                setState(() {});
-                              }),
+                              setState(() {});
+                            },
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            );
-          })
-    ]);
+                        TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig
+                              .upgradePlanBannerModel.cash_goods_offers,
+                          transaction_matrix_type: "cash_goods_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'create_money_offers',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: S.of(context).request_type_cash,
+                                value: RequestType.CASH,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.TIME,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.money_offers;
+                                  _bloc.onTypeChanged(data);
+                                  title_hint =
+                                      S.of(context).cash_offer_title_hint;
+                                  description_hint =
+                                      S.of(context).cash_offer_desc_hint;
+                                  offerType = data;
+
+                                  setState(() {});
+                                }),
+                          ),
+                        ),
+                        TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig
+                              .upgradePlanBannerModel.cash_goods_offers,
+                          transaction_matrix_type: "cash_goods_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'create_goods_offers',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: S.of(context).request_type_goods,
+                                value: RequestType.GOODS,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.TIME,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.goods_offers;
+                                  title_hint =
+                                      S.of(context).goods_offer_title_hint;
+                                  description_hint =
+                                      S.of(context).goods_offer_desc_hint;
+                                  _bloc.onTypeChanged(data);
+                                  offerType = data;
+                                  setState(() {});
+                                }),
+                          ),
+                        ),
+                        TransactionsMatrixCheck(
+                          upgradeDetails:
+                              AppConfig.upgradePlanBannerModel.onetomany_offers,
+                          transaction_matrix_type: "onetomany_offers",
+                          comingFrom: ComingFrom.Offers,
+                          child: ConfigurationCheck(
+                            actionType: 'one_to_many_offer',
+                            role: memberType(widget.timebankModel,
+                                SevaCore.of(context).loggedInUser.sevaUserID),
+                            child: _optionRadioButton(
+                                title: S.of(context).one_to_many,
+                                value: RequestType.ONE_TO_MANY_OFFER,
+                                groupvalue: snapshot.data != null
+                                    ? snapshot.data
+                                    : RequestType.TIME,
+                                onChanged: (data) {
+                                  AppConfig.helpIconContextMember =
+                                      HelpContextMemberType.one_to_many_offers;
+                                  _bloc.onTypeChanged(data);
+                                  offerType = data;
+
+                                  setState(() {});
+                                }),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                );
+              })
+        ]);
   }
 
   Widget TimeRequest() {
