@@ -1,9 +1,127 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class WatchDog {
+  static showDialogForUpdation({
+    BuildContext context,
+    Function updateSingleEvent,
+    Function updateSubsequentEvents,
+  }) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext viewContext) {
+          return WillPopScope(
+              onWillPop: () {},
+              child: AlertDialog(
+                  title: Text(S.of(context).this_is_repeating_event),
+                  actions: [
+                    FlatButton(
+                      child: Text(
+                        S.of(context).edit_this_event,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        //Update this event
+                        await updateSingleEvent();
+                        Navigator.pop(viewContext);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        S.of(context).edit_subsequent_event,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        //Update subsquent events
+                        await updateSubsequentEvents();
+                        Navigator.pop(viewContext);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        S.of(context).cancel,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                            fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(viewContext);
+                      },
+                    ),
+                  ]));
+        });
+  }
+
+  static Future<bool> updateSubsequentEvents(ProjectModel projectModel) async {
+    var batch = Firestore.instance.batch();
+
+    var eventList =
+        await getEventAssociatedWithParentEvent(projectModel.parentEventId);
+
+    var affectedEventIds = [];
+
+    eventList.forEach((element) {
+      if (element.occurenceCount >= projectModel.occurenceCount)
+        affectedEventIds.add(element.id);
+    });
+
+    logger.d(affectedEventIds.length);
+
+    affectedEventIds.forEach((element) {
+      Map<String, dynamic> updatedDetails = {
+        "name": projectModel.name,
+        "description": projectModel.description,
+        "public": projectModel.public,
+        "virtualProject": projectModel.virtualProject,
+        "email_id": projectModel.emailId,
+        "address": projectModel.address,
+        "registrationLink": projectModel.registrationLink,
+        "timebanksPosted":
+            List<dynamic>.from(projectModel.timebanksPosted.map((x) => x)),
+      };
+      if (projectModel.location != null)
+        updatedDetails['location'] = projectModel.location?.data;
+
+      batch.updateData(
+        Firestore.instance.collection("projects").document(element),
+        updatedDetails,
+      );
+    });
+    return batch.commit().then((value) => true).catchError((onError) => false);
+  }
+
+  static Future<List<ProjectModel>> getEventAssociatedWithParentEvent(
+    String parentEventId,
+  ) {
+    return Firestore.instance
+        .collection("projects")
+        .where("parentEventId", isEqualTo: parentEventId)
+        .getDocuments()
+        .then((value) {
+      List<ProjectModel> eventList = [];
+      value.documents.forEach((event) {
+        eventList.add(ProjectModel.fromMap(event.data));
+      });
+      return eventList;
+    });
+  }
+
+  static Future<bool> updateSingleEvent() {}
+
   static Future<List<String>> createRecurringEvents({
     @required ProjectModel projectModel,
   }) async {
