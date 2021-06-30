@@ -11,22 +11,26 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/watchdog.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/projects_helper.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -85,6 +89,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool makePublicBool = false;
   bool isPulicCheckboxVisible = false;
   CommunityModel communityModel;
+  End end = End();
 
   @override
   void initState() {
@@ -220,7 +225,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : S.of(context).seva + timebankModel.name + S.of(context).event,
+                      : S.of(context).seva +
+                          timebankModel.name +
+                          S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -367,6 +374,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       startTime: startDate,
                       endTime: endDate,
                     ),
+              RepeatWidget(),
               Text(
                 dateTimeEroor,
                 style: TextStyle(
@@ -496,72 +504,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   hintStyle: textStyle,
                 ),
               ),
-//               Padding(
-//                 padding: EdgeInsets.all(8),
-//               ),
-//               headingText(S.of(context).phone_number),
-//               TextFormField(
-//                 onFieldSubmitted: (_) {
-//                   FocusScope.of(context).unfocus();
-//                 },
-//                 cursorColor: Colors.black54,
-//                 focusNode: focusNodes[4],
-//                 textInputAction: TextInputAction.done,
-//                 keyboardType: TextInputType.phone,
-//                 //  validator: _validateEmailId,
-//                 onSaved: (value) {
-//                   projectModel.phoneNumber = '+' + value;
-//                 },
-//                 onChanged: (value) {
-//                   ExitWithConfirmation.of(context).fieldValues[5] = value;
-//                   projectModel.phoneNumber = '+' + value;
-//                 },
-//                 inputFormatters: [
-//                   WhitelistingTextInputFormatter(RegExp("[0-9]")),
-//                 ],
 
-//                 validator: (value) {
-//                   if (value.isEmpty) {
-//                     return null;
-//                   } else {
-//                     projectModel.phoneNumber = '+' + value;
-//                   }
-//                   return null;
-//                 },
-//                 maxLength: 15,
-//                 initialValue: widget.isCreateProject
-//                     ? widget.projectTemplateModel != null
-//                         ? widget.projectTemplateModel.phoneNumber ?? ""
-//                         : projectModel.phoneNumber != null
-//                             ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
-//                             : ''
-//                     : projectModel?.phoneNumber?.replaceAll('+', '') ?? '',
-//                 decoration: InputDecoration(
-// //                icon: Icon(
-// //                  Icons.add,
-// //                  color: Colors.black,
-// //                  size: 13,
-// //                ),
-// //                prefixIcon: Icon(
-// //                  Icons.add,
-// //                  color: Colors.black,
-// //                  size: 13,
-// //                ),
-//                   prefix: Icon(
-//                     Icons.add,
-//                     color: Colors.black,
-//                     size: 13,
-//                   ),
-//                   enabledBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.black54),
-//                   ),
-//                   focusedBorder: UnderlineInputBorder(
-//                     borderSide: BorderSide(color: Colors.black54),
-//                   ),
-//                   hintText: S.of(context).hint_text_number,
-//                   hintStyle: textStyle,
-//                 ),
-//               ),
               Padding(
                 padding: EdgeInsets.all(8),
               ),
@@ -593,39 +536,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   },
                 ),
               ),
-              // Center(
-              //   child: FlatButton.icon(
-              //     icon: Icon(Icons.add_location),
-              //     label: Container(
-              //       child: Text(
-              //         selectedAddress == '' || selectedAddress == null
-              //             ? 'Add Location'
-              //             : selectedAddress ?? "",
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //     ),
-              //     color: Colors.grey[200],
-              //     onPressed: () async {
-              //              await Navigator.push(
-              //         context,
-              //         MaterialPageRoute<LocationDataModel>(
-              //           builder: (context) => LocationPicker(
-              //             selectedLocation: location,
-              //             selectedAddress: selectedAddress,
-              //           ),
-              //         ),
-              //       ).then((dataModel) {
-              //         if (dataModel != null) {
-              //           location = dataModel.geoPoint;
-              //           setState(() {
-              //             this.selectedAddress = dataModel.location;
-              //           });
-              //           log("Adderess   ${dataModel.location}");
-              //         }
-              //       });
-              //     },
-              //   ),
-              // ),
+
               Text(
                 locationError,
                 style: TextStyle(
@@ -664,12 +575,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           ),
                         ),
                         headingText(S.of(context).save_as_template),
-
-//                Column(
-//                  children: <Widget>[
-//
-//                  ],
-//                ),
                       ],
                     )
                   : Offstage(),
@@ -816,6 +721,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectModel.softDelete = false;
                           projectModel.communityName =
                               communityModel.name ?? timebankModel.name;
+                          projectModel.parentEventId = projectModel.id;
 
                           if (saveAsTemplate) {
                             projectTemplateModel.communityId =
@@ -838,28 +744,49 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectTemplateModel.mode = projectModel.mode;
                             projectTemplateModel.softDelete = false;
                             projectTemplateModel.emailId = projectModel.emailId;
-                            // projectTemplateModel.phoneNumber =
-                            //     projectModel.phoneNumber;
+
                             await FirestoreManager.createProjectTemplate(
                                 projectTemplateModel: projectTemplateModel);
                           }
 
-                          // if (globals.projectsAvtaarURL == null) {
-                          //   setState(() {
-                          //     this.communityImageError =
-                          //         'Project logo is mandatory';
-                          //     //   moveToTop();
-                          //   });
-
-                          // }
                           showProgressDialog(S.of(context).creating_project);
-                          await ProjectMessagingRoomHelper
-                              .createProjectWithMessaging(
-                            projectModel: projectModel,
-                            projectCreator: SevaCore.of(context).loggedInUser,
-                          );
-                          // await FirestoreManager.createProject(
-                          //     projectModel: projectModel);
+
+                          if (RepeatWidgetState.isRecurring) {
+                            projectModel.isRecurring = true;
+                            projectModel.recurringDays =
+                                RepeatWidgetState.getRecurringdays();
+                            projectModel.occurenceCount = 1;
+                            end.endType =
+                                RepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.on = end.endType == "on"
+                                ? RepeatWidgetState
+                                    .selectedDate.millisecondsSinceEpoch
+                                : null;
+                            end.after = (end.endType == "after"
+                                ? int.parse(RepeatWidgetState.after)
+                                : null);
+                            projectModel.end = end;
+
+                            String messagingRoomId =
+                                await ProjectMessagingRoomHelper
+                                    .createMessagingRoomForEvent(
+                              projectModel: projectModel,
+                              projectCreator: SevaCore.of(context).loggedInUser,
+                            );
+
+                            projectModel.associatedMessaginfRoomId =
+                                messagingRoomId;
+
+                            await WatchDog.createRecurringEvents(
+                                projectModel: projectModel);
+                          } else {
+                            await ProjectMessagingRoomHelper
+                                .createProjectWithMessaging(
+                              projectModel: projectModel,
+                              projectCreator: SevaCore.of(context).loggedInUser,
+                            );
+                          }
+
                           globals.projectsAvtaarURL = null;
                           globals.webImageUrl = null;
 

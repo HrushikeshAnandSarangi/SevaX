@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class WatchDog {
-  Future<List<String>> createRecurringEvents({
+  static Future<List<String>> createRecurringEvents({
     @required ProjectModel projectModel,
-    @required String communityId,
-    @required String timebankId,
   }) async {
     var batch = Firestore.instance.batch();
     var db = Firestore.instance;
@@ -45,8 +40,7 @@ class WatchDog {
             eventEndDate.minute,
             eventEndDate.second);
 
-        if (eventStartDate.millisecondsSinceEpoch <= projectModel.end.on &&
-            occurenceCount < 11) {
+        if (eventStartDate.millisecondsSinceEpoch <= projectModel.end.on) {
           numTemp = eventStartDate.weekday % 7;
           if (projectModel.recurringDays.contains(numTemp)) {
             ProjectModel temp = projectModel;
@@ -79,12 +73,13 @@ class WatchDog {
             eventStartDate.minute,
             eventStartDate.second);
         eventEndDate = DateTime(
-            eventEndDate.year,
-            eventEndDate.month,
-            eventEndDate.day + 1,
-            eventEndDate.hour,
-            eventEndDate.minute,
-            eventEndDate.second);
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second,
+        );
 
         numTemp = eventStartDate.weekday % 7;
         if (projectModel.recurringDays.contains(numTemp)) {
