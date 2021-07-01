@@ -66,16 +66,23 @@ class _CustomRequestCategoriesState extends State<CustomRequestCategories> {
                   }
                   List<CategoryModel> categoryModelList = snapshot.data;
 
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: categoryModelList.length,
+                  return categoryModelList.length == 0
+                      ? Center(
+                          child: Text(
+                          L.of(context).no_subcategories_created,
+                          style:
+                              TextStyle(fontSize: 17, color: Colors.grey[400]),
+                        ))
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: categoryModelList.length,
 //            controller: _scrollController,
-                      itemBuilder: (context, index) {
-                        return EditRequestCategoryCard(
-                          categoryModel: categoryModelList[index],
-                          userModel: SevaCore.of(context).loggedInUser,
-                        );
-                      });
+                          itemBuilder: (context, index) {
+                            return EditRequestCategoryCard(
+                              categoryModel: categoryModelList[index],
+                              userModel: SevaCore.of(context).loggedInUser,
+                            );
+                          });
                 },
               ),
             ),

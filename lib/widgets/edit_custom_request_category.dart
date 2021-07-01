@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -42,6 +43,8 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
   @override
   void initState() {
     super.initState();
+
+    subcategorytitle = widget.categoryModel.title_en;
 
     //For Checking Duplicate request subcategory When creating new one
     searchTextController.addListener(
@@ -222,23 +225,23 @@ class _EditRequestCustomCategoryState extends State<EditRequestCustomCategory> {
                           creatorId: widget.userModel.sevaUserID,
                           creatorEmail: widget.userModel.email,
                         );
+                        logger.e('CHECK 1: ' + subcategorytitle);
+                        logger.e('CHECK 2: ' + widget.categoryModel.title_en);
                         if (newRequestCategoryLogo !=
                                 widget.categoryModel.logo &&
                             subcategorytitle == widget.categoryModel.title_en) {
                           await editRequestCategory(newRequestCategoryModel,
-                                  widget.categoryModel.typeId)
-                              .then((value) {});
+                              widget.categoryModel.typeId);
 
-                          Navigator.of(context).pop();
+                          Navigator.of(context1).pop();
                         }
                         if (formKey.currentState.validate() &&
                             (errTxt == null || errTxt == "")) {
                           formKey.currentState.save();
                           //validate title is not empty
                           await editRequestCategory(newRequestCategoryModel,
-                                  widget.categoryModel.typeId)
-                              .then((value) {});
-                          Navigator.of(context).pop();
+                              widget.categoryModel.typeId);
+                          Navigator.of(context1).pop();
                           // widget.onCategoryEdited();
                         }
                         ;

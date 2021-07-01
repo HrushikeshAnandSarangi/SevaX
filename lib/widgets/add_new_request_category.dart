@@ -252,8 +252,6 @@ class _AddNewRequestCategoryState extends State<AddNewRequestCategory> {
                                   });
 
                                   // After adding new category to DB refresh the state of this or renaviagate here
-                                  logger.e('HERE');
-
                                   widget.onNewCategoryCreated();
                                 }
                                 ;

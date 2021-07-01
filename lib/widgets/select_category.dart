@@ -11,9 +11,9 @@ import 'package:sevaexchange/widgets/add_new_request_category.dart';
 
 class Category extends StatefulWidget {
   final List<String> selectedSubCategoriesids;
-  final VoidCallback onNewCategoryCreatedFinal;
+  final VoidCallback onNewCategoryCreated;
 
-  Category({this.selectedSubCategoriesids, this.onNewCategoryCreatedFinal});
+  Category({this.selectedSubCategoriesids, this.onNewCategoryCreated});
 
   @override
   _CategoryState createState() => _CategoryState();
@@ -252,10 +252,10 @@ class _CategoryState extends State<Category> {
               index == subs.length - 1
                   ? AddNewRequestCategory(
                       categoryId: mainCategoryId,
-                      onNewCategoryCreated: () async {
+                      onNewCategoryCreated: () {
                         Navigator.pop(context,
                             ['Selected Categories', selectedSubCategories]);
-                        widget.onNewCategoryCreatedFinal();
+                        widget.onNewCategoryCreated();
                       },
                       primaryColor: Theme.of(context).primaryColor)
                   : Container(),
