@@ -179,6 +179,18 @@ class L {
 // //  String get continue_to_signin => "Continue to Sign in"; //done in web
 // //  String get request_to_join => "Request to join"; //done in web
 
+//----- BELOW ARE FOR ADD NEW REQUEST CATEGORY FEATURE ---------------------------->
+  String get my_request_categories => "My Request Categories";
+  String get add_new_request_category => "Add new request category";
+  String get edit_request_category => "Edit subcategory";
+  String get add_new_subcategory => "Add new subcategory";
+  String get add_new_subcategory_hint => "Subcategory title";
+  String get select_photo => "Select Photo";
+  String get photo_selected => "Photo Selected";
+  String get please_enter_title => "Please enter title";
+  String get request_category_exists => "Request category exists";
+//----- END OF ADD NEW REQUEST CATEGORY FEATURE ---------------------------->
+
   String get images_help_convey_theme_of_request =>
       'Images helps to convey the theme of your request';
 

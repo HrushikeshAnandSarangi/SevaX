@@ -592,6 +592,31 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
   );
 }
 
+Stream<List<CategoryModel>> getUserCreatedRequestCategories(
+    String creatorId) async* {
+  var query = CollectionRef.requestCategories
+      .where('creatorId', isEqualTo: creatorId)
+      .orderBy('title_en');
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<CategoryModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<CategoryModel> categoriesList = [];
+        snapshot.docs.forEach(
+          (documentSnapshot) {
+            CategoryModel model =
+                CategoryModel.fromMap(documentSnapshot.data());
+            categoriesList.add(model);
+          },
+        );
+        requestSink.add(categoriesList);
+      },
+    ),
+  );
+}
+
 Stream<List<RequestModel>> getAllVirtualRequestListStream(
     {String timebankid}) async* {
   var query = CollectionRef.requests
@@ -1913,6 +1938,17 @@ Future<CategoryModel> getCategoryForId({@required String categoryID}) async {
   });
 
   return categoryModel;
+}
+
+//Add new user defined request category
+Future<void> addNewRequestCategory(
+    CategoryModel newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).set(newModel.toMap());
+}
+
+//Edit user defined request category
+Future<void> editRequestCategory(CategoryModel newModel, String typeId) async {
+  await CollectionRef.requestCategories.doc(typeId).update(newModel.toMap());
 }
 
 Future oneToManyCreatorRequestCompletionRejectedTimebankNotifications(

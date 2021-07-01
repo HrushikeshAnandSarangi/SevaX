@@ -12,7 +12,7 @@ class ImagePickerDialog extends StatelessWidget {
   AnimationController _controller;
   BuildContext context;
 
-  ImagePickerDialog(this._listener, this._controller);
+  ImagePickerDialog(this._listener, this._controller, {imagePickerType});
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;

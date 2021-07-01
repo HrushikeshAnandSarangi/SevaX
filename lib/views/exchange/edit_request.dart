@@ -1897,6 +1897,15 @@ class RequestEditFormState extends State<RequestEditForm> {
           fullscreenDialog: true,
           builder: (context) => Category(
                 selectedSubCategoriesids: selectedCategoryIds,
+                onNewCategoryCreatedFinal: () async {
+                  logger.e('onNewCategoryCreatedFinal');
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => Category(
+                              selectedSubCategoriesids: selectedCategoryIds)));
+                },
               )),
     );
 

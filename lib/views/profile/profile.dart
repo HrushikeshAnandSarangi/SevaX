@@ -11,6 +11,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
@@ -29,8 +30,10 @@ import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/requests/custom_request_categories_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/add_new_request_category.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 
 import 'edit_profile.dart';
@@ -394,6 +397,19 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                           },
                         ),
+                        ProfileSettingsCard(
+                          title: L.of(context).my_request_categories,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return CustomRequestCategories();
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 20),
                         ProfileSettingsCard(
                           title: S.of(context).my_timezone,
                           onTap: () {
