@@ -185,39 +185,37 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           tasks: totalTask,
                           pendingTask: project.pendingRequests?.length,
                           onTap: () {
-                            logger.d("=====================================LL");
-
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (_context) => BlocProvider(
-                            //       bloc: BlocProvider.of<HomeDashBoardBloc>(
-                            //           context),
-                            //       child: ProjectRequests(
-                            //         ComingFrom.Projects,
-                            //         timebankId: widget.timebankId,
-                            //         projectModel: project,
-                            //         timebankModel: widget.timebankModel,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // );
-
-                            logger.d(project.parentEventId + ">>>>>><<<<<<<");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_context) => BlocProvider(
-                                  bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                      context),
-                                  child: RecurringEventsList(
-                                    timebankId: widget.timebankId,
-                                    timebankModel: widget.timebankModel,
-                                    parentEventId: project.parentEventId,
+                            if (project.isRecurring)
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: RecurringEventsList(
+                                      timebankId: widget.timebankId,
+                                      timebankModel: widget.timebankModel,
+                                      parentEventId: project.parentEventId,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            else
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_context) => BlocProvider(
+                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                        context),
+                                    child: ProjectRequests(
+                                      ComingFrom.Projects,
+                                      timebankId: widget.timebankId,
+                                      projectModel: project,
+                                      timebankModel: widget.timebankModel,
+                                    ),
+                                  ),
+                                ),
+                              );
                           },
                         );
                       },

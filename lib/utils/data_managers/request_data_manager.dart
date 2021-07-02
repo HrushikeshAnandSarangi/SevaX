@@ -675,7 +675,7 @@ Stream<List<ProjectModel>> getRecurringEvents({
   var query = Firestore.instance
       .collection('projects')
       .where('parentEventId', isEqualTo: parentEventId)
-      .orderBy("created_at", descending: false);
+      .orderBy("start_time", descending: false);
 
   var data = query.snapshots();
 

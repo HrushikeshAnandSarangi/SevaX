@@ -1182,6 +1182,34 @@ class RequestModel extends DataModel {
   String toString() {
     return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, isSpeakerCompleted: $isSpeakerCompleted}';
   }
+
+  RequestModel get flush {
+    RequestModel requestModel = this;
+    requestModel.acceptors.clear();
+    requestModel.allowedCalenderUsers.clear();
+    requestModel.approvedUsers.clear();
+    requestModel.invitedUsers.clear();
+    requestModel.transactions.clear();
+    requestModel.participantDetails.clear();
+    requestModel.postTimestamp = DateTime.now().millisecondsSinceEpoch;
+    switch (this.requestType) {
+      case RequestType.TIME:
+        break;
+      case RequestType.CASH:
+        requestModel.cashModel.donors.clear();
+        break;
+      case RequestType.GOODS:
+        requestModel.goodsDonationDetails.donors.clear();
+        break;
+      case RequestType.BORROW:
+        break;
+      case RequestType.ONE_TO_MANY_REQUEST:
+        requestModel.oneToManyRequestAttenders.clear();
+        break;
+    }
+
+    return requestModel;
+  }
 }
 
 class GoodsDonationDetails {
