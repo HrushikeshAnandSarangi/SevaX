@@ -33,7 +33,7 @@ class RequestFilters extends StatelessWidget {
         return Wrap(
           spacing: 8.0,
           children: [
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[0],
               label: 'Time',
               isSelected: filter.timeRequest,
@@ -45,7 +45,7 @@ class RequestFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[1],
               label: 'Money',
               isSelected: filter.cashRequest,
@@ -57,7 +57,7 @@ class RequestFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[2],
               label: 'Goods',
               isSelected: filter.goodsRequest,
@@ -69,7 +69,7 @@ class RequestFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[3],
               label: S.of(context).one_to_many.sentenceCase(),
               isSelected: filter.oneToManyRequest,
@@ -81,7 +81,7 @@ class RequestFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[4],
               label: 'Public',
               isSelected: filter.publicRequest,
@@ -93,7 +93,7 @@ class RequestFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[5],
               label: S.of(context).virtual,
               isSelected: filter.virtualRequest,
