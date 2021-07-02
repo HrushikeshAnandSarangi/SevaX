@@ -23,7 +23,8 @@ class SelectedMemberWidget extends StatelessWidget {
                 width: 70,
                 height: 70,
                 child: CustomNetworkImage(
-                  info.photoUrl??defaultUserImageURL,
+                  info?.photoUrl ?? defaultUserImageURL,
+                  fit: BoxFit.cover,
                 ),
               ),
               Offstage(

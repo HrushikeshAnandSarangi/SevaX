@@ -42,15 +42,20 @@ class SelectedMemberListBuilder extends StatelessWidget {
 }
 
 class SelectedMemberWrapBuilder extends StatelessWidget {
-  final CreateChatBloc bloc;
+  final Map<String, ParticipantInfo> allParticipants;
+  final Stream<List<String>> selectedParticipants;
+  final ValueChanged onRemovePressed;
+  // final CreateChatBloc bloc;
   const SelectedMemberWrapBuilder({
     Key key,
-    this.bloc,
+    this.allParticipants,
+    this.selectedParticipants,
+    this.onRemovePressed,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<String>>(
-      stream: bloc.selectedMembers,
+      stream: selectedParticipants,
       builder: (context, snapshot) {
         if ((snapshot.data?.length ?? 0) <= 0) {
           return Container();
@@ -60,11 +65,9 @@ class SelectedMemberWrapBuilder extends StatelessWidget {
             children: List.generate(
               snapshot.data.length,
               (index) => SelectedMemberWidget(
-                info: bloc.allMembers[snapshot.data[index]],
+                info: allParticipants[snapshot.data[index]],
                 onRemovePressed: () {
-                  bloc.selectMember(
-                    bloc.allMembers[snapshot.data[index]].id,
-                  );
+                  onRemovePressed(snapshot.data[index]);
                 },
               ),
             ),

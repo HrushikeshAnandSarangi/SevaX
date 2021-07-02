@@ -14,6 +14,7 @@ class ChatModel {
   bool isTimebankMessage;
   // String timebankId;
   bool interCommunity;
+  bool isParentChildCommunication;
   String communityId;
   List<String> showToCommunities;
   bool isGroupMessage;
@@ -36,6 +37,7 @@ class ChatModel {
     this.isGroupMessage,
     this.groupDetails,
     this.chatContext,
+    this.isParentChildCommunication,
   });
 
   factory ChatModel.fromMap(Map<String, dynamic> map) => ChatModel(
@@ -61,6 +63,10 @@ class ChatModel {
                 : null,
 
         // timebankId: map["timebankId"],
+        isParentChildCommunication:
+            map.containsKey('isParentChildCommunication')
+                ? map['isParentChildCommunication']
+                : false,
         interCommunity: map.containsKey('interCommunity')
             ? map['interCommunity'] ?? false
             : false,
@@ -92,6 +98,7 @@ class ChatModel {
         "showToCommunities":
             List<dynamic>.from((showToCommunities ?? []).map((x) => x)),
         "interCommunity": interCommunity ?? false,
+        "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 
   Map<String, dynamic> shareMessage({Map<String, dynamic> unreadStatus}) => {
@@ -106,6 +113,7 @@ class ChatModel {
         "groupDetails": groupDetails?.toMap(),
         "chatContext": chatContext.toMap(),
         "interCommunity": interCommunity ?? false,
+        "isParentChildCommunication": isParentChildCommunication ?? false,
       };
 }
 

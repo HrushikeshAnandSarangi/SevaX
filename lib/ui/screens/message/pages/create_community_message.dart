@@ -3,26 +3,28 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/parent_community_message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
-class CreateGroupPage extends StatelessWidget {
-  final CreateChatBloc bloc;
+class CreateCommunityMessage extends StatelessWidget {
+  final ParentCommunityMessageBloc bloc;
   final TextEditingController _controller = TextEditingController();
 
-  CreateGroupPage({Key key, this.bloc}) : super(key: key);
+  CreateCommunityMessage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Map validationString = {
@@ -57,10 +59,18 @@ class CreateGroupPage extends StatelessWidget {
                   );
                 },
               );
-
+              var timebank =
+                  Provider.of<HomePageBaseBloc>(context, listen: false)
+                      .primaryTimebankModel();
               bloc
                   .createMultiUserMessaging(
-                      SevaCore.of(context).loggedInUser, context)
+                context,
+                ParticipantInfo(
+                  id: timebank.id,
+                  name: timebank.name,
+                  photoUrl: timebank.photoUrl,
+                ),
+              )
                   .then((
                 ChatModel model,
               ) {
@@ -120,8 +130,7 @@ class CreateGroupPage extends StatelessWidget {
                         },
                         onChanged: (file) {
                           if (file != null) {
-                            profanityCheck(
-                                bloc: bloc, file: file, context: context);
+                            profanityCheck(file: file, context: context);
                           }
                         },
                       );
@@ -179,7 +188,7 @@ class CreateGroupPage extends StatelessWidget {
               ],
             ),
             StreamBuilder<List<String>>(
-                stream: bloc.selectedMembers,
+                stream: bloc.selectedTimebanks,
                 builder: (context, snapshot) {
                   return Container(
                     height: 30,
@@ -197,10 +206,10 @@ class CreateGroupPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: SelectedMemberWrapBuilder(
-                allParticipants: bloc.allMembers,
-                selectedParticipants: bloc.selectedMembers,
+                selectedParticipants: bloc.selectedTimebanks,
+                allParticipants: bloc.allParticipants,
                 onRemovePressed: (id) {
-                  bloc.selectMember(id);
+                  bloc.selectParticipant(id);
                 },
               ),
             ),
@@ -212,7 +221,6 @@ class CreateGroupPage extends StatelessWidget {
 
   Future<void> profanityCheck({
     File file,
-    CreateChatBloc bloc,
     BuildContext context,
   }) async {
     progressDialog = ProgressDialog(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/create_new_chat_app_bar.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/member_list_builder.dart';
@@ -38,6 +40,9 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
           .getMembers(
         SevaCore.of(context).loggedInUser,
         SevaCore.of(context).loggedInUser.currentCommunity,
+        Provider.of<HomePageBaseBloc>(context, listen: false)
+            .primaryTimebankModel()
+            .id,
       )
           .then((_) {
         if (widget.selectedMembers != null) {

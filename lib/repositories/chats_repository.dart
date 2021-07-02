@@ -111,6 +111,26 @@ class ChatsRepository {
     return ChatModel.fromMap(result.data());
   }
 
+  static Stream<List<ChatModel>> getParentChildChats(String timebankId) async* {
+    var data = collectionReference
+        .where("isParentChildCommunication", isEqualTo: true)
+        .where("participants", arrayContains: timebankId)
+        .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
+        handleData: (data, sink) {
+          List<ChatModel> chats = [];
+          data.docs.forEach((element) {
+            var chat = ChatModel.fromMap(element.data());
+            chats.add(chat);
+          });
+          sink.add(chats);
+        },
+      ),
+    );
+  }
+
   static Future<void> editGroup(
     String chatId,
     String groupName,
