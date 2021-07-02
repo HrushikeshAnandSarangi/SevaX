@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/utils/helpers/location_helper.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -1185,6 +1186,10 @@ class RequestModel extends DataModel {
 
   RequestModel get flush {
     RequestModel requestModel = this;
+
+    if(requestModel.isRecurring )
+
+    requestModel.id = Utils.getUuid();
     requestModel.acceptors.clear();
     requestModel.allowedCalenderUsers.clear();
     requestModel.approvedUsers.clear();

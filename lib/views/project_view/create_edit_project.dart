@@ -866,9 +866,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 : null);
                             projectModel.end = end;
 
-                            await WatchDog.createRecurringEventsFromExisting(
-                              projectModel,
-                            );
+                            //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
+                            if (true) {
+                              logger.d("inside ==============================");
+                              await WatchDog
+                                  .cloneAndCreateRecurringEventsFromExisting(
+                                projectModel,
+                              );
+                              return;
+                            } else {
+                              await WatchDog.createRecurringEventsFromExisting(
+                                projectModel,
+                              );
+                            }
                           } else {
                             //FOLLOW NORMAL PROCEDURE
                             //This segment updates events

@@ -11,7 +11,11 @@ class WatchDog {
     requestModel.approvedUsers.clear();
   }
 
-  static Future<bool> cloneRequestsAndFlushData(String eventId) async {
+  static Future<bool> cloneAndCreateRecurringEventsFromExisting(
+      String eventId) async {
+    var eventIdArray = [];
+    List<RequestModel> requestList = [];
+
     return await Firestore.instance
         .collection('requests')
         .where('projectId', isEqualTo: eventId)
@@ -19,23 +23,23 @@ class WatchDog {
         .then((value) {
       var batch = Firestore.instance.batch();
 
-      List<RequestModel> requestList = [];
-
-      flushDataFromRequest();
-      value.documents.forEach((element) {
-        batch.setData(document, data)
-        requestList.add(RequestModel.fromMap(element.data).flush);
+      eventIdArray.forEach((eventId) {
+        value.documents.forEach((request) {
+          var requestModel = RequestModel.fromMap(request.data).flush;
+          requestModel.projectId = eventId;
+        });
       });
 
+      logger.d("_-_-_-_-_-" + value.documents.length.toString());
+      // flushDataFromRequest();
 
       return;
     });
   }
 
-  void resetIds(){
-    
-  }
-  static createRecurringEventsFromExisting(ProjectModel projectModel) async {
+  void resetIds() {}
+  static Future<List<String>> createRecurringEventsFromExisting(
+      ProjectModel projectModel) async {
     // Update existing project model to recurring
     //Create new events as prescribed my admin
     var batch = Firestore.instance.batch();
