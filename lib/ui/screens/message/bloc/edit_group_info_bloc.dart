@@ -106,7 +106,11 @@ class EditGroupInfoBloc {
       });
 
       await ChatsRepository.editGroup(
-          chatId, _groupName.value, imageUrl, _participantInfo.value);
+        chatId,
+        _groupName.value,
+        imageUrl,
+        _participantInfo.value,
+      );
 
       return true;
     }

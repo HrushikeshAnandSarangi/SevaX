@@ -35,14 +35,17 @@ class CreateCommunityMessage extends StatefulWidget {
 
 class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
   final ParentCommunityMessageBloc bloc = ParentCommunityMessageBloc();
+
   final TextEditingController _controller = TextEditingController();
+  BuildContext dialogContext;
+  List<String> ids = [];
 
   @override
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        bloc.init(
+        widget.bloc.init(
           Provider.of<HomePageBaseBloc>(context, listen: false)
               .primaryTimebankModel()
               .id,
@@ -52,16 +55,17 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
     if (widget.chatModel != null) {
       bloc.onGroupNameChanged(widget.chatModel.groupDetails.name);
       _controller.text = widget.chatModel.groupDetails.name;
-      bloc.addCurrentParticipants(
-          List<String>.from(widget.chatModel.participants.map((x) => x)));
-      bloc.addParticipants(
+      widget.bloc.addCurrentParticipants(List<String>.from(
+          widget.chatModel.participants.map((x) => x).toList()));
+      widget.bloc.addParticipants(
         widget.chatModel.participantInfo
             .where(
               (p) => widget.chatModel.participants.contains(p.id),
             )
             .toList(),
       );
-      bloc.onImageChanged(
+
+      widget.bloc.onImageChanged(
         MessageRoomImageModel(
           stockImageUrl: widget.chatModel.groupDetails.imageUrl,
         ),
@@ -97,22 +101,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext dialogCnxt) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      content: Text(
-                        widget.chatModel == null
-                            ? S.of(context).creating_messaging_room
-                            : S.of(context).updating_messaging_room,
-                      ),
-                    );
-                  },
-                );
+                showProgress();
                 var timebank =
                     Provider.of<HomePageBaseBloc>(context, listen: false)
                         .primaryTimebankModel();
@@ -144,8 +133,9 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
                               type: ChatType.TYPE_MULTI_USER_MESSAGING),
                           widget.chatModel)
                       .then((_) {
-                    Navigator.of(context, rootNavigator: true).pop();
-
+                    if (dialogContext != null) {
+                      Navigator.of(dialogContext).pop();
+                    }
                     Navigator.of(context).pop();
                   });
                 }
@@ -261,6 +251,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             StreamBuilder<List<String>>(
                 stream: widget.bloc.selectedTimebanks,
                 builder: (context, snapshot) {
+                  log('len  ${snapshot.data.length}');
                   return Container(
                     height: 30,
                     width: double.infinity,
@@ -277,7 +268,7 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: StreamBuilder<List<ParticipantInfo>>(
-                stream: bloc.selectedTimebanksInfo,
+                stream: widget.bloc.selectedTimebanksInfo,
                 builder: (context, snapshot) {
                   if ((snapshot.data?.length ?? 0) <= 0) {
                     return Container();
@@ -312,6 +303,27 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
           ],
         ),
       ),
+    );
+  }
+
+  void showProgress() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogCnxt) {
+        dialogContext = dialogCnxt;
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          content: Text(
+            widget.chatModel == null
+                ? S.of(context).creating_messaging_room
+                : S.of(context).updating_messaging_room,
+          ),
+        );
+      },
     );
   }
 

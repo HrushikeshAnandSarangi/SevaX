@@ -8,11 +8,12 @@ import 'package:sevaexchange/repositories/chats_repository.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 
 class ParentCommunityMessageBloc {
   final _groupName = BehaviorSubject<String>();
   final _selectedTimebanks = BehaviorSubject<List<String>>.seeded([]);
-  final Map<String, ParticipantInfo> allParticipants = {};
+  final Map<String, ParticipantInfo> allTimbankData = {};
   final profanityDetector = ProfanityDetector();
   final _file = BehaviorSubject<MessageRoomImageModel>();
   final data = BehaviorSubject<List<ParentCommunityMessageData>>.seeded([]);
@@ -45,12 +46,12 @@ class ParentCommunityMessageBloc {
                 photoUrl: element.photoUrl,
               ),
             );
-            allParticipants[element.id] = ParticipantInfo(
+            allTimbankData[element.id] = ParticipantInfo(
               id: element.id,
               name: element.name,
               photoUrl: element.photoUrl,
             );
-            log(" llll ${allParticipants.values.length}");
+            log(" llll ${allTimbankData.values.length}");
           });
           data.add(x);
         }
@@ -88,36 +89,50 @@ class ParentCommunityMessageBloc {
       } else {
         imageUrl = null;
       }
-      MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
-        name: _groupName.value,
-        imageUrl: imageUrl,
-        admins: [creator.id],
-      );
+      if (_selectedTimebanks.value.length == 1) {
+        createAndOpenChat(
+          isTimebankMessage: true,
+          context: context,
+          timebankId: null,
+          communityId: null,
+          sender: creator,
+          reciever: _participantInfo.value[0],
+          isFromRejectCompletion: false,
+          isParentChildCommunication: true,
+          onChatCreate: () {},
+        );
+      } else {
+        MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
+          name: _groupName.value,
+          imageUrl: imageUrl,
+          admins: [creator.id],
+        );
 
-      List<ParticipantInfo> participantInfos = [
-        creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
-      ];
-      _selectedTimebanks.value.forEach(
-        (String id) async {
-          participantInfos.add(
-            allParticipants[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
-          );
-        },
-      );
+        List<ParticipantInfo> participantInfos = [
+          creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
+        ];
+        _selectedTimebanks.value.forEach(
+          (String id) async {
+            participantInfos.add(
+              allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
+            );
+          },
+        );
 
-      ChatModel model = ChatModel(
-        participants: _selectedTimebanks.value..add(creator.id),
-        communityId: null,
-        showToCommunities: null,
-        participantInfo: participantInfos,
-        interCommunity: false,
-        isTimebankMessage: true,
-        isGroupMessage: true,
-        isParentChildCommunication: true,
-        groupDetails: groupDetails,
-      );
-      String chatId = await ChatsRepository.createNewChat(model);
-      return model..id = chatId;
+        ChatModel model = ChatModel(
+          participants: _selectedTimebanks.value..add(creator.id),
+          communityId: null,
+          showToCommunities: null,
+          participantInfo: participantInfos,
+          interCommunity: false,
+          isTimebankMessage: true,
+          isGroupMessage: true,
+          isParentChildCommunication: true,
+          groupDetails: groupDetails,
+        );
+        String chatId = await ChatsRepository.createNewChat(model);
+        return model..id = chatId;
+      }
     }
   }
 
@@ -141,20 +156,23 @@ class ParentCommunityMessageBloc {
       } else {
         imageUrl = null;
       }
-
       List<ParticipantInfo> participantInfos = [
         creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
       ];
       _selectedTimebanks.value.forEach(
-        (String id) async {
+        (String id) {
           participantInfos.add(
-            allParticipants[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
+            allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
           );
         },
       );
 
       await ChatsRepository.editGroup(
-          chatModel.id, _groupName.value, imageUrl, participantInfos);
+        chatModel.id,
+        _groupName.value,
+        imageUrl,
+        participantInfos,
+      );
     }
   }
 
