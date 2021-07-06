@@ -867,18 +867,28 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectModel.end = end;
 
                             //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
-                            if (true) {
-                              logger.d("inside ==============================");
-                              await WatchDog
-                                  .cloneAndCreateRecurringEventsFromExisting(
-                                projectModel,
-                              );
-                              return;
-                            } else {
-                              await WatchDog.createRecurringEventsFromExisting(
-                                projectModel,
-                              );
-                            }
+                            await DialogsManager.showDilaogWithTitle(
+                              negativeTitle: 'Do not copy.',
+                              positiveTitle: 'Proceed with copying.',
+                              context: context,
+                              title:
+                                  "Would you like to copy all requests inside events as well?",
+                            ).then((value) async {
+                              if (value)
+                                await WatchDog
+                                        .cloneAndCreateRecurringEventsFromExisting(
+                                            eventModel: projectModel)
+                                    .then((value) => logger.d(""))
+                                    .catchError((onError) => {
+                                          logger.d(onError.toString()),
+                                        });
+                              else
+                                await WatchDog
+                                    .createRecurringEventsFromExisting(
+                                        projectModel);
+                            }).catchError((onError) {
+                              logger.e("Error " + onError.toString());
+                            });
                           } else {
                             //FOLLOW NORMAL PROCEDURE
                             //This segment updates events

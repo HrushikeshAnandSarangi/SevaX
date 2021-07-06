@@ -1186,30 +1186,27 @@ class RequestModel extends DataModel {
 
   RequestModel get flush {
     RequestModel requestModel = this;
-
-    if(requestModel.isRecurring )
-
     requestModel.id = Utils.getUuid();
-    requestModel.acceptors.clear();
-    requestModel.allowedCalenderUsers.clear();
-    requestModel.approvedUsers.clear();
-    requestModel.invitedUsers.clear();
-    requestModel.transactions.clear();
-    requestModel.participantDetails.clear();
+    requestModel.acceptors = [];
+    requestModel.allowedCalenderUsers = [];
+    requestModel.approvedUsers = [];
+    requestModel.invitedUsers = [];
+    requestModel.transactions = [];
+    requestModel.participantDetails = {};
     requestModel.postTimestamp = DateTime.now().millisecondsSinceEpoch;
     switch (this.requestType) {
       case RequestType.TIME:
         break;
       case RequestType.CASH:
-        requestModel.cashModel.donors.clear();
+        requestModel.cashModel.donors = [];
         break;
       case RequestType.GOODS:
-        requestModel.goodsDonationDetails.donors.clear();
+        requestModel.goodsDonationDetails.donors = [];
         break;
       case RequestType.BORROW:
         break;
       case RequestType.ONE_TO_MANY_REQUEST:
-        requestModel.oneToManyRequestAttenders.clear();
+        requestModel.oneToManyRequestAttenders = [];
         break;
     }
 
