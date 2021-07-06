@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class ChatsRepository {
@@ -123,9 +124,12 @@ class ChatsRepository {
           List<ChatModel> chats = [];
           data.docs.forEach((element) {
             var chat = ChatModel.fromMap(element.data());
+            chat.id = element.id;
             chats.add(chat);
           });
           sink.add(chats);
+          ChatModelSync chatModelSync = ChatModelSync();
+          chatModelSync.addChatModels(chats);
         },
       ),
     );

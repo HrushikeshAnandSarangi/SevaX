@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/repositories/feed_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/parent_community_message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_info.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_app_bar.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/feed_shared_bubble.dart';
@@ -30,6 +31,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
+
+import 'create_community_message.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatModel chatModel;
@@ -68,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
   String recieverId;
   final ChatBloc _bloc = ChatBloc();
   Map<String, ParticipantInfo> participantsInfoById = {};
-  ChatModel chatModel;
+  ChatModel chatModel = ChatModel();
   bool exitFromChatPage = false;
   final profanityDetector = ProfanityDetector();
   bool isProfane = false;
@@ -78,7 +81,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     chatModel = widget.chatModel;
-    getTimebank();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isFromRejectCompletion)
@@ -86,26 +88,26 @@ class _ChatPageState extends State<ChatPage> {
     });
 
     if (!chatModel.isGroupMessage) {
-      recieverId = chatModel.participants[0] != widget.senderId
-          ? chatModel.participants[0]
-          : chatModel.participants[1];
+      recieverId = widget.chatModel.participants[0] != widget.senderId
+          ? widget.chatModel.participants[0]
+          : widget.chatModel.participants[1];
     }
 
     //set timebank id if it is timebank message
-    if (chatModel.isTimebankMessage) {
+    if (widget.chatModel.isTimebankMessage) {
       //checking timebank id based on uuid, expect to contain '-';
-      timebankId = chatModel.participants
+      timebankId = widget.chatModel.participants
           .firstWhere((element) => element.contains('-'), orElse: () {
         logger.e("timebank id not found");
         return null;
       });
     }
 
-    chatModel.participantInfo.forEach((ParticipantInfo info) {
+    widget.chatModel.participantInfo.forEach((ParticipantInfo info) {
       participantsInfoById[info.id] = info
         ..color = colorGeneratorFromName(info.name);
     });
-    _bloc.getAllMessages(chatModel.id, widget.senderId);
+    _bloc.getAllMessages(widget.chatModel.id, widget.senderId);
     _scrollController = ScrollController();
 
     if (widget.isFromShare) {
@@ -135,10 +137,11 @@ class _ChatPageState extends State<ChatPage> {
                 ..color = colorGeneratorFromName(info.name);
             });
 
-            if (chatModel.groupDetails.name != model.groupDetails.name ||
-                chatModel.groupDetails.imageUrl !=
+            if (widget.chatModel.groupDetails.name != model.groupDetails.name ||
+                widget.chatModel.groupDetails.imageUrl !=
                     model.groupDetails.imageUrl ||
-                !listEquals(model.participants, chatModel.participants)) {
+                !listEquals(
+                    model.participants, widget.chatModel.participants)) {
               chatModel = model;
               if (this.mounted) setState(() {});
             }
@@ -146,6 +149,8 @@ class _ChatPageState extends State<ChatPage> {
         },
       );
     }
+    getTimebank();
+
     super.initState();
   }
 
@@ -451,11 +456,22 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void openGroupInfo() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => GroupInfoPage(chatModel: chatModel),
-      ),
-    );
+    if (chatModel.isParentChildCommunication) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => CreateCommunityMessage(
+            chatModel: chatModel,
+            bloc: ParentCommunityMessageBloc(),
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => GroupInfoPage(chatModel: chatModel),
+        ),
+      );
+    }
   }
 
   @override

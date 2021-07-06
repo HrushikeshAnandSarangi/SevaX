@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -14,15 +16,21 @@ class ParentCommunityMessageBloc {
   final profanityDetector = ProfanityDetector();
   final _file = BehaviorSubject<MessageRoomImageModel>();
   final data = BehaviorSubject<List<ParentCommunityMessageData>>.seeded([]);
+  final _participantInfo = BehaviorSubject<List<ParticipantInfo>>();
 
   Stream<List<ParentCommunityMessageData>> get childCommunities => data.stream;
 
   Function(String) get onGroupNameChanged => _groupName.sink.add;
   Function(MessageRoomImageModel) get onImageChanged => _file.sink.add;
-
+  Function(List<String>) get addCurrentParticipants =>
+      _selectedTimebanks.sink.add;
+  Function(List<ParticipantInfo>) get addParticipants =>
+      _participantInfo.sink.add;
   Stream<String> get groupName => _groupName.stream;
   Stream<MessageRoomImageModel> get selectedImage => _file.stream;
   Stream<List<String>> get selectedTimebanks => _selectedTimebanks.stream;
+  Stream<List<ParticipantInfo>> get selectedTimebanksInfo =>
+      _participantInfo.stream;
 
   void init(String timebankId) {
     TimebankRepository.getChildCommunities(timebankId).then(
@@ -42,6 +50,7 @@ class ParentCommunityMessageBloc {
               name: element.name,
               photoUrl: element.photoUrl,
             );
+            log(" llll ${allParticipants.values.length}");
           });
           data.add(x);
         }
@@ -109,6 +118,43 @@ class ParentCommunityMessageBloc {
       );
       String chatId = await ChatsRepository.createNewChat(model);
       return model..id = chatId;
+    }
+  }
+
+  Future<void> updateCommunityChat(
+      ParticipantInfo creator, ChatModel chatModel) async {
+    if (_groupName.value == null || _groupName.value.isEmpty) {
+      _groupName.addError("validation_error_room_name");
+      return null;
+    } else if (profanityDetector.isProfaneString(_groupName.value)) {
+      _groupName.addError("profanity");
+      return null;
+    } else {
+      String imageUrl;
+      if (_file.value != null && _file.value.selectedImage != null) {
+        imageUrl = _file.value != null
+            ? await StorageRepository.uploadFile(
+                "multiUserMessagingLogo", _file.value.selectedImage)
+            : null;
+      } else if (_file.value != null && _file.value.stockImageUrl != null) {
+        imageUrl = _file.value.stockImageUrl;
+      } else {
+        imageUrl = null;
+      }
+
+      List<ParticipantInfo> participantInfos = [
+        creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
+      ];
+      _selectedTimebanks.value.forEach(
+        (String id) async {
+          participantInfos.add(
+            allParticipants[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
+          );
+        },
+      );
+
+      await ChatsRepository.editGroup(
+          chatModel.id, _groupName.value, imageUrl, participantInfos);
     }
   }
 
