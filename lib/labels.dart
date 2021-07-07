@@ -3,12 +3,19 @@ import 'package:flutter/cupertino.dart';
 class L {
   L.of(BuildContext context) {}
 
+  //TODO PENDING LIST
   String get to_do => "To Do";
   String get one_to_many_attende => "One to Many Offer Attende";
   String get one_to_many_speaker => "One to Many Offer Speaker";
   String get time_request_volunteer => "Time Request Volunteer";
   String get one_to_many_request_speaker => "One to Many Request Speaker";
   String get one_to_many_request_attende => "One to Many Request attende";
+
+  //RECURRING EVENTS
+  String get do_not_copy => "Do not copy";
+  String get proceed_with_copying => "Proceed with copying.";
+  String get copy_requests_in_events =>
+      "Would you like to copy all requests inside events as well?";
 
 //   String get browse_requests_by_category => "Browse requests by category";
 

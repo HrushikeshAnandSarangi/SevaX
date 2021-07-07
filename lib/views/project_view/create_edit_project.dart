@@ -867,12 +867,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectModel.end = end;
 
                             //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
+                            
+                          
                             await DialogsManager.showDilaogWithTitle(
-                              negativeTitle: 'Do not copy.',
-                              positiveTitle: 'Proceed with copying.',
+                              negativeTitle: L.of(context).do_not_copy,
+                              positiveTitle: L.of(context).proceed_with_copying,
                               context: context,
-                              title:
-                                  "Would you like to copy all requests inside events as well?",
+                              title: L.of(context).copy_requests_in_events,
                             ).then((value) async {
                               if (value)
                                 await WatchDog
