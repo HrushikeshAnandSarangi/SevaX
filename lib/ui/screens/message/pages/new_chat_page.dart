@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
+import 'package:sevaexchange/ui/screens/members/pages/members_page.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
@@ -17,9 +20,11 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/configuration_check.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/hide_widget.dart';
 
 class NewChatPage extends StatefulWidget {
   final List<FrequentContactsModel> frequentContacts;
@@ -142,18 +147,28 @@ class _NewChatPageState extends State<NewChatPage> {
                             ),
                           ),
                         ),
-                        Container(
-                          height: 50,
-                          child: TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CommunityMessageCreate(),
-                                ),
-                              );
-                            },
-                            child: Text('New Community Message'),
+                        HideWidget(
+                          hide: memberType(
+                                  Provider.of<HomePageBaseBloc>(context,
+                                          listen: false)
+                                      .primaryTimebankModel(),
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID) ==
+                              MemberType.MEMBER,
+                          child: Container(
+                            height: 50,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CommunityMessageCreate(),
+                                  ),
+                                );
+                              },
+                              child: Text('New Community Message'),
+                            ),
                           ),
                         ),
                       ],

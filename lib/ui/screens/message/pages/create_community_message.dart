@@ -76,6 +76,13 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Map validationString = {
       'profanity': S.of(context).profanity_text_alert,

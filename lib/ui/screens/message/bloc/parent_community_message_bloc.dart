@@ -61,10 +61,15 @@ class ParentCommunityMessageBloc {
 
   void selectParticipant(String timebankId) {
     var x = _selectedTimebanks.value;
+    var list = _participantInfo.value ?? [];
     if (x.contains(timebankId)) {
       x.remove(timebankId);
+      list.remove(allTimbankData[timebankId]);
+      _participantInfo.add(list);
     } else {
       x.add(timebankId);
+      list.add(allTimbankData[timebankId]);
+      _participantInfo.add(list);
     }
     _selectedTimebanks.add(x);
   }
@@ -89,6 +94,16 @@ class ParentCommunityMessageBloc {
       } else {
         imageUrl = null;
       }
+      List<ParticipantInfo> participantInfos = [
+        creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
+      ];
+      _selectedTimebanks.value.forEach(
+        (String id) async {
+          participantInfos.add(
+            allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
+          );
+        },
+      );
       if (_selectedTimebanks.value.length == 1) {
         createAndOpenChat(
           isTimebankMessage: true,
@@ -96,7 +111,7 @@ class ParentCommunityMessageBloc {
           timebankId: null,
           communityId: null,
           sender: creator,
-          reciever: _participantInfo.value[0],
+          reciever: participantInfos[1],
           isFromRejectCompletion: false,
           isParentChildCommunication: true,
           onChatCreate: () {},
@@ -181,6 +196,7 @@ class ParentCommunityMessageBloc {
     _selectedTimebanks.close();
     _file.close();
     _groupName.close();
+    _participantInfo.close();
   }
 }
 

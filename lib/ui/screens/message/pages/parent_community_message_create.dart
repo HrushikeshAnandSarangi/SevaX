@@ -36,6 +36,13 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
