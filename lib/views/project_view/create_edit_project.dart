@@ -497,44 +497,44 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               Padding(
                 padding: EdgeInsets.all(8),
               ),
-              headingText(S.of(context).phone_number),
-              TextFormField(
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).unfocus();
-                },
-                cursorColor: Colors.black54,
-                focusNode: focusNodes[4],
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.phone,
-                //  validator: _validateEmailId,
-                onSaved: (value) {
-                  projectModel.phoneNumber = '+' + value;
-                },
-                onChanged: (value) {
-                  ExitWithConfirmation.of(context).fieldValues[5] = value;
-                  projectModel.phoneNumber = '+' + value;
-                },
-                inputFormatters: [
-                  WhitelistingTextInputFormatter(RegExp("[0-9]")),
-                ],
+              // headingText(S.of(context).phone_number),
+              // TextFormField(
+              //   onFieldSubmitted: (_) {
+              //     FocusScope.of(context).unfocus();
+              //   },
+              //   cursorColor: Colors.black54,
+              //   focusNode: focusNodes[4],
+              //   textInputAction: TextInputAction.done,
+              //   keyboardType: TextInputType.phone,
+              //   //  validator: _validateEmailId,
+              //   onSaved: (value) {
+              //     projectModel.phoneNumber = '+' + value;
+              //   },
+              //   onChanged: (value) {
+              //     ExitWithConfirmation.of(context).fieldValues[5] = value;
+              //     projectModel.phoneNumber = '+' + value;
+              //   },
+              //   inputFormatters: [
+              //     WhitelistingTextInputFormatter(RegExp("[0-9]")),
+              //   ],
 
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return null;
-                  } else {
-                    projectModel.phoneNumber = '+' + value;
-                  }
-                  return null;
-                },
-                maxLength: 15,
-                initialValue: widget.isCreateProject
-                    ? widget.projectTemplateModel != null
-                        ? widget.projectTemplateModel.phoneNumber ?? ""
-                        : projectModel.phoneNumber != null
-                            ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
-                            : ''
-                    : projectModel?.phoneNumber?.replaceAll('+', '') ?? '',
-                decoration: InputDecoration(
+              //   validator: (value) {
+              //     if (value.isEmpty) {
+              //       return null;
+              //     } else {
+              //       projectModel.phoneNumber = '+' + value;
+              //     }
+              //     return null;
+              //   },
+              //   maxLength: 15,
+              //   initialValue: widget.isCreateProject
+              //       ? widget.projectTemplateModel != null
+              //           ? widget.projectTemplateModel.phoneNumber ?? ""
+              //           : projectModel.phoneNumber != null
+              //               ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
+              //               : ''
+              //       : projectModel?.phoneNumber?.replaceAll('+', '') ?? '',
+              //   decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
 //                  color: Colors.black,
@@ -545,21 +545,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                  color: Colors.black,
 //                  size: 13,
 //                ),
-                  prefix: Icon(
-                    Icons.add,
-                    color: Colors.black,
-                    size: 13,
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black54),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black54),
-                  ),
-                  hintText: "123456789",
-                  hintStyle: textStyle,
-                ),
-              ),
+              //     prefix: Icon(
+              //       Icons.add,
+              //       color: Colors.black,
+              //       size: 13,
+              //     ),
+              //     enabledBorder: UnderlineInputBorder(
+              //       borderSide: BorderSide(color: Colors.black54),
+              //     ),
+              //     focusedBorder: UnderlineInputBorder(
+              //       borderSide: BorderSide(color: Colors.black54),
+              //     ),
+              //     hintText: "123456789",
+              //     hintStyle: textStyle,
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsets.all(8),
               ),
@@ -836,8 +836,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             projectTemplateModel.mode = projectModel.mode;
                             projectTemplateModel.softDelete = false;
                             projectTemplateModel.emailId = projectModel.emailId;
-                            projectTemplateModel.phoneNumber =
-                                projectModel.phoneNumber;
+                            // projectTemplateModel.phoneNumber =
+                            //     projectModel.phoneNumber;
                             await FirestoreManager.createProjectTemplate(
                                 projectTemplateModel: projectTemplateModel);
                           }
