@@ -3,7 +3,7 @@ List<dynamic> categories = [
     'image':
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     'index': 4,
-    'name': 'People',
+    'name': 'Phjvgggheople',
     'fit': 2,
     'children': [
       {

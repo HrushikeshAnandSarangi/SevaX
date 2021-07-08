@@ -83,6 +83,7 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
                 });
               }
             }).catchError((e) => log(e));
+            ;
           }
         });
       } else {
