@@ -117,7 +117,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker = ImagePickerHandler(this, _controller, false);
     imagePicker.init();
   }
 

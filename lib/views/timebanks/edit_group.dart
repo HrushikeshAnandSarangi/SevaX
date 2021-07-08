@@ -19,8 +19,9 @@ import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 import '../core.dart';
+import 'package:sevaexchange/labels.dart';
 
 class EditGroupView extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -123,6 +124,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   void updateGroupDetails() {
     widget.timebankModel.photoUrl =
         globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
+    widget.timebankModel.cover_url =
+        globals.timebankCoverURL ?? widget.timebankModel.cover_url;
     // widget.timebankModel.protected = protectedVal;
     widget.timebankModel.address = selectedAddress;
     widget.timebankModel.location =
@@ -141,6 +144,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           subTimebankId: widget.timebankModel.id,
           targetTimebankId: parentTimebankModel.id,
           timebankPhotoUrl: widget.timebankModel.photoUrl,
+          timebankCoverUrl: widget.timebankModel.cover_url,
           creatorName: SevaCore.of(context).loggedInUser.fullname,
           creatorPhotoUrl: SevaCore.of(context).loggedInUser.photoURL,
           communityId: widget.timebankModel.communityId);
@@ -179,6 +183,17 @@ class EditGroupFormState extends State<EditGroupForm> {
               padding: EdgeInsets.all(5.0),
               child: Column(
                 children: <Widget>[
+                  TimebankCoverPhoto(
+                      coverUrl: widget.timebankModel.cover_url ?? null),
+                  SizedBox(height: 10),
+                  Text(
+                    "${L.of(context).cover_picture_label_group}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 25),
                   TimebankAvatar(
                     photoUrl: widget.timebankModel.photoUrl ?? null,
                   ),

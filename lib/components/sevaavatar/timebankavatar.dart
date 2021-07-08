@@ -114,7 +114,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker = ImagePickerHandler(this, _controller, false);
     imagePicker.init();
   }
 

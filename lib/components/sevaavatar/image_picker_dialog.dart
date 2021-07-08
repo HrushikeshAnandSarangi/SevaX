@@ -11,8 +11,9 @@ class ImagePickerDialog extends StatelessWidget {
   ImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
+  bool isCover;
 
-  ImagePickerDialog(this._listener, this._controller);
+  ImagePickerDialog(this._listener, this._controller, this.isCover);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -117,8 +118,8 @@ class ImagePickerDialog extends StatelessWidget {
                           // keepOnBackPress: false,
                           // showBackBtn: false,
                           // isFromHome: false,
-                          onChanged: (image) {
-                            _listener.addStockImageUrl(image);
+                          onChanged: (image) async {
+                            await _listener.addStockImageUrl(image, isCover);
                             Navigator.pop(context);
                           },
                         ),
@@ -141,7 +142,7 @@ class ImagePickerDialog extends StatelessWidget {
                     Navigator.of(_context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return ImageUrlView();
+                          return ImageUrlView(isCover: isCover);
                         },
                       ),
                     ).then((value) {

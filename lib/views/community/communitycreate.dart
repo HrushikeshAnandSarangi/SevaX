@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/components/sevaavatar/timebankcoverphoto.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -169,6 +170,7 @@ class CreateEditCommunityViewFormState
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
+    globals.timebankCoverURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
@@ -328,9 +330,34 @@ class CreateEditCommunityViewFormState
                             child: Column(
                               children: <Widget>[
                                 widget.isCreateTimebank
+                                    ? SizedBox(
+                                        height: 10,
+                                      )
+                                    : Container(),
+                                widget.isCreateTimebank
+                                    ? TimebankCoverPhoto()
+                                    : TimebankCoverPhoto(
+                                        coverUrl: (communityModel.cover_url ==
+                                                    null ||
+                                                communityModel.cover_url == '')
+                                            ? null
+                                            : communityModel.cover_url,
+                                      ),
+                                Text(''),
+                                Text(
+                                  "${L.of(context).cover_picture_label}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                widget.isCreateTimebank
                                     ? TimebankAvatar()
                                     : TimebankAvatar(
-                                        photoUrl: communityModel.logo_url ?? "",
+                                        photoUrl: communityModel.logo_url ?? '',
                                       ),
                                 Text(''),
                                 Text(
@@ -1076,11 +1103,13 @@ class CreateEditCommunityViewFormState
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
                                           location,
+                                          globals.timebankCoverURL,
                                         );
                                         // creation of default timebank;
                                         snapshot.data.UpdateTimebankDetails(
                                           SevaCore.of(context).loggedInUser,
                                           globals.timebankAvatarURL,
+                                          globals.timebankCoverURL,
                                         );
                                         // updating the community with default timebank id
                                         snapshot.data.community.timebanks = [
@@ -1155,6 +1184,7 @@ class CreateEditCommunityViewFormState
                                         });
 
                                         globals.timebankAvatarURL = null;
+                                        globals.timebankCoverURL = null;
                                         globals.webImageUrl = null;
 
                                         Navigator.pop(dialogContext);
@@ -1197,11 +1227,25 @@ class CreateEditCommunityViewFormState
                                     showProgressDialog(
                                       S.of(context).updating_timebank,
                                     );
+
+                                    logger.e('UPDATE CHECK 3: ' +
+                                        globals.timebankAvatarURL.toString());
+                                    logger.e('UPDATE CHECK 4: ' +
+                                        globals.timebankCoverURL.toString());
+
                                     if (globals.timebankAvatarURL != null) {
                                       communityModel.logo_url =
                                           globals.timebankAvatarURL;
                                       timebankModel.photoUrl =
                                           globals.timebankAvatarURL;
+                                    }
+
+                                    if (globals.timebankCoverURL != null) {
+                                      communityModel.cover_url =
+                                          globals.timebankCoverURL;
+                                      timebankModel.cover_url =
+                                          globals.timebankCoverURL;
+                                      setState(() {});
                                     }
 
                                     timebankModel.name =
@@ -1228,6 +1272,7 @@ class CreateEditCommunityViewFormState
                                         .then((onValue) {});
 
                                     globals.timebankAvatarURL = null;
+                                    globals.timebankCoverURL = null;
                                     globals.webImageUrl = null;
                                     if (dialogContext != null) {
                                       Navigator.pop(dialogContext);

@@ -1,22 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
-
 import './image_picker_dialog.dart';
 import './imagecategorieslist.dart';
+
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class ImagePickerHandler {
   ImagePickerDialog imagePicker;
   AnimationController _controller;
   ImagePickerListener _listener;
+  bool isCover;
 
-  ImagePickerHandler(this._listener, this._controller);
+  ImagePickerHandler(this._listener, this._controller, this.isCover);
 
   void openCamera() async {
     imagePicker.dismissDialog();
@@ -60,13 +62,25 @@ class ImagePickerHandler {
     _listener.addWebImageUrl();
   }
 
-  addStockImageUrl(String image) async {
-    globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
-    _listener.userImage(image, 'stock_image');
+  addStockImageUrl(String image, bool isCover) async {
+    logger.e('HERE 1');
+
+    if (isCover) {
+      isCover ? imagePicker.dismissDialog() : null;
+      //crop functionality for stock image selection for cover photo
+      File imageToCrop = await utils.urlToFile(image);
+      cropImage(imageToCrop.path);
+
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      _listener.userImage(image, 'stock_image');
+    } else {
+      globals.isFromOnBoarding ? null : imagePicker.dismissDialog();
+      _listener.userImage(image, 'stock_image');
+    }
   }
 
   void init() {
-    imagePicker = ImagePickerDialog(this, _controller);
+    imagePicker = ImagePickerDialog(this, _controller, isCover);
     imagePicker.initState();
   }
 
@@ -75,11 +89,11 @@ class ImagePickerHandler {
     ImageCropper.cropImage(
       sourcePath: path,
       aspectRatio: CropAspectRatio(
-        ratioX: 1.0,
+        ratioX: isCover ? 2.0 : 1.0,
         ratioY: 1.0,
       ),
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: isCover ? 620 : 200,
+      maxHeight: isCover ? 150 : 200,
     ).then((value) {
       if (value != null) {
         croppedFile = value;
