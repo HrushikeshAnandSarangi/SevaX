@@ -692,14 +692,22 @@ Stream<List<ProjectModel>> getAllProjectListStream(
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            projectsList.add(model);
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            // DateTime endDate =
-            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
-            //uncomment below for Verve Release //to check only owner/admin/creator/members can view past events
-            // if (isAdminOrOwner ||
-            // model.associatedmembers.containsKey(
-            // SevaCore.of(context).loggedInUser.sevaUserID) ||
+            if (endDate.isBefore(DateTime.now())) {
+              if (isAdminOrOwner ||
+                  model.associatedmembers.containsKey(
+                      SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.members
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+                  model.creatorId ==
+                      SevaCore.of(context).loggedInUser.sevaUserID) {
+                projectsList.add(model);
+              }
+            } else {
+              projectsList.add(model);
+            }
           },
         );
         projectSink.add(projectsList);
@@ -708,7 +716,8 @@ Stream<List<ProjectModel>> getAllProjectListStream(
   );
 }
 
-Stream<List<ProjectModel>> getPublicProjects() async* {
+Stream<List<ProjectModel>> getPublicProjects(String sevaUserID) async* {
+  logger.e('USER ID CHECK 5');
   var data = CollectionRef.projects
       .where('public', isEqualTo: true)
       .where('softDelete', isEqualTo: false)
@@ -722,18 +731,32 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
-            // DateTime endDate =
-            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            DateTime endDate =
+                DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-            // if (endDate.isAfter(DateTime.now())) {
-            if (AppConfig.isTestCommunity) {
-              if (model.liveMode == false) {
-                projectsList.add(model);
+            logger.e('USER ID CHECK 1:  ' + sevaUserID);
+
+            //main explore page horizontal section
+            if (endDate.isBefore(DateTime.now())) {
+              if (sevaUserID != '' &&
+                  (model.creatorId == sevaUserID ||
+                      model.members.contains(sevaUserID) ||
+                      model.associatedmembers.containsKey(sevaUserID))) {
+                if (AppConfig.isTestCommunity != null &&
+                    AppConfig.isTestCommunity) {
+                  if (!model.liveMode) projectsList.add(model);
+                } else {
+                  projectsList.add(model);
+                }
               }
             } else {
-              projectsList.add(model);
+              if (AppConfig.isTestCommunity != null &&
+                  AppConfig.isTestCommunity) {
+                if (!model.liveMode) projectsList.add(model);
+              } else {
+                projectsList.add(model);
+              }
             }
-            // }
           },
         );
         projectSink.add(projectsList);

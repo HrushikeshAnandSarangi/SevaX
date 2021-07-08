@@ -575,9 +575,9 @@ class ElasticSearchApi {
     return models;
   }
 
-  static Future<List<ProjectModel>> getPublicProjects({
-    DistanceFilterData distanceFilterData,
-  }) async {
+  static Future<List<ProjectModel>> getPublicProjects(
+      {DistanceFilterData distanceFilterData, String sevaUserID}) async {
+    logger.e('USER ID CHECK 6');
     String endPoint = '//elasticsearch/sevaxprojects/_doc/_search?size=1000';
     dynamic body = json.encode({
       "query": {
@@ -600,15 +600,30 @@ class ElasticSearchApi {
       Map<String, dynamic> sourceMap = map['_source'];
       ProjectModel model = ProjectModel.fromMap(sourceMap);
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
-        // DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
+        DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
 
-        // if (endDate.isAfter(DateTime.now())) {
-        if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
-          if (!model.liveMode) models.add(model);
+        logger.e('USER ID CHECK 2:  ' + sevaUserID);
+
+        //explore events listing page
+        if (endDate.isBefore(DateTime.now())) {
+          if ((sevaUserID != '' || sevaUserID != '') &&
+              (model.creatorId == sevaUserID ||
+                  model.members.contains(sevaUserID) ||
+                  model.associatedmembers.containsKey(sevaUserID))) {
+            if (AppConfig.isTestCommunity != null &&
+                AppConfig.isTestCommunity) {
+              if (!model.liveMode) models.add(model);
+            } else {
+              models.add(model);
+            }
+          }
         } else {
-          models.add(model);
+          if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
+            if (!model.liveMode) models.add(model);
+          } else {
+            models.add(model);
+          }
         }
-        // }
       }
     });
     models.sort((a, b) => a.name.compareTo(b.name));

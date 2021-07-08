@@ -28,6 +28,7 @@ import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
@@ -89,8 +90,20 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     _bloc = FindCommunitiesBloc();
 
+    logger.e('USER ID CHECK 8');
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _exploreBloc.load(isUserLoggedIn: widget.isUserSignedIn);
+      Future.delayed(
+          Duration(milliseconds: 300),
+          () => {
+                _exploreBloc.load(
+                  isUserLoggedIn: widget.isUserSignedIn,
+                  sevaUserID: widget.isUserSignedIn
+                      ? SevaCore.of(context).loggedInUser.sevaUserID
+                      : '',
+                ),
+              });
+
       // if (isSignedUser) {
       LocationHelper.getLocation().then((value) {
         if (value != null) {
@@ -108,6 +121,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
+    logger.e('USER ID CHECK 7');
     var screenWidth = MediaQuery.of(context).size.width;
     return ExplorePageViewHolder(
       hideSearchBar: true,

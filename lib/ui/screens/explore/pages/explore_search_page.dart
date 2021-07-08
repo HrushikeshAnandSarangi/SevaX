@@ -18,6 +18,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_filters.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/request_filters.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/widgets/custom_back.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
@@ -54,7 +55,13 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   @override
   void initState() {
     super.initState();
-    _bloc.load();
+    Future.delayed(
+        Duration(milliseconds: 300),
+        () => {
+              _bloc.load(widget.isUserSignedIn
+                  ? SevaCore.of(context).loggedInUser.sevaUserID
+                  : ''),
+            });
     _tabIndex.add(widget.tabIndex);
     _searchController.text = widget.searchText;
     _bloc.onSearchChange(widget.searchText);
@@ -438,7 +445,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                             children: [
                               Text(
                                 snapshot.data == 0
-                                    ?S.of(context).anywhere
+                                    ? S.of(context).anywhere
                                     : 'Within ${snapshot.data} ' +
                                         S.of(context).miles,
                                 style: TextStyle(

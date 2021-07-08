@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -67,7 +66,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
-        Provider.of<HomePageBaseBloc>(context, listen: false).init(SevaCore.of(context).loggedInUser);
+        Provider.of<HomePageBaseBloc>(context, listen: false)
+            .init(SevaCore.of(context).loggedInUser);
         _userBloc.userStream.listen((UserModel user) async {
           Provider.of<MembersBloc>(context, listen: false)
               .init(user.currentCommunity);
@@ -76,7 +76,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               await Provider.of<MembersBloc>(context, listen: false)
                   .members
                   .first;
-          
 
           _messageBloc.fetchAllMessage(
             user.currentCommunity,
