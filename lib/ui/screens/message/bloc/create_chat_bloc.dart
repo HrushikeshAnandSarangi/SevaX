@@ -21,9 +21,7 @@ import '../../../../flavor_config.dart';
 
 class CreateChatBloc extends BlocBase {
   final bool isSelectionEnabled;
-
   CreateChatBloc(this.isSelectionEnabled);
-
   final _members = BehaviorSubject<List<ParticipantInfo>>();
   final _searchText = BehaviorSubject<String>();
   final _groupName = BehaviorSubject<String>();
@@ -35,6 +33,7 @@ class CreateChatBloc extends BlocBase {
   final Map<String, List<ParticipantInfo>> sortedMembers = {};
   final Map<String, int> scrollOffset = {};
   final profanityDetector = ProfanityDetector();
+  final _parentChildCommunities = BehaviorSubject<List<ParticipantInfo>>();
 
   Function(String) get onSearchChanged => _searchText.sink.add;
   Function(String) get onGroupNameChanged => _groupName.sink.add;
@@ -47,6 +46,8 @@ class CreateChatBloc extends BlocBase {
   Stream<List<TimebankModel>> get timebanksOfUser => _timebanksOfUser.stream;
   Stream<List<String>> get selectedMembers => _selectedMembers.stream;
   Stream<MessageRoomImageModel> get selectedImage => _file.stream;
+  Stream<List<ParticipantInfo>> get parentChildCommunities =>
+      _parentChildCommunities.stream;
 
   void selectMember(String participantId) {
     _selectedMembersList.contains(participantId)
@@ -55,7 +56,8 @@ class CreateChatBloc extends BlocBase {
     _selectedMembers.add(_selectedMembersList);
   }
 
-  Future<void> getMembers(UserModel user, String communityId) async {
+  Future<void> getMembers(
+      UserModel user, String communityId, String timebankId) async {
     List<ParticipantInfo> users =
         await UserRepository.getShortDetailsOfAllMembersOfCommunity(
       communityId,
@@ -84,14 +86,34 @@ class CreateChatBloc extends BlocBase {
 
     List<TimebankModel> timebanks =
         await TimebankRepository.getTimebanksWhichUserIsPartOf(
-            user.sevaUserID, communityId);
+      user.sevaUserID,
+      communityId,
+    );
     timebanks.removeWhere(
       (TimebankModel model) =>
           model.members.length == 1 ||
           model.parentTimebankId == FlavorConfig.values.timebankId,
     );
+
+    List<ParticipantInfo> childParticipants = [];
+    var childCommunities =
+        await TimebankRepository.getChildCommunities(timebankId);
+    if (childCommunities != null) {
+      childCommunities.forEach((element) {
+        var info = ParticipantInfo(
+          id: element.id,
+          name: element.name,
+          photoUrl: element.photoUrl,
+        );
+        allMembers[element.id] = info;
+        childParticipants.add(info);
+      });
+    }
+
     if (!_timebanksOfUser.isClosed) _timebanksOfUser.add(timebanks);
     if (!_members.isClosed) _members.add(users);
+    if (!_parentChildCommunities.isClosed)
+      _parentChildCommunities.add(childParticipants);
   }
 
   Future<ChatModel> createMultiUserMessaging(

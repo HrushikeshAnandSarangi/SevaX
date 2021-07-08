@@ -10,6 +10,28 @@ import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class TimebankRepository {
   static final CollectionReference _ref = CollectionRef.timebank;
+
+  static Future<List<TimebankModel>> getChildCommunities(
+      String timebankId) async {
+    var data = await _ref
+        .where('associatedParentTimebankId', isEqualTo: timebankId)
+        .get();
+
+    logger.i(data.docs.length, timebankId);
+
+    List<TimebankModel> models = [];
+    data.docs.forEach(
+      (element) {
+        var model = TimebankModel.fromMap(element.data());
+        // if (!(model.softDelete ?? false)) {
+        models.add(model);
+        // }
+      },
+    );
+
+    return models;
+  }
+
   static Future<List<TimebankModel>> getTimebanksWhichUserIsPartOf(
     String userId,
     String communityId,
