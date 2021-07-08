@@ -219,7 +219,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : S.of(context).seva + timebankModel.name + S.of(context).event,
+                      : S.of(context).seva +
+                          timebankModel.name +
+                          S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(

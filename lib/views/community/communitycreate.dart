@@ -445,7 +445,8 @@ class CreateEditCommunityViewFormState
                         SizedBox(
                           height: 20,
                         ),
-                        headingText(S.of(context).select_categories_community_headding),
+                        headingText(
+                            S.of(context).select_categories_community_headding),
                         SizedBox(
                           height: 10,
                         ),
@@ -660,10 +661,13 @@ class CreateEditCommunityViewFormState
                                       if (!canTestCommunity) {
                                         if (!testCommunity) {
                                           _showSanBoxdvisory(
-                                                  title:
-                                                      S.of(context).sandbox_dialog_title.sentenceCase(),
-                                                  description:
-                                                      S.of(context).sandbox_community_description)
+                                                  title: S
+                                                      .of(context)
+                                                      .sandbox_dialog_title
+                                                      .sentenceCase(),
+                                                  description: S
+                                                      .of(context)
+                                                      .sandbox_community_description)
                                               .then((status) {
                                             if (status) {
                                               communityModel.payment = {
@@ -702,8 +706,9 @@ class CreateEditCommunityViewFormState
                                         }
                                       } else {
                                         showDialogForSuccess(
-                                            dialogTitle: S.of(context).you_created_sandbox_community
-                                                ,
+                                            dialogTitle: S
+                                                .of(context)
+                                                .you_created_sandbox_community,
                                             err: true);
                                       }
                                     },

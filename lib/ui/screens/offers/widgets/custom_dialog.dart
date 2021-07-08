@@ -14,7 +14,7 @@ Future<void> errorDialog({BuildContext context, String error}) async {
         actions: <Widget>[
           CustomTextButton(
             child: Text(
-            S.of(context).ok,
+              S.of(context).ok,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -43,7 +43,7 @@ Future<bool> confirmationDialog(
         actions: <Widget>[
           CustomTextButton(
             child: Text(
-             S.of(context).cancel,
+              S.of(context).cancel,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -55,7 +55,7 @@ Future<bool> confirmationDialog(
           CustomTextButton(
             color: Theme.of(context).primaryColor,
             child: Text(
-             S.of(context).ok,
+              S.of(context).ok,
               style: TextStyle(
                 fontSize: 16,
               ),

@@ -11,7 +11,12 @@ class IntroSlider extends StatefulWidget {
   final String nextText;
   final String continueText;
   final String skipText;
-  IntroSlider({@required this.data, @required this.onSkip, @required this.nextText, @required this.continueText, @required this.skipText});
+  IntroSlider(
+      {@required this.data,
+      @required this.onSkip,
+      @required this.nextText,
+      @required this.continueText,
+      @required this.skipText});
   @override
   _IntroSliderState createState() => _IntroSliderState();
 }
@@ -149,7 +154,7 @@ class _IntroSliderState extends State<IntroSlider> {
                           child: Row(
                             children: [
                               Text(
-                               widget.continueText,
+                                widget.continueText,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,

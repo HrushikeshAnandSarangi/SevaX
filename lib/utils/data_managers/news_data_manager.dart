@@ -63,19 +63,17 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 //   // Geolocator geolocator = Geolocator();
 //   var futures = <Future>[];
 
-
-  var query = CollectionRef.feeds.where(
-    'entity',
-    isEqualTo: {
-      'entityType': 'timebanks',
-      'entityId': timebankID,
-      //'entityName': FlavorConfig.timebankName,
-    },
-  );
-  // .orderBy('posttimestamp', descending: true);
+var query = CollectionRef.feeds.where(
+  'entity',
+  isEqualTo: {
+    'entityType': 'timebanks',
+    'entityId': timebankID,
+    //'entityName': FlavorConfig.timebankName,
+  },
+);
+// .orderBy('posttimestamp', descending: true);
 
 //   lastLocation.fold((l) => null, (r) => null);
-
 
 //   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
 
@@ -152,7 +150,7 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 }
 
 //Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  //   Position userLocation;
+//   Position userLocation;
 
 //   userLocation = await Geolocator.getCurrentPosition();
 //   double lat = userLocation.latitude;
