@@ -63,14 +63,6 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 //   // Geolocator geolocator = Geolocator();
 //   var futures = <Future>[];
 
-var query = CollectionRef.feeds.where(
-  'entity',
-  isEqualTo: {
-    'entityType': 'timebanks',
-    'entityId': timebankID,
-    //'entityName': FlavorConfig.timebankName,
-  },
-);
 // .orderBy('posttimestamp', descending: true);
 
 //   lastLocation.fold((l) => null, (r) => null);

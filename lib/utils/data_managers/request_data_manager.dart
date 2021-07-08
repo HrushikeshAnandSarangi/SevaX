@@ -1598,8 +1598,6 @@ Future<void> acceptInviteRequest({
   }
 }
 
-
-
 Future<RequestModel> getRequestFutureById({
   @required String requestId,
 }) async {

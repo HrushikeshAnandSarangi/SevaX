@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/time_offer_participant.dart';
 import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
@@ -20,8 +21,7 @@ class PendingTasks {
   static Stream<List<OfferModel>> getAcceptedOffers(
     String loggedInmemberId,
   ) async* {
-    yield* Firestore.instance
-        .collection('offers')
+    yield* CollectionRef.offers
         .where('offerType', isEqualTo: 'INDIVIDUAL_OFFERS')
         .where('individualOfferDataModel.offerAcceptors',
             arrayContains: loggedInmemberId)
@@ -31,8 +31,8 @@ class PendingTasks {
       handleData: (data, sink) {
         List<OfferModel> individualOffers = [];
 
-        data.documents.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data);
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
           individualOffers.add(offerModel);
         });
         sink.add(individualOffers);
@@ -42,7 +42,7 @@ class PendingTasks {
 
   static Stream<List<TimeOfferParticipantsModel>> getAcceptedOffersStatus(
       String loggedInmemberId) async* {
-    yield* Firestore.instance
+    yield* FirebaseFirestore.instance
         .collectionGroup('offerAcceptors')
         .where('status', isEqualTo: 'ACCEPTED')
         .where('participantDetails.sevauserid', isEqualTo: loggedInmemberId)
@@ -51,9 +51,9 @@ class PendingTasks {
             List<TimeOfferParticipantsModel>>.fromHandlers(
       handleData: (data, sink) {
         List<TimeOfferParticipantsModel> oneToManyOffers = [];
-        data.documents.forEach((element) {
+        data.docs.forEach((element) {
           var participantModel =
-              TimeOfferParticipantsModel.fromJSON(element.data);
+              TimeOfferParticipantsModel.fromJSON(element.data());
           oneToManyOffers.add(participantModel);
         });
         sink.add(oneToManyOffers);
@@ -143,17 +143,13 @@ class PendingTasks {
         communityId: requestModel.communityId,
         isTimebankNotification: true);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
+    await CollectionRef.timebank
+        .doc(notificationModel.timebankId)
         .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
+        .doc(notificationModel.id)
+        .set(notificationModel.toMap());
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .updateData({
+    await CollectionRef.requests.doc(requestModel.id).update({
       'isSpeakerCompleted': true,
     });
 

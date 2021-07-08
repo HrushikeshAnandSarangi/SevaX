@@ -97,18 +97,18 @@ class _CompletedListState extends State<CompletedList> {
         //      transmodel == null
         //           ? Text('0')
         //           : Column(
-          //            mainAxisSize: MainAxisSize.min,
-          //            crossAxisAlignment: CrossAxisAlignment.center,
-          //            children: <Widget>[
-          //              Text('${transmodel.credits}'),
-          //              Text(S.of(context).seva_credits,
-          //                  style: TextStyle(
-          //                    fontSize: 9,
-          //                    fontWeight: FontWeight.w600,
-          //                    letterSpacing: -0.2,
-          //                  )),
-          //            ],
-          //             );
+        //            mainAxisSize: MainAxisSize.min,
+        //            crossAxisAlignment: CrossAxisAlignment.center,
+        //            children: <Widget>[
+        //              Text('${transmodel.credits}'),
+        //              Text(S.of(context).seva_credits,
+        //                  style: TextStyle(
+        //                    fontSize: 9,
+        //                    fontWeight: FontWeight.w600,
+        //                    letterSpacing: -0.2,
+        //                  )),
+        //            ],
+        //             );
         //     }(),
         //     subtitle: FutureBuilder(
         //       future:

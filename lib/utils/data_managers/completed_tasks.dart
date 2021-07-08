@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -19,8 +20,7 @@ class CompletedTasks {
   static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
     String loggedInMemberEmail,
   }) async* {
-    yield* Firestore.instance
-        .collection('requests')
+    yield* CollectionRef.requests
         .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
         .where('request_end', isLessThan: DateTime.now().millisecondsSinceEpoch)
         .snapshots()
@@ -28,8 +28,8 @@ class CompletedTasks {
             StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
                 handleData: (data, sink) {
       List<RequestModel> requestList = [];
-      data.documents.forEach((element) {
-        requestList.add(RequestModel.fromMap(element.data));
+      data.docs.forEach((element) {
+        requestList.add(RequestModel.fromMap(element.data()));
       });
       return sink.add(requestList);
     }));
@@ -38,8 +38,7 @@ class CompletedTasks {
   static Stream<List<OfferModel>> getCompletedOneToManyOffersCreated(
     String loggedInmemberEmail,
   ) async* {
-    yield* Firestore.instance
-        .collection('offers')
+    yield* CollectionRef.offers
         .where('offerType', isEqualTo: 'GROUP_OFFER')
         .where('email', isEqualTo: loggedInmemberEmail)
         .where('groupOfferDataModel.endDate',
@@ -50,8 +49,8 @@ class CompletedTasks {
       handleData: (data, sink) {
         List<OfferModel> oneToManyOffers = [];
 
-        data.documents.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data);
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -61,8 +60,7 @@ class CompletedTasks {
 
   static Stream<List<OfferModel>> getCompletedSignedUpOffersStream(
       String loggedInmemberId) async* {
-    yield* Firestore.instance
-        .collection('offers')
+    yield* CollectionRef.offers
         .where('offerType', isEqualTo: 'GROUP_OFFER')
         .where('groupOfferDataModel.signedUpMembers',
             arrayContains: loggedInmemberId)
@@ -74,8 +72,8 @@ class CompletedTasks {
       handleData: (data, sink) {
         List<OfferModel> oneToManyOffers = [];
 
-        data.documents.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data);
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -216,17 +214,13 @@ class CompletedTasks {
         communityId: requestModel.communityId,
         isTimebankNotification: true);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
+    await CollectionRef.timebank
+        .doc(notificationModel.timebankId)
         .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
+        .doc(notificationModel.id)
+        .set(notificationModel.toMap());
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .updateData({
+    await CollectionRef.requests.doc(requestModel.id).update({
       'isSpeakerCompleted': true,
     });
 

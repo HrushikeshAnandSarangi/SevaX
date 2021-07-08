@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/oneToManySpeakerTimeEntryComplete_page.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/utils/data_managers/completed_tasks.dart';
@@ -25,8 +26,7 @@ class ToDo {
   static Stream<List<RequestModel>> getSignedUpOneToManyRequests({
     String loggedInMemberEmail,
   }) async* {
-    yield* Firestore.instance
-        .collection('requests')
+    yield* CollectionRef.requests
         .where('oneToManyRequestAttenders', arrayContains: loggedInMemberEmail)
         .where('request_end',
             isGreaterThan: DateTime.now().millisecondsSinceEpoch)
@@ -35,8 +35,8 @@ class ToDo {
             StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
                 handleData: (data, sink) {
       List<RequestModel> requestList = [];
-      data.documents.forEach((element) {
-        requestList.add(RequestModel.fromMap(element.data));
+      data.docs.forEach((element) {
+        requestList.add(RequestModel.fromMap(element.data()));
       });
       return sink.add(requestList);
     }));
@@ -47,8 +47,7 @@ class ToDo {
     @required String userId,
     BuildContext context,
   }) async* {
-    var data = Firestore.instance
-        .collection('requests')
+    var data = CollectionRef.requests
         .where('approvedUsers', arrayContains: userEmail)
         .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
         .snapshots();
@@ -56,11 +55,11 @@ class ToDo {
     yield* data.transform(
       StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
         handleData: (snapshot, requestSink) {
-          log('REQUESTS LIST:  ' + snapshot.documents.length.toString());
+          log('REQUESTS LIST:  ' + snapshot.docs.length.toString());
           List<RequestModel> requestModelList = [];
-          snapshot.documents.forEach((documentSnapshot) {
-            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+          snapshot.docs.forEach((documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data());
+            model.id = documentSnapshot.id;
             bool isCompletedByUser = false;
 
             model.transactions?.forEach((transaction) {
@@ -83,8 +82,7 @@ class ToDo {
   static Stream<List<OfferModel>> getOneToManyOffersCreated(
     String loggedInmemberEmail,
   ) async* {
-    yield* Firestore.instance
-        .collection('offers')
+    yield* CollectionRef.offers
         .where('offerType', isEqualTo: 'GROUP_OFFER')
         .where('email', isEqualTo: loggedInmemberEmail)
         .where('groupOfferDataModel.endDate',
@@ -95,8 +93,8 @@ class ToDo {
       handleData: (data, sink) {
         List<OfferModel> oneToManyOffers = [];
 
-        data.documents.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data);
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -106,8 +104,7 @@ class ToDo {
 
   static Stream<List<OfferModel>> getSignedUpOffersStream(
       String loggedInmemberId) async* {
-    yield* Firestore.instance
-        .collection('offers')
+    yield* CollectionRef.offers
         .where('offerType', isEqualTo: 'GROUP_OFFER')
         .where('groupOfferDataModel.endDate',
             isGreaterThan: DateTime.now().millisecondsSinceEpoch)
@@ -119,8 +116,8 @@ class ToDo {
       handleData: (data, sink) {
         List<OfferModel> oneToManyOffers = [];
 
-        data.documents.forEach((element) {
-          var offerModel = OfferModel.fromMap(element.data);
+        data.docs.forEach((element) {
+          var offerModel = OfferModel.fromMap(element.data());
           oneToManyOffers.add(offerModel);
         });
         sink.add(oneToManyOffers);
@@ -298,17 +295,13 @@ class ToDo {
         communityId: requestModel.communityId,
         isTimebankNotification: true);
 
-    await Firestore.instance
-        .collection('timebanknew')
-        .document(notificationModel.timebankId)
+    await CollectionRef.timebank
+        .doc(notificationModel.timebankId)
         .collection('notifications')
-        .document(notificationModel.id)
-        .setData(notificationModel.toMap());
+        .doc(notificationModel.id)
+        .set(notificationModel.toMap());
 
-    await Firestore.instance
-        .collection('requests')
-        .document(requestModel.id)
-        .updateData({
+    await CollectionRef.requests.doc(requestModel.id).update({
       'isSpeakerCompleted': true,
     });
 
