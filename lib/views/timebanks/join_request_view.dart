@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -134,7 +135,7 @@ class TimebankRequests extends StatelessWidget {
                                             defaultUserImageURL),
                                   ),
                                   subtitle: Text(
-                                    'Reason: ${model.reason}',
+                                     S.of(context).reason +':${model.reason}',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -198,7 +199,7 @@ class TimebankRequests extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                       S.of(context).about +" ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -376,7 +377,7 @@ class CampaignRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Center(
-      child: Text('Coming soon'),
+      child: Text(S.of(context).coming_soon),
     );
   }
 }

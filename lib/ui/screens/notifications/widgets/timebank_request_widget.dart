@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -145,7 +146,7 @@ class TimebankRequestWidget extends StatelessWidget {
                     Center(
                         child: requestModel.requestType == RequestType.BORROW
                             ? Text(
-                                "${S.of(context).notifications_by_approving} ${userModel.fullname}, you will go ahead with them for the request.",
+                                "${S.of(context).notifications_by_approving} ${userModel.fullname},"+ S.of(context).you_will_go_ahead_with_them_for_request,
                                 style: TextStyle(
                                   //LABEL NEEDED FROM CLIENT FOR ABOVE TEXT
                                   fontStyle: FontStyle.italic,

@@ -3,6 +3,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class LocationPickerWidget extends StatelessWidget {
   final ValueChanged<LocationDataModel> onChanged;
@@ -38,6 +39,9 @@ class LocationPickerWidget extends StatelessWidget {
         primary: Colors.grey,
       ),
       onPressed: () async {
+
+        logger.d("$location retrieved from onTap=================================");
+
         await Navigator.push(
           context,
           MaterialPageRoute<LocationDataModel>(

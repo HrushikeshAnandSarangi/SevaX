@@ -451,7 +451,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         var result = webScraper.getScrapedData();
         if (result != null) {
           newsObject.title = result.title;
-          newsObject.imageScraped = result.image ?? S.of(context).no_data;
+          newsObject.imageScraped = result.image ?? "NoData";
           newsObject.description = result.body;
         }
       }

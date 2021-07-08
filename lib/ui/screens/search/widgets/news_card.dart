@@ -93,7 +93,7 @@ class NewsCard extends StatelessWidget {
                           margin: EdgeInsets.only(top: 5),
                           child: Linkify(
                               text: title != null &&
-                                      title != S.of(context).no_data
+                                      title != "NoData"
                                   ? title.trim()
                                   : S.of(context).title,
                               onOpen: (url) async {
@@ -157,7 +157,7 @@ class NewsCard extends StatelessWidget {
               height: 10,
             ),
             //feed image
-            imageUrl == null || imageUrl == S.of(context).no_data
+            imageUrl == null || imageUrl == "NoData"
                 ? Offstage()
                 : getImageView(id, imageUrl),
             SizedBox(

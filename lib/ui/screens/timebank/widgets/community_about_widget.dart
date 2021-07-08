@@ -274,7 +274,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Center(
                           child: Text(
-                        L.of(context).join_seva_community,
+                        S.of(context).join_seva_community,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
                 )
@@ -560,7 +560,7 @@ class _CommunityAboutState extends State<CommunityAbout>
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(L.of(context).please_switch_to_access + message),
+            content: Text(S.of(context).please_switch_to_access + message),
             actions: [
               CustomElevatedButton(
                 color: Colors.orange,
@@ -586,7 +586,7 @@ class _CommunityAboutState extends State<CommunityAbout>
         context: context,
         builder: (dialogContext) {
           return AlertDialog(
-            content: Text(L.of(context).please_join_seva_to_access + message),
+            content: Text(S.of(context).please_join_seva_to_access + message),
             actions: [
               CustomElevatedButton(
                 color: Colors.red,
@@ -614,7 +614,7 @@ class _CommunityAboutState extends State<CommunityAbout>
           if (snapshot.data == null) {
             return Center(
               child: Text(
-                L.of(context).no_events_available,
+                S.of(context).no_events_available,
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.black,
@@ -643,7 +643,7 @@ class _CommunityAboutState extends State<CommunityAbout>
                         height: 20,
                       ),
                       Text(
-                        L.of(context).no_events_available,
+                        S.of(context).no_events_available,
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.black,

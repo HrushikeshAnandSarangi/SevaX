@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
@@ -144,7 +145,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                 Center(
                   child: model.requestType == RequestType.BORROW
                       ? Text(
-                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} will be added to the request.",
+                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} " + S.of(context).will_be_added_to_request,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                           ),

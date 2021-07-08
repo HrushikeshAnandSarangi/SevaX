@@ -3,12 +3,14 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
+import 'package:sevaexchange/ui/utils/location_helper.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
+import 'package:location/location.dart';
 
 import '../app_config.dart';
 import '../location_utility.dart';
@@ -56,17 +58,11 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
   });
 }
 
-Stream<List<NewsModel>> getNearNewsStream(
-    {@required String timebankID}) async* {
-  // Geolocator geolocator = Geolocator();
-  Position userLocation;
-  var futures = <Future>[];
+// Stream<List<NewsModel>> getNearNewsStream(
+//     {@required String timebankID}) async* {
+//   // Geolocator geolocator = Geolocator();
+//   var futures = <Future>[];
 
-  userLocation = await Geolocator.getCurrentPosition();
-  double lat = userLocation.latitude;
-  double lng = userLocation.longitude;
-
-  GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
 
   var query = CollectionRef.feeds.where(
     'entity',
@@ -78,51 +74,66 @@ Stream<List<NewsModel>> getNearNewsStream(
   );
   // .orderBy('posttimestamp', descending: true);
 
-  var radius = 20;
-  try {
-    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-  } on Exception {
-    //
-  }
+//   lastLocation.fold((l) => null, (r) => null);
 
-  var data = geos.collection(collectionRef: query).within(
-        center: center,
-        radius: radius.toDouble(),
-        field: 'location',
-        strictMode: true,
-      );
 
-  yield* data.transform(
-      StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
-          handleData: (querySnapshot, newsSink) async {
-    List<NewsModel> modelList = [];
+//   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
 
-    querySnapshot.forEach((document) {
-      var news = NewsModel.fromMap(document.data());
-      futures.add(getUserInfo(news.email));
-      modelList.add(news);
-    });
-    modelList.sort((n1, n2) {
-      return n2.postTimestamp.compareTo(n1.postTimestamp);
-      // return n2.postTimestamp > n2.postTimestamp ? -1 : 1;
-    });
+//   var query = Firestore.instance.collection('news').where(
+//     'entity',
+//     isEqualTo: {
+//       'entityType': 'timebanks',
+//       'entityId': timebankID,
+//       //'entityName': FlavorConfig.timebankName,
+//     },
+//   );
+//   // .orderBy('posttimestamp', descending: true);
 
-    //await process goes here
-    await Future.wait(futures).then((onValue) async {
-      for (var i = 0; i < modelList.length; i++) {
-        //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+//   var radius = 20;
+//   try {
+//     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+//   } on Exception {
+//     //
+//   }
 
-        // var data = await _getLocation(
-        //   modelList[i].location.geoPoint.latitude,
-        //   modelList[i].location.geoPoint.longitude,
-        // );
-        // modelList[i].placeAddress = data;
-      }
+//   var data = geos.collection(collectionRef: query).within(
+//         center: center,
+//         radius: radius.toDouble(),
+//         field: 'location',
+//         strictMode: true,
+//       );
 
-      newsSink.add(modelList);
-    });
-  }));
-}
+//   yield* data.transform(
+//       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
+//           handleData: (querySnapshot, newsSink) async {
+//     List<NewsModel> modelList = [];
+
+//     querySnapshot.forEach((document) {
+//       var news = NewsModel.fromMap(document.data());
+//       futures.add(getUserInfo(news.email));
+//       modelList.add(news);
+//     });
+//     modelList.sort((n1, n2) {
+//       return n2.postTimestamp.compareTo(n1.postTimestamp);
+//       // return n2.postTimestamp > n2.postTimestamp ? -1 : 1;
+//     });
+
+//     //await process goes here
+//     await Future.wait(futures).then((onValue) async {
+//       for (var i = 0; i < modelList.length; i++) {
+//         //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+
+//         // var data = await _getLocation(
+//         //   modelList[i].location.geoPoint.latitude,
+//         //   modelList[i].location.geoPoint.longitude,
+//         // );
+//         // modelList[i].placeAddress = data;
+//       }
+
+//       newsSink.add(modelList);
+//     });
+//   }));
+// }
 
 Stream<List<NewsModel>> getAllNewsStream() async* {
   var data = CollectionRef.feeds
@@ -140,41 +151,41 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
   }));
 }
 
-Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  Position userLocation;
+//Stream<List<NewsModel>> getAllNearNewsStream() async* {
+  //   Position userLocation;
 
-  userLocation = await Geolocator.getCurrentPosition();
-  double lat = userLocation.latitude;
-  double lng = userLocation.longitude;
+//   userLocation = await Geolocator.getCurrentPosition();
+//   double lat = userLocation.latitude;
+//   double lng = userLocation.longitude;
 
-  var radius = 20;
-  try {
-    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-  } on Exception {
-    //
-  }
+//   var radius = 20;
+//   try {
+//     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+//   } on Exception {
+//     //
+//   }
 
-  GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
-  var query = CollectionRef.feeds;
-  var data = geos.collection(collectionRef: query).within(
-      center: center,
-      radius: radius.toDouble(),
-      field: 'location',
-      strictMode: true);
+//   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
+//   var query = CollectionRef.feeds;
+//   var data = geos.collection(collectionRef: query).within(
+//       center: center,
+//       radius: radius.toDouble(),
+//       field: 'location',
+//       strictMode: true);
 
-  yield* data.transform(
-      StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
-          handleData: (querySnapshot, newsSink) {
-    List<NewsModel> modelList = [];
-    querySnapshot.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data()));
-    });
-    modelList.sort((n1, n2) {
-      return n2.postTimestamp.compareTo(n1.postTimestamp);
-    });
-    newsSink.add(modelList);
-  }));
-}
+//   yield* data.transform(
+//       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
+//           handleData: (querySnapshot, newsSink) {
+//     List<NewsModel> modelList = [];
+//     querySnapshot.forEach((document) {
+//       modelList.add(NewsModel.fromMap(document.data()));
+//     });
+//     modelList.sort((n1, n2) {
+//       return n2.postTimestamp.compareTo(n1.postTimestamp);
+//     });
+//     newsSink.add(modelList);
+//   }));
+// }
 
 Future<NewsModel> getNewsForId(String newsId) async {
   NewsModel newsModel;

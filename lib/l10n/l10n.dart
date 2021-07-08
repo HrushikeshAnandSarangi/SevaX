@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -3807,7 +3806,7 @@ class S {
       );
 
   String get will_be_added_to_request => Intl.message(
-        'will be automatically added to the request.',
+        'will be added to the request.',
         name: 'will_be_added_to_request',
       );
 
@@ -7366,6 +7365,281 @@ class S {
         'Join Chat',
         name: 'join_chat',
       );
+
+  String get person_of_contact_details => Intl.message(
+        'Person of contact details',
+        name: 'person_of_contact_details',
+      );
+
+  String get review_agreement => Intl.message(
+        'Review Agreement',
+        name: 'review_agreement',
+      );
+
+  String get any_specific_conditions => Intl.message(
+        'Any specific condition(s)',
+        name: 'any_specific_conditions',
+      );
+
+  String get review_before_proceding_text => Intl.message(
+        'Please review the agreement below before proceeding.',
+        name: 'review_before_proceding_text',
+      );
+
+  String get lender_not_accepted_request_msg => Intl.message(
+        'Lender has not created an agreement for this request',
+        name: 'lender_not_accepted_request_msg',
+      );
+
+  String get agreement => Intl.message(
+        'Agreement',
+        name: 'agreement',
+      );
+
+  String get terms_acknowledgement_text => Intl.message(
+        'I accept the terms of use as per the agreement',
+        name: 'terms_acknowledgement_text',
+      );
+
+  String get description_of_item => Intl.message(
+        'Description of item(s)',
+        name: 'description_of_item',
+      );
+
+  String get item_returned_hint_text => Intl.message(
+        'Ex: item must be returned in the same condition.',
+        name: 'item_returned_hint_text',
+      );
+
+  String get sandbox_community_description => Intl.message(
+        'Sandbox communities are created for testing purposes?',
+        name: 'sandbox_community_description',
+      );
+
+  String get select_categories_community_headding => Intl.message(
+        'Select categories for your community',
+        name: 'select_categories_community_headding',
+      );
+
+  String get snackbar_select_agreement_type => Intl.message(
+        'Select an agreement type',
+        name: 'snackbar_select_agreement_type',
+      );
+
+  String get guests_can_do_and_dont => Intl.message(
+        'Guests can do and don\'t*',
+        name: 'guests_can_do_and_dont',
+      );
+
+  String get security_deposits => Intl.message(
+        'Security Deposit',
+        name: 'security_deposits',
+      );
+
+  String get max_occupants => Intl.message(
+        'Maximum occupants',
+        name: 'max_occupants',
+      );
+
+  String get quite_hours_allowed => Intl.message(
+        'Quiet hours allowed',
+        name: 'quite_hours_allowed',
+      );
+
+  String get usage_term => Intl.message(
+        'Usage term*',
+        name: 'usage_term',
+      );
+
+  String get instruction_for_stay => Intl.message(
+        'Instruction for the stay',
+        name: 'instruction_for_stay',
+      );
+
+  String get enter_delivery_time => Intl.message(
+        'Enter Delivery Time',
+        name: 'enter_delivery_time',
+      );
+
+  String get you_created_sandbox_community => Intl.message(
+        'You already created a sandbox community.',
+        name: 'you_created_sandbox_community',
+      );
+
+  String get anywhere => Intl.message(
+        'Anywhere',
+        name: 'anywhere',
+      );
+
+  String get request_description_hint_text_borrow => Intl.message(
+        'Please describe what you require',
+        name: 'request_description_hint_text_borrow',
+      );
+
+  String get goods_request_data_hint_text => Intl.message(
+        'Ex: Local Food Bank has a shortage...',
+        name: 'goods_request_data_hint_text',
+      );
+
+  String get cash_request_data_hint_text => Intl.message(
+        'Ex: Fundraiser to expand women’s shelter...',
+        name: 'cash_request_data_hint_text',
+      );
+
+  String get request_descrip_hint_text => Intl.message(
+        'Your Request and any #hashtags',
+        name: 'request_descrip_hint_text',
+      );
+
+  String get invite_members_group_dots => Intl.message(
+        '...',
+        name: 'invite_members_group_dots',
+      );
+
+  String get view => Intl.message(
+        'view',
+        name: 'view',
+      );
+
+  String get coming_soon => Intl.message(
+        'Coming Soon',
+        name: 'coming_soon',
+      );
+
+  String get public => Intl.message(
+        'Public',
+        name: 'public',
+      );
+
+  String get document_csv => Intl.message(
+        'Document.CSV',
+        name: 'document_csv',
+      );
+
+  String get select_time => Intl.message(
+        'Select time',
+        name: 'select_time',
+      );
+
+  String get claimed_successfully => Intl.message(
+        'Claimed Successfully',
+        name: 'claimed_successfully',
+      );
+
+  String get no_result_found => Intl.message(
+        'No result found',
+        name: 'no_result_found',
+      );
+
+  String get try_text => Intl.message(
+        'Try',
+        name: 'try_text',
+      );
+
+  String get seva_community_groups => Intl.message(
+        'Seva Community Groups',
+        name: 'seva_community_groups',
+      );
+
+  String get projects_text => Intl.message(
+        'Projects',
+        name: 'projects_text',
+      );
+
+  String get select_all => Intl.message(
+        'Select All',
+        name: 'select_all',
+      );
+
+  String get click_button_below_to_review => Intl.message(
+        'Click button below to review',
+        name: 'click_button_below_to_review',
+      );
+
+  String get and_complete_task => Intl.message(
+        'and complete the task',
+        name: 'and_complete_task',
+      );
+
+  String get remove_from_bookmark  => Intl.message(
+        'Remove from bookmarks',
+        name: 'remove_from_bookmark ',
+      );
+
+  String get invitations => Intl.message(
+        'Invitations',
+        name: 'invitations',
+      );
+
+  String get attachment => Intl.message(
+        'Attachment',
+        name: 'attachment',
+      );
+
+  String get zero_one => Intl.message(
+        '0/1',
+        name: 'zero_one',
+      );
+
+  String get report_of => Intl.message(
+        'Report of',
+        name: 'report_of',
+      );
+
+  String get waiting_acknowledgement => Intl.message(
+        'Waiting acknowledgement',
+        name: 'waiting_acknowledgement',
+      );
+
+  String get add_sponsor_image => Intl.message(
+        'Add Sponsor image',
+        name: 'add_sponsor_image',
+      );
+
+  String get hint_text_number => Intl.message(
+        '123456789',
+        name: 'hint_text_number',
+      );
+
+  String get accept_modified_amount_finalized => Intl.message(
+        'By Accepting this amount will be finalized',
+        name: 'accept_modified_amount_finalized',
+      );
+
+  String get please_enter_valid_amount => Intl.message(
+        'Please enter a valid amount',
+        name: 'please_enter_valid_amount',
+      );
+
+  String get request_amount_cannot_be_greater => Intl.message(
+        'Requested amount cannot be greater than offered amount!',
+        name: 'request_amount_cannot_be_greater',
+      );
+
+  String get name_not_updated => Intl.message(
+        ' name not updated',
+        name: 'name_not_updated',
+      );
+
+  String get timebank_not_updated => Intl.message(
+        'Timebank name not updated',
+        name: 'timebank_not_updated',
+      );
+
+  String get manage_permissions => Intl.message(
+        'Manage Permissions',
+        name: 'manage_permissions',
+      );
+
+  String get csv_file_sent_successfully_to => Intl.message(
+        'CSV file sent successfully to',
+        name: 'csv_file_sent_successfully_to',
+      );
+
+  String get you_will_go_ahead_with_them_for_request => Intl.message(
+        ' you will go ahead with them for the request.',
+        name: 'you_will_go_ahead_with_them_for_request',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -7375,8 +7649,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),

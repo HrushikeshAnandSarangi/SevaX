@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -92,7 +93,7 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                 ),
               ),
               Center(
-                child: Text("By Accepting this amount will be finalized",
+                child: Text(S.of(context).accept_modified_amount_finalized,
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),

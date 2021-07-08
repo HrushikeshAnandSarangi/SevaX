@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -73,7 +74,7 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
                                 child: Text(S.of(context).participants),
                               ),
                               Tab(
-                                child: Text('Invitations'),
+                                child: Text(S.of(context).invitations),
                               ),
                               Tab(
                                 child: Text(S.of(context).completed),

@@ -79,7 +79,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           if (userList.length == 0) {
             return getEmptyWidget(
-              L.of(context).users,
+              S.of(context).users,
               S.of(context).no_user_found,
             );
           }

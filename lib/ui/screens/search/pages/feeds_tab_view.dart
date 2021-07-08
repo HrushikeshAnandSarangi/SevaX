@@ -87,7 +87,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       id: news.id,
                       imageUrl: news.newsImageUrl ?? news.imageScraped,
                       title: news.title != null &&
-                              news.title != S.of(context).no_data
+                              news.title != "NoData"
                           ? news.title.trim()
                           : news.subheading.trim(),
                       userImageUrl: news.userPhotoURL ?? defaultUserImageURL,

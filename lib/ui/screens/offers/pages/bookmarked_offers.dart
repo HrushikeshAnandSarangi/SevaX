@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -354,7 +355,7 @@ void showDialogForMakingAnOffer({
                               width: double.infinity,
                               child: Center(
                                 child: Text(
-                                  'Remove from bookmark',
+                                  S.of(context).remove_from_bookmark,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(color: Colors.white),
                                 ),
@@ -371,7 +372,7 @@ void showDialogForMakingAnOffer({
                             width: double.infinity,
                             child: Center(
                               child: Text(
-                                'Cancel',
+                                S.of(context).cancel,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),

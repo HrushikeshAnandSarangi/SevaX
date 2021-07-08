@@ -958,7 +958,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
                     } else if (value.length > 250) {
-                      return L.of(context).max_250_characters;
+                      return S.of(context).max_250_characters;
                     } else {
                       bio = value;
                       return null;

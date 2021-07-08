@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 // import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -639,7 +639,8 @@ Future<List<ProjectModel>> getAllPublicProjects({String timebankid}) async {
   return projectsList;
 }
 
-Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
+Stream<List<ProjectModel>> getAllProjectListStream(
+    {String timebankid, bool isAdminOrOwner, BuildContext context}) async* {
   var query = CollectionRef.projects
       .where('timebanksPosted', arrayContains: timebankid)
       .where('softDelete', isEqualTo: false)
@@ -657,6 +658,13 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
             projectsList.add(model);
+
+            // DateTime endDate =
+            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
+            //uncomment below for Verve Release //to check only owner/admin/creator/members can view past events
+            // if (isAdminOrOwner ||
+            // model.associatedmembers.containsKey(
+            // SevaCore.of(context).loggedInUser.sevaUserID) ||
           },
         );
         projectSink.add(projectsList);
@@ -679,6 +687,10 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
           (documentSnapshot) {
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
             model.id = documentSnapshot.id;
+            // DateTime endDate =
+            //     DateTime.fromMillisecondsSinceEpoch(model.endTime);
+
+            // if (endDate.isAfter(DateTime.now())) {
             if (AppConfig.isTestCommunity) {
               if (model.liveMode == false) {
                 projectsList.add(model);
@@ -686,6 +698,7 @@ Stream<List<ProjectModel>> getPublicProjects() async* {
             } else {
               projectsList.add(model);
             }
+            // }
           },
         );
         projectSink.add(projectsList);
@@ -912,74 +925,77 @@ Stream<List<RequestModel>> getProjectRequestsStream(
   );
 }
 
-Stream<List<RequestModel>> getNearRequestListStream(
-    {String timebankId, UserModel loggedInUser, bool isFromSettings}) async* {
-  // LocationData pos = await location.getLocation();
-  // double lat = pos.latitude;
-  // double lng = pos.longitude;
+// Stream<List<RequestModel>> getNearRequestListStream(
+//     {String timebankId, UserModel loggedInUser, bool isFromSettings}) async* {
+//   // LocationData pos = await location.getLocation();
+//   // double lat = pos.latitude;
+//   // double lng = pos.longitude;
 
-  Position userLocation;
-  userLocation = await Geolocator.getCurrentPosition();
-  double lat = userLocation.latitude;
-  double lng = userLocation.longitude;
+//   Position userLocation;
+//   userLocation = await Geolocator.getCurrentPosition();
+//   double lat = userLocation.latitude;
+//   double lng = userLocation.longitude;
 
-  GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query;
-  if (isFromSettings == true) {
-    query = CollectionRef.requests
-        .where('timebankId', isEqualTo: timebankId)
-        .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
-  } else {
-    query = timebankId == null || timebankId == 'All'
-        ? CollectionRef.requests.where('accepted', isEqualTo: false)
-        // .orderBy('posttimestamp', descending: true)
-        : CollectionRef.requests
-            .where('accepted', isEqualTo: false)
-            .where('timebankId', isEqualTo: timebankId);
-  }
-  // .orderBy('posttimestamp', descending: true);
+//   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+//   var query;
+//   if (isFromSettings == true) {
+//     query = Firestore.instance
+//         .collection('requests')
+//         .where('timebankId', isEqualTo: timebankId)
+//         .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+//   } else {
+//     query = timebankId == null || timebankId == 'All'
+//         ? Firestore.instance
+//             .collection('requests')
+//             .where('accepted', isEqualTo: false)
+//         // .orderBy('posttimestamp', descending: true)
+//         : Firestore.instance
+//             .collection('requests')
+//             .where('accepted', isEqualTo: false)
+//             .where('timebankId', isEqualTo: timebankId);
+//   }
+//   // .orderBy('posttimestamp', descending: true);
 
-  var radius = 20;
-  try {
-    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-  } on Exception {
-    //FirebaseCrashlytics.instance.log(error.toString());
+//   var radius = 20;
+//   try {
+//     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+//   } on Exception {
+//     //Crashlytics.instance.log(error.toString());
 
-  }
+//   }
 
-  var data = geo.collection(collectionRef: query).within(
-        center: center,
-        radius: radius.toDouble(),
-        field: 'location',
-        strictMode: true,
-      );
+//   var data = geo.collection(collectionRef: query).within(
+//         center: center,
+//         radius: radius.toDouble(),
+//         field: 'location',
+//         strictMode: true,
+//       );
 
-  yield* data.transform(
-    StreamTransformer<List<DocumentSnapshot>, List<RequestModel>>.fromHandlers(
-      handleData: (snapshot, requestSink) {
-        List<RequestModel> requestList = [];
-        snapshot.forEach(
-          (documentSnapshot) {
-            if (documentSnapshot.data()['accepted'] == false ||
-                (documentSnapshot.data()['accepted'] == true &&
-                    documentSnapshot.data()['sevauserid'] ==
-                        loggedInUser.sevaUserID)) {
-              RequestModel model =
-                  RequestModel.fromMap(documentSnapshot.data());
-              model.id = documentSnapshot.id;
-              if (model.approvedUsers != null) {
-                if (model.approvedUsers.length <= model.numberOfApprovals)
-                  requestList.add(model);
-              }
-            }
-          },
-        );
-        requestList.sort((a, b) => a.postTimestamp > b.postTimestamp ? -1 : 1);
-        requestSink.add(requestList);
-      },
-    ),
-  );
-}
+//   yield* data.transform(
+//     StreamTransformer<List<DocumentSnapshot>, List<RequestModel>>.fromHandlers(
+//       handleData: (snapshot, requestSink) {
+//         List<RequestModel> requestList = [];
+//         snapshot.forEach(
+//           (documentSnapshot) {
+//             if (documentSnapshot.data['accepted'] == false ||
+//                 (documentSnapshot.data['accepted'] == true &&
+//                     documentSnapshot.data['sevauserid'] ==
+//                         loggedInUser.sevaUserID)) {
+//               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+//               model.id = documentSnapshot.documentID;
+//               if (model.approvedUsers != null) {
+//                 if (model.approvedUsers.length <= model.numberOfApprovals)
+//                   requestList.add(model);
+//               }
+//             }
+//           },
+//         );
+//         requestList.sort((a, b) => a.postTimestamp > b.postTimestamp ? -1 : 1);
+//         requestSink.add(requestList);
+//       },
+//     ),
+//   );
+// }
 
 Future<void> sendOfferRequest({
   @required OfferModel offerModel,

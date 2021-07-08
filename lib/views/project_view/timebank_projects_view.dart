@@ -144,7 +144,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
           Expanded(
             child: StreamBuilder<List<ProjectModel>>(
               stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId),
+                  timebankid: widget.timebankId,
+                  isAdminOrOwner: isAdminOrOwner,
+                  context: context),
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {

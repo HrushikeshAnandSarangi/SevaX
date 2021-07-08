@@ -901,78 +901,7 @@ class DiscussionListState extends State<DiscussionList> {
                 ),
               ),
               //Pinning ui
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Umeshify(
-                              text: news.subheading.trim(),
-                              onOpen: (url) async {
-                                if (await canLaunch(url)) {
-                                  launch(url);
-                                } else {
-                                  logger.e("could not launch");
-                                }
-                              },
-                            ),
-                          ),
-                          // scraped Data
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Umeshify(
-                              text: news.title != null &&
-                                      news.title != S.of(context).no_data
-                                  ? news.title.trim()
-                                  : '',
-                              onOpen: (url) async {
-                                if (await canLaunch(url)) {
-                                  launch(url);
-                                } else {
-                                  logger.e("could not launch");
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    isAccessAvailable(widget.timebankModel,
-                            SevaCore.of(context).loggedInUser.sevaUserID)
-                        ? getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Container(
-                                height: 20,
-                                width: 20,
-                                child: Image.asset(
-                                  'lib/assets/images/pin.png',
-                                  color: news.isPinned
-                                      ? Colors.green
-                                      : Colors.black,
-                                ),
-                              ),
-                            ),
-                            () {
-                              news.isPinned
-                                  ? unPinFeed(newsModel: news)
-                                  : pinNews(
-                                      newsModel: news,
-                                    );
-                              setState(() {});
-                            },
-                          )
-                        : Offstage(),
-                  ],
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, right: 12),
                 child: Row(
@@ -1018,16 +947,87 @@ class DiscussionListState extends State<DiscussionList> {
               SizedBox(
                 height: 10,
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Umeshify(
+                              text: news.subheading.trim(),
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                            ),
+                          ),
+                          // scraped Data
+                          Container(
+                            margin: EdgeInsets.only(top: 5),
+                            child: Umeshify(
+                              text: news.title != null &&
+                                      news.title != "NoData"
+                                  ? news.title.trim()
+                                  : '',
+                              onOpen: (url) async {
+                                if (await canLaunch(url)) {
+                                  launch(url);
+                                } else {
+                                  logger.e("could not launch");
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    isAccessAvailable(widget.timebankModel,
+                            SevaCore.of(context).loggedInUser.sevaUserID)
+                        ? getOptionButtons(
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: Image.asset(
+                                  'lib/assets/images/pin.png',
+                                  color: news.isPinned
+                                      ? Colors.green
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                            () {
+                              news.isPinned
+                                  ? unPinFeed(newsModel: news)
+                                  : pinNews(
+                                      newsModel: news,
+                                    );
+                              setState(() {});
+                            },
+                          )
+                        : Offstage(),
+                  ],
+                ),
+              ),
               //feed image
               news.newsImageUrl == null
                   ? news.imageScraped == null ||
-                          news.imageScraped == S.of(context).no_data
+                          news.imageScraped == "NoData"
                       ? Offstage()
                       : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
 
               //feed options
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 0.0, top: 4, right: 15),
                 child: !isFromMessage

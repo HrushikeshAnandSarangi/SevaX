@@ -24,7 +24,7 @@ class L {
 //   String get onetomany_createoffer_note =>
 //       "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
-  String get add_to_calender => "Add to calender";
+ // String get add_to_calender => "Add to calender";
 
 //   String get bundlePricingInfoButton =>
 //       'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
@@ -95,13 +95,13 @@ class L {
 //   String get credits_debited_msg =>
 //       "Seva Credits have been debited from your account";
 
-  String get users => "Users";
+//  String get users => "Users";
 
 //   String get completed_the_request => " Completed the request";
 
 //  String get error_loading_data =>
 //  'Error Loading Data';
-  String get likes => "likes";
+  //String get likes => "likes";
 
 //   String get create_virtual_offer => "create virtual offer";
 //   String get create_public_offer => "create public offer";
@@ -179,220 +179,227 @@ class L {
 // //  String get continue_to_signin => "Continue to Sign in"; //done in web
 // //  String get request_to_join => "Request to join"; //done in web
 
-  String get images_help_convey_theme_of_request =>
-      'Images helps to convey the theme of your request';
+  // String get images_help_convey_theme_of_request =>
+  //     'Images helps to convey the theme of your request';
+
+  // String get max_image_size => 'Maximum size: 5MB';
+
+  // String get exp_date => "Exp. Date";
+  // String get camera_not_available => "Camera not available";
+
+  // String get loading_camera => "Loading Camera...";
+  // String get internet_connection_lost => 'Internet connection lost';
+  // String get update_available => 'Update Available';
+  // String get update_app => "Update App";
+  // String get update_msg =>
+  //     "There is an update available with the app, Please tap on update to use the latest version of the app";
+  //String get member_permission => "Member Permission";
+  // String get copy_and_share_code =>
+  //     'Code Generated: Copy the code and share to your friends';
+//  String get copy_community_code => "Copy Community Code";
+  //String get copy_code => "Copy Code";
+  // String get share_code_msg =>
+  //     "You can share the code to invite them to your seva community";
+ // String get no_pending_join_request => 'No pending join requests';
+ // String get attend => "Attend";
+ // String get requested_by => "Requested By";
+  //String get location_not_provided => "Location not provided";
+ // String get request_approved_by_msg => 'Your request has been approved by ';
+  // String get request_agreement_not_available =>
+  //     'Request agreement not available';
+  // String get click_to_view_request_agreement =>
+  //     'Click to view request agreement';
+  // String get enter_prep_time => 'Enter Prep Time';
+  // String get choose_document => "Choose Document";
+  // String get pets_allowed => "Pets Allowed";
+  // String get attending => "Attending";
+  // String get invited_speaker => "Invited Speaker";
+  // String get description_not_updated => "Description not yet updated";
+  // String get add_manual_time => "Add Manual Time";
+  // String get trustworthiness => "Trustworthiness";
+  // String get reliabilitysocre => "Reliabilityscore";
+  // String get cv_not_available => "CV not available";
+  // String get change_document => "Change document";
+  // String get add_document => "Add document";
+  // String get sign_up_with_apple => 'Sign up with Apple';
+
+//june 14
+
+// String get person_of_contact_details => "Person of contact details";
+// String get review_agreement => "Review Agreement";
+// String get any_specific_conditions => "Any specific condition(s)";
+// String get review_before_proceding_text => "Please review the agreement below before proceeding.";
+// String get lender_not_accepted_request_msg => "Lender has not created an agreement for this request";
+// String get agreement => "Agreement";
+// String get terms_acknowledgement_text => "I accept the terms of use as per the agreement";
+// String get description_of_item => "Description of item(s)";
+// String get item_returned_hint_text => 'Ex: item must be returned in the same condition.';
+// String get sign_up_with_google => 'Sign up with Google';
+// String get sandbox_community_description =>'Sandbox communities are created for testing purposes?';
+// String get select_categories_community_headding =>'Select categories for your community';
+// String get snackbar_select_agreement_type => "Select an agreement type";
+// String get guests_can_do_and_dont => "Guests can do and don't*";
+// String get security_deposits => "Security Deposit";
+// String get max_occupants => "Maximum occupants";
+// String get quite_hours_allowed => "Quiet hours allowed";
+// String get usage_term => "Usage term*";
+// String get instruction_for_stay => 'Instruction for the stay';
+// String get enter_delivery_time => 'Enter Delivery Time';
+// String get you_created_sandbox_community => 'You already created a sandbox community.';
+// String get anywhere =>"Anywhere";
+ String get request_descrip_hint_text =>"Your Request and any #hashtags";
+ String get invite_members_group_dots =>"...";
+ String get view => "view";
+ String get coming_soon => "Coming Soon";
+ String get public => "Public";
+ String get document_csv => "Document.CSV"; 
+ String get select_time => "Select time";
+ String get claimed_successfully => 'Claimed Successfully';
+ String get no_result_found => 'No result found';
+ String get try_text => "Try";
+ String get seva_community_groups =>  'Seva Community Groups';
+ String get projects_text => "Projects";
+ String get select_all => "Select All";
+ String get click_button_below_to_review => "Click button below to review";
+ String get and_complete_task => "and complete the task";
+ String get will_be_added_to_request => "will be added to the request.";
+ String get  remove_from_bookmark    => "Remove from bookmarks";
+ String get invitations => 'Invitations';
+ String get attachment => "Attachment";
+ String get zer0_one =>    "0/1";
+ String get report_of => "Report of";
+ String get waiting_acknowledgement => "Waiting acknowledgement";
+ String get add_sponsor_image => 'Add Sponsor image';
+ String get hint_text_number => "123456789";
+String get accept_modified_amount_finalized  => "By Accepting this amount will be finalized";
+String get please_enter_valid_amount =>"Please enter a valid amount";
+String get request_amount_cannot_be_greater => "Requested amount cannot be greater than offered amount!";
+String get name_not_updated =>" name not updated";
+String get timebank_not_updated =>  "Timebank name not updated";
+String get description_not_updated =>  "Description not yet updated";
+String get manage_permissions => "Manage Permissions";
+String get csv_file_sent_successfully_to => "CSV file sent successfully to";
+String get you_will_go_ahead_with_them_for_request    =>" you will go ahead with them for the request.";
 
-  String get max_image_size => 'Maximum size: 5MB';
 
-  String get exp_date => "Exp. Date";
-  String get camera_not_available => "Camera not available";
 
-  String get loading_camera => "Loading Camera...";
 
-  String get internet_connection_lost => 'Internet connection lost';
 
-  String get update_available => 'Update Available';
-  String get update_app => "Update App";
+// String get request_description_hint_text_borrow =>'Please describe what you require';
+// String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";
+// String get cash_request_data_hint_text =>"Ex: Fundraiser to expand women’s shelter...";
 
-  String get update_msg =>
-      "There is an update available with the app, Please tap on update to use the latest version of the app";
+  // // labels on june 10
+  // String get do_you_want_to_add => "Do you want to add this";
+  // String get event_to_calender => "event to calender";
 
-  String get member_permission => "Member Permission";
+  // String get seva_community_name_not_updated =>
+  //     "Seva Community name not updated";
+  // String get create_new => "Create New";
+  // String get choose_previous_agreement => "Choose previous agreement";
 
-  String get copy_and_share_code =>
-      'Code Generated: Copy the code and share to your friends';
+  // String get no_agrreement => "No Agreement";
+  // String get fixed => "Fixed";
 
-  String get copy_community_code => "Copy Community Code";
+  // String get long_term_month_to_month => 'Long-term (Month to Month)';
+  // String get request_offer_agreement_hint_text => "Ex :3";
+  // String get request_offer_agreement_hint_text2 => "Ex: \$300";
+  // String get request_offer_agreement_hint_text3 =>
+  //     'Ex: Gas-powered lawnmower in mint condition with full tank of gas.';
 
-  String get copy_code => "Copy Code";
+  // String get request_offer_agreement_tool_widget_text =>
+  //     "Stipulations regarding returned item in unsatisfactory condition.";
 
-  String get share_code_msg =>
-      "You can share the code to invite them to your seva community";
+  // String get request_offer_agreement_hint_text4 =>
+  //     'Ex: Lawnmower must be cleaned and operable with a full tank of gas.';
 
-  String get no_pending_join_request => 'No pending join requests';
+  // String get document_name => "Document Name*";
+  // String get please_enter_doc_name => "Please enter document name";
+  // String get other_details => "Other Details";
 
-  String get attend => "Attend";
+  // String get request_offer_agreement_hint_text5 =>
+  //     "Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.";
 
-  String get requested_by => "Requested By";
+  // String get use => "use";
 
-  String get location_not_provided => "Location not provided";
+  // String get approve_borrow_request => 'Approve Room Borrow Request';
+  // String get approve_item_borrow => 'Approve Item Borrow request';
 
-  String get request_approved_by_msg => 'Your request has been approved by ';
+  // String get approve_borrow_hint_text1 => "Tell your borrower do and dont's";
+  // String get approve_borrow_alert_msg1 => "Please enter the do's and dont's";
 
-  String get instruction_for_stay => 'Instruction for the stay';
+  // String get approve_borrow_no_agreement_selected => "No Agreement Selected";
+  // String get request_agreement_form_component_text =>
+  //     'Create/Use agreement between you and borrower on how your item/place can be used.';
 
-  String get request_agreement_not_available =>
-      'Request agreement not available';
+  // String get approve_borrow_terms_acknowledgement_text1 =>
+  //     "I acknowledge that you can use the room on the mentioned dates.";
+  // String get approve_borrow_terms_acknowledgement_text2 =>
+  //     "I acknowledge that you can use the item on the mentioned dates.";
+  // String get approve_borrow_terms_acknowledgement_text3 =>
+  //     "Note: Please instruct on how to reach the location and do and don't accordingly.";
+  // String get approve_borrow_terms_acknowledgement_text4 =>
+  //     "Note: Please create an agreement if you have specific instructions and/or requirements.";
 
-  String get click_to_view_request_agreement =>
-      'Click to view request agreement';
+  // String get error_was_thrown => "Error was Thrown";
+  // String get max_250_characters => '* max 250 characters';
 
-  String get enter_prep_time => 'Enter Prep Time';
+  // String get doc_pdf => "Document.pdf";
 
-  String get enter_delivery_time => 'Enter Delivery Time';
+  // String get credits => "Credits:";
+  // String get could_not_launch => "Could not launch";
 
-  String get choose_document => "Choose Document";
+  // String get need_a_place => "Need a  place";
+  // String get item => "Item";
+  // String get borrow => "Borrow";
+  // String get choose_skills_for_request => "Choose skills for request";
+  // String get creating_request_with_underscore_not_allowed =>
+  //     'Creating request with "_" is not allowed';
 
-  String get usage_term => "Usage term*";
+  // String get selected_skills => "Selected Skills";
 
-  String get quite_hours_allowed => "Quiet hours allowed";
+  // String get request_tools_description => "Request tools description*";
+  // String get seva => "Seva";
+  // String get test_community => "Test Community";
 
-  String get pets_allowed => "Pets Allowed";
+  // String get you_already_created_test_community =>
+  //     'You already created a test community.';
+  // String get selected_value => "Selected value :";
+  // String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
 
-  String get max_occupants => "Maximum occupants";
+  // String get upgrade_plan_disable_msg1 =>
+  //     'This feature is disabled for your community';
 
-  String get security_deposits => "Security Deposit";
+  // String get upgrade_plan_disable_msg2 =>
+  //     'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/';
+  // String get upgrade_plan_disable_msg3 =>
+  //     'This is currently not permitted. Please contact the Community Creator for more information';
 
-  String get person_of_contact_details => "Person of contact details";
+  // String get edit_name => "Edit Name";
 
-  String get any_specific_conditions => "Any specific condition(s)";
+  // String get sponsored_by => "Sponsored By";
+  // String get sponsor_name => "Sponsor name";
 
-  String get item_returned_hint_text =>
-      'Ex: item must be returned in the same condition.';
-  String get description_of_item => "Description of item(s)";
+  // String get no_search_result_found => "No search result found";
+  // String get join_seva_community => "Join Seva Community";
 
-  String get attending => "Attending";
+  // String get please_switch_to_access =>
+  //     'Please switch seva community to access ';
+  // String get please_join_seva_to_access =>
+  //     'Please join seva community to access ';
+  // String get no_events_available => "No Events Available";
+  // String get ack => "Ack";
+  // String get enter_the_amount_received => "Enter the amount recieved";
 
-  String get invited_speaker => "Invited Speaker";
-  String get description_not_updated => "Description not yet updated";
-  String get terms_acknowledgement_text =>
-      "I accept the terms of use as per the agreement";
-  String get agreement => "Agreement";
-  String get lender_not_accepted_request_msg =>
-      "Lender has not created an agreement for this request";
+  // String get virtual_requests => "Virtual requests";
+  // String get name_not_available => "Name not available";
+  // String get attended_by => "Attended by";
+  // String get reset_list => "Reset list";
 
-  String get review_before_proceding_text =>
-      "Please review the agreement below before proceeding.";
+  // String get join_community_to_view_updates =>
+  //     "To view and receive updates join the community";
 
-  String get review_agreement => "Review Agreement";
-
-  String get guests_can_do_and_dont => "Guests can do and don't*";
-
-  String get snackbar_select_agreement_type => "Select an agreement type";
-  String get add_manual_time => "Add Manual Time";
-
-  String get trustworthiness => "Trustworthiness";
-  String get reliabilitysocre => "Reliabilityscore";
-  String get cv_not_available => "CV not available";
-
-  String get change_document => "Change document";
-  String get add_document => "Add document";
-
-  String get sign_up_with_apple => 'Sign up with Apple';
-
-  String get sign_up_with_google => 'Sign up with Google';
-
-  // labels on june 10
-  String get do_you_want_to_add => "Do you want to add this";
-  String get event_to_calender => "event to calender";
-
-  String get seva_community_name_not_updated =>
-      "Seva Community name not updated";
-  String get create_new => "Create New";
-  String get choose_previous_agreement => "Choose previous agreement";
-
-  String get no_agrreement => "No Agreement";
-  String get fixed => "Fixed";
-
-  String get long_term_month_to_month => 'Long-term (Month to Month)';
-  String get request_offer_agreement_hint_text => "Ex :3";
-  String get request_offer_agreement_hint_text2 => "Ex: \$300";
-  String get request_offer_agreement_hint_text3 =>
-      'Ex: Gas-powered lawnmower in mint condition with full tank of gas.';
-
-  String get request_offer_agreement_tool_widget_text =>
-      "Stipulations regarding returned item in unsatisfactory condition.";
-
-  String get request_offer_agreement_hint_text4 =>
-      'Ex: Lawnmower must be cleaned and operable with a full tank of gas.';
-
-  String get document_name => "Document Name*";
-  String get please_enter_doc_name => "Please enter document name";
-  String get other_details => "Other Details";
-
-  String get request_offer_agreement_hint_text5 =>
-      "Ex: LANDLORD'S LIABILITY. The Guest and any of their guests hereby indemnify and hold harmless the Landlord against any and all claims of personal injury or property damage or loss arising from the use of the Premises regardless of the nature of the accident, injury or loss. The Guest expressly recognizes that any insurance for property damage or loss which the Landlord may maintain on the property does not cover the personal property of Tenant and that Tenant should purchase their own insurance for their guests if such coverage is desired.";
-
-  String get use => "use";
-
-  String get approve_borrow_request => 'Approve Room Borrow Request';
-  String get approve_item_borrow => 'Approve Item Borrow request';
-
-  String get approve_borrow_hint_text1 => "Tell your borrower do and dont's";
-  String get approve_borrow_alert_msg1 => "Please enter the do's and dont's";
-
-  String get approve_borrow_no_agreement_selected => "No Agreement Selected";
-  String get request_agreement_form_component_text =>
-      'Create/Use agreement between you and borrower on how your item/place can be used.';
-
-  String get approve_borrow_terms_acknowledgement_text1 =>
-      "I acknowledge that you can use the room on the mentioned dates.";
-  String get approve_borrow_terms_acknowledgement_text2 =>
-      "I acknowledge that you can use the item on the mentioned dates.";
-  String get approve_borrow_terms_acknowledgement_text3 =>
-      "Note: Please instruct on how to reach the location and do and don't accordingly.";
-  String get approve_borrow_terms_acknowledgement_text4 =>
-      "Note: Please create an agreement if you have specific instructions and/or requirements.";
-
-  String get error_was_thrown => "Error was Thrown";
-  String get max_250_characters => '* max 250 characters';
-
-  String get doc_pdf => "Document.pdf";
-
-  String get credits => "Credits:";
-  String get could_not_launch => "Could not launch";
-
-  String get need_a_place => "Need a  place";
-  String get item => "Item";
-  String get borrow => "Borrow";
-  String get choose_skills_for_request => "Choose skills for request";
-  String get creating_request_with_underscore_not_allowed =>
-      'Creating request with "_" is not allowed';
-
-  String get selected_skills => "Selected Skills";
-
-  String get request_tools_description => "Request tools description*";
-  String get seva => "Seva";
-  String get test_community => "Test Community";
-
-  String get you_already_created_test_community =>
-      'You already created a test community.';
-  String get selected_value => "Selected value :";
-  String get upgrade_plan_msg1 => "Sorry Couldn't fetch data";
-
-  String get upgrade_plan_disable_msg1 =>
-      'This feature is disabled for your community';
-
-  String get upgrade_plan_disable_msg2 =>
-      'This is currently not permitted. Please see the following link for more information: http://web.sevaxapp.com/';
-  String get upgrade_plan_disable_msg3 =>
-      'This is currently not permitted. Please contact the Community Creator for more information';
-
-  String get edit_name => "Edit Name";
-
-  String get sponsored_by => "Sponsored By";
-  String get sponsor_name => "Sponsor name";
-
-  String get no_search_result_found => "No search result found";
-  String get join_seva_community => "Join Seva Community";
-
-  String get please_switch_to_access =>
-      'Please switch seva community to access ';
-  String get please_join_seva_to_access =>
-      'Please join seva community to access ';
-  String get no_events_available => "No Events Available";
-  String get ack => "Ack";
-  String get enter_the_amount_received => "Enter the amount recieved";
-
-  String get virtual_requests => "Virtual requests";
-  String get name_not_available => "Name not available";
-  String get attended_by => "Attended by";
-  String get reset_list => "Reset list";
-
-  String get join_community_to_view_updates =>
-      "To view and receive updates join the community";
-
-  String get join_chat => "Join Chat";
+  // String get join_chat => "Join Chat";
 
 //<------------------below labels are done------------->
 

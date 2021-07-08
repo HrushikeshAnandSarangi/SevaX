@@ -590,7 +590,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           .contains('_') &&
                                       !AppConfig.testingEmails
                                           .contains(AppConfig.loggedInEmail)) {
-                                    return L
+                                    return S
                                         .of(context)
                                         .creating_request_with_underscore_not_allowed;
                                   } else {
@@ -1140,7 +1140,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                       children: [
                                         SizedBox(height: 12),
                                         Text(
-                                          L.of(context).borrow,
+                                          S.of(context).borrow,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1158,7 +1158,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                L.of(context).need_a_place,
+                                                S.of(context).need_a_place,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1167,7 +1167,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                               padding: EdgeInsets.only(
                                                   left: 14, right: 14),
                                               child: Text(
-                                                L.of(context).item,
+                                                S.of(context).item,
                                                 style:
                                                     TextStyle(fontSize: 12.0),
                                               ),
@@ -1333,6 +1333,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
         //radio button goods
         //prefrill offer title, offer description, pleged amount,
 
+        // TODO: Handle this case.
+        break;
+      case RequestType.BORROW:
+        // TODO: Handle this case.
+        break;
+      case RequestType.ONE_TO_MANY_REQUEST:
         // TODO: Handle this case.
         break;
     }
@@ -1909,7 +1915,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: <Widget>[
           (requestModel.requestType == RequestType.BORROW && roomOrTool == 1)
               ? Text(
-                  L.of(context).request_tools_description,
+                  S.of(context).request_tools_description,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -2311,7 +2317,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
           SizedBox(height: 15),
 
-          RequestDescriptionData('Your Request and any #hashtags'),
+          RequestDescriptionData(S.of(context).request_descrip_hint_text),
           SizedBox(height: 20),
           //Same hint for Room and Tools ?
           // Choose Category and Sub Category
@@ -2463,7 +2469,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
           SizedBox(height: 20),
 
           requestModel.requestType == RequestType.ONE_TO_MANY_REQUEST
-              ? RequestDescriptionData('You Request and any #hashtags')
+              ? RequestDescriptionData(S.of(context).request_descrip_hint_text)
               : RequestDescriptionData(S.of(context).request_description_hint),
 
           SizedBox(height: 20),
@@ -2693,7 +2699,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Fundraiser to expand women’s shelter..."),
+          RequestDescriptionData(S.of(context).cash_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2821,7 +2827,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 20),
-          RequestDescriptionData("Ex: Local Food Bank has a shortage..."),
+          RequestDescriptionData(S.of(context).goods_request_data_hint_text),
           // RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
           categoryWidget(),
@@ -2885,7 +2891,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
             0: Text(
               timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                   ? S.of(context).timebank_request(1)
-                  : L.of(context).seva +
+                  : S.of(context).seva +
                       timebankModel.name +
                       " ${S.of(context).group} " +
                       S.of(context).request,
@@ -3011,7 +3017,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
 
       if (requestModel.requestType == RequestType.GOODS &&
-          requestModel.goodsDonationDetails.requiredGoods == null) {
+          (requestModel.goodsDonationDetails.requiredGoods == null ||
+              requestModel.goodsDonationDetails.requiredGoods.isEmpty)) {
         showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }

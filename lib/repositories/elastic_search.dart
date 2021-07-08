@@ -600,11 +600,15 @@ class ElasticSearchApi {
       Map<String, dynamic> sourceMap = map['_source'];
       ProjectModel model = ProjectModel.fromMap(sourceMap);
       if (distanceFilterData?.isInRadius(model.location) ?? true) {
+        // DateTime endDate = DateTime.fromMillisecondsSinceEpoch(model.endTime);
+
+        // if (endDate.isAfter(DateTime.now())) {
         if (AppConfig.isTestCommunity != null && AppConfig.isTestCommunity) {
           if (!model.liveMode) models.add(model);
         } else {
           models.add(model);
         }
+        // }
       }
     });
     models.sort((a, b) => a.name.compareTo(b.name));

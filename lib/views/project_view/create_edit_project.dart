@@ -14,6 +14,7 @@ import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -218,7 +219,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   timebankModel.parentTimebankId ==
                           FlavorConfig.values.timebankId
                       ? S.of(context).seva_community_event
-                      : "Seva " + timebankModel.name + S.of(context).event,
+                      : S.of(context).seva + timebankModel.name + S.of(context).event,
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
@@ -494,9 +495,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   hintStyle: textStyle,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(8),
-              ),
+//               Padding(
+//                 padding: EdgeInsets.all(8),
+//              ),
               // headingText(S.of(context).phone_number),
               // TextFormField(
               //   onFieldSubmitted: (_) {
@@ -516,7 +517,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //   },
               //   inputFormatters: [
               //     WhitelistingTextInputFormatter(RegExp("[0-9]")),
-              //   ],
+              //                 ],
 
               //   validator: (value) {
               //     if (value.isEmpty) {
@@ -534,17 +535,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //               ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
               //               : ''
               //       : projectModel?.phoneNumber?.replaceAll('+', '') ?? '',
-              //   decoration: InputDecoration(
-//                icon: Icon(
-//                  Icons.add,
-//                  color: Colors.black,
-//                  size: 13,
-//                ),
-//                prefixIcon: Icon(
-//                  Icons.add,
-//                  color: Colors.black,
-//                  size: 13,
-//                ),
+              //                 decoration: InputDecoration(
+// //                icon: Icon(
+// //                  Icons.add,
+// //                  color: Colors.black,
+// //                  size: 13,
+// //                ),
+// //                prefixIcon: Icon(
+// //                  Icons.add,
+// //                  color: Colors.black,
+// //                  size: 13,
+// //               ),
               //     prefix: Icon(
               //       Icons.add,
               //       color: Colors.black,
@@ -556,10 +557,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //     focusedBorder: UnderlineInputBorder(
               //       borderSide: BorderSide(color: Colors.black54),
               //     ),
-              //     hintText: "123456789",
+              //                   hintText: S.of(context).hint_text_number,
               //     hintStyle: textStyle,
               //   ),
-              // ),
+              //               ),
               Padding(
                 padding: EdgeInsets.all(8),
               ),

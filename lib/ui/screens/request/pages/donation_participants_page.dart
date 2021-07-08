@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -132,7 +133,7 @@ class DonationParticipantPage extends StatelessWidget {
                                     },
                                   ),
                                 )
-                              : Text("Waiting acknowledgement"),
+                              : Text(S.of(context).waiting_acknowledgement),
             );
           },
           separatorBuilder: (context, index) {

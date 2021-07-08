@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -608,13 +609,13 @@ class _DonationViewState extends State<DonationView> {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_general_text;
                 } else if (int.parse(value) < 1) {
-                  return "Please enter a valid amount";
+                  return S.of(context).please_enter_valid_amount;
                 } else if (!value.isEmpty) {
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return "Requested amount cannot be greater than offered amount!";
+                    return S.of(context).request_amount_cannot_be_greater;
                   }
                   if (int.parse(value) > offerModel.cashModel.targetAmount) {
-                    return "Requested amount cannot be greater than offered amount!";
+                    return  S.of(context).request_amount_cannot_be_greater;
                   }
                   donationsModel.cashDetails.cashDetails.amountRaised =
                       int.parse(value);

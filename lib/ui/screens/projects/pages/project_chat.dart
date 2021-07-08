@@ -64,9 +64,9 @@ class _ProjectChatViewState extends State<ProjectChatView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(L.of(context).join_community_to_view_updates),
+                  Text(S.of(context).join_community_to_view_updates),
                   CustomElevatedButton(
-                    child: Text(L.of(context).join_chat),
+                    child: Text(S.of(context).join_chat),
                     onPressed: () {
                       ChatsRepository.addMember(
                         snapshot.data.id,

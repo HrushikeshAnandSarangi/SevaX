@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -465,7 +466,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   Widget gettigStatus() {
     return CustomElevatedButton(
       onPressed: null,
-      child: Text('...'),
+      child: Text(S.of(context).invite_members_group_dots),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),

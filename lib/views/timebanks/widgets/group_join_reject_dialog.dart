@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -67,14 +68,14 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 widget.groupInviteUserModel.timebankName ??
-                    "Timebank name not updated",
+                   S.of(context).timebank_not_updated
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
                 widget.groupInviteUserModel.aboutTimebank ??
-                    "Description not yet updated",
+                   S.of(context).description_not_updated,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

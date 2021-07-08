@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/configuration_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
@@ -92,7 +93,7 @@ class _MemberPermissionsState extends State<MemberPermissions> {
         ),
         centerTitle: true,
         title: Text(
-          'Manage Permissions',
+         S.of(context).manage_permissions,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,

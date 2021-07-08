@@ -54,7 +54,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = AppConfig.isTestCommunity
-              ? snapshot.data['sandboxBalance']
+              ? snapshot.data['sandboxBalance'].toDouble()
               : snapshot.data['balance'].toDouble();
           timebankModel = TimebankModel.fromMap(snapshot.data.data());
           return widget.isAdmin

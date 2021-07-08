@@ -65,7 +65,7 @@ class TimebankUserInsufficientCreditsDialog extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
                 userInsufficientModel.timebankName ??
-                    L.of(context).seva_community_name_not_updated,
+                    S.of(context).seva_community_name_not_updated,
               ),
             ),
             // Padding(

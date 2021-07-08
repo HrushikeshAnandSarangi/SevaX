@@ -221,7 +221,7 @@ class _CreateOfferRequestState extends State<CreateOfferRequest>
           0: Text(
             timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? S.of(context).timebank_request(1)
-                : "Seva " +
+                :S.of(context).seva +
                     timebankModel.name +
                     " ${S.of(context).group} " +
                     S.of(context).request,

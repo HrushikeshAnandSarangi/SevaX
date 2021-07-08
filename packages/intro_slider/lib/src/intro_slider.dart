@@ -8,7 +8,10 @@ class IntroSlider extends StatefulWidget {
   // final List<Widget> data;
   final List<String> data;
   final VoidCallback onSkip;
-  IntroSlider({@required this.data, @required this.onSkip});
+  final String nextText;
+  final String continueText;
+  final String skipText;
+  IntroSlider({@required this.data, @required this.onSkip, @required this.nextText, @required this.continueText, @required this.skipText});
   @override
   _IntroSliderState createState() => _IntroSliderState();
 }
@@ -99,7 +102,7 @@ class _IntroSliderState extends State<IntroSlider> {
                     child: Row(
                       children: [
                         Text(
-                          'skip',
+                          widget.skipText,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -146,7 +149,7 @@ class _IntroSliderState extends State<IntroSlider> {
                           child: Row(
                             children: [
                               Text(
-                                'Continue',
+                               widget.continueText,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -179,7 +182,7 @@ class _IntroSliderState extends State<IntroSlider> {
                           child: Row(
                             children: [
                               Text(
-                                'Next',
+                                widget.nextText,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,

@@ -17,13 +17,13 @@ class CalenderEventConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(L.of(context).add_to_calender),
+      title: Text(S.of(context).add_to_calender),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(L.of(context).do_you_want_to_add +
+          Text(S.of(context).do_you_want_to_add +
               '$title ${isrequest ? 'request' : 'offer'}' +
-              L.of(context).event_to_calender),
+              S.of(context).event_to_calender),
           SizedBox(height: 10),
           Row(
             children: <Widget>[

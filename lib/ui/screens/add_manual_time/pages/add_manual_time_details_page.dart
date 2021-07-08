@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/manual_time_model.dart';
 import 'package:sevaexchange/ui/screens/add_manual_time/bloc/add_manual_time_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -93,7 +94,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Select time'),
+            Text(S.of(context).select_time),
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -198,7 +199,7 @@ class _AddMnualTimeDetailsPageState extends State<AddMnualTimeDetailsPage> {
                                   .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Claimed Successfully'),
+                                  content: Text(S.of(context).claimed_successfully),
                                 ),
                               );
                               Future.delayed(Duration(seconds: 2), () {

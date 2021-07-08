@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/report_info_card.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_chip.dart';
@@ -52,7 +53,7 @@ class ReportedMemberInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Report of ${model.reportedUserName}",
+          S.of(context).report_of +"${model.reportedUserName}",
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,

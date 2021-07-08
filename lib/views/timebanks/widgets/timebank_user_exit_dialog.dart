@@ -51,13 +51,13 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userExitModel.timebank ?? "Seva Community name not updated",
+                userExitModel.timebank ?? S.of(context).seva_community_name_not_updated,
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                userExitModel.reason ?? "Reason not mentioned",
+                userExitModel.reason ?? S.of(context).reason_not_mentioned,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

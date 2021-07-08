@@ -623,7 +623,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       end.endType = RepeatWidgetState.endType == 0
           ? S.of(context).on
           : S.of(context).after;
-      end.on = end.endType == "on"
+      end.on = end.endType == S.of(context).on
           ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch
           : null;
       end.after = (end.endType == S.of(context).after

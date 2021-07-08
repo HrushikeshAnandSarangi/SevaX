@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/explore/bloc/explore_search_page_bloc.dart';
 import 'package:sevaexchange/ui/screens/explore/pages/communities_search_view.dart';
@@ -437,7 +438,7 @@ class ExploreSearchTabBar extends StatelessWidget {
                             children: [
                               Text(
                                 snapshot.data == 0
-                                    ? 'Anywhere'
+                                    ?S.of(context).anywhere
                                     : 'Within ${snapshot.data} ' +
                                         S.of(context).miles,
                                 style: TextStyle(
