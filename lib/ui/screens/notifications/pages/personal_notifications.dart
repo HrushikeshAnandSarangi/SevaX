@@ -1194,7 +1194,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
     );
 
     if (results != null && results.containsKey('selection')) {
-      Firestore.instance.collection("reviews").add(
+      CollectionRef.reviews.add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": requestModel.title,

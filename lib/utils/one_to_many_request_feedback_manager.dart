@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
-WriteBatch batch = Firestore.instance.batch();
+WriteBatch batch = CollectionRef.batch;
 
 Future<void> sendFeedbackNotificationsToAttendees(
     {@required List attendeesList,
@@ -27,12 +28,11 @@ Future<void> sendFeedbackNotificationsToAttendees(
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: attendee['sevaUserID']);
 
-    batch.setData(
-        Firestore.instance
-            .collection('users')
-            .document(attendee['email'])
+    batch.set(
+        CollectionRef.users
+            .doc(attendee['email'])
             .collection("notifications")
-            .document(notification.id),
+            .doc(notification.id),
         notification.toMap());
   }
 

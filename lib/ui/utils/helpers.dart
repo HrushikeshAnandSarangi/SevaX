@@ -85,16 +85,13 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
   if (type == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
     var temp = results['ratings'];
     logger.e('RESULTS:' + results.toString());
-    await Firestore.instance
-        .collection('users')
-        .document(model.selectedInstructor.email)
-        .setData({
+    await CollectionRef.users.doc(model.selectedInstructor.email).set({
       'totalReviews': FieldValue.increment(1),
       'reliabilityscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
       'trustworthinessscore': averageReview(user.totalReviews,
           ratingCal(temp['0'] + temp['2']), user.trustworthinessscore)
-    }, merge: true);
+    }, SetOptions(merge: true));
   }
 }
 
