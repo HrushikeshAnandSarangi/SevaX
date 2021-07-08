@@ -89,7 +89,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool templateFound = false;
   final profanityDetector = ProfanityDetector();
   bool makePublicBool = false;
-  bool isPulicCheckboxVisible = false;
+  // bool isPulicCheckboxVisible = false;
   CommunityModel communityModel;
   End end = End();
 
@@ -630,12 +630,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           if (projectModel.virtualProject != val) {
                             this.projectModel.virtualProject = val;
 
-                            if (!val) {
-                              projectModel.public = false;
-                              isPulicCheckboxVisible = false;
-                            } else {
-                              isPulicCheckboxVisible = true;
-                            }
+                            // if (!val) {
+                            //   projectModel.public = false;
+                            //   isPulicCheckboxVisible = false;
+                            // } else {
+                            //   isPulicCheckboxVisible = true;
+                            // }
 
                             setState(() {});
                           }
@@ -644,28 +644,30 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 ),
               ),
 
-              HideWidget(
-                hide: !isPulicCheckboxVisible,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ConfigurationCheck(
-                    actionType: 'create_public_event',
-                    role: memberType(timebankModel,
-                        SevaCore.of(context).loggedInUser.sevaUserID),
-                    child: OpenScopeCheckBox(
-                        infoType: InfoType.OpenScopeEvent,
-                        isChecked: projectModel.public,
-                        checkBoxTypeLabel: CheckBoxType.type_Events,
-                        onChangedCB: (bool val) {
-                          if (projectModel.public != val) {
-                            this.projectModel.public = val;
-                            log('value ${projectModel.public}');
-                            setState(() {});
-                          }
-                        }),
-                  ),
+              // HideWidget(
+              //   hide: !isPulicCheckboxVisible,
+              //   child:
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: ConfigurationCheck(
+                  actionType: 'create_public_event',
+                  role: memberType(timebankModel,
+                      SevaCore.of(context).loggedInUser.sevaUserID),
+                  child: OpenScopeCheckBox(
+                      infoType: InfoType.OpenScopeEvent,
+                      isChecked: projectModel.public,
+                      checkBoxTypeLabel: CheckBoxType.type_Events,
+                      onChangedCB: (bool val) {
+                        if (projectModel.public != val) {
+                          this.projectModel.public = val;
+                          log('value ${projectModel.public}');
+                          setState(() {});
+                        }
+                      }),
                 ),
               ),
+              // ),
+
               // Padding(
               //   padding: const EdgeInsets.symmetric(vertical: 8),
               //   child: OpenScopeCheckBox(
