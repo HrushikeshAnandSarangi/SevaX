@@ -3,6 +3,64 @@ import 'package:flutter/cupertino.dart';
 class L {
   L.of(BuildContext context) {}
 
+  String get to_do => "To Do";
+  String get one_to_many_offer_attende => "One to Many Offer Attende";
+  String get one_to_many_offer_speaker => "One to Many Offer Speaker";
+  String get time_request_volunteer => "Time Request Volunteer";
+  String get time_offer_volunteer => "Accepted Time Offer";
+  String get one_to_many_request_speaker => "One to Many Request Speaker";
+  String get one_to_many_request_attende => "One to Many Request attende";
+
+  String get completed_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_offer_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_offer_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get completed_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get completed_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+
+//ToDO List
+
+  String get to_do_one_to_many_offer_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_offer_speaker_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_offer_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_request_attende_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_attende_subtitle =>
+      "This one to many offer has completed.";
+
+  String get to_do_one_to_many_request_speaker_title =>
+      "This one to many offer has completed.";
+  String get to_do_one_to_many_request_speaker_subtitle =>
+      "This one to many offer has completed.";
+
+
+
+
+
+
+
+
 //   String get browse_requests_by_category => "Browse requests by category";
 
 // //   // <------------ PENDING START ------------>
@@ -24,7 +82,7 @@ class L {
 //   String get onetomany_createoffer_note =>
 //       "Note: Upon completing the one to many offer, the combined prep time and session hours will be credited to you.";
 
- // String get add_to_calender => "Add to calender";
+  // String get add_to_calender => "Add to calender";
 
 //   String get bundlePricingInfoButton =>
 //       'There is a limit to the number of transactions in the free tier. You will be charged \$2 for a bundle of 50 transactions.'; //done in web // ask shubam or umesh
@@ -200,11 +258,11 @@ class L {
   //String get copy_code => "Copy Code";
   // String get share_code_msg =>
   //     "You can share the code to invite them to your seva community";
- // String get no_pending_join_request => 'No pending join requests';
- // String get attend => "Attend";
- // String get requested_by => "Requested By";
+  // String get no_pending_join_request => 'No pending join requests';
+  // String get attend => "Attend";
+  // String get requested_by => "Requested By";
   //String get location_not_provided => "Location not provided";
- // String get request_approved_by_msg => 'Your request has been approved by ';
+  // String get request_approved_by_msg => 'Your request has been approved by ';
   // String get request_agreement_not_available =>
   //     'Request agreement not available';
   // String get click_to_view_request_agreement =>
@@ -247,43 +305,42 @@ class L {
 // String get enter_delivery_time => 'Enter Delivery Time';
 // String get you_created_sandbox_community => 'You already created a sandbox community.';
 // String get anywhere =>"Anywhere";
- String get request_descrip_hint_text =>"Your Request and any #hashtags";
- String get invite_members_group_dots =>"...";
- String get view => "view";
- String get coming_soon => "Coming Soon";
- String get public => "Public";
- String get document_csv => "Document.CSV"; 
- String get select_time => "Select time";
- String get claimed_successfully => 'Claimed Successfully';
- String get no_result_found => 'No result found';
- String get try_text => "Try";
- String get seva_community_groups =>  'Seva Community Groups';
- String get projects_text => "Projects";
- String get select_all => "Select All";
- String get click_button_below_to_review => "Click button below to review";
- String get and_complete_task => "and complete the task";
- String get will_be_added_to_request => "will be added to the request.";
- String get  remove_from_bookmark    => "Remove from bookmarks";
- String get invitations => 'Invitations';
- String get attachment => "Attachment";
- String get zer0_one =>    "0/1";
- String get report_of => "Report of";
- String get waiting_acknowledgement => "Waiting acknowledgement";
- String get add_sponsor_image => 'Add Sponsor image';
- String get hint_text_number => "123456789";
-String get accept_modified_amount_finalized  => "By Accepting this amount will be finalized";
-String get please_enter_valid_amount =>"Please enter a valid amount";
-String get request_amount_cannot_be_greater => "Requested amount cannot be greater than offered amount!";
-String get name_not_updated =>" name not updated";
-String get timebank_not_updated =>  "Timebank name not updated";
-String get description_not_updated =>  "Description not yet updated";
-String get manage_permissions => "Manage Permissions";
-String get csv_file_sent_successfully_to => "CSV file sent successfully to";
-String get you_will_go_ahead_with_them_for_request    =>" you will go ahead with them for the request.";
-
-
-
-
+  String get request_descrip_hint_text => "Your Request and any #hashtags";
+  String get invite_members_group_dots => "...";
+  String get view => "view";
+  String get coming_soon => "Coming Soon";
+  String get public => "Public";
+  String get document_csv => "Document.CSV";
+  String get select_time => "Select time";
+  String get claimed_successfully => 'Claimed Successfully';
+  String get no_result_found => 'No result found';
+  String get try_text => "Try";
+  String get seva_community_groups => 'Seva Community Groups';
+  String get projects_text => "Projects";
+  String get select_all => "Select All";
+  String get click_button_below_to_review => "Click button below to review";
+  String get and_complete_task => "and complete the task";
+  String get will_be_added_to_request => "will be added to the request.";
+  String get remove_from_bookmark => "Remove from bookmarks";
+  String get invitations => 'Invitations';
+  String get attachment => "Attachment";
+  String get zer0_one => "0/1";
+  String get report_of => "Report of";
+  String get waiting_acknowledgement => "Waiting acknowledgement";
+  String get add_sponsor_image => 'Add Sponsor image';
+  String get hint_text_number => "123456789";
+  String get accept_modified_amount_finalized =>
+      "By Accepting this amount will be finalized";
+  String get please_enter_valid_amount => "Please enter a valid amount";
+  String get request_amount_cannot_be_greater =>
+      "Requested amount cannot be greater than offered amount!";
+  String get name_not_updated => " name not updated";
+  String get timebank_not_updated => "Timebank name not updated";
+  String get description_not_updated => "Description not yet updated";
+  String get manage_permissions => "Manage Permissions";
+  String get csv_file_sent_successfully_to => "CSV file sent successfully to";
+  String get you_will_go_ahead_with_them_for_request =>
+      " you will go ahead with them for the request.";
 
 // String get request_description_hint_text_borrow =>'Please describe what you require';
 // String get goods_request_data_hint_text =>"Ex: Local Food Bank has a shortage...";

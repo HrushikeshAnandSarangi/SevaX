@@ -6,9 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/labels.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -19,6 +17,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/to_do.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -75,17 +74,14 @@ class MyTasksListState extends State<MyTaskList> {
   final subjectBorrow = ReplaySubject<int>();
 
   RequestModel requestModelNew;
+  Stream<dynamic> myTasksStream;
 
-  Stream<List<RequestModel>> myTasksStream;
+  List<Widget> widgetList = [];
+
   @override
   void initState() {
     super.initState();
-    myTasksStream = FirestoreManager.getTaskStreamForUserWithEmail(
-      userEmail: widget.email,
-      userId: widget.sevaUserId,
-      context: context,
-    );
-
+    myTasksStream = ToDo.getToDoList(widget.email, widget.sevaUserId);
     subjectBorrow
         .transform(ThrottleStreamTransformer(
             (_) => TimerStream(true, const Duration(seconds: 1))))
@@ -97,7 +93,7 @@ class MyTasksListState extends State<MyTaskList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<RequestModel>>(
+    return StreamBuilder<dynamic>(
       stream: myTasksStream,
       builder: (streamContext, snapshot) {
         if (!snapshot.hasData) {
@@ -106,183 +102,34 @@ class MyTasksListState extends State<MyTaskList> {
             child: LoadingIndicator(),
           );
         }
-        List<RequestModel> requestModelList = snapshot.data;
-        if (requestModelList.length == 0) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 58.0),
+
+        widgetList = ToDo.classifyToDos(
+          context: context,
+          toDoSink: snapshot.data,
+          requestCallback: (requestModel) {
+            requestModelNew = requestModel;
+          },
+          feedbackCallback: (int value) {
+            subjectBorrow.add(value);
+          },
+        );
+
+        if (widgetList.length == 0)
+          return Center(
             child: Text(
-              S.of(context).no_pending_task,
-              textAlign: TextAlign.center,
+              'No To Do\'s',
             ),
           );
-        }
+
         return ListView.builder(
           physics: NeverScrollableScrollPhysics(),
-          itemCount: requestModelList.length,
+          itemCount: widgetList.length,
           itemBuilder: (listContext, index) {
-            RequestModel model = requestModelList[index];
-            requestModelNew = model;
-
-            if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                    model.accepted == false
-                //&& model.isSpeakerCompleted == false
-                ) {
-              return getOneToManyTaskWidget(
-                  model, SevaCore.of(context).loggedInUser.timezone, context);
-            } else if (model.requestType == RequestType.ONE_TO_MANY_REQUEST &&
-                model.accepted == true) {
-              return Container();
-            } else {
-              return getTaskWidget(
-                model,
-                SevaCore.of(context).loggedInUser.timezone,
-                context,
-              );
-            }
+            return widgetList[index];
           },
         );
       },
     );
-  }
-
-  Widget getTaskWidget(
-    RequestModel model,
-    String userTimezone,
-    BuildContext context,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          shadows: shadowList,
-        ),
-        child: InkWell(
-          onTap: () {
-            logger.e('TYPEE: ------>  ' + model.requestType.toString());
-            logger.e('FIRST CLICK 1');
-
-            if (model.requestType == RequestType.BORROW) {
-              subjectBorrow.add(0);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => BorrowRequestFeedBackView(
-              //       requestModel: model,
-              //     ),
-              //   ),
-              // );
-            } else {
-              logger.e('FIRST CLICK 2');
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TaskCardView(
-                    requestModel: model,
-                    userTimezone: userTimezone,
-                  ),
-                ),
-              );
-              // return TaskCardView(
-              //   requestModel: model,
-              //   userTimezone: userTimezone,
-              // );
-            }
-          },
-          child: ListTile(
-            title: Text(
-              model.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(model.fullName),
-                SizedBox(height: 4),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  //runAlignment: WrapAlignment.center,
-                  spacing: 8,
-                  children: <Widget>[
-                    Text(
-                      getTimeFormattedString(model.requestStart, userTimezone),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                      size: 14,
-                    ),
-                    Text(
-                      getTimeFormattedString(model.requestEnd, userTimezone),
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(model.photoUrl ?? defaultUserImageURL),
-            ),
-            onTap: () {
-              logger.e('TYPEE: ------>  ' + model.requestType.toString());
-
-              if (model.requestType == RequestType.BORROW) {
-                logger.e('SECOND CLICK 1');
-                subjectBorrow.add(0);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => BorrowRequestFeedBackView(
-                //       requestModel: model,
-                //     ),
-                //   ),
-                // );
-              } else {
-                logger.e('SECOND CLICK 2');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskCardView(
-                      requestModel: model,
-                      userTimezone: userTimezone,
-                    ),
-                  ),
-                );
-                // return TaskCardView(
-                //   requestModel: model,
-                //   userTimezone: userTimezone,
-                // );
-              }
-            },
-          ),
-        ),
-      ),
-    );
-    // return FutureBuilder<UserModel>(
-    //     future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasError) return Text(snapshot.error.toString());
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return taskShimmer;
-    //       }
-
-    //       UserModel user = snapshot.data;
-
-    //       if (user == null) {
-    //         return Container();
-    //       }
-
-    //       // DateFormat format = DateFormat(
-    //       //     'dd/MM/yy hh:mm a',
-    //       //     Locale(getLangTag())
-    //       //         .toLanguageTag());
-
-    //     });
   }
 
   void checkForReviewBorrowRequests() async {
@@ -384,7 +231,7 @@ class MyTasksListState extends State<MyTaskList> {
 
   void startTransaction() async {
     // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
-    logger.e('comes here 1');
+    // logger.e('comes here 1');
 
     //doing below since in RequestModel if != null nothing happens
     //so manually removing user from task

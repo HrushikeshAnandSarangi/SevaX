@@ -29,6 +29,7 @@ import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../../../flavor_config.dart';
+import '../../../../labels.dart';
 
 class TimebankHomePage extends StatefulWidget {
   final SelectedCommuntityGroup selectedCommuntityGroup;
@@ -239,10 +240,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 indicatorColor: Theme.of(context).primaryColor,
                 tabs: [
                   Tab(
-                    child: Text(S.of(context).pending),
+                    child: Text(L.of(context).to_do),
                   ),
                   Tab(
-                    child: Text(S.of(context).not_accepted),
+                    child: Text(S.of(context).pending),
                   ),
                   Tab(
                     child: Text(S.of(context).completed),
