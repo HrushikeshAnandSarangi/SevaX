@@ -30,7 +30,7 @@ class OfferFilters extends StatelessWidget {
         return Wrap(
           spacing: 8.0,
           children: [
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[0],
               label: S.of(context).time,
               isSelected: filter.timeOffer,
@@ -42,7 +42,7 @@ class OfferFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[1],
               label: S.of(context).cash,
               isSelected: filter.cashOffer,
@@ -54,7 +54,7 @@ class OfferFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[2],
               label: S.of(context).goods,
               isSelected: filter.goodsOffer,
@@ -66,7 +66,7 @@ class OfferFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[3],
               label: S.of(context).one_to_many.sentenceCase(),
               isSelected: filter.oneToManyOffer,
@@ -78,7 +78,7 @@ class OfferFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[4],
               label: 'Public',
               isSelected: filter.publicOffer,
@@ -90,7 +90,7 @@ class OfferFilters extends StatelessWidget {
                 );
               },
             ),
-            CustomChipWithTap(
+            CustomChipExploreFilter(
               isHidden: hideFilters[5],
               label: S.of(context).virtual,
               isSelected: filter.virtualOffer,
