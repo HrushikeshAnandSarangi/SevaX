@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 
 class Catalyst {
   static recordAccessTime({
     String communityId,
   }) {
-    Firestore.instance
-        .collection("communities")
-        .document(communityId)
+    CollectionRef.communities
+        .doc(communityId)
         .collection("activity")
-        .document(communityId + "*activity")
+        .doc(communityId + "*activity")
         .get()
         .then((value) {
       if (value.exists) {
@@ -19,12 +19,11 @@ class Catalyst {
           var now = DateTime.now();
 
           if (now.difference(lastAccessed).inMinutes > 10) {
-            Firestore.instance
-                .collection("communities")
-                .document(communityId)
+            CollectionRef.communities
+                .doc(communityId)
                 .collection("activity")
-                .document(communityId + "*activity")
-                .updateData({
+                .doc(communityId + "*activity")
+                .update({
               'lastFetched': DateTime.now().millisecondsSinceEpoch,
             });
           }
@@ -33,12 +32,11 @@ class Catalyst {
         }
       } else {
         logger.d("No Document found");
-        Firestore.instance
-            .collection("communities")
-            .document(communityId)
+        CollectionRef.communities
+            .doc(communityId)
             .collection("activity")
-            .document(communityId + "*activity")
-            .setData({
+            .doc(communityId + "*activity")
+            .set({
           'lastFetched': DateTime.now().millisecondsSinceEpoch,
         });
       }

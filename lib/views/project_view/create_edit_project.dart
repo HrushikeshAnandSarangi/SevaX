@@ -867,7 +867,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                             //CHECK TO SEE IF ADMIN WANTS TO CLONE ALL THE REQUESTS INSIDE OR JUST CREATE EMPTY
 
-
                             await DialogsManager.showDilaogWithTitle(
                               negativeTitle: L.of(context).do_not_copy,
                               positiveTitle: L.of(context).proceed_with_copying,

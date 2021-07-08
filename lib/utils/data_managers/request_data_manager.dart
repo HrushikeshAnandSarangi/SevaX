@@ -642,8 +642,7 @@ Future<List<ProjectModel>> getAllPublicProjects({String timebankid}) async {
 Stream<List<ProjectModel>> getRecurringEvents({
   @required String parentEventId,
 }) async* {
-  var query = Firestore.instance
-      .collection('projects')
+  var query = CollectionRef.projects
       .where('parentEventId', isEqualTo: parentEventId)
       .orderBy("start_time", descending: false);
 
@@ -653,11 +652,11 @@ Stream<List<ProjectModel>> getRecurringEvents({
     StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
       handleData: (snapshot, projectSink) {
         List<ProjectModel> projectsList = [];
-        snapshot.documents.forEach(
+        snapshot.docs.forEach(
           (documentSnapshot) {
             // var a = Map<String, dynamic>.from(documentSnapshot.data);
-            ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
+            ProjectModel model = ProjectModel.fromMap(documentSnapshot.data());
+            model.id = documentSnapshot.id;
             projectsList.add(model);
 
             // DateTime endDate =

@@ -235,10 +235,9 @@ class ProjectMessagingRoomHelper {
         contextId: projectModel.id,
       );
 
-    return await Firestore.instance
-        .collection('chatsnew')
-        .document(chatModel.id)
-        .setData(chatModel.toMap())
+    return await CollectionRef.chats
+        .doc(chatModel.id)
+        .set(chatModel.toMap())
         .then((value) => chatModel.id);
   }
 

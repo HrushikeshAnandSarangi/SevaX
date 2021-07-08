@@ -32,7 +32,6 @@ class L {
   String get completed_one_to_many_request_speaker_subtitle =>
       "This one to many offer has completed.";
 
-
 //ToDO List
 
   String get to_do_one_to_many_offer_attende_title =>
@@ -54,13 +53,6 @@ class L {
       "This one to many offer has completed.";
   String get to_do_one_to_many_request_speaker_subtitle =>
       "This one to many offer has completed.";
-
-
-
-
-
-
-
 
   //RECURRING EVENTS
   String get do_not_copy => "Do not copy";
