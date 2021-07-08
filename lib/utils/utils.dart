@@ -134,7 +134,8 @@ String getReviewMessage(
     String reviewMessage,
     bool isForCreator,
     bool isOfferReview = false,
-    BuildContext context}) {
+    BuildContext context,
+    bool isFromOfferRequest}) {
   String offerReview = '${S.of(context).offerReview} $requestTitle';
   String body = isForCreator
       ? S.of(context).request_review_body_creator

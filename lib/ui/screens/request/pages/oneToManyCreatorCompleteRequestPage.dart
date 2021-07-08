@@ -13,10 +13,19 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/custom_buttons.dart';
+import 'package:sevaexchange/utils/one_to_many_request_feedback_manager.dart';
+
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class OneToManyCreatorCompleteRequestPage extends StatefulWidget {
   final RequestModel requestModel;
@@ -549,6 +558,12 @@ class OneToManyCreatorCompleteRequestPageState
                                               requestModel: requestModel,
                                               fromNotification: false,
                                             );
+
+                                            //Send Feedback notitifications to Attendees
+                                            await sendFeedbackNotificationsToAttendees(
+                                                attendeesList: attendeesList,
+                                                requestModel: requestModel,
+                                                context: context);
 
                                             Navigator.pop(viewContext);
                                             Navigator.of(viewContext).pop();

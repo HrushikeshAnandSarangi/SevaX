@@ -19,6 +19,7 @@ enum FeedbackType {
   FOR_ONE_TO_MANY_OFFER,
   FOR_BORROW_REQUEST_LENDER,
   FOR_BORROW_REQUEST_BORROWER,
+  FOR_ONE_TO_MANY_REQUEST_ATTENDEE,
 }
 
 class ReviewFeedback extends StatefulWidget {
@@ -136,6 +137,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case FeedbackType.FOR_BORROW_REQUEST_BORROWER:
         return getFeedbackQuestionsForBorrower(languageCode);
+
+      case FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE:
+        return getFeedbackQuestionForOneToManyRequestAttendee(languageCode);
 
       default:
         throw "FEEDBACK TYPE NOT DEFINED";
@@ -295,10 +299,42 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     }
   }
 
+  List<Map<String, Object>> getFeedbackQuestionForOneToManyRequestAttendee(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+      case 'af':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF;
+      case 'sn':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SN;
+
+      case 'sw':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_SW;
+
+      case 'fr':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR;
+
+      case 'pt':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_PT;
+
+      case 'es':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
+
+      case 'zh':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+    }
+  }
+
   Widget getFeebackQuestions() {
     Widget widgettype;
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ||
-        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER) {
+        widget.feedbackType == FeedbackType.FOR_BORROW_REQUEST_BORROWER ||
+        widget.feedbackType == FeedbackType.FOR_ONE_TO_MANY_REQUEST_ATTENDEE) {
       widgettype = StarRating();
     } else {
       widgettype = getQuestionsWidget(widget, questionIndex);
