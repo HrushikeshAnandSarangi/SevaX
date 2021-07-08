@@ -422,6 +422,8 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
       .then((DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> dataMap = documentSnapshot.data();
     communityModel = CommunityModel(dataMap);
+    logger.d(
+        "==================|||||||||========================================");
   });
   return communityModel;
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -20,25 +19,27 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
-import 'package:sevaexchange/views/project_view/recurring_event_list.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/custom_buttons.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/empty_widget.dart';
 
-import '../requests/project_request.dart';
-
-class TimeBankProjectsView extends StatefulWidget {
+class RecurringEventsList extends StatefulWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+  final String parentEventId;
 
-  TimeBankProjectsView({this.timebankId, this.timebankModel});
+  RecurringEventsList({
+    this.timebankId,
+    this.timebankModel,
+    @required this.parentEventId,
+  });
 
   @override
-  _TimeBankProjectsViewState createState() => _TimeBankProjectsViewState();
+  EventListState createState() => EventListState();
 }
 
-class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+class EventListState extends State<RecurringEventsList> {
   bool isAdminOrOwner = false;
 
   @override
@@ -48,100 +49,28 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   Widget build(BuildContext context) {
-    isAdminOrOwner = widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-        widget.timebankModel.organizers
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+    // isAdminOrOwner = widget.timebankModel.admins
+    //         .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+    //     widget.timebankModel.organizers
+    //         .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Event List'),
+      ),
       body: Column(
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 110.0,
-                  height: 50.0,
-                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(
-                          right: 0,
-                        ),
-                        child: CustomTextButton(
-                          onPressed: () {},
-                          child: Text(
-                            S.of(context).projects,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        // will be positioned in the top right of the container
-                        top: 0,
-                        right: -20,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 4, right: 4),
-                          child: infoButton(
-                            context: context,
-                            key: GlobalKey(),
-                            type: InfoType.PROJECTS,
-                            // text: infoDetails['projectsInfo'] ?? description,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Visibility(
-                  visible: isAdminOrOwner,
-                  child: TransactionLimitCheck(
-                    comingFrom: ComingFrom.Projects,
-                    timebankId: widget.timebankId,
-                    isSoftDeleteRequested:
-                        widget.timebankModel.requestedSoftDelete,
-                    child: ConfigurationCheck(
-                      actionType: 'create_events',
-                      role: memberType(widget.timebankModel,
-                          SevaCore.of(context).loggedInUser.sevaUserID),
-                      child: GestureDetector(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 0),
-                          child: Icon(
-                            Icons.add_circle,
-                            color: FlavorConfig.values.theme.primaryColor,
-                          ),
-                        ),
-                        onTap: () {
-                          navigateToCreateProject();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Spacer(),
-              ],
-            ),
-          ),
           Expanded(
             child: StreamBuilder<List<ProjectModel>>(
-              stream: FirestoreManager.getAllProjectListStream(
-                  timebankid: widget.timebankId,
-                  isAdminOrOwner: isAdminOrOwner,
-                  context: context),
+              stream: FirestoreManager.getRecurringEvents(
+                parentEventId: widget.parentEventId,
+              ),
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+                logger.d("===============|||");
                 if (projectListSnapshot.hasError) {
-                  log("===================== ===== > ${projectListSnapshot.error}");
-                  return Text(S.of(context).general_stream_error);
+                  return Text(S.of(context).general_stream_error +
+                      " " +
+                      projectListSnapshot.error.toString());
                 }
                 switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -167,6 +96,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       shrinkWrap: true,
                       itemCount: projectModelList.length,
                       itemBuilder: (BuildContext context, int index) {
+                        //   return Text('Lo');
                         ProjectModel project = projectModelList[index];
                         int totalTask = project.completedRequests != null &&
                                 project.pendingRequests != null
@@ -186,37 +116,21 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           tasks: totalTask,
                           pendingTask: project.pendingRequests?.length,
                           onTap: () {
-                            if (project.isRecurring)
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: RecurringEventsList(
-                                      timebankId: widget.timebankId,
-                                      timebankModel: widget.timebankModel,
-                                      parentEventId: project.parentEventId,
-                                    ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_context) => BlocProvider(
+                                  bloc: BlocProvider.of<HomeDashBoardBloc>(
+                                      context),
+                                  child: ProjectRequests(
+                                    ComingFrom.Projects,
+                                    timebankId: widget.timebankId,
+                                    projectModel: project,
+                                    timebankModel: widget.timebankModel,
                                   ),
                                 ),
-                              );
-                            else
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_context) => BlocProvider(
-                                    bloc: BlocProvider.of<HomeDashBoardBloc>(
-                                        context),
-                                    child: ProjectRequests(
-                                      ComingFrom.Projects,
-                                      timebankId: widget.timebankId,
-                                      projectModel: project,
-                                      timebankModel: widget.timebankModel,
-                                    ),
-                                  ),
-                                ),
-                              );
+                              ),
+                            );
                           },
                         );
                       },
@@ -290,7 +204,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
             ),
           ),
           actions: <Widget>[
-            CustomTextButton(
+            FlatButton(
               child: Text(
                 S.of(mContext).ok,
                 style: TextStyle(

@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/images_slider.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -55,6 +56,23 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Container(
+        color: Colors.teal,
+        child: ImagesPreview(
+          urls: [
+            "https://picsum.photos/200",
+            "https://picsum.photos/200",
+            "https://picsum.photos/200",
+            "https://picsum.photos/200",
+            "https://picsum.photos/200",
+            "https://picsum.photos/200",
+          ],
+        ),
+      ),
+    );
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -858,5 +876,69 @@ class OfferDetails extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class ImagesPreview extends StatefulWidget {
+  final List<String> urls;
+
+  ImagesPreview({@required this.urls});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ImagesPreviewState();
+  }
+}
+
+class ImagesPreviewState extends State<ImagesPreview> {
+  PageController pageController = new PageController();
+  int pageIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    log("_" + pageIndex.toString());
+    return Column(
+      children: [
+        AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Container(
+            color: Colors.red,
+            child: PageView.builder(
+              itemCount: widget.urls.length,
+              itemBuilder: (_, index) {
+                return Image.network(
+                  widget.urls[index],
+                  fit: BoxFit.fitWidth,
+                );
+              },
+              controller: pageController,
+              onPageChanged: (pageIndex) {
+                this.pageIndex = pageIndex;
+                log(this.pageIndex.toString());
+              },
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.play_arrow_sharp),
+              onPressed: () => pageController.animateToPage(
+                pageIndex > 0 ? --pageIndex : pageIndex,
+                curve: Curves.linearToEaseOut,
+                duration: Duration(seconds: 1),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_drop_down_circle_rounded),
+              onPressed: () => pageController.animateToPage(
+                pageIndex < (widget.urls.length - 1) ? ++pageIndex : pageIndex,
+                curve: Curves.easeIn,
+                duration: Duration(seconds: 1),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

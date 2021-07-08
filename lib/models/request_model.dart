@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/selectedSpeakerTimeDetails.dart';
 import 'package:sevaexchange/utils/helpers/location_helper.dart';
+import 'package:sevaexchange/utils/utils.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -1181,6 +1182,35 @@ class RequestModel extends DataModel {
   @override
   String toString() {
     return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, requestCreatorName: $requestCreatorName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors,oneToManyRequestAttenders: $oneToManyRequestAttenders, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions,  categories: $categories, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers,recommendedMemberIdsForRequest: $recommendedMemberIdsForRequest, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified, isSpeakerCompleted: $isSpeakerCompleted}';
+  }
+
+  RequestModel get flush {
+    RequestModel requestModel = this;
+    requestModel.id = Utils.getUuid();
+    requestModel.acceptors = [];
+    requestModel.allowedCalenderUsers = [];
+    requestModel.approvedUsers = [];
+    requestModel.invitedUsers = [];
+    requestModel.transactions = [];
+    requestModel.participantDetails = {};
+    requestModel.postTimestamp = DateTime.now().millisecondsSinceEpoch;
+    switch (this.requestType) {
+      case RequestType.TIME:
+        break;
+      case RequestType.CASH:
+        requestModel.cashModel.donors = [];
+        break;
+      case RequestType.GOODS:
+        requestModel.goodsDonationDetails.donors = [];
+        break;
+      case RequestType.BORROW:
+        break;
+      case RequestType.ONE_TO_MANY_REQUEST:
+        requestModel.oneToManyRequestAttenders = [];
+        break;
+    }
+
+    return requestModel;
   }
 }
 
