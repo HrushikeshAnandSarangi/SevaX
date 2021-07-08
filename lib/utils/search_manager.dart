@@ -302,6 +302,28 @@ class SearchManager {
 //    }
   }
 
+  static Future<bool> searchRequestCategoriesForDuplicate(
+      {@required queryString}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/request_categories/_doc/_search?size=400';
+    dynamic body = json.encode({
+      "query": {
+        "match": {"title_en": queryString.trim()}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    bool categoryfound = false;
+    for (var map in hitList) {
+      if (map['_source']['title_en'].toLowerCase() ==
+          queryString.toLowerCase()) {
+        categoryfound = true;
+        break;
+      }
+    }
+    return categoryfound;
+  }
+
   static Future<bool> searchGroupForDuplicate(
       {@required queryString, @required communityId}) async {
     String url =

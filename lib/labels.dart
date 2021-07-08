@@ -236,6 +236,45 @@ class L {
 // //  String get continue_to_signin => "Continue to Sign in"; //done in web
 // //  String get request_to_join => "Request to join"; //done in web
 
+//----- BELOW ARE FOR ADD NEW REQUEST CATEGORY FEATURE ---------------------------->
+  String get my_request_categories => "My Request Subcategories";
+  String get add_new_request_category => "Add new request subcategory";
+  String get edit_request_category => "Edit subcategory";
+  String get add_new_subcategory => "Add new subcategory";
+  String get add_new_subcategory_hint => "Subcategory title";
+  String get select_photo => "Select Photo";
+  String get photo_selected => "Photo Selected";
+  String get please_enter_title => "Please enter title";
+  String get request_category_exists => "Request subcategory exists";
+  String get no_subcategories_created => "No Request Subcategories Created";
+//----- END OF ADD NEW REQUEST CATEGORY FEATURE ---------------------------->
+
+  String get images_help_convey_theme_of_request =>
+      'Images helps to convey the theme of your request';
+
+  String get max_image_size => 'Maximum size: 5MB';
+
+  String get exp_date => "Exp. Date";
+  String get camera_not_available => "Camera not available";
+
+  String get loading_camera => "Loading Camera...";
+
+  String get internet_connection_lost => 'Internet connection lost';
+
+  String get update_available => 'Update Available';
+  String get update_app => "Update App";
+
+  String get update_msg =>
+      "There is an update available with the app, Please tap on update to use the latest version of the app";
+
+  String get member_permission => "Member Permission";
+
+  String get copy_and_share_code =>
+      'Code Generated: Copy the code and share to your friends';
+
+  String get copy_community_code => "Copy Community Code";
+
+  String get copy_code => "Copy Code";
   // String get images_help_convey_theme_of_request =>
   //     'Images helps to convey the theme of your request';
 

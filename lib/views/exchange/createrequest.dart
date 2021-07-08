@@ -2248,6 +2248,14 @@ class RequestCreateFormState extends State<RequestCreateForm>
           fullscreenDialog: true,
           builder: (context) => Category(
                 selectedSubCategoriesids: selectedCategoryIds,
+                onNewCategoryCreated: () async {
+                  var categoryNew = await Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return Category(
+                        selectedSubCategoriesids: selectedCategoryIds);
+                  }));
+                  updateInformation(categoryNew);
+                },
               )),
     );
     updateInformation(category);

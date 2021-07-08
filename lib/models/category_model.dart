@@ -33,6 +33,8 @@ class CategoryModel {
     this.type,
     this.typeId,
     this.logo,
+    this.creatorId,
+    this.creatorEmail,
   });
 
   String categoryId;
@@ -40,6 +42,8 @@ class CategoryModel {
   CategoryType type;
   String typeId;
   String logo;
+  String creatorId;
+  String creatorEmail;
 
   factory CategoryModel.fromMap(Map<String, dynamic> json) => CategoryModel(
         categoryId: json["categoryId"] == null ? null : json["categoryId"],
@@ -51,7 +55,24 @@ class CategoryModel {
                 : CategoryType.SUB_CATEGORY,
         typeId: json["typeId"] == null ? null : json["typeId"],
         logo: json.containsKey('logo') ? json['logo'] : null,
+        creatorId: json.containsKey('creatorId') ? json['creatorId'] : null,
+        creatorEmail:
+            json.containsKey('creatorEmail') ? json['creatorEmail'] : null,
       );
+
+  Map<String, dynamic> toMap() => {
+        "categoryId": categoryId == null ? null : categoryId,
+        "title_en": title_en == null ? null : title_en,
+        "type": type == null
+            ? null
+            : type == CategoryType.CATEGORY
+                ? 'category'
+                : 'subCategory',
+        "typeId": typeId == null ? null : typeId,
+        "logo": logo == null ? null : logo,
+        "creatorId": creatorId == null ? null : creatorId,
+        "creatorEmail": creatorEmail == null ? null : creatorEmail,
+      };
 }
 
 enum CategoryType { CATEGORY, SUB_CATEGORY }
