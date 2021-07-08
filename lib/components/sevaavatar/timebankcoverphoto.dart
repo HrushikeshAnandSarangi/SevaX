@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
@@ -35,19 +37,19 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
   Future<String> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('timebanklogos')
-        .child(
-            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
-    StorageUploadTask uploadTask = ref.putFile(
+    Reference ref = FirebaseStorage.instance.ref().child('timebanklogos').child(
+        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+    UploadTask uploadTask = ref.putFile(
       _image,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'Timebank Logo'},
+        customMetadata: <String, String>{'activity': 'Cover Photo'},
       ),
     );
-    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String imageURL = '';
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
     await profanityCheck(imageURL: imageURL);
 
     return imageURL;
@@ -71,14 +73,13 @@ class _TimebankCoverPhotoState extends State<TimebankCoverPhoto>
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-              setState(() {
-                globals.timebankCoverURL = null;
-              });
-            });
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {
+                setState(() {
+                  globals.timebankAvatarURL = null;
+                });
+              }
+            }).catchError((e) => log(e));
           } else {}
         });
       } else {

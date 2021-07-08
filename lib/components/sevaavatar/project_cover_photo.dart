@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/log_printer/log_printer.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/labels.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,19 +38,22 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
   Future<String> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
+    Reference ref = FirebaseStorage.instance
         .ref()
         .child('projects_avtaar')
         .child(
             SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       _image,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'Projects Logo'},
+        customMetadata: <String, String>{'activity': 'Cover Photo'},
       ),
     );
-    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String imageURL = '';
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
 
     await profanityCheck(imageURL: imageURL);
 
@@ -71,14 +76,13 @@ class _ProjectCoverPhotoState extends State<ProjectCoverPhoto>
                 context: context, content: profanityStatusModel.category)
             .then((status) {
           if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageURL)
-                .then((reference) {
-              reference.delete();
-              setState(() {
-                globals.projectsCoverURL = null;
-              });
-            }).catchError((e) => logger.e(e));
+            deleteFireBaseImage(imageUrl: imageURL).then((value) {
+              if (value) {
+                setState(() {
+                  globals.projectsCoverURL = null;
+                });
+              }
+            }).catchError((e) => log(e));
           }
         });
       } else {

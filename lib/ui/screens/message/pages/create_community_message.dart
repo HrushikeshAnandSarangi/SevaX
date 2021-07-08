@@ -368,7 +368,6 @@ class _CreateCommunityMessageState extends State<CreateCommunityMessage> {
             deleteFireBaseImage(imageUrl: imageUrl).then((value) {
               if (value) {}
             }).catchError((e) => log(e));
-            ;
           }
         });
       } else {

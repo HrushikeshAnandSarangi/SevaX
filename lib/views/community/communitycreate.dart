@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -1228,9 +1229,9 @@ class CreateEditCommunityViewFormState
                                       S.of(context).updating_timebank,
                                     );
 
-                                    logger.e('UPDATE CHECK 3: ' +
+                                    log('UPDATE CHECK 3: ' +
                                         globals.timebankAvatarURL.toString());
-                                    logger.e('UPDATE CHECK 4: ' +
+                                    log('UPDATE CHECK 4: ' +
                                         globals.timebankCoverURL.toString());
 
                                     if (globals.timebankAvatarURL != null) {

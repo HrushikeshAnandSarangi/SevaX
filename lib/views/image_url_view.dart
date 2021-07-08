@@ -257,8 +257,10 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     File croppedFile;
     await ImageCropper.cropImage(
       sourcePath: path,
-      ratioX: widget.isCover ? 2.0 : 1.0,
-      ratioY: 1.0,
+      aspectRatio: CropAspectRatio(
+        ratioX: 1.0,
+        ratioY: 1.0,
+      ),
       maxWidth: widget.isCover ? 620 : 200,
       maxHeight: widget.isCover ? 150 : 200,
     ).then((value) async {
@@ -325,22 +327,23 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Future<String> _uploadImage(File _image, BuildContext context) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('cover_photo')
-        .child(user.email +
+    User user = await _firebaseAuth.currentUser;
+    Reference ref = FirebaseStorage.instance.ref().child('cover_photo').child(
+        user.email +
             '_' +
             timestampString +
             '.jpg'); //need to pass timebank name here for reference?
-    StorageUploadTask uploadTask = ref.putFile(
+    UploadTask uploadTask = ref.putFile(
       _image,
-      StorageMetadata(
+      SettableMetadata(
         contentLanguage: 'en',
         customMetadata: <String, String>{'activity': 'Cover Photo'},
       ),
     );
-    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String imageURL = '';
+    uploadTask.whenComplete(() async {
+      imageURL = await ref.getDownloadURL();
+    });
     // await profanityCheck(imageURL: imageURL);
     //this function is called on this page and above it has gone through profanity check
 
