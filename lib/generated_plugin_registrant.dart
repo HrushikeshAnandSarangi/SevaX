@@ -14,8 +14,7 @@ import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:firebase_storage_web/firebase_storage_web.dart';
 import 'package:flutter_keyboard_visibility_web/flutter_keyboard_visibility_web.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
-import 'package:shared_preferences_web/shared_preferences_web.dart';
-import 'package:url_launcher_web/url_launcher_web.dart';
+import 'package:location_web/location_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
 
@@ -33,6 +32,7 @@ void registerPlugins(Registrar registrar) {
   FirebaseStorageWeb.registerWith(registrar);
   FlutterKeyboardVisibilityPlugin.registerWith(registrar);
   GoogleSignInPlugin.registerWith(registrar);
+  LocationWebPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);
   registrar.registerMessageHandler();

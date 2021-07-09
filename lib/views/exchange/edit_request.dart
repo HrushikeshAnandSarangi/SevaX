@@ -1838,13 +1838,17 @@ class RequestEditFormState extends State<RequestEditForm> {
   }
 
 // Choose Category and Sub Category function
+
   // get data from Category class
-  List categories;
-  List<CategoryModel> modelList = [];
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
   Map<String, dynamic> _selectedSkillsMap = {};
 
-  void updateInformation(List category) {
-    setState(() => categories = category);
+  void updateInformation(List<CategoryModel> category) {
+    if (category != null && category.length > 0) {
+      selectedCategoryModels.addAll(category);
+    }
+    setState(() {});
   }
 
   Future<void> getCategoriesFromApi(String query) async {
@@ -1889,7 +1893,11 @@ class RequestEditFormState extends State<RequestEditForm> {
       modelList.add(categoryModel);
     }
 
-    updateInformation([title, modelList]);
+    if (modelList != null && modelList.length > 0) {
+      categoryMode = S.of(context).suggested_categories;
+
+      updateInformation(modelList);
+    }
   }
 
   // Navigat to Category class and geting data from the class
@@ -1900,26 +1908,26 @@ class RequestEditFormState extends State<RequestEditForm> {
           fullscreenDialog: true,
           builder: (context) => Category(
                 selectedSubCategoriesids: selectedCategoryIds,
-                onNewCategoryCreated: () async {
-                  var categoryNew = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) => Category(
-                              selectedSubCategoriesids: selectedCategoryIds)));
-                  updateInformation(categoryNew);
-                },
               )),
     );
 
-    updateInformation(category);
+    if (category != null) {
+      categoryMode = category[0];
+      updateInformation(category[1]);
+    }
     log(' poped selectedCategory  => ${category[0]} \n poped selectedSubCategories => ${category[1]} ');
   }
 
   //building list of selectedSubCategories
-  List<Widget> _buildselectedSubCategories(List categories) {
+  List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
-    subCategories = categories[1];
+    subCategories = selectedCategoryModels;
+    log('lll l ${subCategories.length}');
+    subCategories.forEach((item) {});
+    final ids = subCategories.map((e) => e.typeId).toSet();
+    subCategories.retainWhere((x) => ids.remove(x.typeId));
+    log('lll after ${subCategories.length}');
+
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
     subCategories.forEach((item) {
@@ -1972,60 +1980,8 @@ class RequestEditFormState extends State<RequestEditForm> {
       children: <Widget>[
         RequestDescriptionData(S.of(context).request_description_hint),
         SizedBox(height: 20),
-        InkWell(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  categories == null
-                      ? Text(
-                          S.of(context).choose_category,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Europa',
-                            color: Colors.black,
-                          ),
-                        )
-                      : Text(
-                          "${categories[0]}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Europa',
-                            color: Colors.black,
-                          ),
-                        ),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    size: 16,
-                  ),
-                  // Container(
-                  //   height: 25,
-                  //   width: 25,
-                  //   decoration: BoxDecoration(
-                  //       color: Theme.of(context).primaryColor,
-                  //       borderRadius: BorderRadius.circular(100)),
-                  //   child: Icon(
-                  //     Icons.arrow_drop_down_outlined,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                ],
-              ),
-              SizedBox(height: 20),
-              categories != null
-                  ? Wrap(
-                      alignment: WrapAlignment.start,
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      children: _buildselectedSubCategories(categories),
-                    )
-                  : Container(),
-            ],
-          ),
-          onTap: () => moveToCategory(),
-        ),
+        categoryWidget(),
+
         SizedBox(height: 20),
         isFromRequest(
           projectId: widget.projectId,
@@ -2204,6 +2160,52 @@ class RequestEditFormState extends State<RequestEditForm> {
     );
   }
 
+  Widget categoryWidget() {
+    return InkWell(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              categoryMode == null
+                  ? Text(
+                      S.of(context).choose_category,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    )
+                  : Text(
+                      "${categoryMode}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+              Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 16,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          selectedCategoryModels != null && selectedCategoryModels.length > 0
+              ? Wrap(
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: _buildselectedSubCategories(),
+                )
+              : Container(),
+        ],
+      ),
+      onTap: () => moveToCategory(),
+    );
+  }
+
   Widget BorrowRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2212,60 +2214,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               S.of(context).request_description_hint_text_borrow),
           SizedBox(height: 20), //Same hint for Room and Tools ?
           // Choose Category and Sub Category
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2401,60 +2350,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             selectedList: widget.requestModel.imageUrls,
           ),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -2477,60 +2373,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           SizedBox(height: 20),
           RequestDescriptionData(S.of(context).request_description_hint_goods),
           SizedBox(height: 20),
-          InkWell(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    categories == null
-                        ? Text(
-                            S.of(context).choose_category,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            "${categories[0]}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            ),
-                          ),
-                    Spacer(),
-                    Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      size: 16,
-                    ),
-                    // Container(
-                    //   height: 25,
-                    //   width: 25,
-                    //   decoration: BoxDecoration(
-                    //       color: Theme.of(context).primaryColor,
-                    //       borderRadius: BorderRadius.circular(100)),
-                    //   child: Icon(
-                    //     Icons.arrow_drop_down_outlined,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                categories != null
-                    ? Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
-                      )
-                    : Container(),
-              ],
-            ),
-            onTap: () => moveToCategory(),
-          ),
+          categoryWidget(),
           SizedBox(height: 20),
           AddImagesForRequest(
             onLinksCreated: (List<String> imageUrls) {

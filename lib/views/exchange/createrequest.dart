@@ -2187,11 +2187,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
 
 // Choose Category and Sub Category function
   // get data from Category class
-  List categories;
+  List<CategoryModel> selectedCategoryModels = [];
+  String categoryMode;
   Map<String, dynamic> _selectedSkillsMap = {};
 
-  void updateInformation(List category) {
-    setState(() => categories = category);
+  void updateInformation(List<CategoryModel> category) {
+    if (category != null && category.length > 0) {
+      selectedCategoryModels.addAll(category);
+    }
+    setState(() {});
   }
 
   Future<void> getCategoriesFromApi(String query) async {
@@ -2236,8 +2240,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
       );
       modelList.add(categoryModel);
     }
+    if (modelList != null && modelList.length > 0) {
+      categoryMode = S.of(context).suggested_categories;
 
-    updateInformation([S.of(context).suggested_categories, modelList]);
+      updateInformation(modelList);
+    }
   }
 
   // Navigat to Category class and geting data from the class
@@ -2248,23 +2255,32 @@ class RequestCreateFormState extends State<RequestCreateForm>
           fullscreenDialog: true,
           builder: (context) => Category(
                 selectedSubCategoriesids: selectedCategoryIds,
-                onNewCategoryCreated: () async {
-                  var categoryNew = await Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) {
-                    return Category(
-                        selectedSubCategoriesids: selectedCategoryIds);
-                  }));
-                  updateInformation(categoryNew);
-                },
+                // onNewCategoryCreated: () async {
+                //   var categoryNew = await Navigator.of(context)
+                //       .push(MaterialPageRoute(builder: (context) {
+                //     return Category(
+                //         selectedSubCategoriesids: selectedCategoryIds);
+                //   }));
+                //   updateInformation(categoryNew);
+                // },
               )),
     );
-    updateInformation(category);
+    if (category != null) {
+      categoryMode = category[0];
+      updateInformation(category[1]);
+    }
   }
 
   //building list of selectedSubCategories
-  List<Widget> _buildselectedSubCategories(List categories) {
+  List<Widget> _buildselectedSubCategories() {
     List<CategoryModel> subCategories = [];
-    subCategories = categories[1];
+    subCategories = selectedCategoryModels;
+    log('lll l ${subCategories.length}');
+    subCategories.forEach((item) {});
+    final ids = subCategories.map((e) => e.typeId).toSet();
+    subCategories.retainWhere((x) => ids.remove(x.typeId));
+    log('lll after ${subCategories.length}');
+
     List<Widget> selectedSubCategories = [];
     selectedCategoryIds.clear();
     subCategories.forEach((item) {
@@ -2334,7 +2350,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
               children: [
                 Row(
                   children: [
-                    categories == null
+                    categoryMode == null
                         ? Text(
                             S.of(context).choose_category,
                             style: TextStyle(
@@ -2345,7 +2361,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             ),
                           )
                         : Text(
-                            "${categories[0]}",
+                            "${categoryMode}",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -2372,11 +2388,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   ],
                 ),
                 SizedBox(height: 20),
-                categories != null
+                selectedCategoryModels != null &&
+                        selectedCategoryModels.length > 0
                     ? Wrap(
                         alignment: WrapAlignment.start,
                         crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _buildselectedSubCategories(categories),
+                        children: _buildselectedSubCategories(),
                       )
                     : Container(),
               ],
@@ -2418,7 +2435,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         children: [
           Row(
             children: [
-              categories == null
+              categoryMode == null
                   ? Text(
                       S.of(context).choose_category,
                       style: TextStyle(
@@ -2429,7 +2446,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                       ),
                     )
                   : Text(
-                      "${categories[0]}",
+                      "${categoryMode}",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -2456,10 +2473,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
             ],
           ),
           SizedBox(height: 20),
-          categories != null
+          selectedCategoryModels != null && selectedCategoryModels.length > 0
               ? Wrap(
                   alignment: WrapAlignment.start,
-                  children: _buildselectedSubCategories(categories),
+                  children: _buildselectedSubCategories(),
                 )
               : Container(),
         ],
