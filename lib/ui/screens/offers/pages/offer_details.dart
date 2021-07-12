@@ -56,22 +56,22 @@ class OfferDetails extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Container(
-        color: Colors.teal,
-        child: ImagesPreview(
-          urls: [
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-            "https://picsum.photos/200",
-          ],
-        ),
-      ),
-    );
+    // return Align(
+    //   alignment: Alignment.topLeft,
+    //   child: Container(
+    //     color: Colors.teal,
+    //     child: ImagesPreview(
+    //       urls: [
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //         "https://picsum.photos/200",
+    //       ],
+    //     ),
+    //   ),
+    // );
 
     return Column(
       children: <Widget>[
