@@ -123,7 +123,8 @@ class CollectionRef {
   static Query notificationGroup =
       _firestore.collectionGroup(_collectionNames.notifications);
 
-  static Query reviews = _firestore.collectionGroup(_collectionNames.reviews);
+  static CollectionReference reviews =
+      _firestore.collection(_collectionNames.reviews);
 
   static CollectionReference entryExitLogs(String path) => _firestore
       .collection(_collectionNames.timebank)
