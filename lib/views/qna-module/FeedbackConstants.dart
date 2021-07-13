@@ -1353,4 +1353,64 @@ class FeedbackConstants {
       ]
     },
   ];
+
+  //FEEDBACK QUESTION FOR ONE TO MANY
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN = const [
+    {
+      FEEDBACK_TITLE:
+          "How likely are you to recommend this webinar to a friend?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Your overall rating of the webinar.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Your rating on the content of the class.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Your rating on the length of the class.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "Your overall rating of the speaker.",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "How would you rate the speaker's knowledge of the subject?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+  ];
 }

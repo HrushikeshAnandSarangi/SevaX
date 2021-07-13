@@ -304,7 +304,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   ) {
     switch (languageCode) {
       case 'en':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+        return FeedbackConstants
+            .FEEDBACK_QUESTION_FOR_ONE_TO_MANY_REQUEST_ATTENDEE_EN;
       case 'af':
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_AF;
       case 'sn':
