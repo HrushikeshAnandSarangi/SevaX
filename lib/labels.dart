@@ -640,6 +640,7 @@ class L {
   String get cover_picture_label => "Seva Community Cover Picture";
   String get cover_picture_label_group => "Group Cover Picture";
   String get cover_picture_label_event => "Event Cover Picture";
+  String get occurrences => "Occurrences";
 }
 
 // // <--------  IRRELEVANT FOR NOW  --------->

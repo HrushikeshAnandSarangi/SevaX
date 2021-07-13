@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/labels.dart';
 
 class RepeatWidget extends StatefulWidget {
   RepeatWidget();
@@ -384,7 +385,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text("${S.of(context).occurences}",
+                                Text("${L.of(context).occurrences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 16,
