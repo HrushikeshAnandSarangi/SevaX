@@ -74,6 +74,34 @@ class ParentCommunityMessageBloc {
     _selectedTimebanks.add(x);
   }
 
+  Future<void> createSingleCommunityChat(
+      BuildContext context, ParticipantInfo creator) async {
+    List<ParticipantInfo> participantInfos = [
+      creator..type = ChatType.TYPE_MULTI_USER_MESSAGING
+    ];
+    _selectedTimebanks.value.forEach(
+      (String id) async {
+        participantInfos.add(
+          allTimbankData[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
+        );
+      },
+    );
+    createAndOpenChat(
+      isTimebankMessage: true,
+      context: context,
+      timebankId: null,
+      communityId: null,
+      sender: creator,
+      reciever: participantInfos[1],
+      isFromRejectCompletion: false,
+      isParentChildCommunication: true,
+      onChatCreate: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Future<ChatModel> createMultiUserMessaging(
       BuildContext context, ParticipantInfo creator) async {
     if (_groupName.value == null || _groupName.value.isEmpty) {

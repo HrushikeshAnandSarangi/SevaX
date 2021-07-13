@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_page_base_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/parent_community_message_bloc.dart';
@@ -56,14 +57,29 @@ class _CommunityMessageCreateState extends State<CommunityMessageCreate> {
               builder: (context, snapshot) {
                 if ((snapshot.data?.length ?? 0) > 0) {
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreateCommunityMessage(
-                            bloc: bloc,
+                    onTap: () async {
+                      var timebanks = await bloc.selectedTimebanks.first;
+                      if (timebanks.length == 1) {
+                        var timebank = Provider.of<HomePageBaseBloc>(context,
+                                listen: false)
+                            .primaryTimebankModel();
+                        bloc.createSingleCommunityChat(
+                          context,
+                          ParticipantInfo(
+                            id: timebank.id,
+                            name: timebank.name,
+                            photoUrl: timebank.photoUrl,
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CreateCommunityMessage(
+                              bloc: bloc,
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: Center(
                       child: Padding(
