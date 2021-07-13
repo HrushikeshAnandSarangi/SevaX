@@ -121,9 +121,7 @@ class OneToManySpeakerTimeEntryCompleteState
                                             selectedHoursPrepTimeController,
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          BlacklistingTextInputFormatter(
-                                            RegExp('[\\.|\\,|\\ |\\-]'),
-                                          ),
+                                          FilteringTextInputFormatter.digitsOnly
                                         ],
                                         decoration: InputDecoration(
                                           //errorText: S.of(context).enter_hours,

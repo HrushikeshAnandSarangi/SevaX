@@ -59,8 +59,8 @@ class OneToManyCreatorCompleteRequestPageState
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        attendeesList.add(doc.data);
-        tempAttendeesList.add(doc.data);
+        attendeesList.add(doc.data());
+        tempAttendeesList.add(doc.data());
       });
       if (this.mounted) {
         setState(() {});
